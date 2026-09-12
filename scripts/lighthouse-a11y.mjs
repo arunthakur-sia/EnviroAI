@@ -35,8 +35,13 @@ fs.mkdirSync(outDir, { recursive: true });
 const headersPath = path.join(outDir, "headers.json");
 fs.writeFileSync(headersPath, JSON.stringify({ Cookie: cookie }));
 
+// CR02 acceptance 10: Home, Strategy, Lessons, Podcast above 90 (Ask and
+// Trends kept from CR01).
 const targets = [
   ["/en/home", "home"],
+  ["/en/strategy", "strategy"],
+  ["/en/lessons", "lessons"],
+  ["/en/podcast", "podcast"],
   ["/en/ask", "ask"],
   ["/en/trends", "trends"],
 ];

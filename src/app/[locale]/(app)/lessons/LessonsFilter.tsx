@@ -29,9 +29,10 @@ export function LessonsFilter({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      {hasClusters ? (
-        <div className="inline-flex items-center gap-0.5 rounded-xl bg-sand-100 p-1">
-          {(["feed", "clusters"] as const).map((mode) => (
+      <div className="inline-flex items-center gap-0.5 rounded-xl bg-sand-100 p-1">
+        {(["feed", "projects", "clusters"] as const)
+          .filter((mode) => mode !== "clusters" || hasClusters)
+          .map((mode) => (
             <button
               key={mode}
               onClick={() => setParam("view", mode === "feed" ? null : mode)}
@@ -43,8 +44,7 @@ export function LessonsFilter({
               {t(`views.${mode}`)}
             </button>
           ))}
-        </div>
-      ) : null}
+      </div>
       <NativeSelect
         value={sp.get("outcome") ?? ""}
         onChange={(e) => setParam("outcome", e.target.value || null)}

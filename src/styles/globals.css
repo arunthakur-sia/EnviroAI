@@ -274,6 +274,30 @@ html[lang="ar"] h4 {
   background-position: center;
 }
 
+/* CR02 2.2: navigator pane slide (180ms) and the map's one-time draw-in */
+@keyframes pane-slide-in {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes pane-slide-in-rtl {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.pane-slide {
+  animation: pane-slide-in 180ms var(--ease-paper);
+}
+[dir="rtl"] .pane-slide {
+  animation-name: pane-slide-in-rtl;
+}
+@keyframes sunburst-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+.sunburst-in {
+  animation: sunburst-in 600ms var(--ease-paper);
+  transform-origin: center;
+}
+
 /* Chart tooltips (recharts) */
 .recharts-default-tooltip {
   border-radius: 10px !important;

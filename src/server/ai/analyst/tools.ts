@@ -74,11 +74,15 @@ export type WorkspaceDocument = {
   page: number | null;
   status: string;
   classification: number;
+  /* CR02 2.3: set when the document is a deliverable of a node */
+  deliverable?: { code: string; nodeCode: string | null } | null;
 };
 
 export type WorkspaceLesson = {
   id: string;
   kind: "lesson" | "decision";
+  /* CR02 3.1: delivery | external | expert | institutional */
+  category?: string | null;
   titleEn: string;
   titleAr: string;
   learningEn: string | null;
@@ -287,16 +291,26 @@ export async function toolSearchKnowledge(
   const wantDocs = !input.types?.length || input.types.includes("document");
   const recordTypes = (input.types?.length
     ? input.types.filter((t) => t !== "document")
-    : ["lesson", "answer", "signal", "decision"]) as string[];
+    : ["lesson", "answer", "signal", "decision", "podcast_episode"]) as string[];
 
   const lines: string[] = [];
   if (wantDocs) {
     const { chunks } = await retrieveChunks(input.query, filters, Math.min(input.limit ?? 6, 8));
+    // CR02 2.3: deliverables cite as "Deliverable D3 of Project P-21, p. 12"
+    const { deliverableInfoForDocs } = await import("@/server/services/deliverables");
+    const deliverableInfo = await deliverableInfoForDocs([
+      ...new Set(chunks.map((c) => c.documentId)),
+    ]);
     for (const c of chunks) {
+      const dInfo = deliverableInfo.get(c.documentId) ?? null;
+      const baseTitle = c.documentTitleEn || c.documentTitleAr;
+      const title = dInfo
+        ? `Deliverable ${dInfo.code} of ${dInfo.nodeType === "project" ? "Project" : "Initiative"} ${dInfo.nodeCode ?? dInfo.nodeTitleEn}: ${baseTitle}`
+        : baseTitle;
       const n = ctx.state.addSource({
         resource_type: "document",
         resource_id: c.documentId,
-        title: c.documentTitleEn || c.documentTitleAr,
+        title,
         page: c.page,
         excerpt: c.text.slice(0, 280),
         lang: c.lang,
@@ -318,10 +332,11 @@ export async function toolSearchKnowledge(
           page: c.page,
           status: doc.status,
           classification: doc.classificationLevel,
+          deliverable: dInfo ? { code: dInfo.code, nodeCode: dInfo.nodeCode } : null,
         });
       }
       lines.push(
-        `[${n}] document "${c.documentTitleEn || c.documentTitleAr}"${c.page ? ` p.${c.page}` : ""} (${c.verified ? "verified" : "unverified"}): ${c.text.slice(0, 500)}`
+        `[${n}] ${dInfo ? `deliverable ${dInfo.code} of ${dInfo.nodeCode ?? "node"} ` : "document "}"${baseTitle}"${c.page ? ` p.${c.page}` : ""} (${c.verified ? "verified" : "unverified"}): ${c.text.slice(0, 500)}`
       );
     }
   }
@@ -404,10 +419,14 @@ export async function toolGetDocument(
   if (!canReadResource(ctx.user, { classificationLevel: d.classificationLevel, departmentId: d.departmentId })) {
     return "You do not have clearance to read this document.";
   }
+  const { deliverableInfoForDocs } = await import("@/server/services/deliverables");
+  const dInfo = (await deliverableInfoForDocs([d.id])).get(d.id) ?? null;
   const n = ctx.state.addSource({
     resource_type: "document",
     resource_id: d.id,
-    title: d.titleEn || d.titleAr,
+    title: dInfo
+      ? `Deliverable ${dInfo.code} of ${dInfo.nodeType === "project" ? "Project" : "Initiative"} ${dInfo.nodeCode ?? dInfo.nodeTitleEn}: ${d.titleEn || d.titleAr}`
+      : d.titleEn || d.titleAr,
     page: null,
     excerpt: (d.summaryEn ?? "").slice(0, 260),
     classification: d.classificationLevel,
@@ -422,6 +441,7 @@ export async function toolGetDocument(
     page: input.pages?.[0] ?? null,
     status: d.status,
     classification: d.classificationLevel,
+    deliverable: dInfo ? { code: dInfo.code, nodeCode: dInfo.nodeCode } : null,
   });
   let pageText = "";
   if (input.pages?.length) {
@@ -542,12 +562,17 @@ export async function toolQueryStrategy(
 }
 
 /* ---- get_node ---- */
-export async function toolGetNode(ctx: ToolContext, input: { id: string }): Promise<string> {
-  const [node] = await db
-    .select()
-    .from(schema.strategyNodes)
-    .where(eq(schema.strategyNodes.id, input.id))
-    .limit(1);
+export async function toolGetNode(
+  ctx: ToolContext,
+  input: { id?: string; code?: string }
+): Promise<string> {
+  const cond = input.id
+    ? eq(schema.strategyNodes.id, input.id)
+    : input.code
+      ? sql`lower(${schema.strategyNodes.code}) = lower(${input.code})`
+      : null;
+  if (!cond) return "Give a node id or code.";
+  const [node] = await db.select().from(schema.strategyNodes).where(cond).limit(1);
   if (!node) return "Node not found.";
   const [edition] = await db
     .select()
@@ -833,13 +858,14 @@ export async function toolFindExperts(
 /* ---- get_lessons ---- */
 export async function toolGetLessons(
   ctx: ToolContext,
-  input: { node_id?: string; text?: string }
+  input: { node_id?: string; text?: string; category?: string }
 ): Promise<string> {
   const conds = [
     inArray(schema.lessons.status, ["published", "verified"]),
     sql`${schema.lessons.classificationLevel} <= ${ctx.user.clearanceLevel}`,
   ];
   if (input.node_id) conds.push(eq(schema.lessons.nodeId, input.node_id));
+  if (input.category) conds.push(eq(schema.lessons.category, input.category));
   if (input.text) {
     const pat = `%${input.text}%`;
     conds.push(
@@ -879,6 +905,7 @@ export async function toolGetLessons(
       dedupePush(ctx.state.workspace.lessons, {
         id: l.id,
         kind: "lesson",
+        category: l.category,
         titleEn: l.titleEn,
         titleAr: l.titleAr,
         learningEn: l.learningEn,
@@ -888,9 +915,70 @@ export async function toolGetLessons(
         status: l.status,
         classification: l.classificationLevel,
       });
-      return `[${n}] lesson "${l.titleEn}": ${(l.learningEn ?? "").slice(0, 300)} Recommendation: ${(l.recommendationEn ?? "").slice(0, 200)}`;
+      return `[${n}] lesson (${l.category}) "${l.titleEn}": ${(l.learningEn ?? "").slice(0, 300)} Recommendation: ${(l.recommendationEn ?? "").slice(0, 200)}`;
     })
     .join("\n");
+}
+
+/* ---- get_deliverables (CR02 2.3) ---- */
+export async function toolGetDeliverables(
+  ctx: ToolContext,
+  input: { node_id?: string; node_code?: string }
+): Promise<string> {
+  let nodeId = input.node_id ?? null;
+  if (!nodeId && input.node_code) {
+    const [n] = await db
+      .select({ id: schema.strategyNodes.id })
+      .from(schema.strategyNodes)
+      .where(sql`lower(${schema.strategyNodes.code}) = lower(${input.node_code})`)
+      .limit(1);
+    nodeId = n?.id ?? null;
+  }
+  if (!nodeId) return "Give a node_id or node_code of an initiative or project.";
+  const [node] = await db
+    .select()
+    .from(schema.strategyNodes)
+    .where(eq(schema.strategyNodes.id, nodeId))
+    .limit(1);
+  if (!node) return "Node not found.";
+  const { listDeliverables } = await import("@/server/services/deliverables");
+  const rows = await listDeliverables(ctx.user, nodeId);
+  if (!rows.length) {
+    return `${node.nodeType} ${node.code ?? ""} "${node.titleEn}" has no deliverables recorded.`;
+  }
+  const docs = await db
+    .select()
+    .from(schema.documents)
+    .where(inArray(schema.documents.id, rows.map((r) => r.documentId)));
+  const kind = node.nodeType === "project" ? "Project" : "Initiative";
+  const lines = rows.map((r) => {
+    const doc = docs.find((d) => d.id === r.documentId);
+    const n = ctx.state.addSource({
+      resource_type: "document",
+      resource_id: r.documentId,
+      title: `Deliverable ${r.deliverableCode} of ${kind} ${node.code ?? node.titleEn}: ${r.titleEn || r.titleAr}`,
+      page: null,
+      excerpt: (doc?.summaryEn ?? "").slice(0, 240),
+      classification: r.classificationLevel,
+      verified: r.status === "verified",
+    });
+    dedupePush(ctx.state.workspace.documents, {
+      id: r.documentId,
+      titleEn: r.titleEn,
+      titleAr: r.titleAr,
+      summaryEn: doc?.summaryEn ?? null,
+      summaryAr: doc?.summaryAr ?? null,
+      page: null,
+      status: r.status,
+      classification: r.classificationLevel,
+      deliverable: { code: r.deliverableCode, nodeCode: node.code },
+    });
+    return `[${n}] ${r.deliverableCode} "${r.titleEn}" (v${r.versionNo}, ${r.status}, acceptance ${r.acceptanceStatus}${r.milestone ? `, milestone ${r.milestone}` : ""}${r.deliveredDate ? `, delivered ${r.deliveredDate}` : ""}): ${(doc?.summaryEn ?? "no summary").slice(0, 280)}`;
+  });
+  return [
+    `${kind} ${node.code ?? ""} "${node.titleEn}" has ${rows.length} deliverables:`,
+    ...lines,
+  ].join("\n");
 }
 
 /* ---- get_signals ---- */
@@ -969,6 +1057,33 @@ export async function toolWhatChanged(
   const signals = input.outcome_code
     ? await listSignals(ctx.user, { outcome: input.outcome_code, triage: "accepted", days, limit: 4 })
     : [];
+  // CR02 2.3: deliverables that arrived in the period, within the node scope
+  const nodeScope = new Set(nodeIds);
+  const recentDeliverables = (
+    await db
+      .select()
+      .from(schema.deliverableMeta)
+      .where(sql`${schema.deliverableMeta.createdAt} >= ${since}`)
+      .limit(30)
+  ).filter((m) => nodeScope.has(m.nodeId));
+  let deliverableLine = "";
+  if (recentDeliverables.length) {
+    const dDocs = await db
+      .select({ id: schema.documents.id, titleEn: schema.documents.titleEn })
+      .from(schema.documents)
+      .where(
+        and(
+          inArray(schema.documents.id, recentDeliverables.map((m) => m.documentId)),
+          sql`${schema.documents.classificationLevel} <= ${ctx.user.clearanceLevel}`
+        )
+      );
+    if (dDocs.length) {
+      deliverableLine = `New deliverables in period: ${recentDeliverables
+        .filter((m) => dDocs.some((d) => d.id === m.documentId))
+        .map((m) => `${m.deliverableCode} ${dDocs.find((d) => d.id === m.documentId)?.titleEn ?? ""}`)
+        .join("; ")}`;
+    }
+  }
   const n = ctx.state.addSource({
     resource_type: "node",
     resource_id: input.node_id ?? edition.id,
@@ -994,6 +1109,7 @@ export async function toolWhatChanged(
     `[${n}] ${changed.summary_en}`,
     ...changed.highlights.map((h) => `- (${h.kind}) ${h.text_en}`),
     newDocs.length ? `New documents in period: ${newDocs.map((d) => d.titleEn).join("; ")}` : "",
+    deliverableLine,
     signals.length ? `Accepted signals in period: ${signals.map((s) => s.titleEn).join("; ")}` : "",
   ]
     .filter(Boolean)
@@ -1126,11 +1242,11 @@ export const TOOL_DEFINITIONS = [
   },
   {
     name: "get_node",
-    description: "Fetch one strategy node with its KPIs, latest values, status updates, and lineage.",
+    description:
+      "Fetch one strategy node (by id or by code such as PRJ-01a) with its KPIs, latest values, status updates, and lineage.",
     input_schema: {
       type: "object" as const,
-      properties: { id: { type: "string" } },
-      required: ["id"],
+      properties: { id: { type: "string" }, code: { type: "string" } },
     },
   },
   {
@@ -1187,7 +1303,14 @@ export const TOOL_DEFINITIONS = [
     description: "Lessons learned, filtered by strategy node or text.",
     input_schema: {
       type: "object" as const,
-      properties: { node_id: { type: "string" }, text: { type: "string" } },
+      properties: {
+        node_id: { type: "string" },
+        text: { type: "string" },
+        category: {
+          type: "string",
+          enum: ["delivery", "external", "expert", "institutional"],
+        },
+      },
     },
   },
   {
@@ -1199,9 +1322,18 @@ export const TOOL_DEFINITIONS = [
     },
   },
   {
+    name: "get_deliverables",
+    description:
+      "The deliverables (contracted outputs stored in the Vault) of an initiative or project, with codes, versions, acceptance status, and summaries. Give node_id or node_code such as PRJ-01a.",
+    input_schema: {
+      type: "object" as const,
+      properties: { node_id: { type: "string" }, node_code: { type: "string" } },
+    },
+  },
+  {
     name: "what_changed",
     description:
-      "Status updates, KPI deltas, new documents, and accepted signals for a node or outcome over a period in days.",
+      "Status updates, KPI deltas, new documents, new deliverables, and accepted signals for a node or outcome over a period in days.",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -1251,6 +1383,8 @@ export async function runTool(
         return await toolGetLessons(ctx, input as never);
       case "get_signals":
         return await toolGetSignals(ctx, input as never);
+      case "get_deliverables":
+        return await toolGetDeliverables(ctx, input as never);
       case "what_changed":
         return await toolWhatChanged(ctx, input as never);
       case "compare_editions":

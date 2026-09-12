@@ -42,17 +42,72 @@ export function TrendsToolbar({ canScan, canAdd }: { canScan: boolean; canAdd: b
     router.push(`${pathname}?${next.toString()}` as never, { scroll: false });
   }
 
-  async function scanNow() {
+  /* CR02 6: inline progress for the running refresh */
+  const [progress, setProgress] = React.useState<{
+    status: string;
+    briefsRun: number;
+    totalBriefs: number;
+    candidates: number;
+    acceptedNew: number;
+    duplicates: number;
+  } | null>(null);
+  const pollRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+  React.useEffect(() => () => {
+    if (pollRef.current) clearInterval(pollRef.current);
+  }, []);
+
+  function startPolling() {
+    if (pollRef.current) clearInterval(pollRef.current);
+    pollRef.current = setInterval(async () => {
+      try {
+        const res = await fetch("/api/v1/scan/run");
+        const json = await res.json();
+        const run = json.data;
+        if (!run) return;
+        setProgress(run);
+        if (run.status !== "running") {
+          if (pollRef.current) clearInterval(pollRef.current);
+          setScanning(false);
+          toast(t("scanDone", { count: run.acceptedNew ?? 0 }), "success");
+          setTimeout(() => setProgress(null), 6000);
+          router.refresh();
+        }
+      } catch {
+        /* keep polling */
+      }
+    }, 2000);
+  }
+
+  async function scanNow(rescanOutcome?: string) {
     setScanning(true);
     try {
-      const res = await fetch("/api/v1/scan/run", { method: "POST" });
+      const res = await fetch("/api/v1/scan/run", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(rescanOutcome ? { outcome: rescanOutcome } : {}),
+      });
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error);
-      toast(json.data.queued ? t("scanQueued") : t("scanDone", { count: json.data.added ?? 0 }), "success");
-      router.refresh();
-    } catch {
-      toast(tc("error"), "error");
-    } finally {
+      if (!res.ok) {
+        throw new Error(json.error);
+      }
+      if (json.data.queued) {
+        toast(t("scanQueued"), "success");
+        setProgress({
+          status: "running",
+          briefsRun: 0,
+          totalBriefs: 0,
+          candidates: 0,
+          acceptedNew: 0,
+          duplicates: 0,
+        });
+        startPolling();
+      } else {
+        toast(t("scanDone", { count: json.data.added ?? 0 }), "success");
+        setScanning(false);
+        router.refresh();
+      }
+    } catch (e: any) {
+      toast(e?.message === "no_brief_for_filter" ? t("noBriefForFilter") : tc("error"), "error");
       setScanning(false);
     }
   }
@@ -104,6 +159,7 @@ export function TrendsToolbar({ canScan, canAdd }: { canScan: boolean; canAdd: b
   );
 
   return (
+    <div>
     <div className="flex flex-wrap items-center gap-2">
       {select("outcome", OUTCOMES, "outcomes", t("filterOutcome"))}
       {select("type", TYPES, "types", t("filterType"))}
@@ -126,6 +182,17 @@ export function TrendsToolbar({ canScan, canAdd }: { canScan: boolean; canAdd: b
       {activeFilters.length ? (
         <Button variant="ghost" size="sm" onClick={() => router.push(pathname as never, { scroll: false })}>
           <X /> {t("clearFilters")}
+        </Button>
+      ) : null}
+      {/* CR02 6: Rescan only the brief behind the active outcome filter */}
+      {canScan && sp.get("outcome") ? (
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => scanNow(sp.get("outcome")!)}
+          disabled={scanning}
+        >
+          <RefreshCw className={cn(scanning && "animate-spin")} /> {t("rescan")}
         </Button>
       ) : null}
 
@@ -172,11 +239,35 @@ export function TrendsToolbar({ canScan, canAdd }: { canScan: boolean; canAdd: b
           </Dialog>
         ) : null}
         {canScan ? (
-          <Button onClick={scanNow} loading={scanning}>
+          <Button onClick={() => scanNow()} loading={scanning} data-testid="refresh-signals">
             <RefreshCw /> {t("scanNow")}
           </Button>
         ) : null}
       </span>
+    </div>
+    {/* CR02 6: inline progress card, live while the run is going */}
+    {progress ? (
+      <div
+        className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 rounded-xl border border-gold-300 bg-gold-100/40 px-4 py-2.5 text-sm text-ink-900"
+        data-testid="scan-progress"
+        aria-live="polite"
+      >
+        <RefreshCw
+          className={cn("size-4 text-maroon-700", progress.status === "running" && "animate-spin")}
+          aria-hidden
+        />
+        <span className="tnum">
+          {t("progressBriefs", { done: progress.briefsRun, total: progress.totalBriefs })}
+        </span>
+        <span className="tnum">{t("progressCandidates", { count: progress.candidates })}</span>
+        <span className="font-medium text-maroon-900 tnum">
+          {t("progressNew", { count: progress.acceptedNew })}
+        </span>
+        <span className="text-ink-600 tnum">
+          {t("progressDuplicates", { count: progress.duplicates })}
+        </span>
+      </div>
+    ) : null}
     </div>
   );
 }

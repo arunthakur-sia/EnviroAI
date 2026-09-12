@@ -44,6 +44,8 @@ export function citationHref(c: Citation): string {
     case "question":
     case "answer":
       return `/ask`;
+    case "podcast_episode":
+      return `/podcast/${c.resource_id}`;
     default:
       return `/vault/${c.resource_id}${c.page ? `?page=${c.page}` : ""}`;
   }
@@ -247,6 +249,14 @@ export function SourceList({ citations }: { citations: Citation[] }) {
               {isIndicator ? (
                 <span className="ms-auto shrink-0 text-[10px] font-medium uppercase tracking-wide text-gulf-600">
                   {t("statisticTag")}
+                </span>
+              ) : c.resource_type === "podcast_episode" ? (
+                <span className="ms-auto shrink-0 rounded bg-maroon-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-maroon-900">
+                  {t("podcastTag")}
+                </span>
+              ) : c.title.startsWith("Deliverable ") ? (
+                <span className="ms-auto shrink-0 rounded bg-maroon-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-maroon-900">
+                  {t("deliverableTag")}
                 </span>
               ) : c.page ? (
                 <span className="ms-auto shrink-0 text-xs text-ink-400 tnum">p. {c.page}</span>

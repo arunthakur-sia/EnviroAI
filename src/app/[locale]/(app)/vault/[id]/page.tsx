@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { asc, desc, eq } from "drizzle-orm";
-import { ShieldAlert, BadgeCheck, Download } from "lucide-react";
+import { ShieldAlert, BadgeCheck, Download, Headphones } from "lucide-react";
 import { db, schema } from "@/server/db/client";
 import { getCurrentUser } from "@/server/auth/session";
 import { can } from "@/server/auth/permissions";
@@ -16,6 +16,7 @@ import { bi } from "@/lib/utils";
 import { Chip, ClassificationChip, EmptyState, Avatar } from "@/components/ui/primitives";
 import { Reveal } from "@/components/motion";
 import { BriefDialog } from "@/components/nexus/BriefDialog";
+import { Link } from "@/i18n/navigation";
 import { Reader } from "./Reader";
 import { AiPanel } from "./AiPanel";
 import { VerifyControls } from "./VerifyControls";
@@ -36,6 +37,7 @@ export default async function DocumentPage({
   if (!user) redirect(`/${locale}/login`);
   const t = await getTranslations("reader");
   const tc = await getTranslations("common");
+  const tp = await getTranslations("podcast");
 
   const { doc, allowed } = await getDocument(user, id);
   if (!doc) {
@@ -158,6 +160,13 @@ export default async function DocumentPage({
             <Download className="size-4" /> {tc("download")}
           </a>
           <BriefDialog resourceType="document" resourceId={id} />
+          {/* CR02 4.3: make an episode from this document */}
+          <Link
+            href={`/podcast/new?document=${id}` as never}
+            className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-sand-300 bg-white px-4 text-sm font-medium text-ink-900 hover:border-maroon-300 hover:text-maroon-700"
+          >
+            <Headphones className="size-4" /> {tp("listen")}
+          </Link>
         </div>
       </div>
 

@@ -8,6 +8,8 @@ import {
   CornerDownLeft,
   Share2,
   FileDown,
+  FileOutput,
+  Headphones,
   Pin,
   Trash2,
   ArrowLeft,
@@ -16,6 +18,7 @@ import {
 import { cn, bi } from "@/lib/utils";
 import { Button, Textarea, NativeSelect, Chip } from "@/components/ui/primitives";
 import { useToast } from "@/components/ui/toast";
+import { ReportButton } from "@/components/nexus/ReportButton";
 import {
   useAnalyst,
   AnalystAnswer,
@@ -41,6 +44,8 @@ export function ConversationClient({
 }) {
   const t = useTranslations("analyst");
   const tc = useTranslations("common");
+  const tp = useTranslations("podcast");
+  const tr = useTranslations("reports");
   const locale = useLocale();
   const router = useRouter();
   const { toast } = useToast();
@@ -189,6 +194,26 @@ export function ConversationClient({
             <Button variant="ghost" size="sm" onClick={exportDocx}>
               <FileDown /> {t("export")}
             </Button>
+            {/* CR02 4.3: make an episode from this answer */}
+            <Link href={`/podcast/new?conversation=${conversationId}` as never}>
+              <Button variant="ghost" size="sm">
+                <Headphones /> {tp("listen")}
+              </Button>
+            </Link>
+            {/* CR02 7.1: extract a designed report from this answer */}
+            <ReportButton
+              scope={{
+                kind: "ask",
+                ids: [conversationId],
+                labelEn: title || "Ask NPC answer",
+                labelAr: title || "إجابة اسأل المجلس",
+              }}
+              trigger={
+                <Button variant="ghost" size="sm">
+                  <FileOutput /> {tr("extract")}
+                </Button>
+              }
+            />
             <span className="relative">
               <Button variant="ghost" size="sm" onClick={openPin}>
                 <Pin /> {t("pin")}

@@ -14,6 +14,7 @@ You receive raw material an NPC employee captured: rough typed notes, extracted 
   "decision": { "decision_en": "", "decision_ar": "", "rationale_en": "", "rationale_ar": "" },
   "document": { "summary_en": "", "summary_ar": "", "key_facts": [{ "text_en": "", "text_ar": "" }] },
   "expert": { "name_en": "", "name_ar": "", "organisation_en": "", "organisation_ar": "", "position_en": "", "position_ar": "", "email": "", "domains": ["topic codes"] },
+  "category": "for lesson and insight items only: delivery|external|expert|institutional",
   "topic_codes": ["up to 5 topic codes from the provided taxonomy"],
   "outcome_links": [{ "code": "outcome code", "reason_en": "one line", "reason_ar": "one line" }],
   "indicator_codes": ["indicator codes when the note observes a statistic"],
@@ -24,6 +25,8 @@ You receive raw material an NPC employee captured: rough typed notes, extracted 
 } ] }
 
 Rules: one input can yield SEVERAL items (a conference note can produce two signals, one lesson, and one expert contact). Include a type's object only for the item's types. Faithful to the material; never invent facts, names, or numbers. classification_level 1 for public material, 2 for internal working notes. Items in the source language first, the other language a natural rendition.
+
+Lesson category rules: "delivery" when the learning comes from executing an NDS initiative or project (a delivery-node context line, if given, forces this); "external" for conferences, external reports, study visits, or other entities' experience; "expert" for tacit knowledge from a named person, interview, or handover; "institutional" for NPC processes, governance, ways of working, and decisions. When a delivery-node context is provided, keep lesson items linked to it and set category "delivery" unless the material clearly says otherwise.
 
 # Examples
 

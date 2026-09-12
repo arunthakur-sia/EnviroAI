@@ -180,6 +180,31 @@ async function questionText(id: string): Promise<RecordRow | null> {
   };
 }
 
+/* CR02 8: podcast episodes join the unified index (script text). */
+async function podcastEpisodeText(id: string): Promise<RecordRow | null> {
+  const [e] = await db
+    .select()
+    .from(schema.podcastEpisodes)
+    .where(eq(schema.podcastEpisodes.id, id))
+    .limit(1);
+  if (!e || e.status !== "published") return null;
+  let scriptText = "";
+  try {
+    const script = JSON.parse(e.scriptJson ?? "{}") as {
+      segments?: { speaker: string; text: string }[];
+    };
+    scriptText = (script.segments ?? []).map((s) => s.text).join(" ");
+  } catch {
+    scriptText = "";
+  }
+  return {
+    resourceType: "podcast_episode",
+    resourceId: id,
+    lang: e.language,
+    text: `Podcast episode: ${e.titleEn} | ${e.titleAr} | ${e.descriptionEn ?? ""} | ${e.descriptionAr ?? ""} | ${scriptText.slice(0, 2500)}`,
+  };
+}
+
 const BUILDERS: Record<string, (id: string) => Promise<RecordRow | null>> = {
   indicator: indicatorText,
   node: nodeText,
@@ -190,6 +215,7 @@ const BUILDERS: Record<string, (id: string) => Promise<RecordRow | null>> = {
   question: questionText,
   signal: signalText,
   decision: decisionText,
+  podcast_episode: podcastEpisodeText,
 };
 
 export async function embedStructuredRecords(
@@ -224,6 +250,8 @@ export async function embedStructuredRecords(
     push(await signalText(s.id)); // accepted signals only (builder filters)
   for (const d of await db.select({ id: schema.decisions.id }).from(schema.decisions))
     push(await decisionText(d.id));
+  for (const e of await db.select({ id: schema.podcastEpisodes.id }).from(schema.podcastEpisodes))
+    push(await podcastEpisodeText(e.id));
   // batch in groups of 64 for embedding efficiency
   for (let i = 0; i < rows.length; i += 64) {
     await upsertRecords(rows.slice(i, i + 64));

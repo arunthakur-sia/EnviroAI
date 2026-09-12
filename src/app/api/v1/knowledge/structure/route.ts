@@ -27,7 +27,25 @@ export async function POST(req: NextRequest) {
   const notes = String(form.get("notes") ?? "");
   const whereFrom = String(form.get("whereFrom") ?? "");
   const urlsRaw = String(form.get("urls") ?? "");
+  const nodeId = String(form.get("nodeId") ?? "");
+  const categoryHint = String(form.get("category") ?? "");
   const files = form.getAll("files").filter((f): f is File => f instanceof File);
+
+  // CR02 3.3: opened from an initiative or project page
+  let nodeContext: { id: string; code: string | null; title_en: string; title_ar: string } | null =
+    null;
+  if (nodeId) {
+    const { db, schema } = await import("@/server/db/client");
+    const { eq } = await import("drizzle-orm");
+    const [node] = await db
+      .select()
+      .from(schema.strategyNodes)
+      .where(eq(schema.strategyNodes.id, nodeId))
+      .limit(1);
+    if (node) {
+      nodeContext = { id: node.id, code: node.code, title_en: node.titleEn, title_ar: node.titleAr };
+    }
+  }
 
   const parsedFiles: { filename: string; text: string; mime: string }[] = [];
   const images: { filename: string; mediaType: string; base64: string }[] = [];
@@ -46,9 +64,30 @@ export async function POST(req: NextRequest) {
     fileRefs.push({ filename: file.name, storagePath, mime, sizeBytes: buf.length });
     if (IMAGE_MEDIA.has(mime)) {
       images.push({ filename: file.name, mediaType: mime, base64: buf.toString("base64") });
+    } else if (mime.startsWith("audio/")) {
+      // stored above so the original survives; transcription happens client-side
+      continue;
     } else {
       const parsed = await parseDocument(buf, file.name, mime);
       parsedFiles.push({ filename: file.name, text: parsed.text.slice(0, 20000), mime });
+    }
+  }
+
+  // CR02 5.2: the Speak mode's recording, stored so the original is never lost
+  let audioRef: { filename: string; storagePath: string; mime: string; sizeBytes: number } | null =
+    null;
+  const audio = form.get("audio");
+  if (audio instanceof File) {
+    const buf = Buffer.from(await audio.arrayBuffer());
+    if (buf.length > 0 && buf.length <= 60 * 1024 * 1024) {
+      const mime = audio.type || "audio/webm";
+      const storagePath = await put(newId(), audio.name || "voice-note.webm", buf);
+      audioRef = {
+        filename: audio.name || "voice-note.webm",
+        storagePath,
+        mime,
+        sizeBytes: buf.length,
+      };
     }
   }
 
@@ -77,6 +116,8 @@ export async function POST(req: NextRequest) {
     parsedFiles,
     images,
     pages,
+    nodeContext,
+    categoryHint: categoryHint || null,
   });
 
   // attach file refs to document items (first unassigned file per document item)
@@ -97,7 +138,7 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json({
-    data: { items: withRefs, live, whereFrom, fileRefs },
+    data: { items: withRefs, live, whereFrom, fileRefs, audioRef },
     error: null,
   });
 }

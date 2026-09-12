@@ -65,6 +65,16 @@ const Item = z.object({
       domains: z.array(z.string()).default([]),
     })
     .optional(),
+  category: z.string().nullable().optional(),
+  node_link: z
+    .object({
+      id: z.string(),
+      code: z.string().nullable(),
+      title_en: z.string().default(""),
+      title_ar: z.string().default(""),
+    })
+    .nullable()
+    .optional(),
   topic_codes: z.array(z.string()).default([]),
   outcome_links: z
     .array(z.object({ code: z.string(), reason_en: z.string().default(""), reason_ar: z.string().default("") }))
@@ -87,6 +97,17 @@ const Item = z.object({
 const Body = z.object({
   items: z.array(Item).min(1).max(12),
   whereFrom: z.string().default(""),
+  /* CR02 5.2: the submission came through the Speak mode */
+  voice: z.boolean().default(false),
+  audioRef: z
+    .object({
+      storagePath: z.string(),
+      filename: z.string(),
+      mime: z.string(),
+      sizeBytes: z.number(),
+    })
+    .nullable()
+    .optional(),
 });
 
 const EVENT_HINT = /conference|forum|summit|workshop|external meeting|site visit|مؤتمر|منتدى|قمة|ورشة|اجتماع خارجي|زيارة/i;
@@ -101,7 +122,7 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ data: null, error: "invalid_body" }, { status: 400 });
   }
-  const { items, whereFrom } = parsed.data;
+  const { items, whereFrom, voice, audioRef } = parsed.data;
   const submissionId = newId();
   const terms = await getAllTerms();
   const termByCode = new Map(terms.map((t) => [`${t.dimension}:${t.code}`, t]));
@@ -187,9 +208,20 @@ export async function POST(req: NextRequest) {
 
     if (primary === "lesson" || primary === "insight" || primary === "indicator_observation") {
       const id = newId();
+      // CR02 3.2/3.3: a confirmed node link is the primary node (Delivery
+      // Lessons); the outcome node stays the fallback. Category from the
+      // structurer, validated.
+      const category = ["delivery", "external", "expert", "institutional"].includes(
+        item.category ?? ""
+      )
+        ? item.category!
+        : item.node_link
+          ? "delivery"
+          : "institutional";
       await db.insert(schema.lessons).values({
         id,
         authorId: user.id,
+        category,
         titleEn: item.title_en || item.title_ar,
         titleAr: item.title_ar || item.title_en,
         contextEn: item.lesson?.context_en || item.cleaned_en || null,
@@ -198,7 +230,7 @@ export async function POST(req: NextRequest) {
         learningAr: item.lesson?.learning_ar || null,
         recommendationEn: item.lesson?.recommendation_en || null,
         recommendationAr: item.lesson?.recommendation_ar || null,
-        nodeId: outcomeNodeId,
+        nodeId: item.node_link?.id ?? outcomeNodeId,
         classificationLevel: item.classification_level,
         status: "published",
         createdAt: nowIso(),
@@ -368,6 +400,70 @@ export async function POST(req: NextRequest) {
     const game = await record({
       userId: user.id,
       type: "knowledge_from_event",
+      resourceType: "knowledge_submission",
+      resourceId: submissionId,
+      meta: { departmentId: user.departmentId },
+    });
+    totalPoints += game.points;
+  }
+
+  // CR02 5.2: the Speak path stores the original recording as an audio
+  // document, relates it to everything published, and awards the voice bonus
+  // once per submission.
+  if (voice && published.length) {
+    if (audioRef) {
+      const audioDocId = newId();
+      const versionId = newId();
+      await db.insert(schema.documents).values({
+        id: audioDocId,
+        titleEn: `Voice note: ${items[0]?.title_en || audioRef.filename}`.slice(0, 180),
+        titleAr: `تسجيل صوتي: ${items[0]?.title_ar || audioRef.filename}`.slice(0, 180),
+        titleArMachine: 0,
+        summaryEn: "Original audio of a spoken knowledge submission.",
+        summaryAr: "التسجيل الأصلي لمساهمة معرفية منطوقة.",
+        summaryMachine: 0,
+        keyFactsJson: "[]",
+        knowledgeTypeTermId: null,
+        classificationLevel: 2,
+        departmentId: user.departmentId,
+        ownerUserId: user.id,
+        languageOriginal: "en",
+        status: "published",
+        sourceOrigin: "npc",
+        originalFilename: audioRef.filename,
+        mime: audioRef.mime,
+        sizeBytes: audioRef.sizeBytes,
+        storagePath: audioRef.storagePath,
+        currentVersionId: versionId,
+        isSeeded: 0,
+        createdAt: nowIso(),
+        updatedAt: nowIso(),
+      });
+      await db.insert(schema.documentVersions).values({
+        id: versionId,
+        documentId: audioDocId,
+        versionNo: 1,
+        storagePath: audioRef.storagePath,
+        uploadedBy: user.id,
+        note: "Voice submission recording",
+        createdAt: nowIso(),
+      });
+      for (const p of published) {
+        await db.insert(schema.relations).values({
+          id: newId(),
+          fromType: p.type,
+          fromId: p.id,
+          toType: "document",
+          toId: audioDocId,
+          relation: "source_audio",
+          source: "human",
+          createdAt: nowIso(),
+        });
+      }
+    }
+    const game = await record({
+      userId: user.id,
+      type: "knowledge_by_voice",
       resourceType: "knowledge_submission",
       resourceId: submissionId,
       meta: { departmentId: user.departmentId },

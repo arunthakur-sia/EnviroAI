@@ -34,6 +34,8 @@ const DAILY_POINT_CAPS: Record<string, number> = {
   document_read_fully: 60, // 20 x 3
   knowledge_submitted: 90, // CR01 5.5
   signal_accepted: 100, // triage stays rewarding but bounded
+  podcast_listened_full: 20, // CR02 4.6: 4 full listens x 5
+  report_extracted: 45, // CR02 7: 3 reports x 15
 };
 
 const ONCE_PER_DAY = new Set(["daily_login", "mystery_shelf_opened", "daily_quiz_correct", "daily_quiz_wrong"]);
@@ -43,6 +45,7 @@ const ONCE_PER_RESOURCE = new Set([
   "document_verified",
   "answer_verified",
   "lesson_verified",
+  "podcast_listened_full", // CR02 4.6: per episode per user
 ]);
 
 /** Event types that count as contributions (weekly streak, freeze earning). */
@@ -412,9 +415,11 @@ async function evaluateBadges(
   check("connector_bronze", connectorCount >= 3);
   check("connector_silver", connectorCount >= 15);
   check("connector_gold", connectorCount >= 50);
-  check("explorer_bronze", extra.breadthCount >= 3 || extra.quizStreak >= 7);
-  check("explorer_silver", extra.breadthCount >= 5 || extra.quizStreak >= 30);
-  check("explorer_gold", extra.breadthCount >= 7 || extra.quizStreak >= 100);
+  // CR02 4.6: completed podcast episodes count toward Explorer
+  const podcastListens = await countEvents(userId, ["podcast_listened_full"]);
+  check("explorer_bronze", extra.breadthCount >= 3 || extra.quizStreak >= 7 || podcastListens >= 3);
+  check("explorer_silver", extra.breadthCount >= 5 || extra.quizStreak >= 30 || podcastListens >= 10);
+  check("explorer_gold", extra.breadthCount >= 7 || extra.quizStreak >= 100 || podcastListens >= 30);
   check("first_shelf", uploads >= 1);
   check("bilingual", translations >= 10);
   check("gap_closer", bountiesFulfilled >= 3);

@@ -19,6 +19,7 @@ import { Link } from "@/i18n/navigation";
 import { Radar } from "lucide-react";
 import { SignalCard } from "@/components/nexus/SignalCard";
 import { toSignalCardData } from "@/components/nexus/signal-card-data";
+import { ReportButton } from "@/components/nexus/ReportButton";
 import { RiskHeatmap } from "../foresight/RiskHeatmap";
 import { ForesightForms } from "../foresight/ForesightForms";
 import { TrendsToolbar } from "./TrendsToolbar";
@@ -82,7 +83,21 @@ export default async function TrendsPage({
             ) : null}
           </p>
         </div>
-        {canAdd ? <ForesightForms /> : null}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* CR02 7.1: report over the current signal filters */}
+          <ReportButton
+            scope={{
+              kind: "signals",
+              ids: [],
+              labelEn: "Trends and Signals",
+              labelAr: "الاتجاهات والإشارات",
+              filters: Object.fromEntries(
+                Object.entries(sp).filter(([, v]) => typeof v === "string") as [string, string][]
+              ),
+            }}
+          />
+          {canAdd ? <ForesightForms /> : null}
+        </div>
       </div>
 
       <TrendsToolbar canScan={mayScan} canAdd={canAdd} />

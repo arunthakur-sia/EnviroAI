@@ -10,7 +10,9 @@ export type JobType =
   | "daily_card"
   | "digest"
   | "scan_run"
-  | "reembed_all";
+  | "reembed_all"
+  | "podcast_render" // CR02 4.5
+  | "report_generate"; // CR02 7
 
 export async function enqueue(
   type: JobType,

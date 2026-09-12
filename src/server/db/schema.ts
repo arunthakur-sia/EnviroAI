@@ -733,6 +733,8 @@ export const aiMessages = sqliteTable(
 export const lessons = sqliteTable("lessons", {
   id: id(),
   authorId: text("author_id").notNull(),
+  // CR02 3.1: delivery | external | expert | institutional
+  category: text("category").notNull().default("institutional"),
   titleEn: text("title_en").notNull(),
   titleAr: text("title_ar").notNull(),
   contextEn: text("context_en"),
@@ -908,6 +910,92 @@ export const indexRankings = sqliteTable("index_rankings", {
   sourceUrl: text("source_url"),
   note: text("note"),
 });
+
+/* ------------------------------------------------------------------ */
+/* CR02: deliverables, podcast, reports                                 */
+/* ------------------------------------------------------------------ */
+
+/* CR02 2.3: deliverable metadata over Vault documents */
+export const deliverableMeta = sqliteTable(
+  "deliverable_meta",
+  {
+    id: id(),
+    documentId: text("document_id").notNull(),
+    nodeId: text("node_id").notNull(),
+    deliverableCode: text("deliverable_code").notNull(),
+    milestone: text("milestone"),
+    dueDate: text("due_date"),
+    deliveredDate: text("delivered_date"),
+    acceptanceStatus: text("acceptance_status").notNull().default("pending"),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    index("deliverable_meta_node_idx").on(t.nodeId),
+    index("deliverable_meta_doc_idx").on(t.documentId),
+  ]
+);
+
+/* CR02 4.6: NPC Nexus Podcast */
+export const podcastEpisodes = sqliteTable(
+  "podcast_episodes",
+  {
+    id: id(),
+    titleEn: text("title_en").notNull(),
+    titleAr: text("title_ar").notNull(),
+    descriptionEn: text("description_en"),
+    descriptionAr: text("description_ar"),
+    language: text("language").notNull().default("en"),
+    focus: text("focus").notNull().default("overview"),
+    sourceScopeJson: text("source_scope_json"),
+    scriptJson: text("script_json"),
+    audioPath: text("audio_path"),
+    audioProvider: text("audio_provider").notNull().default("browser"),
+    durationSec: integer("duration_sec").notNull().default(0),
+    status: text("status").notNull().default("draft"),
+    createdBy: text("created_by"),
+    classificationLevel: integer("classification_level").notNull().default(2),
+    listens: integer("listens").notNull().default(0),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [index("podcast_episodes_status_idx").on(t.status)]
+);
+
+export const podcastListens = sqliteTable(
+  "podcast_listens",
+  {
+    id: id(),
+    episodeId: text("episode_id").notNull(),
+    userId: text("user_id").notNull(),
+    secondsListened: integer("seconds_listened").notNull().default(0),
+    completed: integer("completed").notNull().default(0),
+    updatedAt: updatedAt(),
+  },
+  (t) => [uniqueIndex("podcast_listens_unique").on(t.episodeId, t.userId)]
+);
+
+/* CR02 7: extracted Word reports */
+export const reports = sqliteTable(
+  "reports",
+  {
+    id: id(),
+    title: text("title").notNull(),
+    scopeJson: text("scope_json").notNull(),
+    optionsJson: text("options_json"),
+    audience: text("audience").notNull().default("working"),
+    language: text("language").notNull().default("en"),
+    status: text("status").notNull().default("queued"),
+    filePath: text("file_path"),
+    narrativeJson: text("narrative_json"),
+    error: text("error"),
+    vaultDocumentId: text("vault_document_id"),
+    classificationLevel: integer("classification_level").notNull().default(2),
+    createdBy: text("created_by"),
+    createdAt: createdAt(),
+    finishedAt: text("finished_at"),
+  },
+  (t) => [index("reports_user_idx").on(t.createdBy)]
+);
 
 /* ------------------------------------------------------------------ */
 /* 7.10 Gamification                                                   */

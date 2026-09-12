@@ -1,19 +1,23 @@
+// CR02 1.3: the new Home. One focal point (the Ask box), three purposeful
+// rows (Today, Lessons learned, Explore with Your progress), 48px rhythm,
+// one staggered entrance, content max width 1200px.
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { Quote, Lightbulb as LightbulbIcon, ArrowRight } from "lucide-react";
+import { Lightbulb, Plus } from "lucide-react";
 import { getCurrentUser } from "@/server/auth/session";
 import { getHomeData } from "@/server/services/home";
+import { can } from "@/server/auth/permissions";
 import { bi } from "@/lib/utils";
 import { formatDate, formatHijri } from "@/lib/format";
 import { Link } from "@/i18n/navigation";
-import { Reveal, Stagger } from "@/components/motion";
-import { Avatar, Chip, RagDot } from "@/components/ui/primitives";
+import { Stagger } from "@/components/motion";
+import { EmptyState, Button } from "@/components/ui/primitives";
 import { Shelf } from "@/components/nexus/Shelf";
 import { LessonCard } from "@/components/nexus/LessonCard";
-import { DailyFactCard } from "./DailyFactCard";
-import { FootprintCard } from "./FootprintCard";
-import { MysteryCard } from "./MysteryCard";
 import { HomeAsk } from "./HomeAsk";
+import { HomeToday } from "./HomeToday";
+import { ProgressPanel } from "./ProgressPanel";
+import { SectionEyebrow } from "./SectionEyebrow";
 
 export const dynamic = "force-dynamic";
 
@@ -33,169 +37,119 @@ export default async function HomePage({
   const greetingKey = hour < 12 ? "morning" : hour < 17 ? "afternoon" : "evening";
   const firstName = bi(locale, user.nameEn, user.nameAr).split(/\s+/)[0];
   const todayIso = now.toISOString();
+  const canAdd = can(user, "create", "lessons");
 
   return (
-    <div>
-      {/* Greeting + word of the day */}
-      <Reveal>
-        <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
-          <h1 className="text-[28px]">{t(`greeting.${greetingKey}`, { name: firstName })}</h1>
-          <p className="text-sm text-ink-400">
-            <span className="tnum">{formatDate(todayIso, locale, { style: "long", numerals: user.numeralsPref })}</span>
-            <span className="ms-2 text-xs">· {formatHijri(todayIso, locale)}</span>
-          </p>
-        </div>
-        {data.word ? (
-          <div
-            className="mb-6 flex items-start gap-2.5 border-s-2 border-gold-500 ps-3 text-sm text-ink-600"
-            data-testid="word-strip"
-          >
-            <Quote className="mt-0.5 size-3.5 shrink-0 text-gold-500" aria-hidden />
-            <p className="leading-relaxed">
-              {bi(locale, data.word.textEn, data.word.textAr)}
-              {(data.word.attributionEn || data.word.attributionAr) ? (
-                <span className="ms-1.5 text-xs text-ink-400">
-                  · {bi(locale, data.word.attributionEn ?? "", data.word.attributionAr ?? "")}
-                </span>
-              ) : null}
+    <div className="mx-auto max-w-[1200px]">
+      <Stagger className="flex flex-col gap-12" step={0.05}>
+        {/* Hero: quiet greeting, the Ask box, chips, word of the day caption */}
+        <section>
+          <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">
+            <h1 className="text-xl">{t(`greeting.${greetingKey}`, { name: firstName })}</h1>
+            <p className="text-sm text-ink-600">
+              <span className="tnum">
+                {formatDate(todayIso, locale, { style: "long", numerals: user.numeralsPref })}
+              </span>
+              <span className="ms-2 text-xs text-ink-400">· {formatHijri(todayIso, locale)}</span>
             </p>
           </div>
-        ) : null}
-      </Reveal>
+          <HomeAsk
+            examples={data.exampleQuestions}
+            continueConversation={data.todayConversation}
+            word={data.word}
+          />
+        </section>
 
-      {/* Ask SiaNexus (CR01 3.2) */}
-      <Reveal delay={0.03}>
-        <HomeAsk
-          examples={data.exampleQuestions}
-          continueConversation={data.todayConversation}
-        />
-      </Reveal>
+        {/* Today: exactly three equal cards */}
+        <section>
+          <SectionEyebrow label={t("todayEyebrow")} />
+          <HomeToday
+            card={data.card}
+            changed={data.changed}
+            episode={data.latestEpisode}
+            quiet={data.quietMode}
+          />
+        </section>
 
-      {/* Hero row: daily fact + for you */}
-      <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          {data.card ? (
-            <DailyFactCard card={data.card} quiet={data.quietMode} />
-          ) : null}
-        </div>
-        <Reveal delay={0.08} className="flex flex-col">
-          <div className="card flex h-full flex-col p-5">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-ink-400">
-              {t("forYou")}
-            </p>
-            <div className="flex flex-col gap-3.5">
-              {data.forYou.map((item, i) => (
-                <Link key={i} href={item.link as never} className="group">
-                  <p className="text-[11px] font-medium text-gulf-600">
-                    {bi(locale, item.hintEn, item.hintAr)}
-                  </p>
-                  <p className="mt-0.5 line-clamp-2 text-sm text-ink-900 group-hover:text-maroon-900">
-                    {bi(locale, item.titleEn, item.titleAr)}
-                  </p>
+        {/* Lessons learned: four cards, category chips, Add Knowledge */}
+        <section data-testid="home-lessons">
+          <SectionEyebrow
+            label={t("lessonsEyebrow")}
+            action={
+              canAdd ? (
+                <Link href={"/add" as never}>
+                  <Button size="sm" variant="secondary">
+                    <Plus /> {t("addKnowledge")}
+                  </Button>
                 </Link>
-              ))}
-              {data.forYou.length === 0 ? (
-                <p className="text-sm text-ink-400">{t("forYouEmpty")}</p>
-              ) : null}
-            </div>
-          </div>
-        </Reveal>
-      </div>
-
-      {/* What changed in NDS3 */}
-      {data.changed?.highlights.length ? (
-        <Reveal delay={0.1}>
-          <div className="card mb-6 p-5">
-            <div className="mb-3 flex items-center justify-between gap-3">
-              <p className="text-xs font-semibold uppercase tracking-wider text-ink-400">
-                {t("whatChanged")}
-              </p>
-              <Link
-                href="/strategy"
-                className="flex items-center gap-1 text-xs font-medium text-maroon-700 hover:underline"
-              >
-                {t("openStrategy")} <ArrowRight className="size-3 flip-rtl" />
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-              {data.changed.highlights.map((h, i) => (
-                <div key={i} className="flex items-start gap-2.5 rounded-xl bg-sand-50 px-3.5 py-3">
-                  <RagDot status={h.kind === "risk" ? "at_risk" : "on_track"} className="mt-1.5" />
-                  <p className="text-sm leading-relaxed text-ink-900">
-                    {locale === "ar" ? h.text_ar : h.text_en}
-                  </p>
-                </div>
+              ) : undefined
+            }
+          />
+          {data.lessons.length ? (
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {data.lessons.map((l) => (
+                <LessonCard key={l.id} lesson={l} showCategory />
               ))}
             </div>
-          </div>
-        </Reveal>
-      ) : null}
-
-      {/* Lessons + footprint */}
-      <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2" data-testid="home-lessons">
-          <div className="mb-3 flex items-center justify-between">
-            <p className="text-xs font-semibold uppercase tracking-wider text-ink-400">
-              {t("latestLessons")}
-            </p>
-            <Link href="/lessons" className="text-xs font-medium text-maroon-700 hover:underline">
-              {t("allLessons")}
+          ) : (
+            <EmptyState
+              icon={<Lightbulb />}
+              title={t("lessonsEmpty")}
+              action={
+                canAdd ? (
+                  <Link href={"/add" as never}>
+                    <Button size="sm">
+                      <Plus /> {t("addKnowledge")}
+                    </Button>
+                  </Link>
+                ) : undefined
+              }
+            />
+          )}
+          <div className="mt-3 text-end">
+            <Link
+              href="/lessons"
+              className="text-xs font-medium text-maroon-700 hover:underline"
+            >
+              {t("seeAll")}
             </Link>
           </div>
-          <Stagger className="grid grid-cols-1 gap-3 sm:grid-cols-3" step={0.05}>
-            {data.lessons.map((l) => (
-              <LessonCard key={l.id} lesson={l} />
-            ))}
-          </Stagger>
-        </div>
-        {!data.quietMode ? (
-          <FootprintCard footprint={data.footprint} />
-        ) : null}
-      </div>
+        </section>
 
-      {/* Mystery + spotlight */}
-      <div className="mb-8 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        {data.mystery ? (
-          <div className="lg:col-span-2">
-            <MysteryCard mystery={data.mystery} />
+        {/* Explore + Your progress */}
+        <section className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+          <div data-testid="newest-shelf">
+            <SectionEyebrow
+              label={t("exploreEyebrow")}
+              action={
+                <Link
+                  href="/vault"
+                  className="text-xs font-medium text-maroon-700 hover:underline"
+                >
+                  {t("openVault")}
+                </Link>
+              }
+            />
+            <p className="mb-2 text-sm text-ink-600">{t("newestShelf")}</p>
+            {data.newestShelf.length ? (
+              <Shelf docs={data.newestShelf} />
+            ) : (
+              <EmptyState
+                title={t("shelfEmpty")}
+                action={
+                  <Link href="/vault">
+                    <Button size="sm" variant="secondary">{t("openVault")}</Button>
+                  </Link>
+                }
+              />
+            )}
           </div>
-        ) : null}
-        {data.spotlight ? (
-          <Reveal delay={0.12}>
-            <div className="card flex h-full flex-col justify-center gap-3 p-5">
-              <p className="text-xs font-semibold uppercase tracking-wider text-gold-500">
-                {t("spotlight")}
-              </p>
-              <div className="flex items-center gap-3">
-                <Avatar name={data.spotlight.nameEn} color={data.spotlight.color} size={44} />
-                <div>
-                  <p className="font-medium text-ink-900">
-                    {bi(locale, data.spotlight.nameEn, data.spotlight.nameAr)}
-                  </p>
-                  <p className="mt-0.5 text-sm leading-relaxed text-ink-600">
-                    {bi(locale, data.spotlight.blurbEn ?? "", data.spotlight.blurbAr ?? "")}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        ) : null}
-      </div>
-
-      {/* Newest shelf */}
-      {data.newestShelf.length ? (
-        <Reveal delay={0.14}>
-          <div className="mb-2 flex items-center justify-between" data-testid="newest-shelf">
-            <p className="text-xs font-semibold uppercase tracking-wider text-ink-400">
-              {t("newestShelf")}
-            </p>
-            <Link href="/vault" className="text-xs font-medium text-maroon-700 hover:underline">
-              {t("openVault")}
-            </Link>
+          <div>
+            <SectionEyebrow label={t("progressEyebrow")} />
+            <ProgressPanel progress={data.progress} quiet={data.quietMode} />
           </div>
-          <Shelf docs={data.newestShelf} />
-        </Reveal>
-      ) : null}
+        </section>
+      </Stagger>
     </div>
   );
 }

@@ -17,7 +17,7 @@ import {
   UserRound,
   Building2,
   Sparkles,
-  PlusCircle,
+  Podcast,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SiaLogo } from "./Logo";
@@ -35,6 +35,7 @@ import { ToastProvider } from "@/components/ui/toast";
 import { GlobalSearch } from "./GlobalSearch";
 import { GlobalDropZone } from "./GlobalDropZone";
 import { NotificationsMenu } from "./NotificationsMenu";
+import { MiniPlayer } from "./MiniPlayer";
 
 export type ShellUser = {
   id: string;
@@ -52,15 +53,17 @@ export type ShellUser = {
   clearance: number;
 };
 
+/* CR02 5.1: the Add Knowledge rail button is gone (it lives on Home, the
+   Lessons page, and project Lessons tabs). CR02 4.6: Podcast under Lessons. */
 const NAV = [
   { href: "/home", icon: Home, key: "home" },
-  { href: "/add", icon: PlusCircle, key: "add", primary: true },
   { href: "/vault", icon: Library, key: "vault" },
   { href: "/strategy", icon: Compass, key: "strategy" },
   { href: "/statistics", icon: BarChart3, key: "statistics" },
   { href: "/experts", icon: Users, key: "experts" },
   { href: "/ask", icon: MessageCircleQuestion, key: "ask" },
   { href: "/lessons", icon: Lightbulb, key: "lessons" },
+  { href: "/podcast", icon: Podcast, key: "podcast" },
   { href: "/trends", icon: Radar, key: "trends" },
 ] as const;
 
@@ -112,7 +115,6 @@ export function AppShell({
               </Link>
               {NAV.map((item) => {
                 const active = pathname.startsWith(item.href);
-                const primary = "primary" in item && item.primary;
                 return (
                   <Link
                     key={item.key}
@@ -121,14 +123,10 @@ export function AppShell({
                       "flex h-10 items-center gap-3 overflow-hidden rounded-lg px-3 text-sm transition-colors",
                       active
                         ? "bg-maroon-100 font-medium text-maroon-900"
-                        : primary
-                          ? "font-medium text-maroon-700 hover:bg-maroon-100/70 hover:text-maroon-900"
-                          : "text-ink-600 hover:bg-white/70 hover:text-ink-900"
+                        : "text-ink-600 hover:bg-white/70 hover:text-ink-900"
                     )}
                   >
-                    <item.icon
-                      className={cn("size-5 shrink-0", (active || primary) && "text-maroon-700")}
-                    />
+                    <item.icon className={cn("size-5 shrink-0", active && "text-maroon-700")} />
                     <span className="whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover/rail:opacity-100">
                       {t(`nav.${item.key}`)}
                     </span>
@@ -242,11 +240,13 @@ export function AppShell({
                 </div>
               </header>
 
-              <main className="mx-auto w-full max-w-[1280px] flex-1 px-6 py-6">
+              <main className="mx-auto w-full max-w-[1280px] flex-1 px-6 py-6 pb-20">
                 {children}
               </main>
             </div>
           </div>
+          {/* CR02 4.6: playback continues across page navigation */}
+          <MiniPlayer />
         </GlobalDropZone>
       </ToastProvider>
     </TooltipProvider>

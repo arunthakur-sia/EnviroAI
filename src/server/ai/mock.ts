@@ -541,6 +541,10 @@ export function mockAnalystPlan(
   const tools: MockPlannedTool[] = [];
   let complexity: "simple" | "complex" = "simple";
 
+  // CR02 2.3: "what did project PRJ-01a deliver?" routes to get_deliverables
+  const nodeCodeMatch = /\b(prj-[\w-]+|ini-\d+)\b/i.exec(rewritten);
+  const delivery = /deliver|deliverable|output|تسليم|مخرجات|ماذا سلم/i.test(q);
+
   const wantsCount = /how many|count of|كم عدد|عدد ال/i.test(q);
   const strategyNoun = /target|initiative|project|outcome|node|مستهدف|هدف|مبادر|مشروع|نتيجة/i.test(q);
   const performance =
@@ -555,7 +559,13 @@ export function mockAnalystPlan(
   const lessons = /learn|lesson|تعلمنا|دروس|ماذا استفدنا/i.test(q);
   const realistic = /realistic|achievable|feasible|واقعي|قابل للتحقيق/i.test(q);
 
-  if (compare) {
+  if (delivery && nodeCodeMatch) {
+    tools.push({
+      name: "get_deliverables",
+      input: { node_code: nodeCodeMatch[1].toUpperCase() },
+    });
+    tools.push({ name: "get_node", input: { code: nodeCodeMatch[1].toUpperCase() } });
+  } else if (compare) {
     complexity = "complex";
     const theme = rewritten
       .replace(/compare|nds\d|and|on|versus|قارن|مقارنة|بين/gi, " ")
@@ -805,5 +815,105 @@ export function mockHealth(metrics: Record<string, number | string>) {
         text_ar: "طرح مكافأة معرفية حول الموضوع الأكثر بحثاً دون نتائج.",
       },
     ],
+  };
+}
+
+/* ---------------- podcast script (CR02 4.4 mock) ---------------- */
+
+/**
+ * Mock podcast script: deterministic two-voice episode built from the
+ * gathered material's numbered source lines. Cold open, up to four Q and A
+ * beats with spoken attributions, a numbers moment when digits exist, a
+ * lesson to keep, and a sign-off, capped to the requested minutes.
+ */
+export function mockPodcastScript(input: {
+  labelEn: string;
+  labelAr: string;
+  material: string;
+  language: "ar" | "en";
+  minutes: number;
+  focus: string;
+}): {
+  title_en: string;
+  title_ar: string;
+  description_en: string;
+  description_ar: string;
+  segments: { speaker: "mariam" | "hamad"; text: string; source_mention?: string | null }[];
+} {
+  const ar = input.language === "ar";
+  const maxWords = input.minutes * (ar ? 130 : 150);
+  const sourceLines = input.material
+    .split("\n")
+    .map((l) => l.trim())
+    .filter((l) => /^\[\d+\]/.test(l))
+    .map((l) => {
+      const m = /^\[(\d+)\]\s*(?:[a-z_]+\s*)?"?([^":]{3,110})"?[^:]*:\s*(.+)$/.exec(l);
+      return m ? { n: Number(m[1]), title: m[2].trim(), text: m[3].trim() } : null;
+    })
+    .filter((x): x is { n: number; title: string; text: string } => Boolean(x))
+    .slice(0, 6);
+
+  const segs: { speaker: "mariam" | "hamad"; text: string; source_mention?: string | null }[] = [];
+  const w = (s: string) => s.split(/\s+/).filter(Boolean).length;
+  let used = 0;
+  const push = (speaker: "mariam" | "hamad", text: string, mention?: string | null) => {
+    if (used + w(text) > maxWords) return false;
+    segs.push({ speaker, text, source_mention: mention ?? null });
+    used += w(text);
+    return true;
+  };
+
+  if (ar) {
+    push(
+      "hamad",
+      `أهلاً بكم في بودكاست صوت المعرفة من المجلس الوطني للتخطيط. حلقة اليوم عن ${input.labelAr || input.labelEn}، وسبب اهتمامنا بها أنها تمس عملنا اليومي في تنفيذ الاستراتيجية الوطنية. معي الدكتورة مريم. أهلاً دكتورة.`
+    );
+    push("mariam", "أهلاً حمد، وأهلاً بالمستمعين. المادة التي بين أيدينا اليوم غنية، فلنبدأ.");
+    for (const s of sourceLines.slice(0, 4)) {
+      if (!push("hamad", `حدثينا عن ${s.title}. ما الذي تقوله المادة هنا؟`)) break;
+      const clean = s.text.replace(/\s+/g, " ").slice(0, 260);
+      if (!push("mariam", `${clean}`, `كما ورد في ${s.title}`)) break;
+    }
+    const numeric = sourceLines.find((s) => /\d/.test(s.text));
+    if (numeric) {
+      push("hamad", "قبل أن نختم، لحظة الأرقام. ما أهم رقم يجب أن نحفظه من هذه الحلقة؟");
+      const numClean = numeric.text.replace(/\s+/g, " ").slice(0, 200);
+      push("mariam", `الرقم الأهم هنا: ${numClean}`, `بحسب ${numeric.title}`);
+    }
+    push(
+      "mariam",
+      "والدرس الذي أرجو أن نحتفظ به: المعرفة الموثقة في وقتها توفر على الفريق القادم شهوراً من إعادة الاكتشاف. سجلوا ما تعلمتم في سيا نكسس قبل أن ينساه المشروع."
+    );
+    push("hamad", "شكراً دكتورة مريم، وشكراً لكم على الاستماع. إلى اللقاء في حلقة قادمة من صوت المعرفة.");
+  } else {
+    push(
+      "hamad",
+      `Welcome to the NPC Nexus Podcast from the National Planning Council. Today we are talking about ${input.labelEn}, and it matters because it touches the daily work of delivering the national strategy. With me is Dr. Mariam. Welcome, doctor.`
+    );
+    push("mariam", "Thank you Hamad, and hello everyone. The material in front of us today is rich, so let us begin.");
+    for (const s of sourceLines.slice(0, 4)) {
+      if (!push("hamad", `Tell us about ${s.title}. What does the material say here?`)) break;
+      const clean = s.text.replace(/\s+/g, " ").slice(0, 280);
+      if (!push("mariam", clean, `as ${s.title} records`)) break;
+    }
+    const numeric = sourceLines.find((s) => /\d/.test(s.text));
+    if (numeric) {
+      push("hamad", "Before we close, the numbers moment. What is the one figure to remember from this episode?");
+      const numClean = numeric.text.replace(/\s+/g, " ").slice(0, 220);
+      push("mariam", `The figure to keep: ${numClean}`, `according to ${numeric.title}`);
+    }
+    push(
+      "mariam",
+      "And the lesson to keep: knowledge recorded in its moment saves the next team months of rediscovery. Capture what you learned in SiaNexus before the project forgets it."
+    );
+    push("hamad", "Thank you Dr. Mariam, and thank you for listening. Until the next episode of the NPC Nexus Podcast.");
+  }
+
+  return {
+    title_en: `${input.labelEn}: what the knowledge says`,
+    title_ar: `${input.labelAr || input.labelEn}: ماذا تقول المعرفة`,
+    description_en: `A short two-voice episode on ${input.labelEn}, grounded in the selected SiaNexus content.`,
+    description_ar: `حلقة قصيرة بصوتين عن ${input.labelAr || input.labelEn}، مبنية على المحتوى المختار في سيا نكسس.`,
+    segments: segs,
   };
 }

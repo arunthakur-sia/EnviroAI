@@ -82,8 +82,17 @@ async function main() {
   // reader vs confidential
   const admin = makeClient();
   await login(admin, "admin@npc.qa");
-  const docsRes = await admin("/api/v1/documents?limit=120");
-  const docs = (await docsRes.json()).data as { id: string; titleEn: string; classification: number }[];
+  // the list clamps to 120 per page; page until a confidential doc appears
+  // (CR02 added 90+ newer internal deliverables above it in the sort)
+  let docs: { id: string; titleEn: string; classification: number }[] = [];
+  let cursor: number | null = 0;
+  for (let page = 0; page < 5 && cursor !== null; page++) {
+    const pageRes = await admin(`/api/v1/documents?limit=120&cursor=${cursor}`);
+    const pageJson = await pageRes.json();
+    docs = docs.concat(pageJson.data ?? []);
+    cursor = pageJson.meta?.nextCursor ?? null;
+    if (docs.some((d) => d.classification >= 3)) break;
+  }
   const confidential = docs.find((d) => d.classification >= 3);
   check("admin sees a confidential document", Boolean(confidential));
   const reader = makeClient();
@@ -113,10 +122,12 @@ async function main() {
   check("onboarding quest is gone from Home", !homeHtml.includes('data-testid="quest-card"'));
   check("ask box present on Home", homeHtml.includes('data-testid="home-ask"'));
   check("daily card present", homeHtml.includes('data-testid="daily-card"'));
-  check("word of the day present", homeHtml.includes('data-testid="word-strip"'));
+  // CR02 1.3: the word of the day is a caption, the mystery shelf is gone,
+  // and the footprint lives inside the redesigned progress panel.
+  check("word of the day present", homeHtml.includes('data-testid="word-caption"'));
   check("lessons box present", homeHtml.includes('data-testid="home-lessons"'));
-  check("mystery shelf present", homeHtml.includes('data-testid="mystery"'));
-  check("footprint present", homeHtml.includes('data-testid="footprint"'));
+  check("mystery shelf removed (CR02)", !homeHtml.includes('data-testid="mystery"'));
+  check("progress panel present", homeHtml.includes('data-testid="progress-panel"'));
   check("newest shelf present", homeHtml.includes('data-testid="newest-shelf"'));
   // quiz awards points
   {
@@ -277,10 +288,11 @@ async function main() {
     check("at least 25 lineage links", Number(lineage.rows[0].c) >= 25, String(lineage.rows[0].c));
     db.close();
 
-    const nds2 = await analyst("/en/strategy?edition=nds2");
+    // CR02 2.2: archive editions live at /strategy/{code} in the navigator
+    const nds2 = await analyst("/en/strategy/nds2");
     const nds2Html = await nds2.text();
     check("NDS2 renders with archive banner", nds2Html.includes('data-testid="archive-banner"'));
-    const nds1 = await analyst("/en/strategy?edition=nds1");
+    const nds1 = await analyst("/en/strategy/nds1");
     check("NDS1 renders", nds1.status === 200);
 
     // post a status update and see it in what changed
@@ -763,6 +775,338 @@ async function main() {
       "/lessons/new redirects to /add",
       lessonsNew.status >= 300 && lessonsNew.status < 400 && (lessonsNew.headers.get("location") ?? "").includes("/add")
     );
+
+    // restore live AI mode
+    await admin("/api/v1/settings", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ ai: { mockMode: false } }),
+    });
+    db.close();
+  }
+
+  /* 13. CR02: Home redesign, Living Strategy, lessons categories, podcast,
+        voice intake, signals refresh, reports */
+  console.log("13. CR02 acceptance");
+  {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const { createClient } = await import("@libsql/client");
+    const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
+
+    // mock mode for deterministic AI paths
+    await admin("/api/v1/settings", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ ai: { mockMode: true } }),
+    });
+    await new Promise((r) => setTimeout(r, 300));
+
+    // 13.1 Home composition
+    const home = await admin("/en/home");
+    const homeHtml = await home.text();
+    check("home renders the Today row with three cards", homeHtml.includes('data-testid="home-today"') && homeHtml.includes('data-testid="daily-card"') && homeHtml.includes('data-testid="what-changed"') && homeHtml.includes('data-testid="podcast-card"'));
+    check("home shows lessons row, shelf, and progress panel", homeHtml.includes('data-testid="home-lessons"') && homeHtml.includes('data-testid="newest-shelf"') && homeHtml.includes('data-testid="progress-panel"'));
+    check("mystery shelf, spotlight, and For-you are gone", !homeHtml.includes('data-testid="mystery"') && !homeHtml.includes("Contributor spotlight") && !homeHtml.includes('data-testid="word-strip"'));
+    check("word of the day is a caption line", homeHtml.includes('data-testid="word-caption"'));
+    check("podcast card names the latest episode", /what the knowledge says|ماذا تقول المعرفة/.test(homeHtml));
+    check("rail has no Add Knowledge button", !/href="\/en\/add"[^>]*>[\s\S]{0,200}?<\/a>/.test(homeHtml.split("<main")[0] ?? homeHtml.slice(0, 6000)));
+    const forYouRows = await db.execute("select count(*) c from notifications where kind='for_you'");
+    check("For-you items became notifications", Number(forYouRows.rows[0].c) >= 1);
+
+    // 13.2 design review reports exist
+    const reviews = ["home-before", "home-after", "vault", "statistics", "experts", "ask", "trends", "settings"];
+    check(
+      "design review reports exist for all pages",
+      reviews.every((r) => fs.existsSync(path.join(process.cwd(), "docs", "design-reviews", `${r}.md`)))
+    );
+    const afterReview = fs.readFileSync(path.join(process.cwd(), "docs", "design-reviews", "home-after.md"), "utf8");
+    check("home-after has no High or Critical findings", !/^\s*-?\s*\*\*(High|Critical)\b/m.test(afterReview) && !/### Critical\n\n- /.test(afterReview));
+
+    // 13.3 Living Strategy navigator
+    const nav = await admin("/en/strategy");
+    const navHtml = await nav.text();
+    check("strategy opens the column navigator", nav.status === 200 && navHtml.includes('data-testid="strategy-panes"'));
+    const drill = await admin("/en/strategy/nds3/o3/o3-t1");
+    const drillHtml = await drill.text();
+    check("URL path drills to outcome and target", drill.status === 200 && drillHtml.includes("O3.T1"));
+    const badItems = await db.execute(`
+      select count(*) c from strategy_nodes n
+      where n.edition_id = (select id from strategy_editions where code='nds3')
+        and n.node_type in ('initiative')
+        and n.parent_id not in (select id from strategy_nodes where node_type in ('target','outcome'))`);
+    check("every NDS3 initiative sits under a target or outcome", Number(badItems.rows[0].c) === 0, `stray=${badItems.rows[0].c}`);
+    const badProjects = await db.execute(`
+      select count(*) c from strategy_nodes p
+      join strategy_nodes i on i.id = p.parent_id
+      where p.edition_id = (select id from strategy_editions where code='nds3')
+        and p.node_type='project'
+        and i.parent_id not in (select id from strategy_nodes where node_type in ('target','outcome'))`);
+    check("every NDS3 project inherits a target through its initiative", Number(badProjects.rows[0].c) === 0);
+
+    // 13.4 deliverables: upload -> vault doc + relation + list + analyst citation
+    const prjRow = await db.execute("select id, code from strategy_nodes where node_type='project' and code like 'PRJ-01%' limit 1");
+    const prjId = String(prjRow.rows[0].id);
+    const prjCode = String(prjRow.rows[0].code);
+    {
+      const form = new FormData();
+      form.set(
+        "file",
+        new File(
+          [
+            "Acceptance test deliverable for the smoke suite. Completion 90 percent against the agreed acceptance criteria. Adoption reached 61 percent in the pilot group.",
+          ],
+          "smoke-deliverable.txt",
+          { type: "text/plain" }
+        )
+      );
+      form.set("nodeId", prjId);
+      const up = await admin("/api/v1/deliverables", { method: "POST", body: form });
+      const upJson = await up.json();
+      check("deliverable upload creates a Vault document", up.status === 200 && Boolean(upJson.data?.documentId), upJson.error ?? "");
+      if (upJson.data?.documentId) {
+        const rel = await db.execute({
+          sql: "select count(*) c from relations where from_type='document' and from_id=? and to_type='node' and to_id=? and relation='about_node'",
+          args: [upJson.data.documentId, prjId],
+        });
+        check("deliverable carries the about_node relation", Number(rel.rows[0].c) === 1);
+        const typeRow = await db.execute({
+          sql: "select tt.code from documents d join taxonomy_terms tt on tt.id=d.knowledge_type_term_id where d.id=?",
+          args: [upJson.data.documentId],
+        });
+        check("deliverable has knowledge_type deliverable", String(typeRow.rows[0]?.code) === "deliverable");
+      }
+      const list = await admin(`/api/v1/deliverables?nodeId=${prjId}`);
+      const listJson = await list.json();
+      check("deliverables list shows the node's files", list.status === 200 && (listJson.data?.length ?? 0) >= 4);
+    }
+    {
+      const ask = await admin("/api/v1/ai/analyst", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ message: `What did project ${prjCode} deliver?`, locale: "en" }),
+      });
+      const { final } = await readSse(ask);
+      const cites = (final?.citations ?? []) as { title: string }[];
+      check(
+        "analyst answers the deliverables question citing them",
+        Boolean(final) && cites.some((c) => c.title.startsWith("Deliverable D")),
+        cites.map((c) => c.title).slice(0, 2).join(" | ")
+      );
+      check(
+        "deliverable citations carry the node code",
+        cites.some((c) => c.title.includes(prjCode))
+      );
+    }
+
+    // 13.5 lessons categories
+    const uncategorised = await db.execute(
+      "select count(*) c from lessons where category not in ('delivery','external','expert','institutional')"
+    );
+    check("every lesson has a category", Number(uncategorised.rows[0].c) === 0);
+    const lessonsPage = await admin("/en/lessons");
+    const lessonsHtml = await lessonsPage.text();
+    check("lessons header shows the category segmented control", lessonsHtml.includes('data-testid="category-tabs"'));
+    const catTotals = await db.execute("select category, count(*) c from lessons group by category");
+    const totalLessons = catTotals.rows.reduce((s, r) => s + Number(r.c), 0);
+    const allCount = await db.execute("select count(*) c from lessons");
+    check("segmented control counts add up", totalLessons === Number(allCount.rows[0].c));
+    const byProject = await admin("/en/lessons?view=projects");
+    const byProjectHtml = await byProject.text();
+    check("By project mode lists nodes with lessons", byProject.status === 200 && byProjectHtml.includes('data-testid="lessons-by-project"'));
+    {
+      // Add lesson from a project pre-fills node and Delivery category
+      const form = new FormData();
+      form.set("notes", "During the smoke test rollout we learned that pre-filled delivery context should survive the structuring step and stay linked to the project.");
+      form.set("nodeId", prjId);
+      form.set("category", "delivery");
+      const structRes = await admin("/api/v1/knowledge/structure", { method: "POST", body: form });
+      const structJson = await structRes.json();
+      const first = structJson.data?.items?.[0];
+      check(
+        "Add Knowledge pre-fills the node and Delivery category",
+        structRes.status === 200 && first?.category === "delivery" && first?.node_link?.id === prjId,
+        `category=${first?.category}`
+      );
+    }
+
+    // 13.6 podcast
+    const episodeCount = await db.execute("select count(*) c from podcast_episodes where status='published'");
+    check("six or more seeded episodes exist", Number(episodeCount.rows[0].c) >= 6, String(episodeCount.rows[0].c));
+    const library = await admin("/en/podcast");
+    const libraryHtml = await library.text();
+    check("podcast library renders episode cards", library.status === 200 && libraryHtml.includes('data-testid="episode-card"'));
+    {
+      const scriptRes = await admin("/api/v1/podcast/script", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          scope: { kind: "node", ids: [prjId], labelEn: `${prjCode} smoke episode`, labelAr: "حلقة اختبار" },
+          options: { language: "en", minutes: 3, focus: "overview" },
+        }),
+      });
+      const scriptJson = await scriptRes.json();
+      const script = scriptJson.data?.script;
+      check("composer writes a script from a project", scriptRes.status === 200 && (script?.segments?.length ?? 0) >= 4);
+      check("script respects the five minute cap", (script?.estimated_seconds ?? 999) <= 5 * 60, `${script?.estimated_seconds}s`);
+      if (script) {
+        script.segments[0].text = script.segments[0].text + " (edited in review)";
+        const createRes = await admin("/api/v1/podcast", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            scope: { kind: "node", ids: [prjId], labelEn: `${prjCode} smoke episode`, labelAr: "حلقة اختبار" },
+            options: { language: "en", minutes: 3, focus: "overview" },
+            script,
+            render: "browser",
+          }),
+        });
+        const createJson = await createRes.json();
+        check("episode saves with podcast_created points", createRes.status === 200 && (createJson.data?.points ?? 0) >= 30, `points=${createJson.data?.points}`);
+        const epId = createJson.data?.id;
+        if (epId) {
+          const asAnalyst = await analyst(`/api/v1/podcast/${epId}`);
+          const asAnalystJson = await asAnalyst.json();
+          check("episode is visible to other users at clearance", asAnalyst.status === 200 && asAnalystJson.data?.script?.segments?.[0]?.text?.includes("(edited in review)"));
+          const listen = await analyst(`/api/v1/podcast/${epId}/listen`, {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ seconds: 180, completed: true }),
+          });
+          const listenJson = await listen.json();
+          check("full listen awards podcast_listened_full", listen.status === 200 && (listenJson.data?.points ?? 0) >= 5);
+          const listens = await db.execute({ sql: "select listens from podcast_episodes where id=?", args: [epId] });
+          check("listen count incremented", Number(listens.rows[0].listens) >= 1);
+        }
+      }
+      const studio = await db.execute("select id from podcast_episodes where audio_provider='elevenlabs' and audio_path is not null limit 1");
+      if (studio.rows.length) {
+        const audio = await admin(`/api/v1/podcast/${studio.rows[0].id}/audio`);
+        check("studio episode streams mp3 audio", audio.status === 200 && (audio.headers.get("content-type") ?? "").includes("audio/mpeg"));
+      } else {
+        check("studio episode streams mp3 audio", false, "no rendered episode found");
+      }
+    }
+
+    // 13.7 voice intake
+    const addSpeak = await admin("/en/add?mode=speak");
+    const addSpeakHtml = await addSpeak.text();
+    check("Speak mode renders the recorder", addSpeak.status === 200 && addSpeakHtml.includes('data-testid="add-modes"') && addSpeakHtml.includes('data-testid="speak-panel"'));
+    const transcribeProbe = await admin("/api/v1/transcribe");
+    const transcribeJson = await transcribeProbe.json();
+    check("transcribe capability probe answers", transcribeProbe.status === 200 && typeof transcribeJson.data?.available === "boolean");
+    {
+      // voice bonus on publish
+      const form = new FormData();
+      form.set("notes", "Spoken note for the smoke test: the census field teams asked for a shared checklist of entity contacts before each collection wave, which saved two days of coordination.");
+      form.set("audio", new File([Buffer.from([0x1a, 0x45, 0xdf, 0xa3, 0, 0, 0, 0])], "voice-note.webm", { type: "audio/webm" }));
+      const structRes = await admin("/api/v1/knowledge/structure", { method: "POST", body: form });
+      const structJson = await structRes.json();
+      check("speak submission stores the audio", structRes.status === 200 && Boolean(structJson.data?.audioRef?.storagePath));
+      const items = structJson.data?.items ?? [];
+      if (items.length) {
+        const pub = await admin("/api/v1/knowledge/publish", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ items: [items[0]], whereFrom: "", voice: true, audioRef: structJson.data.audioRef }),
+        });
+        const pubJson = await pub.json();
+        check("voice publish awards the knowledge_by_voice bonus", pub.status === 200 && (pubJson.data?.points ?? 0) >= 15 + 10, `points=${pubJson.data?.points}`);
+        if (pubJson.data?.published?.length) {
+          const audioRel = await db.execute({
+            sql: "select count(*) c from relations where from_id=? and relation='source_audio'",
+            args: [pubJson.data.published[0].id],
+          });
+          check("audio is attached to the published item", Number(audioRel.rows[0].c) === 1);
+        }
+      } else {
+        check("voice publish awards the knowledge_by_voice bonus", false, "no items structured");
+      }
+    }
+
+    // 13.8 signals refresh
+    const runsBefore2 = await db.execute("select count(*) c from scan_runs");
+    const refresh = await admin("/api/v1/scan/run", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({}),
+    });
+    check("Refresh signals runs a scan", refresh.status === 200);
+    await new Promise((r) => setTimeout(r, 1500));
+    const runsAfter2 = await db.execute("select count(*) c from scan_runs");
+    check("refresh logged in scan_runs", Number(runsAfter2.rows[0].c) > Number(runsBefore2.rows[0].c));
+    const progressApi = await admin("/api/v1/scan/run");
+    const progressJson = await progressApi.json();
+    check("progress endpoint reports the latest run", progressApi.status === 200 && progressJson.data?.status !== undefined && typeof progressJson.data?.totalBriefs === "number");
+    const rescan = await admin("/api/v1/scan/run", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ outcome: "workforce" }),
+    });
+    check("Rescan resolves the outcome's brief", rescan.status === 200);
+
+    // 13.9 reports
+    async function smokeReport(name: string, language: "en" | "ar" | "both") {
+      const create = await admin("/api/v1/reports", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          scope: { kind: "node", ids: [prjId], labelEn: `${prjCode} report`, labelAr: `تقرير ${prjCode}` },
+          options: { audience: "working", language, summaryLength: "short", includeCharts: true, includeSources: true, includeLessons: true, includeSignals: false },
+        }),
+      });
+      const createJson = await create.json();
+      if (create.status !== 200) {
+        check(`report (${name}) generates`, false, createJson.error);
+        return null;
+      }
+      const id = createJson.data.id as string;
+      for (let i = 0; i < 40; i++) {
+        await new Promise((r) => setTimeout(r, 1500));
+        const poll = await admin(`/api/v1/reports/${id}`);
+        const pj = await poll.json();
+        if (pj.data?.status === "done") {
+          check(`report (${name}) generates`, true);
+          return id;
+        }
+        if (pj.data?.status === "failed") {
+          check(`report (${name}) generates`, false, pj.data.error);
+          return null;
+        }
+      }
+      check(`report (${name}) generates`, false, "timeout");
+      return null;
+    }
+    const enReport = await smokeReport("English", "en");
+    if (enReport) {
+      const dl = await admin(`/api/v1/reports/${enReport}/download`);
+      const buf = Buffer.from(await dl.arrayBuffer());
+      check("report downloads as a Word file", dl.status === 200 && buf[0] === 0x50 && buf[1] === 0x4b);
+      const save = await admin(`/api/v1/reports/${enReport}/save`, { method: "POST" });
+      const saveJson = await save.json();
+      check("Save to Vault creates a searchable report document", save.status === 200 && Boolean(saveJson.data?.documentId));
+      if (saveJson.data?.documentId) {
+        const typeRow = await db.execute({
+          sql: "select tt.code from documents d left join taxonomy_terms tt on tt.id=d.knowledge_type_term_id where d.id=?",
+          args: [saveJson.data.documentId],
+        });
+        check("saved report has knowledge_type report", String(typeRow.rows[0]?.code) === "report");
+      }
+      const pointsRow = await db.execute(
+        "select count(*) c from game_events where event_type='report_extracted'"
+      );
+      check("report_extracted points recorded", Number(pointsRow.rows[0].c) >= 1);
+    }
+    const bothReport = await smokeReport("both languages", "both");
+    if (bothReport) {
+      const row = await db.execute({ sql: "select narrative_json from reports where id=?", args: [bothReport] });
+      const parts = JSON.parse(String(row.rows[0].narrative_json)).parts as { lang: string }[];
+      check("Both produces two language parts in one file", parts.length === 2 && parts[0].lang === "en" && parts[1].lang === "ar");
+    }
+
+    // podcast episodes are an Ask source type
+    const idx = await db.execute("select count(*) c from search_index where resource_type='podcast_episode'");
+    check("podcast episodes joined the unified index", Number(idx.rows[0].c) >= 6);
 
     // restore live AI mode
     await admin("/api/v1/settings", {

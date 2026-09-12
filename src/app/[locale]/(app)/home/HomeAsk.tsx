@@ -1,6 +1,8 @@
 "use client";
-// CR01 3.2: the Ask box on Home. Same composer style as /ask; submitting starts
-// an analyst conversation and lands on /ask/c/[id] with the answer streaming.
+// CR02 1.3.1: the Ask box is the only large element above the fold. Same
+// composer as /ask; submitting starts an analyst conversation and lands on
+// /ask/c/[id] with the answer streaming. The word of the day is one quiet
+// caption line under the example chips, not a strip.
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, Link } from "@/i18n/navigation";
@@ -12,9 +14,11 @@ export type ExampleQuestion = { en: string; ar: string };
 export function HomeAsk({
   examples,
   continueConversation,
+  word,
 }: {
   examples: ExampleQuestion[];
   continueConversation: { id: string; title: string } | null;
+  word: { textEn: string; textAr: string; attributionEn: string | null; attributionAr: string | null } | null;
 }) {
   const t = useTranslations("home");
   const locale = useLocale();
@@ -40,15 +44,15 @@ export function HomeAsk({
   }
 
   return (
-    <div className="card mb-6 p-5" data-testid="home-ask">
+    <div className="mx-auto w-full max-w-3xl" data-testid="home-ask">
       <form
         onSubmit={(e) => {
           e.preventDefault();
           submit(query);
         }}
       >
-        <div className="relative">
-          <MessageCircleQuestion className="pointer-events-none absolute start-3.5 top-3.5 size-5 text-maroon-500" />
+        <div className="card relative transition-shadow focus-within:shadow-[var(--shadow-lift)]">
+          <MessageCircleQuestion className="pointer-events-none absolute start-4 top-4 size-5 text-maroon-500" />
           <Textarea
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -60,20 +64,20 @@ export function HomeAsk({
             }}
             placeholder={t("askPlaceholder")}
             rows={2}
-            className="min-h-14 ps-11 pe-12 text-base"
+            className="min-h-28 border-0 bg-transparent ps-12 pe-13 pt-3.5 text-base shadow-none focus:ring-0 sm:min-h-16"
             aria-label={t("askPlaceholder")}
           />
           <button
             type="submit"
             disabled={busy || !query.trim()}
-            className="absolute bottom-2.5 end-2.5 rounded-lg bg-maroon-700 p-2 text-white transition-colors hover:bg-maroon-900 disabled:opacity-40 cursor-pointer"
+            className="absolute bottom-3 end-3 rounded-lg bg-maroon-700 p-2 text-white transition-colors hover:bg-maroon-900 disabled:opacity-40 cursor-pointer"
             aria-label={t("askCta")}
           >
-            <CornerDownLeft className="size-4" />
+            <CornerDownLeft className="size-4 flip-rtl" />
           </button>
         </div>
       </form>
-      <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
         {rotating.map((ex, i) => {
           const text = locale === "ar" ? ex.ar : ex.en;
           return (
@@ -89,7 +93,7 @@ export function HomeAsk({
         {continueConversation ? (
           <Link
             href={`/ask/c/${continueConversation.id}` as never}
-            className="ms-auto text-xs font-medium text-maroon-700 hover:underline"
+            className="text-xs font-medium text-maroon-700 hover:underline"
           >
             {t("continueConversation", {
               title: continueConversation.title.slice(0, 40),
@@ -97,6 +101,19 @@ export function HomeAsk({
           </Link>
         ) : null}
       </div>
+      {word ? (
+        <p
+          className="mx-auto mt-2.5 max-w-2xl truncate text-center text-xs text-ink-600"
+          data-testid="word-caption"
+        >
+          {locale === "ar" ? word.textAr : word.textEn}
+          {(word.attributionEn || word.attributionAr) ? (
+            <span className="text-ink-400">
+              {" "}· {locale === "ar" ? word.attributionAr ?? "" : word.attributionEn ?? ""}
+            </span>
+          ) : null}
+        </p>
+      ) : null}
     </div>
   );
 }

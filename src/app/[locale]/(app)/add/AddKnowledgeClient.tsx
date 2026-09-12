@@ -1,9 +1,10 @@
 "use client";
-// CR01 5: one big paste area + one drop zone in; a stack of editable proposed
-// items out. Publish sends each item to its module.
+// CR01 5 + CR02 5.2: three input modes (Write, Upload, Speak) in; a stack of
+// editable proposed items out. Publish sends each item to its module; spoken
+// submissions keep their original audio and earn the voice bonus.
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter, Link } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { useDropzone } from "react-dropzone";
 import {
   Sparkles,
@@ -18,6 +19,8 @@ import {
   Radar,
   Gavel,
   UserRound,
+  PenLine,
+  Mic,
 } from "lucide-react";
 import { cn, bi } from "@/lib/utils";
 import {
@@ -31,8 +34,10 @@ import {
 } from "@/components/ui/primitives";
 import { useToast } from "@/components/ui/toast";
 import type { KnowledgeItem } from "@/server/ai/knowledge_structurer";
+import { SpeakPanel } from "./SpeakPanel";
 
 type Topic = { code: string; nameEn: string; nameAr: string };
+type Mode = "write" | "upload" | "speak";
 
 const OUTCOME_CODES = [
   "eco_growth",
@@ -44,6 +49,9 @@ const OUTCOME_CODES = [
   "gov_excellence",
 ];
 
+const LESSON_CATEGORIES = ["delivery", "external", "expert", "institutional"] as const;
+const LESSONISH = new Set(["lesson", "insight", "indicator_observation"]);
+
 const TYPE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   lesson: Lightbulb,
   insight: Lightbulb,
@@ -54,15 +62,34 @@ const TYPE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = 
   indicator_observation: FileText,
 };
 
-export function AddKnowledgeClient({ topics }: { topics: Topic[] }) {
+type AudioRef = { storagePath: string; filename: string; mime: string; sizeBytes: number };
+
+export function AddKnowledgeClient({
+  topics,
+  nodeContext,
+  categoryHint,
+  initialMode,
+  whisperAvailable,
+}: {
+  topics: Topic[];
+  nodeContext: { id: string; code: string | null; titleEn: string; titleAr: string } | null;
+  categoryHint: string | null;
+  initialMode: Mode;
+  whisperAvailable: boolean;
+}) {
   const t = useTranslations("addKnowledge");
+  const tl = useTranslations("lessons");
   const tt = useTranslations("trends");
   const tc = useTranslations("common");
   const locale = useLocale();
-  const router = useRouter();
   const { toast } = useToast();
 
+  const [mode, setMode] = React.useState<Mode>(initialMode);
   const [notes, setNotes] = React.useState("");
+  const [transcript, setTranscript] = React.useState("");
+  const [audioFile, setAudioFile] = React.useState<File | null>(null);
+  const [audioRef, setAudioRef] = React.useState<AudioRef | null>(null);
+  const [wasVoice, setWasVoice] = React.useState(false);
   const [whereFrom, setWhereFrom] = React.useState("");
   const [urls, setUrls] = React.useState("");
   const [files, setFiles] = React.useState<File[]>([]);
@@ -86,19 +113,30 @@ export function AddKnowledgeClient({ topics }: { topics: Topic[] }) {
     noClick: false,
   });
 
+  const effectiveNotes =
+    mode === "speak" || transcript.trim()
+      ? [notes.trim(), transcript.trim()].filter(Boolean).join("\n\n")
+      : notes;
+  const canStructure = Boolean(effectiveNotes.trim() || files.length || urls.trim());
+
   async function structure() {
-    if (!notes.trim() && !files.length && !urls.trim()) return;
+    if (!canStructure || structuring) return;
     setStructuring(true);
     try {
       const form = new FormData();
-      form.set("notes", notes);
+      form.set("notes", effectiveNotes);
       form.set("whereFrom", whereFrom);
       form.set("urls", urls);
+      if (nodeContext) form.set("nodeId", nodeContext.id);
+      if (categoryHint) form.set("category", categoryHint);
       for (const f of files) form.append("files", f);
+      if (audioFile) form.set("audio", audioFile);
       const res = await fetch("/api/v1/knowledge/structure", { method: "POST", body: form });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
       setItems(json.data.items);
+      if (json.data.audioRef) setAudioRef(json.data.audioRef);
+      if (mode === "speak" || audioFile) setWasVoice(true);
     } catch (e: any) {
       toast(e?.message === "nothing_to_structure" ? t("nothingToStructure") : tc("error"), "error");
     } finally {
@@ -149,7 +187,7 @@ export function AddKnowledgeClient({ topics }: { topics: Topic[] }) {
       const res = await fetch("/api/v1/knowledge/publish", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ items: toPublish, whereFrom }),
+        body: JSON.stringify({ items: toPublish, whereFrom, voice: wasVoice, audioRef }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
@@ -173,46 +211,104 @@ export function AddKnowledgeClient({ topics }: { topics: Topic[] }) {
     return topic ? bi(locale, topic.nameEn, topic.nameAr) : code;
   };
 
+  const contextChip = nodeContext ? (
+    <p className="mb-3">
+      <Chip tone="maroon">
+        {t("deliveryContext", {
+          node: `${nodeContext.code ?? ""} ${bi(locale, nodeContext.titleEn, nodeContext.titleAr)}`.trim(),
+        })}
+      </Chip>
+    </p>
+  ) : null;
+
   /* ---------------- input stage ---------------- */
   if (items === null) {
     return (
       <div className="mx-auto max-w-3xl">
+        {contextChip}
+        {/* CR02 5.2: Write | Upload | Speak */}
+        <div
+          className="mb-4 inline-flex items-center gap-0.5 rounded-xl bg-sand-100 p-1"
+          role="tablist"
+          data-testid="add-modes"
+        >
+          {(
+            [
+              ["write", PenLine],
+              ["upload", UploadCloud],
+              ["speak", Mic],
+            ] as const
+          ).map(([m, Icon]) => (
+            <button
+              key={m}
+              role="tab"
+              aria-selected={mode === m}
+              onClick={() => setMode(m)}
+              className={cn(
+                "flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-sm transition-colors cursor-pointer",
+                mode === m
+                  ? "bg-white font-medium text-maroon-900 shadow-sm"
+                  : "text-ink-600 hover:text-ink-900"
+              )}
+            >
+              <Icon className="size-4" /> {t(`modes.${m}`)}
+            </button>
+          ))}
+        </div>
+
         <div className="card p-5">
-          <Textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder={t("pastePlaceholder")}
-            rows={10}
-            className="text-base"
-            aria-label={t("pastePlaceholder")}
-          />
-          <div
-            {...getRootProps()}
-            className={cn(
-              "mt-3 flex cursor-pointer items-center justify-center gap-3 rounded-xl border-2 border-dashed border-sand-300 px-4 py-6 text-sm text-ink-600 transition-colors hover:border-maroon-300",
-              isDragActive && "border-maroon-500 bg-maroon-50"
-            )}
-          >
-            <input {...getInputProps()} />
-            <UploadCloud className="size-5 text-maroon-500" />
-            {t("dropHint")}
-          </div>
-          {files.length ? (
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {files.map((f, i) => (
-                <Chip key={i} tone="sand">
-                  {f.name}
-                  <button
-                    onClick={() => setFiles((prev) => prev.filter((_, j) => j !== i))}
-                    aria-label={tc("delete")}
-                    className="ms-1 cursor-pointer"
-                  >
-                    <X className="size-3" />
-                  </button>
-                </Chip>
-              ))}
-            </div>
+          {mode === "write" ? (
+            <Textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder={t("pastePlaceholder")}
+              rows={10}
+              className="text-base"
+              aria-label={t("pastePlaceholder")}
+            />
           ) : null}
+
+          {mode === "upload" ? (
+            <>
+              <div
+                {...getRootProps()}
+                className={cn(
+                  "flex cursor-pointer items-center justify-center gap-3 rounded-xl border-2 border-dashed border-sand-300 px-4 py-14 text-sm text-ink-600 transition-colors hover:border-maroon-300",
+                  isDragActive && "border-maroon-500 bg-maroon-50"
+                )}
+              >
+                <input {...getInputProps()} />
+                <UploadCloud className="size-5 text-maroon-500" />
+                {t("dropHint")}
+              </div>
+              {files.length ? (
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {files.map((f, i) => (
+                    <Chip key={i} tone="sand">
+                      {f.name}
+                      <button
+                        onClick={() => setFiles((prev) => prev.filter((_, j) => j !== i))}
+                        aria-label={tc("delete")}
+                        className="ms-1 cursor-pointer"
+                      >
+                        <X className="size-3" />
+                      </button>
+                    </Chip>
+                  ))}
+                </div>
+              ) : null}
+            </>
+          ) : null}
+
+          {mode === "speak" ? (
+            <SpeakPanel
+              whisperAvailable={whisperAvailable}
+              transcript={transcript}
+              setTranscript={setTranscript}
+              onAudioReady={setAudioFile}
+            />
+          ) : null}
+
           <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
             <div>
               <Label htmlFor="add-from">{t("whereFrom")}</Label>
@@ -223,31 +319,28 @@ export function AddKnowledgeClient({ topics }: { topics: Topic[] }) {
                 placeholder={t("whereFromPlaceholder")}
               />
             </div>
-            <div>
-              <Label htmlFor="add-urls">{t("urls")}</Label>
-              <Input
-                id="add-urls"
-                dir="ltr"
-                value={urls}
-                onChange={(e) => setUrls(e.target.value)}
-                placeholder="https://…"
-              />
-            </div>
+            {mode !== "speak" ? (
+              <div>
+                <Label htmlFor="add-urls">{t("urls")}</Label>
+                <Input
+                  id="add-urls"
+                  dir="ltr"
+                  value={urls}
+                  onChange={(e) => setUrls(e.target.value)}
+                  placeholder="https://…"
+                />
+              </div>
+            ) : null}
           </div>
           <div className="mt-5 flex justify-end">
-            <Button
-              size="lg"
-              onClick={structure}
-              loading={structuring}
-              disabled={!notes.trim() && !files.length && !urls.trim()}
-            >
+            <Button size="lg" onClick={structure} loading={structuring} disabled={!canStructure}>
               <Sparkles /> {t("structureCta")}
             </Button>
           </div>
         </div>
         {publishedLinks.length ? (
           <div className="card mt-5 p-5">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-400">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-600">
               {t("justPublished")}
             </p>
             <PublishedList links={publishedLinks} />
@@ -260,6 +353,7 @@ export function AddKnowledgeClient({ topics }: { topics: Topic[] }) {
   /* ---------------- review stage ---------------- */
   return (
     <div className="mx-auto max-w-3xl">
+      {contextChip}
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <Button variant="ghost" size="sm" onClick={() => setItems(null)}>
           {t("backToInput")}
@@ -267,6 +361,11 @@ export function AddKnowledgeClient({ topics }: { topics: Topic[] }) {
         <Button variant="ghost" size="sm" onClick={() => setShowOriginal((v) => !v)}>
           <Eye /> {showOriginal ? t("hideOriginal") : t("showOriginal")}
         </Button>
+        {wasVoice ? (
+          <Chip tone="gold">
+            <Mic className="size-3" /> {t("modes.speak")}
+          </Chip>
+        ) : null}
         <span className="ms-auto">
           <Button onClick={() => publish()} loading={publishing} disabled={!items.length}>
             <Send /> {t("publishAll", { count: items.length })}
@@ -274,12 +373,12 @@ export function AddKnowledgeClient({ topics }: { topics: Topic[] }) {
         </span>
       </div>
 
-      {showOriginal && notes.trim() ? (
+      {showOriginal && effectiveNotes.trim() ? (
         <div className="card mb-4 bg-sand-50 p-4">
-          <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-ink-400">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-ink-600">
             {t("original")}
           </p>
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink-600">{notes}</p>
+          <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink-600">{effectiveNotes}</p>
         </div>
       ) : null}
 
@@ -288,7 +387,18 @@ export function AddKnowledgeClient({ topics }: { topics: Topic[] }) {
           title={t("allPublished")}
           hint={t("allPublishedHint")}
           action={
-            <Button variant="secondary" onClick={() => { setItems(null); setNotes(""); setFiles([]); }}>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setItems(null);
+                setNotes("");
+                setTranscript("");
+                setFiles([]);
+                setAudioFile(null);
+                setAudioRef(null);
+                setWasVoice(false);
+              }}
+            >
               {t("addMore")}
             </Button>
           }
@@ -298,6 +408,7 @@ export function AddKnowledgeClient({ topics }: { topics: Topic[] }) {
       <div className="flex flex-col gap-4">
         {items.map((item, i) => {
           const Icon = TYPE_ICONS[item.types[0]] ?? Lightbulb;
+          const lessonish = LESSONISH.has(item.types[0]);
           return (
             <div key={i} className="card p-5" data-testid="knowledge-item">
               <div className="mb-3 flex flex-wrap items-center gap-2">
@@ -314,6 +425,34 @@ export function AddKnowledgeClient({ topics }: { topics: Topic[] }) {
                     </option>
                   ))}
                 </NativeSelect>
+                {/* CR02 3.3: the suggested category, confirmed by the user */}
+                {lessonish ? (
+                  <NativeSelect
+                    value={item.category ?? "institutional"}
+                    onChange={(e) => patchItem(i, { category: e.target.value })}
+                    className="w-auto"
+                    aria-label={t("categoryField")}
+                    data-testid="category-select"
+                  >
+                    {LESSON_CATEGORIES.map((c) => (
+                      <option key={c} value={c}>
+                        {tl(`categories.${c}` as never)}
+                      </option>
+                    ))}
+                  </NativeSelect>
+                ) : null}
+                {lessonish && item.node_link ? (
+                  <Chip tone="maroon">
+                    {item.node_link.code ?? bi(locale, item.node_link.title_en, item.node_link.title_ar)}
+                    <button
+                      onClick={() => patchItem(i, { node_link: null })}
+                      aria-label={tc("delete")}
+                      className="ms-1 cursor-pointer"
+                    >
+                      <X className="size-3" />
+                    </button>
+                  </Chip>
+                ) : null}
                 <button
                   onClick={() =>
                     patchItem(i, { classification_level: item.classification_level === 1 ? 2 : 1 })
@@ -473,7 +612,7 @@ export function AddKnowledgeClient({ topics }: { topics: Topic[] }) {
 
       {publishedLinks.length ? (
         <div className="card mt-5 p-5">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-400">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-600">
             {t("justPublished")}
           </p>
           <PublishedList links={publishedLinks} />

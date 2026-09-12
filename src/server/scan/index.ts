@@ -30,6 +30,8 @@ export async function getTrendsSettings(): Promise<TrendsSettings> {
 export async function runScan(opts: {
   trigger: "manual" | "scheduled";
   userId?: string | null;
+  /* CR02 6: Rescan runs only this brief (feeds are skipped) */
+  briefId?: string | null;
 }): Promise<{ runId: string; added: number; duplicates: number }> {
   const runId = newId();
   const startedAt = nowIso();
@@ -64,10 +66,11 @@ export async function runScan(opts: {
       added = res.added.length;
       duplicates = res.duplicates;
     } else {
-      const briefs = await db
+      let briefs = await db
         .select()
         .from(schema.scanBriefs)
         .where(eq(schema.scanBriefs.isActive, 1));
+      if (opts.briefId) briefs = briefs.filter((b) => b.id === opts.briefId);
 
       // Source 1: Claude web search per brief (token-budgeted)
       if (settings.webSearchOn) {
@@ -103,11 +106,18 @@ export async function runScan(opts: {
             .update(schema.scanBriefs)
             .set({ lastRunAt: nowIso() })
             .where(eq(schema.scanBriefs.id, brief.id));
+          // CR02 6: live progress for the inline card on /trends
+          await db
+            .update(schema.scanRuns)
+            .set({ briefsRun, candidates: candidatesCount, acceptedNew: added, duplicates })
+            .where(eq(schema.scanRuns.id, runId));
         }
       }
 
-      // Source 2: RSS/Atom feeds (always on)
-      const rss = await runRssScan(30);
+      // Source 2: RSS/Atom feeds (always on; skipped for a single-brief rescan)
+      const rss = opts.briefId
+        ? { tokensIn: 0, tokensOut: 0, errors: [] as string[], candidates: [] }
+        : await runRssScan(30);
       tokensIn += rss.tokensIn;
       tokensOut += rss.tokensOut;
       errors.push(...rss.errors.slice(0, 15));

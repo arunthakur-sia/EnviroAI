@@ -93,6 +93,33 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   return { ...user, role, department };
 });
 
+/** Loads a user by id with role and department, for job contexts with no
+    request session (CR02 report generation runs as the report's creator). */
+export async function getUserById(userId: string): Promise<CurrentUser | null> {
+  const [user] = await db
+    .select()
+    .from(schema.users)
+    .where(eq(schema.users.id, userId))
+    .limit(1);
+  if (!user || user.deletedAt) return null;
+  const [role] = await db
+    .select()
+    .from(schema.roles)
+    .where(eq(schema.roles.id, user.roleId))
+    .limit(1);
+  if (!role) return null;
+  let department = null;
+  if (user.departmentId) {
+    const deps = await db
+      .select()
+      .from(schema.departments)
+      .where(eq(schema.departments.id, user.departmentId))
+      .limit(1);
+    department = deps[0] ?? null;
+  }
+  return { ...user, role, department };
+}
+
 export async function createSessionFor(
   userId: string,
   meta: { ip?: string; userAgent?: string } = {}

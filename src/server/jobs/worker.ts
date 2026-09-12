@@ -38,8 +38,24 @@ async function handle(job: {
     }
     case "scan_run": {
       const { runScan } = await import("@/server/scan");
-      await runScan({ trigger: "scheduled" });
+      await runScan({
+        trigger: payload.trigger ?? "scheduled",
+        userId: payload.userId ?? null,
+        briefId: payload.briefId ?? null,
+      });
       await scheduleNextScan();
+      break;
+    }
+    case "podcast_render": {
+      // CR02 4.5: studio audio for one episode, progress in renderProgress
+      const { renderEpisodeAudio } = await import("@/server/ai/podcast/audio");
+      await renderEpisodeAudio(payload.episodeId);
+      break;
+    }
+    case "report_generate": {
+      // CR02 7: narrative + designed docx for one report row
+      const { generateReport } = await import("@/server/reports/generate");
+      await generateReport(payload.reportId);
       break;
     }
     default:

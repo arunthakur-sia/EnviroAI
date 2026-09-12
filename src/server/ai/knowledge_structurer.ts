@@ -49,6 +49,10 @@ export type KnowledgeItem = {
     email: string;
     domains: string[];
   };
+  /* CR02 3.3: suggested lesson category (delivery|external|expert|institutional) */
+  category?: string | null;
+  /* CR02 3.2: the pre-filled delivery node for Delivery Lessons */
+  node_link?: { id: string; code: string | null; title_en: string; title_ar: string } | null;
   topic_codes: string[];
   outcome_links: { code: string; reason_en: string; reason_ar: string }[];
   indicator_codes: string[];
@@ -72,7 +76,55 @@ export type StructureInput = {
   parsedFiles: { filename: string; text: string; mime: string }[];
   images: { filename: string; mediaType: string; base64: string }[];
   pages: { url: string; title: string; text: string }[];
+  /* CR02 3.3: opened from an initiative or project page */
+  nodeContext?: { id: string; code: string | null; title_en: string; title_ar: string } | null;
+  categoryHint?: string | null;
 };
+
+const LESSON_CATEGORIES = new Set(["delivery", "external", "expert", "institutional"]);
+
+/** Deterministic category fallback shared by the live post-processing and the mock. */
+export function inferLessonCategory(text: string, hasNode: boolean): string {
+  if (hasNode) return "delivery";
+  const q = text.toLowerCase();
+  if (/conference|forum|summit|study visit|delegation|external report|benchmark|مؤتمر|منتدى|زيارة|وفد|تجربة دولية/i.test(q)) {
+    return "external";
+  }
+  if (/interview|handover|retiring|expert|professor|dr\.|mentioned|told me|مقابلة|تسليم مهام|خبير|أخبرني|الدكتور/i.test(q)) {
+    return "expert";
+  }
+  if (/process|governance|procedure|policy of the council|ways of working|approval|عملية|حوكمة|إجراء|اعتماد|آلية عمل/i.test(q)) {
+    return "institutional";
+  }
+  if (/project|initiative|delivery|rollout|pilot|مشروع|مبادرة|تنفيذ|تجريبي/i.test(q)) {
+    return "delivery";
+  }
+  return "institutional";
+}
+
+/** Apply node context, category hints, and validation to structured items. */
+export function applyCategoryAndNode(
+  items: KnowledgeItem[],
+  input: StructureInput
+): KnowledgeItem[] {
+  return items.map((item) => {
+    const isLessonish =
+      item.types[0] === "lesson" || item.types[0] === "insight" || item.types[0] === "indicator_observation";
+    if (!isLessonish) return { ...item, category: null, node_link: item.node_link ?? null };
+    let category = item.category && LESSON_CATEGORIES.has(item.category) ? item.category : null;
+    const nodeLink = input.nodeContext ?? item.node_link ?? null;
+    if (input.categoryHint && LESSON_CATEGORIES.has(input.categoryHint)) {
+      category = input.categoryHint;
+    }
+    if (!category) {
+      category = inferLessonCategory(
+        `${item.title_en} ${item.cleaned_en} ${input.whereFrom}`,
+        Boolean(nodeLink)
+      );
+    }
+    return { ...item, category, node_link: nodeLink };
+  });
+}
 
 const IMAGE_MEDIA = new Set(["image/png", "image/jpeg", "image/gif", "image/webp"]);
 
@@ -82,7 +134,7 @@ export async function structureKnowledge(input: StructureInput): Promise<{
 }> {
   const live = await aiLive();
   if (!live) {
-    return { items: mockKnowledgeStructure(input), live: false };
+    return { items: applyCategoryAndNode(mockKnowledgeStructure(input), input), live: false };
   }
   const settings = await getAiSettings();
   const terms = await getAllTerms();
@@ -99,6 +151,11 @@ export async function structureKnowledge(input: StructureInput): Promise<{
     `Outcome codes: eco_growth, fiscal_sust, workforce, cohesive_society, quality_life, env_sust, gov_excellence`,
     `Indicator codes: pop_total, gdp_real_growth, gdp_nonhydro_share, cpi_inflation, unemployment_rate, trade_balance, building_permits, lfpr_qatari, fdi_inflows, ghg_per_capita, solar_capacity, digital_services_share, labour_productivity_growth`,
   ];
+  if (input.nodeContext) {
+    textParts.push(
+      `Delivery-node context: this material was captured from ${input.nodeContext.code ?? ""} "${input.nodeContext.title_en}". Lesson items are Delivery Lessons of this node unless the material clearly says otherwise.`
+    );
+  }
   if (input.notes.trim()) textParts.push(`Typed notes:\n${input.notes.slice(0, 12000)}`);
   for (const f of input.parsedFiles) {
     textParts.push(`File "${f.filename}":\n${f.text.slice(0, 8000)}`);
@@ -138,12 +195,15 @@ export async function structureKnowledge(input: StructureInput): Promise<{
     const parsed = extractJson<{ items: KnowledgeItem[] }>(text);
     if (parsed?.items?.length) {
       return {
-        items: parsed.items.slice(0, 8).map((i) => ({ ...i, machine: true })),
+        items: applyCategoryAndNode(
+          parsed.items.slice(0, 8).map((i) => ({ ...i, machine: true })),
+          input
+        ),
         live: true,
       };
     }
   } catch (e) {
     console.error("[knowledge_structurer] live call failed:", (e as Error)?.message);
   }
-  return { items: mockKnowledgeStructure(input), live: false };
+  return { items: applyCategoryAndNode(mockKnowledgeStructure(input), input), live: false };
 }

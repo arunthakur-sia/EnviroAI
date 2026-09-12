@@ -11,6 +11,7 @@ import { DocListRow } from "./DocListRow";
 import { EmptyState, Button } from "@/components/ui/primitives";
 import { Link } from "@/i18n/navigation";
 import { Reveal } from "@/components/motion";
+import { ReportButton } from "@/components/nexus/ReportButton";
 
 export const dynamic = "force-dynamic";
 
@@ -108,6 +109,15 @@ export default async function VaultPage({
           <p className="mt-1 text-sm text-ink-600">{t("subtitle", { count: shelfDocs.length })}</p>
         </div>
         <div className="flex items-center gap-2">
+          {/* CR02 7.1: report over the current Vault filters */}
+          <ReportButton
+            scope={{
+              kind: "vault",
+              ids: shelfDocs.slice(0, 30).map((d) => d.id),
+              labelEn: "Knowledge Vault",
+              labelAr: "خزانة المعرفة",
+            }}
+          />
           <Link href="/vault/collections">
             <Button variant="secondary">
               <LibraryBig /> {t("collections")}

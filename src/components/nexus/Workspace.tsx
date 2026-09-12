@@ -75,6 +75,7 @@ export type AnalystWorkspaceData = {
     page: number | null;
     status: string;
     classification: number;
+    deliverable?: { code: string; nodeCode: string | null } | null;
   }[];
   lessons: {
     id: string;
@@ -418,6 +419,19 @@ export function AnalystAnswer({
                     status: d.status,
                   }}
                 />
+                {/* CR02 2.3: deliverables carry their chip and node code */}
+                {d.deliverable ? (
+                  <span className="absolute start-3 top-3 flex items-center gap-1">
+                    <Chip tone="maroon">{t("chipDeliverable")}</Chip>
+                    {d.deliverable.nodeCode ? (
+                      <Chip tone="sand">
+                        <span className="tnum">
+                          {d.deliverable.code} · {d.deliverable.nodeCode}
+                        </span>
+                      </Chip>
+                    ) : null}
+                  </span>
+                ) : null}
                 {d.page ? (
                   <span className="absolute bottom-3 end-3 text-[11px] text-ink-400 tnum">
                     p. {d.page}

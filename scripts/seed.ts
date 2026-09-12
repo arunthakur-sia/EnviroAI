@@ -2039,6 +2039,45 @@ async function main() {
     await setSetting("ai", { ...DEFAULT_AI_SETTINGS, mockMode: false });
   }
 
+  /* ---------------- 12c. CR02: strategy shape, lesson categories, rules,
+        deliverables, podcast episodes ---------------- */
+  console.log("-- CR02: strategy migration, categories, deliverables, podcast...");
+  {
+    // the new game rules (knowledge_by_voice, podcast, reports)
+    const cr02Rules: [string, number][] = [
+      ["knowledge_by_voice", 10],
+      ["podcast_created", 30],
+      ["podcast_listened_full", 5],
+      ["report_extracted", 15],
+    ];
+    const { eq: eqRule } = await import("drizzle-orm");
+    for (const [eventType, points] of cr02Rules) {
+      const existing = await db
+        .select({ id: schema.gameRules.id })
+        .from(schema.gameRules)
+        .where(eqRule(schema.gameRules.eventType, eventType))
+        .limit(1);
+      if (!existing.length) {
+        await db.insert(schema.gameRules).values({
+          id: newId(),
+          eventType,
+          points,
+          multiplierRulesJson: null,
+          isActive: 1,
+        });
+        bump("game_rules");
+      }
+    }
+    const { migrateStrategyCr02 } = await import("./cr02-migrate-strategy");
+    await migrateStrategyCr02();
+    const { migrateLessonCategoriesCr02 } = await import("./cr02-migrate-lessons");
+    await migrateLessonCategoriesCr02();
+    const { seedDeliverablesCr02 } = await import("./cr02-seed-deliverables");
+    report.deliverables = await seedDeliverablesCr02();
+    const { seedPodcastCr02 } = await import("./cr02-seed-podcast");
+    report.podcast_episodes = await seedPodcastCr02();
+  }
+
   /* ---------------- 13. report ---------------- */
   const lines = [
     "# Seed report",
