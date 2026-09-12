@@ -1,0 +1,213 @@
+"use client";
+import * as React from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
+import { Sparkles } from "lucide-react";
+import { cn, bi, isArabicText } from "@/lib/utils";
+import {
+  Button,
+  Input,
+  Textarea,
+  Label,
+  NativeSelect,
+} from "@/components/ui/primitives";
+import { useToast } from "@/components/ui/toast";
+
+export function NewExpertForm({
+  topics,
+}: {
+  topics: { code: string; nameEn: string; nameAr: string }[];
+}) {
+  const t = useTranslations("experts");
+  const tc = useTranslations("common");
+  const locale = useLocale();
+  const router = useRouter();
+  const { toast } = useToast();
+  const [busy, setBusy] = React.useState(false);
+  const [cv, setCv] = React.useState("");
+  const [form, setForm] = React.useState({
+    nameEn: "",
+    nameAr: "",
+    type: "academic",
+    organisationEn: "",
+    organisationAr: "",
+    positionEn: "",
+    positionAr: "",
+    bioEn: "",
+    bioAr: "",
+    email: "",
+    phone: "",
+    nationality: "",
+    yearsExperience: "",
+    availability: "available",
+    domainCodes: [] as string[],
+  });
+
+  function set<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
+    setForm((f) => ({ ...f, [key]: value }));
+  }
+
+  /** Heuristic CV prefill: first line = name, look for org/position/email patterns. */
+  function prefill() {
+    const lines = cv.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    if (!lines.length) return;
+    const first = lines[0];
+    if (isArabicText(first)) set("nameAr", first);
+    else set("nameEn", first);
+    const email = /[\w.+-]+@[\w-]+\.[\w.]+/.exec(cv)?.[0];
+    if (email) set("email", email);
+    const years = /(\d{1,2})\+?\s*(years|سنة|عاماً)/i.exec(cv)?.[1];
+    if (years) set("yearsExperience", years);
+    const orgLine = lines.find((l) => /(university|institute|ministry|bank|جامعة|وزارة|معهد)/i.test(l));
+    if (orgLine) {
+      if (isArabicText(orgLine)) set("organisationAr", orgLine.slice(0, 90));
+      else set("organisationEn", orgLine.slice(0, 90));
+    }
+    const bio = lines.slice(1, 5).join(" ").slice(0, 500);
+    if (bio) {
+      if (isArabicText(bio)) set("bioAr", bio);
+      else set("bioEn", bio);
+    }
+    toast(t("prefilled"), "info");
+  }
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    try {
+      const res = await fetch("/api/v1/experts", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          nameAr: form.nameAr || form.nameEn,
+          nameEn: form.nameEn || form.nameAr,
+          yearsExperience: form.yearsExperience ? Number(form.yearsExperience) : undefined,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error);
+      toast(t("expertAdded"), "points");
+      router.push(`/experts/${json.data.id}` as never);
+    } catch {
+      toast(tc("error"), "error");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <form onSubmit={submit} className="mt-6 flex flex-col gap-4">
+      <div className="card p-4">
+        <Label>{t("cvPaste")}</Label>
+        <Textarea value={cv} onChange={(e) => setCv(e.target.value)} rows={4} placeholder={t("cvPlaceholder")} />
+        <Button type="button" variant="ghost" size="sm" className="mt-2" onClick={prefill} disabled={!cv.trim()}>
+          <Sparkles className="text-gold-500" /> {t("prefillCta")}
+        </Button>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <Label>{t("nameEn")}</Label>
+          <Input value={form.nameEn} dir="ltr" onChange={(e) => set("nameEn", e.target.value)} required={!form.nameAr} />
+        </div>
+        <div>
+          <Label>{t("nameAr")}</Label>
+          <Input value={form.nameAr} dir="rtl" onChange={(e) => set("nameAr", e.target.value)} />
+        </div>
+        <div>
+          <Label>{t("filterType")}</Label>
+          <NativeSelect value={form.type} onChange={(e) => set("type", e.target.value)}>
+            {["academic", "government", "consultant", "international"].map((v) => (
+              <option key={v} value={v}>
+                {t(`types.${v}` as never)}
+              </option>
+            ))}
+          </NativeSelect>
+        </div>
+        <div>
+          <Label>{t("filterAvailability")}</Label>
+          <NativeSelect value={form.availability} onChange={(e) => set("availability", e.target.value)}>
+            {["available", "limited", "unavailable"].map((v) => (
+              <option key={v} value={v}>
+                {t(`availability.${v}` as never)}
+              </option>
+            ))}
+          </NativeSelect>
+        </div>
+        <div>
+          <Label>{t("organisation")} (EN)</Label>
+          <Input value={form.organisationEn} dir="ltr" onChange={(e) => set("organisationEn", e.target.value)} />
+        </div>
+        <div>
+          <Label>{t("organisation")} (AR)</Label>
+          <Input value={form.organisationAr} dir="rtl" onChange={(e) => set("organisationAr", e.target.value)} />
+        </div>
+        <div>
+          <Label>{t("position")} (EN)</Label>
+          <Input value={form.positionEn} dir="ltr" onChange={(e) => set("positionEn", e.target.value)} />
+        </div>
+        <div>
+          <Label>{t("position")} (AR)</Label>
+          <Input value={form.positionAr} dir="rtl" onChange={(e) => set("positionAr", e.target.value)} />
+        </div>
+        <div>
+          <Label>{t("emailLabel")}</Label>
+          <Input value={form.email} dir="ltr" type="email" onChange={(e) => set("email", e.target.value)} />
+        </div>
+        <div>
+          <Label>{t("yearsLabel")}</Label>
+          <Input
+            value={form.yearsExperience}
+            type="number"
+            dir="ltr"
+            onChange={(e) => set("yearsExperience", e.target.value)}
+          />
+        </div>
+      </div>
+      <div>
+        <Label>{t("bio")} (EN)</Label>
+        <Textarea value={form.bioEn} dir="ltr" rows={3} onChange={(e) => set("bioEn", e.target.value)} />
+      </div>
+      <div>
+        <Label>{t("bio")} (AR)</Label>
+        <Textarea value={form.bioAr} dir="rtl" rows={3} onChange={(e) => set("bioAr", e.target.value)} />
+      </div>
+      <div>
+        <Label>{t("domains")}</Label>
+        <div className="flex max-h-40 flex-wrap gap-1.5 overflow-y-auto">
+          {topics.map((topic) => {
+            const active = form.domainCodes.includes(topic.code);
+            return (
+              <button
+                key={topic.code}
+                type="button"
+                onClick={() =>
+                  set(
+                    "domainCodes",
+                    active
+                      ? form.domainCodes.filter((c) => c !== topic.code)
+                      : [...form.domainCodes, topic.code]
+                  )
+                }
+                className={cn(
+                  "rounded-lg border px-2.5 py-1 text-xs transition-colors cursor-pointer",
+                  active
+                    ? "border-maroon-700 bg-maroon-100 font-medium text-maroon-900"
+                    : "border-sand-300 bg-white text-ink-600 hover:border-maroon-300"
+                )}
+              >
+                {bi(locale, topic.nameEn, topic.nameAr)}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <div className="flex justify-end">
+        <Button type="submit" size="lg" loading={busy}>
+          {t("addCta")}
+        </Button>
+      </div>
+    </form>
+  );
+}

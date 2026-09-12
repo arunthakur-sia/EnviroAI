@@ -1,0 +1,13 @@
+node_modules/
+.next/
+out/
+data/
+sources/
+public/fonts/*.woff2
+public/pdf.worker.min.mjs
+.env.local
+.env*.local
+*.tsbuildinfo
+next-env.d.ts
+test-results/
+playwright-report/

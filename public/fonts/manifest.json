@@ -1,0 +1,26 @@
+[
+  {
+    "file": "fraunces-var-latin.woff2",
+    "status": "exists"
+  },
+  {
+    "file": "inter-var-latin.woff2",
+    "status": "exists"
+  },
+  {
+    "file": "plex-sans-arabic-400.woff2",
+    "status": "exists"
+  },
+  {
+    "file": "plex-sans-arabic-500.woff2",
+    "status": "exists"
+  },
+  {
+    "file": "plex-sans-arabic-600.woff2",
+    "status": "exists"
+  },
+  {
+    "file": "noto-kufi-arabic-var.woff2",
+    "status": "exists"
+  }
+]

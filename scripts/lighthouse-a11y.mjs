@@ -1,0 +1,80 @@
+/* eslint-disable no-console */
+// CR01 acceptance 8: Lighthouse accessibility on Home, Ask, and Trends.
+// Uses system Edge (Chromium) because the machine policy blocks bundled Chromium.
+import { spawnSync } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
+
+const BASE = process.env.SMOKE_BASE ?? "http://localhost:3000";
+const EDGE_CANDIDATES = [
+  "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+  "C:/Program Files/Microsoft/Edge/Application/msedge.exe",
+];
+const edge = EDGE_CANDIDATES.find((p) => fs.existsSync(p));
+if (!edge) {
+  console.error("Edge not found");
+  process.exit(1);
+}
+
+// authenticated session cookie via the API
+const login = await fetch(`${BASE}/api/v1/auth/login`, {
+  method: "POST",
+  headers: { "content-type": "application/json" },
+  body: JSON.stringify({ email: "admin@npc.qa", password: "Nexus!2026" }),
+});
+const setCookie = login.headers.getSetCookie?.() ?? [];
+const cookie = setCookie.map((c) => c.split(";")[0]).join("; ");
+if (!cookie) {
+  console.error("no session cookie");
+  process.exit(1);
+}
+
+const outDir = path.resolve("data", "lighthouse");
+fs.mkdirSync(outDir, { recursive: true });
+// Windows shell mangles inline JSON args; lighthouse accepts a headers file path
+const headersPath = path.join(outDir, "headers.json");
+fs.writeFileSync(headersPath, JSON.stringify({ Cookie: cookie }));
+
+const targets = [
+  ["/en/home", "home"],
+  ["/en/ask", "ask"],
+  ["/en/trends", "trends"],
+];
+
+let failed = 0;
+for (const [url, name] of targets) {
+  const outPath = path.join(outDir, `${name}.json`);
+  const args = [
+    "--yes",
+    "lighthouse@12",
+    `${BASE}${url}`,
+    "--only-categories=accessibility",
+    "--output=json",
+    `--output-path=${outPath}`,
+    `--chrome-path=${edge}`,
+    '"--chrome-flags=--headless=new --disable-gpu"',
+    `--extra-headers=${headersPath}`,
+    "--quiet",
+    "--max-wait-for-load=45000",
+  ];
+  const res = spawnSync("npx.cmd", args, { encoding: "utf8", timeout: 240000, shell: true });
+  if (!fs.existsSync(outPath)) {
+    console.log(`FAIL ${name}: lighthouse produced no report`);
+    console.log((res.stderr || res.stdout || "").slice(-600));
+    failed++;
+    continue;
+  }
+  const report = JSON.parse(fs.readFileSync(outPath, "utf8"));
+  const score = Math.round((report.categories?.accessibility?.score ?? 0) * 100);
+  const ok = score >= 90;
+  if (!ok) failed++;
+  console.log(`${ok ? "ok  " : "FAIL"} ${name}: accessibility ${score}`);
+  if (!ok) {
+    const audits = Object.values(report.audits ?? {})
+      .filter((a) => a.score !== null && a.score < 1 && a.scoreDisplayMode === "binary")
+      .slice(0, 8)
+      .map((a) => `  - ${a.id}: ${a.title}`);
+    console.log(audits.join("\n"));
+  }
+}
+process.exit(failed ? 1 : 0);

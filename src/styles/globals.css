@@ -1,0 +1,283 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/* Self-hosted fonts (downloaded by scripts/fetch-fonts.mjs)           */
+/* ------------------------------------------------------------------ */
+@font-face {
+  font-family: "Fraunces";
+  src: url("/fonts/fraunces-var-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-var-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Sans Arabic";
+  src: url("/fonts/plex-sans-arabic-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Sans Arabic";
+  src: url("/fonts/plex-sans-arabic-500.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Sans Arabic";
+  src: url("/fonts/plex-sans-arabic-600.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Noto Kufi Arabic";
+  src: url("/fonts/noto-kufi-arabic-var.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+/* ------------------------------------------------------------------ */
+/* Design tokens (Section 4.2 of the blueprint)                        */
+/* ------------------------------------------------------------------ */
+@theme {
+  --color-maroon-900: #5a0e24;
+  --color-maroon-700: #8a1538;
+  --color-maroon-500: #a8325a;
+  --color-maroon-300: #cf7d99;
+  --color-maroon-100: #f6e7ec;
+  --color-maroon-50: #fbf2f5;
+
+  --color-sand-50: #fbf9f5;
+  --color-sand-100: #f4f0e8;
+  --color-sand-200: #ece6d8;
+  --color-sand-300: #e2dac9;
+
+  --color-ink-900: #1e1b1f;
+  --color-ink-600: #5e5760;
+  --color-ink-400: #928b93;
+  --color-ink-200: #d8d4d9;
+
+  --color-gulf-600: #0f6e76;
+  --color-gulf-400: #3a959c;
+  --color-gulf-100: #dff1f2;
+
+  --color-gold-500: #c9a24d;
+  --color-gold-300: #ddc287;
+  --color-gold-100: #f8f0da;
+
+  --color-ok: #2e7d5b;
+  --color-ok-light: #e3f1ea;
+  --color-warn: #b7791f;
+  --color-warn-light: #f9efdd;
+  --color-danger: #b3261e;
+  --color-danger-light: #f9e5e4;
+  --color-info: #2f5f9e;
+  --color-info-light: #e6edf7;
+
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-arabic: "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
+  --font-kufi: "Noto Kufi Arabic", "IBM Plex Sans Arabic", sans-serif;
+
+  --radius-card: 0.875rem;
+  --radius-chip: 0.5rem;
+
+  --shadow-paper: 0 1px 2px rgba(30, 27, 31, 0.05), 0 2px 8px rgba(30, 27, 31, 0.04);
+  --shadow-lift: 0 2px 6px rgba(138, 21, 56, 0.08), 0 10px 28px rgba(138, 21, 56, 0.1);
+  --shadow-pop: 0 4px 12px rgba(30, 27, 31, 0.08), 0 16px 40px rgba(30, 27, 31, 0.12);
+
+  --ease-paper: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-shimmer: shimmer 1.8s linear infinite;
+  --animate-breathe: breathe 1.2s ease-in-out infinite;
+
+  @keyframes shimmer {
+    0% { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+  }
+  @keyframes breathe {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+}
+
+html {
+  background: var(--color-sand-50);
+}
+
+body {
+  background: var(--color-sand-50);
+  color: var(--color-ink-900);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Arabic gets its own scale: 6 percent larger, line-height 1.7 */
+html[lang="ar"] body {
+  font-family: var(--font-arabic);
+  font-size: 0.99375rem;
+  line-height: 1.7;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  color: var(--color-ink-900);
+}
+html[lang="ar"] h1,
+html[lang="ar"] h2,
+html[lang="ar"] h3,
+html[lang="ar"] h4 {
+  font-family: var(--font-kufi);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+::selection {
+  background: var(--color-maroon-100);
+  color: var(--color-maroon-900);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-maroon-700);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Numbers are always tabular in KPIs, charts, tables */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Scrollbars: quiet, sand-toned */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-sand-300) transparent;
+}
+
+/* ------------------------------------------------------------------ */
+/* Product patterns                                                    */
+/* ------------------------------------------------------------------ */
+
+/* A white card floating on paper */
+.card {
+  background: #ffffff;
+  border: 1px solid var(--color-sand-300);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-paper);
+}
+
+.card-hover {
+  transition: transform 200ms var(--ease-paper), box-shadow 200ms var(--ease-paper);
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+
+/* Skeleton shimmer in the shape of real content */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-sand-100) 25%,
+    var(--color-sand-200) 40%,
+    var(--color-sand-100) 55%
+  );
+  background-size: 800px 100%;
+  animation: var(--animate-shimmer);
+  border-radius: 6px;
+}
+
+/* Streaming caret that breathes */
+.stream-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  vertical-align: text-bottom;
+  background: var(--color-maroon-700);
+  animation: var(--animate-breathe);
+  margin-inline-start: 2px;
+}
+
+/* Page entrance choreography: one per page, then calm */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0;
+  animation: rise-in 320ms var(--ease-paper) forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { animation: none; opacity: 1; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Book spine: title runs along the spine */
+.spine-title-ltr {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+.spine-title-rtl {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+/* Directional icons flip in RTL */
+[dir="rtl"] .flip-rtl {
+  transform: scaleX(-1);
+}
+
+/* Reading measure for document text */
+.measure {
+  max-width: 760px;
+}
+
+/* Thin maroon divider with a paper feel */
+.rule {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(to right, var(--color-sand-300), transparent);
+}
+
+/* SiaNexus wordmark crops (CR01 1.2): compact = Sia + slash (viewBox 0 0 1032 400
+   of the 2654x400 wordmark), mark = the teal slash alone on a square canvas
+   (region 700 0 328 328). Background crops so no asset is duplicated. */
+.logo-compact {
+  background-image: url("/brand/SiaNexus_logo.svg");
+  background-repeat: no-repeat;
+  background-size: 257.17% auto;
+  background-position: 0 0;
+}
+.logo-mark {
+  background-image: url("/brand/SiaNexus_mark.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+/* Chart tooltips (recharts) */
+.recharts-default-tooltip {
+  border-radius: 10px !important;
+  border-color: var(--color-sand-300) !important;
+  box-shadow: var(--shadow-paper) !important;
+  font-family: inherit !important;
+}
