@@ -84,7 +84,8 @@ export async function listDocuments(user: CurrentUser, filters: VaultFilters) {
           ? asc(schema.documents.reviewDueAt)
           : desc(schema.documents.createdAt);
 
-  const limit = Math.min(filters.limit ?? 60, 120);
+  // CR03 1.1: the shelves view shows the whole library, so the cap allows it
+  const limit = Math.min(filters.limit ?? 60, 300);
   const offset = filters.cursor ?? 0;
   const rows = await db
     .select()
@@ -294,6 +295,13 @@ export async function toShelfDocs(docs: DocRow[]) {
       ownerNameAr: owner?.nameAr ?? null,
       ownerColor: owner?.color ?? null,
       publishYear: d.publishYear,
+      // CR03 1.2: spine width and cover caption need a credible page count.
+      // Web captures and generated docx record 1 page, so unpaginated items
+      // get an equivalent estimated from stored size (~3000 bytes per page).
+      pageCount:
+        d.pageCount && d.pageCount > 1
+          ? d.pageCount
+          : Math.max(1, Math.min(400, Math.round((d.sizeBytes ?? 3000) / 3000))),
       reuseCount: d.reuseCount,
       viewCount: d.viewCount,
     };

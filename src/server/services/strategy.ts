@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray, or } from "drizzle-orm";
+import { and, asc, desc, eq, gte, inArray, or } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import type { CurrentUser } from "@/server/auth/session";
 import { can } from "@/server/auth/permissions";
@@ -123,6 +123,9 @@ export type NavOutcome = {
   slug: string;
   titleEn: string;
   titleAr: string;
+  descriptionEn: string | null;
+  descriptionAr: string | null;
+  ownerEntityName: string | null;
   status: string;
   progress: number; // share of targets on track
   targetCount: number;
@@ -147,6 +150,7 @@ export type NavTarget = {
     latest: number | null;
     target: number | null;
     direction: string;
+    period: string | null;
   } | null;
   clusterIds: string[];
   sort: number;
@@ -177,6 +181,15 @@ export type NavigatorData = {
   targets: NavTarget[];
   items: NavItem[];
   clusters: { id: string; code: string | null; titleEn: string; titleAr: string; nodeType: string }[];
+  /* CR03 2.2: the at-a-glance band */
+  glance: {
+    targetsOnTrack: number;
+    targetsTotal: number;
+    initiatives: number;
+    projects: number;
+    months: string[]; // "2026-03" oldest -> newest (12)
+    updatesPerMonth: number[];
+  };
 };
 
 const STOP_WORDS = new Set([
@@ -269,7 +282,7 @@ export async function getNavigator(editionId: string): Promise<NavigatorData> {
     }
   }
   const matchedKpiIds = [...kpiForTarget.values()].map((k) => k.id);
-  const latestByKpi = new Map<string, number>();
+  const latestByKpi = new Map<string, { value: number; period: string }>();
   if (matchedKpiIds.length) {
     const values = await db
       .select()
@@ -277,7 +290,8 @@ export async function getNavigator(editionId: string): Promise<NavigatorData> {
       .where(inArray(schema.kpiValues.kpiId, matchedKpiIds))
       .orderBy(asc(schema.kpiValues.period));
     for (const v of values) {
-      if (v.actualValue != null) latestByKpi.set(v.kpiId, v.actualValue);
+      if (v.actualValue != null)
+        latestByKpi.set(v.kpiId, { value: v.actualValue, period: v.period });
     }
   }
 
@@ -354,9 +368,12 @@ export async function getNavigator(editionId: string): Promise<NavigatorData> {
               nameEn: kpi.nameEn,
               nameAr: kpi.nameAr,
               unit: kpi.unit,
-              latest: latestByKpi.get(kpi.id) ?? kpi.baselineValue ?? null,
+              latest: latestByKpi.get(kpi.id)?.value ?? kpi.baselineValue ?? null,
               target: kpi.targetValue,
               direction: kpi.direction,
+              period:
+                latestByKpi.get(kpi.id)?.period ??
+                (kpi.baselineYear ? String(kpi.baselineYear) : null),
             }
           : null,
         clusterIds: [
@@ -376,6 +393,9 @@ export async function getNavigator(editionId: string): Promise<NavigatorData> {
     return {
       id: o.id,
       code: o.code,
+      descriptionEn: o.descriptionEn,
+      descriptionAr: o.descriptionAr,
+      ownerEntityName: o.ownerEntityName,
       slug: slugOfCode(o.code, o.id),
       titleEn: o.titleEn,
       titleAr: o.titleAr,
@@ -397,7 +417,35 @@ export async function getNavigator(editionId: string): Promise<NavigatorData> {
       nodeType: c.nodeType,
     }));
 
+  /* CR03 2.2: the at-a-glance band, with a 12-month status-update sparkline */
+  const nodeIdSet = new Set(nodes.map((n) => n.id));
+  const months: string[] = [];
+  const now = new Date();
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - i, 1));
+    months.push(d.toISOString().slice(0, 7));
+  }
+  const sinceIso = `${months[0]}-01T00:00:00.000Z`;
+  const updateRows = await db
+    .select({ nodeId: schema.statusUpdates.nodeId, createdAt: schema.statusUpdates.createdAt })
+    .from(schema.statusUpdates)
+    .where(gte(schema.statusUpdates.createdAt, sinceIso));
+  const updatesPerMonth = months.map(
+    (m) =>
+      updateRows.filter((u) => nodeIdSet.has(u.nodeId) && u.createdAt.startsWith(m)).length
+  );
+  const glance = {
+    targetsOnTrack: targets.filter((t) => t.status === "on_track" || t.status === "completed")
+      .length,
+    targetsTotal: targets.length,
+    initiatives: items.filter((i) => i.type === "initiative").length,
+    projects: items.filter((i) => i.type === "project").length,
+    months,
+    updatesPerMonth,
+  };
+
   return {
+    glance,
     edition: {
       id: edition.id,
       code: edition.code,

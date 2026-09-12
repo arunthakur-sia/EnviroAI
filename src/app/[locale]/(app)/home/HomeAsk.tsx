@@ -1,119 +1,175 @@
 "use client";
-// CR02 1.3.1: the Ask box is the only large element above the fold. Same
-// composer as /ask; submitting starts an analyst conversation and lands on
-// /ask/c/[id] with the answer streaming. The word of the day is one quiet
-// caption line under the example chips, not a strip.
+// CR03 4.5: the Ask hero. A 64px input whose placeholder types out the seeded
+// example questions letter by letter (35ms per character, 2.5s pause, delete,
+// next), stopping the moment the user types. Two quiet suggestion chips
+// rotate with the placeholder. Focus dims the constellation and draws a soft
+// maroon glow; submitting expands the card into the answer workspace.
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, Link } from "@/i18n/navigation";
 import { CornerDownLeft, MessageCircleQuestion } from "lucide-react";
-import { Textarea } from "@/components/ui/primitives";
+import { motion, useReducedMotion } from "framer-motion";
+import { useConnections } from "./connections";
 
 export type ExampleQuestion = { en: string; ar: string };
 
 export function HomeAsk({
   examples,
   continueConversation,
-  word,
 }: {
   examples: ExampleQuestion[];
   continueConversation: { id: string; title: string } | null;
-  word: { textEn: string; textAr: string; attributionEn: string | null; attributionAr: string | null } | null;
 }) {
   const t = useTranslations("home");
   const locale = useLocale();
   const router = useRouter();
+  const reduced = useReducedMotion();
+  const conn = useConnections();
   const [query, setQuery] = React.useState("");
   const [busy, setBusy] = React.useState(false);
+  const [leaving, setLeaving] = React.useState(false);
+  const [placeholder, setPlaceholder] = React.useState("");
+  const [exampleIndex, setExampleIndex] = React.useState(0);
+  const stopped = React.useRef(false);
 
-  // three rotating examples: day-based offset so they change daily
-  const rotating = React.useMemo(() => {
-    if (!examples.length) return [];
-    const day = Math.floor(Date.now() / 86400000);
-    const out: ExampleQuestion[] = [];
-    for (let i = 0; i < Math.min(3, examples.length); i++) {
-      out.push(examples[(day + i * 5) % examples.length]);
+  const texts = React.useMemo(
+    () => examples.map((ex) => (locale === "ar" ? ex.ar : ex.en)).filter(Boolean),
+    [examples, locale]
+  );
+
+  /* the typewriter placeholder cycle (CR03 4.5) */
+  React.useEffect(() => {
+    if (!texts.length || reduced) {
+      setPlaceholder(texts[0] ?? t("askPlaceholder"));
+      return;
     }
-    return out;
-  }, [examples]);
+    let index = 0;
+    let pos = 0;
+    let deleting = false;
+    let timer: ReturnType<typeof setTimeout>;
+    const tick = () => {
+      if (stopped.current) return;
+      const text = texts[index];
+      if (!deleting) {
+        pos++;
+        setPlaceholder(text.slice(0, pos));
+        if (pos >= text.length) {
+          deleting = true;
+          timer = setTimeout(tick, 2500);
+          return;
+        }
+        timer = setTimeout(tick, 35);
+      } else {
+        pos -= 3;
+        setPlaceholder(text.slice(0, Math.max(0, pos)));
+        if (pos <= 0) {
+          deleting = false;
+          index = (index + 1) % texts.length;
+          setExampleIndex(index);
+          timer = setTimeout(tick, 300);
+          return;
+        }
+        timer = setTimeout(tick, 18);
+      }
+    };
+    timer = setTimeout(tick, 600);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [texts, reduced]);
+
+  // typing by the user stops the cycle
+  React.useEffect(() => {
+    if (query) stopped.current = true;
+  }, [query]);
 
   function submit(q: string) {
     if (!q.trim() || busy) return;
     setBusy(true);
-    router.push(`/ask/c/new?q=${encodeURIComponent(q.trim())}` as never);
+    setLeaving(true);
+    // the input expands toward the workspace, then the route change carries on
+    setTimeout(() => {
+      router.push(`/ask/c/new?q=${encodeURIComponent(q.trim())}` as never);
+    }, reduced ? 0 : 240);
   }
 
+  /* two quiet suggestion chips rotating with the placeholder */
+  const chips = React.useMemo(() => {
+    if (!texts.length) return [];
+    return [texts[(exampleIndex + 1) % texts.length], texts[(exampleIndex + 2) % texts.length]].filter(
+      Boolean
+    );
+  }, [texts, exampleIndex]);
+
   return (
-    <div className="mx-auto w-full max-w-3xl" data-testid="home-ask">
-      <form
+    <div className="w-full" data-testid="home-ask">
+      <motion.form
+        animate={
+          leaving && !reduced ? { scale: 1.02, y: 6, opacity: 0.9 } : { scale: 1, y: 0, opacity: 1 }
+        }
+        transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
         onSubmit={(e) => {
           e.preventDefault();
           submit(query);
         }}
       >
-        <div className="card relative transition-shadow focus-within:shadow-[var(--shadow-lift)]">
-          <MessageCircleQuestion className="pointer-events-none absolute start-4 top-4 size-5 text-maroon-500" />
-          <Textarea
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                submit(query);
-              }
+        <div className="relative">
+          {/* the soft radial glow when focused (CR03 4.2) */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -inset-8 rounded-full transition-opacity duration-300"
+            style={{
+              background: "radial-gradient(ellipse, var(--color-maroon-100), transparent 65%)",
+              opacity: conn?.askFocused ? 1 : 0,
             }}
-            placeholder={t("askPlaceholder")}
-            rows={2}
-            className="min-h-28 border-0 bg-transparent ps-12 pe-13 pt-3.5 text-base shadow-none focus:ring-0 sm:min-h-16"
-            aria-label={t("askPlaceholder")}
           />
-          <button
-            type="submit"
-            disabled={busy || !query.trim()}
-            className="absolute bottom-3 end-3 rounded-lg bg-maroon-700 p-2 text-white transition-colors hover:bg-maroon-900 disabled:opacity-40 cursor-pointer"
-            aria-label={t("askCta")}
+          <div
+            className="relative flex items-center rounded-2xl border border-sand-300 bg-white shadow-[var(--shadow-paper)] transition-all duration-200 focus-within:border-maroon-500 focus-within:shadow-[var(--shadow-lift)] focus-within:ring-2 focus-within:ring-maroon-100"
+            style={{ height: 64 }}
           >
-            <CornerDownLeft className="size-4 flip-rtl" />
-          </button>
-        </div>
-      </form>
-      <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
-        {rotating.map((ex, i) => {
-          const text = locale === "ar" ? ex.ar : ex.en;
-          return (
+            <MessageCircleQuestion className="pointer-events-none ms-5 size-5 shrink-0 text-maroon-500" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => conn?.setAskFocused(true)}
+              onBlur={() => conn?.setAskFocused(false)}
+              placeholder={placeholder || t("askPlaceholder")}
+              className="h-full min-w-0 flex-1 bg-transparent px-3.5 text-base text-ink-900 placeholder:text-ink-400 focus:outline-none"
+              aria-label={t("askPlaceholder")}
+              data-testid="ask-input"
+            />
             <button
-              key={i}
-              onClick={() => setQuery(text)}
-              className="rounded-lg border border-sand-200 bg-sand-50 px-2.5 py-1 text-xs text-ink-600 transition-colors hover:border-maroon-300 hover:text-maroon-900 cursor-pointer"
+              type="submit"
+              disabled={busy || !query.trim()}
+              className="me-3 rounded-xl bg-maroon-700 p-2.5 text-white transition-colors hover:bg-maroon-900 disabled:opacity-40 cursor-pointer"
+              aria-label={t("askCta")}
             >
-              {text}
+              <CornerDownLeft className="size-4 flip-rtl" />
             </button>
-          );
-        })}
+          </div>
+        </div>
+      </motion.form>
+      <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+        {chips.map((text, i) => (
+          <button
+            key={`${exampleIndex}-${i}`}
+            onClick={() => {
+              stopped.current = true;
+              setQuery(text);
+            }}
+            className="max-w-full truncate rounded-lg border border-sand-200 bg-sand-50/80 px-2.5 py-1 text-xs text-ink-600 transition-colors hover:border-maroon-300 hover:text-maroon-900 cursor-pointer"
+          >
+            {text}
+          </button>
+        ))}
         {continueConversation ? (
           <Link
             href={`/ask/c/${continueConversation.id}` as never}
-            className="text-xs font-medium text-maroon-700 hover:underline"
+            className="link-draw text-xs font-medium text-maroon-700"
           >
-            {t("continueConversation", {
-              title: continueConversation.title.slice(0, 40),
-            })}
+            {t("continueConversation", { title: continueConversation.title.slice(0, 40) })}
           </Link>
         ) : null}
       </div>
-      {word ? (
-        <p
-          className="mx-auto mt-2.5 max-w-2xl truncate text-center text-xs text-ink-600"
-          data-testid="word-caption"
-        >
-          {locale === "ar" ? word.textAr : word.textEn}
-          {(word.attributionEn || word.attributionAr) ? (
-            <span className="text-ink-400">
-              {" "}· {locale === "ar" ? word.attributionAr ?? "" : word.attributionEn ?? ""}
-            </span>
-          ) : null}
-        </p>
-      ) : null}
     </div>
   );
 }

@@ -145,7 +145,24 @@
       "viewed": "Most viewed",
       "review_due": "Review due"
     },
-    "clearFilters": "Clear"
+    "clearFilters": "Clear",
+    "shelves": {
+      "strategies": "Strategies",
+      "policies": "Policies and Standards",
+      "reports": "Reports and Studies",
+      "statistical": "Statistical Releases",
+      "guidebooks": "Guidebooks and Templates",
+      "presentations": "Presentations and Speeches",
+      "minutes": "Minutes and Circulars",
+      "projects": "Projects"
+    },
+    "projectsSummary": "Projects: {docs} deliverables across {projects} projects",
+    "expandAll": "Expand all",
+    "collapseAll": "Collapse all",
+    "pages": "{count} pp.",
+    "scrollBack": "Scroll back along the shelf",
+    "scrollForward": "Scroll forward along the shelf",
+    "verifiedSeal": "verified"
   },
   "upload": {
     "title": "Upload to Vault",
@@ -319,6 +336,40 @@
   },
   "strategy": {
     "title": "Living Strategy",
+    "glance": {
+      "band": "Strategy at a glance",
+      "targetsOnTrack": "targets on track",
+      "ofTotal": "of {total}",
+      "initiatives": "initiatives",
+      "projects": "projects",
+      "updatesSpark": "Status updates per month"
+    },
+    "medallionAria": "{title}: {pct}% of targets on track",
+    "hero": {
+      "back": "Strategy",
+      "owner": "Owner",
+      "targets": "{count} targets",
+      "initiatives": "{count} initiatives",
+      "projects": "{count} projects",
+      "progressAria": "{pct}% of targets on track"
+    },
+    "targetCard": {
+      "latest": "Latest",
+      "target": "Target",
+      "open": "Open target",
+      "noKpi": "No measure linked to this target yet",
+      "keyboard": "Arrow keys move between targets, Enter expands, Escape collapses.",
+      "expandAria": "Expand {title}"
+    },
+    "lanes": {
+      "initiatives": "Initiatives",
+      "projects": "Projects",
+      "empty": "Nothing here yet",
+      "today": "Today"
+    },
+    "outcomeLevelLane": "Outcome-level initiatives",
+    "timeline": "Timeline",
+    "deliverablesShelf": "The deliverables shelf",
     "archiveBanner": "{name} is an archived edition. It is read-only, kept for lineage and institutional memory.",
     "archiveChip": "Archive",
     "nav": {
@@ -825,7 +876,21 @@
     "footprintHint": "Your knowledge footprint across the seven national outcomes. Open your profile for the detail.",
     "askPlaceholder": "Ask SiaNexus anything about NDS3, statistics, documents, people",
     "askCta": "Ask",
-    "continueConversation": "Continue: {title}"
+    "continueConversation": "Continue: {title}",
+    "qatarNumbers": "Qatar in numbers",
+    "vsLastPeriod": "vs last period",
+    "exploreIndicator": "Explore the indicator",
+    "tomorrowNumber": "Tomorrow: another number",
+    "dailyChallenge": "Daily challenge",
+    "challengeEmpty": "No challenge today. The Statistics Hub always has a number worth knowing.",
+    "challengeRight": "Correct",
+    "challengeWrong": "Not quite",
+    "challengeDone": "Answered for today",
+    "quoteEyebrow": "Words that guide us",
+    "quoteSource": "Source",
+    "quoteNext": "Next quote",
+    "seeAllChanges": "See all changes",
+    "podcastHosts": "Dr. Mariam and Hamad"
   },
   "reports": {
     "extract": "Extract report",
@@ -970,6 +1035,50 @@
     "linkedNode": "Strategy link"
   },
   "trends": {
+    "radar": {
+      "title": "Signals Radar",
+      "bands": {
+        "near": "Short · 0-12 months",
+        "mid": "Medium · 1-3 years",
+        "long": "Long · 3+ years"
+      },
+      "bandsShort": {
+        "near": "Short",
+        "mid": "Medium",
+        "long": "Long"
+      },
+      "impactShort": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
+      "legend": "Legend",
+      "legendImpact": "Impact",
+      "legendSentiment": "Outlook for Qatar",
+      "sentiment": {
+        "positive": "Positive",
+        "negative": "Negative",
+        "neutral": "Neutral",
+        "mixed": "Mixed"
+      },
+      "empty": "No accepted signals in this period. Refresh signals to scan.",
+      "aria": "Signals radar: accepted signals of the last 180 days by horizon and type",
+      "filterBand": "Filter by horizon: {band}",
+      "filterWedge": "Filter by type: {type}"
+    },
+    "briefing": {
+      "title": "Signal Briefing",
+      "topMonth": "Highest impact this month",
+      "byCategory": "By category",
+      "byOutcome": "By outcome",
+      "avgImpact": "avg. impact",
+      "signalsCount": "{count} signals",
+      "activeFilters": "Filtered:",
+      "clearOne": "Remove filter {name}",
+      "whyItMatters": "Why it matters",
+      "collapseLane": "Collapse {name}",
+      "expandLane": "Expand {name}"
+    },
     "title": "Trends and Signals",
     "intro": "Continuous scanning of news, reports, and research, turned into structured signals linked to NDS3.",
     "lastScan": "Last refreshed:",

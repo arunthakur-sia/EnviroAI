@@ -1,9 +1,9 @@
 "use client";
-// CR02 2.2: the map toggle. A zoomable radial partition: outcomes on the
-// inner ring, targets on the middle ring, initiatives and projects on the
-// outer ring. Hand-rolled angles (proportional to item counts) instead of a
-// d3-hierarchy dependency. Draw-in once on first load, then static; clicking
-// a node sets the panes to that path.
+// CR03 2.2: the map toggle, redesigned in the outcome-medallion palette.
+// A zoomable radial partition: outcomes as maroon ring segments (each with
+// its medallion lightness), targets as sand segments, initiatives and
+// projects on the outer ring tinted by status. Hovering any segment shows
+// the same card as the medallions. Draw-in once, then static.
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { ZoomIn, ZoomOut } from "lucide-react";
@@ -18,6 +18,17 @@ const STATUS_FILL: Record<string, string> = {
   not_started: "var(--color-ink-200)",
 };
 
+/* the medallion maroon, varied per outcome like the ring lightness */
+const OUTCOME_FILLS = [
+  "#8a1538",
+  "#7a1533",
+  "#96214a",
+  "#6d1430",
+  "#a8325a",
+  "#821a41",
+  "#5a0e24",
+];
+
 type Slice = {
   id: string;
   kind: "outcome" | "target" | "item";
@@ -27,7 +38,9 @@ type Slice = {
   r1: number;
   status: string;
   label: string;
+  sub: string;
   outcomeId: string;
+  outcomeIndex: number;
   targetId: string | null;
 };
 
@@ -58,7 +71,10 @@ export function StrategyMap({
 }) {
   const locale = useLocale();
   const t = useTranslations("strategy");
+  const tc = useTranslations("common");
   const [zoom, setZoom] = React.useState(1);
+  const [hover, setHover] = React.useState<{ x: number; y: number; slice: Slice } | null>(null);
+  const wrapRef = React.useRef<HTMLDivElement>(null);
   const size = 640;
   const cx = size / 2;
   const cy = size / 2;
@@ -69,7 +85,7 @@ export function StrategyMap({
       Math.max(1, data.items.filter((i) => i.outcomeId === outcomeId).length);
     const totalWeight = data.outcomes.reduce((s, o) => s + weightOf(o.id), 0);
     let angle = -Math.PI / 2;
-    for (const o of data.outcomes) {
+    data.outcomes.forEach((o, oi) => {
       const span = (weightOf(o.id) / totalWeight) * Math.PI * 2;
       const a0 = angle;
       const a1 = angle + span;
@@ -83,10 +99,11 @@ export function StrategyMap({
         r1: 130,
         status: o.status,
         label: `${o.code ?? ""} ${bi(locale, o.titleEn, o.titleAr)}`.trim(),
+        sub: bi(locale, o.descriptionEn ?? "", o.descriptionAr ?? ""),
         outcomeId: o.id,
+        outcomeIndex: oi,
         targetId: null,
       });
-      // middle ring: targets plus one outcome-level slot if direct items exist
       const targets = data.targets.filter((tg) => tg.outcomeId === o.id);
       const directItems = data.items.filter(
         (i) => i.outcomeId === o.id && i.targetId === null
@@ -123,11 +140,12 @@ export function StrategyMap({
             r1: 194,
             status: g.status,
             label: g.label,
+            sub: "",
             outcomeId: o.id,
+            outcomeIndex: oi,
             targetId: g.id,
           });
         }
-        // outer ring: the group's items
         const items = g.id
           ? data.items.filter((i) => i.targetId === g.id)
           : directItems;
@@ -143,12 +161,14 @@ export function StrategyMap({
             r1: 258,
             status: i.status,
             label: `${i.code ?? ""} ${bi(locale, i.titleEn, i.titleAr)}`.trim(),
+            sub: i.ownerEntityName ?? "",
             outcomeId: o.id,
+            outcomeIndex: oi,
             targetId: g.id,
           });
         });
       }
-    }
+    });
     return out;
   }, [data, locale, t]);
 
@@ -159,11 +179,28 @@ export function StrategyMap({
     return false;
   };
 
+  const fillOf = (s: Slice): string => {
+    if (s.kind === "outcome") return OUTCOME_FILLS[s.outcomeIndex % OUTCOME_FILLS.length];
+    if (s.kind === "target") return "var(--color-sand-300)";
+    return STATUS_FILL[s.status] ?? "var(--color-ink-200)";
+  };
+
+  const showCard = (e: React.MouseEvent | React.FocusEvent, slice: Slice) => {
+    const wrap = wrapRef.current?.getBoundingClientRect();
+    const target = (e.target as SVGElement).getBoundingClientRect();
+    if (!wrap) return;
+    setHover({
+      x: target.left + target.width / 2 - wrap.left,
+      y: target.top - wrap.top,
+      slice,
+    });
+  };
+
   const view = size / zoom;
   const offset = (size - view) / 2;
 
   return (
-    <div className="card relative overflow-hidden p-4" data-testid="strategy-map">
+    <div ref={wrapRef} className="card relative overflow-hidden p-4" data-testid="strategy-map">
       <div className="absolute end-4 top-4 z-10 flex gap-1">
         <button
           onClick={() => setZoom((z) => Math.min(2.5, z + 0.5))}
@@ -187,8 +224,7 @@ export function StrategyMap({
         aria-label={t("nav.map")}
         style={{ direction: "ltr" }}
       >
-        {/* centre: the edition */}
-        <circle cx={cx} cy={cy} r={64} fill="var(--color-maroon-700)" />
+        <circle cx={cx} cy={cy} r={64} fill="var(--color-maroon-900)" />
         <text
           x={cx}
           y={cy + 5}
@@ -203,14 +239,18 @@ export function StrategyMap({
           <path
             key={`${s.kind}-${s.id}`}
             d={arcPath(cx, cy, s.r0, s.r1, s.a0, s.a1)}
-            fill={STATUS_FILL[s.status] ?? "var(--color-ink-200)"}
-            opacity={dimmed(s) ? 0.18 : s.kind === "outcome" ? 0.9 : s.kind === "target" ? 0.75 : 0.6}
+            fill={fillOf(s)}
+            opacity={dimmed(s) ? 0.15 : s.kind === "target" ? 0.9 : s.kind === "item" ? 0.72 : 1}
             stroke="#fff"
             strokeWidth={1}
-            className="cursor-pointer transition-opacity"
+            className="cursor-pointer transition-opacity hover:opacity-100"
             role="button"
             aria-label={s.label}
             tabIndex={0}
+            onMouseEnter={(e) => showCard(e, s)}
+            onMouseLeave={() => setHover(null)}
+            onFocus={(e) => showCard(e, s)}
+            onBlur={() => setHover(null)}
             onClick={() => {
               if (s.kind === "item") onOpen(s.id);
               else onSelect({ outcomeId: s.outcomeId, targetId: s.targetId });
@@ -221,11 +261,8 @@ export function StrategyMap({
                 else onSelect({ outcomeId: s.outcomeId, targetId: s.targetId });
               }
             }}
-          >
-            <title>{s.label}</title>
-          </path>
+          />
         ))}
-        {/* outcome code labels */}
         {slices
           .filter((s) => s.kind === "outcome")
           .map((s) => {
@@ -247,6 +284,29 @@ export function StrategyMap({
             );
           })}
       </svg>
+
+      {/* the medallion hover card (CR03 2.2) */}
+      {hover ? (
+        <div
+          className="pointer-events-none absolute z-20 w-64 -translate-x-1/2 -translate-y-full"
+          style={{ left: hover.x, top: hover.y - 6 }}
+        >
+          <div className="card p-3 text-start text-xs leading-relaxed text-ink-600 shadow-[var(--shadow-pop)]">
+            <p className="mb-0.5 flex items-center gap-1.5 font-medium text-ink-900">
+              <span
+                className="inline-block size-2 rounded-full"
+                style={{ background: STATUS_FILL[hover.slice.status] ?? STATUS_FILL.not_started }}
+                aria-hidden
+              />
+              <span className="line-clamp-2">{hover.slice.label}</span>
+            </p>
+            {hover.slice.sub ? <p className="line-clamp-2">{hover.slice.sub}</p> : null}
+            <p className="mt-0.5 text-[10px] uppercase tracking-wider text-ink-600">
+              {tc(`status.${hover.slice.status}` as never)}
+            </p>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

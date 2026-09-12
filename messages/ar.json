@@ -145,7 +145,24 @@
       "viewed": "الأكثر مشاهدة",
       "review_due": "استحقاق المراجعة"
     },
-    "clearFilters": "مسح"
+    "clearFilters": "مسح",
+    "shelves": {
+      "strategies": "الاستراتيجيات",
+      "policies": "السياسات والمعايير",
+      "reports": "التقارير والدراسات",
+      "statistical": "الإصدارات الإحصائية",
+      "guidebooks": "الأدلة والنماذج",
+      "presentations": "العروض والخطابات",
+      "minutes": "المحاضر والتعاميم",
+      "projects": "المشاريع"
+    },
+    "projectsSummary": "المشاريع: {docs} تسليماً عبر {projects} مشروعاً",
+    "expandAll": "توسيع الكل",
+    "collapseAll": "طي الكل",
+    "pages": "{count} صفحة",
+    "scrollBack": "التمرير للخلف على الرف",
+    "scrollForward": "التمرير للأمام على الرف",
+    "verifiedSeal": "موثق"
   },
   "upload": {
     "title": "رفع إلى الخزانة",
@@ -319,6 +336,40 @@
   },
   "strategy": {
     "title": "الاستراتيجية الحية",
+    "glance": {
+      "band": "الاستراتيجية في لمحة",
+      "targetsOnTrack": "مستهدفاً على المسار",
+      "ofTotal": "من {total}",
+      "initiatives": "مبادرة",
+      "projects": "مشروعاً",
+      "updatesSpark": "تحديثات الحالة شهرياً"
+    },
+    "medallionAria": "{title}: {pct}% من المستهدفات على المسار",
+    "hero": {
+      "back": "الاستراتيجية",
+      "owner": "الجهة المسؤولة",
+      "targets": "{count} مستهدفات",
+      "initiatives": "{count} مبادرات",
+      "projects": "{count} مشاريع",
+      "progressAria": "{pct}% من المستهدفات على المسار"
+    },
+    "targetCard": {
+      "latest": "أحدث قيمة",
+      "target": "المستهدف",
+      "open": "فتح المستهدف",
+      "noKpi": "لا يوجد مقياس مرتبط بهذا المستهدف بعد",
+      "keyboard": "الأسهم للتنقل بين المستهدفات، Enter للتوسيع، Escape للطي.",
+      "expandAria": "توسيع {title}"
+    },
+    "lanes": {
+      "initiatives": "المبادرات",
+      "projects": "المشاريع",
+      "empty": "لا شيء هنا بعد",
+      "today": "اليوم"
+    },
+    "outcomeLevelLane": "مبادرات على مستوى النتيجة",
+    "timeline": "الخط الزمني",
+    "deliverablesShelf": "رف التسليمات",
     "archiveBanner": "{name} نسخة مؤرشفة للقراءة فقط، محفوظة للنسب التاريخي والذاكرة المؤسسية.",
     "archiveChip": "أرشيف",
     "nav": {
@@ -825,7 +876,21 @@
     "footprintHint": "بصمتك المعرفية عبر النتائج الوطنية السبع. افتح ملفك الشخصي للتفاصيل.",
     "askPlaceholder": "اسأل سيا نكسس عن أي شيء في الاستراتيجية أو الإحصاءات أو الوثائق أو الأشخاص",
     "askCta": "اسأل",
-    "continueConversation": "أكمل: {title}"
+    "continueConversation": "أكمل: {title}",
+    "qatarNumbers": "قطر بالأرقام",
+    "vsLastPeriod": "مقارنة بالفترة السابقة",
+    "exploreIndicator": "استكشف المؤشر",
+    "tomorrowNumber": "غداً: رقم آخر",
+    "dailyChallenge": "تحدي اليوم",
+    "challengeEmpty": "لا يوجد تحدٍّ اليوم. مركز الإحصاء يحمل دائماً رقماً يستحق المعرفة.",
+    "challengeRight": "إجابة صحيحة",
+    "challengeWrong": "ليست الإجابة",
+    "challengeDone": "تمت الإجابة اليوم",
+    "quoteEyebrow": "كلمات تقودنا",
+    "quoteSource": "المصدر",
+    "quoteNext": "الاقتباس التالي",
+    "seeAllChanges": "كل التغييرات",
+    "podcastHosts": "د. مريم وحمد"
   },
   "reports": {
     "extract": "استخرج تقريراً",
@@ -970,6 +1035,50 @@
     "linkedNode": "ارتباط بالاستراتيجية"
   },
   "trends": {
+    "radar": {
+      "title": "رادار الإشارات",
+      "bands": {
+        "near": "قريب · 0-12 شهراً",
+        "mid": "متوسط · 1-3 سنوات",
+        "long": "بعيد · أكثر من 3 سنوات"
+      },
+      "bandsShort": {
+        "near": "قريب",
+        "mid": "متوسط",
+        "long": "بعيد"
+      },
+      "impactShort": {
+        "high": "مرتفع",
+        "medium": "متوسط",
+        "low": "منخفض"
+      },
+      "legend": "المفتاح",
+      "legendImpact": "الأثر",
+      "legendSentiment": "الانعكاس على قطر",
+      "sentiment": {
+        "positive": "إيجابي",
+        "negative": "سلبي",
+        "neutral": "محايد",
+        "mixed": "متباين"
+      },
+      "empty": "لا توجد إشارات معتمدة في هذه الفترة. حدّث الإشارات لبدء المسح.",
+      "aria": "رادار الإشارات: الإشارات المعتمدة خلال 180 يوماً حسب الأفق والنوع",
+      "filterBand": "تصفية حسب الأفق: {band}",
+      "filterWedge": "تصفية حسب النوع: {type}"
+    },
+    "briefing": {
+      "title": "موجز الإشارات",
+      "topMonth": "الأعلى أثراً هذا الشهر",
+      "byCategory": "حسب الفئة",
+      "byOutcome": "حسب النتيجة",
+      "avgImpact": "متوسط الأثر",
+      "signalsCount": "{count} إشارة",
+      "activeFilters": "مصفّى:",
+      "clearOne": "إزالة عامل التصفية {name}",
+      "whyItMatters": "لماذا يهمنا",
+      "collapseLane": "طي {name}",
+      "expandLane": "توسيع {name}"
+    },
     "title": "الاتجاهات والإشارات",
     "intro": "مسح مستمر للأخبار والتقارير والأبحاث، يتحول إلى إشارات منظمة مرتبطة باستراتيجية التنمية الوطنية الثالثة.",
     "lastScan": "آخر تحديث:",

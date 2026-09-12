@@ -35,34 +35,38 @@ fs.mkdirSync(outDir, { recursive: true });
 const headersPath = path.join(outDir, "headers.json");
 fs.writeFileSync(headersPath, JSON.stringify({ Cookie: cookie }));
 
-// CR02 acceptance 10: Home, Strategy, Lessons, Podcast above 90 (Ask and
-// Trends kept from CR01).
+// CR03 acceptance 6: performance and accessibility above 90 on Home, Vault,
+// Strategy, and Trends at 1440 (Lessons, Podcast, Ask kept from CR02 for
+// accessibility only).
 const targets = [
-  ["/en/home", "home"],
-  ["/en/strategy", "strategy"],
-  ["/en/lessons", "lessons"],
-  ["/en/podcast", "podcast"],
-  ["/en/ask", "ask"],
-  ["/en/trends", "trends"],
+  ["/en/home", "home", true],
+  ["/en/vault", "vault", true],
+  ["/en/strategy", "strategy", true],
+  ["/en/trends", "trends", true],
+  ["/en/lessons", "lessons", false],
+  ["/en/podcast", "podcast", false],
+  ["/en/ask", "ask", false],
 ];
 
 let failed = 0;
-for (const [url, name] of targets) {
+for (const [url, name, withPerf] of targets) {
   const outPath = path.join(outDir, `${name}.json`);
+  const categories = withPerf ? "performance,accessibility" : "accessibility";
   const args = [
     "--yes",
     "lighthouse@12",
     `${BASE}${url}`,
-    "--only-categories=accessibility",
+    `--only-categories=${categories}`,
+    "--preset=desktop",
     "--output=json",
     `--output-path=${outPath}`,
     `--chrome-path=${edge}`,
-    '"--chrome-flags=--headless=new --disable-gpu"',
+    '"--chrome-flags=--headless=new --disable-gpu --window-size=1440,900"',
     `--extra-headers=${headersPath}`,
     "--quiet",
     "--max-wait-for-load=45000",
   ];
-  const res = spawnSync("npx.cmd", args, { encoding: "utf8", timeout: 240000, shell: true });
+  const res = spawnSync("npx.cmd", args, { encoding: "utf8", timeout: 300000, shell: true });
   if (!fs.existsSync(outPath)) {
     console.log(`FAIL ${name}: lighthouse produced no report`);
     console.log((res.stderr || res.stdout || "").slice(-600));
@@ -70,15 +74,18 @@ for (const [url, name] of targets) {
     continue;
   }
   const report = JSON.parse(fs.readFileSync(outPath, "utf8"));
-  const score = Math.round((report.categories?.accessibility?.score ?? 0) * 100);
-  const ok = score >= 90;
+  const a11y = Math.round((report.categories?.accessibility?.score ?? 0) * 100);
+  const perf = withPerf ? Math.round((report.categories?.performance?.score ?? 0) * 100) : null;
+  const ok = a11y >= 90 && (perf === null || perf >= 90);
   if (!ok) failed++;
-  console.log(`${ok ? "ok  " : "FAIL"} ${name}: accessibility ${score}`);
+  console.log(
+    `${ok ? "ok  " : "FAIL"} ${name}: accessibility ${a11y}${perf !== null ? ` · performance ${perf}` : ""}`
+  );
   if (!ok) {
     const audits = Object.values(report.audits ?? {})
-      .filter((a) => a.score !== null && a.score < 1 && a.scoreDisplayMode === "binary")
-      .slice(0, 8)
-      .map((a) => `  - ${a.id}: ${a.title}`);
+      .filter((a) => a.score !== null && a.score < 0.9)
+      .slice(0, 10)
+      .map((a) => `  - ${a.id}: ${a.title} (${a.score})`);
     console.log(audits.join("\n"));
   }
 }

@@ -1,4 +1,7 @@
-// CR02 2.2: shared server renderer for the column navigator routes.
+// CR03 2: shared server renderer for the Living Strategy routes.
+// Level 1 (no outcome) renders the medallion overview with the map toggle;
+// an outcome slug renders the target cards page; a target slug renders the
+// target's detail page. URLs stay exactly as CR02 introduced them.
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/server/auth/session";
@@ -9,7 +12,9 @@ import {
 } from "@/server/services/strategy";
 import { Reveal } from "@/components/motion";
 import { bi } from "@/lib/utils";
-import { StrategyNavigator } from "./StrategyNavigator";
+import { StrategyOverview } from "./StrategyOverview";
+import { OutcomeTargets } from "./OutcomeTargets";
+import { NodeDetail } from "./node-detail";
 
 export async function renderNavigator({
   locale,
@@ -45,6 +50,21 @@ export async function renderNavigator({
         ) ?? null
       : null;
 
+  // CR03 2.4: the target slug is the target's detail page
+  if (target) {
+    return <NodeDetail locale={locale} id={target.id} />;
+  }
+
+  // CR03 2.3: one outcome's targets
+  if (outcome) {
+    return (
+      <Reveal>
+        <OutcomeTargets data={data} outcomeId={outcome.id} />
+      </Reveal>
+    );
+  }
+
+  // CR03 2.2: Level 1
   return (
     <Reveal>
       <div className="mb-4">
@@ -53,11 +73,7 @@ export async function renderNavigator({
           {bi(locale, edition.summaryEn ?? "", edition.summaryAr ?? "")}
         </p>
       </div>
-      <StrategyNavigator
-        data={data}
-        initial={{ outcomeId: outcome?.id ?? null, targetId: target?.id ?? null }}
-        initialView={view === "map" ? "map" : "columns"}
-      />
+      <StrategyOverview data={data} initialView={view === "map" ? "map" : "overview"} />
     </Reveal>
   );
 }

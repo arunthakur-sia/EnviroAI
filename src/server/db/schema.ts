@@ -37,6 +37,7 @@ export const users = sqliteTable(
     numeralsPref: text("numerals_pref").notNull().default("western"),
     quietMode: integer("quiet_mode").notNull().default(0),
     onboardingJson: text("onboarding_json"),
+    prefsJson: text("prefs_json"),
     positionEn: text("position_en"),
     positionAr: text("position_ar"),
     lastLoginAt: text("last_login_at"),

@@ -121,10 +121,10 @@ async function main() {
   const homeHtml = await (await analyst("/en/home")).text();
   check("onboarding quest is gone from Home", !homeHtml.includes('data-testid="quest-card"'));
   check("ask box present on Home", homeHtml.includes('data-testid="home-ask"'));
-  check("daily card present", homeHtml.includes('data-testid="daily-card"'));
-  // CR02 1.3: the word of the day is a caption, the mystery shelf is gone,
-  // and the footprint lives inside the redesigned progress panel.
-  check("word of the day present", homeHtml.includes('data-testid="word-caption"'));
+  // CR03 4.4.3: the daily card became the Daily challenge flip card
+  check("daily challenge present", homeHtml.includes('data-testid="daily-challenge"'));
+  // CR03 4.4.1: the word of the day became the Words that guide us band
+  check("quote band present", homeHtml.includes('data-testid="quote-band"'));
   check("lessons box present", homeHtml.includes('data-testid="home-lessons"'));
   check("mystery shelf removed (CR02)", !homeHtml.includes('data-testid="mystery"'));
   check("progress panel present", homeHtml.includes('data-testid="progress-panel"'));
@@ -547,8 +547,10 @@ async function main() {
     );
     const trends = await analyst("/en/trends");
     const trendsHtml = await trends.text();
-    check("trends renders the four sections", trends.status === 200 && trendsHtml.includes("Radar by outcome") && trendsHtml.includes("Risk heat map") && trendsHtml.includes("International index tracker"));
-    check("signal stream shows accepted cards", trendsHtml.includes("/en/trends/"));
+    // CR03 3.1 reordered the page: radar, briefing, then the unchanged
+    // heat map and tracker below.
+    check("trends renders the four sections", trends.status === 200 && trendsHtml.includes('data-testid="signal-radar"') && trendsHtml.includes('data-testid="signal-briefing"') && trendsHtml.includes("Risk heat map") && trendsHtml.includes("International index tracker"));
+    check("signal briefing shows signal cards", trendsHtml.includes("/en/trends/"));
 
     // force mock mode for deterministic scan + analyst checks
     await admin("/api/v1/settings", {
@@ -805,10 +807,12 @@ async function main() {
     // 13.1 Home composition
     const home = await admin("/en/home");
     const homeHtml = await home.text();
-    check("home renders the Today row with three cards", homeHtml.includes('data-testid="home-today"') && homeHtml.includes('data-testid="daily-card"') && homeHtml.includes('data-testid="what-changed"') && homeHtml.includes('data-testid="podcast-card"'));
+    // CR03 4 recomposed the Today row into the bento (number, challenge,
+    // podcast, timeline); the CR02 content set is all still present.
+    check("home renders the bento content set", homeHtml.includes('data-testid="qatar-numbers"') && homeHtml.includes('data-testid="daily-challenge"') && homeHtml.includes('data-testid="what-changed"') && homeHtml.includes('data-testid="podcast-card"'));
     check("home shows lessons row, shelf, and progress panel", homeHtml.includes('data-testid="home-lessons"') && homeHtml.includes('data-testid="newest-shelf"') && homeHtml.includes('data-testid="progress-panel"'));
     check("mystery shelf, spotlight, and For-you are gone", !homeHtml.includes('data-testid="mystery"') && !homeHtml.includes("Contributor spotlight") && !homeHtml.includes('data-testid="word-strip"'));
-    check("word of the day is a caption line", homeHtml.includes('data-testid="word-caption"'));
+    check("the leadership quote band is present", homeHtml.includes('data-testid="quote-band"'));
     check("podcast card names the latest episode", /what the knowledge says|ماذا تقول المعرفة/.test(homeHtml));
     check("rail has no Add Knowledge button", !/href="\/en\/add"[^>]*>[\s\S]{0,200}?<\/a>/.test(homeHtml.split("<main")[0] ?? homeHtml.slice(0, 6000)));
     const forYouRows = await db.execute("select count(*) c from notifications where kind='for_you'");
@@ -826,7 +830,8 @@ async function main() {
     // 13.3 Living Strategy navigator
     const nav = await admin("/en/strategy");
     const navHtml = await nav.text();
-    check("strategy opens the column navigator", nav.status === 200 && navHtml.includes('data-testid="strategy-panes"'));
+    // CR03 2.2 replaced the column navigator with the medallion overview
+    check("strategy opens the medallion overview", nav.status === 200 && navHtml.includes('data-testid="medallion-arc"') && navHtml.includes('data-testid="glance-band"'));
     const drill = await admin("/en/strategy/nds3/o3/o3-t1");
     const drillHtml = await drill.text();
     check("URL path drills to outcome and target", drill.status === 200 && drillHtml.includes("O3.T1"));
@@ -1114,6 +1119,148 @@ async function main() {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ ai: { mockMode: false } }),
     });
+    db.close();
+  }
+
+  /* 14. CR03: library vault, medallion strategy, signals radar, bento home */
+  console.log("\n14. CR03 acceptance");
+  {
+    const { createClient } = await import("@libsql/client");
+    const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+
+    // 14.1 Vault: fixed shelf order, books, Projects shelf, persistence
+    const vault = await admin("/en/vault");
+    const vaultHtml = await vault.text();
+    check("vault renders the shelves board", vault.status === 200 && vaultHtml.includes('data-testid="vault-shelves"'));
+    const order = ["shelf-strategies", "shelf-policies", "shelf-reports", "shelf-statistical", "shelf-projects"];
+    const positions = order.map((k) => vaultHtml.indexOf(`data-testid="${k}"`));
+    check(
+      "shelves follow the fixed order with Projects lowest",
+      positions.every((p) => p >= 0) && positions.every((p, i) => i === 0 || p > positions[i - 1]),
+      positions.join(",")
+    );
+    const delCounts = await db.execute(
+      "select count(*) c, count(distinct node_id) p from deliverable_meta"
+    );
+    check(
+      "Projects header carries the deliverable and project counts",
+      vaultHtml.includes(`Projects: ${delCounts.rows[0].c} deliverables across ${delCounts.rows[0].p} projects`)
+    );
+    check("expand and collapse all sit on the shelf toolbar", vaultHtml.includes('data-testid="expand-all"') && vaultHtml.includes('data-testid="collapse-all"'));
+    const bookCount = (vaultHtml.match(/data-testid="book"/g) ?? []).length;
+    check("documents render as books", bookCount >= 40, `books=${bookCount}`);
+    check(
+      "spine widths follow page count",
+      vaultHtml.includes("width:40") && vaultHtml.includes("width:52") && vaultHtml.includes("width:64")
+    );
+    const clothShades = new Set(vaultHtml.match(/background:#[0-9a-f]{6}/g) ?? []);
+    check(
+      "cloth colours vary per book from the library palette",
+      clothShades.size >= 8,
+      `shades=${clothShades.size}`
+    );
+    const grid = await admin("/en/vault?view=grid");
+    const gridHtml = await grid.text();
+    check("grid view uses the front-cover design", gridHtml.includes('data-testid="book-cover"'));
+    const arVault = await admin("/ar/vault");
+    const arVaultHtml = await arVault.text();
+    check("Arabic shelves carry native labels", arVaultHtml.includes("الاستراتيجيات") && arVaultHtml.includes('data-testid="book"'));
+    // collapse state persists per user in preferences
+    const prefPatch = await admin("/api/v1/profile/prefs", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ vaultShelves: { strategies: false, projects: true } }),
+    });
+    const prefGet = await admin("/api/v1/profile/prefs");
+    const prefJson = await prefGet.json();
+    check(
+      "shelf collapse state persists in preferences",
+      prefPatch.status === 200 && prefJson.data?.vaultShelves?.strategies === false && prefJson.data?.vaultShelves?.projects === true
+    );
+    await admin("/api/v1/profile/prefs", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ vaultShelves: {} }),
+    });
+
+    // 14.2 Strategy: medallions, glance, no tables, target cards, lanes
+    const l1 = await admin("/en/strategy");
+    const l1Html = await l1.text();
+    const medallions = (l1Html.match(/data-testid="outcome-medallion"/g) ?? []).length;
+    check("seven outcome medallions in the arc", medallions === 7, `got ${medallions}`);
+    check("at-a-glance band shows the three figures and sparkline", l1Html.includes('data-testid="glance-band"'));
+    check("no table on strategy level 1", !l1Html.includes("<table"));
+    const mapView = await admin("/en/strategy?view=map");
+    check("the radial map stays behind the toggle", (await mapView.text()).includes('data-testid="strategy-map"'));
+    const l2 = await admin("/en/strategy/nds3/o3");
+    const l2Html = await l2.text();
+    check("outcome page shows the hero and target cards", l2.status === 200 && l2Html.includes('data-testid="outcome-hero"') && l2Html.includes('data-testid="target-card"'));
+    check("no table on strategy level 2", !l2Html.includes("<table"));
+    const l3 = await admin("/en/strategy/nds3/o3/o3-t1");
+    const l3Html = await l3.text();
+    check("target slug opens the target detail page", l3.status === 200 && l3Html.includes('data-testid="node-hero"') && l3Html.includes("O3.T1"));
+    check("target detail groups delivery by status", l3Html.includes('data-testid="target-lanes"'));
+    const prjShelfRow = await db.execute(
+      "select node_id from deliverable_meta group by node_id order by count(*) desc limit 1"
+    );
+    const prjPage = await admin(`/en/strategy/${prjShelfRow.rows[0].node_id}`);
+    const prjHtml = await prjPage.text();
+    check("project page shows the deliverables mini shelf", prjHtml.includes('data-testid="deliverables-mini-shelf"') && prjHtml.includes('data-testid="book"'));
+    check("project page draws the milestone timeline", prjHtml.includes('data-testid="delivery-timeline"'));
+
+    // 14.3 Trends: radar geometry, briefing structure, filters
+    const tr = await admin("/en/trends");
+    const trHtml = await tr.text();
+    check("signals radar renders with legend", trHtml.includes('data-testid="signal-radar"') && trHtml.includes('data-testid="radar-legend"'));
+    const blipCount = (trHtml.match(/data-testid="radar-blip"/g) ?? []).length;
+    check("accepted signals appear as blips", blipCount >= 10, `blips=${blipCount}`);
+    const featureCount = (trHtml.match(/data-testid="feature-signal"/g) ?? []).length;
+    check(
+      "briefing opens with the highest-impact feature row",
+      trHtml.includes('data-testid="feature-row"') && featureCount >= 1 && featureCount <= 3,
+      `featured=${featureCount}`
+    );
+    check("category lanes and the by-outcome toggle exist", trHtml.includes('data-testid="briefing-lanes"') && trHtml.includes('data-testid="by-outcome-toggle"'));
+    const trFiltered = await admin("/en/trends?horizon=near");
+    const trFilteredHtml = await trFiltered.text();
+    check("active filters render as chips above the briefing", trFilteredHtml.includes('data-testid="filter-chips"'));
+    const trNew = await admin("/en/trends?triage=new");
+    const trNewHtml = await trNew.text();
+    check("radar keeps only accepted signals (empty for triage=new)", trNewHtml.includes('data-testid="radar-empty"'));
+
+    // 14.4 Home: bento, constellation, quote band, numbers, challenge
+    const home3 = await admin("/en/home");
+    const home3Html = await home3.text();
+    check(
+      "home bento carries the full content set",
+      ["home-ask", "quote-band", "qatar-numbers", "daily-challenge", "podcast-card", "what-changed", "home-lessons", "newest-shelf", "progress-panel"].every((id) => home3Html.includes(`data-testid="${id}"`))
+    );
+    check("the constellation is generated behind the content", home3Html.includes('data-testid="constellation"'));
+    const dotCount = (home3Html.match(/data-testid="outcome-dot"/g) ?? []).length;
+    check("progress panel shows the seven outcome dots", dotCount === 7, `dots=${dotCount}`);
+    check("the mini library shelves real books", home3Html.split('data-testid="newest-shelf"')[1]?.includes('data-testid="book"') === true);
+    check("no table on home", !home3Html.includes("<table"));
+    check("what changed rows carry outcome chips", home3Html.includes('data-testid="what-changed"'));
+    const arHome = await admin("/ar/home");
+    const arHomeHtml = await arHome.text();
+    check("Arabic home renders the bento with the quote band", arHome.status === 200 && arHomeHtml.includes('data-testid="quote-band"') && arHomeHtml.includes("كلمات تقودنا"));
+
+    // 14.5 CR03 design reviews exist with no unresolved generic item
+    const cr03Reviews = ["cr03-vault", "cr03-strategy-l1", "cr03-strategy-l2", "cr03-signals", "cr03-home"];
+    check(
+      "CR03 self-critique reviews exist for every screen",
+      cr03Reviews.every((r) => fs.existsSync(path.join(process.cwd(), "docs", "design-reviews", `${r}.md`)))
+    );
+    check(
+      "CR03 reviews close with no High or Critical findings",
+      cr03Reviews.every((r) => {
+        const text = fs.readFileSync(path.join(process.cwd(), "docs", "design-reviews", `${r}.md`), "utf8");
+        return /no High or Critical HIG findings/.test(text);
+      })
+    );
+
     db.close();
   }
 

@@ -63,6 +63,15 @@ export function MiniPlayer() {
 
   const isBrowserVoice = episode ? episode.audioProvider === "browser" || !episode.audioPath : false;
 
+  /* CR03 4.4.5: tell the Home podcast card (and anyone else) about playback */
+  React.useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent("sia:podcast:state", {
+        detail: { playing, id: episode?.id ?? null },
+      })
+    );
+  }, [playing, episode]);
+
   /* segment boundaries by word share, for mp3 highlight events */
   const boundaries = React.useMemo(() => {
     if (!episode) return [];

@@ -74,18 +74,8 @@ export function VaultToolbar({
         ))}
       </div>
 
-      {view === "shelves" ? (
-        <NativeSelect
-          value={sp.get("group") ?? "type"}
-          onChange={(e) => setParam("group", e.target.value === "type" ? null : e.target.value)}
-          className="w-auto"
-          aria-label={t("groupBy")}
-        >
-          <option value="type">{t("groupByType")}</option>
-          <option value="outcome">{t("groupByOutcome")}</option>
-        </NativeSelect>
-      ) : null}
-
+      {/* CR03 1.1: the shelf order is fixed by knowledge type, so the old
+          group-by select is gone. */}
       {select("type", terms.knowledge_type ?? [], t("filterType"))}
       {select("outcome", terms.outcome ?? [], t("filterOutcome"))}
       {select("sector", terms.sector ?? [], t("filterSector"))}

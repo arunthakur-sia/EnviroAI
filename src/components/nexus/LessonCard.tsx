@@ -44,8 +44,15 @@ export function LessonCard({
   const locale = useLocale();
   const t = useTranslations("lessons");
   const category = lesson.category ?? null;
+  /* CR03 4.3: the category chip fills with its colour on hover */
+  const chipFill: Record<string, string> = {
+    delivery: "group-hover/lesson:bg-maroon-700 group-hover/lesson:text-white",
+    external: "group-hover/lesson:bg-gulf-600 group-hover/lesson:text-white",
+    expert: "group-hover/lesson:bg-gold-500 group-hover/lesson:text-white",
+    institutional: "group-hover/lesson:bg-sand-300 group-hover/lesson:text-ink-900",
+  };
   return (
-    <Link href={`/lessons/${lesson.id}` as never} className="card card-hover flex h-full flex-col gap-2 p-4">
+    <Link href={`/lessons/${lesson.id}` as never} className="group/lesson card card-hover flex h-full flex-col gap-2 p-4">
       <div className="flex items-center gap-2">
         <Lightbulb className="size-4 shrink-0 text-gold-500" />
         <p className="line-clamp-2 flex-1 font-medium leading-snug text-ink-900">
@@ -79,10 +86,18 @@ export function LessonCard({
       ) : null}
       <div className="mt-auto flex flex-wrap items-center gap-2 pt-1">
         {showCategory && category ? (
-          <Chip tone={CATEGORY_TONES[category] ?? "sand"}>
+          <Chip
+            tone={CATEGORY_TONES[category] ?? "sand"}
+            className={`transition-colors duration-200 ${chipFill[category] ?? ""}`}
+          >
             {t(`categories.${category}` as never)}
           </Chip>
         ) : null}
+        {/* CR03 4.3: the outcome dot pulses once on hover */}
+        <span
+          aria-hidden
+          className="inline-block size-2 rounded-full bg-maroon-500 group-hover/lesson:[animation:dot-once_600ms_ease-out]"
+        />
         {lesson.nodeCode ? (
           <Chip tone="sand">{lesson.nodeCode}</Chip>
         ) : lesson.outcomeNameEn ? (

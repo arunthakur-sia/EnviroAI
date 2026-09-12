@@ -1,50 +1,47 @@
-// CR02 1.3.6: Home loading skeletons that match the final shapes exactly:
-// hero ask box, three equal Today cards, four lesson cards, one shelf, one
-// progress panel.
+// CR03 4: Home loading skeletons matching the bento: greeting + ask hero,
+// the quote band, the Row C bento (tall number card, quiz, podcast, timeline),
+// four lesson cards, the mini library beside the progress panel.
 import { Skeleton, ShelfSkeleton } from "@/components/ui/primitives";
 
 export default function HomeLoading() {
   return (
-    <div className="mx-auto max-w-[1200px]" aria-busy>
-      <div className="flex flex-col gap-12">
-        <section>
-          <div className="mb-5 flex items-baseline justify-between">
-            <Skeleton className="h-7 w-56" />
-            <Skeleton className="h-4 w-40" />
+    <div className="mx-auto max-w-[1240px]" aria-busy>
+      <div className="flex flex-col gap-6">
+        <section className="grid grid-cols-12 items-center gap-6">
+          <div className="col-span-12 lg:col-span-4">
+            <Skeleton className="h-9 w-64" />
+            <Skeleton className="mt-2 h-4 w-44" />
           </div>
-          <div className="mx-auto w-full max-w-3xl">
-            <Skeleton className="h-20 w-full rounded-[0.875rem]" />
-            <div className="mt-3 flex justify-center gap-1.5">
-              <Skeleton className="h-6 w-44" />
+          <div className="col-span-12 lg:col-span-8">
+            <Skeleton className="h-16 w-full rounded-2xl" />
+            <div className="mt-2.5 flex gap-1.5">
               <Skeleton className="h-6 w-52" />
-              <Skeleton className="h-6 w-40" />
+              <Skeleton className="h-6 w-44" />
             </div>
-            <Skeleton className="mx-auto mt-2.5 h-4 w-72" />
           </div>
         </section>
-        <section>
-          <Skeleton className="mb-4 h-4 w-24" />
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <Skeleton className="h-56 rounded-[0.875rem]" />
-            <Skeleton className="h-56 rounded-[0.875rem]" />
-            <Skeleton className="h-56 rounded-[0.875rem]" />
-          </div>
+        <Skeleton className="h-40 w-full rounded-2xl" />
+        <section className="grid grid-cols-12 gap-6">
+          <Skeleton className="col-span-12 h-[480px] rounded-[0.875rem] lg:col-span-5" />
+          <Skeleton className="col-span-12 h-56 rounded-[0.875rem] sm:col-span-6 lg:col-span-3" />
+          <Skeleton className="col-span-12 h-56 rounded-[0.875rem] sm:col-span-6 lg:col-span-4" />
+          <Skeleton className="col-span-12 h-52 rounded-[0.875rem] lg:col-span-7 lg:col-start-6" />
         </section>
         <section>
           <Skeleton className="mb-4 h-4 w-36" />
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <Skeleton className="h-40 rounded-[0.875rem]" />
-            <Skeleton className="h-40 rounded-[0.875rem]" />
-            <Skeleton className="h-40 rounded-[0.875rem]" />
-            <Skeleton className="h-40 rounded-[0.875rem]" />
+            <Skeleton className="h-44 rounded-[0.875rem]" />
+            <Skeleton className="h-44 rounded-[0.875rem]" />
+            <Skeleton className="h-44 rounded-[0.875rem]" />
+            <Skeleton className="h-44 rounded-[0.875rem]" />
           </div>
         </section>
-        <section className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-          <div>
-            <Skeleton className="mb-4 h-4 w-24" />
+        <section className="grid grid-cols-12 gap-6">
+          <div className="col-span-12 lg:col-span-8">
+            <Skeleton className="mb-4 h-4 w-40" />
             <ShelfSkeleton count={8} />
           </div>
-          <div>
+          <div className="col-span-12 lg:col-span-4">
             <Skeleton className="mb-4 h-4 w-28" />
             <Skeleton className="h-72 rounded-[0.875rem]" />
           </div>

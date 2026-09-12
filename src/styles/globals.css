@@ -71,6 +71,16 @@
   --color-gold-300: #ddc287;
   --color-gold-100: #f8f0da;
 
+  /* CR03 1.3: Library palette. Book cloth colours only; never used elsewhere. */
+  --color-cloth-maroon: #7a1533;
+  --color-cloth-ink: #23303f;
+  --color-cloth-gulf: #145c63;
+  --color-cloth-olive: #4f5a3a;
+  --color-cloth-plum: #4e2a4c;
+  --color-cloth-umber: #6b4a2e;
+  --color-cloth-slate: #4a5563;
+  --color-cloth-sand: #b9a57f;
+
   --color-ok: #2e7d5b;
   --color-ok-light: #e3f1ea;
   --color-warn: #b7791f;
@@ -296,6 +306,160 @@ html[lang="ar"] h4 {
 .sunburst-in {
   animation: sunburst-in 600ms var(--ease-paper);
   transform-origin: center;
+}
+
+/* ------------------------------------------------------------------ */
+/* CR03 patterns                                                       */
+/* ------------------------------------------------------------------ */
+
+/* CR03 4.2: the one new token for the Home constellation lines */
+:root {
+  --connection: rgba(138, 21, 56, 0.18);
+}
+
+/* CR03 4.3: bento card hover: 4px lift, warm maroon-tinted shadow, border
+   from transparent to maroon-100, 180ms; the primary action slides in. */
+.bento-card {
+  background: #ffffff;
+  border: 1px solid var(--color-sand-300);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-paper);
+  transition:
+    transform 180ms var(--ease-paper),
+    box-shadow 180ms var(--ease-paper),
+    border-color 180ms var(--ease-paper);
+}
+.bento-card:hover,
+.bento-card:focus-within {
+  transform: translateY(-4px);
+  border-color: var(--color-maroon-100);
+  box-shadow:
+    0 3px 8px rgba(138, 21, 56, 0.08),
+    0 14px 32px rgba(138, 21, 56, 0.12);
+}
+.bento-card .card-action {
+  transition: transform 180ms var(--ease-paper);
+}
+.bento-card:hover .card-action {
+  transform: translateX(-4px);
+}
+[dir="rtl"] .bento-card:hover .card-action {
+  transform: translateX(4px);
+}
+
+/* CR03 4.3: links draw an underline from the start side on hover */
+.link-draw {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 220ms var(--ease-paper);
+}
+[dir="rtl"] .link-draw {
+  background-position: 100% 100%;
+}
+.link-draw:hover,
+.link-draw:focus-visible {
+  background-size: 100% 1px;
+}
+
+/* CR03 4.3: digits nudge 1px up and back on hover */
+@keyframes digit-tick {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(-1px); }
+  100% { transform: translateY(0); }
+}
+.digit-tick:hover .tnum {
+  animation: digit-tick 240ms var(--ease-paper);
+}
+
+/* CR03 1.2: processing books shimmer slowly along the cloth; no spinner */
+@keyframes cloth-shimmer {
+  0% { background-position: 0 -220px; }
+  100% { background-position: 0 220px; }
+}
+.book-processing::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    180deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.16) 50%,
+    transparent 70%
+  );
+  background-size: 100% 220px;
+  animation: cloth-shimmer 2.6s linear infinite;
+  pointer-events: none;
+}
+
+/* CR03 4.2: constellation drift, a 40s loop of 6px amplitude */
+@keyframes constellation-drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(4px, -6px); }
+  50% { transform: translate(-3px, 4px); }
+  75% { transform: translate(5px, 3px); }
+}
+.constellation-drift {
+  animation: constellation-drift 40s ease-in-out infinite;
+}
+
+/* CR03 4.4.5: slow breathing halo on the podcast play button */
+@keyframes halo-breathe {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(138, 21, 56, 0.28); }
+  50% { box-shadow: 0 0 0 12px rgba(138, 21, 56, 0); }
+}
+.podcast-halo {
+  animation: halo-breathe 3.2s ease-in-out infinite;
+}
+
+/* CR03 4.3: the lesson card's outcome dot pulses once on hover */
+@keyframes dot-once {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.7); }
+  100% { transform: scale(1); }
+}
+
+/* CR03 4.4.2 and 3.2: a pulsing dot (sparkline end, high-impact radar blips) */
+@keyframes dot-pulse {
+  0% { opacity: 0.25; transform: scale(1); }
+  70% { opacity: 0; transform: scale(2.6); }
+  100% { opacity: 0; transform: scale(2.6); }
+}
+.dot-pulse {
+  animation: dot-pulse 2.4s ease-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+  pointer-events: none;
+}
+
+/* CR03 4.4.5: waveform bars dance while an episode plays */
+@keyframes wave-dance {
+  0%, 100% { transform: scaleY(0.55); }
+  50% { transform: scaleY(1); }
+}
+.wave-playing rect {
+  animation: wave-dance 900ms ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.wave-playing rect:nth-child(2n) { animation-delay: 120ms; }
+.wave-playing rect:nth-child(3n) { animation-delay: 260ms; }
+.wave-playing rect:nth-child(5n) { animation-delay: 380ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .constellation-drift,
+  .podcast-halo,
+  .dot-pulse,
+  .wave-playing rect,
+  .book-processing::after {
+    animation: none !important;
+  }
+  .bento-card:hover,
+  .bento-card:focus-within {
+    transform: none;
+  }
 }
 
 /* Chart tooltips (recharts) */

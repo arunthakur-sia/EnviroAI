@@ -356,6 +356,293 @@ export async function getHomeData(user: CurrentUser) {
     .orderBy(desc(schema.aiConversations.updatedAt))
     .limit(1);
 
+  /* ---------------- CR03 4 additions ---------------- */
+
+  // nodeId -> outcome taxonomy code, for connection highlights
+  const { outcomeNodeMap } = await import("@/server/scan/extract");
+  const outcomeMap = await outcomeNodeMap(); // tax code -> outcome node id
+  const taxByOutcomeNode = new Map<string, string>();
+  for (const [tax, nodeId] of outcomeMap) taxByOutcomeNode.set(nodeId, tax);
+  const allNodes = await db
+    .select({
+      id: schema.strategyNodes.id,
+      parentId: schema.strategyNodes.parentId,
+      code: schema.strategyNodes.code,
+      nodeType: schema.strategyNodes.nodeType,
+    })
+    .from(schema.strategyNodes);
+  const nodeById = new Map(allNodes.map((n) => [n.id, n]));
+  const outcomeTaxOfNode = (nodeId: string | null): string | null => {
+    let current = nodeId ? nodeById.get(nodeId) : undefined;
+    for (let i = 0; i < 6 && current; i++) {
+      const tax = taxByOutcomeNode.get(current.id);
+      if (tax) return tax;
+      current = current.parentId ? nodeById.get(current.parentId) : undefined;
+    }
+    return null;
+  };
+
+  /* CR03 4.4.1: all quotes for the Words that guide us band */
+  const quotes = words
+    .filter((w) => w.kind === "quote")
+    .map((w) => ({
+      textEn: w.textEn,
+      textAr: w.textAr,
+      attributionEn: w.attributionEn,
+      attributionAr: w.attributionAr,
+      sourceRef: w.sourceRef,
+    }));
+
+  /* CR03 4.4.2: Qatar in numbers. The daily card's indicator when set, else a
+     headline indicator rotated by day. Series of the last 24 periods. */
+  let qatarNumber: {
+    indicatorId: string;
+    nameEn: string;
+    nameAr: string;
+    unit: string | null;
+    decimals: number;
+    direction: string;
+    latestValue: number;
+    latestPeriod: string;
+    prevValue: number | null;
+    series: { period: string; value: number }[];
+    hookEn: string | null;
+    hookAr: string | null;
+  } | null = null;
+  {
+    let indicatorId = card?.indicatorId ?? null;
+    if (!indicatorId) {
+      const headliners = await db
+        .select({ id: schema.indicators.id })
+        .from(schema.indicators)
+        .where(eq(schema.indicators.isHeadline, 1))
+        .orderBy(schema.indicators.code);
+      if (headliners.length) indicatorId = headliners[dayOfYear % headliners.length].id;
+    }
+    if (indicatorId) {
+      const [ind] = await db
+        .select()
+        .from(schema.indicators)
+        .where(eq(schema.indicators.id, indicatorId))
+        .limit(1);
+      if (ind) {
+        const values = await db
+          .select()
+          .from(schema.indicatorValues)
+          .where(
+            and(
+              eq(schema.indicatorValues.indicatorId, ind.id),
+              eq(schema.indicatorValues.dimensionKey, "total")
+            )
+          )
+          .orderBy(schema.indicatorValues.period);
+        const series = values.slice(-24).map((v) => ({ period: v.period, value: v.value }));
+        const latest = series.at(-1);
+        if (latest) {
+          qatarNumber = {
+            indicatorId: ind.id,
+            nameEn: ind.nameEn,
+            nameAr: ind.nameAr,
+            unit: ind.unit,
+            decimals: ind.decimals,
+            direction: ind.direction,
+            latestValue: latest.value,
+            latestPeriod: latest.period,
+            prevValue: series.at(-2)?.value ?? null,
+            series,
+            hookEn: card?.indicatorId === ind.id ? card?.hookEn ?? null : null,
+            hookAr: card?.indicatorId === ind.id ? card?.hookAr ?? null : null,
+          };
+        }
+      }
+    }
+  }
+
+  /* CR03 4.4.4: What changed as a compact timeline with outcome chips */
+  const since90 = new Date(Date.now() - 90 * 86400000).toISOString();
+  const updateRows = await db
+    .select({
+      nodeId: schema.statusUpdates.nodeId,
+      status: schema.statusUpdates.status,
+      progressPct: schema.statusUpdates.progressPct,
+      summaryEn: schema.statusUpdates.summaryEn,
+      summaryAr: schema.statusUpdates.summaryAr,
+      createdAt: schema.statusUpdates.createdAt,
+      titleEn: schema.strategyNodes.titleEn,
+      titleAr: schema.strategyNodes.titleAr,
+      code: schema.strategyNodes.code,
+    })
+    .from(schema.statusUpdates)
+    .innerJoin(schema.strategyNodes, eq(schema.strategyNodes.id, schema.statusUpdates.nodeId))
+    .where(gte(schema.statusUpdates.createdAt, since90))
+    .orderBy(desc(schema.statusUpdates.createdAt))
+    .limit(6);
+  const kpiRows = await db
+    .select({
+      period: schema.kpiValues.period,
+      value: schema.kpiValues.actualValue,
+      createdAt: schema.kpiValues.createdAt,
+      nameEn: schema.kpis.nameEn,
+      nameAr: schema.kpis.nameAr,
+      unit: schema.kpis.unit,
+      nodeId: schema.kpis.nodeId,
+    })
+    .from(schema.kpiValues)
+    .innerJoin(schema.kpis, eq(schema.kpis.id, schema.kpiValues.kpiId))
+    .where(gte(schema.kpiValues.createdAt, since90))
+    .orderBy(desc(schema.kpiValues.createdAt))
+    .limit(6);
+  const changedTimeline = [
+    ...updateRows.map((u) => ({
+      kind: "status" as const,
+      date: u.createdAt,
+      titleEn: u.titleEn,
+      titleAr: u.titleAr,
+      nodeCode: u.code,
+      status: u.status,
+      deltaEn: u.progressPct != null ? `${u.progressPct}%` : null,
+      deltaAr: u.progressPct != null ? `${u.progressPct}%` : null,
+      detailEn: u.summaryEn ?? "",
+      detailAr: u.summaryAr ?? "",
+      outcome: outcomeTaxOfNode(u.nodeId),
+      outcomeCode: (() => {
+        let cur = nodeById.get(u.nodeId);
+        for (let i = 0; i < 6 && cur; i++) {
+          if (taxByOutcomeNode.has(cur.id)) return cur.code;
+          cur = cur.parentId ? nodeById.get(cur.parentId) : undefined;
+        }
+        return null;
+      })(),
+    })),
+    ...kpiRows
+      .filter((k) => k.value != null)
+      .map((k) => ({
+        kind: "kpi" as const,
+        date: k.createdAt,
+        titleEn: k.nameEn,
+        titleAr: k.nameAr,
+        nodeCode: null as string | null,
+        status: null as string | null,
+        deltaEn: `${k.value}${k.unit ? ` ${k.unit}` : ""} (${k.period})`,
+        deltaAr: `${k.value}${k.unit ? ` ${k.unit}` : ""} (${k.period})`,
+        detailEn: "",
+        detailAr: "",
+        outcome: outcomeTaxOfNode(k.nodeId),
+        outcomeCode: (() => {
+          let cur = k.nodeId ? nodeById.get(k.nodeId) : undefined;
+          for (let i = 0; i < 6 && cur; i++) {
+            if (taxByOutcomeNode.has(cur.id)) return cur.code;
+            cur = cur.parentId ? nodeById.get(cur.parentId) : undefined;
+          }
+          return null;
+        })(),
+      })),
+  ]
+    .sort((a, b) => b.date.localeCompare(a.date))
+    // one row per subject: three KPI values entered the same day collapse
+    .filter(
+      (row, i, all) => all.findIndex((r) => r.kind === row.kind && r.titleEn === row.titleEn) === i
+    )
+    .slice(0, 3);
+
+  /* CR03 4.2: the knowledge constellation, from real relations */
+  const outcomeHubs = outcomes.map((o) => {
+    const nodeId = outcomeMap.get(o.code);
+    const node = nodeId ? nodeById.get(nodeId) : undefined;
+    return { tax: o.code, code: node?.code ?? o.code, nameEn: o.nameEn, nameAr: o.nameAr };
+  });
+  const satellites: { id: string; type: string; outcome: string }[] = [];
+  // documents tagged with an outcome term
+  const outcomeTerms = await db
+    .select({ id: schema.taxonomyTerms.id, code: schema.taxonomyTerms.code })
+    .from(schema.taxonomyTerms)
+    .innerJoin(
+      schema.taxonomyDimensions,
+      eq(schema.taxonomyDimensions.id, schema.taxonomyTerms.dimensionId)
+    )
+    .where(eq(schema.taxonomyDimensions.code, "outcome"));
+  const termTax = new Map(outcomeTerms.map((t) => [t.id, t.code]));
+  const docTags = await db
+    .select({ resourceId: schema.taggings.resourceId, termId: schema.taggings.termId })
+    .from(schema.taggings)
+    .where(
+      and(
+        eq(schema.taggings.resourceType, "document"),
+        inArray(schema.taggings.termId, outcomeTerms.map((t) => t.id))
+      )
+    )
+    .limit(400);
+  const seenDocs = new Set<string>();
+  for (const tag of docTags) {
+    if (satellites.length >= 22) break;
+    if (seenDocs.has(tag.resourceId)) continue;
+    seenDocs.add(tag.resourceId);
+    const tax = termTax.get(tag.termId);
+    if (tax) satellites.push({ id: `doc:${tag.resourceId}`, type: "document", outcome: tax });
+  }
+  // lessons linked to nodes
+  const lessonRows = await db
+    .select({ id: schema.lessons.id, nodeId: schema.lessons.nodeId })
+    .from(schema.lessons)
+    .where(inArray(schema.lessons.status, ["published", "verified"]))
+    .limit(60);
+  let lessonCount = 0;
+  for (const l of lessonRows) {
+    if (lessonCount >= 12) break;
+    const tax = outcomeTaxOfNode(l.nodeId);
+    if (tax) {
+      satellites.push({ id: `lesson:${l.id}`, type: "lesson", outcome: tax });
+      lessonCount++;
+    }
+  }
+  // indicators through KPIs on outcome subtrees
+  const kpiIndicators = await db
+    .select({ indicatorId: schema.kpis.indicatorId, nodeId: schema.kpis.nodeId })
+    .from(schema.kpis)
+    .limit(80);
+  const seenInd = new Set<string>();
+  for (const k of kpiIndicators) {
+    if (seenInd.size >= 12) break;
+    if (!k.indicatorId || seenInd.has(k.indicatorId)) continue;
+    const tax = outcomeTaxOfNode(k.nodeId);
+    if (tax) {
+      seenInd.add(k.indicatorId);
+      satellites.push({ id: `ind:${k.indicatorId}`, type: "indicator", outcome: tax });
+    }
+  }
+  // experts with an outcome domain
+  const domainRows = await db
+    .select({ expertId: schema.expertDomains.expertId, termId: schema.expertDomains.termId })
+    .from(schema.expertDomains)
+    .where(inArray(schema.expertDomains.termId, outcomeTerms.map((t) => t.id)))
+    .limit(30);
+  const seenExperts = new Set<string>();
+  for (const d of domainRows) {
+    if (seenExperts.size >= 8) break;
+    if (seenExperts.has(d.expertId)) continue;
+    seenExperts.add(d.expertId);
+    const tax = termTax.get(d.termId);
+    if (tax) satellites.push({ id: `exp:${d.expertId}`, type: "expert", outcome: tax });
+  }
+  const constellation = { hubs: outcomeHubs, satellites: satellites.slice(0, 52) };
+
+  /* CR03 4.4.5: has the user finished the latest episode (halo when not) */
+  let episodeListened = false;
+  if (latestEpisode) {
+    const [listen] = await db
+      .select({ id: schema.podcastListens.id })
+      .from(schema.podcastListens)
+      .where(
+        and(
+          eq(schema.podcastListens.episodeId, latestEpisode.id),
+          eq(schema.podcastListens.userId, user.id),
+          eq(schema.podcastListens.completed, 1)
+        )
+      )
+      .limit(1);
+    episodeListened = Boolean(listen);
+  }
+
   /* Newest verified shelf (Explore row: 8 spines) */
   const newest = await db
     .select()
@@ -413,6 +700,7 @@ export async function getHomeData(user: CurrentUser) {
           language: latestEpisode.language,
           audioProvider: latestEpisode.audioProvider,
           source: episodeSource,
+          listened: episodeListened,
         }
       : null,
     lessons: lessons.map((l) => {
@@ -431,8 +719,13 @@ export async function getHomeData(user: CurrentUser) {
         nodeCode: node?.code ?? null,
         nodeTitleEn: node?.titleEn ?? null,
         nodeTitleAr: node?.titleAr ?? null,
+        outcome: outcomeTaxOfNode(l.nodeId),
       };
     }),
+    quotes,
+    qatarNumber,
+    changedTimeline,
+    constellation,
     progress: {
       outcomes: outcomes.map((o) => ({
         code: o.code,
