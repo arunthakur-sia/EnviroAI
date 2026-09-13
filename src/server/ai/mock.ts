@@ -833,6 +833,8 @@ export function mockPodcastScript(input: {
   language: "ar" | "en";
   minutes: number;
   focus: string;
+  /* CR04 3.6: the single-lesson episode template */
+  template?: "lesson";
 }): {
   title_en: string;
   title_ar: string;
@@ -863,12 +865,51 @@ export function mockPodcastScript(input: {
     return true;
   };
 
-  if (ar) {
+  /* CR04 4.2: every episode opens and signs off with the official name */
+  if (input.template === "lesson") {
+    // CR04 3.6: Hamad introduces the lesson and its source, Dr. Mariam
+    // explains it and the recommendation, Hamad closes with where it applies.
+    const first = sourceLines[0];
+    const clean = (s: string | undefined, n: number) => (s ?? "").replace(/\s+/g, " ").slice(0, n);
+    if (ar) {
+      push(
+        "hamad",
+        `أهلاً بكم في بودكاست المعرفة من المجلس الوطني للتخطيط. حلقة قصيرة اليوم عن درس واحد يستحق دقيقتين من وقتكم: ${input.labelAr || input.labelEn}. دكتورة مريم، ما القصة؟`
+      );
+      if (first) {
+        push("mariam", clean(first.text, 300), `كما سُجل في ${first.title}`);
+      }
+      push(
+        "mariam",
+        "والتوصية العملية: طبقوا هذا الدرس عند أول محطة قادمة مشابهة، ولا تنتظروا نهاية المشروع لتوثيق ما تعلمتم."
+      );
+      push(
+        "hamad",
+        `أين ينطبق هذا؟ في كل مشروع يمر بالمرحلة نفسها. ستجدون الدرس وروابطه في غرفة التعلم في سيا نكسس. كان هذا بودكاست المعرفة. إلى اللقاء.`
+      );
+    } else {
+      push(
+        "hamad",
+        `Welcome to NPC Knowledge Cast, from the National Planning Council. A short one today: a single lesson worth two minutes of your time: ${input.labelEn}. Dr. Mariam, what is the story?`
+      );
+      if (first) {
+        push("mariam", clean(first.text, 320), `as recorded in ${first.title}`);
+      }
+      push(
+        "mariam",
+        "And the working recommendation: apply this at the next comparable milestone, and do not wait for project close-out to write down what you learned."
+      );
+      push(
+        "hamad",
+        `Where does it apply? In every project passing through the same stage. You will find the lesson and its links in the Learning Room in SiaNexus. That was NPC Knowledge Cast. Until next time.`
+      );
+    }
+  } else if (ar) {
     push(
       "hamad",
-      `أهلاً بكم في بودكاست صوت المعرفة من المجلس الوطني للتخطيط. حلقة اليوم عن ${input.labelAr || input.labelEn}، وسبب اهتمامنا بها أنها تمس عملنا اليومي في تنفيذ الاستراتيجية الوطنية. معي الدكتورة مريم. أهلاً دكتورة.`
+      `أهلاً بكم في بودكاست المعرفة من المجلس الوطني للتخطيط. حلقة اليوم عن ${input.labelAr || input.labelEn}، وسبب اهتمامنا بها أنها تمس عملنا اليومي في تنفيذ الاستراتيجية الوطنية. معي الدكتورة مريم. أهلاً دكتورة.`
     );
-    push("mariam", "أهلاً حمد، وأهلاً بالمستمعين. المادة التي بين أيدينا اليوم غنية، فلنبدأ.");
+    push("mariam", "أهلاً حمد، وأهلاً بمستمعي البودكاست. المادة التي بين أيدينا اليوم غنية، فلنبدأ.");
     for (const s of sourceLines.slice(0, 4)) {
       if (!push("hamad", `حدثينا عن ${s.title}. ما الذي تقوله المادة هنا؟`)) break;
       const clean = s.text.replace(/\s+/g, " ").slice(0, 260);
@@ -884,13 +925,13 @@ export function mockPodcastScript(input: {
       "mariam",
       "والدرس الذي أرجو أن نحتفظ به: المعرفة الموثقة في وقتها توفر على الفريق القادم شهوراً من إعادة الاكتشاف. سجلوا ما تعلمتم في سيا نكسس قبل أن ينساه المشروع."
     );
-    push("hamad", "شكراً دكتورة مريم، وشكراً لكم على الاستماع. إلى اللقاء في حلقة قادمة من صوت المعرفة.");
+    push("hamad", "شكراً دكتورة مريم، وشكراً لكم على الاستماع. كان هذا بودكاست المعرفة. إلى اللقاء.");
   } else {
     push(
       "hamad",
-      `Welcome to the NPC Nexus Podcast from the National Planning Council. Today we are talking about ${input.labelEn}, and it matters because it touches the daily work of delivering the national strategy. With me is Dr. Mariam. Welcome, doctor.`
+      `Welcome to NPC Knowledge Cast, from the National Planning Council. Today we are talking about ${input.labelEn}, and it matters because it touches the daily work of delivering the national strategy. With me is Dr. Mariam. Welcome, doctor.`
     );
-    push("mariam", "Thank you Hamad, and hello everyone. The material in front of us today is rich, so let us begin.");
+    push("mariam", "Thank you Hamad, and hello to everyone listening to the Cast. The material in front of us today is rich, so let us begin.");
     for (const s of sourceLines.slice(0, 4)) {
       if (!push("hamad", `Tell us about ${s.title}. What does the material say here?`)) break;
       const clean = s.text.replace(/\s+/g, " ").slice(0, 280);
@@ -906,7 +947,7 @@ export function mockPodcastScript(input: {
       "mariam",
       "And the lesson to keep: knowledge recorded in its moment saves the next team months of rediscovery. Capture what you learned in SiaNexus before the project forgets it."
     );
-    push("hamad", "Thank you Dr. Mariam, and thank you for listening. Until the next episode of the NPC Nexus Podcast.");
+    push("hamad", "Thank you Dr. Mariam, and thank you for listening. That was NPC Knowledge Cast. Until next time.");
   }
 
   return {

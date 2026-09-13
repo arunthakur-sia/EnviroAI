@@ -12,15 +12,20 @@ export default async function NodePage({
   searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>;
-  searchParams: Promise<{ view?: string }>;
+  searchParams: Promise<{ view?: string; o?: string; t?: string; i?: string; p?: string }>;
 }) {
   const { locale, id } = await params;
   const sp = await searchParams;
 
-  // /strategy/nds3 and friends: the overview, not a node
+  // /strategy/nds3 and friends: the canvas, not a node
   const asEdition = await getEditionByCode(id);
   if (asEdition) {
-    return renderNavigator({ locale, editionCode: id, view: sp.view });
+    return renderNavigator({
+      locale,
+      editionCode: id,
+      view: sp.view,
+      canvasState: { o: sp.o, t: sp.t, i: sp.i, p: sp.p },
+    });
   }
 
   return <NodeDetail locale={locale} id={id} />;

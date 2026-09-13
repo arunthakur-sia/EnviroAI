@@ -12,7 +12,8 @@ export type JobType =
   | "scan_run"
   | "reembed_all"
   | "podcast_render" // CR02 4.5
-  | "report_generate"; // CR02 7
+  | "report_generate" // CR02 7
+  | "lessons_recluster"; // CR04 3.7
 
 export async function enqueue(
   type: JobType,

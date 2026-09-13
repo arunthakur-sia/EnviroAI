@@ -7,7 +7,7 @@
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { ArrowLeft, ArrowRight, FileStack } from "lucide-react";
+import { ArrowLeft, ArrowRight, FileStack, Link as LinkIcon } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { cn, bi } from "@/lib/utils";
 import { formatNumber } from "@/lib/format";
@@ -30,13 +30,24 @@ function outcomeNumber(code: string | null): string {
 }
 
 /* A compact delivery card inside a lane */
-function LaneCard({ item, locale, today }: { item: NavItem; locale: string; today: string }) {
+export function LaneCard({
+  item,
+  locale,
+  today,
+  onOpen,
+}: {
+  item: NavItem;
+  locale: string;
+  today: string;
+  /** CR04 2.4: the canvas opens a drawer instead of navigating */
+  onOpen?: (item: NavItem) => void;
+}) {
   const t = useTranslations("strategy");
   const router = useRouter();
   const pct = timelinePct(item.startDate, item.endDate);
   return (
     <button
-      onClick={() => router.push(`/strategy/${item.id}` as never)}
+      onClick={() => (onOpen ? onOpen(item) : router.push(`/strategy/${item.id}` as never))}
       className="card flex w-60 shrink-0 flex-col gap-1.5 px-3.5 py-3 text-start transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] cursor-pointer"
       data-testid="lane-card"
     >
@@ -78,16 +89,18 @@ function LaneCard({ item, locale, today }: { item: NavItem; locale: string; toda
   );
 }
 
-function Lane({
+export function Lane({
   label,
   items,
   locale,
   today,
+  onOpen,
 }: {
   label: string;
   items: NavItem[];
   locale: string;
   today: string;
+  onOpen?: (item: NavItem) => void;
 }) {
   const t = useTranslations("strategy");
   return (
@@ -98,7 +111,7 @@ function Lane({
       {items.length ? (
         <div className="flex gap-2.5 overflow-x-auto pb-2" style={{ overscrollBehaviorX: "contain" }}>
           {items.map((i) => (
-            <LaneCard key={i.id} item={i} locale={locale} today={today} />
+            <LaneCard key={i.id} item={i} locale={locale} today={today} onOpen={onOpen} />
           ))}
         </div>
       ) : (
@@ -110,7 +123,7 @@ function Lane({
   );
 }
 
-function TargetCard({
+export function TargetCard({
   target,
   items,
   expanded,
@@ -119,6 +132,8 @@ function TargetCard({
   outcomeSlug,
   locale,
   today,
+  onOpenItem,
+  copyLink,
 }: {
   target: NavTarget;
   items: NavItem[];
@@ -128,6 +143,9 @@ function TargetCard({
   outcomeSlug: string;
   locale: string;
   today: string;
+  onOpenItem?: (item: NavItem) => void;
+  /** CR04 2.5: copy the deep link for this target */
+  copyLink?: () => void;
 }) {
   const t = useTranslations("strategy");
   const reduced = useReducedMotion();
@@ -245,10 +263,19 @@ function TargetCard({
           >
             <div className="border-t border-sand-100 px-5 py-4">
               <div className="flex flex-col gap-5 lg:flex-row lg:gap-8">
-                <Lane label={t("lanes.initiatives")} items={initiatives} locale={locale} today={today} />
-                <Lane label={t("lanes.projects")} items={projects} locale={locale} today={today} />
+                <Lane label={t("lanes.initiatives")} items={initiatives} locale={locale} today={today} onOpen={onOpenItem} />
+                <Lane label={t("lanes.projects")} items={projects} locale={locale} today={today} onOpen={onOpenItem} />
               </div>
-              <div className="mt-2 text-end">
+              <div className="mt-2 flex items-center justify-end gap-3">
+                {copyLink ? (
+                  <button
+                    onClick={copyLink}
+                    className="link-draw inline-flex items-center gap-1 text-xs font-medium text-ink-600 cursor-pointer"
+                    data-testid="copy-target-link"
+                  >
+                    <LinkIcon className="size-3" /> {t("canvas.copyLink")}
+                  </button>
+                ) : null}
                 <Link
                   href={`/strategy/${editionCode}/${outcomeSlug}/${target.slug}` as never}
                   className="link-draw inline-flex items-center gap-1 text-sm font-medium text-maroon-700"

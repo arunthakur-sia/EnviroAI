@@ -20,6 +20,7 @@ import { useToast } from "@/components/ui/toast";
 import { MODULES, ACTIONS } from "@/server/db/json";
 import { AnalyticsTab, type AnalyticsData } from "./AnalyticsTab";
 import { TrendsSettingsTab } from "./TrendsSettingsTab";
+import { LessonsSettingsTab } from "./LessonsSettingsTab";
 
 type UserRow = {
   id: string;
@@ -81,6 +82,7 @@ export function SettingsTabs(props: {
             <TabsTrigger value="gamification">{t("tabs.gamification")}</TabsTrigger>
             <TabsTrigger value="ai">{t("tabs.ai")}</TabsTrigger>
             <TabsTrigger value="trends">{t("tabs.trends")}</TabsTrigger>
+            <TabsTrigger value="lessons">{t("tabs.lessons")}</TabsTrigger>
             <TabsTrigger value="bounties">{t("tabs.bounties")}</TabsTrigger>
             <TabsTrigger value="integrations">{t("tabs.integrations")}</TabsTrigger>
             <TabsTrigger value="audit">{t("tabs.audit")}</TabsTrigger>
@@ -105,6 +107,9 @@ export function SettingsTabs(props: {
           </TabsContent>
           <TabsContent value="ai" className="mt-5">
             <AiTab settings={props.aiSettings} />
+          </TabsContent>
+          <TabsContent value="lessons" className="mt-5">
+            <LessonsSettingsTab />
           </TabsContent>
           <TabsContent value="trends" className="mt-5">
             <TrendsSettingsTab />
@@ -218,7 +223,7 @@ function UsersTab({
                     onChange={(e) => patch(u.id, { departmentId: e.target.value || null })}
                     className="h-8 w-auto max-w-44 text-xs"
                   >
-                    <option value="">—</option>
+                    <option value="">-</option>
                     {departments.map((d) => (
                       <option key={d.id} value={d.id}>
                         {bi(locale, d.nameEn, d.nameAr)}
@@ -240,7 +245,7 @@ function UsersTab({
                   </NativeSelect>
                 </td>
                 <td className="px-4 py-2 text-xs text-ink-400 tnum">
-                  {u.lastLoginAt ? u.lastLoginAt.slice(0, 10) : "—"}
+                  {u.lastLoginAt ? u.lastLoginAt.slice(0, 10) : "-"}
                 </td>
               </tr>
             ))}
@@ -784,7 +789,7 @@ function AuditTab() {
                   <td className="whitespace-nowrap px-4 py-1.5 text-xs text-ink-400 tnum" dir="ltr">
                     {r.createdAt.slice(0, 19).replace("T", " ")}
                   </td>
-                  <td className="px-4 py-1.5 text-ink-900">{r.userNameEn ?? "—"}</td>
+                  <td className="px-4 py-1.5 text-ink-900">{r.userNameEn ?? "-"}</td>
                   <td className="px-4 py-1.5">
                     <Chip tone="sand">{r.action}</Chip>
                   </td>

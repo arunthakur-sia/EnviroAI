@@ -1,0 +1,24 @@
+// Probe: open the O3 panel, expand Read the chapter, show the full text.
+import { chromium } from "playwright";
+const BASE = "http://localhost:3000";
+const browser = await chromium.launch({ channel: "msedge" }).catch(() => chromium.launch());
+const page = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
+await page.goto(`${BASE}/en/login`);
+await page.fill("#email", "admin@npc.qa");
+await page.fill("#password", "Nexus!2026");
+await page.click("button[type=submit]");
+await page.waitForURL("**/home");
+await page.goto(`${BASE}/en/strategy?o=o3`, { waitUntil: "networkidle" });
+await page.waitForTimeout(2200);
+await page.click('[data-testid="read-chapter"] > button');
+await page.waitForTimeout(700);
+const summary = await page.locator('[data-testid="read-chapter"]').innerText();
+console.log("summary excerpt:", summary.slice(0, 400).replace(/\n/g, " | "));
+await page.click('[data-testid="show-full-text"]');
+await page.waitForTimeout(1500);
+const text = await page.locator('[data-testid="read-chapter"]').innerText();
+console.log("\nfull text length:", text.length);
+console.log("page chips:", (text.match(/p\. \d+/g) ?? []).slice(0, 8).join(", "));
+await page.screenshot({ path: "data/screenshots/cr04/canvas-en-chapter.png" });
+console.log("saved canvas-en-chapter.png");
+await browser.close();

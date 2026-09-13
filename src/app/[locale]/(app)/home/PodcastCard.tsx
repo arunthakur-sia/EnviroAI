@@ -1,8 +1,9 @@
 "use client";
-// CR03 4.4.5: the NPC Nexus Podcast card. Soft maroon corner wash, the
-// waveform glyph (dancing while an episode plays), the latest episode, the
-// hosts line, a large circular play button with a slow breathing halo while
-// an unplayed episode exists, and Make an episode as the quiet second action.
+// CR03 4.4.5 + CR04 4.3: the NPC Knowledge Cast card. Soft maroon corner
+// wash, the wordmark beside the waveform glyph (dancing while an episode
+// plays), the latest episode, the hosts line, a large circular play button
+// with a slow breathing halo while an unplayed episode exists, and Make an
+// episode as the quiet second action.
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -45,10 +46,19 @@ export function PodcastCard({ episode }: { episode: HomeEpisode }) {
         className="pointer-events-none absolute -end-10 -top-10 size-40 rounded-full"
         style={{ background: "radial-gradient(circle, var(--color-maroon-100), transparent 70%)" }}
       />
-      <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-ink-600" style={{ fontFamily: "inherit" }}>
-        {t("podcastEyebrow")}
+      {/* CR04 4.3: the wordmark beside the glyph */}
+      <p className="mb-3 flex items-center gap-2">
+        <WaveformMark className={cn("h-5 w-10 shrink-0", playing && "wave-playing")} />
+        <span
+          className="truncate font-semibold text-maroon-900"
+          style={{
+            fontFamily: locale === "ar" ? "var(--font-kufi)" : "var(--font-display)",
+            fontSize: 15,
+          }}
+        >
+          {t("podcastEyebrow")}
+        </span>
       </p>
-      <WaveformMark className={cn("h-6 w-12", playing && "wave-playing")} />
       {episode ? (
         <>
           <p className="mt-2.5 line-clamp-2 text-sm font-medium leading-snug text-ink-900">

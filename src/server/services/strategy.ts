@@ -467,6 +467,195 @@ export async function getNavigator(editionId: string): Promise<NavigatorData> {
   };
 }
 
+/* ------------------------------------------------------------------ */
+/* CR04 2: the Strategy Canvas extras                                   */
+/* ------------------------------------------------------------------ */
+
+export type QnvPillar = {
+  key: "human" | "social" | "economic" | "environmental";
+  outcomes: number[]; // outcome numbers (O1..O7)
+};
+
+/* CR04 2.2 seed mapping: Economic 1+2, Human 3, Social 4+5,
+   Environmental 6, and outcome 7 is driven by all four. */
+export const DEFAULT_QNV_PILLARS: QnvPillar[] = [
+  { key: "human", outcomes: [3, 7] },
+  { key: "social", outcomes: [4, 5, 7] },
+  { key: "economic", outcomes: [1, 2, 7] },
+  { key: "environmental", outcomes: [6, 7] },
+];
+
+export type ChapterInfo = {
+  documentId: string;
+  documentIdAr: string | null;
+  pageFrom: number;
+  pageTo: number;
+  summaryEn: string;
+  summaryAr: string;
+};
+
+export type CanvasExtras = {
+  pillars: QnvPillar[];
+  /* outcome node code (O1..O7) -> */
+  kpiTiles: Record<
+    string,
+    {
+      id: string;
+      nameEn: string;
+      nameAr: string;
+      unit: string | null;
+      decimals: number;
+      direction: string;
+      latestValue: number | null;
+      latestPeriod: string | null;
+      previousValue: number | null;
+      spark: number[];
+    }[]
+  >;
+  experts: Record<string, { id: string; nameEn: string; nameAr: string }[]>;
+  signalsCount: Record<string, number>;
+  outcomeTax: Record<string, string>; // node code -> outcome taxonomy code
+  chapters: Record<string, ChapterInfo>;
+};
+
+export async function getCanvasExtras(editionId: string): Promise<CanvasExtras> {
+  const { getSetting } = await import("@/server/settings");
+  const { outcomeNodeMap } = await import("@/server/scan/extract");
+  const pillars = await getSetting<QnvPillar[]>("qnv_pillars", DEFAULT_QNV_PILLARS);
+  const chapters = await getSetting<Record<string, ChapterInfo>>("outcome_chapters", {});
+
+  const outcomes = await db
+    .select()
+    .from(schema.strategyNodes)
+    .where(
+      and(
+        eq(schema.strategyNodes.editionId, editionId),
+        eq(schema.strategyNodes.nodeType, "outcome")
+      )
+    )
+    .orderBy(asc(schema.strategyNodes.sort));
+  const outcomeIds = outcomes.map((o) => o.id);
+
+  // outcome node code -> taxonomy code, for Trends links and expert domains
+  const taxMap = await outcomeNodeMap(); // tax -> nodeId
+  const outcomeTax: Record<string, string> = {};
+  for (const [tax, nodeId] of taxMap) {
+    const node = outcomes.find((o) => o.id === nodeId);
+    if (node?.code) outcomeTax[node.code] = tax;
+  }
+
+  // headline KPI tiles (only KPIs backed by a statistical indicator)
+  const kpis = outcomeIds.length
+    ? await db.select().from(schema.kpis).where(inArray(schema.kpis.nodeId, outcomeIds))
+    : [];
+  const indicatorIds = [...new Set(kpis.map((k) => k.indicatorId).filter(Boolean))] as string[];
+  const indicators = indicatorIds.length
+    ? await db
+        .select()
+        .from(schema.indicators)
+        .where(inArray(schema.indicators.id, indicatorIds))
+    : [];
+  const values = indicatorIds.length
+    ? await db
+        .select()
+        .from(schema.indicatorValues)
+        .where(
+          and(
+            inArray(schema.indicatorValues.indicatorId, indicatorIds),
+            eq(schema.indicatorValues.dimensionKey, "total")
+          )
+        )
+        .orderBy(asc(schema.indicatorValues.period))
+    : [];
+  const kpiTiles: CanvasExtras["kpiTiles"] = {};
+  for (const outcome of outcomes) {
+    if (!outcome.code) continue;
+    const tiles = kpis
+      .filter((k) => k.nodeId === outcome.id && k.indicatorId)
+      .slice(0, 4)
+      .map((k) => {
+        const ind = indicators.find((i) => i.id === k.indicatorId)!;
+        if (!ind) return null;
+        const series = values.filter((v) => v.indicatorId === ind.id);
+        const latest = series.at(-1);
+        const prev = series.at(-2);
+        return {
+          id: ind.id,
+          nameEn: ind.nameEn,
+          nameAr: ind.nameAr,
+          unit: ind.unit,
+          decimals: ind.decimals,
+          direction: ind.direction,
+          latestValue: latest?.value ?? null,
+          latestPeriod: latest?.period ?? null,
+          previousValue: prev?.value ?? null,
+          spark: series.slice(-12).map((v) => v.value),
+        };
+      })
+      .filter((t): t is NonNullable<typeof t> => Boolean(t));
+    if (tiles.length) kpiTiles[outcome.code] = tiles;
+  }
+
+  // linked experts per outcome (through outcome-term domains)
+  const outcomeTerms = await db
+    .select({ id: schema.taxonomyTerms.id, code: schema.taxonomyTerms.code })
+    .from(schema.taxonomyTerms)
+    .innerJoin(
+      schema.taxonomyDimensions,
+      eq(schema.taxonomyDimensions.id, schema.taxonomyTerms.dimensionId)
+    )
+    .where(eq(schema.taxonomyDimensions.code, "outcome"));
+  const domainRows = outcomeTerms.length
+    ? await db
+        .select({
+          termId: schema.expertDomains.termId,
+          expertId: schema.expertDomains.expertId,
+          nameEn: schema.experts.nameEn,
+          nameAr: schema.experts.nameAr,
+        })
+        .from(schema.expertDomains)
+        .innerJoin(schema.experts, eq(schema.experts.id, schema.expertDomains.expertId))
+        .where(inArray(schema.expertDomains.termId, outcomeTerms.map((t) => t.id)))
+    : [];
+  const experts: CanvasExtras["experts"] = {};
+  for (const outcome of outcomes) {
+    if (!outcome.code) continue;
+    const tax = outcomeTax[outcome.code];
+    const termId = outcomeTerms.find((t) => t.code === tax)?.id;
+    if (!termId) continue;
+    const seen = new Set<string>();
+    experts[outcome.code] = domainRows
+      .filter((d) => d.termId === termId)
+      .filter((d) => (seen.has(d.expertId) ? false : (seen.add(d.expertId), true)))
+      .slice(0, 4)
+      .map((d) => ({ id: d.expertId, nameEn: d.nameEn, nameAr: d.nameAr }));
+  }
+
+  // accepted signals per outcome
+  const links = outcomeIds.length
+    ? await db
+        .select({ resourceId: schema.signalLinks.resourceId, signalId: schema.signalLinks.signalId })
+        .from(schema.signalLinks)
+        .innerJoin(schema.signals, eq(schema.signals.id, schema.signalLinks.signalId))
+        .where(
+          and(
+            eq(schema.signalLinks.resourceType, "node"),
+            inArray(schema.signalLinks.resourceId, outcomeIds),
+            inArray(schema.signals.triageStatus, ["accepted", "converted"])
+          )
+        )
+    : [];
+  const signalsCount: CanvasExtras["signalsCount"] = {};
+  for (const outcome of outcomes) {
+    if (!outcome.code) continue;
+    signalsCount[outcome.code] = new Set(
+      links.filter((l) => l.resourceId === outcome.id).map((l) => l.signalId)
+    ).size;
+  }
+
+  return { pillars, kpiTiles, experts, signalsCount, outcomeTax, chapters };
+}
+
 export async function getNodeDetail(user: CurrentUser, nodeId: string) {
   const [node] = await db
     .select()

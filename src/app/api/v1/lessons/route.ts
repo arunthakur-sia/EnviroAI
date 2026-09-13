@@ -24,6 +24,28 @@ const Body = z.object({
   node_id: z.string().nullable().default(null),
 });
 
+/* CR04 3.7: a light list for the Lesson-of-the-week schedule editor */
+export async function GET() {
+  const user = await getCurrentUser();
+  if (!user) return NextResponse.json({ data: null, error: "unauthorized" }, { status: 401 });
+  const { sql, desc } = await import("drizzle-orm");
+  const rows = await db
+    .select({
+      id: schema.lessons.id,
+      titleEn: schema.lessons.titleEn,
+      titleAr: schema.lessons.titleAr,
+      status: schema.lessons.status,
+      reuseCount: schema.lessons.reuseCount,
+    })
+    .from(schema.lessons)
+    .where(
+      sql`${schema.lessons.classificationLevel} <= ${user.clearanceLevel} and ${schema.lessons.status} in ('published','verified')`
+    )
+    .orderBy(desc(schema.lessons.reuseCount))
+    .limit(200);
+  return NextResponse.json({ data: rows, error: null });
+}
+
 export async function POST(req: NextRequest) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ data: null, error: "unauthorized" }, { status: 401 });

@@ -31,7 +31,16 @@ export type PodcastScript = {
 };
 
 export type PodcastScope = {
-  kind: "node" | "document" | "collection" | "lessons" | "topic" | "conversation";
+  kind:
+    | "node"
+    | "document"
+    | "collection"
+    | "lessons"
+    | "topic"
+    | "conversation"
+    /* CR04 3.6: one lesson (2 minute episode) or one theme (4 minutes) */
+    | "lesson"
+    | "theme";
   ids: string[];
   labelEn: string;
   labelAr: string;
@@ -41,7 +50,7 @@ export type PodcastScope = {
 
 export type PodcastOptions = {
   language: "ar" | "en";
-  minutes: 3 | 5;
+  minutes: 2 | 3 | 4 | 5;
   focus: "overview" | "lessons" | "numbers" | "risks";
 };
 
@@ -90,6 +99,57 @@ export async function gatherScopeContent(
         limit: 5,
       })
     );
+  } else if (scope.kind === "lesson" || scope.kind === "theme") {
+    // CR04 3.6: a single lesson (or one theme's lessons) as the whole scope
+    const { db, schema } = await import("@/server/db/client");
+    const { eq, inArray } = await import("drizzle-orm");
+    let lessonIds = scope.ids;
+    if (scope.kind === "theme") {
+      const [cluster] = await db
+        .select()
+        .from(schema.lessonClusters)
+        .where(eq(schema.lessonClusters.id, scope.ids[0] ?? ""))
+        .limit(1);
+      try {
+        lessonIds = JSON.parse(cluster?.lessonIdsJson ?? "[]").slice(0, 6);
+      } catch {
+        lessonIds = [];
+      }
+      if (cluster?.summaryEn || cluster?.summaryAr) {
+        parts.push(
+          `Theme synthesis: ${cluster.summaryEn ?? ""} / ${cluster.summaryAr ?? ""}`.trim()
+        );
+      }
+    }
+    const rows = lessonIds.length
+      ? await db.select().from(schema.lessons).where(inArray(schema.lessons.id, lessonIds))
+      : [];
+    rows.forEach((l, i) => {
+      state.addSource({
+        resource_type: "lesson",
+        resource_id: l.id,
+        title: l.titleEn,
+        page: null,
+        excerpt: (l.learningEn ?? l.titleEn).slice(0, 200),
+        classification: l.classificationLevel,
+        verified: l.status === "verified",
+      });
+      parts.push(
+        [
+          `[${state.sources.length}] lesson "${l.titleEn}" / "${l.titleAr}": ${l.learningEn ?? ""}`,
+          l.contextEn ? `Context: ${l.contextEn}` : "",
+          l.recommendationEn ? `Recommendation: ${l.recommendationEn}` : "",
+          l.learningAr ? `Arabic learning: ${l.learningAr}` : "",
+          l.recommendationAr ? `Arabic recommendation: ${l.recommendationAr}` : "",
+        ]
+          .filter(Boolean)
+          .join("\n")
+      );
+      if (i === 0 && scope.kind === "lesson" && l.nodeId) {
+        // the lesson's source project gives Hamad his "where it applies" close
+        parts.push(`Source node id: ${l.nodeId}`);
+      }
+    });
   } else if (scope.kind === "conversation") {
     // the Ask answer text arrives via query
     parts.push(`Ask NPC answer being discussed:\n${(scope.query ?? "").slice(0, 6000)}`);
@@ -127,6 +187,7 @@ export async function generatePodcastScript(
       language: options.language,
       minutes: options.minutes,
       focus: options.focus,
+      template: scope.kind === "lesson" ? "lesson" : undefined,
     });
     return {
       script: {
@@ -148,9 +209,16 @@ export async function generatePodcastScript(
     `Episode language: ${options.language === "ar" ? "Arabic" : "English"}.`,
     `Length: ${options.minutes} minutes, hard cap ${maxWords} words across all segments.`,
     `Focus: ${options.focus}.`,
+    scope.kind === "lesson"
+      ? "Template: SINGLE LESSON. Hamad introduces the lesson and its source, Dr. Mariam explains the learning and the recommendation, Hamad closes with where it applies. Target 2 minutes, never over 3."
+      : scope.kind === "theme"
+        ? "Template: THEME. The episode walks the theme's lessons as one thread. Target 4 minutes, never over 5."
+        : "",
     `Episode subject: ${scope.labelEn} / ${scope.labelAr}.`,
     `Selected content (numbered sources, the ONLY permitted facts):\n${material}`,
-  ].join("\n\n");
+  ]
+    .filter(Boolean)
+    .join("\n\n");
 
   try {
     const response = await getClient().messages.create({
@@ -204,6 +272,7 @@ export async function generatePodcastScript(
     language: options.language,
     minutes: options.minutes,
     focus: options.focus,
+    template: scope.kind === "lesson" ? "lesson" : undefined,
   });
   return {
     script: {

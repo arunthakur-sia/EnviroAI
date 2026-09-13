@@ -302,6 +302,7 @@ export async function toShelfDocs(docs: DocRow[]) {
         d.pageCount && d.pageCount > 1
           ? d.pageCount
           : Math.max(1, Math.min(400, Math.round((d.sizeBytes ?? 3000) / 3000))),
+      updatedAt: d.updatedAt,
       reuseCount: d.reuseCount,
       viewCount: d.viewCount,
     };

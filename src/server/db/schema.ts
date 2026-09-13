@@ -764,6 +764,32 @@ export const lessonClusters = sqliteTable("lesson_clusters", {
   generatedAt: text("generated_at"),
 });
 
+/* CR04 3.5: private reflection notes and guided Learn sessions */
+export const notes = sqliteTable(
+  "notes",
+  {
+    id: id(),
+    userId: text("user_id").notNull(),
+    lessonId: text("lesson_id").notNull(),
+    text: text("text").notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [index("notes_user_idx").on(t.userId)]
+);
+
+export const learnSessions = sqliteTable(
+  "learn_sessions",
+  {
+    id: id(),
+    userId: text("user_id").notNull(),
+    lessonIdsJson: text("lesson_ids_json").notNull(),
+    progressJson: text("progress_json"),
+    completedAt: text("completed_at"),
+    createdAt: createdAt(),
+  },
+  (t) => [index("learn_sessions_user_idx").on(t.userId)]
+);
+
 export const decisions = sqliteTable("decisions", {
   id: id(),
   titleEn: text("title_en").notNull(),
@@ -936,7 +962,7 @@ export const deliverableMeta = sqliteTable(
   ]
 );
 
-/* CR02 4.6: NPC Nexus Podcast */
+/* CR02 4.6: NPC Knowledge Cast (renamed by CR04 4.1) */
 export const podcastEpisodes = sqliteTable(
   "podcast_episodes",
   {

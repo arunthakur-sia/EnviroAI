@@ -37,6 +37,9 @@ export function citationHref(c: Citation): string {
       return `/strategy/${c.resource_id}`;
     case "lesson":
       return `/lessons/${c.resource_id}`;
+    /* CR04 5: theme citations open the Learning Room */
+    case "lesson_theme":
+      return `/lessons`;
     case "signal":
       return `/trends/${c.resource_id}`;
     case "expert":

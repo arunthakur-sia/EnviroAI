@@ -1,13 +1,21 @@
 "use client";
-// CR03 1.2: books, not boxes. Every document renders as a physical book
-// standing on a plank: cloth spine coloured by knowledge type, headbands,
-// gold rules, a page block on the fore-edge, and a pull-off-the-shelf hover
-// that reveals the front cover in 3D. The memorable idea of the product.
+// CR03 1.2 built the books; CR04 1 rebuilt the hover: pull, turn, preview.
+// Each book is a real 3D object (spine, hinged cover, 4px page slab, its own
+// shadow) inside a shelf with perspective. Hover (after a 40ms intent window)
+// pulls the book forward and up, turns it 22 degrees about the fore-edge so
+// the hinged cover comes into view, parts the neighbours, deepens the shadow,
+// and raises a preview card. Transform and opacity only; nothing waits on the
+// network. Touch uses a two-tap model; keyboard focus pulls, Enter opens,
+// Escape returns the book.
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import { ChevronLeft, ChevronRight, Check } from "lucide-react";
+import { Link, useRouter } from "@/i18n/navigation";
+import { ChevronLeft, ChevronRight, Check, BookOpen, FolderPlus, Loader2 } from "lucide-react";
 import { cn, bi, initialsOf } from "@/lib/utils";
+import { formatDate } from "@/lib/format";
+import { Avatar, Button, ClassificationChip } from "@/components/ui/primitives";
+import { useToast } from "@/components/ui/toast";
 
 export type ShelfDoc = {
   id: string;
@@ -25,6 +33,7 @@ export type ShelfDoc = {
   ownerColor?: string | null;
   publishYear?: number | null;
   pageCount?: number | null;
+  updatedAt?: string | null;
   reuseCount?: number;
   viewCount?: number;
   processing?: boolean;
@@ -96,9 +105,188 @@ function spineWidth(pageCount: number | null | undefined): number {
 }
 
 const PAPER = "#fbf9f5";
+const PREVIEW_W = 320;
+
+function isTouch(): boolean {
+  return typeof window !== "undefined" && window.matchMedia("(hover: none)").matches;
+}
 
 /* ------------------------------------------------------------------ */
-/* The book                                                            */
+/* The preview card (CR04 1.4): all data from the shelf payload         */
+/* ------------------------------------------------------------------ */
+
+function BookPreview({
+  doc,
+  pos,
+  onPointerEnter,
+  onPointerLeave,
+}: {
+  doc: ShelfDoc;
+  pos: { x: number; y: number; below: boolean };
+  onPointerEnter: () => void;
+  onPointerLeave: () => void;
+}) {
+  const locale = useLocale();
+  const t = useTranslations("vault");
+  const tc = useTranslations("common");
+  const { toast } = useToast();
+  const cloth = clothFor(doc);
+  const title = bi(locale, doc.titleEn, doc.titleAr);
+  const summary = bi(locale, doc.summaryEn ?? "", doc.summaryAr ?? "");
+  const typeName = bi(locale, doc.typeNameEn ?? "", doc.typeNameAr ?? "");
+  const owner = bi(locale, doc.ownerName ?? "", doc.ownerNameAr ?? doc.ownerName ?? "");
+  const [saving, setSaving] = React.useState(false);
+  const [collections, setCollections] = React.useState<
+    { id: string; nameEn: string; nameAr: string }[] | null
+  >(null);
+
+  async function openCollections() {
+    if (collections) {
+      setCollections(null);
+      return;
+    }
+    setSaving(true);
+    try {
+      const res = await fetch("/api/v1/collections");
+      const json = await res.json();
+      setCollections(json.data ?? []);
+    } catch {
+      setCollections([]);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function saveTo(collectionId: string) {
+    setSaving(true);
+    try {
+      const res = await fetch("/api/v1/collections", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ collectionId, resourceType: "document", resourceId: doc.id }),
+      });
+      if (res.ok) toast(t("preview.saved"), "success");
+      else toast(tc("error"), "error");
+    } catch {
+      toast(tc("error"), "error");
+    } finally {
+      setSaving(false);
+      setCollections(null);
+    }
+  }
+
+  return createPortal(
+    <div
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      className={cn(
+        "card fixed z-[70] p-3.5 shadow-[var(--shadow-pop)]",
+        pos.below ? "book-preview-below" : "book-preview-above"
+      )}
+      style={{ left: pos.x, top: pos.y, width: PREVIEW_W }}
+      onPointerEnter={onPointerEnter}
+      onPointerLeave={onPointerLeave}
+      onFocusCapture={onPointerEnter}
+      data-testid="book-preview"
+    >
+      <div className="flex gap-3">
+        {/* a 48 by 64 miniature of the cover face */}
+        <span
+          aria-hidden
+          className="relative block shrink-0 overflow-hidden rounded-[3px]"
+          style={{
+            width: 48,
+            height: 64,
+            background: cloth.cover,
+            boxShadow: "inset 0 0 6px rgba(0,0,0,0.14), 0 1px 3px rgba(30,27,31,0.25)",
+          }}
+        >
+          <span className="absolute inset-x-0 top-0 h-1" style={{ background: cloth.dark }} />
+          <span className="absolute inset-x-0 bottom-0 h-1" style={{ background: cloth.dark }} />
+          <span
+            className="absolute inset-x-1 rounded-[2px]"
+            style={{
+              top: 8,
+              height: 34,
+              background: "var(--color-sand-50)",
+              border: "1px solid var(--color-sand-300)",
+            }}
+          />
+          <span className="absolute inset-y-0 start-0 w-1" style={{ background: cloth.base }} />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-ink-600">
+            {typeName}
+          </p>
+          <p className="mt-0.5 line-clamp-2 text-sm font-medium leading-snug text-ink-900">{title}</p>
+        </div>
+      </div>
+      {summary ? (
+        <p className="mt-2 line-clamp-5 text-xs leading-relaxed text-ink-600">{summary}</p>
+      ) : null}
+      <div className="mt-2.5 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[11px] text-ink-600">
+        {owner ? (
+          <span className="flex min-w-0 items-center gap-1.5">
+            <Avatar name={owner} color={doc.ownerColor ?? "maroon"} size={18} />
+            <span className="truncate">{owner}</span>
+          </span>
+        ) : null}
+        {doc.pageCount ? <span className="tnum shrink-0">{t("pages", { count: doc.pageCount })}</span> : null}
+        <ClassificationChip
+          level={doc.classification}
+          labels={
+            [
+              tc("classification.1"),
+              tc("classification.2"),
+              tc("classification.3"),
+              tc("classification.4"),
+            ] as [string, string, string, string]
+          }
+        />
+        {doc.status === "verified" ? (
+          <span className="flex items-center gap-1 text-gulf-600">
+            <Check className="size-3" /> {tc("verified")}
+          </span>
+        ) : null}
+        {doc.updatedAt ? (
+          <span className="tnum shrink-0">
+            {t("preview.updated", { date: formatDate(doc.updatedAt, locale, { style: "short" }) })}
+          </span>
+        ) : null}
+      </div>
+      <div className="mt-3 flex items-center gap-2">
+        <Link href={`/vault/${doc.id}`} className="flex-1">
+          <Button size="sm" className="w-full">
+            <BookOpen /> {t("preview.open")}
+          </Button>
+        </Link>
+        <Button size="sm" variant="secondary" onClick={openCollections} disabled={saving}>
+          {saving ? <Loader2 className="animate-spin" /> : <FolderPlus />} {t("preview.save")}
+        </Button>
+      </div>
+      {collections ? (
+        <div className="mt-2 max-h-36 overflow-y-auto rounded-lg border border-sand-300 bg-sand-50">
+          {collections.length ? (
+            collections.map((c) => (
+              <button
+                key={c.id}
+                onClick={() => saveTo(c.id)}
+                className="block w-full truncate px-3 py-1.5 text-start text-xs text-ink-900 hover:bg-maroon-100 cursor-pointer"
+              >
+                {bi(locale, c.nameEn, c.nameAr)}
+              </button>
+            ))
+          ) : (
+            <p className="px-3 py-2 text-xs text-ink-600">{t("preview.noCollections")}</p>
+          )}
+        </div>
+      ) : null}
+    </div>,
+    document.body
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* The book (CR04 1.2, 1.3)                                             */
 /* ------------------------------------------------------------------ */
 
 export function Book({
@@ -117,256 +305,320 @@ export function Book({
   const locale = useLocale();
   const isRtl = locale === "ar";
   const t = useTranslations("vault");
+  const router = useRouter();
   const title = bi(locale, doc.titleEn, doc.titleAr);
   const summary = bi(locale, doc.summaryEn ?? "", doc.summaryAr ?? "");
   const typeName = bi(locale, doc.typeNameEn ?? "", doc.typeNameAr ?? "");
-  const owner = bi(locale, doc.ownerName ?? "", doc.ownerNameAr ?? doc.ownerName ?? "");
 
   const h = height ?? (index % 2 === 0 ? 216 : 184);
   const scale = Math.min(1, h / 200);
   const w = Math.round(spineWidth(doc.pageCount) * scale);
+  const coverW = Math.round(120 * scale);
   const cloth = clothFor(doc);
   const ink = cloth.darkText ? "#2b241c" : PAPER;
-  const coverInk = cloth.darkText ? "#2b241c" : PAPER;
+
+  const wrapRef = React.useRef<HTMLDivElement>(null);
+  const [pulled, setPulled] = React.useState(false);
+  const [cardPos, setCardPos] = React.useState<{ x: number; y: number; below: boolean } | null>(null);
+  const intentRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const leaveRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const pull = React.useCallback(() => {
+    const rect = wrapRef.current?.getBoundingClientRect();
+    if (rect) {
+      const below = rect.top < 430; // no room above: flip under the plank
+      const x = Math.min(
+        Math.max(rect.left + rect.width / 2, PREVIEW_W / 2 + 12),
+        window.innerWidth - PREVIEW_W / 2 - 12
+      );
+      setCardPos({ x, y: below ? rect.bottom + 22 : rect.top - 14, below });
+    }
+    setPulled(true);
+    // only one pulled book at a time, and the reader route warms up now
+    window.dispatchEvent(new CustomEvent("sia:book:pull", { detail: { id: doc.id } }));
+    try {
+      router.prefetch(`/vault/${doc.id}` as never);
+    } catch {
+      /* prefetch is a hint */
+    }
+  }, [doc.id, router]);
+
+  const release = React.useCallback(() => {
+    if (intentRef.current) clearTimeout(intentRef.current);
+    if (leaveRef.current) clearTimeout(leaveRef.current);
+    setPulled(false);
+  }, []);
+
+  React.useEffect(() => {
+    function onOtherPull(e: Event) {
+      if ((e as CustomEvent).detail?.id !== doc.id) release();
+    }
+    window.addEventListener("sia:book:pull", onOtherPull);
+    return () => window.removeEventListener("sia:book:pull", onOtherPull);
+  }, [doc.id, release]);
+
+  // touch: tapping elsewhere returns the book
+  React.useEffect(() => {
+    if (!pulled) return;
+    function onDocDown(e: PointerEvent) {
+      const target = e.target as Node;
+      if (wrapRef.current?.contains(target)) return;
+      if ((target as HTMLElement).closest?.('[data-testid="book-preview"]')) return;
+      release();
+    }
+    document.addEventListener("pointerdown", onDocDown);
+    return () => document.removeEventListener("pointerdown", onDocDown);
+  }, [pulled, release]);
+
+  React.useEffect(() => () => release(), [release]);
+
+  const cancelLeave = React.useCallback(() => {
+    if (leaveRef.current) clearTimeout(leaveRef.current);
+  }, []);
+  const scheduleLeave = React.useCallback(() => {
+    if (intentRef.current) clearTimeout(intentRef.current);
+    if (leaveRef.current) clearTimeout(leaveRef.current);
+    leaveRef.current = setTimeout(() => setPulled(false), 120);
+  }, []);
 
   return (
     <div
-      className={cn(
-        "group/book relative shrink-0 hover:z-10 focus-within:z-10",
-        leaning && "origin-bottom"
-      )}
+      ref={wrapRef}
+      className={cn("book-wrap", leaning && "origin-bottom")}
       style={leaning ? { transform: `rotate(${isRtl ? -4 : 4}deg)` } : undefined}
+      data-pulled={pulled || undefined}
       data-testid="book"
       data-doc-id={doc.id}
+      onPointerEnter={(e) => {
+        if (e.pointerType !== "mouse") return;
+        cancelLeave();
+        if (intentRef.current) clearTimeout(intentRef.current);
+        // pointer intent: 40ms of continuous hover before the state applies
+        intentRef.current = setTimeout(pull, 40);
+      }}
+      onPointerLeave={(e) => {
+        if (e.pointerType !== "mouse") return;
+        scheduleLeave();
+      }}
     >
-      {/* the drop shadow lands on the plank and deepens on hover; it lives
-          outside the 3D transform so filters cannot flatten the book */}
-      <span
-        aria-hidden
-        className="absolute inset-x-0.5 bottom-0 h-2 rounded-full transition-all duration-200 group-hover/book:inset-x-0 group-hover/book:opacity-80"
-        style={{
-          background: "radial-gradient(ellipse at center, rgba(30,27,31,0.45), transparent 70%)",
-          filter: "blur(3px)",
-          opacity: 0.6,
-          transform: "translateY(4px)",
-        }}
-      />
+      {/* the shadow is its own element, animated independently (CR04 1.2) */}
+      <span aria-hidden className="book-shadow" />
+
       <Link
         href={`/vault/${doc.id}`}
         aria-label={`${title}${doc.status === "verified" ? ` (${t("verifiedSeal")})` : ""}`}
-        className={cn(
-          "relative block rounded-t-[3px] rounded-b-[2px] outline-none",
-          "transition-transform duration-[160ms] ease-[var(--ease-paper)]",
-          "group-hover/book:duration-[220ms] group-hover/book:[transform:translateY(-10px)_rotateY(var(--book-turn))]",
-          "focus-visible:duration-[220ms] focus-visible:[transform:translateY(-10px)_rotateY(var(--book-turn))]",
-          doc.processing && "book-processing"
-        )}
-        style={
-          {
-            width: w,
-            height: h,
-            transformStyle: "preserve-3d",
-            "--book-turn": isRtl ? "14deg" : "-14deg",
+        aria-expanded={pulled}
+        className="book rounded-t-[3px] rounded-b-[2px] outline-none"
+        style={{ width: w, height: h }}
+        onFocus={() => {
+          cancelLeave();
+          pull();
+        }}
+        onBlur={scheduleLeave}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            release();
+            (e.target as HTMLElement).blur();
+          }
+        }}
+        onClick={(e) => {
+          // touch: first tap pulls, the second tap (or Open) navigates
+          if (isTouch() && !pulled) {
+            e.preventDefault();
+            pull();
+          }
+        }}
+      >
+        {/* ---- the spine (front face at rest) ---- */}
+        <span
+          className={cn(
+            "absolute inset-0 block rounded-t-[3px] rounded-b-[2px]",
+            doc.processing && "book-processing"
+          )}
+          style={{
             background: cloth.base,
-            // vertical cloth texture at 4 percent opacity (CR03 1.2)
             backgroundImage:
               "repeating-linear-gradient(to right, rgba(255,255,255,0.04) 0 1px, transparent 1px 3px)",
-            boxShadow: [
-              // curvature on the spine's outer edge
-              isRtl
-                ? "inset -3px 0 6px rgba(0,0,0,0.18)"
-                : "inset 3px 0 6px rgba(0,0,0,0.18)",
-              "0 10px 14px -10px rgba(30,27,31,0.45)",
-            ].join(", "),
-          } as React.CSSProperties
-        }
-      >
-        {/* headbands: 6px darker band top and bottom */}
-        <span
-          aria-hidden
-          className="absolute inset-x-0 top-0 h-1.5 rounded-t-[3px]"
-          style={{ background: cloth.dark }}
-        />
-        <span
-          aria-hidden
-          className="absolute inset-x-0 bottom-0 h-1.5 rounded-b-[2px]"
-          style={{ background: cloth.dark }}
-        />
-        {/* two 1px gold rules, 14px from top and bottom */}
-        <span
-          aria-hidden
-          className="absolute inset-x-1 h-px"
-          style={{ top: 14, background: "rgba(201,162,77,0.7)" }}
-        />
-        <span
-          aria-hidden
-          className="absolute inset-x-1 h-px"
-          style={{ bottom: 14, background: "rgba(201,162,77,0.7)" }}
-        />
-        {/* page block on the fore-edge side */}
-        <span
-          aria-hidden
-          className="absolute bottom-1.5 top-1.5 w-[3px] rounded-[1px]"
-          style={{
-            insetInlineEnd: 0,
-            background: PAPER,
             boxShadow: isRtl
-              ? "1px 0 1px rgba(30,27,31,0.25)"
-              : "-1px 0 1px rgba(30,27,31,0.25)",
-          }}
-        />
-
-        {/* spine title, running along the spine */}
-        <span
-          className="absolute inset-x-0 flex justify-center overflow-hidden"
-          style={{ top: 20, bottom: h > 150 ? 52 : 34 }}
-        >
-          <span
-            lang={locale}
-            className="line-clamp-2 max-h-full font-semibold"
-            style={{
-              writingMode: "vertical-rl",
-              textOrientation: "mixed",
-              fontFamily: isRtl ? "var(--font-kufi)" : "var(--font-display)",
-              fontSize: h >= 180 ? 13 : 11,
-              lineHeight: 1.25,
-              color: ink,
-              textShadow: cloth.darkText ? "none" : "0 1px 0 rgba(0,0,0,0.25)",
-              letterSpacing: "0.01em",
-            }}
-          >
-            {title}
-          </span>
-        </span>
-
-        {/* year above the NPC mark, near the bottom headband */}
-        {h >= 150 ? (
-          <span
-            aria-hidden
-            className="absolute inset-x-0 bottom-2.5 flex flex-col items-center gap-0.5"
-            style={{ color: ink }}
-          >
-            {doc.publishYear ? (
-              <span className="tnum" style={{ fontSize: 9, opacity: 0.85 }}>
-                {doc.publishYear}
-              </span>
-            ) : null}
-            <span
-              style={{
-                fontSize: 10,
-                fontFamily: "var(--font-sans)",
-                fontWeight: 600,
-                letterSpacing: "0.08em",
-                opacity: 0.75,
-              }}
-            >
-              NPC
-            </span>
-          </span>
-        ) : null}
-
-        {/* verification seal: 14px gold circle with a check */}
-        {doc.status === "verified" ? (
-          <span
-            className="absolute flex items-center justify-center rounded-full"
-            style={{
-              width: 14,
-              height: 14,
-              insetInlineStart: "50%",
-              bottom: h >= 150 ? 40 : 18,
-              transform: "translateX(-50%)",
-              background: "var(--color-gold-500)",
-              boxShadow: "0 1px 2px rgba(0,0,0,0.3)",
-            }}
-            aria-hidden
-          >
-            <Check className="size-2.5 text-white" strokeWidth={3.5} />
-          </span>
-        ) : null}
-
-        {/* the front cover face: hinged on the fore-edge, receding into the
-            shelf; the book's turn reveals it toward the reader (CR03 1.2) */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute top-0 overflow-hidden rounded-[2px]"
-          style={{
-            width: 120 * scale,
-            height: h,
-            insetInlineEnd: 0,
-            // extends backward from the fore-edge; the visible face is the
-            // back face, so the content wrapper counter-mirrors it
-            transform: isRtl ? "rotateY(90deg)" : "rotateY(-90deg)",
-            transformOrigin: isRtl ? "0% 50%" : "100% 50%",
-            background: cloth.cover,
-            boxShadow: "inset 0 0 12px rgba(0,0,0,0.12)",
+              ? "inset -3px 0 6px rgba(0,0,0,0.18)"
+              : "inset 3px 0 6px rgba(0,0,0,0.18)",
           }}
         >
+          <span aria-hidden className="absolute inset-x-0 top-0 h-1.5 rounded-t-[3px]" style={{ background: cloth.dark }} />
+          <span aria-hidden className="absolute inset-x-0 bottom-0 h-1.5 rounded-b-[2px]" style={{ background: cloth.dark }} />
+          <span aria-hidden className="absolute inset-x-1 h-px" style={{ top: 14, background: "rgba(201,162,77,0.7)" }} />
+          <span aria-hidden className="absolute inset-x-1 h-px" style={{ bottom: 14, background: "rgba(201,162,77,0.7)" }} />
+
+          {/* spine title, running along the spine */}
           <span
-            className="absolute inset-x-0 top-0 h-1.5"
-            style={{ background: cloth.dark }}
-          />
-          <span
-            className="absolute inset-x-0 bottom-0 h-1.5"
-            style={{ background: cloth.dark }}
-          />
-          <span
-            className="absolute inset-x-1.5 h-px"
-            style={{ top: 14, background: "rgba(201,162,77,0.7)" }}
-          />
-          <span
-            className="absolute inset-x-1.5 h-px"
-            style={{ bottom: 14, background: "rgba(201,162,77,0.7)" }}
-          />
-          <span
-            className="absolute inset-x-0 flex flex-col gap-1 px-2"
-            // the viewer sees the plane's back face; mirror the content back
-            style={{ top: 22, bottom: 22, color: coverInk, transform: "scaleX(-1)" }}
+            className="absolute inset-x-0 flex justify-center overflow-hidden"
+            style={{ top: 20, bottom: h > 150 ? 52 : 34 }}
           >
-            {typeName ? (
-              <span
-                className="truncate"
-                style={{ fontSize: 8, letterSpacing: "0.1em", textTransform: "uppercase", opacity: 0.8 }}
-              >
-                {typeName}
-              </span>
-            ) : null}
             <span
-              className="line-clamp-3 font-semibold leading-snug"
+              lang={locale}
+              className="line-clamp-2 max-h-full font-semibold"
               style={{
-                fontSize: 10,
+                writingMode: "vertical-rl",
+                textOrientation: "mixed",
                 fontFamily: isRtl ? "var(--font-kufi)" : "var(--font-display)",
+                fontSize: h >= 180 ? 13 : 11,
+                lineHeight: 1.25,
+                color: ink,
+                textShadow: cloth.darkText ? "none" : "0 1px 0 rgba(0,0,0,0.25)",
+                letterSpacing: "0.01em",
               }}
             >
               {title}
             </span>
-            {summary ? (
-              <span className="line-clamp-3 leading-snug" style={{ fontSize: 8.5, opacity: 0.85 }}>
-                {summary}
-              </span>
-            ) : null}
-            <span className="mt-auto flex items-center justify-between" style={{ fontSize: 8.5 }}>
-              {owner ? (
-                <span
-                  className="flex size-4 items-center justify-center rounded-full font-semibold"
-                  style={{
-                    background: cloth.darkText ? "rgba(43,36,28,0.14)" : "rgba(251,249,245,0.22)",
-                    fontSize: 7,
-                  }}
-                >
-                  {initialsOf(owner)}
+          </span>
+
+          {h >= 150 ? (
+            <span aria-hidden className="absolute inset-x-0 bottom-2.5 flex flex-col items-center gap-0.5" style={{ color: ink }}>
+              {doc.publishYear ? (
+                <span className="tnum" style={{ fontSize: 9, opacity: 0.85 }}>
+                  {doc.publishYear}
                 </span>
-              ) : (
-                <span />
-              )}
-              {doc.pageCount ? (
-                <span className="tnum" style={{ opacity: 0.8 }}>
-                  {t("pages", { count: doc.pageCount })}
+              ) : null}
+              <span style={{ fontSize: 10, fontFamily: "var(--font-sans)", fontWeight: 600, letterSpacing: "0.08em", opacity: 0.75 }}>
+                NPC
+              </span>
+            </span>
+          ) : null}
+
+          {doc.status === "verified" ? (
+            <span
+              className="absolute flex items-center justify-center rounded-full"
+              style={{
+                width: 14,
+                height: 14,
+                insetInlineStart: "50%",
+                bottom: h >= 150 ? 40 : 18,
+                transform: "translateX(-50%)",
+                background: "var(--color-gold-500)",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.3)",
+              }}
+              aria-hidden
+            >
+              <Check className="size-2.5 text-white" strokeWidth={3.5} />
+            </span>
+          ) : null}
+        </span>
+
+        {/* ---- the page slab: 4px of paper between spine and cover ---- */}
+        <span
+          aria-hidden
+          className="absolute top-0.5 bottom-0.5"
+          style={{
+            width: 5,
+            insetInlineEnd: 0,
+            transform: isRtl ? "rotateY(90deg)" : "rotateY(-90deg)",
+            transformOrigin: isRtl ? "0% 50%" : "100% 50%",
+            background:
+              "repeating-linear-gradient(to bottom, #f3efe6 0 2px, #e6e0d2 2px 3px), " + PAPER,
+          }}
+        />
+
+        {/* ---- the cover, hinged along the fore-edge (CR04 1.3) ---- */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute top-0 overflow-hidden rounded-[2px]"
+          style={{
+            width: coverW,
+            height: h,
+            insetInlineEnd: 0,
+            transform: isRtl
+              ? "translateZ(-4px) rotateY(90deg)"
+              : "translateZ(-4px) rotateY(-90deg)",
+            transformOrigin: isRtl ? "0% 50%" : "100% 50%",
+            background: cloth.base,
+            backgroundImage:
+              "repeating-linear-gradient(to right, rgba(255,255,255,0.04) 0 1px, transparent 1px 3px)",
+            boxShadow: "inset 0 0 12px rgba(0,0,0,0.12)",
+          }}
+        >
+          <span className="absolute inset-x-0 top-0 h-1.5" style={{ background: cloth.dark }} />
+          <span className="absolute inset-x-0 bottom-0 h-1.5" style={{ background: cloth.dark }} />
+          <span className="absolute inset-x-1.5 h-px" style={{ top: 14, background: "rgba(201,162,77,0.7)" }} />
+          <span className="absolute inset-x-1.5 h-px" style={{ bottom: 14, background: "rgba(201,162,77,0.7)" }} />
+
+          {/* the viewer sees the plane's back face; mirror the content back */}
+          <span
+            className="absolute inset-0 block"
+            style={{ transform: "scaleX(-1)" }}
+            dir={isRtl ? "rtl" : "ltr"}
+          >
+            {/* paper title plate in the upper two thirds */}
+            <span
+              className="absolute inset-x-2 flex flex-col gap-1 overflow-hidden rounded-[3px] px-2 py-2"
+              style={{
+                top: 20,
+                height: Math.round((h - 40) * 0.66),
+                background: "var(--color-sand-50)",
+                border: "1px solid var(--color-sand-300)",
+                boxShadow: "inset 0 2px 3px rgba(30,27,31,0.08)",
+              }}
+            >
+              {typeName ? (
+                <span
+                  className="truncate font-semibold uppercase"
+                  style={{ fontSize: 8, letterSpacing: "0.1em", color: "var(--color-ink-600)" }}
+                >
+                  {typeName}
+                </span>
+              ) : null}
+              <span
+                className="line-clamp-3 font-semibold leading-snug"
+                style={{
+                  fontSize: 15 * Math.max(0.72, scale),
+                  fontFamily: isRtl ? "var(--font-kufi)" : "var(--font-display)",
+                  color: "var(--color-ink-900)",
+                }}
+              >
+                {title}
+              </span>
+              {summary ? (
+                <span
+                  className="line-clamp-2 leading-snug"
+                  style={{ fontSize: 11 * Math.max(0.72, scale), color: "var(--color-ink-600)" }}
+                >
+                  {summary}
+                </span>
+              ) : null}
+              {doc.publishYear ? (
+                <span className="mt-auto tnum" style={{ fontSize: 9, color: "var(--color-ink-600)" }}>
+                  {doc.publishYear}
+                </span>
+              ) : null}
+            </span>
+            {/* below the plate: the NPC mark and the seal */}
+            <span
+              className="absolute inset-x-0 bottom-3 flex items-center justify-center gap-2"
+              style={{ color: cloth.darkText ? "#2b241c" : PAPER }}
+            >
+              <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", opacity: 0.8 }}>
+                NPC
+              </span>
+              {doc.status === "verified" ? (
+                <span
+                  className="flex size-3.5 items-center justify-center rounded-full"
+                  style={{ background: "var(--color-gold-500)" }}
+                >
+                  <Check className="size-2.5 text-white" strokeWidth={3.5} />
                 </span>
               ) : null}
             </span>
           </span>
         </span>
       </Link>
+
+      {pulled && cardPos ? (
+        <BookPreview
+          doc={doc}
+          pos={cardPos}
+          onPointerEnter={cancelLeave}
+          onPointerLeave={scheduleLeave}
+        />
+      ) : null}
     </div>
   );
 }
@@ -488,7 +740,7 @@ export function Shelf({
           >
             <div
               className="flex items-end gap-2.5 pt-4"
-              style={{ perspective: "900px", minWidth: "min-content" }}
+              style={{ minWidth: "min-content" }}
             >
               {docs.map((d, i) => (
                 <Book

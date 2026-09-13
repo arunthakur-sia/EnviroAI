@@ -2078,6 +2078,13 @@ async function main() {
     report.podcast_episodes = await seedPodcastCr02();
   }
 
+  /* ---------------- 12d. CR04: pillars, chapters, Learning Room ---------------- */
+  console.log("-- CR04: pillars, chapters, learning room seeds...");
+  {
+    const { seedCr04 } = await import("./cr04-seed");
+    await seedCr04();
+  }
+
   /* ---------------- 13. report ---------------- */
   const lines = [
     "# Seed report",

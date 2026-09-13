@@ -58,6 +58,18 @@ async function handle(job: {
       await generateReport(payload.reportId);
       break;
     }
+    case "lessons_recluster": {
+      // CR04 3.7: nightly theme re-clustering (and on demand from Settings)
+      const { getSetting } = await import("@/server/settings");
+      const settings = await getSetting<{ reclusterNightly?: boolean }>("lessons_settings", {});
+      if (settings.reclusterNightly !== false) {
+        const { reclusterLessons } = await import("@/server/services/lessons");
+        const made = await reclusterLessons();
+        console.log(`[jobs] lesson themes reclustered: ${made}`);
+      }
+      await scheduleNextRecluster();
+      break;
+    }
     default:
       throw new Error(`Unknown job type ${job.type}`);
   }
@@ -83,6 +95,27 @@ async function scheduleNextScan(): Promise<void> {
     await enqueue("scan_run", {}, { runAfter });
   } catch (e) {
     console.error("[jobs] scheduleNextScan failed", e);
+  }
+}
+
+/** Keeps exactly one future nightly recluster in the queue (CR04 3.7). */
+async function scheduleNextRecluster(): Promise<void> {
+  try {
+    const { db, schema } = await import("@/server/db/client");
+    const { and, eq } = await import("drizzle-orm");
+    const { enqueue } = await import("./queue");
+    const pending = await db
+      .select({ id: schema.jobs.id })
+      .from(schema.jobs)
+      .where(and(eq(schema.jobs.type, "lessons_recluster"), eq(schema.jobs.status, "queued")))
+      .limit(1);
+    if (pending.length) return;
+    const next = new Date();
+    next.setUTCDate(next.getUTCDate() + 1);
+    next.setUTCHours(2, 0, 0, 0); // a quiet hour
+    await enqueue("lessons_recluster", {}, { runAfter: next.toISOString() });
+  } catch (e) {
+    console.error("[jobs] scheduleNextRecluster failed", e);
   }
 }
 
@@ -112,8 +145,9 @@ export function startWorker(): void {
     }
   };
   loop();
-  // seed the recurring scan schedule (CR01 2.3)
+  // seed the recurring schedules (CR01 2.3 scan, CR04 3.7 recluster)
   scheduleNextScan();
+  scheduleNextRecluster();
   console.log("[jobs] worker started");
 }
 

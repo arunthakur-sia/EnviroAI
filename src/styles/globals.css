@@ -373,6 +373,119 @@ html[lang="ar"] h4 {
   animation: digit-tick 240ms var(--ease-paper);
 }
 
+/* ------------------------------------------------------------------ */
+/* CR04 1: the book hover: pull, turn, preview. Transform and opacity  */
+/* only; 160ms in (after the 40ms intent window), 140ms back.          */
+/* ------------------------------------------------------------------ */
+.book-wrap {
+  position: relative;
+  flex-shrink: 0;
+  /* each book gets its own 3D stage: a shared row perspective would put all
+     books in one 3D rendering context, where depth sorting lets a neighbour's
+     spine paint over the turned cover regardless of z-index */
+  perspective: 1100px;
+  perspective-origin: 50% 40%;
+  /* z rises on the same frame as pull and clears 160ms after leave */
+  z-index: 1;
+  transition: z-index 0s linear 160ms;
+}
+.book-wrap[data-pulled="true"] {
+  z-index: 30;
+  transition-delay: 0s;
+}
+.book {
+  position: relative;
+  display: block;
+  transform-style: preserve-3d;
+  transform: translate3d(0, 0, 0) rotateY(0deg);
+  transition: transform 140ms var(--ease-paper) 0ms;
+}
+.book-wrap[data-pulled="true"] .book {
+  transform: translate3d(0, -12px, 28px) rotateY(-22deg);
+  transition: transform 160ms var(--ease-paper);
+  will-change: transform;
+}
+[dir="rtl"] .book-wrap[data-pulled="true"] .book {
+  transform: translate3d(0, -12px, 28px) rotateY(22deg);
+}
+/* neighbours part by 6px and quieten; back on leave */
+.book-wrap .book {
+  opacity: 1;
+  transition:
+    transform 140ms var(--ease-paper) 0ms,
+    opacity 140ms var(--ease-paper) 0ms;
+}
+.book-wrap[data-pulled="true"] + .book-wrap .book {
+  transform: translate3d(6px, 0, 0);
+  opacity: 0.85;
+  transition-duration: 160ms;
+  will-change: transform;
+}
+.book-wrap:has(+ .book-wrap[data-pulled="true"]) .book {
+  transform: translate3d(-6px, 0, 0);
+  opacity: 0.85;
+  transition-duration: 160ms;
+  will-change: transform;
+}
+[dir="rtl"] .book-wrap[data-pulled="true"] + .book-wrap .book {
+  transform: translate3d(-6px, 0, 0);
+}
+[dir="rtl"] .book-wrap:has(+ .book-wrap[data-pulled="true"]) .book {
+  transform: translate3d(6px, 0, 0);
+}
+/* the shadow ellipse leaves the plank with the book */
+.book-shadow {
+  position: absolute;
+  inset-inline: 2px;
+  bottom: -2px;
+  height: 8px;
+  border-radius: 9999px;
+  background: radial-gradient(ellipse at center, rgba(30, 27, 31, 0.5), transparent 70%);
+  filter: blur(3px);
+  opacity: 0.45;
+  transform: scaleX(1);
+  transition:
+    transform 140ms var(--ease-paper),
+    opacity 140ms var(--ease-paper);
+  pointer-events: none;
+}
+.book-wrap[data-pulled="true"] .book-shadow {
+  transform: scaleX(1.35);
+  opacity: 0.6;
+  transition-duration: 160ms;
+}
+/* the preview card entrance: 120ms fade with a 6px drift (transform only) */
+@keyframes book-preview-above {
+  from { opacity: 0; transform: translate(-50%, calc(-100% + 6px)); }
+  to { opacity: 1; transform: translate(-50%, -100%); }
+}
+@keyframes book-preview-below {
+  from { opacity: 0; transform: translate(-50%, 6px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+.book-preview-above {
+  transform: translate(-50%, -100%);
+  animation: book-preview-above 120ms var(--ease-paper) both;
+}
+.book-preview-below {
+  transform: translate(-50%, 0);
+  animation: book-preview-below 120ms var(--ease-paper) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .book,
+  .book-wrap[data-pulled="true"] .book,
+  .book-shadow,
+  .book-wrap[data-pulled="true"] + .book-wrap .book,
+  .book-wrap:has(+ .book-wrap[data-pulled="true"]) .book {
+    transition: none !important;
+    transform: none !important;
+  }
+  .book-preview-above,
+  .book-preview-below {
+    animation: none;
+  }
+}
+
 /* CR03 1.2: processing books shimmer slowly along the cloth; no spinner */
 @keyframes cloth-shimmer {
   0% { background-position: 0 -220px; }

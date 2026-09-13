@@ -36,9 +36,16 @@ const DAILY_POINT_CAPS: Record<string, number> = {
   signal_accepted: 100, // triage stays rewarding but bounded
   podcast_listened_full: 20, // CR02 4.6: 4 full listens x 5
   report_extracted: 45, // CR02 7: 3 reports x 15
+  lesson_read_fully: 60, // CR04 3.5: 20 x 3, like document_read_fully
 };
 
-const ONCE_PER_DAY = new Set(["daily_login", "mystery_shelf_opened", "daily_quiz_correct", "daily_quiz_wrong"]);
+const ONCE_PER_DAY = new Set([
+  "daily_login",
+  "mystery_shelf_opened",
+  "daily_quiz_correct",
+  "daily_quiz_wrong",
+  "learn_session_completed", // CR04 3.5
+]);
 const ONCE_PER_RESOURCE = new Set([
   "document_read_fully",
   "expert_profile_completed",
@@ -46,6 +53,8 @@ const ONCE_PER_RESOURCE = new Set([
   "answer_verified",
   "lesson_verified",
   "podcast_listened_full", // CR02 4.6: per episode per user
+  "lesson_read_fully", // CR04 3.5: per lesson per user
+  "reflection_saved", // CR04 3.5: per lesson per user
 ]);
 
 /** Event types that count as contributions (weekly streak, freeze earning). */

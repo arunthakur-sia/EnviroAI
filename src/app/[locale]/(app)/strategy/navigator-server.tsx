@@ -9,10 +9,11 @@ import {
   getEditions,
   getEditionByCode,
   getNavigator,
+  getCanvasExtras,
 } from "@/server/services/strategy";
 import { Reveal } from "@/components/motion";
 import { bi } from "@/lib/utils";
-import { StrategyOverview } from "./StrategyOverview";
+import { StrategyCanvas } from "./StrategyCanvas";
 import { OutcomeTargets } from "./OutcomeTargets";
 import { NodeDetail } from "./node-detail";
 
@@ -22,12 +23,15 @@ export async function renderNavigator({
   outcomeSlug,
   targetSlug,
   view,
+  canvasState,
 }: {
   locale: string;
   editionCode?: string;
   outcomeSlug?: string;
   targetSlug?: string;
   view?: string;
+  /* CR04 2.5: deep-link state from the query string */
+  canvasState?: { o?: string; t?: string; i?: string; p?: string };
 }) {
   const user = await getCurrentUser();
   if (!user) redirect(`/${locale}/login`);
@@ -64,7 +68,8 @@ export async function renderNavigator({
     );
   }
 
-  // CR03 2.2: Level 1
+  // CR04 2: the Strategy Canvas (one page, everything in place)
+  const extras = await getCanvasExtras(edition.id);
   return (
     <Reveal>
       <div className="mb-4">
@@ -73,7 +78,17 @@ export async function renderNavigator({
           {bi(locale, edition.summaryEn ?? "", edition.summaryAr ?? "")}
         </p>
       </div>
-      <StrategyOverview data={data} initialView={view === "map" ? "map" : "overview"} />
+      <StrategyCanvas
+        data={data}
+        extras={extras}
+        initialView={view === "map" ? "map" : "canvas"}
+        initialState={{
+          o: canvasState?.o ?? null,
+          t: canvasState?.t ?? null,
+          itemKind: canvasState?.i ? "i" : canvasState?.p ? "p" : null,
+          item: canvasState?.i ?? canvasState?.p ?? null,
+        }}
+      />
     </Reveal>
   );
 }

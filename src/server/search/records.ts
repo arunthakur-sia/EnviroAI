@@ -205,6 +205,22 @@ async function podcastEpisodeText(id: string): Promise<RecordRow | null> {
   };
 }
 
+/* CR04 5: theme syntheses join the unified index. */
+async function lessonThemeText(id: string): Promise<RecordRow | null> {
+  const [c] = await db
+    .select()
+    .from(schema.lessonClusters)
+    .where(eq(schema.lessonClusters.id, id))
+    .limit(1);
+  if (!c) return null;
+  return {
+    resourceType: "lesson_theme",
+    resourceId: id,
+    lang: "en",
+    text: `Lesson theme: ${c.labelEn} | ${c.labelAr} | ${c.summaryEn ?? ""} | ${c.summaryAr ?? ""}`,
+  };
+}
+
 const BUILDERS: Record<string, (id: string) => Promise<RecordRow | null>> = {
   indicator: indicatorText,
   node: nodeText,
@@ -216,6 +232,7 @@ const BUILDERS: Record<string, (id: string) => Promise<RecordRow | null>> = {
   signal: signalText,
   decision: decisionText,
   podcast_episode: podcastEpisodeText,
+  lesson_theme: lessonThemeText,
 };
 
 export async function embedStructuredRecords(
@@ -252,6 +269,8 @@ export async function embedStructuredRecords(
     push(await decisionText(d.id));
   for (const e of await db.select({ id: schema.podcastEpisodes.id }).from(schema.podcastEpisodes))
     push(await podcastEpisodeText(e.id));
+  for (const c of await db.select({ id: schema.lessonClusters.id }).from(schema.lessonClusters))
+    push(await lessonThemeText(c.id));
   // batch in groups of 64 for embedding efficiency
   for (let i = 0; i < rows.length; i += 64) {
     await upsertRecords(rows.slice(i, i + 64));

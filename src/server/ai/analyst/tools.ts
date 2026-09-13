@@ -920,6 +920,30 @@ export async function toolGetLessons(
     .join("\n");
 }
 
+/* ---- get_lesson_themes (CR04 5) ---- */
+export async function toolGetLessonThemes(ctx: ToolContext): Promise<string> {
+  const clusters = await db.select().from(schema.lessonClusters);
+  if (!clusters.length) return "No lesson themes exist yet.";
+  return clusters
+    .map((c) => {
+      let count = 0;
+      try {
+        count = (JSON.parse(c.lessonIdsJson ?? "[]") as string[]).length;
+      } catch {
+        count = 0;
+      }
+      const n = ctx.state.addSource({
+        resource_type: "lesson_theme",
+        resource_id: c.id,
+        title: c.labelEn || c.labelAr,
+        page: null,
+        excerpt: (c.summaryEn ?? "").slice(0, 220),
+      });
+      return `[${n}] theme "${c.labelEn}" / "${c.labelAr}" (${count} lessons): ${c.summaryEn ?? ""}`;
+    })
+    .join("\n");
+}
+
 /* ---- get_deliverables (CR02 2.3) ---- */
 export async function toolGetDeliverables(
   ctx: ToolContext,
@@ -1314,6 +1338,12 @@ export const TOOL_DEFINITIONS = [
     },
   },
   {
+    name: "get_lesson_themes",
+    description:
+      "The Learning Room's lesson themes: AI clusters of related lessons with a one-line synthesis and lesson counts.",
+    input_schema: { type: "object" as const, properties: {} },
+  },
+  {
     name: "get_signals",
     description: "Accepted external signals from Trends and Signals, by node, text, and recency window in days.",
     input_schema: {
@@ -1381,6 +1411,8 @@ export async function runTool(
         return await toolFindExperts(ctx, input as never);
       case "get_lessons":
         return await toolGetLessons(ctx, input as never);
+      case "get_lesson_themes":
+        return await toolGetLessonThemes(ctx);
       case "get_signals":
         return await toolGetSignals(ctx, input as never);
       case "get_deliverables":
