@@ -1,3 +1,4 @@
+import { cache as reactCache } from "react";
 import { and, asc, desc, eq, gte, inArray, or } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import type { CurrentUser } from "@/server/auth/session";
@@ -708,11 +709,221 @@ export type CanvasExtras = {
       spark: number[];
     }[]
   >;
-  experts: Record<string, { id: string; nameEn: string; nameAr: string }[]>;
+  /* CR06: the four outcome stakeholder groups replace the CR04 expert chips */
+  outcomeStakeholders: Record<string, OutcomeStakeholders>;
   signalsCount: Record<string, number>;
   outcomeTax: Record<string, string>; // node code -> outcome taxonomy code
   chapters: Record<string, ChapterInfo>;
 };
+
+/* ------------------------------------------------------------------ */
+/* CR06 3: outcome stakeholders. The department owner is the           */
+/* department-kind lead row on the outcome node itself (strategy_nodes  */
+/* lost its owner columns to node_leads in CR05); lead entities         */
+/* aggregate over the outcome's initiatives and projects; experts and   */
+/* the sponsor/owner/manager groups aggregate node_stakeholders across  */
+/* the outcome, its targets, and the items beneath, direct rows first.  */
+/* ------------------------------------------------------------------ */
+
+export type OutcomeStakeholderItem = {
+  id: string;
+  code: string | null;
+  titleEn: string;
+  titleAr: string;
+  nodeType: string;
+};
+
+export type OutcomeDepartmentOwner = {
+  id: string;
+  code: string;
+  nameEn: string;
+  nameAr: string;
+  head: { id: string; nameEn: string; nameAr: string; avatarColor: string } | null;
+};
+
+export type OutcomeLeadEntity = { chip: LeadChip; count: number };
+
+export type OutcomePerson = {
+  key: string;
+  userId: string | null;
+  expertId: string | null;
+  nameEn: string;
+  nameAr: string;
+  organisationEn: string | null;
+  organisationAr: string | null;
+  email: string | null;
+  avatarColor: string;
+  domains: { id: string; nameEn: string; nameAr: string }[];
+  /* a row sits on the outcome node itself */
+  direct: boolean;
+  count: number;
+  items: OutcomeStakeholderItem[];
+};
+
+export type OutcomeStakeholders = {
+  outcomeId: string;
+  departmentOwner: OutcomeDepartmentOwner | null;
+  leadEntities: OutcomeLeadEntity[];
+  experts: OutcomePerson[];
+  leaders: { sponsor: OutcomePerson[]; owner: OutcomePerson[]; manager: OutcomePerson[] };
+};
+
+/** The four groups for one outcome, cached per request (CR06 3). React's
+    cache() dedupes within one server request and never outlives it, so an
+    edit is visible on the very next request. */
+export const getOutcomeStakeholders = reactCache(
+  (outcomeId: string): Promise<OutcomeStakeholders | null> =>
+    computeOutcomeStakeholders(outcomeId)
+);
+
+async function computeOutcomeStakeholders(
+  outcomeId: string
+): Promise<OutcomeStakeholders | null> {
+  const [outcome] = await db
+    .select()
+    .from(schema.strategyNodes)
+    .where(eq(schema.strategyNodes.id, outcomeId))
+    .limit(1);
+  if (!outcome) return null;
+  const nodes = await db
+    .select()
+    .from(schema.strategyNodes)
+    .where(eq(schema.strategyNodes.editionId, outcome.editionId))
+    .orderBy(asc(schema.strategyNodes.sort));
+  const childrenOf = new Map<string, NodeLite[]>();
+  for (const n of nodes) {
+    if (!n.parentId) continue;
+    (childrenOf.get(n.parentId) ?? childrenOf.set(n.parentId, []).get(n.parentId)!).push(n);
+  }
+  const subtree: NodeLite[] = [];
+  const walk = (id: string) => {
+    for (const c of childrenOf.get(id) ?? []) {
+      subtree.push(c);
+      walk(c.id);
+    }
+  };
+  walk(outcomeId);
+  const targets = subtree.filter((n) => n.nodeType === "target");
+  const items = subtree.filter((n) => n.nodeType === "initiative" || n.nodeType === "project");
+  const infoOf = new Map<string, OutcomeStakeholderItem>(
+    [outcome, ...subtree].map((n) => [
+      n.id,
+      { id: n.id, code: n.code, titleEn: n.titleEn, titleAr: n.titleAr, nodeType: n.nodeType },
+    ])
+  );
+
+  /* 1. the department owner: the department-kind lead on the outcome node */
+  let departmentOwner: OutcomeDepartmentOwner | null = null;
+  const ownRows = await db
+    .select()
+    .from(schema.nodeLeads)
+    .where(
+      and(
+        eq(schema.nodeLeads.nodeId, outcomeId),
+        eq(schema.nodeLeads.leadKind, "department"),
+        eq(schema.nodeLeads.role, "lead")
+      )
+    )
+    .orderBy(asc(schema.nodeLeads.sort));
+  if (ownRows[0]?.departmentId) {
+    const [dep] = await db
+      .select()
+      .from(schema.departments)
+      .where(eq(schema.departments.id, ownRows[0].departmentId))
+      .limit(1);
+    if (dep) {
+      const [head] = dep.headUserId
+        ? await db.select().from(schema.users).where(eq(schema.users.id, dep.headUserId)).limit(1)
+        : [];
+      departmentOwner = {
+        id: dep.id,
+        code: dep.code,
+        nameEn: dep.nameEn,
+        nameAr: dep.nameAr,
+        head: head
+          ? { id: head.id, nameEn: head.nameEn, nameAr: head.nameAr, avatarColor: head.avatarColor }
+          : null,
+      };
+    }
+  }
+
+  /* 2. lead entities and departments across the initiatives and projects */
+  const leadsMap = await loadLeadsFor(items.map((i) => i.id));
+  const leadAgg = new Map<string, OutcomeLeadEntity>();
+  for (const chips of leadsMap.values()) {
+    for (const c of chips) {
+      if (c.role !== "lead") continue;
+      const key = `${c.kind}:${c.id}`;
+      const g = leadAgg.get(key);
+      if (g) g.count++;
+      else leadAgg.set(key, { chip: c, count: 1 });
+    }
+  }
+  const leadEntities = [...leadAgg.values()].sort(
+    (a, b) => b.count - a.count || a.chip.nameEn.localeCompare(b.chip.nameEn)
+  );
+
+  /* 3 + 4. experts and the sponsor/owner/manager groups, deduplicated */
+  const shMap = await loadStakeholdersFor([
+    outcomeId,
+    ...targets.map((t) => t.id),
+    ...items.map((i) => i.id),
+  ]);
+  const keyOf = (r: StakeholderRow) =>
+    r.expertId ? `x:${r.expertId}` : r.userId ? `u:${r.userId}` : `n:${r.nameEn}`;
+  const collect = (role: string): Map<string, OutcomePerson> => {
+    const agg = new Map<string, OutcomePerson>();
+    for (const [nodeId, rows] of shMap) {
+      for (const r of rows) {
+        if (r.role !== role) continue;
+        const key = keyOf(r);
+        const g =
+          agg.get(key) ??
+          ({
+            key,
+            userId: r.userId,
+            expertId: r.expertId,
+            nameEn: r.nameEn,
+            nameAr: r.nameAr,
+            organisationEn: r.organisationEn,
+            organisationAr: r.organisationAr,
+            email: r.email,
+            avatarColor: r.avatarColor,
+            domains: [],
+            direct: false,
+            count: 0,
+            items: [],
+          } satisfies OutcomePerson);
+        if (nodeId === outcomeId) g.direct = true;
+        const item = infoOf.get(nodeId);
+        if (item && !g.items.some((x) => x.id === item.id)) g.items.push(item);
+        if (r.domain && !g.domains.some((d) => d.id === r.domain!.id)) g.domains.push(r.domain);
+        agg.set(key, g);
+      }
+    }
+    for (const g of agg.values()) g.count = g.items.length;
+    return agg;
+  };
+  const order = (agg: Map<string, OutcomePerson>): OutcomePerson[] =>
+    [...agg.values()].sort(
+      (a, b) =>
+        Number(b.direct) - Number(a.direct) ||
+        b.count - a.count ||
+        a.nameEn.localeCompare(b.nameEn)
+    );
+
+  return {
+    outcomeId,
+    departmentOwner,
+    leadEntities,
+    experts: order(collect("expert")),
+    leaders: {
+      sponsor: order(collect("sponsor")),
+      owner: order(collect("owner")),
+      manager: order(collect("manager")),
+    },
+  };
+}
 
 export async function getCanvasExtras(editionId: string): Promise<CanvasExtras> {
   const { getSetting } = await import("@/server/settings");
@@ -792,39 +1003,12 @@ export async function getCanvasExtras(editionId: string): Promise<CanvasExtras> 
     if (tiles.length) kpiTiles[outcome.code] = tiles;
   }
 
-  // linked experts per outcome (through outcome-term domains)
-  const outcomeTerms = await db
-    .select({ id: schema.taxonomyTerms.id, code: schema.taxonomyTerms.code })
-    .from(schema.taxonomyTerms)
-    .innerJoin(
-      schema.taxonomyDimensions,
-      eq(schema.taxonomyDimensions.id, schema.taxonomyTerms.dimensionId)
-    )
-    .where(eq(schema.taxonomyDimensions.code, "outcome"));
-  const domainRows = outcomeTerms.length
-    ? await db
-        .select({
-          termId: schema.expertDomains.termId,
-          expertId: schema.expertDomains.expertId,
-          nameEn: schema.experts.nameEn,
-          nameAr: schema.experts.nameAr,
-        })
-        .from(schema.expertDomains)
-        .innerJoin(schema.experts, eq(schema.experts.id, schema.expertDomains.expertId))
-        .where(inArray(schema.expertDomains.termId, outcomeTerms.map((t) => t.id)))
-    : [];
-  const experts: CanvasExtras["experts"] = {};
+  // CR06: the outcome stakeholder groups replace the CR04 expert chips
+  const outcomeStakeholders: CanvasExtras["outcomeStakeholders"] = {};
   for (const outcome of outcomes) {
     if (!outcome.code) continue;
-    const tax = outcomeTax[outcome.code];
-    const termId = outcomeTerms.find((t) => t.code === tax)?.id;
-    if (!termId) continue;
-    const seen = new Set<string>();
-    experts[outcome.code] = domainRows
-      .filter((d) => d.termId === termId)
-      .filter((d) => (seen.has(d.expertId) ? false : (seen.add(d.expertId), true)))
-      .slice(0, 4)
-      .map((d) => ({ id: d.expertId, nameEn: d.nameEn, nameAr: d.nameAr }));
+    const groups = await getOutcomeStakeholders(outcome.id);
+    if (groups) outcomeStakeholders[outcome.code] = groups;
   }
 
   // accepted signals per outcome
@@ -849,7 +1033,7 @@ export async function getCanvasExtras(editionId: string): Promise<CanvasExtras> 
     ).size;
   }
 
-  return { pillars, kpiTiles, experts, signalsCount, outcomeTax, chapters };
+  return { pillars, kpiTiles, outcomeStakeholders, signalsCount, outcomeTax, chapters };
 }
 
 export async function getNodeDetail(user: CurrentUser, nodeId: string) {

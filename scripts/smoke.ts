@@ -1974,6 +1974,191 @@ async function main() {
     db.close();
   }
 
+  /* 17. CR06: outcome stakeholders in the Living Strategy panel */
+  console.log("\n17. CR06 acceptance");
+  {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const { createClient } = await import("@libsql/client");
+    const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
+
+    /* 17.1 the old single expert chip is gone from every outcome panel */
+    const panelSrc = fs.readFileSync(
+      path.join(process.cwd(), "src", "app", "[locale]", "(app)", "strategy", "OutcomePanel.tsx"),
+      "utf8"
+    );
+    check(
+      "the CR04 expert chips are gone from the panel source",
+      !panelSrc.includes("extras.experts") && panelSrc.includes("OutcomeStakeholdersSection")
+    );
+
+    /* 17.2 seeding: a department owner and two direct experts per outcome */
+    const outcomeRows = await db.execute(
+      `select n.id from strategy_nodes n join strategy_editions e on e.id = n.edition_id
+       where e.code = 'nds3' and n.node_type = 'outcome'`
+    );
+    const outcomeIds = outcomeRows.rows.map((r) => String(r.id));
+    const ownerCount = await db.execute({
+      sql: `select count(distinct node_id) c from node_leads
+       where lead_kind = 'department' and role = 'lead'
+         and node_id in (${outcomeIds.map(() => "?").join(",")})`,
+      args: outcomeIds,
+    });
+    check(
+      "every NDS3 outcome has a seeded department owner",
+      Number(ownerCount.rows[0].c) === outcomeIds.length,
+      `${ownerCount.rows[0].c}/${outcomeIds.length}`
+    );
+    const directExperts = await db.execute({
+      sql: `select node_id, count(*) c from node_stakeholders
+       where role = 'expert' and node_id in (${outcomeIds.map(() => "?").join(",")})
+       group by node_id`,
+      args: outcomeIds,
+    });
+    check(
+      "every outcome carries two directly assigned experts",
+      directExperts.rows.length === outcomeIds.length &&
+        directExperts.rows.every((r) => Number(r.c) >= 2),
+      `${directExperts.rows.length} outcomes covered`
+    );
+
+    /* 17.3 the aggregation: four groups, deduplicated, counted, direct first */
+    const { getOutcomeStakeholders } = await import("../src/server/services/strategy");
+    const g = await getOutcomeStakeholders(outcomeIds[0]);
+    check("getOutcomeStakeholders returns the department owner", Boolean(g?.departmentOwner?.nameEn && g?.departmentOwner?.nameAr));
+    check(
+      "lead entities are deduplicated and ordered by nodes led",
+      (g?.leadEntities.length ?? 0) > 0 &&
+        new Set(g!.leadEntities.map((l) => `${l.chip.kind}:${l.chip.id}`)).size === g!.leadEntities.length &&
+        g!.leadEntities.every((l, i) => i === 0 || g!.leadEntities[i - 1].count >= l.count)
+    );
+    const directFirst = (list: { direct: boolean }[]) => {
+      const firstAgg = list.findIndex((p) => !p.direct);
+      return firstAgg === -1 || list.slice(firstAgg).every((p) => !p.direct);
+    };
+    check(
+      "experts are deduplicated with direct assignments first",
+      (g?.experts.length ?? 0) >= 2 &&
+        new Set(g!.experts.map((e) => e.key)).size === g!.experts.length &&
+        g!.experts.some((e) => e.direct) &&
+        directFirst(g!.experts) &&
+        g!.experts.every((e) => e.count === e.items.length && e.count > 0)
+    );
+    check(
+      "the sponsor, owner, and manager groups aggregate with counts",
+      Boolean(g) &&
+        (["sponsor", "owner", "manager"] as const).every(
+          (r) =>
+            g!.leaders[r].length > 0 &&
+            new Set(g!.leaders[r].map((p) => p.key)).size === g!.leaders[r].length &&
+            directFirst(g!.leaders[r]) &&
+            g!.leaders[r].every((p) => p.count > 0)
+        )
+    );
+
+    /* 17.4 the panel renders the section in both languages */
+    const slug = "o1";
+    const panelEn = await (await admin(`/en/strategy?o=${slug}`)).text();
+    check(
+      "the panel shows the four stakeholder groups",
+      panelEn.includes('data-testid="outcome-stakeholders"') &&
+        panelEn.includes('data-testid="outcome-dept-owner"') &&
+        panelEn.includes('data-testid="outcome-lead-entities"') &&
+        panelEn.includes('data-testid="outcome-experts"') &&
+        panelEn.includes('data-testid="outcome-leaders"')
+    );
+    check(
+      "direct assignments carry the Outcome chip and the signals link survives",
+      panelEn.includes('data-testid="direct-chip"') && panelEn.includes('data-testid="panel-signals-link"')
+    );
+    const panelAr = await (await admin(`/ar/strategy?o=${slug}`)).text();
+    check(
+      "the Arabic panel renders the section",
+      panelAr.includes('data-testid="outcome-stakeholders"') && panelAr.includes("أصحاب المصلحة في النتيجة")
+    );
+
+    /* 17.5 lead chips filter the lanes (the l= state the chips drive) */
+    const topLead = g!.leadEntities[0];
+    const leadKey = `${topLead.chip.kind === "department" ? "d" : "e"}:${topLead.chip.id}`;
+    const filtered = await (
+      await admin(`/en/strategy?o=${slug}&l=${encodeURIComponent(leadKey)}`)
+    ).text();
+    check(
+      "a lead chip's filter state renders as pressed",
+      /aria-pressed="true"[^>]*data-testid="outcome-lead-chip"|data-testid="outcome-lead-chip"[^>]*aria-pressed="true"|aria-pressed="true"/.test(
+        filtered.split('data-testid="outcome-lead-entities"')[1]?.slice(0, 4000) ?? ""
+      )
+    );
+
+    /* 17.6 editing: Set department owner is targeted, not a replace-all */
+    const [o1] = outcomeIds;
+    const before = await db.execute({
+      sql: `select count(*) c from node_leads where node_id = ? and not (lead_kind = 'department' and role = 'lead')`,
+      args: [o1],
+    });
+    const ownerRow = await db.execute({
+      sql: `select department_id from node_leads where node_id = ? and lead_kind = 'department' and role = 'lead'`,
+      args: [o1],
+    });
+    const setOwner = await admin("/api/v1/strategy/leads", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        nodeId: o1,
+        action: "set_department_owner",
+        departmentId: String(ownerRow.rows[0].department_id),
+      }),
+    });
+    const after = await db.execute({
+      sql: `select count(*) c from node_leads where node_id = ? and not (lead_kind = 'department' and role = 'lead')`,
+      args: [o1],
+    });
+    check(
+      "Set department owner succeeds and leaves other leads untouched",
+      setOwner.status === 200 && Number(after.rows[0].c) === Number(before.rows[0].c)
+    );
+    const readerLeads = makeClient();
+    await login(readerLeads, "reader@npc.qa");
+    const denied = await readerLeads("/api/v1/strategy/leads", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ nodeId: o1, action: "set_department_owner", departmentId: "x" }),
+    });
+    check("a reader cannot set the department owner", denied.status === 403);
+
+    /* 17.7 Ask NPC: get_node(outcome) answers with the groups and counts */
+    const { toolGetNode } = await import("../src/server/ai/analyst/tools");
+    const fakeCtx = {
+      user: { id: "smoke", clearanceLevel: 4 },
+      state: { addSource: () => 1, workspace: { strategy: [] } },
+    } as never;
+    const toolOut = await toolGetNode(fakeCtx, { id: o1 });
+    check(
+      "get_node(outcome) reports owner, lead entities, experts, and leaders",
+      toolOut.includes("Department owner:") &&
+        toolOut.includes("Lead entities across its initiatives and projects:") &&
+        /Experts \(\d+\):/.test(toolOut) &&
+        /Sponsors \(\d+\):/.test(toolOut) &&
+        /Project owners \(\d+\):/.test(toolOut) &&
+        /Project managers \(\d+\):/.test(toolOut)
+    );
+
+    /* 17.8 CR06 screenshots and the design review */
+    const shotDir = path.join(process.cwd(), "data", "screenshots", "cr06");
+    check(
+      "CR06 screenshots exist (EN and AR)",
+      fs.existsSync(shotDir) &&
+        fs.readdirSync(shotDir).some((f) => f.endsWith("-en.png")) &&
+        fs.readdirSync(shotDir).some((f) => f.endsWith("-ar.png"))
+    );
+    const reviewFile = path.join(process.cwd(), "docs", "design-reviews", "cr06-outcome-stakeholders.md");
+    check(
+      "the CR06 self-critique review exists and closes clean",
+      fs.existsSync(reviewFile) && /no High or Critical HIG findings/.test(fs.readFileSync(reviewFile, "utf8"))
+    );
+    db.close();
+  }
+
   console.log(`\n== smoke result: ${passed} passed, ${failed} failed ==`);
   if (failures.length) {
     console.log("Failures:");

@@ -230,6 +230,13 @@ html[lang="ar"] h4 {
   box-shadow: var(--shadow-lift);
 }
 
+/* CR06: hovering an expert row lights the lane cards of the items they touch */
+.lane-hl {
+  outline: 2px solid var(--color-gold-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-card);
+}
+
 /* Skeleton shimmer in the shape of real content */
 .skeleton {
   background: linear-gradient(

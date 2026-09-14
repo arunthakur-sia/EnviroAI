@@ -373,11 +373,14 @@ export function StrategyCanvas({
   extras,
   initialView,
   initialState,
+  canEdit = false,
 }: {
   data: NavigatorData;
   extras: CanvasExtras;
   initialView: CanvasView;
   initialState: CanvasState;
+  /* CR06: editors get Add stakeholder and Set owner in the outcome panel */
+  canEdit?: boolean;
 }) {
   const t = useTranslations("strategy");
   const locale = useLocale();
@@ -1077,6 +1080,9 @@ export function StrategyCanvas({
                         onCopyTargetLink={(slug) => copyLink({ o: outcome.slug, t: slug, item: null, itemKind: null, lead: null })}
                         onClose={() => closeLevel({ o: null, t: null, item: null, itemKind: null, lead: state.lead })}
                         pillarsOf={pillarsOf}
+                        canEdit={canEdit}
+                        leadFilter={state.lead}
+                        onLeadFilter={setLeadFilter}
                       />
                     </motion.div>
                   </AnimatePresence>

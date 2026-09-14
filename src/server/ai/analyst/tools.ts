@@ -10,7 +10,7 @@ import { filtersForUser, suggestExperts } from "@/server/ai/ask";
 import { getAiSettings } from "@/server/settings";
 import { whatChanged } from "@/server/ai";
 import { listSignals } from "@/server/services/signals";
-import { loadLeadsFor } from "@/server/services/strategy";
+import { loadLeadsFor, getOutcomeStakeholders } from "@/server/services/strategy";
 
 /* ------------------------------------------------------------------ */
 /* Loop state: sources registry + workspace accumulation               */
@@ -640,10 +640,44 @@ export async function toolGetNode(
       : gLeadNames[0]
         ? `led by ${gLeadNames[0]}`
         : "-";
+
+  // CR06 6: outcomes answer with their stakeholder groups and counts
+  let stakeholderLines: string[] = [];
+  if (node.nodeType === "outcome") {
+    const g = await getOutcomeStakeholders(node.id);
+    if (g) {
+      const person = (p: { nameEn: string; direct: boolean; count: number }) =>
+        `${p.nameEn}${p.direct ? " [assigned to the outcome itself]" : ""} (${p.count} item${p.count === 1 ? "" : "s"})`;
+      stakeholderLines = [
+        g.departmentOwner
+          ? `Department owner: ${g.departmentOwner.nameEn}${g.departmentOwner.head ? `, headed by ${g.departmentOwner.head.nameEn}` : ""}`
+          : "Department owner: not set",
+        g.leadEntities.length
+          ? `Lead entities across its initiatives and projects: ${g.leadEntities
+              .slice(0, 10)
+              .map((l) => `${l.chip.nameEn} leads ${l.count}`)
+              .join("; ")}`
+          : "Lead entities: none recorded",
+        g.experts.length
+          ? `Experts (${g.experts.length}): ${g.experts.slice(0, 10).map(person).join("; ")}`
+          : "Experts: none recorded",
+        g.leaders.sponsor.length
+          ? `Sponsors (${g.leaders.sponsor.length}): ${g.leaders.sponsor.slice(0, 6).map(person).join("; ")}`
+          : "",
+        g.leaders.owner.length
+          ? `Project owners (${g.leaders.owner.length}): ${g.leaders.owner.slice(0, 6).map(person).join("; ")}`
+          : "",
+        g.leaders.manager.length
+          ? `Project managers (${g.leaders.manager.length}): ${g.leaders.manager.slice(0, 6).map(person).join("; ")}`
+          : "",
+      ];
+    }
+  }
   return [
     `[${n}] ${edition?.code?.toUpperCase()} ${node.nodeType} ${node.code ?? ""} "${node.titleEn}" / "${node.titleAr}" status=${node.status} lead=${leadPhrase} budgetQAR=${node.budgetQar ?? "-"}`,
     gSupport.length ? `Supporting entities: ${gSupport.join(", ")}` : "",
     `Description: ${(node.descriptionEn ?? "").slice(0, 500)}`,
+    ...stakeholderLines,
     ...kpiLines,
     ...updates.map(
       (u) => `Update ${u.period ?? u.createdAt.slice(0, 10)}: ${u.status} ${u.progressPct}% ${(u.summaryEn ?? "").slice(0, 200)}`

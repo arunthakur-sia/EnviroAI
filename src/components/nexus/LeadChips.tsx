@@ -8,7 +8,7 @@ import { Building2, Globe2, Briefcase, Landmark } from "lucide-react";
 import { cn, bi } from "@/lib/utils";
 import type { LeadChip as LeadChipData } from "@/server/services/strategy";
 
-function KindGlyph({ lead }: { lead: LeadChipData }) {
+export function KindGlyph({ lead }: { lead: LeadChipData }) {
   if (lead.kind === "department") {
     return (
       // the NPC emblem sits at the right edge of the transparent lockup

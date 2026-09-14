@@ -5,6 +5,7 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/server/auth/session";
+import { can } from "@/server/auth/permissions";
 import {
   getEditions,
   getEditionByCode,
@@ -81,6 +82,7 @@ export async function renderNavigator({
       <StrategyCanvas
         data={data}
         extras={extras}
+        canEdit={can(user, "create", "strategy")}
         initialView={view === "map" ? "map" : view === "lead" ? "lead" : "canvas"}
         initialState={{
           o: canvasState?.o ?? null,

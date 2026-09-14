@@ -177,8 +177,9 @@ const OUTCOME_POOLS: Record<number, string[]> = {
   7: ["cgb", "mcit", "ncsa", "gscm", "moi", "moj"],
 };
 
-// NPC department co-lead pools per outcome (department codes).
-const OUTCOME_DEPTS: Record<number, string[]> = {
+// NPC department co-lead pools per outcome (department codes). CR06 reuses
+// the first code of each pool as the outcome's department owner.
+export const OUTCOME_DEPTS: Record<number, string[]> = {
   1: ["econ_planning"],
   2: ["econ_planning", "monitoring_eval"],
   3: ["social_planning"],
@@ -376,7 +377,7 @@ export async function seedCr05Entities(): Promise<void> {
 /* leads). Deterministic, idempotent (skips when any row exists).       */
 /* ------------------------------------------------------------------ */
 
-const EXPERT_NOTES: [string, string][] = [
+export const EXPERT_NOTES: [string, string][] = [
   ["Methodology advisor", "مستشار منهجية"],
   ["Data quality reviewer", "مراجع جودة البيانات"],
   ["Sector specialist", "متخصص قطاعي"],

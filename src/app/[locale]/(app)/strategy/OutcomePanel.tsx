@@ -2,19 +2,21 @@
 // CR04 2.3: the outcome panel that opens beneath the arc. Header with the
 // watermark numeral and pillar chips, Read the chapter (AI summary first,
 // then the page-cited full text from the NDS3 document), headline KPI tiles,
-// the target cards with in-place lanes, and the related experts and signals.
+// the target cards with in-place lanes, the CR06 Outcome stakeholders
+// section, and the signals link.
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { BookOpen, ChevronDown, ExternalLink, Link as LinkIcon, Radar, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { cn, bi } from "@/lib/utils";
-import { Avatar, Chip, ProgressRing, Skeleton } from "@/components/ui/primitives";
+import { Chip, ProgressRing, Skeleton } from "@/components/ui/primitives";
 import { LeadChips } from "@/components/nexus/LeadChips";
 import { IndicatorTile } from "@/components/nexus/IndicatorTile";
 import { useToast } from "@/components/ui/toast";
 import type { NavigatorData, NavItem, CanvasExtras } from "@/server/services/strategy";
 import { TargetCard } from "./OutcomeTargets";
+import { OutcomeStakeholdersSection } from "./OutcomeStakeholders";
 
 function outcomeNumber(code: string | null): string {
   const m = code?.match(/\d+/);
@@ -53,6 +55,9 @@ export function OutcomePanel({
   onCopyTargetLink,
   onClose,
   pillarsOf,
+  canEdit,
+  leadFilter,
+  onLeadFilter,
 }: {
   data: NavigatorData;
   extras: CanvasExtras;
@@ -64,6 +69,10 @@ export function OutcomePanel({
   onCopyTargetLink: (targetSlug: string) => void;
   onClose: () => void;
   pillarsOf: (outcomeNumber: number) => string[];
+  /* CR06: the Outcome stakeholders section */
+  canEdit: boolean;
+  leadFilter: string | null;
+  onLeadFilter: (lead: string | null) => void;
 }) {
   const t = useTranslations("strategy");
   const locale = useLocale();
@@ -106,7 +115,7 @@ export function OutcomePanel({
   const today = new Date().toISOString().slice(0, 10);
   const pct = Math.round(Math.min(1, Math.max(0, outcome.progress)) * 100);
   const tiles = extras.kpiTiles[code] ?? [];
-  const experts = extras.experts[code] ?? [];
+  const stakeholders = extras.outcomeStakeholders[code] ?? null;
   const signalsCount = extras.signalsCount[code] ?? 0;
   const tax = extras.outcomeTax[code];
   const pillarKeys = pillarsOf(Number(outcomeNumber(outcome.code)) || 0);
@@ -306,6 +315,7 @@ export function OutcomePanel({
                 <button
                   key={i.id}
                   onClick={() => onOpenItem(i)}
+                  data-node-id={i.id}
                   className="card flex w-60 shrink-0 flex-col gap-1.5 px-3.5 py-3 text-start transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] cursor-pointer"
                 >
                   <span className="flex items-center gap-2 text-[10px] text-ink-600 tnum">{i.code}</span>
@@ -318,28 +328,27 @@ export function OutcomePanel({
           </div>
         ) : null}
 
-        {/* 5. related */}
-        {(experts.length || signalsCount) ? (
+        {/* 5. the Outcome stakeholders section (CR06, replaces the expert chips) */}
+        {stakeholders ? (
+          <OutcomeStakeholdersSection
+            outcomeId={outcome.id}
+            data={stakeholders}
+            canEdit={canEdit}
+            leadFilter={leadFilter}
+            onLeadFilter={onLeadFilter}
+          />
+        ) : null}
+
+        {/* 6. the signals link */}
+        {signalsCount && tax ? (
           <div className="mt-5 flex flex-wrap items-center gap-2">
-            {experts.map((e) => (
-              <Link
-                key={e.id}
-                href={`/experts/${e.id}` as never}
-                className="flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 text-xs text-ink-900 shadow-sm hover:text-maroon-700"
-              >
-                <Avatar name={e.nameEn} size={20} />
-                {bi(locale, e.nameEn, e.nameAr)}
-              </Link>
-            ))}
-            {signalsCount && tax ? (
-              <Link
-                href={`/trends?outcome=${tax}` as never}
-                className="flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 text-xs font-medium text-gulf-600 shadow-sm hover:text-gulf-600/80 tnum"
-                data-testid="panel-signals-link"
-              >
-                <Radar className="size-3.5" /> {t("canvas.signalsFor", { count: signalsCount })}
-              </Link>
-            ) : null}
+            <Link
+              href={`/trends?outcome=${tax}` as never}
+              className="flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 text-xs font-medium text-gulf-600 shadow-sm hover:text-gulf-600/80 tnum"
+              data-testid="panel-signals-link"
+            >
+              <Radar className="size-3.5" /> {t("canvas.signalsFor", { count: signalsCount })}
+            </Link>
           </div>
         ) : null}
       </div>

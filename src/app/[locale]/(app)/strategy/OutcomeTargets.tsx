@@ -51,6 +51,7 @@ export function LaneCard({
       onClick={() => (onOpen ? onOpen(item) : router.push(`/strategy/${item.id}` as never))}
       className="card flex w-60 shrink-0 flex-col gap-1.5 px-3.5 py-3 text-start transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] cursor-pointer"
       data-testid="lane-card"
+      data-node-id={item.id}
     >
       <span className="flex items-center gap-2">
         <RagDot status={item.status} />

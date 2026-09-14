@@ -571,6 +571,34 @@
         "expert": "Expert involved",
         "external_partner": "External partner"
       }
+    },
+    "outcomeStakeholders": {
+      "title": "Outcome stakeholders",
+      "deptOwner": "Department owner",
+      "deptOwnerEmpty": "No department owner set.",
+      "setOwner": "Set owner",
+      "deptHead": "Head: {name}",
+      "openDepartment": "Department page",
+      "pickDepartment": "Choose a department",
+      "confirmOwner": "Set",
+      "ownerSet": "Department owner updated.",
+      "leadEntities": "Lead entities",
+      "leadEntitiesEmpty": "No lead entities recorded on this outcome's initiatives and projects yet.",
+      "chipLabel": "{name}, {count}",
+      "leadChipAria": "Show only the work led by {name} ({count} items)",
+      "clearFilter": "Clear filter",
+      "experts": "Experts",
+      "expertsEmpty": "No experts recorded on this outcome yet.",
+      "involvedIn": "{count, plural, one {involved in # item} other {involved in # items}}",
+      "directChip": "Outcome",
+      "showAll": "Show all {count}",
+      "showLess": "Show fewer",
+      "leaders": "People leading the work under this outcome",
+      "leadersEmpty": "No one recorded yet.",
+      "sponsors": "Sponsors",
+      "owners": "Project owners",
+      "managers": "Project managers",
+      "nodesCount": "{count, plural, one {# item} other {# items}}"
     }
   },
   "experts": {

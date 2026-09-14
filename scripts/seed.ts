@@ -2101,6 +2101,13 @@ async function main() {
     await seedCr05();
   }
 
+  /* ---------------- 12f. CR06: outcome stakeholders ---------------- */
+  console.log("-- CR06: outcome department owners and direct experts...");
+  {
+    const { seedCr06 } = await import("./cr06-seed");
+    await seedCr06();
+  }
+
   /* ---------------- 13. report ---------------- */
   const lines = [
     "# Seed report",

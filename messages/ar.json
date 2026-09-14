@@ -571,6 +571,34 @@
         "expert": "خبير مشارك",
         "external_partner": "شريك خارجي"
       }
+    },
+    "outcomeStakeholders": {
+      "title": "أصحاب المصلحة في النتيجة",
+      "deptOwner": "الإدارة المالكة",
+      "deptOwnerEmpty": "لم تُحدد إدارة مالكة بعد.",
+      "setOwner": "تحديد الإدارة",
+      "deptHead": "رئيس الإدارة: {name}",
+      "openDepartment": "صفحة الإدارة",
+      "pickDepartment": "اختر إدارة",
+      "confirmOwner": "تحديد",
+      "ownerSet": "تم تحديث الإدارة المالكة.",
+      "leadEntities": "الجهات القائدة",
+      "leadEntitiesEmpty": "لا توجد جهات قائدة مسجلة على مبادرات هذه النتيجة ومشاريعها بعد.",
+      "chipLabel": "{name}، {count}",
+      "leadChipAria": "عرض الأعمال التي تقودها {name} فقط ({count} عناصر)",
+      "clearFilter": "إزالة التصفية",
+      "experts": "الخبراء",
+      "expertsEmpty": "لا يوجد خبراء مسجلون على هذه النتيجة بعد.",
+      "involvedIn": "{count, plural, zero {غير مشارك في أي عنصر} one {مشارك في عنصر واحد} two {مشارك في عنصرين} few {مشارك في # عناصر} many {مشارك في # عنصرًا} other {مشارك في # عنصر}}",
+      "directChip": "النتيجة",
+      "showAll": "عرض الكل ({count})",
+      "showLess": "عرض أقل",
+      "leaders": "الأشخاص الذين يقودون العمل ضمن هذه النتيجة",
+      "leadersEmpty": "لا يوجد أحد مسجل بعد.",
+      "sponsors": "الرعاة",
+      "owners": "ملاك المشاريع",
+      "managers": "مديرو المشاريع",
+      "nodesCount": "{count, plural, zero {لا عناصر} one {عنصر واحد} two {عنصران} few {# عناصر} many {# عنصرًا} other {# عنصر}}"
     }
   },
   "experts": {

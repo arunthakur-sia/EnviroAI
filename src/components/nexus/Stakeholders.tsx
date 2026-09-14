@@ -29,28 +29,23 @@ type SearchHit = {
   subtitleAr: string;
 };
 
-export function StakeholdersSection({
+/* CR06: the inline add form, extracted so the outcome panel reuses the same
+   control the project pages have. */
+export function AddStakeholderInline({
   nodeId,
-  rows: initialRows,
-  canEdit,
-  compact = false,
+  onAdded,
 }: {
   nodeId: string;
-  rows: StakeholderRow[];
-  canEdit: boolean;
-  compact?: boolean;
+  onAdded: (row: StakeholderRow) => void;
 }) {
   const t = useTranslations("strategy.stakeholders");
   const locale = useLocale();
-  const [rows, setRows] = React.useState(initialRows);
-  const [adding, setAdding] = React.useState(false);
   const [role, setRole] = React.useState("team");
   const [query, setQuery] = React.useState("");
   const [hits, setHits] = React.useState<SearchHit[]>([]);
   const [picked, setPicked] = React.useState<SearchHit | null>(null);
   const [note, setNote] = React.useState("");
   const [busy, setBusy] = React.useState(false);
-  React.useEffect(() => setRows(initialRows), [initialRows]);
 
   React.useEffect(() => {
     if (picked || query.trim().length < 2) {
@@ -89,16 +84,94 @@ export function StakeholdersSection({
       });
       const json = await res.json();
       if (json.data) {
-        setRows((r) => [...r, json.data]);
         setPicked(null);
         setQuery("");
         setNote("");
-        setAdding(false);
+        onAdded(json.data as StakeholderRow);
       }
     } finally {
       setBusy(false);
     }
   }
+
+  return (
+    <div className="card mb-4 flex flex-col gap-2.5 p-3.5" data-testid="stakeholder-add-form">
+      <div className="flex flex-wrap gap-2.5">
+        <NativeSelect
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          className="w-44"
+          aria-label={t("role")}
+        >
+          {["sponsor", "owner", "manager", "team", "expert", "external_partner"].map((r) => (
+            <option key={r} value={r}>
+              {t(`roles.${r}` as never)}
+            </option>
+          ))}
+        </NativeSelect>
+        <div className="relative min-w-56 flex-1">
+          <Input
+            value={picked ? bi(locale, picked.nameEn, picked.nameAr) : query}
+            onChange={(e) => {
+              setPicked(null);
+              setQuery(e.target.value);
+            }}
+            placeholder={t("searchPlaceholder")}
+            aria-label={t("searchPlaceholder")}
+          />
+          {hits.length ? (
+            <div className="absolute top-11 z-30 w-full overflow-hidden rounded-xl border border-sand-300 bg-white shadow-[var(--shadow-pop)]">
+              {hits.slice(0, 6).map((h) => (
+                <button
+                  key={`${h.kind}:${h.id}`}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-start text-sm hover:bg-maroon-100/50 cursor-pointer"
+                  onClick={() => {
+                    setPicked(h);
+                    setHits([]);
+                  }}
+                >
+                  <UserRound className="size-4 text-ink-400" />
+                  <span className="truncate">{bi(locale, h.nameEn, h.nameAr)}</span>
+                  <span className="ms-auto shrink-0 text-xs text-ink-600">
+                    {bi(locale, h.subtitleEn, h.subtitleAr)}
+                  </span>
+                </button>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      </div>
+      <Input
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        placeholder={t("notePlaceholder")}
+        aria-label={t("notePlaceholder")}
+      />
+      <div>
+        <Button size="sm" onClick={add} loading={busy} disabled={!picked}>
+          {t("confirm")}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export function StakeholdersSection({
+  nodeId,
+  rows: initialRows,
+  canEdit,
+  compact = false,
+}: {
+  nodeId: string;
+  rows: StakeholderRow[];
+  canEdit: boolean;
+  compact?: boolean;
+}) {
+  const t = useTranslations("strategy.stakeholders");
+  const locale = useLocale();
+  const [rows, setRows] = React.useState(initialRows);
+  const [adding, setAdding] = React.useState(false);
+  React.useEffect(() => setRows(initialRows), [initialRows]);
 
   if (!rows.length && !canEdit) return null;
 
@@ -119,64 +192,13 @@ export function StakeholdersSection({
       </div>
 
       {adding ? (
-        <div className="card mb-4 flex flex-col gap-2.5 p-3.5" data-testid="stakeholder-add-form">
-          <div className="flex flex-wrap gap-2.5">
-            <NativeSelect
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="w-44"
-              aria-label={t("role")}
-            >
-              {["sponsor", "owner", "manager", "team", "expert", "external_partner"].map((r) => (
-                <option key={r} value={r}>
-                  {t(`roles.${r}` as never)}
-                </option>
-              ))}
-            </NativeSelect>
-            <div className="relative min-w-56 flex-1">
-              <Input
-                value={picked ? bi(locale, picked.nameEn, picked.nameAr) : query}
-                onChange={(e) => {
-                  setPicked(null);
-                  setQuery(e.target.value);
-                }}
-                placeholder={t("searchPlaceholder")}
-                aria-label={t("searchPlaceholder")}
-              />
-              {hits.length ? (
-                <div className="absolute top-11 z-30 w-full overflow-hidden rounded-xl border border-sand-300 bg-white shadow-[var(--shadow-pop)]">
-                  {hits.slice(0, 6).map((h) => (
-                    <button
-                      key={`${h.kind}:${h.id}`}
-                      className="flex w-full items-center gap-2 px-3 py-2 text-start text-sm hover:bg-maroon-100/50 cursor-pointer"
-                      onClick={() => {
-                        setPicked(h);
-                        setHits([]);
-                      }}
-                    >
-                      <UserRound className="size-4 text-ink-400" />
-                      <span className="truncate">{bi(locale, h.nameEn, h.nameAr)}</span>
-                      <span className="ms-auto shrink-0 text-xs text-ink-600">
-                        {bi(locale, h.subtitleEn, h.subtitleAr)}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-          </div>
-          <Input
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder={t("notePlaceholder")}
-            aria-label={t("notePlaceholder")}
-          />
-          <div>
-            <Button size="sm" onClick={add} loading={busy} disabled={!picked}>
-              {t("confirm")}
-            </Button>
-          </div>
-        </div>
+        <AddStakeholderInline
+          nodeId={nodeId}
+          onAdded={(row) => {
+            setRows((r) => [...r, row]);
+            setAdding(false);
+          }}
+        />
       ) : null}
 
       <ul className="flex flex-col divide-y divide-sand-100">
