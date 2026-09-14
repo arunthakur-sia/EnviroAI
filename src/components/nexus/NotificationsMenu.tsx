@@ -55,12 +55,12 @@ export function NotificationsMenu({ unreadCount }: { unreadCount: number }) {
     >
       <DropdownTrigger asChild>
         <button
-          className="relative rounded-lg p-2 text-ink-600 hover:bg-sand-100 hover:text-ink-900 cursor-pointer"
+          className="relative rounded-lg p-2 text-bar-ink hover:bg-white/15 cursor-pointer"
           aria-label={t("notifications")}
         >
           <Bell className="size-5" />
           {count > 0 ? (
-            <span className="absolute -top-0.5 -end-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-maroon-700 px-1 text-[10px] font-semibold text-white">
+            <span className="absolute -top-0.5 -end-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-gold-500 px-1 text-[10px] font-semibold text-ink-900">
               {count > 9 ? "9+" : count}
             </span>
           ) : null}

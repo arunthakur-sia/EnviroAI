@@ -207,8 +207,9 @@ function BookPreview({
             style={{
               top: 8,
               height: 34,
-              background: "var(--color-sand-50)",
-              border: "1px solid var(--color-sand-300)",
+              // warm book paper: an object colour, pinned since CR05 cooled the sand tokens
+              background: PAPER,
+              border: "1px solid #e2dac9",
             }}
           />
           <span className="absolute inset-y-0 start-0 w-1" style={{ background: cloth.base }} />
@@ -553,8 +554,9 @@ export function Book({
               style={{
                 top: 20,
                 height: Math.round((h - 40) * 0.66),
-                background: "var(--color-sand-50)",
-                border: "1px solid var(--color-sand-300)",
+                // warm book paper: an object colour, pinned since CR05 cooled the sand tokens
+                background: PAPER,
+                border: "1px solid #e2dac9",
                 boxShadow: "inset 0 2px 3px rgba(30,27,31,0.08)",
               }}
             >
@@ -729,7 +731,7 @@ export function Shelf({
           className="rounded-t-lg"
           style={{
             background:
-              "repeating-linear-gradient(to right, rgba(30,27,31,0.016) 0 1px, transparent 1px 7px), var(--color-sand-100)",
+              "repeating-linear-gradient(to right, rgba(31,35,40,0.016) 0 1px, transparent 1px 7px), var(--color-sand-100)",
           }}
         >
           <div
@@ -755,26 +757,27 @@ export function Shelf({
           </div>
         </div>
 
-        {/* the plank: a 12px board with highlight, gradient, and shadow */}
+        {/* the plank: a 12px board with highlight, gradient, and shadow
+            (CR05 1.2: the board is --plank with a --plank-edge bottom line) */}
         <div className="relative">
           <div
             className="h-3 rounded-[3px]"
             style={{
               background:
-                "linear-gradient(180deg, var(--color-sand-100) 0 1px, var(--color-sand-300) 1px 55%, #d0c7b1 100%)",
-              boxShadow: "0 6px 12px -6px rgba(30,27,31,0.35)",
+                "linear-gradient(180deg, #ffffff 0 1px, var(--color-plank) 1px 55%, var(--color-plank-edge) 100%)",
+              boxShadow: "0 6px 12px -6px rgba(31,35,40,0.35)",
             }}
           />
           {/* shelf ends: 10px brackets */}
           <span
             aria-hidden
             className="absolute bottom-0 start-0 w-2.5 rounded-t-[2px]"
-            style={{ height: 34, background: "var(--color-sand-300)", boxShadow: "0 6px 8px -5px rgba(30,27,31,0.3)" }}
+            style={{ height: 34, background: "var(--color-plank-edge)", boxShadow: "0 6px 8px -5px rgba(31,35,40,0.3)" }}
           />
           <span
             aria-hidden
             className="absolute bottom-0 end-0 w-2.5 rounded-t-[2px]"
-            style={{ height: 34, background: "var(--color-sand-300)", boxShadow: "0 6px 8px -5px rgba(30,27,31,0.3)" }}
+            style={{ height: 34, background: "var(--color-plank-edge)", boxShadow: "0 6px 8px -5px rgba(31,35,40,0.3)" }}
           />
         </div>
       </div>

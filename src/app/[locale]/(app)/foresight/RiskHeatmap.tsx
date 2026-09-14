@@ -23,7 +23,7 @@ function cellColor(likelihood: number, impact: number): string {
   if (score >= 16) return "#B3261E22";
   if (score >= 10) return "#B7791F22";
   if (score >= 5) return "#C9A24D1e";
-  return "#F4F0E8";
+  return "#EEF0F3";
 }
 
 export function RiskHeatmap({

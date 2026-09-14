@@ -138,6 +138,24 @@ export function ProfileForm({ initial }: { initial: Initial }) {
           </span>
           <Switch checked={form.quietMode} onCheckedChange={(v) => set("quietMode", v)} />
         </label>
+        {/* CR05 6.3: sessions end after 12 hours idle and 7 days absolute */}
+        <div className="flex items-center justify-between gap-3 border-t border-sand-100 pt-4">
+          <span>
+            <span className="block text-sm text-ink-900">{t("signOutAll")}</span>
+            <span className="block text-xs text-ink-600">{t("signOutAllHint")}</span>
+          </span>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={async () => {
+              await fetch("/api/v1/auth/logout-all", { method: "POST" });
+              window.location.href = "/login";
+            }}
+            data-testid="logout-all"
+          >
+            {t("signOutAllCta")}
+          </Button>
+        </div>
       </div>
 
       <div className="flex justify-end">

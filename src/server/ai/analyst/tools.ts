@@ -10,6 +10,7 @@ import { filtersForUser, suggestExperts } from "@/server/ai/ask";
 import { getAiSettings } from "@/server/settings";
 import { whatChanged } from "@/server/ai";
 import { listSignals } from "@/server/services/signals";
+import { loadLeadsFor } from "@/server/services/strategy";
 
 /* ------------------------------------------------------------------ */
 /* Loop state: sources registry + workspace accumulation               */
@@ -259,7 +260,15 @@ async function nodeCard(
       targetYear: k.targetYear,
     };
   }
-  let ownerName: string | null = node.ownerEntityName;
+  // CR05 2.2: the lead(s) come from node_leads; joint leads read naturally
+  // ("led jointly by the Ministry of Finance and the Ministry of Commerce
+  // and Industry")
+  const nodeLeads = (await loadLeadsFor([node.id])).get(node.id) ?? [];
+  const leadNames = nodeLeads.filter((l) => l.role === "lead").map((l) => l.nameEn);
+  let ownerName: string | null =
+    leadNames.length > 1
+      ? `led jointly by ${leadNames.slice(0, -1).join(", ")} and ${leadNames[leadNames.length - 1]}`
+      : leadNames[0] ?? null;
   if (!ownerName && node.ownerUserId) {
     const [u] = await db
       .select({ nameEn: schema.users.nameEn })
@@ -546,6 +555,8 @@ export async function toolQueryStrategy(
   for (const nRow of listed.slice(0, 8)) {
     dedupePush(ctx.state.workspace.strategy, await nodeCard(ctx.state, nRow, edition.code), 8);
   }
+  // CR05 2.2: answers name the responsible lead(s)
+  const listLeads = await loadLeadsFor(listed.map((r) => r.id));
   const lines = listed.map((r) => {
     const n = ctx.state.addSource({
       resource_type: "node",
@@ -556,7 +567,13 @@ export async function toolQueryStrategy(
       edition: edition.code,
       verified: r.verified === 1,
     });
-    return `[${n}] ${r.nodeType} ${r.code ?? ""} "${r.titleEn}" status=${r.status}`;
+    const names = (listLeads.get(r.id) ?? [])
+      .filter((l) => l.role === "lead")
+      .map((l) => l.nameEn);
+    const leadTxt = names.length
+      ? ` lead=${names.join(" + ")}${names.length > 1 ? " (joint)" : ""}`
+      : "";
+    return `[${n}] ${r.nodeType} ${r.code ?? ""} "${r.titleEn}" status=${r.status}${leadTxt}`;
   });
   return `${edition.code.toUpperCase()}: ${rows.length} matching nodes${rows.length > 25 ? " (first 25 shown)" : ""}:\n${lines.join("\n")}`;
 }
@@ -613,8 +630,19 @@ export async function toolGetNode(
     .select()
     .from(schema.nodeLineage)
     .where(or(eq(schema.nodeLineage.fromNodeId, node.id), eq(schema.nodeLineage.toNodeId, node.id)));
+  // CR05 2.2: leads and supporting from node_leads
+  const gLeads = (await loadLeadsFor([node.id])).get(node.id) ?? [];
+  const gLeadNames = gLeads.filter((l) => l.role === "lead").map((l) => l.nameEn);
+  const gSupport = gLeads.filter((l) => l.role === "supporting").map((l) => l.nameEn);
+  const leadPhrase =
+    gLeadNames.length > 1
+      ? `led jointly by ${gLeadNames.slice(0, -1).join(", ")} and ${gLeadNames[gLeadNames.length - 1]}`
+      : gLeadNames[0]
+        ? `led by ${gLeadNames[0]}`
+        : "-";
   return [
-    `[${n}] ${edition?.code?.toUpperCase()} ${node.nodeType} ${node.code ?? ""} "${node.titleEn}" / "${node.titleAr}" status=${node.status} owner=${node.ownerEntityName ?? "-"} budgetQAR=${node.budgetQar ?? "-"}`,
+    `[${n}] ${edition?.code?.toUpperCase()} ${node.nodeType} ${node.code ?? ""} "${node.titleEn}" / "${node.titleAr}" status=${node.status} lead=${leadPhrase} budgetQAR=${node.budgetQar ?? "-"}`,
+    gSupport.length ? `Supporting entities: ${gSupport.join(", ")}` : "",
     `Description: ${(node.descriptionEn ?? "").slice(0, 500)}`,
     ...kpiLines,
     ...updates.map(
@@ -1211,6 +1239,226 @@ export async function toolCompareEditions(
 }
 
 /* ------------------------------------------------------------------ */
+/* CR05 4.9: International Indices tools                                */
+/* ------------------------------------------------------------------ */
+
+async function indexByCodeOrName(codeOrName: string) {
+  const rows = await db.select().from(schema.indices);
+  const lower = codeOrName.toLowerCase();
+  return (
+    rows.find((r) => r.code === lower) ??
+    rows.find((r) => r.nameEn.toLowerCase().includes(lower) || r.nameAr.includes(codeOrName)) ??
+    null
+  );
+}
+
+function registerIndexSource(
+  ctx: ToolContext,
+  idx: typeof schema.indices.$inferSelect,
+  excerpt: string
+): number {
+  return ctx.state.addSource({
+    resource_type: "index",
+    resource_id: idx.code,
+    title: `${idx.nameEn} (${idx.publisher ?? ""})`,
+    page: null,
+    excerpt: excerpt.slice(0, 240),
+    verified: true,
+  });
+}
+
+export async function toolGetIndex(
+  ctx: ToolContext,
+  input: { code: string }
+): Promise<string> {
+  const idx = await indexByCodeOrName(input.code ?? "");
+  if (!idx) return "Unknown index. Use query_indices to list them.";
+  const obs = await db
+    .select()
+    .from(schema.indexObservations)
+    .where(
+      and(eq(schema.indexObservations.indexId, idx.id), eq(schema.indexObservations.countryCode, "QAT"))
+    )
+    .orderBy(asc(schema.indexObservations.year));
+  const latest = obs[obs.length - 1];
+  const n = registerIndexSource(
+    ctx,
+    idx,
+    latest
+      ? `Qatar ${latest.year}: ${latest.rank != null ? `rank ${latest.rank}${latest.totalCountries ? ` of ${latest.totalCountries}` : ""}` : ""} ${latest.score != null ? `score ${latest.score}` : ""}`
+      : idx.methodologySummaryEn ?? ""
+  );
+  const entity = idx.responsibleEntityId
+    ? (
+        await db.select().from(schema.entities).where(eq(schema.entities.id, idx.responsibleEntityId)).limit(1)
+      )[0] ?? null
+    : null;
+  return [
+    `[${n}] ${idx.nameEn} / ${idx.nameAr} (${idx.publisher ?? "-"}, ${idx.frequency}, category ${idx.category}, ${idx.higherIsBetter ? "higher is better" : "LOWER is better"}).`,
+    `Methodology: ${(idx.methodologySummaryEn ?? "").slice(0, 300)}`,
+    entity ? `Responsible entity: ${entity.nameEn}.` : "",
+    `Qatar series: ${obs
+      .map((o) => `${o.year}: ${o.rank != null ? `#${o.rank}` : ""}${o.score != null ? ` ${o.score}` : ""}`.trim())
+      .join("; ")}`,
+    latest?.sourceUrl ? `Latest source: ${latest.sourceUrl}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+export async function toolQueryIndices(
+  ctx: ToolContext,
+  input: { category?: string; direction?: string; text?: string }
+): Promise<string> {
+  let rows = await db.select().from(schema.indices).where(eq(schema.indices.isActive, 1));
+  if (input.category) rows = rows.filter((r) => r.category === input.category);
+  if (input.text) {
+    const q = input.text.toLowerCase();
+    rows = rows.filter(
+      (r) => r.nameEn.toLowerCase().includes(q) || r.nameAr.includes(input.text!) || (r.publisher ?? "").toLowerCase().includes(q)
+    );
+  }
+  if (!rows.length) return "No matching indices.";
+  const forecasts = await db
+    .select()
+    .from(schema.indexForecasts)
+    .where(and(eq(schema.indexForecasts.status, "current"), eq(schema.indexForecasts.horizonYears, 3)));
+  const obs = await db
+    .select()
+    .from(schema.indexObservations)
+    .where(eq(schema.indexObservations.countryCode, "QAT"));
+  const lines = rows.map((idx) => {
+    const mine = obs
+      .filter((o) => o.indexId === idx.id)
+      .sort((a, b) => b.year - a.year)[0];
+    const f = forecasts.find((x) => x.indexId === idx.id);
+    if (input.direction && f?.direction !== input.direction) return null;
+    const n = registerIndexSource(
+      ctx,
+      idx,
+      mine ? `Qatar ${mine.year}: rank ${mine.rank ?? "-"} score ${mine.score ?? "-"}` : ""
+    );
+    return `[${n}] ${idx.code}: ${idx.nameEn} (${idx.publisher ?? "-"}) Qatar ${mine ? `${mine.year} ${mine.rank != null ? `#${mine.rank}${mine.totalCountries ? `/${mine.totalCountries}` : ""}` : ""} ${mine.score != null ? `score ${mine.score}` : ""}` : "no data"}${
+      f ? `; SiaNexus 3y forecast direction: ${f.direction}` : ""
+    }`;
+  });
+  const kept = lines.filter(Boolean) as string[];
+  return kept.length ? kept.join("\n") : "No indices match those filters.";
+}
+
+export async function toolGetIndexForecast(
+  ctx: ToolContext,
+  input: { code: string }
+): Promise<string> {
+  const idx = await indexByCodeOrName(input.code ?? "");
+  if (!idx) return "Unknown index.";
+  const rows = (
+    await db
+      .select()
+      .from(schema.indexForecasts)
+      .where(and(eq(schema.indexForecasts.indexId, idx.id), eq(schema.indexForecasts.status, "current")))
+  ).sort((a, b) => a.horizonYears - b.horizonYears);
+  if (!rows.length) return `No current forecast for ${idx.nameEn}.`;
+  const gen = rows[0].generatedAt.slice(0, 10);
+  const n = ctx.state.addSource({
+    resource_type: "index_forecast",
+    resource_id: idx.code,
+    title: `SiaNexus forecast: ${idx.nameEn}`,
+    page: null,
+    excerpt: `Method ${rows[0].methodVersion}, generated ${gen}. A model output, not a published figure.`,
+    verified: false,
+  });
+  const lines = rows.map(
+    (r) =>
+      `+${r.horizonYears}y: central ${r.centralRank != null ? `rank ${Math.round(r.centralRank)}` : r.centralScore?.toFixed(2) ?? "-"}${
+        r.low != null && r.high != null ? ` (range ${r.low.toFixed(2)} to ${r.high.toFixed(2)})` : ""
+      }, direction ${r.direction}`
+  );
+  return [
+    `[${n}] SiaNexus forecast for ${idx.nameEn}, method ${rows[0].methodVersion}, generated on ${gen}. ALWAYS cite as "SiaNexus forecast, method ${rows[0].methodVersion}, generated on ${gen}", never as a fact.`,
+    ...lines,
+    rows[0].explanationEn ? `Explanation: ${rows[0].explanationEn.slice(0, 600)}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+export async function toolBenchmarkIndex(
+  ctx: ToolContext,
+  input: { code: string; countries?: string[] }
+): Promise<string> {
+  const idx = await indexByCodeOrName(input.code ?? "");
+  if (!idx) return "Unknown index.";
+  const set = [
+    ...new Set([
+      "QAT",
+      ...(input.countries?.length
+        ? input.countries.map((c) => c.toUpperCase())
+        : ["SAU", "ARE", "KWT", "BHR", "OMN"]),
+    ]),
+  ];
+  const obs = await db
+    .select()
+    .from(schema.indexObservations)
+    .where(
+      and(eq(schema.indexObservations.indexId, idx.id), inArray(schema.indexObservations.countryCode, set))
+    );
+  if (!obs.length) return `No stored observations for ${idx.nameEn} in that set.`;
+  const latestOf = (c: string) =>
+    obs.filter((o) => o.countryCode === c).sort((a, b) => b.year - a.year)[0] ?? null;
+  const rows = set
+    .map((c) => ({ c, o: latestOf(c) }))
+    .filter((r) => r.o) as { c: string; o: (typeof obs)[number] }[];
+  const higher = idx.higherIsBetter === 1;
+  const value = (o: (typeof obs)[number]) =>
+    o.rank != null ? -o.rank : higher ? o.score ?? -Infinity : -(o.score ?? Infinity);
+  rows.sort((a, b) => value(b.o) - value(a.o));
+  const n = registerIndexSource(
+    ctx,
+    idx,
+    `Benchmark over ${rows.length} countries, latest published values.`
+  );
+  const lines = rows.map(
+    (r, i) =>
+      `${i + 1}. ${r.c} ${r.o.year}: ${r.o.rank != null ? `#${r.o.rank}` : ""}${r.o.score != null ? ` score ${r.o.score}` : ""}`.trim()
+  );
+  const qatPos = rows.findIndex((r) => r.c === "QAT") + 1;
+  return [
+    `[${n}] ${idx.nameEn}: Qatar stands ${qatPos} of ${rows.length} in this group (latest published values; edition years may differ).`,
+    ...lines,
+  ].join("\n");
+}
+
+/* ------------------------------------------------------------------ */
+/* CR05 7: HR continuity for Ask NPC (portal-gated)                     */
+/* ------------------------------------------------------------------ */
+
+export async function toolGetHrContinuity(ctx: ToolContext): Promise<string> {
+  const { canSeePortal } = await import("@/server/auth/permissions");
+  if (!canSeePortal(ctx.user, "hr")) {
+    return "HR continuity data is not available to this user.";
+  }
+  const { getHrOverview } = await import("@/server/services/hr");
+  const overview = await getHrOverview(ctx.user);
+  if (!overview) return "HR continuity data is not available to this user.";
+  const n = ctx.state.addSource({
+    resource_type: "node",
+    resource_id: "hr-overview",
+    title: "HR Knowledge dashboard (continuity)",
+    page: null,
+    excerpt: `Readiness ${overview.rings.readiness}, continuity ${overview.rings.continuity}, handovers ${overview.rings.handoversComplete}% complete.`,
+    verified: true,
+  });
+  return [
+    `[${n}] Knowledge continuity${overview.scope.all ? " (organisation)" : " (department scope)"}: readiness ${overview.rings.readiness}/100, continuity ${overview.rings.continuity}/100, handovers ${overview.rings.handoversComplete}% complete.`,
+    `Open risks: ${overview.riskCounts.critical} critical, ${overview.riskCounts.high} high, ${overview.riskCounts.medium} medium, ${overview.riskCounts.low} low.`,
+    `Departments by continuity: ${overview.heat.map((h) => `${h.nameEn} ${h.continuity}`).join("; ")}.`,
+    `Top risks: ${overview.topRisks.slice(0, 5).map((r) => `${r.severity}: ${r.title}`).join("; ")}`,
+    "Never quote gamification points, badges, streaks, or private notes in HR answers (they are excluded by design).",
+  ].join("\n");
+}
+
+/* ------------------------------------------------------------------ */
 /* Registry                                                            */
 /* ------------------------------------------------------------------ */
 
@@ -1383,7 +1631,80 @@ export const TOOL_DEFINITIONS = [
       required: ["theme"],
     },
   },
+  {
+    name: "get_index",
+    description:
+      "One international index (HDI, GII, CPI, EGDI, GPI, IMD, LPI, NRI, TTDI, EPI, GTCI, WJP) with its methodology, responsible entity, and Qatar's full published series with sources.",
+    input_schema: {
+      type: "object" as const,
+      properties: { code: { type: "string", description: "Index code or name" } },
+      required: ["code"],
+    },
+  },
+  {
+    name: "query_indices",
+    description:
+      "List the tracked international indices with Qatar's latest published standing and the SiaNexus 3-year forecast direction. Filter by category or text.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        category: {
+          type: "string",
+          enum: ["economy", "governance", "society", "environment", "technology", "human"],
+        },
+        direction: { type: "string", enum: ["up", "down", "stable"] },
+        text: { type: "string" },
+      },
+    },
+  },
+  {
+    name: "get_index_forecast",
+    description:
+      "The current SiaNexus forecast for one index (+1, +3, +5 years with ranges and direction). A model output: cite it as 'SiaNexus forecast, method v1, generated on <date>', never as a fact.",
+    input_schema: {
+      type: "object" as const,
+      properties: { code: { type: "string" } },
+      required: ["code"],
+    },
+  },
+  {
+    name: "benchmark_index",
+    description:
+      "Compare Qatar with other countries (ISO3 codes; default the GCC) on one index using the latest published values.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        code: { type: "string" },
+        countries: { type: "array", items: { type: "string" } },
+      },
+      required: ["code"],
+    },
+  },
+  {
+    name: "get_hr_continuity",
+    description:
+      "Knowledge continuity from the HR dashboard: readiness and continuity scores, risk counts, department heat, and top risks. Only for users who can see the HR portal; never returns points or badges.",
+    input_schema: { type: "object" as const, properties: {} },
+  },
 ];
+
+/* CR05 6.1: tools whose portal must be visible for the user. */
+const TOOL_PORTAL: Record<string, string> = {
+  get_index: "indices",
+  query_indices: "indices",
+  get_index_forecast: "indices",
+  benchmark_index: "indices",
+  get_hr_continuity: "hr",
+  query_strategy: "strategy",
+  get_node: "strategy",
+  get_deliverables: "strategy",
+  query_indicators: "statistics",
+  get_indicator_series: "statistics",
+  find_experts: "experts",
+  get_lessons: "lessons",
+  get_lesson_themes: "lessons",
+  get_signals: "trends",
+};
 
 export async function runTool(
   ctx: ToolContext,
@@ -1392,6 +1713,14 @@ export async function runTool(
 ): Promise<string> {
   ctx.state.toolCalls++;
   try {
+    // CR05 6.1: a hidden portal's data does not exist for this user
+    const portal = TOOL_PORTAL[name];
+    if (portal) {
+      const { canSeePortal } = await import("@/server/auth/permissions");
+      if (!canSeePortal(ctx.user, portal as never)) {
+        return `Tool ${name} is not available for this user.`;
+      }
+    }
     switch (name) {
       case "search_knowledge":
         return await toolSearchKnowledge(ctx, input as never);
@@ -1421,6 +1750,16 @@ export async function runTool(
         return await toolWhatChanged(ctx, input as never);
       case "compare_editions":
         return await toolCompareEditions(ctx, input as never);
+      case "get_index":
+        return await toolGetIndex(ctx, input as never);
+      case "query_indices":
+        return await toolQueryIndices(ctx, input as never);
+      case "get_index_forecast":
+        return await toolGetIndexForecast(ctx, input as never);
+      case "benchmark_index":
+        return await toolBenchmarkIndex(ctx, input as never);
+      case "get_hr_continuity":
+        return await toolGetHrContinuity(ctx);
       default:
         return `Unknown tool ${name}.`;
     }

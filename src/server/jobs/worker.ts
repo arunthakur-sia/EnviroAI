@@ -70,6 +70,33 @@ async function handle(job: {
       await scheduleNextRecluster();
       break;
     }
+    case "indices_fetch": {
+      // CR05 4.3/4.8: Settings > Indices > Refresh data, then recompute
+      const { runIndicesFetch } = await import("@/server/indices/fetcher");
+      const report = await runIndicesFetch({ download: true });
+      const total = report.perIndex.reduce((s, r) => s + r.inserted, 0);
+      console.log(`[jobs] indices refreshed: +${total} observations`);
+      const { computeAllForecasts } = await import("@/server/indices/compute");
+      const done = await computeAllForecasts();
+      console.log(`[jobs] index forecasts recomputed: ${done}`);
+      break;
+    }
+    case "indices_forecast_nightly": {
+      // CR05 4.6.11: the nightly recompute
+      const { computeAllForecasts } = await import("@/server/indices/compute");
+      const done = await computeAllForecasts();
+      console.log(`[jobs] nightly index forecasts: ${done}`);
+      await scheduleNextIndicesForecast();
+      break;
+    }
+    case "hr_risks_recompute": {
+      // CR05 5.5: the nightly HR risk materialisation (and Recompute button)
+      const { recomputeHrRisks } = await import("@/server/services/hr");
+      const n = await recomputeHrRisks();
+      console.log(`[jobs] hr risks recomputed: ${n} open`);
+      if (payload.nightly) await scheduleNextHrRisks();
+      break;
+    }
     default:
       throw new Error(`Unknown job type ${job.type}`);
   }
@@ -119,6 +146,48 @@ async function scheduleNextRecluster(): Promise<void> {
   }
 }
 
+/** Keeps exactly one future nightly index-forecast recompute queued (CR05). */
+async function scheduleNextIndicesForecast(): Promise<void> {
+  try {
+    const { db, schema } = await import("@/server/db/client");
+    const { and, eq } = await import("drizzle-orm");
+    const { enqueue } = await import("./queue");
+    const pending = await db
+      .select({ id: schema.jobs.id })
+      .from(schema.jobs)
+      .where(and(eq(schema.jobs.type, "indices_forecast_nightly"), eq(schema.jobs.status, "queued")))
+      .limit(1);
+    if (pending.length) return;
+    const next = new Date();
+    next.setUTCDate(next.getUTCDate() + 1);
+    next.setUTCHours(2, 30, 0, 0);
+    await enqueue("indices_forecast_nightly", {}, { runAfter: next.toISOString() });
+  } catch (e) {
+    console.error("[jobs] scheduleNextIndicesForecast failed", e);
+  }
+}
+
+/** Keeps exactly one future nightly HR risk recompute queued (CR05 5.5). */
+async function scheduleNextHrRisks(): Promise<void> {
+  try {
+    const { db, schema } = await import("@/server/db/client");
+    const { and, eq } = await import("drizzle-orm");
+    const { enqueue } = await import("./queue");
+    const pending = await db
+      .select({ id: schema.jobs.id })
+      .from(schema.jobs)
+      .where(and(eq(schema.jobs.type, "hr_risks_recompute"), eq(schema.jobs.status, "queued")))
+      .limit(1);
+    if (pending.length) return;
+    const next = new Date();
+    next.setUTCDate(next.getUTCDate() + 1);
+    next.setUTCHours(3, 0, 0, 0);
+    await enqueue("hr_risks_recompute", { nightly: true }, { runAfter: next.toISOString() });
+  } catch (e) {
+    console.error("[jobs] scheduleNextHrRisks failed", e);
+  }
+}
+
 export function startWorker(): void {
   if (started) return;
   started = true;
@@ -145,9 +214,12 @@ export function startWorker(): void {
     }
   };
   loop();
-  // seed the recurring schedules (CR01 2.3 scan, CR04 3.7 recluster)
+  // seed the recurring schedules (CR01 2.3 scan, CR04 3.7 recluster,
+  // CR05 index forecasts and HR risks)
   scheduleNextScan();
   scheduleNextRecluster();
+  scheduleNextIndicesForecast();
+  scheduleNextHrRisks();
   console.log("[jobs] worker started");
 }
 

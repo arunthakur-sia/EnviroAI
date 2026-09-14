@@ -10,7 +10,7 @@ export default async function StrategyPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ edition?: string; view?: string; o?: string; t?: string; i?: string; p?: string }>;
+  searchParams: Promise<{ edition?: string; view?: string; o?: string; t?: string; i?: string; p?: string; l?: string }>;
 }) {
   const { locale } = await params;
   const sp = await searchParams;
@@ -19,6 +19,6 @@ export default async function StrategyPage({
   return renderNavigator({
     locale,
     view: sp.view,
-    canvasState: { o: sp.o, t: sp.t, i: sp.i, p: sp.p },
+    canvasState: { o: sp.o, t: sp.t, i: sp.i, p: sp.p, l: sp.l },
   });
 }

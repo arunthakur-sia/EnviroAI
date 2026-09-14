@@ -41,6 +41,10 @@ export const users = sqliteTable(
     positionEn: text("position_en"),
     positionAr: text("position_ar"),
     lastLoginAt: text("last_login_at"),
+    // CR05 6.3: lockout counters and password provenance
+    failedLogins: integer("failed_logins").notNull().default(0),
+    lockedUntil: text("locked_until"),
+    passwordSetAt: text("password_set_at"),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
     deletedAt: text("deleted_at"),
@@ -56,6 +60,8 @@ export const roles = sqliteTable("roles", {
   defaultClearance: integer("default_clearance").notNull().default(2),
   defaultDepartmentScope: text("default_department_scope").notNull().default("all"),
   isSystem: integer("is_system").notNull().default(0),
+  // CR05 6.1: the portal visibility set for the role (JSON array of portal keys)
+  portalsJson: text("portals_json"),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });
@@ -69,6 +75,10 @@ export const departments = sqliteTable("departments", {
   descriptionAr: text("description_ar"),
   headUserId: text("head_user_id"),
   parentId: text("parent_id"),
+  // CR05 5.2: the HR dashboard's department card content
+  responsibilitiesEn: text("responsibilities_en"),
+  responsibilitiesAr: text("responsibilities_ar"),
+  keyProjectsNote: text("key_projects_note"),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });
@@ -76,9 +86,11 @@ export const departments = sqliteTable("departments", {
 export const sessions = sqliteTable("sessions", {
   id: id(),
   userId: text("user_id").notNull(),
-  expiresAt: text("expires_at").notNull(),
+  expiresAt: text("expires_at").notNull(), // CR05 6.3: absolute expiry (7 days)
   ip: text("ip"),
   userAgent: text("user_agent"),
+  // CR05 6.3: 12-hour inactivity window rides on this
+  lastSeenAt: text("last_seen_at"),
   createdAt: createdAt(),
 });
 
@@ -415,6 +427,377 @@ export const nodeLineage = sqliteTable("node_lineage", {
   noteEn: text("note_en"),
   noteAr: text("note_ar"),
 });
+
+/* ------------------------------------------------------------------ */
+/* CR05 2: responsible entities and node leads                         */
+/* ------------------------------------------------------------------ */
+
+export const entities = sqliteTable("entities", {
+  id: id(),
+  nameEn: text("name_en").notNull(),
+  nameAr: text("name_ar").notNull(),
+  shortNameEn: text("short_name_en"),
+  shortNameAr: text("short_name_ar"),
+  // ministry | agency | authority | company | international | other
+  kind: text("kind").notNull().default("ministry"),
+  logoPath: text("logo_path"),
+  website: text("website"),
+  contactName: text("contact_name"),
+  contactEmail: text("contact_email"),
+  isActive: integer("is_active").notNull().default(1),
+  // Arabic names generated during the owner_entity_name migration are flagged
+  nameArMachine: integer("name_ar_machine").notNull().default(0),
+  mergedIntoId: text("merged_into_id"),
+  createdAt: createdAt(),
+  updatedAt: updatedAt(),
+});
+
+export const nodeLeads = sqliteTable(
+  "node_leads",
+  {
+    id: id(),
+    nodeId: text("node_id").notNull(),
+    leadKind: text("lead_kind").notNull(), // department | entity
+    departmentId: text("department_id"),
+    entityId: text("entity_id"),
+    role: text("role").notNull().default("lead"), // lead | supporting
+    sort: integer("sort").notNull().default(0),
+    verified: integer("verified").notNull().default(0),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    index("node_leads_node_idx").on(t.nodeId),
+    index("node_leads_entity_idx").on(t.entityId),
+    index("node_leads_department_idx").on(t.departmentId),
+  ]
+);
+
+/* ------------------------------------------------------------------ */
+/* CR05 3: stakeholders on projects and initiatives                    */
+/* ------------------------------------------------------------------ */
+
+export const nodeStakeholders = sqliteTable(
+  "node_stakeholders",
+  {
+    id: id(),
+    nodeId: text("node_id").notNull(),
+    personKind: text("person_kind").notNull().default("employee"), // employee | expert | external_contact
+    userId: text("user_id"),
+    expertId: text("expert_id"),
+    nameEn: text("name_en"),
+    nameAr: text("name_ar"),
+    organisation: text("organisation"),
+    email: text("email"),
+    // sponsor | owner | manager | team | expert | external_partner
+    role: text("role").notNull().default("team"),
+    roleNoteEn: text("role_note_en"),
+    roleNoteAr: text("role_note_ar"),
+    domainTermId: text("domain_term_id"),
+    sinceDate: text("since_date"),
+    untilDate: text("until_date"),
+    sort: integer("sort").notNull().default(0),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    index("node_stakeholders_node_idx").on(t.nodeId),
+    index("node_stakeholders_user_idx").on(t.userId),
+    index("node_stakeholders_expert_idx").on(t.expertId),
+  ]
+);
+
+/* ------------------------------------------------------------------ */
+/* CR05 4: International Indices                                       */
+/* ------------------------------------------------------------------ */
+
+export const indices = sqliteTable(
+  "indices",
+  {
+    id: id(),
+    code: text("code").notNull(),
+    nameEn: text("name_en").notNull(),
+    nameAr: text("name_ar").notNull(),
+    publisher: text("publisher"),
+    publisherUrl: text("publisher_url"),
+    methodologySummaryEn: text("methodology_summary_en"),
+    methodologySummaryAr: text("methodology_summary_ar"),
+    scale: text("scale").notNull().default("both"), // rank | score | both
+    scoreMin: real("score_min"),
+    scoreMax: real("score_max"),
+    higherIsBetter: integer("higher_is_better").notNull().default(1),
+    frequency: text("frequency").notNull().default("annual"),
+    latestYear: integer("latest_year"),
+    responsibleEntityId: text("responsible_entity_id"),
+    linkedNodeIdsJson: text("linked_node_ids_json"),
+    // economy | governance | society | environment | technology | human
+    category: text("category").notNull().default("economy"),
+    isActive: integer("is_active").notNull().default(1),
+    sourceNotes: text("source_notes"),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [uniqueIndex("indices_code_idx").on(t.code)]
+);
+
+export const indexObservations = sqliteTable(
+  "index_observations",
+  {
+    id: id(),
+    indexId: text("index_id").notNull(),
+    countryCode: text("country_code").notNull(), // ISO3
+    year: integer("year").notNull(),
+    rank: integer("rank"),
+    score: real("score"),
+    totalCountries: integer("total_countries"),
+    sourceUrl: text("source_url"),
+    fetchedAt: text("fetched_at"),
+    status: text("status").notNull().default("fetched"), // fetched | manual | verified
+  },
+  (t) => [
+    uniqueIndex("index_obs_unique").on(t.indexId, t.countryCode, t.year),
+    index("index_obs_index_idx").on(t.indexId),
+  ]
+);
+
+export const indexPillars = sqliteTable(
+  "index_pillars",
+  {
+    id: id(),
+    indexId: text("index_id").notNull(),
+    pillarCode: text("pillar_code").notNull(),
+    nameEn: text("name_en").notNull(),
+    nameAr: text("name_ar").notNull(),
+    sort: integer("sort").notNull().default(0),
+  },
+  (t) => [index("index_pillars_index_idx").on(t.indexId)]
+);
+
+export const indexPillarValues = sqliteTable(
+  "index_pillar_values",
+  {
+    id: id(),
+    indexId: text("index_id").notNull(),
+    pillarCode: text("pillar_code").notNull(),
+    countryCode: text("country_code").notNull(),
+    year: integer("year").notNull(),
+    rank: integer("rank"),
+    score: real("score"),
+    sourceUrl: text("source_url"),
+  },
+  (t) => [
+    uniqueIndex("index_pillar_values_unique").on(
+      t.indexId,
+      t.pillarCode,
+      t.countryCode,
+      t.year
+    ),
+  ]
+);
+
+export const countries = sqliteTable("countries", {
+  iso3: text("iso3").primaryKey(),
+  nameEn: text("name_en").notNull(),
+  nameAr: text("name_ar").notNull(),
+  region: text("region").notNull().default("other"), // GCC | MENA | G20 | OECD | other
+});
+
+export const peerGroups = sqliteTable("peer_groups", {
+  id: id(),
+  nameEn: text("name_en").notNull(),
+  nameAr: text("name_ar").notNull(),
+  countryCodesJson: text("country_codes_json").notNull(),
+  isDefault: integer("is_default").notNull().default(0),
+  ownerUserId: text("owner_user_id"), // null = shared preset
+  createdAt: createdAt(),
+});
+
+export const indexForecasts = sqliteTable(
+  "index_forecasts",
+  {
+    id: id(),
+    indexId: text("index_id").notNull(),
+    generatedAt: text("generated_at").notNull(),
+    horizonYears: integer("horizon_years").notNull(), // 1 | 3 | 5
+    centralRank: real("central_rank"),
+    centralScore: real("central_score"),
+    low: real("low"),
+    high: real("high"),
+    rankLow: real("rank_low"),
+    rankHigh: real("rank_high"),
+    direction: text("direction").notNull().default("stable"), // up | down | stable
+    methodVersion: text("method_version").notNull().default("v1"),
+    assumptionsJson: text("assumptions_json"),
+    inputsJson: text("inputs_json"),
+    simulationSummaryJson: text("simulation_summary_json"),
+    explanationEn: text("explanation_en"),
+    explanationAr: text("explanation_ar"),
+    status: text("status").notNull().default("current"), // current | superseded
+  },
+  (t) => [index("index_forecasts_index_idx").on(t.indexId, t.status)]
+);
+
+export const indexForecastAssumptions = sqliteTable(
+  "index_forecast_assumptions",
+  {
+    id: id(),
+    indexId: text("index_id"), // null = the global defaults
+    key: text("key").notNull(),
+    value: real("value").notNull(),
+    min: real("min").notNull(),
+    max: real("max").notNull(),
+    step: real("step").notNull().default(0.1),
+    labelEn: text("label_en").notNull(),
+    labelAr: text("label_ar").notNull(),
+    editableBy: text("editable_by").notNull().default("user_whatif"), // admin | user_whatif
+  },
+  (t) => [index("index_assumptions_index_idx").on(t.indexId)]
+);
+
+/* ------------------------------------------------------------------ */
+/* CR05 5: HR Knowledge Dashboard                                      */
+/* ------------------------------------------------------------------ */
+
+export const employeeStatus = sqliteTable("employee_status", {
+  userId: text("user_id").primaryKey(),
+  status: text("status").notNull().default("active"), // active | leaving | transferring | long_leave
+  effectiveDate: text("effective_date"),
+  targetDepartmentId: text("target_department_id"),
+  note: text("note"),
+  setBy: text("set_by"),
+  setAt: text("set_at").notNull(),
+});
+
+export const ownershipBackups = sqliteTable(
+  "ownership_backups",
+  {
+    id: id(),
+    resourceType: text("resource_type").notNull(),
+    resourceId: text("resource_id").notNull(),
+    backupUserId: text("backup_user_id").notNull(),
+    setBy: text("set_by"),
+    setAt: text("set_at").notNull(),
+  },
+  (t) => [
+    uniqueIndex("ownership_backups_unique").on(t.resourceType, t.resourceId),
+    index("ownership_backups_user_idx").on(t.backupUserId),
+  ]
+);
+
+export const handovers = sqliteTable(
+  "handovers",
+  {
+    id: id(),
+    userId: text("user_id").notNull(),
+    kind: text("kind").notNull().default("leaving"), // leaving | transferring | leave
+    createdBy: text("created_by"),
+    createdAt: createdAt(),
+    dueDate: text("due_date"),
+    successorDefaultUserId: text("successor_default_user_id"),
+    status: text("status").notNull().default("open"), // open | in_progress | complete | overdue
+    completionPct: integer("completion_pct").notNull().default(0),
+    completedAt: text("completed_at"),
+  },
+  (t) => [index("handovers_user_idx").on(t.userId)]
+);
+
+export const handoverItems = sqliteTable(
+  "handover_items",
+  {
+    id: id(),
+    handoverId: text("handover_id").notNull(),
+    // document | node_owner | node_role | indicator | lesson | expert_request |
+    // collection | community_lead | tacit_topic
+    itemKind: text("item_kind").notNull(),
+    resourceType: text("resource_type").notNull(),
+    resourceId: text("resource_id").notNull(),
+    title: text("title").notNull(),
+    successorUserId: text("successor_user_id"),
+    status: text("status").notNull().default("pending"), // pending | reassigned | captured | not_needed
+    note: text("note"),
+    doneAt: text("done_at"),
+  },
+  (t) => [index("handover_items_h_idx").on(t.handoverId)]
+);
+
+export const knowledgeCaptures = sqliteTable(
+  "knowledge_captures",
+  {
+    id: id(),
+    handoverId: text("handover_id").notNull(),
+    lessonId: text("lesson_id"),
+    documentId: text("document_id"),
+    topic: text("topic"),
+    createdAt: createdAt(),
+  },
+  (t) => [index("knowledge_captures_h_idx").on(t.handoverId)]
+);
+
+export const hrRisks = sqliteTable(
+  "hr_risks",
+  {
+    id: id(),
+    // incomplete_handover | outdated_content | missing_knowledge |
+    // overdue_update | single_point_of_failure | no_backup
+    kind: text("kind").notNull(),
+    severity: text("severity").notNull().default("medium"), // low | medium | high | critical
+    departmentId: text("department_id"),
+    userId: text("user_id"),
+    resourceType: text("resource_type"),
+    resourceId: text("resource_id"),
+    title: text("title").notNull(),
+    detailEn: text("detail_en"),
+    detailAr: text("detail_ar"),
+    ownerUserId: text("owner_user_id"), // who should act
+    detectedAt: text("detected_at").notNull(),
+    resolvedAt: text("resolved_at"),
+    resolvedBy: text("resolved_by"),
+    resolutionNote: text("resolution_note"),
+  },
+  (t) => [
+    index("hr_risks_open_idx").on(t.resolvedAt, t.severity),
+    index("hr_risks_dept_idx").on(t.departmentId),
+  ]
+);
+
+/* ------------------------------------------------------------------ */
+/* CR05 6: per-user overrides and invitations                          */
+/* ------------------------------------------------------------------ */
+
+export const userPermissionOverrides = sqliteTable(
+  "user_permission_overrides",
+  {
+    id: id(),
+    userId: text("user_id").notNull(),
+    // "portal:<key>" for portal visibility, "<module>:<action>" for module actions
+    permissionKey: text("permission_key").notNull(),
+    effect: text("effect").notNull().default("grant"), // grant | deny
+    reason: text("reason"),
+    setBy: text("set_by"),
+    setAt: text("set_at").notNull(),
+    expiresAt: text("expires_at"),
+  },
+  (t) => [index("user_overrides_user_idx").on(t.userId)]
+);
+
+export const invitations = sqliteTable(
+  "invitations",
+  {
+    id: id(),
+    email: text("email").notNull(),
+    nameEn: text("name_en"),
+    nameAr: text("name_ar"),
+    roleId: text("role_id").notNull(),
+    departmentId: text("department_id"),
+    clearanceLevel: integer("clearance_level").notNull().default(2),
+    portalsJson: text("portals_json"),
+    token: text("token").notNull(),
+    invitedBy: text("invited_by"),
+    createdAt: createdAt(),
+    expiresAt: text("expires_at").notNull(),
+    acceptedAt: text("accepted_at"),
+    status: text("status").notNull().default("pending"), // pending | accepted | expired | revoked
+  },
+  (t) => [uniqueIndex("invitations_token_idx").on(t.token)]
+);
 
 /* ------------------------------------------------------------------ */
 /* 7.5 Statistics and Indicators                                       */

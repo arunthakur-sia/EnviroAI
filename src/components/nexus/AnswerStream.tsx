@@ -40,6 +40,10 @@ export function citationHref(c: Citation): string {
     /* CR04 5: theme citations open the Learning Room */
     case "lesson_theme":
       return `/lessons`;
+    /* CR05 4.9: indices are a source type; resource_id is the index code */
+    case "index":
+    case "index_forecast":
+      return `/indices/${c.resource_id}`;
     case "signal":
       return `/trends/${c.resource_id}`;
     case "expert":
@@ -252,6 +256,10 @@ export function SourceList({ citations }: { citations: Citation[] }) {
               {isIndicator ? (
                 <span className="ms-auto shrink-0 text-[10px] font-medium uppercase tracking-wide text-gulf-600">
                   {t("statisticTag")}
+                </span>
+              ) : c.resource_type === "index" || c.resource_type === "index_forecast" ? (
+                <span className="ms-auto shrink-0 rounded bg-gulf-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-gulf-600">
+                  {c.resource_type === "index_forecast" ? t("forecastTag") : t("indexTag")}
                 </span>
               ) : c.resource_type === "podcast_episode" ? (
                 <span className="ms-auto shrink-0 rounded bg-maroon-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-maroon-900">

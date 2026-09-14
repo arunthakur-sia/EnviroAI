@@ -10,7 +10,7 @@ import { audit } from "@/server/auth/audit";
 import { canReadResource } from "@/server/auth/permissions";
 
 const Body = z.object({
-  resourceType: z.enum(["document", "node", "indicator", "question", "expert", "signal"]),
+  resourceType: z.enum(["document", "node", "indicator", "question", "expert", "signal", "index"]),
   resourceId: z.string(),
   locale: z.string().default("en"),
   format: z.enum(["json", "docx"]).default("json"),
@@ -106,6 +106,51 @@ async function subjectFor(
         label_en: v.period,
         label_ar: v.period,
         value: `${v.value} ${ind.unit ?? ""}`,
+      })),
+    };
+  }
+  if (resourceType === "index") {
+    // CR05 4.5.7: brief over an international index; forecasts cited as
+    // SiaNexus forecasts, never as facts
+    const [idx] = await db.select().from(schema.indices).where(eq(schema.indices.id, resourceId)).limit(1);
+    if (!idx) return null;
+    const obs = await db
+      .select()
+      .from(schema.indexObservations)
+      .where(
+        and(
+          eq(schema.indexObservations.indexId, idx.id),
+          eq(schema.indexObservations.countryCode, "QAT")
+        )
+      )
+      .orderBy(desc(schema.indexObservations.year))
+      .limit(12);
+    const [f3] = await db
+      .select()
+      .from(schema.indexForecasts)
+      .where(
+        and(
+          eq(schema.indexForecasts.indexId, idx.id),
+          eq(schema.indexForecasts.status, "current"),
+          eq(schema.indexForecasts.horizonYears, 3)
+        )
+      )
+      .limit(1);
+    const seriesLine = obs
+      .map((o) => `${o.year}: ${o.rank != null ? `rank ${o.rank}` : ""}${o.score != null ? ` score ${o.score}` : ""}`.trim())
+      .join("; ");
+    const forecastLine = f3
+      ? `SiaNexus forecast (method ${f3.methodVersion}, generated ${f3.generatedAt.slice(0, 10)}): three-year central ${f3.centralRank != null ? `rank ${Math.round(f3.centralRank)}` : f3.centralScore}, direction ${f3.direction}. This is a forecast, not a published figure.`
+      : "";
+    return {
+      titleEn: idx.nameEn,
+      titleAr: idx.nameAr,
+      bodyEn: `${idx.methodologySummaryEn ?? ""}\n\nQatar series: ${seriesLine}\n\n${forecastLine}`,
+      bodyAr: `${idx.methodologySummaryAr ?? ""}\n\nسلسلة قطر: ${seriesLine}\n\n${forecastLine}`,
+      numbers: obs.slice(0, 4).map((o) => ({
+        label_en: String(o.year),
+        label_ar: String(o.year),
+        value: o.rank != null ? `#${o.rank}` : String(o.score ?? ""),
       })),
     };
   }

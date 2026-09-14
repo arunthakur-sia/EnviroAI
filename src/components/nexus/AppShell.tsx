@@ -8,6 +8,7 @@ import {
   Library,
   Compass,
   BarChart3,
+  Globe2,
   Users,
   MessageCircleQuestion,
   Lightbulb,
@@ -18,6 +19,8 @@ import {
   Building2,
   Sparkles,
   Podcast,
+  HeartHandshake,
+  Eye,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SiaLogo } from "./Logo";
@@ -51,20 +54,28 @@ export type ShellUser = {
   points: number;
   quietMode: boolean;
   clearance: number;
+  /* CR05 6.1: the visible portal keys, in rail order */
+  portals: string[];
+  /* CR05 6.4: non-null while a Super Admin previews as this role/user */
+  previewLabel: string | null;
 };
 
 /* CR02 5.1: the Add Knowledge rail button is gone (it lives on Home, the
    Lessons page, and project Lessons tabs). CR02 4.6: Podcast under Lessons. */
+/* CR05 4.1/6.1: portal order matches the access model; hidden portals are
+   filtered out per user. */
 const NAV = [
   { href: "/home", icon: Home, key: "home" },
   { href: "/vault", icon: Library, key: "vault" },
   { href: "/strategy", icon: Compass, key: "strategy" },
   { href: "/statistics", icon: BarChart3, key: "statistics" },
-  { href: "/experts", icon: Users, key: "experts" },
+  { href: "/indices", icon: Globe2, key: "indices" },
+  { href: "/trends", icon: Radar, key: "trends" },
   { href: "/ask", icon: MessageCircleQuestion, key: "ask" },
   { href: "/lessons", icon: Lightbulb, key: "lessons" },
   { href: "/podcast", icon: Podcast, key: "podcast" },
-  { href: "/trends", icon: Radar, key: "trends" },
+  { href: "/experts", icon: Users, key: "experts" },
+  { href: "/hr", icon: HeartHandshake, key: "hr" },
 ] as const;
 
 export function AppShell({
@@ -113,7 +124,7 @@ export function AppShell({
                   className="hidden shrink-0 group-hover/rail:block"
                 />
               </Link>
-              {NAV.map((item) => {
+              {NAV.filter((item) => user.portals.includes(item.key)).map((item) => {
                 const active = pathname.startsWith(item.href);
                 return (
                   <Link
@@ -122,7 +133,7 @@ export function AppShell({
                     className={cn(
                       "flex h-10 items-center gap-3 overflow-hidden rounded-lg px-3 text-sm transition-colors",
                       active
-                        ? "bg-maroon-100 font-medium text-maroon-900"
+                        ? "bg-maroon-100 font-medium text-maroon-700"
                         : "text-ink-600 hover:bg-white/70 hover:text-ink-900"
                     )}
                   >
@@ -155,8 +166,11 @@ export function AppShell({
 
             {/* Main column */}
             <div className="flex min-w-0 flex-1 flex-col">
-              {/* Top bar */}
-              <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-sand-300 bg-sand-50/90 px-6 backdrop-blur">
+              {/* Top bar: NPC maroon with white ink (CR05 1.3) */}
+              <header
+                data-bar
+                className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-maroon-900/40 bg-bar px-6 text-bar-ink"
+              >
                 <div className="flex flex-1 justify-center">
                   <GlobalSearch />
                 </div>
@@ -178,7 +192,7 @@ export function AppShell({
                       e.preventDefault();
                       window.location.href = switchHref;
                     }}
-                    className="rounded-lg border border-sand-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-ink-600 hover:border-maroon-300 hover:text-maroon-700"
+                    className="rounded-lg border border-white/25 bg-bar-field px-2.5 py-1.5 text-xs font-semibold text-bar-ink hover:bg-white/25"
                     aria-label={t("switchLanguage")}
                   >
                     {otherLocale === "ar" ? "العربية" : "EN"}
@@ -187,7 +201,7 @@ export function AppShell({
                   <Dropdown>
                     <DropdownTrigger asChild>
                       <button
-                        className="ms-1 flex items-center gap-2 rounded-full outline-none focus-visible:outline-2 focus-visible:outline-maroon-700 cursor-pointer"
+                        className="ms-1 flex items-center gap-2 rounded-full outline-none focus-visible:outline-2 focus-visible:outline-gold-500 cursor-pointer"
                         aria-label={t("userMenu")}
                       >
                         <ProgressRing value={user.quietMode ? 0 : user.levelProgress} size={44} stroke={2.5} color="var(--color-gold-500)">
@@ -219,19 +233,21 @@ export function AppShell({
                       </DropdownItem>
                     </DropdownContent>
                   </Dropdown>
-                  {/* NPC lockup at the end side of the bar (CR01 1.3): full logo
-                      from 1024px, emblem-only crop 768-1024px, hidden below 768px. */}
-                  <span className="ms-4 hidden h-9 items-center border-s border-sand-300 ps-4 md:flex">
+                  {/* NPC lockup at the end side of the bar (CR01 1.3, CR05 1.3:
+                      the white monochrome file on the maroon bar, no plate):
+                      full logo from 1024px, emblem-only crop 768-1024px,
+                      hidden below 768px. */}
+                  <span className="ms-4 hidden h-9 items-center border-s border-white/25 ps-4 md:flex">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/brand/NPC_logo_transparent.png"
+                      src="/brand/NPC_logo_white_mono.png"
                       alt={locale === "ar" ? "المجلس الوطني للتخطيط" : "National Planning Council"}
                       className="hidden h-9 w-auto select-none lg:block"
                       draggable={false}
                     />
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/brand/NPC_logo_transparent.png"
+                      src="/brand/NPC_logo_white_mono.png"
                       alt={locale === "ar" ? "المجلس الوطني للتخطيط" : "National Planning Council"}
                       className="h-9 w-9 select-none object-cover object-right lg:hidden"
                       draggable={false}
@@ -239,6 +255,31 @@ export function AppShell({
                   </span>
                 </div>
               </header>
+
+              {/* CR05 6.4: the read-only preview banner */}
+              {user.previewLabel ? (
+                <div
+                  className="flex items-center justify-center gap-3 bg-gold-100 px-4 py-1.5 text-xs text-maroon-900"
+                  data-testid="preview-banner"
+                >
+                  <Eye className="size-3.5" aria-hidden />
+                  {t("previewBanner", { label: user.previewLabel })}
+                  <button
+                    onClick={async () => {
+                      await fetch("/api/v1/preview", {
+                        method: "POST",
+                        headers: { "content-type": "application/json" },
+                        body: JSON.stringify({ action: "exit" }),
+                      });
+                      window.location.href = `/${locale}/settings?tab=roles`;
+                    }}
+                    className="rounded-md border border-maroon-300 px-2 py-0.5 font-medium hover:bg-maroon-100 cursor-pointer"
+                    data-testid="preview-exit"
+                  >
+                    {t("previewExit")}
+                  </button>
+                </div>
+              ) : null}
 
               <main className="mx-auto w-full max-w-[1280px] flex-1 px-6 py-6 pb-20">
                 {children}

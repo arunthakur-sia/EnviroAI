@@ -161,7 +161,10 @@ export function StrategyMap({
             r1: 258,
             status: i.status,
             label: `${i.code ?? ""} ${bi(locale, i.titleEn, i.titleAr)}`.trim(),
-            sub: i.ownerEntityName ?? "",
+            sub: i.leads
+              .filter((l) => l.role === "lead")
+              .map((l) => bi(locale, l.shortEn, l.shortAr))
+              .join(" · "),
             outcomeId: o.id,
             outcomeIndex: oi,
             targetId: g.id,

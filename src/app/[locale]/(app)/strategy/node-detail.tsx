@@ -12,7 +12,7 @@ import { Archive, ArrowRight, Headphones, Plus } from "lucide-react";
 import { db, schema } from "@/server/db/client";
 import { getCurrentUser } from "@/server/auth/session";
 import { can } from "@/server/auth/permissions";
-import { getNodeDetail, slugOfCode } from "@/server/services/strategy";
+import { getNodeDetail, slugOfCode, loadLeadsFor } from "@/server/services/strategy";
 import { listDeliverables } from "@/server/services/deliverables";
 import { whatChanged } from "@/server/ai";
 import { toShelfDocs } from "@/server/services/documents";
@@ -30,6 +30,8 @@ import {
   ProgressRing,
 } from "@/components/ui/primitives";
 import { Shelf } from "@/components/nexus/Shelf";
+import { LeadChips } from "@/components/nexus/LeadChips";
+import { StakeholdersSection } from "@/components/nexus/Stakeholders";
 import { BriefDialog } from "@/components/nexus/BriefDialog";
 import { SignalCard } from "@/components/nexus/SignalCard";
 import { toSignalCardData } from "@/components/nexus/signal-card-data";
@@ -72,6 +74,8 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
     edition,
     parent,
     children,
+    leads,
+    stakeholders,
     kpis,
     kpiValues,
     updates,
@@ -131,6 +135,11 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
           (n) => n.nodeType === "initiative" || n.nodeType === "project"
         )
       : [];
+  // CR05 2.2: lead chips on the grouped delivery cards
+  const itemLeads = Object.fromEntries(
+    await loadLeadsFor(deliveryItems.map((n) => n.id))
+  );
+  const allDepartments = await db.select().from(schema.departments);
 
   // hero progress: share of delivery descendants on track
   const heroPool =
@@ -294,6 +303,8 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
         <NodeActions
           nodeId={id}
           kpis={kpis.map((k) => ({ id: k.id, nameEn: k.nameEn, nameAr: k.nameAr, unit: k.unit }))}
+          departments={allDepartments.map((d) => ({ id: d.id, nameEn: d.nameEn, nameAr: d.nameAr }))}
+          canEditLeads={isDeliveryNode}
         />
       ) : null}
     </div>
@@ -374,7 +385,7 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
                 </Chip>
               ) : null}
               {node.verified === 0 ? <Chip tone="warn">{tc("toVerify")}</Chip> : null}
-              {node.ownerEntityName ? <Chip tone="gulf">{node.ownerEntityName}</Chip> : null}
+              <LeadChips leads={leads} max={3} />
               {node.budgetQar ? (
                 <span className="text-xs text-ink-600 tnum">
                   {t("budget")}: {formatNumber(node.budgetQar, locale, { compact: true })} QAR
@@ -508,9 +519,7 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
                         <span className="line-clamp-2 text-sm font-medium leading-snug text-ink-900">
                           {bi(locale, i.titleEn, i.titleAr)}
                         </span>
-                        {i.ownerEntityName ? (
-                          <span className="truncate text-[11px] text-ink-600">{i.ownerEntityName}</span>
-                        ) : null}
+                        <LeadChips leads={itemLeads[i.id] ?? []} />
                       </Link>
                     ))}
                 </div>
@@ -571,6 +580,16 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
                 );
               })}
             </div>
+          ) : null}
+
+          {/* CR05 3.2: stakeholders at the bottom of project and initiative
+              pages, before the actions */}
+          {isDeliveryNode ? (
+            <StakeholdersSection
+              nodeId={id}
+              rows={stakeholders}
+              canEdit={!isArchived && can(user, "create", "strategy")}
+            />
           ) : null}
 
           <div className="mt-8">

@@ -11,7 +11,9 @@
       "lessons": "الدروس المستفادة",
       "podcast": "بودكاست المعرفة",
       "trends": "الاتجاهات والإشارات",
-      "settings": "الإعدادات"
+      "settings": "الإعدادات",
+      "indices": "المؤشرات الدولية",
+      "hr": "معرفة الموارد البشرية"
     },
     "searchPlaceholder": "ابحث في سيا نكسس: وثائق وأرقام وخبراء وإجابات",
     "searching": "جارٍ البحث…",
@@ -34,7 +36,9 @@
     "switchLanguage": "تغيير اللغة",
     "aiMock": "وضع المحاكاة",
     "aiMockHint": "لا يوجد مفتاح للذكاء الاصطناعي. جميع الوظائف الذكية تعمل بنتائج محلية محددة.",
-    "dropToUpload": "أفلت الملف للرفع إلى خزانة المعرفة"
+    "dropToUpload": "أفلت الملف للرفع إلى خزانة المعرفة",
+    "previewBanner": "أنت تعاين بصفة {label}. وضع قراءة فقط: لا يمكن تغيير شيء.",
+    "previewExit": "إنهاء المعاينة"
   },
   "login": {
     "heroTitle": "الذاكرة الحية للمجلس الوطني للتخطيط",
@@ -45,7 +49,8 @@
     "password": "كلمة المرور",
     "signIn": "تسجيل الدخول",
     "invalidCredentials": "البريد الإلكتروني وكلمة المرور غير متطابقين. حاول مرة أخرى.",
-    "networkError": "تعذر الوصول إلى الخادم. تأكد من تشغيل التطبيق."
+    "networkError": "تعذر الوصول إلى الخادم. تأكد من تشغيل التطبيق.",
+    "accountLocked": "قُفل هذا الحساب لمدة 15 دقيقة بعد محاولات فاشلة متكررة."
   },
   "common": {
     "loading": "جارٍ التحميل…",
@@ -111,7 +116,10 @@
       "high": "ثقة عالية",
       "medium": "ثقة متوسطة",
       "low": "ثقة منخفضة"
-    }
+    },
+    "remove": "إزالة",
+    "choose": "اختر",
+    "copy": "نسخ"
   },
   "vault": {
     "title": "خزانة المعرفة",
@@ -122,7 +130,11 @@
     "emptyTitle": "الرفوف هنا فارغة",
     "emptyHint": "لا توجد وثائق تطابق هذه التصفية. امسحها، أو أضف أول وثيقة بنفسك.",
     "viewToggle": "العرض",
-    "views": { "shelves": "رفوف", "grid": "شبكة", "list": "قائمة" },
+    "views": {
+      "shelves": "رفوف",
+      "grid": "شبكة",
+      "list": "قائمة"
+    },
     "groupBy": "تجميع الرفوف حسب",
     "groupByType": "حسب نوع المعرفة",
     "groupByOutcome": "حسب نتائج الاستراتيجية",
@@ -408,7 +420,14 @@
       "openFullPage": "فتح الصفحة الكاملة",
       "askAboutThis": "اسأل عن هذا",
       "railAria": "شريط النتائج",
-      "chapterEmpty": "لا يوجد نص فصل مرتبط بهذه النتيجة بعد."
+      "chapterEmpty": "لا يوجد نص فصل مرتبط بهذه النتيجة بعد.",
+      "byLead": "حسب الجهة المسؤولة",
+      "leadFilterAria": "تصفية حسب الجهة المسؤولة",
+      "allLeads": "كل الجهات",
+      "leadDepartments": "إدارات المجلس",
+      "leadEntities": "الجهات",
+      "leadCounts": "{initiatives} مبادرة · {projects} مشروعًا",
+      "leadOnTrack": "{pct}% على المسار"
     },
     "archiveBanner": "{name} نسخة مؤرشفة للقراءة فقط، محفوظة للنسب التاريخي والذاكرة المؤسسية.",
     "archiveChip": "أرشيف",
@@ -459,7 +478,10 @@
     "noLessonsHere": "لا دروس مرتبطة هنا بعد.",
     "briefMe": "لخص لي",
     "tileCounts": "{initiatives} مبادرة · {projects} مشروعاً",
-    "view": { "tree": "شجرة", "graph": "مخطط" },
+    "view": {
+      "tree": "شجرة",
+      "graph": "مخطط"
+    },
     "nodeType": {
       "vision": "الرؤية",
       "outcome": "نتيجة وطنية",
@@ -512,7 +534,44 @@
     "valueLabel": "القيمة",
     "kpiValueSaved": "سُجلت قيمة المؤشر. 10 نقاط.",
     "risks": "المخاطر",
-    "nextSteps": "الخطوات القادمة"
+    "nextSteps": "الخطوات القادمة",
+    "supporting": "جهات مساندة",
+    "leadsEditor": {
+      "cta": "تعديل الجهات المسؤولة",
+      "title": "الجهات المسؤولة والمساندة",
+      "saved": "تم حفظ الجهات",
+      "leads": "الإدارة أو الجهة المسؤولة (يجوز أكثر من واحدة)",
+      "supporting": "الجهات المساندة",
+      "none": "لا يوجد بعد",
+      "addDepartment": "إضافة إدارة مسؤولة",
+      "pickDepartment": "اختر إدارة",
+      "addEntity": "إضافة جهة",
+      "entityRole": "دور الجهة",
+      "asLead": "جهة مسؤولة",
+      "asSupporting": "جهة مساندة",
+      "entityPlaceholder": "ابحث عن جهة، أو اكتب اسمًا جديدًا",
+      "createNew": "إنشاء “{name}”"
+    },
+    "stakeholders": {
+      "title": "أصحاب العلاقة",
+      "add": "إضافة صاحب علاقة",
+      "cancel": "إلغاء",
+      "role": "الدور",
+      "searchPlaceholder": "ابحث عن موظفين وخبراء",
+      "notePlaceholder": "ملاحظة الدور، مثل “مستشار منهجية” (اختياري)",
+      "confirm": "إضافة",
+      "empty": "لم يُسجَّل أصحاب علاقة بعد.",
+      "profile": "الملف",
+      "email": "مراسلة {name}",
+      "roles": {
+        "sponsor": "الراعي",
+        "owner": "مالك المشروع",
+        "manager": "مدير المشروع",
+        "team": "فريق العمل",
+        "expert": "خبير مشارك",
+        "external_partner": "شريك خارجي"
+      }
+    }
   },
   "experts": {
     "title": "شبكة الخبراء",
@@ -558,7 +617,11 @@
     },
     "skills": "المهارات",
     "contributions": "المساهمات في سيا نكسس",
-    "contrib": { "documents": "وثائق", "answers": "إجابات", "lessons": "دروس" },
+    "contrib": {
+      "documents": "وثائق",
+      "answers": "إجابات",
+      "lessons": "دروس"
+    },
     "badges": "الأوسمة",
     "request": "اطلب هذا الخبير",
     "requestTitle": "طلب هذا الخبير",
@@ -579,7 +642,8 @@
     "emailLabel": "البريد الإلكتروني",
     "yearsLabel": "سنوات الخبرة",
     "addCta": "إضافة الخبير",
-    "expertAdded": "أُضيف الخبير. 30 نقطة بعد التوثيق."
+    "expertAdded": "أُضيف الخبير. 30 نقطة بعد التوثيق.",
+    "projects": "المشاريع"
   },
   "profile": {
     "completion": "مكتمل {pct}%",
@@ -601,7 +665,10 @@
     "numeralsEastern": "عربية مشرقية (١٢٣)",
     "quietMode": "الوضع الهادئ",
     "quietModeHint": "يخفي النقاط والمستويات والسلاسل والأوسمة في كل مكان.",
-    "saved": "حُفظ الملف الشخصي."
+    "saved": "حُفظ الملف الشخصي.",
+    "signOutAll": "تسجيل الخروج من جميع الأجهزة",
+    "signOutAllHint": "ينهي كل الجلسات النشطة لهذا الحساب، بما فيها هذه الجلسة.",
+    "signOutAllCta": "خروج من كل مكان"
   },
   "askPage": {
     "title": "اسأل المجلس",
@@ -644,7 +711,10 @@
     "openQuestions": "أسئلة مفتوحة",
     "bounties": "المكافآت",
     "bountyPoints": "{points} نقطة",
-    "bountySource": { "gap_radar": "رادار الفجوات", "manual": "منشورة" },
+    "bountySource": {
+      "gap_radar": "رادار الفجوات",
+      "manual": "منشورة"
+    },
     "noOpenQuestions": "لا شيء بالانتظار",
     "noOpenQuestionsHint": "كل سؤال وجد إجابته. لحظة هادئة تستحق الاحتفاء.",
     "noBounties": "لا مكافآت مفتوحة حالياً.",
@@ -663,7 +733,11 @@
     "urls": "روابط (اختياري)",
     "structureCta": "نظّم بالذكاء الاصطناعي",
     "nothingToStructure": "أضف ملاحظات أو ملفاً أو رابطاً أولاً.",
-    "modes": { "write": "اكتب", "upload": "ارفع", "speak": "تحدث" },
+    "modes": {
+      "write": "اكتب",
+      "upload": "ارفع",
+      "speak": "تحدث"
+    },
     "deliveryContext": "درس تنفيذ للمشروع {node}",
     "categoryField": "فئة الدرس",
     "record": "تسجيل",
@@ -758,7 +832,10 @@
       "bounties": "المكافآت",
       "integrations": "التكاملات",
       "audit": "سجل التدقيق",
-      "analytics": "التحليلات"
+      "analytics": "التحليلات",
+      "entities": "الجهات",
+      "indices": "المؤشرات",
+      "access": "الوصول"
     },
     "saved": "تم الحفظ.",
     "lessonsTab": {
@@ -804,7 +881,11 @@
       "runTokens": "الرموز",
       "runErrors": "الأخطاء",
       "noRuns": "لم تُنفذ عمليات مسح بعد.",
-      "status": { "done": "مكتمل", "failed": "فشل", "running": "جارٍ" }
+      "status": {
+        "done": "مكتمل",
+        "failed": "فشل",
+        "running": "جارٍ"
+      }
     },
     "searchUsers": "ابحث عن الأشخاص",
     "user": "المستخدم",
@@ -894,7 +975,150 @@
     "noZeroResults": "كل بحث وجد شيئاً.",
     "topReused": "الأكثر إعادة استخدام",
     "askConfidence": "ثقة الإجابات (30 يوماً)",
-    "noAskYet": "لا إجابات ذكاء اصطناعي في الفترة."
+    "noAskYet": "لا إجابات ذكاء اصطناعي في الفترة.",
+    "entitiesTab": {
+      "searchPlaceholder": "ابحث في السجل",
+      "count": "{count} جهة",
+      "add": "إضافة جهة",
+      "name": "الاسم",
+      "shortName": "الاسم المختصر",
+      "kind": "النوع",
+      "contact": "جهة الاتصال",
+      "status": "الحالة",
+      "actions": "إجراءات",
+      "arReview": "العربية بحاجة لمراجعة",
+      "mergedAway": "مدمجة",
+      "active": "نشطة",
+      "inactive": "غير نشطة",
+      "edit": "تعديل",
+      "merge": "دمج في جهة أخرى",
+      "deactivate": "إلغاء التفعيل",
+      "activate": "تفعيل",
+      "saved": "تم حفظ الجهة",
+      "merged": "تم دمج الجهتين",
+      "mergeTitle": "دمج “{name}”",
+      "mergeHint": "تنتقل كل مهام الإسناد إلى الجهة التي تختارها، ويبقى هذا الصف اسمًا مدمجًا.",
+      "pickTarget": "اختر الجهة الباقية",
+      "mergeCta": "دمج",
+      "nameEn": "الاسم (بالإنجليزية)",
+      "nameAr": "الاسم (بالعربية)",
+      "shortEn": "الاسم المختصر (بالإنجليزية)",
+      "shortAr": "الاسم المختصر (بالعربية)",
+      "website": "الموقع الإلكتروني",
+      "contactName": "اسم جهة الاتصال",
+      "contactEmail": "بريد جهة الاتصال",
+      "kinds": {
+        "ministry": "وزارة",
+        "agency": "جهاز",
+        "authority": "هيئة",
+        "company": "شركة",
+        "international": "منظمة دولية",
+        "other": "أخرى"
+      }
+    },
+    "indicesTab": {
+      "refresh": "تحديث البيانات",
+      "refreshQueued": "أُدرج التحديث في قائمة التنفيذ",
+      "recompute": "إعادة احتساب التنبؤات الآن",
+      "recomputed": "أُعيد احتساب التنبؤات",
+      "addIndex": "إضافة مؤشر",
+      "indexAdded": "أُضيف المؤشر؛ شغّل تحديث البيانات لجلب المشاهدات",
+      "done": "تم",
+      "colIndex": "المؤشر",
+      "colPublisher": "الجهة الناشرة",
+      "colCategory": "الفئة",
+      "colDirection": "الاتجاه",
+      "colLatest": "أحدث سنة",
+      "colStatus": "الحالة",
+      "higherBetter": "الأعلى أفضل",
+      "lowerBetter": "الأدنى أفضل",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "manualEntry": "إدخال المشاهدات يدويًا وتصحيحها",
+      "manualHint": "تحمل الصفوف اليدوية حالة manual ولا يمسها التحديث أبدًا. أدرج رابط المصدر متى وُجد.",
+      "country": "الدولة (ISO3)",
+      "year": "السنة",
+      "rank": "المرتبة",
+      "score": "الدرجة",
+      "sourceUrl": "رابط المصدر",
+      "observationSaved": "حُفظت المشاهدة",
+      "assumptions": "افتراضات التنبؤ الافتراضية",
+      "assumptionsHint": "تغذي هذه القيم التنبؤات الرسمية عند إعادة الاحتساب؛ ولا تغيّرها مؤشرات ماذا-لو في صفحات المؤشرات.",
+      "assumptionSaved": "حُفظ الافتراض",
+      "noAssumptions": "تظهر القيم بعد أول تهيئة.",
+      "code": "الرمز",
+      "nameEn": "الاسم (بالإنجليزية)",
+      "nameAr": "الاسم (بالعربية)"
+    },
+    "accessCol": "الوصول",
+    "previewAs": "معاينة بصفته",
+    "portals": {
+      "home": "الرئيسية",
+      "vault": "المستودع",
+      "strategy": "الاستراتيجية",
+      "statistics": "الإحصاءات",
+      "indices": "المؤشرات",
+      "trends": "الاتجاهات",
+      "ask": "اسأل",
+      "lessons": "الدروس",
+      "podcast": "البودكاست",
+      "experts": "الخبراء",
+      "hr": "الموارد البشرية",
+      "settings": "الإعدادات"
+    },
+    "access": {
+      "title": "وصول: {name}",
+      "scope": "نطاق الإدارة",
+      "scopeAll": "كل الإدارات",
+      "scopeOwn": "إدارته فقط",
+      "reason": "سبب الاستثناء التالي",
+      "reasonPlaceholder": "لماذا يوجد هذا الاستثناء",
+      "expiry": "تاريخ الانتهاء (اختياري)",
+      "cycleHint": "انقر على أي بوابة أو خلية في المصفوفة للتبديل: افتراضي الدور، ثم منح، ثم منع، ثم العودة للافتراضي. يُرفَق السبب والتاريخ أعلاه بالنقرة التالية.",
+      "portals": "ظهور البوابات",
+      "sources": {
+        "role": "الدور",
+        "grant": "منح",
+        "deny": "منع",
+        "none": "مغلق"
+      },
+      "overridesTitle": "الاستثناءات الفعالة",
+      "auditTitle": "سجل التدقيق",
+      "noAudit": "لا تغييرات وصول مسجلة بعد.",
+      "overrideSaved": "حُفظ الاستثناء",
+      "domainsTitle": "نطاقات البريد المسموح بها",
+      "domainsHint": "لا يدخل ولا يُدعى إلا من يحمل هذه النطاقات، ويرد نموذج الدخول برسالة محايدة لغيرها.",
+      "addDomain": "إضافة نطاق",
+      "removeDomain": "إزالة {domain}",
+      "domainsSaved": "حُفظت النطاقات",
+      "inviteTitle": "دعوة مستخدمين",
+      "inviteEmail": "البريد",
+      "inviteName": "الاسم",
+      "inviteRole": "الدور",
+      "inviteDepartment": "الإدارة",
+      "inviteClearance": "التصنيف",
+      "inviteCta": "إنشاء دعوة",
+      "csvTitle": "أو الصق CSV (البريد، الاسم، الدور، التصنيف)",
+      "csvPlaceholder": "maryam.x@npc.qa, مريم، مساهم، 2",
+      "csvCta": "دعوة كل الصفوف",
+      "invitesCreated": "أُنشئت {count} دعوة",
+      "someRejected": "رُفض {count} صفًا (نطاق غير مسموح أو حساب موجود)",
+      "linksTitle": "روابط الدعوة (لا خادم بريد محليًا؛ شاركها مباشرة، وهي مسجلة أيضًا)",
+      "linkCopied": "نُسخ الرابط",
+      "copyLink": "نسخ الرابط",
+      "revoke": "إلغاء",
+      "status": "الحالة",
+      "expires": "تنتهي",
+      "actions": "إجراءات",
+      "inviteStatus": {
+        "pending": "معلقة",
+        "accepted": "قُبلت",
+        "expired": "منتهية",
+        "revoked": "ملغاة"
+      },
+      "noInvites": "لا دعوات بعد.",
+      "selfRegistrationNote": "التسجيل الذاتي معطل: لا تُنشأ الحسابات إلا عبر هذه الدعوات."
+    }
   },
   "home": {
     "greeting": {
@@ -963,7 +1187,9 @@
       "node": "عقدة استراتيجية وما تحتها",
       "ask": "إجابة اسأل المجلس",
       "podcast": "حلقة بودكاست",
-      "collection": "مجموعة"
+      "collection": "مجموعة",
+      "indices": "المؤشرات الدولية",
+      "hr": "استمرارية المعرفة"
     },
     "itemCount": "{count} عنصراً",
     "audience": "الجمهور",
@@ -1014,7 +1240,10 @@
       "numbers": "الأرقام",
       "risks": "المخاطر"
     },
-    "langNames": { "en": "الإنجليزية", "ar": "العربية" },
+    "langNames": {
+      "en": "الإنجليزية",
+      "ar": "العربية"
+    },
     "minutes": "{minutes} د",
     "listens": "{count} استماعاً",
     "browserVoice": "صوت المتصفح",
@@ -1081,7 +1310,11 @@
     "filterStatus": "الحالة",
     "statusPublished": "منشور",
     "statusVerified": "موثق",
-    "views": { "feed": "التدفق", "projects": "حسب المشروع", "clusters": "الموضوعات" },
+    "views": {
+      "feed": "التدفق",
+      "projects": "حسب المشروع",
+      "clusters": "الموضوعات"
+    },
     "categoriesAll": "الكل",
     "addKnowledge": "أضف معرفة",
     "readMore": "اقرأ المزيد",
@@ -1244,11 +1477,33 @@
       "index": "مؤشرات دولية",
       "research": "أبحاث"
     },
-    "impact": { "high": "أثر مرتفع", "medium": "أثر متوسط", "low": "أثر منخفض" },
-    "horizon": { "near": "قريب المدى", "mid": "متوسط المدى", "long": "بعيد المدى" },
-    "sourceKinds": { "web_search": "بحث الويب", "rss": "خلاصات الأخبار", "manual": "يدوي" },
-    "triage": { "new": "جديدة", "accepted": "مقبولة", "dismissed": "مستبعدة", "converted": "محوّلة" },
-    "sentiment": { "positive": "إيجابية لقطر", "neutral": "محايدة", "negative": "سلبية لقطر", "mixed": "مختلطة" },
+    "impact": {
+      "high": "أثر مرتفع",
+      "medium": "أثر متوسط",
+      "low": "أثر منخفض"
+    },
+    "horizon": {
+      "near": "قريب المدى",
+      "mid": "متوسط المدى",
+      "long": "بعيد المدى"
+    },
+    "sourceKinds": {
+      "web_search": "بحث الويب",
+      "rss": "خلاصات الأخبار",
+      "manual": "يدوي"
+    },
+    "triage": {
+      "new": "جديدة",
+      "accepted": "مقبولة",
+      "dismissed": "مستبعدة",
+      "converted": "محوّلة"
+    },
+    "sentiment": {
+      "positive": "إيجابية لقطر",
+      "neutral": "محايدة",
+      "negative": "سلبية لقطر",
+      "mixed": "مختلطة"
+    },
     "accept": "قبول",
     "dismiss": "استبعاد",
     "convert": "تحويل",
@@ -1294,15 +1549,28 @@
     "publishedLabel": "تاريخ النشر",
     "sentimentLabel": "الاتجاه",
     "convertedTo": "حُوّلت إلى",
-    "convertTargets": { "lesson": "درس مستفاد", "risk": "خطر", "document": "وثيقة في الخزانة" },
+    "convertTargets": {
+      "lesson": "درس مستفاد",
+      "risk": "خطر",
+      "document": "وثيقة في الخزانة"
+    },
     "comments": "التعليقات",
     "noComments": "لا تعليقات بعد. ابدأ النقاش.",
     "commentPlaceholder": "أضف تعليقاً للفريق…",
-    "postComment": "نشر"
+    "postComment": "نشر",
+    "seeIndices": "استعرض المؤشرات الدولية"
   },
   "foresight": {
-    "impact": { "low": "أثر منخفض", "medium": "أثر متوسط", "high": "أثر مرتفع" },
-    "horizon": { "near": "مدى قريب", "mid": "مدى متوسط", "long": "مدى بعيد" },
+    "impact": {
+      "low": "أثر منخفض",
+      "medium": "أثر متوسط",
+      "high": "أثر مرتفع"
+    },
+    "horizon": {
+      "near": "مدى قريب",
+      "mid": "مدى متوسط",
+      "long": "مدى بعيد"
+    },
     "impactAxis": "الأثر",
     "likelihoodAxis": "الاحتمالية",
     "mitigation": "التخفيف",
@@ -1351,6 +1619,306 @@
     "notHelpful": "غير مفيد",
     "routePrimary": "لم يُعثر على مصدر قوي. وجّه السؤال إلى خبير:",
     "routeSecondary": "خبراء يمكنهم تعميق هذه الإجابة:",
-    "route": "توجيه"
+    "route": "توجيه",
+    "indexTag": "مؤشر",
+    "forecastTag": "تنبؤ"
+  },
+  "indices": {
+    "title": "المؤشرات الدولية",
+    "subtitle": "موقع قطر في المؤشرات العالمية المهمة للاستراتيجية الوطنية الثالثة: قيم منشورة بمصادرها، وتنبؤات بمنهجية معلنة، ومقارنات مع من تختار من الأقران.",
+    "lastRefresh": "آخر تحديث للبيانات",
+    "refresh": "تحديث البيانات",
+    "refreshQueued": "أُدرج التحديث في قائمة التنفيذ وستظهر المشاهدات والتنبؤات الجديدة قريبًا",
+    "categoryFilter": "تصفية حسب الفئة",
+    "allCategories": "الكل",
+    "categories": {
+      "economy": "الاقتصاد",
+      "governance": "الحوكمة",
+      "society": "المجتمع",
+      "environment": "البيئة",
+      "technology": "التقنية",
+      "human": "الإنسان"
+    },
+    "cards": "بطاقات",
+    "table": "جدول",
+    "qatarVsGcc": "قطر ومجلس التعاون",
+    "improving": "في تحسن",
+    "stableCount": "مستقرة",
+    "declining": "في تراجع",
+    "gccLeadCount": "تتصدر الخليج",
+    "rankOf": "من {total}",
+    "scoreLabel": "الدرجة",
+    "scoreShort": "الدرجة",
+    "noData": "لا قيمة منشورة",
+    "rankChange": "{n, plural, one {مرتبة واحدة} two {مرتبتان} few {# مراتب} other {# مرتبة}}",
+    "gccPosition": "الموقع {pos} خليجيًا",
+    "gccScale": "الموقع الخليجي",
+    "leaderIs": "المتصدر {country}",
+    "colIndex": "المؤشر",
+    "colYear": "السنة",
+    "colRank": "المرتبة",
+    "colScore": "الدرجة",
+    "colChange": "التغير",
+    "colGcc": "الخليج",
+    "colEntity": "الجهة",
+    "colLatest": "الأحدث",
+    "colRange": "نطاق 3 سنوات",
+    "colConfidence": "الثقة",
+    "colTotal": "من",
+    "colSource": "المصدر",
+    "confidence": {
+      "narrow": "ضيّق",
+      "medium": "متوسط",
+      "wide": "واسع"
+    },
+    "forecastSummary": "ملخص التنبؤات",
+    "forecastDisclaimer": "تنبؤات سيا نكسس (المنهجية v1): مخرجات نموذج مبنية على السلاسل المنشورة والإشارات المعتمدة ومستهدفات الاستراتيجية، وليست أرقامًا منشورة.",
+    "openMethod": "افتح صفحة المؤشر والمنهجية الكاملة",
+    "publisherSite": "الجهة الناشرة",
+    "methodologyToggle": "المنهجية",
+    "latest": "الأحدث",
+    "history": "السلسلة التاريخية",
+    "rankView": "المرتبة",
+    "scoreView": "الدرجة",
+    "historyTable": "جدول السلسلة",
+    "source": "المصدر",
+    "leaderLine": "الخط الباهت هو متصدر مجلس التعاون: {country}.",
+    "pillars": "الركائز مقارنةً بمتوسط الخليج ({year})",
+    "gccAvg": "متوسط الخليج",
+    "relatedSignals": "إشارات ذات صلة (12 شهرًا)",
+    "askAbout": "اسأل عن هذا المؤشر",
+    "forecast": {
+      "title": "التنبؤ",
+      "years": "سنوات",
+      "range": "النطاق",
+      "citedAs": "تنبؤ سيا نكسس، المنهجية {version}، بتاريخ {date}",
+      "none": "لا يوجد تنبؤ بعد؛ حدّث البيانات لاحتسابه.",
+      "whatIfBanner": "أنت تشاهد محاكاة افتراضية، ولا تُحفَظ أبدًا كتنبؤ رسمي.",
+      "moved": "تحرك التنبؤ من {from} إلى {to} منذ {date}.",
+      "methodToggle": "منهجية التنبؤ بالأرقام الفعلية",
+      "methodText": "خط الأساس هو تمهيد هولت الأسي الخطي على السلسلة المنشورة منذ 2010 (اتجاه مخمد عند أقل من خمس نقاط). تحرك الإشاراتُ المعتمدة المرتبطة بالمؤشر المسارَ ضمن حدود قصوى (4/8/10 بالمئة من مدى الدرجات عند +1/+3/+5 سنوات) موزونةً بالأثر ومطابقة الأفق والعمر. ويجذب المستهدف المرتبط الذي ينص على مرتبة المسارَ نحوه بوزن يتدرج مع حالة المستهدف. تعطي محاكاة مونت كارلو (5,000 دورة بإعادة معاينة البواقي واضطراب الأوزان) المئينات 10/50/90، وتُشتق المراتب من توزيع الدول الأخرى في أحدث سنة مع انجراف كل دولة وفق اتجاهها.",
+      "baselineMethod": "خط الأساس",
+      "damped": "اتجاه مخمد",
+      "residual": "انحراف البواقي",
+      "baseline3": "خط الأساس (+3س)",
+      "pull": "تعديل الإشارات / جذب المستهدف",
+      "contributions": "مساهمات الإشارات (+3س)",
+      "histogram": "نواتج المحاكاة (+3س)",
+      "sensitivity": "أكثر المدخلات تأثيرًا",
+      "inputs": {
+        "signal_strength": "قوة الإشارات",
+        "target_pull": "جذب المستهدف",
+        "manual_shock": "الصدمة اليدوية",
+        "history_window": "نافذة السلسلة"
+      },
+      "whatIf": "محاكي ماذا لو",
+      "reset": "العودة إلى الرسمي",
+      "whatIfHint": "تعيد المؤشرات المنزلقة تشغيل المحرك نفسه في متصفحك بألف دورة، وتبقى التنبؤات الرسمية كما هي.",
+      "sliders": {
+        "signalStrength": "قوة تعديل الإشارات",
+        "targetPullWeight": "وزن الجذب نحو المستهدف",
+        "historyWindowYears": "نافذة السلسلة (سنوات)",
+        "manualShock": "صدمة يدوية (نقاط درجة)"
+      }
+    },
+    "benchmark": {
+      "title": "المقارنة المعيارية",
+      "views": {
+        "rank": "المرتبة عبر الزمن",
+        "score": "أحدث الدرجات",
+        "gap": "الفجوة عن المتصدر"
+      },
+      "top10": "العشرة الأوائل في المؤشر",
+      "custom": "مجموعة مخصصة",
+      "saveGroup": "حفظ المجموعة",
+      "groupNamePrompt": "سمِّ هذه المجموعة",
+      "searchCountry": "ابحث عن الدول",
+      "gapTo": "الفجوة عن {country}",
+      "gapUnit": "نقاط درجة عند أحدث القيم المنشورة",
+      "widestGaps": "أوسع فجوات الركائز",
+      "narrativeCta": "أين تتقدم قطر وأين تتأخر"
+    }
+  },
+  "hr": {
+    "title": "معرفة الموارد البشرية",
+    "subtitleAll": "ملكية المعرفة وجاهزية التسليم ومخاطر الاستمرارية على مستوى المنظمة. لا نقاط ولا شارات هنا.",
+    "subtitleDept": "ملكية المعرفة وجاهزية التسليم ومخاطر الاستمرارية في إدارتك.",
+    "nav": {
+      "aria": "أقسام الموارد البشرية",
+      "overview": "نظرة عامة",
+      "departments": "الإدارات",
+      "people": "الأشخاص",
+      "handovers": "التسليمات",
+      "risks": "المخاطر والتأخيرات"
+    },
+    "recompute": "إعادة الاحتساب",
+    "recomputed": "أُعيد احتساب سجل المخاطر",
+    "saved": "تم الحفظ",
+    "rings": {
+      "readiness": "جاهزية المنظمة",
+      "readinessHint": "جاهزية التسليم لكل من في النطاق، موزونة بحجم الملكية.",
+      "continuity": "استمرارية الأعمال",
+      "continuityHint": "من 100 مطروحًا منها المخاطر المفتوحة (15 حرجة، 8 عالية، 3 متوسطة، 1 منخفضة).",
+      "handoversComplete": "التسليمات المكتملة",
+      "handoversCompleteHint": "نسبة التسليمات التي بدأت واكتملت."
+    },
+    "severity": {
+      "critical": "حرجة",
+      "high": "عالية",
+      "medium": "متوسطة",
+      "low": "منخفضة"
+    },
+    "allRisks": "افتح السجل الكامل",
+    "heatTitle": "الإدارات حسب الاستمرارية",
+    "openRisks": "{count} مفتوحة",
+    "topRisks": "أهم المخاطر",
+    "shouldAct": "المطلوب تصرف {name}",
+    "actOn": "تصرّف",
+    "noRisks": "لا شيء مفتوح. السجل هادئ.",
+    "head": "مدير الإدارة",
+    "headcount": "{count} موظفًا",
+    "docsCount": "{count} وثيقة",
+    "verifiedShare": "{pct}% موثقة",
+    "staleShare": "{pct}% متقادمة",
+    "lessonsCount": "{count} درسًا",
+    "deliverablesCount": "{count} مخرجًا",
+    "openHandovers": "{count} تسليمات مفتوحة",
+    "readinessShort": "الجاهزية",
+    "continuityShort": "الاستمرارية",
+    "responsibilities": "المسؤوليات",
+    "noResponsibilities": "لم تُسجَّل مسؤوليات بعد.",
+    "keyProjects": "أبرز المشاريع",
+    "people": "الأشخاص",
+    "risksTitle": "المخاطر المفتوحة",
+    "searchPeople": "ابحث عن الأشخاص والخبرات",
+    "filterDepartment": "الإدارة",
+    "allDepartments": "كل الإدارات",
+    "filterStatus": "الحالة",
+    "allStatuses": "كل الحالات",
+    "filterReadiness": "نطاق الجاهزية",
+    "allBands": "كل النطاقات",
+    "bands": {
+      "high": "جاهز (80+)",
+      "medium": "جزئي (55-79)",
+      "low": "معرض للخطر (أقل من 55)"
+    },
+    "peopleCount": "{count} شخصًا",
+    "status": {
+      "active": "على رأس العمل",
+      "leaving": "مغادر",
+      "transferring": "منتقل",
+      "long_leave": "إجازة طويلة"
+    },
+    "projectRoles": "المشاريع والأدوار",
+    "noRoles": "لا أدوار مسجلة.",
+    "expertise": "الخبرات",
+    "knowledgeOwned": "المعرفة المملوكة",
+    "noOwned": "لا يملك عناصر مسجلة.",
+    "verifiedOf": "{n} موثقة",
+    "backupLine": "{pct}% من عناصره لها بديل مسمى · وهو بديل عن {forOthers} عنصرًا لآخرين",
+    "readinessParts": "المكونات: البدائل {backup}% · الحداثة {fresh}% · النواب {deputy}% · توثيق حديث {capture}",
+    "handoverState": "التسليم",
+    "noHandover": "لم يبدأ تسليم.",
+    "due": "الاستحقاق {date}",
+    "setStatus": "تحديد الحالة",
+    "startHandover": "بدء التسليم",
+    "assignBackup": "تعيين بديل",
+    "requestCapture": "طلب توثيق",
+    "email": "مراسلة",
+    "setStatusTitle": "تحديد حالة {name}",
+    "startHandoverTitle": "بدء تسليم لمهام {name}",
+    "assignBackupTitle": "تعيين بديل لعناصر {name}",
+    "assignBackupHint": "يسمي هذا الشخص بديلًا لكل عنصر مملوك بلا بديل بعد؛ ويمكن ضبط العناصر فرادى من صفحة التسليم.",
+    "backupPerson": "المالك البديل",
+    "statusLabel": "الحالة",
+    "effectiveDate": "تاريخ السريان",
+    "note": "ملاحظة",
+    "handoverKind": "النوع",
+    "handoverKinds": {
+      "leaving": "مغادرة",
+      "transferring": "انتقال",
+      "leave": "إجازة طويلة"
+    },
+    "dueDate": "تاريخ الاستحقاق",
+    "defaultSuccessor": "الخلف الافتراضي",
+    "noSuccessor": "لا خلف بعد",
+    "successorLine": "الخلف {name}",
+    "itemsCount": "{count} عنصرًا",
+    "handoverStatus": {
+      "open": "مفتوح",
+      "in_progress": "قيد التنفيذ",
+      "complete": "مكتمل",
+      "overdue": "متأخر"
+    },
+    "noHandovers": "لا تسليمات بعد.",
+    "bulkAssign": "إسناد الكل إلى الخلف الافتراضي",
+    "captureSession": "توثيق المعرفة",
+    "successor": "الخلف",
+    "itemStatus": "حالة العنصر",
+    "itemStatus_": {
+      "pending": "معلّق",
+      "reassigned": "أُسند",
+      "captured": "وُثّق",
+      "not_needed": "غير مطلوب"
+    },
+    "itemKinds": {
+      "document": "الوثائق",
+      "node_owner": "البنود المملوكة",
+      "node_role": "أدوار المشاريع",
+      "indicator": "المؤشرات",
+      "lesson": "الدروس",
+      "expert_request": "ملفات الخبراء",
+      "collection": "المجموعات",
+      "community_lead": "قيادة المجتمعات",
+      "tacit_topic": "موضوعات المعرفة الضمنية"
+    },
+    "captures": "جلسات توثيق المعرفة",
+    "noCaptures": "لا جلسات بعد. ابدأ واحدة بزر توثيق المعرفة.",
+    "expertInsight": "رؤى الخبراء",
+    "riskTrend": "المخاطر المفتوحة خلال 12 أسبوعًا",
+    "openNow": "{count} مفتوحة الآن",
+    "filterKind": "النوع",
+    "allKinds": "كل الأنواع",
+    "filterSeverity": "الخطورة",
+    "allSeverities": "كل الدرجات",
+    "showResolved": "إظهار المحلولة",
+    "groupBy": {
+      "severity": "حسب الخطورة",
+      "kind": "حسب النوع"
+    },
+    "riskKinds": {
+      "incomplete_handover": "تسليم غير مكتمل",
+      "outdated_content": "محتوى متقادم",
+      "missing_knowledge": "معرفة مفقودة",
+      "overdue_update": "تحديث متأخر",
+      "single_point_of_failure": "نقطة فشل واحدة",
+      "no_backup": "بلا بديل"
+    },
+    "resolve": "حل",
+    "resolveTitle": "حل هذا الخطر",
+    "resolveNote": "ما الذي تم عمله (اختياري)",
+    "riskResolved": "حُل الخطر",
+    "resolvedOn": "حُل في {date}"
+  },
+  "invite": {
+    "title": "أنت مدعو إلى سيا نكسس",
+    "hello": "أهلًا {name}. عيّن كلمة المرور لتفعيل الحساب.",
+    "invalid": "هذه الدعوة غير صالحة",
+    "invalidHint": "قد تكون انتهت (تصلح الروابط 7 أيام) أو أُلغيت. اطلب من المسؤول دعوة جديدة.",
+    "password": "كلمة المرور",
+    "confirm": "تأكيد كلمة المرور",
+    "policy": "12 حرفًا على الأقل، وفيها حرف ورقم على الأقل.",
+    "acceptableUse": "سأستخدم سيا نكسس لأعمال المجلس الوطني للتخطيط، وأحترم تصنيفات الوثائق، ولن أشارك حسابي مع أحد.",
+    "cta": "تفعيل الحساب",
+    "errors": {
+      "mismatch": "كلمتا المرور غير متطابقتين.",
+      "too_short": "تحتاج كلمة المرور إلى 12 حرفًا على الأقل.",
+      "needs_letter": "أضف حرفًا واحدًا على الأقل.",
+      "needs_digit": "أضف رقمًا واحدًا على الأقل.",
+      "too_common": "كلمة المرور هذه شائعة جدًا؛ اختر غيرها.",
+      "invalid_invite": "لم تعد هذه الدعوة صالحة.",
+      "user_exists": "هذا الحساب موجود بالفعل؛ سجّل الدخول.",
+      "generic": "حدث خطأ ما. حاول مجددًا."
+    }
   }
 }

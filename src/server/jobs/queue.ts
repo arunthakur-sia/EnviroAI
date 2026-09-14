@@ -13,7 +13,10 @@ export type JobType =
   | "reembed_all"
   | "podcast_render" // CR02 4.5
   | "report_generate" // CR02 7
-  | "lessons_recluster"; // CR04 3.7
+  | "lessons_recluster" // CR04 3.7
+  | "indices_fetch" // CR05 4.3
+  | "indices_forecast_nightly" // CR05 4.6.11
+  | "hr_risks_recompute"; // CR05 5.5
 
 export async function enqueue(
   type: JobType,

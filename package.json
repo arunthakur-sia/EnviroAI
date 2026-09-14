@@ -17,6 +17,7 @@
     "seed": "tsx scripts/seed.ts",
     "fetch-sources": "node scripts/fetch-sources.mjs",
     "fetch-fonts": "node scripts/fetch-fonts.mjs",
+    "fetch-indices": "tsx scripts/fetch-indices.ts",
     "smoke": "tsx scripts/smoke.ts",
     "screenshots": "tsx scripts/screenshots.ts",
     "test": "vitest run"

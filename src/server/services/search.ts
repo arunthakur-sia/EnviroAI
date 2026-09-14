@@ -30,12 +30,17 @@ export async function runSearch(user: CurrentUser, q: string, _locale: string) {
     departmentScope: (user.departmentScope === "own" ? "own" : "all") as "own" | "all",
     excludeSecret: user.clearanceLevel < 4,
   };
-  const [records, chunkResult, ftsRecordHits, ftsChunkHits] = await Promise.all([
+  const [recordsRaw, chunkResult, ftsRecordHits, ftsChunkHits] = await Promise.all([
     retrieveRecords(q, filters, 24),
     retrieveChunks(q, filters, 12),
     import("@/server/search/fts").then((m) => m.ftsRecords(q, 1)),
     import("@/server/search/fts").then((m) => m.ftsChunks(q, 1)),
   ]);
+  // CR05 6.1: results from hidden portals do not exist for this user
+  const { hiddenResourceTypes } = await import("@/server/auth/permissions");
+  const hidden = hiddenResourceTypes(user);
+  const records = recordsRaw.filter((r) => !hidden.has(r.resourceType));
+  const vaultHidden = hidden.has("document");
 
   // Zero-signal gate: vector search always returns nearest neighbours, so a
   // query counts as answered only with a keyword hit or a real semantic match.
@@ -119,8 +124,9 @@ export async function runSearch(user: CurrentUser, q: string, _locale: string) {
     });
   }
 
-  // chunk-level passages for documents not already present
-  for (const c of chunkResult.chunks) {
+  // chunk-level passages for documents not already present (unless the Vault
+  // portal is hidden for this user, CR05 6.1)
+  for (const c of vaultHidden ? [] : chunkResult.chunks) {
     if (seenDocs.has(c.documentId)) continue;
     seenDocs.add(c.documentId);
     results.push({

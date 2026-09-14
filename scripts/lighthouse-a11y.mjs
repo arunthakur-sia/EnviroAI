@@ -35,15 +35,17 @@ fs.mkdirSync(outDir, { recursive: true });
 const headersPath = path.join(outDir, "headers.json");
 fs.writeFileSync(headersPath, JSON.stringify({ Cookie: cookie }));
 
-// CR04 acceptance 6: performance and accessibility above 90 on Vault,
-// Strategy, Lessons, and Home at 1440 (Trends keeps CR03's bar; Podcast and
-// Ask stay on accessibility from CR02).
+// CR04 acceptance 6 + CR05 acceptance 7: performance and accessibility above
+// 90 on Home, Indices, HR overview, Strategy (and the CR04 set) at 1440;
+// Podcast and Ask stay on accessibility from CR02.
 const targets = [
   ["/en/home", "home", true],
   ["/en/vault", "vault", true],
   ["/en/strategy", "strategy", true],
   ["/en/lessons", "lessons", true],
   ["/en/trends", "trends", true],
+  ["/en/indices", "indices", true],
+  ["/en/hr", "hr", true],
   ["/en/podcast", "podcast", false],
   ["/en/ask", "ask", false],
 ];

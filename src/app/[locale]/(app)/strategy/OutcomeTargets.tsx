@@ -12,6 +12,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { cn, bi } from "@/lib/utils";
 import { formatNumber } from "@/lib/format";
 import { Chip, ProgressRing, RagDot } from "@/components/ui/primitives";
+import { LeadChips } from "@/components/nexus/LeadChips";
 import type { NavigatorData, NavItem, NavTarget } from "@/server/services/strategy";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -58,9 +59,7 @@ export function LaneCard({
       <span className="line-clamp-2 min-h-9 text-sm font-medium leading-snug text-ink-900">
         {bi(locale, item.titleEn, item.titleAr)}
       </span>
-      {item.ownerEntityName ? (
-        <span className="truncate text-[11px] text-ink-600">{item.ownerEntityName}</span>
-      ) : null}
+      <LeadChips leads={item.leads} />
       {pct != null ? (
         <span
           className="relative mt-0.5 block h-1 overflow-visible rounded-full bg-sand-200"
@@ -374,9 +373,7 @@ export function OutcomeTargets({
               </p>
             ) : null}
             <div className="mt-3 flex flex-wrap items-center gap-1.5">
-              {outcome.ownerEntityName ? (
-                <Chip tone="gulf">{t("hero.owner")}: {outcome.ownerEntityName}</Chip>
-              ) : null}
+              <LeadChips leads={outcome.leads} max={3} />
               <Chip tone="maroon">{t("hero.targets", { count: outcome.targetCount })}</Chip>
               <Chip tone="sand">{t("hero.initiatives", { count: outcome.initiativeCount })}</Chip>
               <Chip tone="sand">{t("hero.projects", { count: outcome.projectCount })}</Chip>

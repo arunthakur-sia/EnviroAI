@@ -37,6 +37,8 @@ const DAILY_POINT_CAPS: Record<string, number> = {
   podcast_listened_full: 20, // CR02 4.6: 4 full listens x 5
   report_extracted: 45, // CR02 7: 3 reports x 15
   lesson_read_fully: 60, // CR04 3.5: 20 x 3, like document_read_fully
+  handover_item_completed: 50, // CR05 5.7: 10 items x 5 per day
+  backup_assigned: 25, // CR05 5.7: 5 x 5 per day
 };
 
 const ONCE_PER_DAY = new Set([
@@ -55,6 +57,10 @@ const ONCE_PER_RESOURCE = new Set([
   "podcast_listened_full", // CR02 4.6: per episode per user
   "lesson_read_fully", // CR04 3.5: per lesson per user
   "reflection_saved", // CR04 3.5: per lesson per user
+  "handover_item_completed", // CR05 5.7: per item
+  "handover_completed", // CR05 5.7: per handover
+  "handover_completed_owner", // CR05 5.7: per handover, before due date
+  "backup_assigned", // CR05 5.7: per item
 ]);
 
 /** Event types that count as contributions (weekly streak, freeze earning). */

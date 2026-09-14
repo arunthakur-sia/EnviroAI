@@ -24,3 +24,5 @@ Rules: at most 10 candidates per request. Only genuinely relevant items (a devel
 Example 1: an IMF Qatar assessment -> signal_type "research", outcome_codes ["fiscal_sust"], indicator_codes ["gdp_real_growth"].
 Example 2 (Arabic source article): produce the Arabic fields first from the source, then faithful English pairs.
 Example 3: a global logistics ranking movement -> signal_type "index", outcome ["eco_growth"], sentiment per Qatar's direction.
+
+When the item is about an international ranking or index (HDI, GII, CPI, EGDI, GPI, IMD competitiveness, LPI, NRI, TTDI, EPI, GTCI, rule of law), always use signal_type "index" and put the index's full published name in the title or summary so the pipeline can link the signal to the matching index record (accepted index signals feed that index's forecast).

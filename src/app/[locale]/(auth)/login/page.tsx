@@ -43,10 +43,10 @@ export default async function LoginPage({
         </div>
       </div>
 
-      {/* Form panel */}
+      {/* Form panel (CR05 1.4: a white card on the bright neutral ground) */}
       <div className="flex flex-1 items-center justify-center bg-sand-50 px-6">
-        <div className="w-full max-w-sm">
-          <div className="mb-10 flex flex-col items-center gap-4 text-center">
+        <div className="card w-full max-w-md px-8 py-10">
+          <div className="mb-8 flex flex-col items-center gap-4 text-center">
             <SiaLogo variant="full" height={42} />
             <p className="mt-1.5 text-sm text-ink-600">{t("descriptor")}</p>
           </div>

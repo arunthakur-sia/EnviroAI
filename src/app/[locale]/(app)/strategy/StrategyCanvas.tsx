@@ -8,15 +8,16 @@
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { Archive, CircleDot, Map as MapIcon } from "lucide-react";
+import { Archive, Building2, ChevronDown, CircleDot, Map as MapIcon } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { cn, bi } from "@/lib/utils";
 import { formatDate } from "@/lib/format";
 import { CountUp } from "@/components/motion";
-import type { NavigatorData, NavItem, NavOutcome, CanvasExtras } from "@/server/services/strategy";
+import type { NavigatorData, NavItem, NavOutcome, CanvasExtras, LeadChip } from "@/server/services/strategy";
 import { StrategyMap } from "./StrategyMap";
 import { OutcomePanel, prefetchChapter } from "./OutcomePanel";
 import { NodeDrawer, fetchNodeCard } from "./NodeDrawer";
+import { Lane } from "./OutcomeTargets";
 
 const RAG: Record<string, string> = {
   on_track: "var(--color-ok)",
@@ -180,11 +181,15 @@ function Sparkline({ values, labelId }: { values: number[]; labelId: string }) {
 /* URL state                                                            */
 /* ------------------------------------------------------------------ */
 
+type CanvasView = "canvas" | "map" | "lead";
+
 type CanvasState = {
   o: string | null; // outcome slug
   t: string | null; // target slug
   itemKind: "i" | "p" | null;
   item: string | null; // item slug (lowercased code)
+  /* CR05 2.2: lead filter, "d:<departmentId>" or "e:<entityId>" */
+  lead: string | null;
 };
 
 function parseState(search: string): CanvasState {
@@ -196,15 +201,17 @@ function parseState(search: string): CanvasState {
     t: params.get("t"),
     itemKind: i ? "i" : p ? "p" : null,
     item: i ?? p,
+    lead: params.get("l"),
   };
 }
 
-function stateQuery(state: CanvasState, view: "canvas" | "map"): string {
+function stateQuery(state: CanvasState, view: CanvasView): string {
   const params = new URLSearchParams();
   if (state.o) params.set("o", state.o);
   if (state.t) params.set("t", state.t);
   if (state.item && state.itemKind) params.set(state.itemKind, state.item);
-  if (view === "map") params.set("view", "map");
+  if (state.lead) params.set("l", state.lead);
+  if (view !== "canvas") params.set("view", view);
   const s = params.toString();
   return s ? `?${s}` : "";
 }
@@ -212,6 +219,149 @@ function stateQuery(state: CanvasState, view: "canvas" | "map"): string {
 function slugOf(code: string | null, id: string): string {
   if (!code) return id;
   return code.toLowerCase().replace(/\./g, "-");
+}
+
+/* ------------------------------------------------------------------ */
+/* CR05 2.2: the By-lead view: a grouped list of leads (departments     */
+/* first, then entities) with counts and a completion ring, expanding   */
+/* in place to their initiatives and projects.                          */
+/* ------------------------------------------------------------------ */
+
+function ByLeadView({
+  data,
+  onOpen,
+}: {
+  data: NavigatorData;
+  onOpen: (item: NavItem) => void;
+}) {
+  const t = useTranslations("strategy");
+  const locale = useLocale();
+  const [open, setOpen] = React.useState<string | null>(null);
+  const today = new Date().toISOString().slice(0, 10);
+
+  const groups = React.useMemo(() => {
+    const map = new Map<
+      string,
+      { key: string; lead: LeadChip; items: NavItem[] }
+    >();
+    for (const i of data.items) {
+      for (const l of i.leads) {
+        if (l.role !== "lead") continue;
+        const key = `${l.kind === "department" ? "d" : "e"}:${l.id}`;
+        const g = map.get(key) ?? { key, lead: l, items: [] };
+        g.items.push(i);
+        map.set(key, g);
+      }
+    }
+    return [...map.values()].sort((a, b) =>
+      a.lead.kind === b.lead.kind
+        ? b.items.length - a.items.length ||
+          a.lead.nameEn.localeCompare(b.lead.nameEn)
+        : a.lead.kind === "department"
+          ? -1
+          : 1
+    );
+  }, [data.items]);
+
+  return (
+    <div className="flex flex-col gap-2.5" data-testid="bylead-view">
+      {(["department", "entity"] as const).map((kind) => {
+        const rows = groups.filter((g) => g.lead.kind === kind);
+        if (!rows.length) return null;
+        return (
+          <div key={kind}>
+            <p className="mb-2 mt-3 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-600" style={{ fontFamily: "inherit" }}>
+              {kind === "department" ? t("canvas.leadDepartments") : t("canvas.leadEntities")}
+            </p>
+            <div className="flex flex-col gap-2">
+              {rows.map((g) => {
+                const done = g.items.filter(
+                  (i) => i.status === "on_track" || i.status === "completed"
+                ).length;
+                const value = g.items.length ? done / g.items.length : 0;
+                const r = 14;
+                const c = 2 * Math.PI * r;
+                const isOpen = open === g.key;
+                return (
+                  <div key={g.key} className="card overflow-hidden" data-testid="bylead-group">
+                    <button
+                      onClick={() => setOpen(isOpen ? null : g.key)}
+                      aria-expanded={isOpen}
+                      className="flex w-full items-center gap-3 px-4 py-3 text-start cursor-pointer hover:bg-sand-50"
+                    >
+                      <svg width={34} height={34} aria-hidden style={{ direction: "ltr" }} className="shrink-0">
+                        <circle cx={17} cy={17} r={r} fill="none" stroke="var(--color-sand-300)" strokeWidth={3.5} />
+                        <circle
+                          cx={17}
+                          cy={17}
+                          r={r}
+                          fill="none"
+                          stroke="var(--color-maroon-700)"
+                          strokeWidth={3.5}
+                          strokeLinecap="round"
+                          strokeDasharray={c}
+                          strokeDashoffset={c * (1 - value)}
+                          transform="rotate(-90 17 17)"
+                        />
+                      </svg>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm font-medium text-ink-900">
+                          {bi(locale, g.lead.nameEn, g.lead.nameAr)}
+                        </span>
+                        <span className="block text-xs text-ink-600 tnum">
+                          {t("canvas.leadCounts", {
+                            initiatives: g.items.filter((i) => i.type === "initiative").length,
+                            projects: g.items.filter((i) => i.type === "project").length,
+                          })}
+                          {" · "}
+                          {t("canvas.leadOnTrack", { pct: Math.round(value * 100) })}
+                        </span>
+                      </span>
+                      <ChevronDown
+                        className={cn(
+                          "size-4 shrink-0 text-ink-400 transition-transform",
+                          isOpen && "rotate-180"
+                        )}
+                        aria-hidden
+                      />
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {isOpen ? (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                          className="overflow-hidden"
+                        >
+                          <div className="flex flex-col gap-4 border-t border-sand-100 px-4 py-4 lg:flex-row">
+                            <Lane
+                              label={t("lanes.initiatives")}
+                              items={g.items.filter((i) => i.type === "initiative")}
+                              locale={locale}
+                              today={today}
+                              onOpen={onOpen}
+                            />
+                            <Lane
+                              label={t("lanes.projects")}
+                              items={g.items.filter((i) => i.type === "project")}
+                              locale={locale}
+                              today={today}
+                              onOpen={onOpen}
+                            />
+                          </div>
+                        </motion.div>
+                      ) : null}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -226,7 +376,7 @@ export function StrategyCanvas({
 }: {
   data: NavigatorData;
   extras: CanvasExtras;
-  initialView: "canvas" | "map";
+  initialView: CanvasView;
   initialState: CanvasState;
 }) {
   const t = useTranslations("strategy");
@@ -234,7 +384,7 @@ export function StrategyCanvas({
   const router = useRouter();
   const reduced = useReducedMotion();
   const archived = data.edition.status === "archived";
-  const [view, setView] = React.useState<"canvas" | "map">(initialView);
+  const [view, setView] = React.useState<CanvasView>(initialView);
   const [state, setState] = React.useState<CanvasState>(initialState);
   const [hoverPillar, setHoverPillar] = React.useState<string | null>(null);
   const [railVisible, setRailVisible] = React.useState(false);
@@ -275,7 +425,7 @@ export function StrategyCanvas({
   const basePath = `/${locale}/strategy${data.edition.code ? `/${data.edition.code}` : ""}`;
 
   const applyUrl = React.useCallback(
-    (next: CanvasState, v: "canvas" | "map", push: boolean) => {
+    (next: CanvasState, v: CanvasView, push: boolean) => {
       const url = `${basePath}${stateQuery(next, v)}`;
       if (push) {
         window.history.pushState({ canvas: true }, "", url);
@@ -292,7 +442,8 @@ export function StrategyCanvas({
     function onPop() {
       const parsed = parseState(window.location.search);
       setState(parsed);
-      setView(new URLSearchParams(window.location.search).get("view") === "map" ? "map" : "canvas");
+      const v = new URLSearchParams(window.location.search).get("view");
+      setView(v === "map" ? "map" : v === "lead" ? "lead" : "canvas");
       depthRef.current = Math.max(0, depthRef.current - 1);
     }
     window.addEventListener("popstate", onPop);
@@ -301,10 +452,10 @@ export function StrategyCanvas({
 
   const openOutcome = (o: NavOutcome) => {
     if (state.o === o.slug && !state.t && !state.item) {
-      closeLevel({ o: null, t: null, item: null, itemKind: null });
+      closeLevel({ o: null, t: null, item: null, itemKind: null, lead: state.lead });
       return;
     }
-    const next: CanvasState = { o: o.slug, t: null, item: null, itemKind: null };
+    const next: CanvasState = { o: o.slug, t: null, item: null, itemKind: null, lead: state.lead };
     setState(next);
     applyUrl(next, view, true);
     void prefetchChapter(o.code ?? "", locale);
@@ -312,7 +463,13 @@ export function StrategyCanvas({
   const toggleTarget = (targetId: string | null) => {
     if (!outcome) return;
     const tg = targetId ? data.targets.find((x) => x.id === targetId) : null;
-    const next: CanvasState = { o: outcome.slug, t: tg?.slug ?? null, item: null, itemKind: null };
+    const next: CanvasState = {
+      o: outcome.slug,
+      t: tg?.slug ?? null,
+      item: null,
+      itemKind: null,
+      lead: state.lead,
+    };
     setState(next);
     if (tg) applyUrl(next, view, true);
     else closeLevel(next);
@@ -325,6 +482,7 @@ export function StrategyCanvas({
       t: tg?.slug ?? state.t,
       item: slugOf(navItem.code, navItem.id),
       itemKind: navItem.type === "initiative" ? "i" : "p",
+      lead: state.lead,
     };
     setState(next);
     applyUrl(next, "canvas", true);
@@ -478,15 +636,85 @@ export function StrategyCanvas({
     setPointerX(mr.left + mr.width / 2 - ar.left);
   }, [selectedIndex, view]);
 
-  const switchView = (v: "canvas" | "map") => {
+  const switchView = (v: CanvasView) => {
     setView(v);
     applyUrl(state, v, false);
   };
 
+  /* CR05 2.2: the Lead filter and the By-lead grouping over the same items */
+  const leadOptions = React.useMemo(() => {
+    const seen = new Map<string, { key: string; kind: string; label: string; sort: string }>();
+    for (const i of data.items) {
+      for (const l of i.leads) {
+        if (l.role !== "lead") continue;
+        const key = `${l.kind === "department" ? "d" : "e"}:${l.id}`;
+        if (!seen.has(key)) {
+          seen.set(key, {
+            key,
+            kind: l.kind,
+            label: bi(locale, l.shortEn, l.shortAr),
+            sort: l.shortEn.toLowerCase(),
+          });
+        }
+      }
+    }
+    return [...seen.values()].sort((a, b) =>
+      a.kind === b.kind ? a.sort.localeCompare(b.sort) : a.kind === "department" ? -1 : 1
+    );
+  }, [data.items, locale]);
+
+  const setLeadFilter = (lead: string | null) => {
+    const next: CanvasState = { ...state, lead };
+    setState(next);
+    applyUrl(next, view, false);
+  };
+
+  const dataView = React.useMemo<NavigatorData>(() => {
+    if (!state.lead) return data;
+    const [kindChar, leadId] = state.lead.split(":");
+    const kind = kindChar === "d" ? "department" : "entity";
+    return {
+      ...data,
+      items: data.items.filter((i) =>
+        i.leads.some((l) => l.role === "lead" && l.kind === kind && l.id === leadId)
+      ),
+    };
+  }, [data, state.lead]);
+
   return (
     <div ref={frameRef} className="relative">
-      {/* edition switch and view toggle */}
+      {/* edition switch, lead filter, and view toggle */}
       <div className="mb-5 flex flex-wrap items-center justify-end gap-2">
+        {/* CR05 2.2: the Lead filter (departments first, then entities) */}
+        {leadOptions.length && view !== "lead" ? (
+          <select
+            value={state.lead ?? ""}
+            onChange={(e) => setLeadFilter(e.target.value || null)}
+            aria-label={t("canvas.leadFilterAria")}
+            data-testid="lead-filter"
+            className="h-7.5 max-w-56 rounded-lg border border-sand-300 bg-white px-2 text-xs text-ink-900 focus:border-maroon-500 focus:outline-none"
+          >
+            <option value="">{t("canvas.allLeads")}</option>
+            <optgroup label={t("canvas.leadDepartments")}>
+              {leadOptions
+                .filter((o) => o.kind === "department")
+                .map((o) => (
+                  <option key={o.key} value={o.key}>
+                    {o.label}
+                  </option>
+                ))}
+            </optgroup>
+            <optgroup label={t("canvas.leadEntities")}>
+              {leadOptions
+                .filter((o) => o.kind === "entity")
+                .map((o) => (
+                  <option key={o.key} value={o.key}>
+                    {o.label}
+                  </option>
+                ))}
+            </optgroup>
+          </select>
+        ) : null}
         <span className="inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5">
           {data.editions.map((e) => (
             <button
@@ -528,6 +756,17 @@ export function StrategyCanvas({
           >
             <MapIcon className="size-3.5" /> {t("nav.map")}
           </button>
+          {/* CR05 2.2: the By-lead view */}
+          <button
+            onClick={() => switchView("lead")}
+            className={cn(
+              "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
+              view === "lead" ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+            )}
+            data-testid="bylead-toggle"
+          >
+            <Building2 className="size-3.5" /> {t("canvas.byLead")}
+          </button>
         </span>
       </div>
 
@@ -538,9 +777,11 @@ export function StrategyCanvas({
         </div>
       ) : null}
 
-      {view === "map" ? (
+      {view === "lead" ? (
+        <ByLeadView data={data} onOpen={openItem} />
+      ) : view === "map" ? (
         <StrategyMap
-          data={data}
+          data={dataView}
           selection={{ outcomeId: outcome?.id ?? null, targetId: target?.id ?? null }}
           onSelect={(next) => {
             const o = next.outcomeId ? data.outcomes.find((x) => x.id === next.outcomeId) : null;
@@ -550,6 +791,7 @@ export function StrategyCanvas({
               t: tg?.slug ?? null,
               item: null,
               itemKind: null,
+              lead: state.lead,
             };
             setState(nextState);
             setView("canvas");
@@ -825,15 +1067,15 @@ export function StrategyCanvas({
                       transition={{ duration: 0.18 }}
                     >
                       <OutcomePanel
-                        data={data}
+                        data={dataView}
                         extras={extras}
                         outcomeId={outcome.id}
                         expandedTarget={target?.id ?? null}
                         onToggleTarget={toggleTarget}
                         onOpenItem={openItem}
-                        onCopyLink={() => copyLink({ o: outcome.slug, t: null, item: null, itemKind: null })}
-                        onCopyTargetLink={(slug) => copyLink({ o: outcome.slug, t: slug, item: null, itemKind: null })}
-                        onClose={() => closeLevel({ o: null, t: null, item: null, itemKind: null })}
+                        onCopyLink={() => copyLink({ o: outcome.slug, t: null, item: null, itemKind: null, lead: null })}
+                        onCopyTargetLink={(slug) => copyLink({ o: outcome.slug, t: slug, item: null, itemKind: null, lead: null })}
+                        onClose={() => closeLevel({ o: null, t: null, item: null, itemKind: null, lead: state.lead })}
                         pillarsOf={pillarsOf}
                       />
                     </motion.div>

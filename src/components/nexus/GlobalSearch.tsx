@@ -95,7 +95,6 @@ export function GlobalSearch() {
 
   return (
     <div ref={boxRef} className="relative w-full max-w-[560px]">
-      <Search className="pointer-events-none absolute start-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-400" />
       <input
         ref={inputRef}
         value={q}
@@ -103,13 +102,16 @@ export function GlobalSearch() {
         onFocus={() => q.length >= 2 && setOpen(true)}
         onKeyDown={(e) => e.key === "Enter" && submit()}
         placeholder={t("searchPlaceholder")}
-        className="h-10.5 w-full rounded-xl border border-sand-300 bg-white ps-10 pe-14 text-sm shadow-[var(--shadow-paper)] transition-all placeholder:text-ink-400 focus:border-maroon-500 focus:outline-none focus:ring-4 focus:ring-maroon-100"
+        // CR05 1.3: translucent field on the maroon bar; on focus it turns
+        // white with ink text and a 2px gold ring
+        className="peer h-10.5 w-full rounded-xl border border-white/20 bg-bar-field ps-10 pe-14 text-sm text-bar-ink transition-all placeholder:text-white/72 focus:border-transparent focus:bg-bar-field-focus focus:text-ink-900 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:placeholder:text-ink-400"
         role="combobox"
         aria-expanded={open}
         aria-controls="global-search-suggestions"
         aria-label={t("searchPlaceholder")}
       />
-      <kbd className="pointer-events-none absolute end-3 top-1/2 hidden -translate-y-1/2 rounded border border-sand-300 bg-sand-50 px-1.5 py-0.5 text-[10px] text-ink-400 md:block">
+      <Search className="pointer-events-none absolute start-3.5 top-1/2 size-4 -translate-y-1/2 text-white/70 peer-focus:text-ink-400" />
+      <kbd className="pointer-events-none absolute end-3 top-1/2 hidden -translate-y-1/2 rounded border border-white/25 bg-white/10 px-1.5 py-0.5 text-[10px] text-white/70 peer-focus:border-sand-300 peer-focus:bg-sand-50 peer-focus:text-ink-400 md:block">
         Ctrl K
       </kbd>
 

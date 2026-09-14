@@ -18,7 +18,7 @@ import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/overlays";
 import { useToast } from "@/components/ui/toast";
 
 export type ReportScope = {
-  kind: "signals" | "lessons" | "vault" | "node" | "ask" | "podcast" | "collection";
+  kind: "signals" | "lessons" | "vault" | "node" | "ask" | "podcast" | "collection" | "indices" | "hr";
   ids: string[];
   labelEn: string;
   labelAr: string;

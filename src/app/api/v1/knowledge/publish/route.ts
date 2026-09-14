@@ -99,6 +99,8 @@ const Body = z.object({
   whereFrom: z.string().default(""),
   /* CR02 5.2: the submission came through the Speak mode */
   voice: z.boolean().default(false),
+  /* CR05 5.6.4: a knowledge capture session linked to a handover */
+  handoverId: z.string().nullable().optional(),
   audioRef: z
     .object({
       storagePath: z.string(),
@@ -122,7 +124,17 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ data: null, error: "invalid_body" }, { status: 400 });
   }
-  const { items, whereFrom, voice, audioRef } = parsed.data;
+  const { items, whereFrom, voice, audioRef, handoverId } = parsed.data;
+  // CR05 5.6.4: validate the handover once; capture rows are written per item
+  let handover: typeof schema.handovers.$inferSelect | null = null;
+  if (handoverId) {
+    const rows = await db
+      .select()
+      .from(schema.handovers)
+      .where(eq(schema.handovers.id, handoverId))
+      .limit(1);
+    handover = rows[0] ?? null;
+  }
   const submissionId = newId();
   const terms = await getAllTerms();
   const termByCode = new Map(terms.map((t) => [`${t.dimension}:${t.code}`, t]));
@@ -211,13 +223,14 @@ export async function POST(req: NextRequest) {
       // CR02 3.2/3.3: a confirmed node link is the primary node (Delivery
       // Lessons); the outcome node stays the fallback. Category from the
       // structurer, validated.
-      const category = ["delivery", "external", "expert", "institutional"].includes(
-        item.category ?? ""
-      )
-        ? item.category!
-        : item.node_link
-          ? "delivery"
-          : "institutional";
+      // CR05 5.6.4: handover captures publish as Expert Insights
+      const category = handover
+        ? "expert"
+        : ["delivery", "external", "expert", "institutional"].includes(item.category ?? "")
+          ? item.category!
+          : item.node_link
+            ? "delivery"
+            : "institutional";
       await db.insert(schema.lessons).values({
         id,
         authorId: user.id,
@@ -239,6 +252,40 @@ export async function POST(req: NextRequest) {
       await tagAndLink("lesson", id, item);
       await enqueue("embed_records", { resourceType: "lesson", resourceId: id });
       published.push({ type: "lesson", id });
+      if (handover) {
+        await db.insert(schema.knowledgeCaptures).values({
+          id: newId(),
+          handoverId: handover.id,
+          lessonId: id,
+          documentId: null,
+          topic: item.title_en || item.title_ar,
+          createdAt: nowIso(),
+        });
+        // the +20 handover-capture bonus on top of the Add Knowledge rules
+        const bonus = await record({
+          userId: user.id,
+          type: "knowledge_capture_bonus",
+          resourceType: "lesson",
+          resourceId: id,
+        });
+        totalPoints += bonus.points;
+        // matching checklist items count as captured
+        const tacit = await db
+          .select()
+          .from(schema.handoverItems)
+          .where(eq(schema.handoverItems.handoverId, handover.id));
+        const open = tacit.find(
+          (t) => t.itemKind === "tacit_topic" && t.status === "pending"
+        );
+        if (open) {
+          await db
+            .update(schema.handoverItems)
+            .set({ status: "captured", doneAt: nowIso() })
+            .where(eq(schema.handoverItems.id, open.id));
+        }
+        const { refreshHandoverCompletion } = await import("@/server/services/hr");
+        await refreshHandoverCompletion(handover.id);
+      }
     } else if (primary === "signal") {
       const id = newId();
       await db.insert(schema.signals).values({

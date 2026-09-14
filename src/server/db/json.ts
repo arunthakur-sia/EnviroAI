@@ -35,6 +35,23 @@ export const MODULES = [
   "analytics",
   "gamification",
 ] as const;
+
+/* CR05 6.1: portals are the top-level modules in the rail, in rail order. */
+export const PORTALS = [
+  "home",
+  "vault",
+  "strategy",
+  "statistics",
+  "indices",
+  "trends",
+  "ask",
+  "lessons",
+  "podcast",
+  "experts",
+  "hr",
+  "settings",
+] as const;
+export type Portal = (typeof PORTALS)[number];
 export const ACTIONS = [
   "read",
   "create",

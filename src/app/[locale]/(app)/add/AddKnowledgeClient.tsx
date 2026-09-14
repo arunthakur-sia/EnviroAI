@@ -70,12 +70,15 @@ export function AddKnowledgeClient({
   categoryHint,
   initialMode,
   whisperAvailable,
+  handoverId = null,
 }: {
   topics: Topic[];
   nodeContext: { id: string; code: string | null; titleEn: string; titleAr: string } | null;
   categoryHint: string | null;
   initialMode: Mode;
   whisperAvailable: boolean;
+  /* CR05 5.6.4: a capture session opened from a handover */
+  handoverId?: string | null;
 }) {
   const t = useTranslations("addKnowledge");
   const tl = useTranslations("lessons");
@@ -187,7 +190,7 @@ export function AddKnowledgeClient({
       const res = await fetch("/api/v1/knowledge/publish", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ items: toPublish, whereFrom, voice: wasVoice, audioRef }),
+        body: JSON.stringify({ items: toPublish, whereFrom, voice: wasVoice, audioRef, handoverId }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);

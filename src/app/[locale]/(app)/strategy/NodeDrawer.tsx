@@ -20,6 +20,9 @@ import { formatDate, formatNumber } from "@/lib/format";
 import { Avatar, Chip, RagDot, Skeleton } from "@/components/ui/primitives";
 import { useToast } from "@/components/ui/toast";
 import { Shelf, type ShelfDoc } from "@/components/nexus/Shelf";
+import { LeadChips, LeadChipPill } from "@/components/nexus/LeadChips";
+import { StakeholdersSection } from "@/components/nexus/Stakeholders";
+import type { LeadChip as LeadChipData, StakeholderRow } from "@/server/services/strategy";
 import { BriefDialog } from "@/components/nexus/BriefDialog";
 import { ReportButton } from "@/components/nexus/ReportButton";
 import { KpiSection } from "./[id]/KpiSection";
@@ -34,11 +37,14 @@ export type DrawerPayload = {
     descriptionEn: string | null;
     descriptionAr: string | null;
     status: string;
-    ownerEntityName: string | null;
     budgetQar: number | null;
     startDate: string | null;
     endDate: string | null;
   };
+  /* CR05 2.2: lead chips (joint leads = several) and supporting entities */
+  leads: LeadChipData[];
+  /* CR05 3.2: the stakeholder section before the actions */
+  stakeholders: StakeholderRow[];
   kpis: {
     id: string;
     nameEn: string;
@@ -266,13 +272,26 @@ export function NodeDrawer({
                       </p>
                     ) : null}
                     <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-600">
-                      {node.ownerEntityName ? <Chip tone="gulf">{node.ownerEntityName}</Chip> : null}
+                      <LeadChips leads={payload.leads ?? []} max={3} />
                       {node.budgetQar ? (
                         <span className="tnum">
                           {t("budget")}: {formatNumber(node.budgetQar, locale, { compact: true })} QAR
                         </span>
                       ) : null}
                     </p>
+                    {/* CR05 2.2: supporting entities under the lead chips */}
+                    {(payload.leads ?? []).some((l) => l.role === "supporting") ? (
+                      <p className="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-ink-600" data-testid="supporting-leads">
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-ink-400">
+                          {t("supporting")}
+                        </span>
+                        {(payload.leads ?? [])
+                          .filter((l) => l.role === "supporting")
+                          .map((l) => (
+                            <LeadChipPill key={`${l.kind}:${l.id}`} lead={l} />
+                          ))}
+                      </p>
+                    ) : null}
                   </div>
 
                   {/* timeline bar with milestones */}
@@ -454,6 +473,16 @@ export function NodeDrawer({
                         </Link>
                       ))}
                     </div>
+                  ) : null}
+
+                  {/* CR05 3.2: stakeholders at the end, before the actions */}
+                  {(payload.stakeholders ?? []).length ? (
+                    <StakeholdersSection
+                      nodeId={node.id}
+                      rows={payload.stakeholders}
+                      canEdit={false}
+                      compact
+                    />
                   ) : null}
 
                   {/* actions */}

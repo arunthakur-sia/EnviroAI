@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { eq } from "drizzle-orm";
 import { BadgeCheck, GraduationCap, Medal } from "lucide-react";
+import { db, schema } from "@/server/db/client";
+import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/server/auth/session";
 import { getExpertProfile } from "@/server/services/experts";
 import { Reveal } from "@/components/motion";
@@ -33,10 +36,31 @@ export default async function ExpertProfilePage({
   if (!user) redirect(`/${locale}/login`);
   const t = await getTranslations("experts");
   const tc = await getTranslations("common");
+  const ts = await getTranslations("strategy.stakeholders");
 
   const profile = await getExpertProfile(user, id);
   if (!profile) return <EmptyState title={tc("notFound")} className="mt-12" />;
   const { expert, domains, endorsementCounts, skills, engagements, publications, contributions, badges } = profile;
+
+  // CR05 3.2: project involvement from node_stakeholders
+  const stakeRows = await db
+    .select({
+      id: schema.nodeStakeholders.id,
+      nodeId: schema.nodeStakeholders.nodeId,
+      role: schema.nodeStakeholders.role,
+      noteEn: schema.nodeStakeholders.roleNoteEn,
+      noteAr: schema.nodeStakeholders.roleNoteAr,
+      code: schema.strategyNodes.code,
+      titleEn: schema.strategyNodes.titleEn,
+      titleAr: schema.strategyNodes.titleAr,
+    })
+    .from(schema.nodeStakeholders)
+    .innerJoin(
+      schema.strategyNodes,
+      eq(schema.strategyNodes.id, schema.nodeStakeholders.nodeId)
+    )
+    .where(eq(schema.nodeStakeholders.expertId, id));
+  const projectRoles = stakeRows.slice(0, 12);
 
   let education: { degree: string; institution: string; year: number | null }[] = [];
   let languages: string[] = [];
@@ -122,19 +146,48 @@ export default async function ExpertProfilePage({
                   <tbody>
                     {engagements.map((e) => (
                       <tr key={e.id} className="border-t border-sand-100">
-                        <td className="px-4 py-2.5 text-ink-400 tnum">{e.year ?? "—"}</td>
+                        <td className="px-4 py-2.5 text-ink-400 tnum">{e.year ?? "-"}</td>
                         <td className="px-4 py-2.5 font-medium text-ink-900">{e.title}</td>
-                        <td className="px-4 py-2.5 text-ink-600">{e.role ?? "—"}</td>
+                        <td className="px-4 py-2.5 text-ink-600">{e.role ?? "-"}</td>
                         <td className="max-w-64 px-4 py-2.5 text-xs text-ink-600">
                           {bi(locale, e.outcomeEn ?? "", e.outcomeAr ?? "")}
                         </td>
                         <td className="px-4 py-2.5 text-gold-500 tnum">
-                          {e.rating ? "★".repeat(e.rating) : "—"}
+                          {e.rating ? "★".repeat(e.rating) : "-"}
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </section>
+          ) : null}
+
+          {/* CR05 3.2: the projects this expert is a stakeholder on */}
+          {projectRoles.length ? (
+            <section data-testid="expert-projects">
+              <SectionTitle>{t("projects")}</SectionTitle>
+              <div className="card divide-y divide-sand-100">
+                {projectRoles.map((r) => (
+                  <Link
+                    key={r.id}
+                    href={`/strategy/${r.nodeId}` as never}
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-maroon-50"
+                  >
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-medium text-ink-900">
+                        {r.code ? <span className="me-1.5 text-xs text-ink-400 tnum">{r.code}</span> : null}
+                        {bi(locale, r.titleEn, r.titleAr)}
+                      </span>
+                      {r.noteEn || r.noteAr ? (
+                        <span className="block truncate text-xs text-ink-600">
+                          {bi(locale, r.noteEn ?? "", r.noteAr ?? "")}
+                        </span>
+                      ) : null}
+                    </span>
+                    <Chip tone="gulf">{ts(`roles.${r.role}` as never)}</Chip>
+                  </Link>
+                ))}
               </div>
             </section>
           ) : null}

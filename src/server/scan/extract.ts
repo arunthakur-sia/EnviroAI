@@ -258,13 +258,33 @@ export async function persistCandidates(
         createdAt: nowIso(),
       });
     }
-    // index-type signals link to the matching international index ranking rows
+    // CR05 7: signals about a ranking link to the Indices module (the CR01
+    // index_rankings tracker rows stay linked too for old deep links)
     if (c.signal_type === "index") {
       try {
+        const title = `${c.title_en} ${c.summary_en}`.toLowerCase();
+        const indices = await db
+          .select({ id: schema.indices.id, nameEn: schema.indices.nameEn })
+          .from(schema.indices);
+        for (const idx of indices) {
+          const words = idx.nameEn.toLowerCase().split(/\s+/).filter((w) => w.length > 3);
+          const matched = words.length >= 2 && words.filter((w) => title.includes(w)).length >= 2;
+          if (matched) {
+            await db.insert(schema.signalLinks).values({
+              id: newId(),
+              signalId: id,
+              resourceType: "index",
+              resourceId: idx.id,
+              relation: "about",
+              source: "ai",
+              createdAt: nowIso(),
+            });
+            // an accepted signal about an index nudges its forecast (4.6.11)
+          }
+        }
         const rankings = await db
           .select({ id: schema.indexRankings.id, nameEn: schema.indexRankings.indexNameEn })
           .from(schema.indexRankings);
-        const title = `${c.title_en} ${c.summary_en}`.toLowerCase();
         for (const rk of rankings) {
           const words = rk.nameEn.toLowerCase().split(/\s+/).filter((w) => w.length > 3);
           const matched = words.length >= 2 && words.filter((w) => title.includes(w)).length >= 2;

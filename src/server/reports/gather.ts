@@ -5,9 +5,10 @@ import { db, schema } from "@/server/db/client";
 import type { CurrentUser } from "@/server/auth/session";
 import { listSignals } from "@/server/services/signals";
 import { listDeliverables } from "@/server/services/deliverables";
+import { loadLeadsFor } from "@/server/services/strategy";
 
 export type ReportItem = {
-  type: "signal" | "lesson" | "document" | "deliverable" | "node" | "answer" | "episode";
+  type: "signal" | "lesson" | "document" | "deliverable" | "node" | "answer" | "episode" | "index";
   id: string;
   titleEn: string;
   titleAr: string;
@@ -28,7 +29,7 @@ export type ReportChart = {
 };
 
 export type ReportScopeInput = {
-  kind: "signals" | "lessons" | "vault" | "node" | "ask" | "podcast" | "collection";
+  kind: "signals" | "lessons" | "vault" | "node" | "ask" | "podcast" | "collection" | "indices" | "hr";
   ids: string[];
   labelEn: string;
   labelAr: string;
@@ -209,15 +210,21 @@ export async function gatherReportItems(
           stack.push(c.id);
         }
       }
-      for (const n of subtree.slice(0, 25)) {
+      // CR05 2: the report names leads from node_leads, not the old free text
+      const sliceNodes = subtree.slice(0, 25);
+      const leadsByNode = await loadLeadsFor(sliceNodes.map((n) => n.id));
+      for (const n of sliceNodes) {
+        const leadRows = (leadsByNode.get(n.id) ?? []).filter((l) => l.role === "lead");
+        const leadEn = leadRows.map((l) => l.nameEn).join(" + ");
+        const leadAr = leadRows.map((l) => l.nameAr).join(" + ");
         items.push({
           type: "node",
           id: n.id,
           titleEn: `${n.code ? n.code + " " : ""}${n.titleEn}`,
           titleAr: `${n.code ? n.code + " " : ""}${n.titleAr}`,
           date: n.updatedAt,
-          metaEn: `${n.nodeType} · ${n.status}${n.ownerEntityName ? ` · ${n.ownerEntityName}` : ""}`,
-          metaAr: `${n.nodeType} · ${n.status}${n.ownerEntityName ? ` · ${n.ownerEntityName}` : ""}`,
+          metaEn: `${n.nodeType} · ${n.status}${leadEn ? ` · ${leadEn}` : ""}`,
+          metaAr: `${n.nodeType} · ${n.status}${leadAr ? ` · ${leadAr}` : ""}`,
           textEn: n.descriptionEn ?? "",
           textAr: n.descriptionAr ?? "",
           outcomeCodes: [],
@@ -343,6 +350,139 @@ export async function gatherReportItems(
         textEn: text.slice(0, 6000),
         textAr: text.slice(0, 6000),
         outcomeCodes: [],
+      });
+    }
+  } else if (scope.kind === "indices") {
+    // CR05 4.4/4.7: the benchmark and board export. One item per index with
+    // Qatar's standing and the current forecast (cited as a SiaNexus
+    // forecast, never as a fact), plus rank-history charts.
+    const rows = scope.ids.length
+      ? await db.select().from(schema.indices).where(inArray(schema.indices.id, scope.ids))
+      : await db.select().from(schema.indices).where(eq(schema.indices.isActive, 1));
+    const obs = rows.length
+      ? await db
+          .select()
+          .from(schema.indexObservations)
+          .where(
+            and(
+              inArray(schema.indexObservations.indexId, rows.map((r) => r.id)),
+              eq(schema.indexObservations.countryCode, "QAT")
+            )
+          )
+      : [];
+    const forecasts = rows.length
+      ? await db
+          .select()
+          .from(schema.indexForecasts)
+          .where(
+            and(
+              inArray(schema.indexForecasts.indexId, rows.map((r) => r.id)),
+              eq(schema.indexForecasts.status, "current"),
+              eq(schema.indexForecasts.horizonYears, 3)
+            )
+          )
+      : [];
+    for (const idx of rows) {
+      const series = obs
+        .filter((o) => o.indexId === idx.id)
+        .sort((a, b) => a.year - b.year);
+      const latest = series[series.length - 1];
+      const f3 = forecasts.find((f) => f.indexId === idx.id);
+      const forecastEn = f3
+        ? ` SiaNexus forecast (method ${f3.methodVersion}, generated ${f3.generatedAt.slice(0, 10)}): three-year central ${
+            f3.centralRank != null ? `rank ${Math.round(f3.centralRank)}` : f3.centralScore?.toFixed(2) ?? "-"
+          }, direction ${f3.direction}.`
+        : "";
+      const forecastAr = f3
+        ? ` تنبؤ سيا نكسس (المنهجية ${f3.methodVersion}، بتاريخ ${f3.generatedAt.slice(0, 10)}): القيمة المركزية بعد ثلاث سنوات ${
+            f3.centralRank != null ? `المرتبة ${Math.round(f3.centralRank)}` : f3.centralScore?.toFixed(2) ?? "-"
+          }، والاتجاه ${f3.direction === "up" ? "صاعد" : f3.direction === "down" ? "هابط" : "مستقر"}.`
+        : "";
+      items.push({
+        type: "index",
+        id: idx.id,
+        titleEn: idx.nameEn,
+        titleAr: idx.nameAr,
+        date: latest ? `${latest.year}-01-01` : null,
+        metaEn: [idx.publisher, idx.category, idx.latestYear ? String(idx.latestYear) : null]
+          .filter(Boolean)
+          .join(" · "),
+        metaAr: [idx.publisher, idx.category, idx.latestYear ? String(idx.latestYear) : null]
+          .filter(Boolean)
+          .join(" · "),
+        textEn: `${
+          latest
+            ? `Qatar ${latest.rank != null ? `ranks ${latest.rank}${latest.totalCountries ? ` of ${latest.totalCountries}` : ""}` : `scores ${latest.score}`} in ${latest.year}.`
+            : "No published Qatar value."
+        }${forecastEn}`,
+        textAr: `${
+          latest
+            ? `قطر ${latest.rank != null ? `في المرتبة ${latest.rank}${latest.totalCountries ? ` من ${latest.totalCountries}` : ""}` : `بدرجة ${latest.score}`} عام ${latest.year}.`
+            : "لا توجد قيمة منشورة لقطر."
+        }${forecastAr}`,
+        outcomeCodes: [],
+      });
+      const rankPoints = series
+        .filter((o) => o.rank != null)
+        .slice(-10)
+        .map((o) => ({ period: String(o.year), value: o.rank as number }));
+      if (rankPoints.length >= 3) {
+        charts.push({
+          labelEn: `${idx.nameEn}: Qatar's rank`,
+          labelAr: `${idx.nameAr}: مرتبة قطر`,
+          unit: "rank",
+          points: rankPoints,
+          target: null,
+        });
+      }
+    }
+  } else if (scope.kind === "hr") {
+    // CR05 5.6.6: the department or organisation continuity report. Knowledge
+    // ownership and risks only; never points, badges, streaks, or notes (5.1).
+    const { getHrOverview, getHrDepartments } = await import("@/server/services/hr");
+    const overview = await getHrOverview(user);
+    const depts = await getHrDepartments(user);
+    if (overview && depts) {
+      const wanted = scope.ids.length
+        ? depts.departments.filter((d) => scope.ids.includes(d.id))
+        : depts.departments;
+      items.push({
+        type: "node",
+        id: "hr-overview",
+        titleEn: "Knowledge continuity overview",
+        titleAr: "نظرة عامة على استمرارية المعرفة",
+        date: null,
+        metaEn: `readiness ${overview.rings.readiness} · continuity ${overview.rings.continuity} · handovers ${overview.rings.handoversComplete}%`,
+        metaAr: `الجاهزية ${overview.rings.readiness} · الاستمرارية ${overview.rings.continuity} · التسليمات ${overview.rings.handoversComplete}%`,
+        textEn: `Open risks: ${overview.riskCounts.critical} critical, ${overview.riskCounts.high} high, ${overview.riskCounts.medium} medium, ${overview.riskCounts.low} low. Top risks: ${overview.topRisks
+          .slice(0, 5)
+          .map((r) => `${r.severity}: ${r.title}`)
+          .join("; ")}`,
+        textAr: `المخاطر المفتوحة: ${overview.riskCounts.critical} حرجة، ${overview.riskCounts.high} عالية، ${overview.riskCounts.medium} متوسطة، ${overview.riskCounts.low} منخفضة.`,
+        outcomeCodes: [],
+      });
+      for (const d of wanted) {
+        items.push({
+          type: "node",
+          id: `hr-${d.id}`,
+          titleEn: d.nameEn,
+          titleAr: d.nameAr,
+          date: null,
+          metaEn: `headcount ${d.headcount} · readiness ${d.readiness} · continuity ${d.continuity} · open handovers ${d.openHandovers}`,
+          metaAr: `العدد ${d.headcount} · الجاهزية ${d.readiness} · الاستمرارية ${d.continuity} · تسليمات مفتوحة ${d.openHandovers}`,
+          textEn: `${d.responsibilitiesEn ?? ""} Repository: ${d.repository.documents} documents (${Math.round(d.repository.verifiedShare * 100)}% verified, ${Math.round(d.repository.staleShare * 100)}% stale), ${d.repository.lessons} lessons, ${d.repository.deliverables} deliverables. Risks: ${d.risks
+            .map((r) => `${r.severity}: ${r.title}`)
+            .join("; ")}`,
+          textAr: `${d.responsibilitiesAr ?? ""} المستودع: ${d.repository.documents} وثيقة، ${d.repository.lessons} درسًا، ${d.repository.deliverables} مخرجًا.`,
+          outcomeCodes: [],
+        });
+      }
+      charts.push({
+        labelEn: "Continuity score by department",
+        labelAr: "درجة الاستمرارية حسب الإدارة",
+        unit: null,
+        points: overview.heat.map((h) => ({ period: h.code, value: h.continuity })),
+        target: null,
       });
     }
   }

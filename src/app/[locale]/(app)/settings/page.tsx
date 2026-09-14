@@ -49,6 +49,7 @@ export default async function SettingsPage({
           nameEn: schema.roles.nameEn,
           nameAr: schema.roles.nameAr,
           permissionsJson: schema.roles.permissionsJson,
+          portalsJson: schema.roles.portalsJson,
           defaultClearance: schema.roles.defaultClearance,
           defaultDepartmentScope: schema.roles.defaultDepartmentScope,
           isSystem: schema.roles.isSystem,

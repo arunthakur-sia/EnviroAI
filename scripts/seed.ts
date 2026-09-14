@@ -2085,6 +2085,22 @@ async function main() {
     await seedCr04();
   }
 
+  /* ---------------- 12e. CR05: entities, stakeholders, indices, HR, access ----- */
+  console.log("-- CR05: entities, stakeholders, indices, HR, access seeds...");
+  {
+    // real index data first (direct files + the research extractions); the
+    // downloads are skippable with SKIP_INDICES_FETCH=1 and fall back to the
+    // cached raw files
+    const { runIndicesFetch } = await import("../src/server/indices/fetcher");
+    try {
+      await runIndicesFetch({});
+    } catch (e) {
+      console.warn("indices fetch during seed failed:", (e as Error)?.message);
+    }
+    const { seedCr05 } = await import("./cr05-seed");
+    await seedCr05();
+  }
+
   /* ---------------- 13. report ---------------- */
   const lines = [
     "# Seed report",

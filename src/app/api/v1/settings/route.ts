@@ -12,7 +12,7 @@ export async function GET() {
   if (!user || !can(user, "manage", "settings")) {
     return NextResponse.json({ data: null, error: "forbidden" }, { status: 403 });
   }
-  const [ai, flags, trends, qnvPillars, lessonsSettings, lessonOfWeek, reflectionPrompts] =
+  const [ai, flags, trends, qnvPillars, lessonsSettings, lessonOfWeek, reflectionPrompts, allowedDomains] =
     await Promise.all([
       getAiSettings(),
       getFlags(),
@@ -21,9 +21,10 @@ export async function GET() {
       getSetting("lessons_settings", { learnModeEnabled: true, reclusterNightly: true }),
       getSetting("lesson_of_week", { schedule: [] }),
       getSetting("reflection_prompts", []),
+      getSetting("allowed_domains", ["npc.qa"]),
     ]);
   return NextResponse.json({
-    data: { ai, flags, trends, qnvPillars, lessonsSettings, lessonOfWeek, reflectionPrompts },
+    data: { ai, flags, trends, qnvPillars, lessonsSettings, lessonOfWeek, reflectionPrompts, allowedDomains },
     error: null,
   });
 }
@@ -85,6 +86,12 @@ const Body = z.object({
     .array(z.object({ en: z.string().max(300), ar: z.string().max(300) }))
     .max(10)
     .optional(),
+  /* CR05 4.8: forecast assumption defaults */
+  indexAssumption: z
+    .object({ id: z.string().min(1), value: z.number() })
+    .optional(),
+  /* CR05 6.3: allowed sign-in domains */
+  allowedDomains: z.array(z.string().min(3).max(60)).max(10).optional(),
 });
 
 export async function PATCH(req: NextRequest) {
@@ -121,6 +128,26 @@ export async function PATCH(req: NextRequest) {
   }
   if (parsed.data.reflectionPrompts) {
     await setSetting("reflection_prompts", parsed.data.reflectionPrompts);
+  }
+  if (parsed.data.indexAssumption) {
+    const { db, schema } = await import("@/server/db/client");
+    const { eq } = await import("drizzle-orm");
+    const a = parsed.data.indexAssumption;
+    const [row] = await db
+      .select()
+      .from(schema.indexForecastAssumptions)
+      .where(eq(schema.indexForecastAssumptions.id, a.id))
+      .limit(1);
+    if (row) {
+      const clamped = Math.max(row.min, Math.min(row.max, a.value));
+      await db
+        .update(schema.indexForecastAssumptions)
+        .set({ value: clamped })
+        .where(eq(schema.indexForecastAssumptions.id, a.id));
+    }
+  }
+  if (parsed.data.allowedDomains) {
+    await setSetting("allowed_domains", parsed.data.allowedDomains);
   }
   await audit(user.id, "edit", "settings", "global", parsed.data as Record<string, unknown>);
   return NextResponse.json({ data: { ok: true }, error: null });

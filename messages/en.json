@@ -11,7 +11,9 @@
       "lessons": "Lessons",
       "podcast": "NPC Knowledge Cast",
       "trends": "Trends and Signals",
-      "settings": "Settings"
+      "settings": "Settings",
+      "indices": "Indices",
+      "hr": "HR Knowledge"
     },
     "searchPlaceholder": "Search SiaNexus: documents, numbers, people, answers",
     "searching": "Searching…",
@@ -34,7 +36,9 @@
     "switchLanguage": "Switch language",
     "aiMock": "AI mock mode",
     "aiMockHint": "No AI key configured. All AI features return deterministic local results.",
-    "dropToUpload": "Drop to upload to the Vault"
+    "dropToUpload": "Drop to upload to the Vault",
+    "previewBanner": "Previewing as {label}. Read-only: nothing can be changed.",
+    "previewExit": "Exit preview"
   },
   "login": {
     "heroTitle": "The living memory of the National Planning Council",
@@ -45,7 +49,8 @@
     "password": "Password",
     "signIn": "Sign in",
     "invalidCredentials": "That email and password do not match. Try again.",
-    "networkError": "Could not reach the server. Check that the app is running."
+    "networkError": "Could not reach the server. Check that the app is running.",
+    "accountLocked": "This account is locked for 15 minutes after repeated failed attempts."
   },
   "common": {
     "loading": "Loading…",
@@ -111,7 +116,10 @@
       "high": "High confidence",
       "medium": "Medium confidence",
       "low": "Low confidence"
-    }
+    },
+    "remove": "Remove",
+    "choose": "Choose",
+    "copy": "Copy"
   },
   "vault": {
     "title": "Knowledge Vault",
@@ -122,7 +130,11 @@
     "emptyTitle": "The shelves are empty here",
     "emptyHint": "No documents match these filters. Clear them, or add the first document yourself.",
     "viewToggle": "View",
-    "views": { "shelves": "Shelves", "grid": "Grid", "list": "List" },
+    "views": {
+      "shelves": "Shelves",
+      "grid": "Grid",
+      "list": "List"
+    },
     "groupBy": "Group shelves by",
     "groupByType": "By knowledge type",
     "groupByOutcome": "By NDS3 outcome",
@@ -408,7 +420,14 @@
       "openFullPage": "Open full page",
       "askAboutThis": "Ask about this",
       "railAria": "Outcome rail",
-      "chapterEmpty": "No chapter text is mapped for this outcome yet."
+      "chapterEmpty": "No chapter text is mapped for this outcome yet.",
+      "byLead": "By lead",
+      "leadFilterAria": "Filter by lead",
+      "allLeads": "All leads",
+      "leadDepartments": "NPC departments",
+      "leadEntities": "Entities",
+      "leadCounts": "{initiatives} initiatives · {projects} projects",
+      "leadOnTrack": "{pct}% on track"
     },
     "archiveBanner": "{name} is an archived edition. It is read-only, kept for lineage and institutional memory.",
     "archiveChip": "Archive",
@@ -459,7 +478,10 @@
     "noLessonsHere": "No lessons linked here yet.",
     "briefMe": "Brief me",
     "tileCounts": "{initiatives} initiatives · {projects} projects",
-    "view": { "tree": "Tree", "graph": "Graph" },
+    "view": {
+      "tree": "Tree",
+      "graph": "Graph"
+    },
     "nodeType": {
       "vision": "Vision",
       "outcome": "National outcome",
@@ -512,7 +534,44 @@
     "valueLabel": "Value",
     "kpiValueSaved": "KPI value recorded. 10 points.",
     "risks": "Risks",
-    "nextSteps": "Next steps"
+    "nextSteps": "Next steps",
+    "supporting": "Supporting",
+    "leadsEditor": {
+      "cta": "Edit leads",
+      "title": "Leads and supporting entities",
+      "saved": "Leads saved",
+      "leads": "Lead department(s) and entity(ies)",
+      "supporting": "Supporting",
+      "none": "None yet",
+      "addDepartment": "Add a lead department",
+      "pickDepartment": "Choose a department",
+      "addEntity": "Add an entity",
+      "entityRole": "Entity role",
+      "asLead": "As lead",
+      "asSupporting": "Supporting",
+      "entityPlaceholder": "Search entities, or type a new name",
+      "createNew": "Create “{name}”"
+    },
+    "stakeholders": {
+      "title": "Stakeholders",
+      "add": "Add stakeholder",
+      "cancel": "Cancel",
+      "role": "Role",
+      "searchPlaceholder": "Search people and experts",
+      "notePlaceholder": "Role note, for example “methodology advisor” (optional)",
+      "confirm": "Add",
+      "empty": "No stakeholders recorded yet.",
+      "profile": "Profile",
+      "email": "Email {name}",
+      "roles": {
+        "sponsor": "Sponsor",
+        "owner": "Project Owner",
+        "manager": "Project Manager",
+        "team": "Team",
+        "expert": "Expert involved",
+        "external_partner": "External partner"
+      }
+    }
   },
   "experts": {
     "title": "Expert Network",
@@ -558,7 +617,11 @@
     },
     "skills": "Skills",
     "contributions": "Contributions in SiaNexus",
-    "contrib": { "documents": "Documents", "answers": "Answers", "lessons": "Lessons" },
+    "contrib": {
+      "documents": "Documents",
+      "answers": "Answers",
+      "lessons": "Lessons"
+    },
     "badges": "Badges",
     "request": "Request this expert",
     "requestTitle": "Request this expert",
@@ -579,7 +642,8 @@
     "emailLabel": "Email",
     "yearsLabel": "Years of experience",
     "addCta": "Add expert",
-    "expertAdded": "Expert added. 30 points when verified."
+    "expertAdded": "Expert added. 30 points when verified.",
+    "projects": "Projects"
   },
   "profile": {
     "completion": "{pct}% complete",
@@ -601,7 +665,10 @@
     "numeralsEastern": "Eastern Arabic (١٢٣)",
     "quietMode": "Quiet mode",
     "quietModeHint": "Hides points, levels, streaks and badges everywhere.",
-    "saved": "Profile saved."
+    "saved": "Profile saved.",
+    "signOutAll": "Sign out of all devices",
+    "signOutAllHint": "Ends every active session for this account, including this one.",
+    "signOutAllCta": "Sign out everywhere"
   },
   "askPage": {
     "title": "Ask NPC",
@@ -644,7 +711,10 @@
     "openQuestions": "Open questions",
     "bounties": "Bounties",
     "bountyPoints": "{points} points",
-    "bountySource": { "gap_radar": "Gap radar", "manual": "Posted" },
+    "bountySource": {
+      "gap_radar": "Gap radar",
+      "manual": "Posted"
+    },
     "noOpenQuestions": "Nothing is waiting",
     "noOpenQuestionsHint": "Every question has an answer. A quiet moment worth celebrating.",
     "noBounties": "No open bounties right now.",
@@ -663,7 +733,11 @@
     "urls": "Links (optional)",
     "structureCta": "Structure with AI",
     "nothingToStructure": "Add some notes, a file, or a link first.",
-    "modes": { "write": "Write", "upload": "Upload", "speak": "Speak" },
+    "modes": {
+      "write": "Write",
+      "upload": "Upload",
+      "speak": "Speak"
+    },
     "deliveryContext": "Delivery lesson for {node}",
     "categoryField": "Lesson category",
     "record": "Record",
@@ -758,7 +832,10 @@
       "bounties": "Bounties",
       "integrations": "Integrations",
       "audit": "Audit log",
-      "analytics": "Analytics"
+      "analytics": "Analytics",
+      "entities": "Entities",
+      "indices": "Indices",
+      "access": "Access"
     },
     "saved": "Saved.",
     "lessonsTab": {
@@ -804,7 +881,11 @@
       "runTokens": "Tokens",
       "runErrors": "Errors",
       "noRuns": "No scans have run yet.",
-      "status": { "done": "Done", "failed": "Failed", "running": "Running" }
+      "status": {
+        "done": "Done",
+        "failed": "Failed",
+        "running": "Running"
+      }
     },
     "searchUsers": "Search people",
     "user": "User",
@@ -894,7 +975,150 @@
     "noZeroResults": "Every search found something.",
     "topReused": "Most reused items",
     "askConfidence": "Ask confidence (30 days)",
-    "noAskYet": "No AI answers in the period."
+    "noAskYet": "No AI answers in the period.",
+    "entitiesTab": {
+      "searchPlaceholder": "Search the register",
+      "count": "{count} entities",
+      "add": "Add entity",
+      "name": "Name",
+      "shortName": "Short name",
+      "kind": "Kind",
+      "contact": "Contact",
+      "status": "Status",
+      "actions": "Actions",
+      "arReview": "Arabic to review",
+      "mergedAway": "Merged",
+      "active": "Active",
+      "inactive": "Inactive",
+      "edit": "Edit",
+      "merge": "Merge into another entity",
+      "deactivate": "Deactivate",
+      "activate": "Activate",
+      "saved": "Entity saved",
+      "merged": "Entities merged",
+      "mergeTitle": "Merge “{name}”",
+      "mergeHint": "Every lead assignment moves to the entity you choose; this row is kept as a merged alias.",
+      "pickTarget": "Choose the surviving entity",
+      "mergeCta": "Merge",
+      "nameEn": "Name (English)",
+      "nameAr": "Name (Arabic)",
+      "shortEn": "Short name (English)",
+      "shortAr": "Short name (Arabic)",
+      "website": "Website",
+      "contactName": "Contact name",
+      "contactEmail": "Contact email",
+      "kinds": {
+        "ministry": "Ministry",
+        "agency": "Agency",
+        "authority": "Authority",
+        "company": "Company",
+        "international": "International",
+        "other": "Other"
+      }
+    },
+    "indicesTab": {
+      "refresh": "Refresh data",
+      "refreshQueued": "Refresh queued",
+      "recompute": "Recompute forecasts now",
+      "recomputed": "Forecasts recomputed",
+      "addIndex": "Add index",
+      "indexAdded": "Index added; run Refresh data to fetch observations",
+      "done": "Done",
+      "colIndex": "Index",
+      "colPublisher": "Publisher",
+      "colCategory": "Category",
+      "colDirection": "Direction",
+      "colLatest": "Latest year",
+      "colStatus": "Status",
+      "higherBetter": "Higher is better",
+      "lowerBetter": "Lower is better",
+      "active": "Active",
+      "inactive": "Inactive",
+      "manualEntry": "Manual observation entry and correction",
+      "manualHint": "Manual rows keep the `manual` status and are never overwritten by a refresh. Give a source URL whenever one exists.",
+      "country": "Country (ISO3)",
+      "year": "Year",
+      "rank": "Rank",
+      "score": "Score",
+      "sourceUrl": "Source URL",
+      "observationSaved": "Observation saved",
+      "assumptions": "Forecast assumption defaults",
+      "assumptionsHint": "Defaults feed the official forecasts on the next recompute; the what-if sliders on index pages never change them.",
+      "assumptionSaved": "Assumption saved",
+      "noAssumptions": "Defaults appear after the first seed.",
+      "code": "Code",
+      "nameEn": "Name (English)",
+      "nameAr": "Name (Arabic)"
+    },
+    "accessCol": "Access",
+    "previewAs": "Preview as",
+    "portals": {
+      "home": "Home",
+      "vault": "Vault",
+      "strategy": "Strategy",
+      "statistics": "Statistics",
+      "indices": "Indices",
+      "trends": "Trends",
+      "ask": "Ask",
+      "lessons": "Lessons",
+      "podcast": "Cast",
+      "experts": "Experts",
+      "hr": "HR",
+      "settings": "Settings"
+    },
+    "access": {
+      "title": "Access: {name}",
+      "scope": "Department scope",
+      "scopeAll": "All departments",
+      "scopeOwn": "Own department",
+      "reason": "Reason for the next override",
+      "reasonPlaceholder": "Why this exception exists",
+      "expiry": "Expiry (optional)",
+      "cycleHint": "Click a portal or matrix cell to cycle: role default, then grant, then deny, then back to the role default. The reason and expiry above are attached to the next click.",
+      "portals": "Portal visibility",
+      "sources": {
+        "role": "role",
+        "grant": "grant",
+        "deny": "deny",
+        "none": "off"
+      },
+      "overridesTitle": "Active overrides",
+      "auditTitle": "Audit trail",
+      "noAudit": "No access changes recorded yet.",
+      "overrideSaved": "Override saved",
+      "domainsTitle": "Allowed sign-in domains",
+      "domainsHint": "Only these email domains can sign in or be invited. The login form answers with a neutral message for anything else.",
+      "addDomain": "Add domain",
+      "removeDomain": "Remove {domain}",
+      "domainsSaved": "Domains saved",
+      "inviteTitle": "Invite users",
+      "inviteEmail": "Email",
+      "inviteName": "Name",
+      "inviteRole": "Role",
+      "inviteDepartment": "Department",
+      "inviteClearance": "Clearance",
+      "inviteCta": "Create invitation",
+      "csvTitle": "Or paste CSV (email, name, role, clearance)",
+      "csvPlaceholder": "maryam.x@npc.qa, Maryam X, Contributor, 2",
+      "csvCta": "Invite all rows",
+      "invitesCreated": "{count} invitation(s) created",
+      "someRejected": "{count} row(s) rejected (domain or existing account)",
+      "linksTitle": "Invitation links (no mail server locally; share these directly, they are also logged)",
+      "linkCopied": "Link copied",
+      "copyLink": "Copy link",
+      "revoke": "Revoke",
+      "status": "Status",
+      "expires": "Expires",
+      "actions": "Actions",
+      "inviteStatus": {
+        "pending": "Pending",
+        "accepted": "Accepted",
+        "expired": "Expired",
+        "revoked": "Revoked"
+      },
+      "noInvites": "No invitations yet.",
+      "selfRegistrationNote": "Self-registration is disabled: accounts exist only through these invitations."
+    }
   },
   "home": {
     "greeting": {
@@ -963,7 +1187,9 @@
       "node": "Strategy node and its children",
       "ask": "Ask NPC answer",
       "podcast": "Podcast episode",
-      "collection": "Collection"
+      "collection": "Collection",
+      "indices": "International indices",
+      "hr": "Knowledge continuity"
     },
     "itemCount": "{count} items",
     "audience": "Audience",
@@ -1014,7 +1240,10 @@
       "numbers": "Numbers",
       "risks": "Risks"
     },
-    "langNames": { "en": "English", "ar": "Arabic" },
+    "langNames": {
+      "en": "English",
+      "ar": "Arabic"
+    },
     "minutes": "{minutes} min",
     "listens": "{count} listens",
     "browserVoice": "Browser voice",
@@ -1081,7 +1310,11 @@
     "filterStatus": "Status",
     "statusPublished": "Published",
     "statusVerified": "Verified",
-    "views": { "feed": "Feed", "projects": "By project", "clusters": "Themes" },
+    "views": {
+      "feed": "Feed",
+      "projects": "By project",
+      "clusters": "Themes"
+    },
     "categoriesAll": "All",
     "addKnowledge": "Add knowledge",
     "readMore": "Read more",
@@ -1244,11 +1477,33 @@
       "index": "Index",
       "research": "Research"
     },
-    "impact": { "high": "High impact", "medium": "Medium impact", "low": "Low impact" },
-    "horizon": { "near": "Near term", "mid": "Mid term", "long": "Long term" },
-    "sourceKinds": { "web_search": "Web search", "rss": "News feeds", "manual": "Manual" },
-    "triage": { "new": "New", "accepted": "Accepted", "dismissed": "Dismissed", "converted": "Converted" },
-    "sentiment": { "positive": "Positive for Qatar", "neutral": "Neutral", "negative": "Negative for Qatar", "mixed": "Mixed" },
+    "impact": {
+      "high": "High impact",
+      "medium": "Medium impact",
+      "low": "Low impact"
+    },
+    "horizon": {
+      "near": "Near term",
+      "mid": "Mid term",
+      "long": "Long term"
+    },
+    "sourceKinds": {
+      "web_search": "Web search",
+      "rss": "News feeds",
+      "manual": "Manual"
+    },
+    "triage": {
+      "new": "New",
+      "accepted": "Accepted",
+      "dismissed": "Dismissed",
+      "converted": "Converted"
+    },
+    "sentiment": {
+      "positive": "Positive for Qatar",
+      "neutral": "Neutral",
+      "negative": "Negative for Qatar",
+      "mixed": "Mixed"
+    },
     "accept": "Accept",
     "dismiss": "Dismiss",
     "convert": "Convert",
@@ -1294,15 +1549,28 @@
     "publishedLabel": "Published",
     "sentimentLabel": "Sentiment",
     "convertedTo": "Converted to",
-    "convertTargets": { "lesson": "Lesson", "risk": "Risk", "document": "Vault document" },
+    "convertTargets": {
+      "lesson": "Lesson",
+      "risk": "Risk",
+      "document": "Vault document"
+    },
     "comments": "Comments",
     "noComments": "No comments yet. Start the discussion.",
     "commentPlaceholder": "Add a comment for the team…",
-    "postComment": "Post"
+    "postComment": "Post",
+    "seeIndices": "See international indices"
   },
   "foresight": {
-    "impact": { "low": "Low impact", "medium": "Medium impact", "high": "High impact" },
-    "horizon": { "near": "Near term", "mid": "Mid term", "long": "Long term" },
+    "impact": {
+      "low": "Low impact",
+      "medium": "Medium impact",
+      "high": "High impact"
+    },
+    "horizon": {
+      "near": "Near term",
+      "mid": "Mid term",
+      "long": "Long term"
+    },
     "impactAxis": "Impact",
     "likelihoodAxis": "Likelihood",
     "mitigation": "Mitigation",
@@ -1351,6 +1619,306 @@
     "notHelpful": "Not helpful",
     "routePrimary": "No solid source found. Route this to an expert:",
     "routeSecondary": "Experts who could deepen this answer:",
-    "route": "Route"
+    "route": "Route",
+    "indexTag": "Index",
+    "forecastTag": "Forecast"
+  },
+  "indices": {
+    "title": "International Indices",
+    "subtitle": "Qatar's standing in the global indices that matter to NDS3: published values with sources, forecasts with their method in the open, and benchmarking against the peers you choose.",
+    "lastRefresh": "Data refreshed",
+    "refresh": "Refresh data",
+    "refreshQueued": "Refresh queued; new observations and forecasts will appear shortly",
+    "categoryFilter": "Filter by category",
+    "allCategories": "All",
+    "categories": {
+      "economy": "Economy",
+      "governance": "Governance",
+      "society": "Society",
+      "environment": "Environment",
+      "technology": "Technology",
+      "human": "Human"
+    },
+    "cards": "Cards",
+    "table": "Table",
+    "qatarVsGcc": "Qatar vs GCC",
+    "improving": "improving",
+    "stableCount": "stable",
+    "declining": "declining",
+    "gccLeadCount": "leading the GCC",
+    "rankOf": "of {total}",
+    "scoreLabel": "score",
+    "scoreShort": "score",
+    "noData": "no published value",
+    "rankChange": "{n, plural, one {# place} other {# places}}",
+    "gccPosition": "{pos, selectordinal, one {#st} two {#nd} few {#rd} other {#th}} in GCC",
+    "gccScale": "GCC position",
+    "leaderIs": "leader {country}",
+    "colIndex": "Index",
+    "colYear": "Year",
+    "colRank": "Rank",
+    "colScore": "Score",
+    "colChange": "Change",
+    "colGcc": "GCC",
+    "colEntity": "Entity",
+    "colLatest": "Latest",
+    "colRange": "3y range",
+    "colConfidence": "Confidence",
+    "colTotal": "Of",
+    "colSource": "Source",
+    "confidence": {
+      "narrow": "Narrow",
+      "medium": "Medium",
+      "wide": "Wide"
+    },
+    "forecastSummary": "Forecast summary",
+    "forecastDisclaimer": "SiaNexus forecasts (method v1). Model outputs from published history, accepted signals, and NDS3 targets; never published figures.",
+    "openMethod": "Open the index page and the full method",
+    "publisherSite": "Publisher",
+    "methodologyToggle": "Methodology",
+    "latest": "Latest",
+    "history": "History",
+    "rankView": "Rank",
+    "scoreView": "Score",
+    "historyTable": "History table",
+    "source": "source",
+    "leaderLine": "The faint line is the GCC leader, {country}.",
+    "pillars": "Pillars against the GCC average ({year})",
+    "gccAvg": "GCC avg",
+    "relatedSignals": "Related signals (12 months)",
+    "askAbout": "Ask about this index",
+    "forecast": {
+      "title": "Forecast",
+      "years": "years",
+      "range": "Range",
+      "citedAs": "SiaNexus forecast, method {version}, generated on {date}",
+      "none": "No forecast yet; refresh the data to compute one.",
+      "whatIfBanner": "You are looking at a what-if simulation. It is never stored as the official forecast.",
+      "moved": "The forecast moved from {from} to {to} since {date}.",
+      "methodToggle": "Forecasting method, with the actual numbers",
+      "methodText": "The baseline is Holt linear exponential smoothing fitted on the published series since 2010 (a damped trend when fewer than five points exist). Accepted signals linked to this index shift the path within bounded caps (4/8/10 percent of the score range at +1/+3/+5 years), weighted by impact, horizon match, and age. A linked NDS3 target that states a rank pulls the path toward it, scaled by the target's status. A 5,000-run Monte Carlo (bootstrapped residuals, perturbed weights) gives the 10th/50th/90th percentiles, and ranks come from the latest distribution of other countries drifted by their own trends.",
+      "baselineMethod": "Baseline",
+      "damped": "Damped trend",
+      "residual": "Residual sd",
+      "baseline3": "Baseline (+3y)",
+      "pull": "Signal adj / target pull",
+      "contributions": "Signal contributions (+3y)",
+      "histogram": "Simulated outcomes (+3y)",
+      "sensitivity": "Most sensitive inputs",
+      "inputs": {
+        "signal_strength": "Signal strength",
+        "target_pull": "Target pull",
+        "manual_shock": "Manual shock",
+        "history_window": "History window"
+      },
+      "whatIf": "What-if simulator",
+      "reset": "Reset to official",
+      "whatIfHint": "Sliders re-run the same engine in your browser at 1,000 runs. Official forecasts stay untouched.",
+      "sliders": {
+        "signalStrength": "Signal adjustment strength",
+        "targetPullWeight": "Target pull weight",
+        "historyWindowYears": "History window (years)",
+        "manualShock": "Manual shock (score points)"
+      }
+    },
+    "benchmark": {
+      "title": "Benchmark",
+      "views": {
+        "rank": "Rank over time",
+        "score": "Latest scores",
+        "gap": "Gap to leader"
+      },
+      "top10": "Top 10 of the index",
+      "custom": "Custom group",
+      "saveGroup": "Save group",
+      "groupNamePrompt": "Name this peer group",
+      "searchCountry": "Search countries",
+      "gapTo": "Gap to {country}",
+      "gapUnit": "score points at the latest published values",
+      "widestGaps": "Widest pillar gaps",
+      "narrativeCta": "Where Qatar leads and lags"
+    }
+  },
+  "hr": {
+    "title": "HR Knowledge",
+    "subtitleAll": "Knowledge ownership, handover readiness, and continuity risk across the organisation. No points or badges live here.",
+    "subtitleDept": "Knowledge ownership, handover readiness, and continuity risk for your department.",
+    "nav": {
+      "aria": "HR sections",
+      "overview": "Overview",
+      "departments": "Departments",
+      "people": "People",
+      "handovers": "Handovers",
+      "risks": "Risks and delays"
+    },
+    "recompute": "Recompute",
+    "recomputed": "Risk register recomputed",
+    "saved": "Saved",
+    "rings": {
+      "readiness": "Organisation readiness",
+      "readinessHint": "Ownership-weighted handover readiness of everyone in scope.",
+      "continuity": "Business continuity",
+      "continuityHint": "100 minus open risk penalties (15 critical, 8 high, 3 medium, 1 low).",
+      "handoversComplete": "Handovers complete",
+      "handoversCompleteHint": "Share of started handovers that reached completion."
+    },
+    "severity": {
+      "critical": "Critical",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "allRisks": "Open the full register",
+    "heatTitle": "Departments by continuity",
+    "openRisks": "{count} open",
+    "topRisks": "Top risks",
+    "shouldAct": "{name} should act",
+    "actOn": "Act",
+    "noRisks": "Nothing open. The register is calm.",
+    "head": "Department head",
+    "headcount": "{count} people",
+    "docsCount": "{count} documents",
+    "verifiedShare": "{pct}% verified",
+    "staleShare": "{pct}% stale",
+    "lessonsCount": "{count} lessons",
+    "deliverablesCount": "{count} deliverables",
+    "openHandovers": "{count} open handovers",
+    "readinessShort": "Readiness",
+    "continuityShort": "Continuity",
+    "responsibilities": "Responsibilities",
+    "noResponsibilities": "No responsibilities recorded yet.",
+    "keyProjects": "Key projects",
+    "people": "People",
+    "risksTitle": "Open risks",
+    "searchPeople": "Search people and expertise",
+    "filterDepartment": "Department",
+    "allDepartments": "All departments",
+    "filterStatus": "Status",
+    "allStatuses": "All statuses",
+    "filterReadiness": "Readiness band",
+    "allBands": "All bands",
+    "bands": {
+      "high": "Ready (80+)",
+      "medium": "Partial (55-79)",
+      "low": "At risk (under 55)"
+    },
+    "peopleCount": "{count} people",
+    "status": {
+      "active": "Active",
+      "leaving": "Leaving",
+      "transferring": "Transferring",
+      "long_leave": "Long leave"
+    },
+    "projectRoles": "Projects and roles",
+    "noRoles": "No stakeholder roles recorded.",
+    "expertise": "Expertise",
+    "knowledgeOwned": "Knowledge owned",
+    "noOwned": "Owns no registered items.",
+    "verifiedOf": "{n} verified",
+    "backupLine": "{pct}% of owned items have a named backup · backup for {forOthers} items of others",
+    "readinessParts": "Components: backups {backup}% · fresh {fresh}% · deputies {deputy}% · recent capture {capture}",
+    "handoverState": "Handover",
+    "noHandover": "No handover started.",
+    "due": "due {date}",
+    "setStatus": "Set status",
+    "startHandover": "Start handover",
+    "assignBackup": "Assign backup",
+    "requestCapture": "Request capture",
+    "email": "Email",
+    "setStatusTitle": "Set status for {name}",
+    "startHandoverTitle": "Start a handover for {name}",
+    "assignBackupTitle": "Assign a backup for {name}",
+    "assignBackupHint": "Names this person as backup owner for every owned item that has none yet; adjust individual items from the handover page.",
+    "backupPerson": "Backup owner",
+    "statusLabel": "Status",
+    "effectiveDate": "Effective date",
+    "note": "Note",
+    "handoverKind": "Kind",
+    "handoverKinds": {
+      "leaving": "Leaving",
+      "transferring": "Transferring",
+      "leave": "Long leave"
+    },
+    "dueDate": "Due date",
+    "defaultSuccessor": "Default successor",
+    "noSuccessor": "No successor yet",
+    "successorLine": "successor {name}",
+    "itemsCount": "{count} items",
+    "handoverStatus": {
+      "open": "Open",
+      "in_progress": "In progress",
+      "complete": "Complete",
+      "overdue": "Overdue"
+    },
+    "noHandovers": "No handovers yet.",
+    "bulkAssign": "Assign all to the default successor",
+    "captureSession": "Capture knowledge",
+    "successor": "Successor",
+    "itemStatus": "Item status",
+    "itemStatus_": {
+      "pending": "Pending",
+      "reassigned": "Reassigned",
+      "captured": "Captured",
+      "not_needed": "Not needed"
+    },
+    "itemKinds": {
+      "document": "Documents",
+      "node_owner": "Owned nodes",
+      "node_role": "Project roles",
+      "indicator": "Indicators",
+      "lesson": "Lessons",
+      "expert_request": "Expert profiles",
+      "collection": "Collections",
+      "community_lead": "Community leadership",
+      "tacit_topic": "Tacit knowledge topics"
+    },
+    "captures": "Knowledge capture sessions",
+    "noCaptures": "No capture sessions yet. Open one with the Capture knowledge button.",
+    "expertInsight": "Expert Insights",
+    "riskTrend": "Open risks, 12 weeks",
+    "openNow": "{count} open now",
+    "filterKind": "Kind",
+    "allKinds": "All kinds",
+    "filterSeverity": "Severity",
+    "allSeverities": "All severities",
+    "showResolved": "Show resolved",
+    "groupBy": {
+      "severity": "By severity",
+      "kind": "By kind"
+    },
+    "riskKinds": {
+      "incomplete_handover": "Incomplete handover",
+      "outdated_content": "Outdated content",
+      "missing_knowledge": "Missing knowledge",
+      "overdue_update": "Overdue update",
+      "single_point_of_failure": "Single point of failure",
+      "no_backup": "No backup"
+    },
+    "resolve": "Resolve",
+    "resolveTitle": "Resolve this risk",
+    "resolveNote": "What was done (optional)",
+    "riskResolved": "Risk resolved",
+    "resolvedOn": "resolved {date}"
+  },
+  "invite": {
+    "title": "You are invited to SiaNexus",
+    "hello": "Welcome, {name}. Set your password to activate the account.",
+    "invalid": "This invitation is not valid",
+    "invalidHint": "It may have expired (links last 7 days) or been revoked. Ask your administrator for a new one.",
+    "password": "Password",
+    "confirm": "Confirm password",
+    "policy": "At least 12 characters, with at least one letter and one digit.",
+    "acceptableUse": "I will use SiaNexus for National Planning Council work, respect document classifications, and never share my account.",
+    "cta": "Activate account",
+    "errors": {
+      "mismatch": "The passwords do not match.",
+      "too_short": "The password needs at least 12 characters.",
+      "needs_letter": "Add at least one letter.",
+      "needs_digit": "Add at least one digit.",
+      "too_common": "That password is too common; choose another.",
+      "invalid_invite": "This invitation is no longer valid.",
+      "user_exists": "This account already exists; sign in instead.",
+      "generic": "Something went wrong. Try again."
+    }
   }
 }

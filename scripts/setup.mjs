@@ -53,7 +53,9 @@ run("download fonts", "node", ["scripts/fetch-fonts.mjs"], { optional: true });
 // 6. public NPC sources (retries + fallbacks inside; never fails the setup)
 run("fetch public NPC sources", "node", ["scripts/fetch-sources.mjs"], { optional: true });
 
-// 7. migrations + full seed (drops and recreates data/nexus.db)
+// 7. migrations + full seed (drops and recreates data/nexus.db). CR05: the
+// seed also fetches international index data (skippable with
+// SKIP_INDICES_FETCH=1, when cached raw files are reused).
 run("seed database", "npx", ["tsx", "scripts/seed.ts"]);
 
 // 8. make sure every vector sits in the primary embedding space

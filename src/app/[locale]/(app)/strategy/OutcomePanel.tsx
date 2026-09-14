@@ -10,6 +10,7 @@ import { BookOpen, ChevronDown, ExternalLink, Link as LinkIcon, Radar, X } from 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { cn, bi } from "@/lib/utils";
 import { Avatar, Chip, ProgressRing, Skeleton } from "@/components/ui/primitives";
+import { LeadChips } from "@/components/nexus/LeadChips";
 import { IndicatorTile } from "@/components/nexus/IndicatorTile";
 import { useToast } from "@/components/ui/toast";
 import type { NavigatorData, NavItem, CanvasExtras } from "@/server/services/strategy";
@@ -134,9 +135,7 @@ export function OutcomePanel({
               {pillarKeys.map((p) => (
                 <Chip key={p} tone="gold">{t(`canvas.pillars.${p}` as never)}</Chip>
               ))}
-              {outcome.ownerEntityName ? (
-                <Chip tone="gulf">{t("hero.owner")}: {outcome.ownerEntityName}</Chip>
-              ) : null}
+              <LeadChips leads={outcome.leads} max={3} />
               <Chip tone="maroon">{t("hero.targets", { count: outcome.targetCount })}</Chip>
               <Chip tone="sand">{t("hero.initiatives", { count: outcome.initiativeCount })}</Chip>
               <Chip tone="sand">{t("hero.projects", { count: outcome.projectCount })}</Chip>

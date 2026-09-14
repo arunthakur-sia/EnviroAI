@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/server/auth/session";
 import { ftsRecords } from "@/server/search/fts";
 import { resolveResourceTitles } from "@/server/services/documents";
-import { canReadResource } from "@/server/auth/permissions";
+import { canReadResource, hiddenResourceTypes } from "@/server/auth/permissions";
 import { db, schema } from "@/server/db/client";
 import { inArray } from "drizzle-orm";
 
@@ -15,7 +15,11 @@ export async function GET(req: NextRequest) {
   if (q.trim().length < 2) return NextResponse.json({ data: {}, error: null });
 
   const hits = await ftsRecords(q, 30);
-  const items = hits.map((h) => ({ type: h.resourceType, id: h.resourceId }));
+  // CR05 6.1: hidden portals never surface in suggestions
+  const hidden = hiddenResourceTypes(user);
+  const items = hits
+    .filter((h) => !hidden.has(h.resourceType))
+    .map((h) => ({ type: h.resourceType, id: h.resourceId }));
   const resolved = await resolveResourceTitles(items);
 
   // clearance filter for documents

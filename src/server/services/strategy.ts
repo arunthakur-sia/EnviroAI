@@ -117,6 +117,194 @@ export function slugOfCode(code: string | null, id: string): string {
   return code.toLowerCase().replace(/\./g, "-");
 }
 
+/* ------------------------------------------------------------------ */
+/* CR05 2: responsible leads (departments and entities) on nodes       */
+/* ------------------------------------------------------------------ */
+
+export type LeadChip = {
+  kind: "department" | "entity";
+  role: "lead" | "supporting";
+  id: string; // department or entity id
+  nameEn: string;
+  nameAr: string;
+  shortEn: string;
+  shortAr: string;
+  entityKind: string | null; // ministry|agency|authority|company|international|other, null for departments
+  verified: boolean;
+};
+
+/** Loads lead and supporting chips for a set of nodes, sorted lead-first. */
+export async function loadLeadsFor(
+  nodeIds: string[]
+): Promise<Map<string, LeadChip[]>> {
+  const out = new Map<string, LeadChip[]>();
+  if (!nodeIds.length) return out;
+  const rows = await db
+    .select()
+    .from(schema.nodeLeads)
+    .where(inArray(schema.nodeLeads.nodeId, nodeIds));
+  if (!rows.length) return out;
+  const entityIds = [...new Set(rows.map((r) => r.entityId).filter(Boolean))] as string[];
+  const deptIds = [...new Set(rows.map((r) => r.departmentId).filter(Boolean))] as string[];
+  const [ents, deps] = await Promise.all([
+    entityIds.length
+      ? db.select().from(schema.entities).where(inArray(schema.entities.id, entityIds))
+      : Promise.resolve([]),
+    deptIds.length
+      ? db
+          .select()
+          .from(schema.departments)
+          .where(inArray(schema.departments.id, deptIds))
+      : Promise.resolve([]),
+  ]);
+  const entById = new Map(ents.map((e) => [e.id, e]));
+  const depById = new Map(deps.map((d) => [d.id, d]));
+  for (const r of rows.sort(
+    (a, b) => (a.role === b.role ? a.sort - b.sort : a.role === "lead" ? -1 : 1)
+  )) {
+    let chip: LeadChip | null = null;
+    if (r.leadKind === "entity" && r.entityId) {
+      const e = entById.get(r.entityId);
+      if (e) {
+        chip = {
+          kind: "entity",
+          role: r.role as "lead" | "supporting",
+          id: e.id,
+          nameEn: e.nameEn,
+          nameAr: e.nameAr,
+          shortEn: e.shortNameEn ?? e.nameEn,
+          shortAr: e.shortNameAr ?? e.nameAr,
+          entityKind: e.kind,
+          verified: r.verified === 1,
+        };
+      }
+    } else if (r.leadKind === "department" && r.departmentId) {
+      const d = depById.get(r.departmentId);
+      if (d) {
+        chip = {
+          kind: "department",
+          role: r.role as "lead" | "supporting",
+          id: d.id,
+          nameEn: d.nameEn,
+          nameAr: d.nameAr,
+          shortEn: d.nameEn.replace(/^Department of /i, ""),
+          shortAr: d.nameAr.replace(/^إدارة /, ""),
+          entityKind: null,
+          verified: r.verified === 1,
+        };
+      }
+    }
+    if (chip) {
+      (out.get(r.nodeId) ?? out.set(r.nodeId, []).get(r.nodeId)!).push(chip);
+    }
+  }
+  return out;
+}
+
+/* ------------------------------------------------------------------ */
+/* CR05 3: stakeholders on projects and initiatives                    */
+/* ------------------------------------------------------------------ */
+
+export const STAKEHOLDER_ROLE_ORDER = [
+  "sponsor",
+  "owner",
+  "manager",
+  "team",
+  "expert",
+  "external_partner",
+] as const;
+
+export type StakeholderRow = {
+  id: string;
+  nodeId: string;
+  personKind: "employee" | "expert" | "external_contact";
+  userId: string | null;
+  expertId: string | null;
+  nameEn: string;
+  nameAr: string;
+  organisationEn: string | null;
+  organisationAr: string | null;
+  email: string | null;
+  avatarColor: string;
+  role: string;
+  roleNoteEn: string | null;
+  roleNoteAr: string | null;
+  domain: { id: string; nameEn: string; nameAr: string } | null;
+  sinceDate: string | null;
+  untilDate: string | null;
+};
+
+/** Loads the stakeholder section rows for a set of nodes, in the CR05 3.2
+    order (sponsor, owner, manager, team, experts, external partners). */
+export async function loadStakeholdersFor(
+  nodeIds: string[]
+): Promise<Map<string, StakeholderRow[]>> {
+  const out = new Map<string, StakeholderRow[]>();
+  if (!nodeIds.length) return out;
+  const rows = await db
+    .select()
+    .from(schema.nodeStakeholders)
+    .where(inArray(schema.nodeStakeholders.nodeId, nodeIds));
+  if (!rows.length) return out;
+  const userIds = [...new Set(rows.map((r) => r.userId).filter(Boolean))] as string[];
+  const expertIds = [...new Set(rows.map((r) => r.expertId).filter(Boolean))] as string[];
+  const termIds = [...new Set(rows.map((r) => r.domainTermId).filter(Boolean))] as string[];
+  const [users, experts, terms, allDeps] = await Promise.all([
+    userIds.length
+      ? db.select().from(schema.users).where(inArray(schema.users.id, userIds))
+      : Promise.resolve([]),
+    expertIds.length
+      ? db.select().from(schema.experts).where(inArray(schema.experts.id, expertIds))
+      : Promise.resolve([]),
+    termIds.length
+      ? db
+          .select()
+          .from(schema.taxonomyTerms)
+          .where(inArray(schema.taxonomyTerms.id, termIds))
+      : Promise.resolve([]),
+    db.select().from(schema.departments),
+  ]);
+  const userById = new Map(users.map((u) => [u.id, u]));
+  const expertById = new Map(experts.map((e) => [e.id, e]));
+  const termById = new Map(terms.map((t) => [t.id, t]));
+  const depById = new Map(allDeps.map((d) => [d.id, d]));
+  const orderOf = (role: string) => {
+    const i = STAKEHOLDER_ROLE_ORDER.indexOf(role as (typeof STAKEHOLDER_ROLE_ORDER)[number]);
+    return i === -1 ? 99 : i;
+  };
+  for (const r of rows.sort(
+    (a, b) => orderOf(a.role) - orderOf(b.role) || a.sort - b.sort
+  )) {
+    const u = r.userId ? userById.get(r.userId) : null;
+    const e = r.expertId ? expertById.get(r.expertId) : null;
+    const dep = u?.departmentId ? depById.get(u.departmentId) : null;
+    const term = r.domainTermId ? termById.get(r.domainTermId) : null;
+    const row: StakeholderRow = {
+      id: r.id,
+      nodeId: r.nodeId,
+      personKind: r.personKind as StakeholderRow["personKind"],
+      userId: r.userId,
+      expertId: r.expertId,
+      nameEn: u?.nameEn ?? e?.nameEn ?? r.nameEn ?? "",
+      nameAr: u?.nameAr ?? e?.nameAr ?? r.nameAr ?? r.nameEn ?? "",
+      organisationEn:
+        dep?.nameEn ?? e?.organisationEn ?? r.organisation ?? null,
+      organisationAr:
+        dep?.nameAr ?? e?.organisationAr ?? r.organisation ?? null,
+      email: u?.email ?? e?.email ?? r.email ?? null,
+      avatarColor: u?.avatarColor ?? e?.avatarColor ?? "maroon",
+      role: r.role,
+      roleNoteEn: r.roleNoteEn,
+      roleNoteAr: r.roleNoteAr,
+      domain: term ? { id: term.id, nameEn: term.nameEn, nameAr: term.nameAr } : null,
+      sinceDate: r.sinceDate,
+      untilDate: r.untilDate,
+    };
+    (out.get(r.nodeId) ?? out.set(r.nodeId, []).get(r.nodeId)!).push(row);
+  }
+  return out;
+}
+
 export type NavOutcome = {
   id: string;
   code: string | null;
@@ -125,7 +313,8 @@ export type NavOutcome = {
   titleAr: string;
   descriptionEn: string | null;
   descriptionAr: string | null;
-  ownerEntityName: string | null;
+  /* CR05 2.2: lead chips replace the old free-text owner */
+  leads: LeadChip[];
   status: string;
   progress: number; // share of targets on track
   targetCount: number;
@@ -166,7 +355,8 @@ export type NavItem = {
   titleEn: string;
   titleAr: string;
   status: string;
-  ownerEntityName: string | null;
+  /* CR05 2.2: lead and supporting chips replace the old free-text owner */
+  leads: LeadChip[];
   startDate: string | null;
   endDate: string | null;
   deliverableCount: number;
@@ -295,6 +485,12 @@ export async function getNavigator(editionId: string): Promise<NavigatorData> {
     }
   }
 
+  const leadsByNode = await loadLeadsFor(
+    nodes
+      .filter((n) => itemTypes.has(n.nodeType) || paneOneTypes.includes(n.nodeType))
+      .map((n) => n.id)
+  );
+
   const items: NavItem[] = [];
   for (const n of nodes) {
     if (!itemTypes.has(n.nodeType)) continue;
@@ -336,7 +532,7 @@ export async function getNavigator(editionId: string): Promise<NavigatorData> {
       titleEn: n.titleEn,
       titleAr: n.titleAr,
       status: n.status,
-      ownerEntityName: n.ownerEntityName,
+      leads: leadsByNode.get(n.id) ?? [],
       startDate: n.startDate,
       endDate: n.endDate,
       deliverableCount: deliverableCounts.get(n.id) ?? 0,
@@ -395,7 +591,7 @@ export async function getNavigator(editionId: string): Promise<NavigatorData> {
       code: o.code,
       descriptionEn: o.descriptionEn,
       descriptionAr: o.descriptionAr,
-      ownerEntityName: o.ownerEntityName,
+      leads: leadsByNode.get(o.id) ?? [],
       slug: slugOfCode(o.code, o.id),
       titleEn: o.titleEn,
       titleAr: o.titleAr,
@@ -801,12 +997,20 @@ export async function getNodeDetail(user: CurrentUser, nodeId: string) {
         .where(inArray(schema.strategyNodes.id, lineageNodeIds))
     : [];
   const editions = await getEditions();
+  const leads = (await loadLeadsFor([nodeId])).get(nodeId) ?? [];
+  const stakeholders = (await loadStakeholdersFor([nodeId])).get(nodeId) ?? [];
+  const leadsByChild = Object.fromEntries(
+    await loadLeadsFor(children.map((c) => c.id))
+  ) as Record<string, LeadChip[]>;
 
   return {
     node,
     edition,
     parent,
     children,
+    leads,
+    stakeholders,
+    leadsByChild,
     kpis,
     kpiValues,
     updates,
@@ -872,6 +1076,26 @@ export async function createStatusUpdate(
   });
   await audit(user.id, "create", "status_update", input.nodeId, { status: input.status });
   await enqueue("embed_records", { resourceType: "node", resourceId: input.nodeId });
+  // CR05 4.6.11: a target status change recomputes the forecasts of the
+  // indices linked to that node
+  if (node.status !== input.status) {
+    try {
+      const linked = await db.select().from(schema.indices);
+      const affected = linked.filter((idx) => {
+        try {
+          return (JSON.parse(idx.linkedNodeIdsJson ?? "[]") as string[]).includes(input.nodeId);
+        } catch {
+          return false;
+        }
+      });
+      if (affected.length) {
+        const { computeForecast } = await import("@/server/indices/compute");
+        for (const idx of affected) await computeForecast(idx.id);
+      }
+    } catch (e) {
+      console.error("index recompute after status change failed:", (e as Error)?.message);
+    }
+  }
   return { ok: true };
 }
 

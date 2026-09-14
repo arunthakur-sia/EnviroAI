@@ -38,5 +38,14 @@ export async function POST(
       { status: result.error === "forbidden" ? 403 : 404 }
     );
   }
+  if (parsed.data.action === "accept") {
+    // CR05 4.6.11: forecasts recompute when an accepted signal touches an index
+    try {
+      const { recomputeForSignal } = await import("@/server/indices/compute");
+      await recomputeForSignal(id);
+    } catch (e) {
+      console.error("index recompute after signal accept failed:", (e as Error)?.message);
+    }
+  }
   return NextResponse.json({ data: result, error: null });
 }

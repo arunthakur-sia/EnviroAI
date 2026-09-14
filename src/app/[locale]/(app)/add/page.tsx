@@ -14,7 +14,7 @@ export default async function AddKnowledgePage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ node?: string; category?: string; mode?: string }>;
+  searchParams: Promise<{ node?: string; category?: string; mode?: string; handover?: string }>;
 }) {
   const { locale } = await params;
   const sp = await searchParams;
@@ -53,6 +53,7 @@ export default async function AddKnowledgePage({
         categoryHint={sp.category ?? null}
         initialMode={sp.mode === "speak" ? "speak" : sp.mode === "upload" ? "upload" : "write"}
         whisperAvailable={Boolean(process.env.OPENAI_API_KEY)}
+        handoverId={sp.handover ?? null}
       />
     </Reveal>
   );

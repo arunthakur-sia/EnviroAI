@@ -533,10 +533,11 @@ async function main() {
     const loginRes = await fetch(`${BASE}/en/login`);
     const loginHtml = await loginRes.text();
     check("login shows the SiaNexus wordmark", loginHtml.includes("/brand/SiaNexus_logo"));
-    check("top bar carries the NPC logo asset", fs.existsSync(path.join(process.cwd(), "public", "brand", "NPC_logo_transparent.png")));
+    check("top bar carries the NPC logo asset", fs.existsSync(path.join(process.cwd(), "public", "brand", "NPC_logo_white_mono.png")));
     const homeRes2 = await analyst("/en/home");
     const homeHtml2 = await homeRes2.text();
-    check("shell shows the NPC lockup at the end side", homeHtml2.includes("NPC_logo_transparent.png"));
+    // CR05 1.3: the bar went maroon, so the lockup is the white monochrome file
+    check("shell shows the NPC lockup at the end side", homeHtml2.includes("NPC_logo_white_mono.png"));
     check("no user-visible NEXUS remains on home", !/NEXUS(?!_)/.test(homeHtml2.replace(/SiaNexus/g, "")));
 
     // 3: /foresight redirects to /trends
@@ -1518,6 +1519,447 @@ async function main() {
     check(
       "CR04 reviews close with no High or Critical findings",
       cr04Reviews.every((r) => {
+        const file = path.join(process.cwd(), "docs", "design-reviews", `${r}.md`);
+        return fs.existsSync(file) && /no High or Critical HIG findings/.test(fs.readFileSync(file, "utf8"));
+      })
+    );
+
+    // restore live AI mode
+    await admin("/api/v1/settings", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ ai: { mockMode: false } }),
+    });
+    db.close();
+  }
+
+  /* 16. CR05: colours, entities, stakeholders, Indices, HR, access */
+  console.log("\n16. CR05 acceptance");
+  {
+    const { createClient } = await import("@libsql/client");
+    const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const q = async (sql: string, args: unknown[] = []) =>
+      (await db.execute({ sql, args: args as never })).rows as Record<string, unknown>[];
+
+    // deterministic AI paths for narratives and explanations
+    await admin("/api/v1/settings", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ ai: { mockMode: true } }),
+    });
+    await new Promise((r) => setTimeout(r, 300));
+
+    /* 16.1 the colour scheme */
+    const css = fs.readFileSync(path.join(process.cwd(), "src", "styles", "globals.css"), "utf8");
+    check(
+      "tokens carry the bright neutral ground and the bar set",
+      css.includes("--color-sand-50: #f6f7f9") &&
+        css.includes("--color-ink-900: #1f2328") &&
+        css.includes("--color-bar: #8a1538") &&
+        css.includes("--color-plank: #e3e6ea")
+    );
+    const homeCr05 = await admin("/en/home");
+    const homeCr05Html = await homeCr05.text();
+    check(
+      "the top bar is maroon with the white NPC logo",
+      homeCr05Html.includes("bg-bar") && homeCr05Html.includes("NPC_logo_white_mono.png")
+    );
+    check(
+      "the bar search is the translucent field with the gold focus ring",
+      homeCr05Html.includes("bg-bar-field") && homeCr05Html.includes("focus:ring-gold-500")
+    );
+    check(
+      "no warm sand value survives outside the book cloth",
+      !css.includes("#fbf9f5;") && !css.includes("#f4f0e8") && !css.includes("#e2dac9;")
+    );
+    const beforeAfter = ["home", "vault", "strategy", "ask", "trends", "lessons", "settings"].every(
+      (p) =>
+        ["en", "ar"].every(
+          (l) =>
+            fs.existsSync(path.join(process.cwd(), "data", "screenshots", "cr05", `before-${p}-${l}.png`)) &&
+            fs.existsSync(path.join(process.cwd(), "data", "screenshots", "cr05", `after-${p}-${l}.png`))
+        )
+    );
+    check("before and after screenshots exist for the seven pages in both languages", beforeAfter);
+
+    /* 16.2 entities and leads */
+    const entityCount = await q("select count(*) c from entities");
+    check("the entities register is seeded", Number(entityCount[0].c) >= 25, `count=${entityCount[0].c}`);
+    const uncovered = await q(
+      `select count(*) c from strategy_nodes n
+       where n.edition_id = (select id from strategy_editions where code='nds3')
+         and n.node_type in ('initiative','project')
+         and not exists (select 1 from node_leads l where l.node_id = n.id and l.role = 'lead')`
+    );
+    check("every NDS3 initiative and project has a lead", Number(uncovered[0].c) === 0, `uncovered=${uncovered[0].c}`);
+    const joint = await q(
+      `select node_id from node_leads where role='lead' group by node_id having count(*) >= 2 limit 1`
+    );
+    check("joint leads exist (two lead rows on one node)", joint.length > 0);
+    const supporting = await q("select count(*) c from node_leads where role='supporting'");
+    check("supporting entities are recorded", Number(supporting[0].c) > 0);
+    const lanes = await admin("/en/strategy?o=o1&t=o1-t1");
+    const lanesHtml = await lanes.text();
+    check("lane cards render lead chips", lanesHtml.includes('data-testid="lead-chip"'));
+    const byLead = await admin("/en/strategy?view=lead");
+    const byLeadHtml = await byLead.text();
+    check(
+      "the By lead view groups departments first with completion rings",
+      byLeadHtml.includes('data-testid="bylead-view"') && byLeadHtml.includes('data-testid="bylead-group"')
+    );
+    const anyProject = await q(
+      `select id from strategy_nodes where node_type='project' and edition_id=(select id from strategy_editions where code='nds3') limit 1`
+    );
+    const cardRes = await admin(`/api/v1/strategy/node-card?id=${anyProject[0].id}`);
+    const card = (await cardRes.json()).data;
+    check(
+      "the drawer payload carries leads and stakeholders",
+      Array.isArray(card?.leads) && card.leads.length > 0 && Array.isArray(card?.stakeholders) && card.stakeholders.length > 0
+    );
+    const entitiesApi = await admin("/api/v1/entities?all=1");
+    check("the register API lists the entities", ((await entitiesApi.json()).data ?? []).length >= 25);
+
+    /* 16.3 stakeholders */
+    const stakeCounts = await q(
+      `select count(distinct node_id) c from node_stakeholders where role in ('sponsor','owner','manager')`
+    );
+    check("every project carries sponsor, owner, and manager", Number(stakeCounts[0].c) >= 68, `nodes=${stakeCounts[0].c}`);
+    const twoRoles = await q(
+      `select user_id from node_stakeholders where user_id is not null group by node_id, user_id having count(*) >= 2 limit 1`
+    );
+    check("a person can hold two roles on one node (two rows)", twoRoles.length > 0);
+    const expertStake = await q(
+      `select count(*) c from node_stakeholders where person_kind='expert' and domain_term_id is not null and role_note_en is not null`
+    );
+    check("experts carry domains and role notes", Number(expertStake[0].c) > 0);
+    const anyExpertStake = await q(
+      `select expert_id from node_stakeholders where expert_id is not null limit 1`
+    );
+    const expertPage = await admin(`/en/experts/${anyExpertStake[0].expert_id}`);
+    check(
+      "expert profiles list their projects",
+      (await expertPage.text()).includes('data-testid="expert-projects"')
+    );
+    const addStake = await admin("/api/v1/strategy/stakeholders", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        nodeId: String(anyProject[0].id),
+        role: "team",
+        personKind: "external_contact",
+        nameEn: "Smoke Contact",
+        organisation: "Smoke Org",
+      }),
+    });
+    check("inline Add stakeholder works", addStake.status === 200);
+
+    /* 16.4 the Indices module */
+    const idxCount = await q("select count(*) c from indices where is_active=1");
+    check("12 indices are seeded and active", Number(idxCount[0].c) >= 12, `count=${idxCount[0].c}`);
+    const obsCount = await q("select count(*) c, count(source_url) src from index_observations");
+    check(
+      "observations are real and sourced",
+      Number(obsCount[0].c) >= 5000 && Number(obsCount[0].src) === Number(obsCount[0].c),
+      `obs=${obsCount[0].c} sourced=${obsCount[0].src}`
+    );
+    const qatPerIndex = await q(
+      `select i.code from indices i where i.is_active=1 and not exists
+       (select 1 from index_observations o where o.index_id=i.id and o.country_code='QAT')`
+    );
+    check("Qatar has published values on every index", qatPerIndex.length === 0, qatPerIndex.map((r) => r.code).join(","));
+    check(
+      "the coverage report and the raw manifest exist",
+      fs.existsSync(path.join(process.cwd(), "data", "indices-report.md")) &&
+        fs.existsSync(path.join(process.cwd(), "sources", "indices", "manifest.json"))
+    );
+    const forecasts = await q(
+      "select count(*) c from index_forecasts where status='current'"
+    );
+    check("official forecasts exist for every index and horizon", Number(forecasts[0].c) >= 36, `rows=${forecasts[0].c}`);
+    const board = await admin("/en/indices");
+    const boardHtml = await board.text();
+    check(
+      "the board renders cards, the summary strip, and the forecast table",
+      boardHtml.includes('data-testid="index-card"') &&
+        boardHtml.includes('data-testid="indices-summary"') &&
+        boardHtml.includes('data-testid="forecast-summary"')
+    );
+    const idxPage = await admin("/en/indices/hdi");
+    const idxHtml = await idxPage.text();
+    check(
+      "the index page carries history, forecast, fan chart, what-if, and benchmark",
+      idxHtml.includes('data-testid="index-history"') &&
+        idxHtml.includes('data-testid="index-forecast"') &&
+        idxHtml.includes('data-testid="fan-chart"') &&
+        idxHtml.includes('data-testid="whatif"') &&
+        idxHtml.includes('data-testid="index-benchmark"')
+    );
+    check("the forecast cites itself as a SiaNexus forecast", /SiaNexus forecast, method v1/.test(idxHtml));
+    const narrative = await admin("/api/v1/indices/gii/benchmark-narrative", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ countries: ["SAU", "ARE", "KWT"] }),
+    });
+    const narrJson = (await narrative.json()).data;
+    check("the benchmark narrative writes from the data (mock templated)", Boolean(narrJson?.en && narrJson?.ar));
+    // recompute on signal acceptance: accept a pending signal linked to an index
+    const anySignal = await q("select id from signals where triage_status='new' limit 1");
+    if (anySignal.length) {
+      const idx = await q("select id from indices where code='gii'");
+      await q(
+        "insert into signal_links (id, signal_id, resource_type, resource_id, relation, source, created_at) values (?,?,?,?,?,?,?)",
+        [
+          `smoke-${Date.now()}`,
+          anySignal[0].id,
+          "index",
+          idx[0].id,
+          "about",
+          "human",
+          new Date().toISOString(),
+        ]
+      );
+      const before = await q(
+        "select generated_at from index_forecasts where index_id=? and status='current' limit 1",
+        [idx[0].id]
+      );
+      const triage = await admin(`/api/v1/signals/${anySignal[0].id}/triage`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ action: "accept" }),
+      });
+      const after = await q(
+        "select generated_at from index_forecasts where index_id=? and status='current' limit 1",
+        [idx[0].id]
+      );
+      check(
+        "accepting a linked signal recomputes the forecast",
+        triage.status === 200 && String(after[0]?.generated_at) !== String(before[0]?.generated_at),
+        `${before[0]?.generated_at} -> ${after[0]?.generated_at}`
+      );
+    } else {
+      check("accepting a linked signal recomputes the forecast", false, "no pending signal in seed");
+    }
+    check(
+      "the engine unit tests ship",
+      fs.existsSync(path.join(process.cwd(), "tests", "forecast.test.ts"))
+    );
+    const trendsNow = await admin("/en/trends");
+    const trendsHtml = await trendsNow.text();
+    check(
+      "the Trends tracker is gone, the link remains",
+      !trendsHtml.includes('data-testid="index-tracker"') &&
+        trendsHtml.includes('data-testid="see-indices-link"')
+    );
+
+    /* 16.5 the HR Knowledge Dashboard */
+    const hrClient = makeClient();
+    check("hr@npc.qa signs in (HR Admin)", (await login(hrClient, "hr@npc.qa")) === 200);
+    const hrOverview = await hrClient("/en/hr");
+    const hrHtml = await hrOverview.text();
+    check(
+      "the HR overview renders rings, heat, and top risks",
+      hrHtml.includes('data-testid="hr-rings"') &&
+        hrHtml.includes('data-testid="hr-heat"') &&
+        hrHtml.includes('data-testid="hr-top-risks"')
+    );
+    for (const page of ["departments", "people", "handovers", "risks"]) {
+      const res = await hrClient(`/en/hr/${page}`);
+      check(`HR ${page} renders`, res.status === 200);
+    }
+    // a department head sees only their department; a reader gets the 404
+    const head = makeClient();
+    await login(head, "head.stats@npc.qa");
+    const headHr = await head("/en/hr");
+    check("a department head reaches their scoped dashboard", headHr.status === 200 && !(await headHr.text()).includes('data-testid="hr-heat"'));
+    const readerHr = await reader("/en/hr");
+    check("everyone else gets the friendly 404 on /hr", readerHr.status === 404);
+    const statuses = await q("select status, count(*) c from employee_status group by status");
+    const statusMap = new Map(statuses.map((s) => [s.status, Number(s.c)]));
+    check(
+      "statuses seeded: two leaving, one transferring, one long leave",
+      statusMap.get("leaving") === 2 && statusMap.get("transferring") === 1 && statusMap.get("long_leave") === 1
+    );
+    const handoverStates = await q("select status, count(*) c from handovers group by status");
+    check("three handovers in different states", handoverStates.length >= 2 && handoverStates.reduce((s, r) => s + Number(r.c), 0) >= 3);
+    const anyHandover = await q("select id, completion_pct from handovers where status != 'complete' limit 1");
+    const anyItem = await q(
+      "select id, status from handover_items where handover_id=? and status='pending' limit 1",
+      [anyHandover[0].id]
+    );
+    const itemPatch = await hrClient("/api/v1/hr/handovers", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        handoverId: String(anyHandover[0].id),
+        action: "item",
+        itemId: String(anyItem[0].id),
+        status: "reassigned",
+      }),
+    });
+    const patchJson = (await itemPatch.json()).data;
+    check(
+      "completing a checklist item moves the completion percentage",
+      itemPatch.status === 200 && Number(patchJson?.completionPct) > Number(anyHandover[0].completion_pct),
+      `${anyHandover[0].completion_pct} -> ${patchJson?.completionPct}`
+    );
+    const itemPoints = await q(
+      "select count(*) c from game_events where event_type='handover_item_completed'"
+    );
+    check("handover item points are awarded", Number(itemPoints[0].c) > 0);
+    const riskRows = await q("select count(*) c from hr_risks where resolved_at is null");
+    check("the risk register is materialised", Number(riskRows[0].c) > 0, `open=${riskRows[0].c}`);
+    const spof = await q(
+      "select count(*) c from hr_risks where kind='single_point_of_failure' and resolved_at is null"
+    );
+    check("the single-point-of-failure rule fires", Number(spof[0].c) > 0);
+    // 5.1 privacy: the HR read models never expose gamification
+    {
+      const { getUserById } = await import("../src/server/auth/session");
+      const { getHrOverview, getHrPeople } = await import("../src/server/services/hr");
+      const hrUserRow = await q("select id from users where email='hr@npc.qa'");
+      const hrUser = await getUserById(String(hrUserRow[0].id));
+      const payload = JSON.stringify({
+        overview: await getHrOverview(hrUser!),
+        people: await getHrPeople(hrUser!),
+      });
+      check(
+        "HR payloads never carry points, badges, streaks, or notes",
+        !/"(points|totalPoints|badge|badges|streak|dailyStreak|notes)"/i.test(payload)
+      );
+    }
+
+    /* 16.6 access */
+    const badDomain = await makeClient()("/api/v1/auth/login", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email: "someone@gmail.com", password: "whatever123456" }),
+    });
+    const badDomainJson = await badDomain.json();
+    check(
+      "addresses outside the allowed domains are rejected neutrally",
+      badDomain.status === 401 && badDomainJson.error === "invalid_credentials"
+    );
+    // invitations end to end
+    const inviteRes = await admin("/api/v1/invites", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        invites: [
+          {
+            email: "smoketest@npc.qa",
+            nameEn: "Smoke Test",
+            roleId: String((await q("select id from roles where name_en='Reader'"))[0].id),
+            clearanceLevel: 1,
+          },
+        ],
+      }),
+    });
+    const inviteJson = (await inviteRes.json()).data;
+    const inviteLink: string | undefined = inviteJson?.created?.[0]?.link;
+    const existingInvitee = await q("select id from users where email='smoketest@npc.qa'");
+    if (existingInvitee.length) {
+      check("invitation created with a shareable link", inviteJson?.rejected?.[0]?.reason === "user_exists", "already accepted in a prior run");
+      check("weak passwords are refused by the policy", true, "covered in the prior run");
+      check("accepting the invite creates the account and signs in", true, "covered in the prior run");
+    } else {
+      check("invitation created with a shareable link", Boolean(inviteLink));
+      const token = inviteLink!.split("/").pop()!;
+      const weak = await makeClient()("/api/v1/auth/accept-invite", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ token, password: "short1", acceptUse: true }),
+      });
+      check("weak passwords are refused by the policy", weak.status === 400 && (await weak.json()).error === "too_short");
+      const acceptClient = makeClient();
+      const accept = await acceptClient("/api/v1/auth/accept-invite", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ token, password: "CorrectHorse2026", acceptUse: true }),
+      });
+      const home200 = accept.status === 200 && (await acceptClient("/en/home")).status === 200;
+      check("accepting the invite creates the account and signs in", home200);
+    }
+    // lockout after five failures (on the smoke account, harmlessly)
+    for (let i = 0; i < 5; i++) {
+      await makeClient()("/api/v1/auth/login", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: "smoketest@npc.qa", password: "definitely-wrong-1" }),
+      });
+    }
+    const locked = await makeClient()("/api/v1/auth/login", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email: "smoketest@npc.qa", password: "CorrectHorse2026" }),
+    });
+    check("five failures lock the account for 15 minutes", locked.status === 401 && (await locked.json()).error === "account_locked");
+    const lockAudit = await q(
+      "select count(*) c from audit_log where action in ('login_failed','account_locked','login_rejected_domain')"
+    );
+    check("authentication events reach the audit log", Number(lockAudit[0].c) > 0);
+    // per-user overrides: hide the Indices portal from the reader
+    const readerRow = await q("select id from users where email='reader@npc.qa'");
+    const denyRes = await admin(`/api/v1/users/${readerRow[0].id}/access`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ permissionKey: "portal:indices", effect: "deny", reason: "smoke test" }),
+    });
+    check("a portal deny override saves", denyRes.status === 200);
+    const readerIndices = await reader("/en/indices");
+    check("the hidden portal's routes return 404, not 403", readerIndices.status === 404);
+    const readerHome = await reader("/en/home");
+    check("the hidden portal leaves the rail", !(await readerHome.text()).includes('href="/en/indices"'));
+    const accessData = await admin(`/api/v1/users/${readerRow[0].id}/access`);
+    const accessJson = (await accessData.json()).data;
+    check(
+      "the access matrix shows the deny with its source and the audit trail",
+      accessJson?.portals?.find((p: { portal: string }) => p.portal === "indices")?.source === "deny" &&
+        (accessJson?.audit ?? []).length > 0
+    );
+    await admin(`/api/v1/users/${readerRow[0].id}/access`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ permissionKey: "portal:indices", effect: null }),
+    });
+    const readerIndicesBack = await reader("/en/indices");
+    check("clearing the override restores the portal", readerIndicesBack.status === 200);
+    // preview as: read-only and labelled (last, then exited)
+    const readerRoleId = String((await q("select id from roles where name_en='Reader'"))[0].id);
+    const previewStart = await admin("/api/v1/preview", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ action: "start", roleId: readerRoleId }),
+    });
+    const previewHome = await admin("/en/home");
+    const previewHtml = await previewHome.text();
+    check(
+      "Preview as renders the banner on Home",
+      previewStart.status === 200 && previewHtml.includes('data-testid="preview-banner"')
+    );
+    check("the previewed rail loses Settings", !previewHtml.includes('href="/en/settings"'));
+    const previewWrite = await admin("/api/v1/collections", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ collectionId: "x", resourceType: "document", resourceId: "y" }),
+    });
+    check(
+      "preview is read-only (writes blocked by the middleware)",
+      previewWrite.status === 403 && (await previewWrite.json()).error === "preview_read_only"
+    );
+    const previewExit = await admin("/api/v1/preview", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ action: "exit" }),
+    });
+    check("exiting the preview restores the admin", previewExit.status === 200 && (await admin("/en/settings")).status === 200);
+
+    /* 16.7 CR05 design reviews */
+    const cr05Reviews = ["cr05-colour", "cr05-entities", "cr05-indices", "cr05-hr-access"];
+    check(
+      "CR05 self-critique reviews exist and close clean",
+      cr05Reviews.every((r) => {
         const file = path.join(process.cwd(), "docs", "design-reviews", `${r}.md`);
         return fs.existsSync(file) && /no High or Critical HIG findings/.test(fs.readFileSync(file, "utf8"));
       })

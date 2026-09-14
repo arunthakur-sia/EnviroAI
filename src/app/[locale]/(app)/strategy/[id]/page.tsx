@@ -12,7 +12,7 @@ export default async function NodePage({
   searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>;
-  searchParams: Promise<{ view?: string; o?: string; t?: string; i?: string; p?: string }>;
+  searchParams: Promise<{ view?: string; o?: string; t?: string; i?: string; p?: string; l?: string }>;
 }) {
   const { locale, id } = await params;
   const sp = await searchParams;
@@ -24,7 +24,7 @@ export default async function NodePage({
       locale,
       editionCode: id,
       view: sp.view,
-      canvasState: { o: sp.o, t: sp.t, i: sp.i, p: sp.p },
+      canvasState: { o: sp.o, t: sp.t, i: sp.i, p: sp.p, l: sp.l },
     });
   }
 

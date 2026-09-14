@@ -16,11 +16,10 @@ import {
 } from "@/server/services/signals";
 import { outcomeNodeMap } from "@/server/scan/extract";
 import { Reveal } from "@/components/motion";
-import { bi } from "@/lib/utils";
 import { formatDate } from "@/lib/format";
-import { Chip, SectionTitle } from "@/components/ui/primitives";
+import { SectionTitle } from "@/components/ui/primitives";
 import { Link } from "@/i18n/navigation";
-import { Radar } from "lucide-react";
+import { Globe2 } from "lucide-react";
 import { ReportButton } from "@/components/nexus/ReportButton";
 import { RiskHeatmap } from "../foresight/RiskHeatmap";
 import { ForesightForms } from "../foresight/ForesightForms";
@@ -77,7 +76,7 @@ export default async function TrendsPage({
   if (!user) redirect(`/${locale}/login`);
   const t = await getTranslations("trends");
 
-  const [signals, risks, rankings, lastRun] = await Promise.all([
+  const [signals, risks, lastRun] = await Promise.all([
     listSignals(user, {
       outcome: sp.outcome,
       type: sp.type,
@@ -91,13 +90,9 @@ export default async function TrendsPage({
       limit: 120,
     }),
     db.select().from(schema.risks).limit(20),
-    db.select().from(schema.indexRankings).orderBy(schema.indexRankings.indexNameEn),
     lastScanInfo(),
   ]);
-  const [riskCounts, rankingCounts] = await Promise.all([
-    relatedSignalCounts("risk", risks.map((r) => r.id)),
-    relatedSignalCounts("ranking", rankings.map((r) => r.id)),
-  ]);
+  const riskCounts = await relatedSignalCounts("risk", risks.map((r) => r.id));
 
   const board = await toBoardSignals(signals);
   // the radar shows accepted signals of the last 180 days (CR03 3.2)
@@ -169,58 +164,15 @@ export default async function TrendsPage({
         />
       </div>
 
-      {/* Section 4: international index tracker (unchanged) */}
+      {/* CR05 4.1: the index tracker moved to its own module */}
       <div className="mt-10">
-        <SectionTitle>{t("indexTracker")}</SectionTitle>
-        <div className="card overflow-x-auto">
-          <table className="w-full min-w-[760px] text-sm">
-            <thead>
-              <tr className="bg-sand-50">
-                <th className="px-4 py-2.5 text-start text-xs font-semibold text-ink-600">{t("indexName")}</th>
-                <th className="px-4 py-2.5 text-start text-xs font-semibold text-ink-600">{t("publisher")}</th>
-                <th className="px-4 py-2.5 text-end text-xs font-semibold text-ink-600">{t("year")}</th>
-                <th className="px-4 py-2.5 text-end text-xs font-semibold text-ink-600">{t("rank")}</th>
-                <th className="px-4 py-2.5 text-end text-xs font-semibold text-ink-600">{t("outOf")}</th>
-                <th className="px-4 py-2.5 text-start text-xs font-semibold text-ink-600">{t("entity")}</th>
-                <th className="px-4 py-2.5 text-start text-xs font-semibold text-ink-600">{t("signalsCol")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rankings.map((r) => {
-                const count = rankingCounts.get(r.id) ?? 0;
-                return (
-                  <tr key={r.id} className="border-t border-sand-100">
-                    <td className="px-4 py-2.5 font-medium text-ink-900">
-                      {bi(locale, r.indexNameEn, r.indexNameAr)}
-                    </td>
-                    <td className="px-4 py-2.5 text-ink-600">{r.publisher}</td>
-                    <td className="px-4 py-2.5 text-end tnum">{r.year}</td>
-                    <td className="px-4 py-2.5 text-end font-semibold text-maroon-900 tnum">
-                      {r.rank ?? "-"}
-                    </td>
-                    <td className="px-4 py-2.5 text-end text-ink-600 tnum">{r.totalCountries ?? "-"}</td>
-                    <td className="px-4 py-2.5 text-xs text-ink-600">{r.responsibleEntity}</td>
-                    <td className="px-4 py-2.5">
-                      <span className="flex items-center gap-2">
-                        {count > 0 ? (
-                          <Link
-                            href={`/trends?rankingId=${r.id}` as never}
-                            className="inline-flex items-center gap-1 rounded-md bg-gulf-100 px-2 py-0.5 text-[11px] font-medium text-gulf-600 hover:bg-gulf-600 hover:text-white tnum"
-                          >
-                            <Radar className="size-3" /> {count}
-                          </Link>
-                        ) : (
-                          <span className="text-[11px] text-ink-600 tnum">0</span>
-                        )}
-                        {r.note?.includes("verify") ? <Chip tone="warn">{t("toVerify")}</Chip> : null}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <Link
+          href="/indices"
+          className="link-draw inline-flex items-center gap-1.5 text-sm font-medium text-maroon-700"
+          data-testid="see-indices-link"
+        >
+          <Globe2 className="size-4" /> {t("seeIndices")}
+        </Link>
       </div>
     </Reveal>
   );

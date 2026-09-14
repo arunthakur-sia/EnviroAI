@@ -30,8 +30,8 @@ export async function renderNavigator({
   outcomeSlug?: string;
   targetSlug?: string;
   view?: string;
-  /* CR04 2.5: deep-link state from the query string */
-  canvasState?: { o?: string; t?: string; i?: string; p?: string };
+  /* CR04 2.5: deep-link state from the query string (CR05 adds l = lead) */
+  canvasState?: { o?: string; t?: string; i?: string; p?: string; l?: string };
 }) {
   const user = await getCurrentUser();
   if (!user) redirect(`/${locale}/login`);
@@ -81,12 +81,13 @@ export async function renderNavigator({
       <StrategyCanvas
         data={data}
         extras={extras}
-        initialView={view === "map" ? "map" : "canvas"}
+        initialView={view === "map" ? "map" : view === "lead" ? "lead" : "canvas"}
         initialState={{
           o: canvasState?.o ?? null,
           t: canvasState?.t ?? null,
           itemKind: canvasState?.i ? "i" : canvasState?.p ? "p" : null,
           item: canvasState?.i ?? canvasState?.p ?? null,
+          lead: canvasState?.l ?? null,
         }}
       />
     </Reveal>

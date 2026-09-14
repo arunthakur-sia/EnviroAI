@@ -16,8 +16,19 @@ export async function GET(req: NextRequest) {
   const id = req.nextUrl.searchParams.get("id") ?? "";
   const detail = await getNodeDetail(user, id);
   if (!detail) return NextResponse.json({ data: null, error: "not_found" }, { status: 404 });
-  const { node, kpis, kpiValues, updates, linkedExperts, lessons, lineage, lineageNodes, editions } =
-    detail;
+  const {
+    node,
+    leads,
+    stakeholders,
+    kpis,
+    kpiValues,
+    updates,
+    linkedExperts,
+    lessons,
+    lineage,
+    lineageNodes,
+    editions,
+  } = detail;
 
   const isDeliveryNode = node.nodeType === "initiative" || node.nodeType === "project";
   const deliverables = isDeliveryNode ? await listDeliverables(user, id) : [];
@@ -42,11 +53,14 @@ export async function GET(req: NextRequest) {
         descriptionEn: node.descriptionEn,
         descriptionAr: node.descriptionAr,
         status: node.status,
-        ownerEntityName: node.ownerEntityName,
         budgetQar: node.budgetQar,
         startDate: node.startDate,
         endDate: node.endDate,
       },
+      /* CR05 2.2: lead chips in the header, supporting under them */
+      leads,
+      /* CR05 3.2: the stakeholder section at the end of the drawer */
+      stakeholders,
       kpis: kpis.map((k) => ({
         id: k.id,
         nameEn: k.nameEn,

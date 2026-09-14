@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { and, eq, isNull, sql } from "drizzle-orm";
 import { getCurrentUser } from "@/server/auth/session";
-import { can } from "@/server/auth/permissions";
+import { can, visiblePortals } from "@/server/auth/permissions";
 import { db, schema } from "@/server/db/client";
 import { getAiSettings } from "@/server/settings";
 import { anthropicKeyPresent } from "@/server/ai/client";
@@ -44,6 +44,7 @@ export default async function AppLayout({
     ? (points - (current?.minPoints ?? 0)) / (next.minPoints - (current?.minPoints ?? 0))
     : 1;
 
+  const portals = visiblePortals(user);
   const shellUser: ShellUser = {
     id: user.id,
     nameEn: user.nameEn,
@@ -51,7 +52,9 @@ export default async function AppLayout({
     email: user.email,
     avatarColor: user.avatarColor,
     departmentCode: user.department?.code ?? null,
-    canSettings: can(user, "manage", "settings") || can(user, "read", "analytics"),
+    canSettings:
+      portals.includes("settings") &&
+      (can(user, "manage", "settings") || can(user, "read", "analytics")),
     canUpload: can(user, "create", "vault"),
     levelProgress: Math.min(1, Math.max(0, levelProgress)),
     levelName:
@@ -59,6 +62,10 @@ export default async function AppLayout({
     points,
     quietMode: user.quietMode === 1,
     clearance: user.clearanceLevel,
+    /* CR05 6.1: the rail carries only visible portals */
+    portals,
+    /* CR05 6.4: the read-only preview banner */
+    previewLabel: user.previewing?.label ?? null,
   };
 
   const aiMock = aiSettings.mockMode || !anthropicKeyPresent();

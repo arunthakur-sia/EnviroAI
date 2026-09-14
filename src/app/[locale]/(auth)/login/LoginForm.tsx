@@ -23,7 +23,10 @@ export function LoginForm() {
         body: JSON.stringify({ email, password }),
       });
       if (!res.ok) {
-        setError(t("invalidCredentials"));
+        const json = await res.json().catch(() => null);
+        setError(
+          json?.error === "account_locked" ? t("accountLocked") : t("invalidCredentials")
+        );
         return;
       }
       router.push("/home");
