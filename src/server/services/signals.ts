@@ -249,6 +249,18 @@ export async function convertSignal(
       createdAt: nowIso(),
       updatedAt: nowIso(),
     });
+    // CR07 1.2: a converted signal's node becomes the lesson's primary link
+    if (nodeId) {
+      await db.insert(schema.lessonNodeLinks).values({
+        id: newId(),
+        lessonId: resourceId,
+        nodeId,
+        nodeKind: "nds",
+        isPrimary: 1,
+        linkedBy: user.id,
+        linkedAt: nowIso(),
+      });
+    }
     await record({
       userId: user.id,
       type: "lesson_published",

@@ -29,7 +29,18 @@ export type ReportChart = {
 };
 
 export type ReportScopeInput = {
-  kind: "signals" | "lessons" | "vault" | "node" | "ask" | "podcast" | "collection" | "indices" | "hr";
+  kind:
+    | "signals"
+    | "lessons"
+    | "vault"
+    | "node"
+    | "ask"
+    | "podcast"
+    | "collection"
+    | "indices"
+    | "hr"
+    /* CR07 2.5: any level of the Council Strategy */
+    | "council_node";
   ids: string[];
   labelEn: string;
   labelAr: string;
@@ -288,6 +299,96 @@ export async function gatherReportItems(
               .map((v) => ({ period: v.period, value: v.actualValue! })),
             target: k.targetValue,
           });
+        }
+      }
+    }
+  } else if (scope.kind === "council_node") {
+    /* CR07 2.5: Extract report on any council level. The whole module is
+       Internal, so the report carries classification 2 and the footer says so
+       through the normal classification line. */
+    const [root] = scope.ids.length
+      ? await db
+          .select()
+          .from(schema.councilNodes)
+          .where(eq(schema.councilNodes.id, scope.ids[0]))
+          .limit(1)
+      : [];
+    if (root) {
+      const all = await db
+        .select()
+        .from(schema.councilNodes)
+        .where(eq(schema.councilNodes.strategyId, root.strategyId));
+      const childrenOf = new Map<string | null, typeof all>();
+      for (const n of all) {
+        (childrenOf.get(n.parentId) ?? childrenOf.set(n.parentId, []).get(n.parentId)!).push(n);
+      }
+      const subtree: typeof all = [root];
+      const stack = [root.id];
+      while (stack.length) {
+        const cur = stack.pop()!;
+        for (const c of childrenOf.get(cur) ?? []) {
+          subtree.push(c);
+          stack.push(c.id);
+        }
+      }
+      const units = await db.select().from(schema.orgUnits);
+      const unitById = new Map(units.map((u) => [u.id, u]));
+      for (const n of subtree.slice(0, 30)) {
+        const unit = n.ownerUnitId ? unitById.get(n.ownerUnitId) : null;
+        items.push({
+          type: "node",
+          id: n.id,
+          titleEn: `${n.code ? n.code + " " : ""}${n.titleEn}`,
+          titleAr: `${n.code ? n.code + " " : ""}${n.titleAr}`,
+          date: n.updatedAt,
+          metaEn: `Internal · ${n.level} · ${n.status}${unit ? ` · ${unit.nameEn}` : ""}`,
+          metaAr: `داخلي · ${n.level} · ${n.status}${unit ? ` · ${unit.nameAr}` : ""}`,
+          textEn: n.descriptionEn ?? "",
+          textAr: n.descriptionAr ?? "",
+          outcomeCodes: [],
+        });
+      }
+      // the indicator charts of the subtree
+      const indicators = await db
+        .select()
+        .from(schema.councilIndicators)
+        .where(inArray(schema.councilIndicators.nodeId, subtree.map((n) => n.id)))
+        .limit(6);
+      for (const indicator of indicators) {
+        const values = await db
+          .select()
+          .from(schema.councilIndicatorValues)
+          .where(eq(schema.councilIndicatorValues.indicatorId, indicator.id))
+          .orderBy(schema.councilIndicatorValues.period);
+        if (values.length >= 2) {
+          charts.push({
+            labelEn: indicator.nameEn,
+            labelAr: indicator.nameAr,
+            unit: indicator.unit,
+            points: values
+              .filter((v) => v.actualValue != null)
+              .map((v) => ({ period: v.period, value: v.actualValue! })),
+            target: null,
+          });
+        }
+      }
+      if (options.includeLessons) {
+        const links = await db
+          .select()
+          .from(schema.lessonNodeLinks)
+          .where(inArray(schema.lessonNodeLinks.nodeId, subtree.map((n) => n.id)));
+        if (links.length) {
+          const lessonsRows = await db
+            .select()
+            .from(schema.lessons)
+            .where(
+              and(
+                inArray(schema.lessons.id, links.map((l) => l.lessonId)),
+                sql`${schema.lessons.classificationLevel} <= ${user.clearanceLevel}`
+              )
+            )
+            .limit(15);
+          for (const l of lessonsRows) items.push(lessonItem(l));
         }
       }
     }

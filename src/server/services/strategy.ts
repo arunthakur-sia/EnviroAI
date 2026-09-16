@@ -1,5 +1,5 @@
 import { cache as reactCache } from "react";
-import { and, asc, desc, eq, gte, inArray, or } from "drizzle-orm";
+import { and, asc, desc, eq, gte, inArray, or, sql } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import type { CurrentUser } from "@/server/auth/session";
 import { can } from "@/server/auth/permissions";
@@ -711,6 +711,8 @@ export type CanvasExtras = {
   >;
   /* CR06: the four outcome stakeholder groups replace the CR04 expert chips */
   outcomeStakeholders: Record<string, OutcomeStakeholders>;
+  /* CR07 1.3: lessons rolled up per outcome and per target, by node id */
+  lessonCounts: Record<string, { direct: number; inherited: number; total: number }>;
   signalsCount: Record<string, number>;
   outcomeTax: Record<string, string>; // node code -> outcome taxonomy code
   chapters: Record<string, ChapterInfo>;
@@ -1011,6 +1013,26 @@ export async function getCanvasExtras(editionId: string): Promise<CanvasExtras> 
     if (groups) outcomeStakeholders[outcome.code] = groups;
   }
 
+  /* CR07 1.3: the lesson chip on outcomes and targets counts everything
+     beneath them, not just what is linked to the level itself */
+  const { lessonCountsFor } = await import("./lesson-links");
+  const targetIds = (
+    await db
+      .select({ id: schema.strategyNodes.id })
+      .from(schema.strategyNodes)
+      .where(
+        and(
+          eq(schema.strategyNodes.editionId, editionId),
+          eq(schema.strategyNodes.nodeType, "target")
+        )
+      )
+  ).map((t) => t.id);
+  const countsMap = await lessonCountsFor([...outcomeIds, ...targetIds]);
+  const lessonCounts: CanvasExtras["lessonCounts"] = {};
+  for (const [nodeId, counts] of countsMap) {
+    if (counts.total > 0) lessonCounts[nodeId] = counts;
+  }
+
   // accepted signals per outcome
   const links = outcomeIds.length
     ? await db
@@ -1033,7 +1055,15 @@ export async function getCanvasExtras(editionId: string): Promise<CanvasExtras> 
     ).size;
   }
 
-  return { pillars, kpiTiles, outcomeStakeholders, signalsCount, outcomeTax, chapters };
+  return {
+    pillars,
+    kpiTiles,
+    outcomeStakeholders,
+    lessonCounts,
+    signalsCount,
+    outcomeTax,
+    chapters,
+  };
 }
 
 export async function getNodeDetail(user: CurrentUser, nodeId: string) {
@@ -1135,18 +1165,56 @@ export async function getNodeDetail(user: CurrentUser, nodeId: string) {
       }
     }
   }
+  /* CR07 1.3: the tab lists the lessons linked to this node first, then the
+     ones inherited from everything beneath it, each naming where it came
+     from. The relations table still carries a few CR01-era lesson links, so
+     those are folded in as direct. */
+  const { getLessonsForNode } = await import("./lesson-links");
+  const nodeLessons = await getLessonsForNode(user, nodeId);
   const relLessonIds = rels
     .filter((r) => r.fromType === "lesson" && r.toType === "node" && r.toId === nodeId)
     .map((r) => r.fromId);
-  const lessonConds = [inArray(schema.lessons.nodeId, [nodeId, ...descendantIds])];
-  if (relLessonIds.length) lessonConds.push(inArray(schema.lessons.id, relLessonIds));
-  const lessons = await db
-    .select()
-    .from(schema.lessons)
-    .where(or(...lessonConds))
-    .orderBy(desc(schema.lessons.createdAt))
-    .limit(30);
-  const lessonsAggregated = descendantIds.length > 0;
+  const known = new Set([
+    ...nodeLessons.direct.map((l) => l.lessonId),
+    ...nodeLessons.inherited.map((l) => l.lessonId),
+  ]);
+  const extraIds = relLessonIds.filter((id) => !known.has(id));
+  const extra = extraIds.length
+    ? await db
+        .select()
+        .from(schema.lessons)
+        .where(
+          and(
+            inArray(schema.lessons.id, extraIds),
+            sql`${schema.lessons.classificationLevel} <= ${user.clearanceLevel}`
+          )
+        )
+        .limit(10)
+    : [];
+  const lessonIds = [
+    ...nodeLessons.direct.map((l) => l.lessonId),
+    ...nodeLessons.inherited.map((l) => l.lessonId),
+    ...extra.map((l) => l.id),
+  ].slice(0, 30);
+  const lessonRows = lessonIds.length
+    ? await db.select().from(schema.lessons).where(inArray(schema.lessons.id, lessonIds))
+    : [];
+  const lessonById = new Map(lessonRows.map((l) => [l.id, l]));
+  const originOf = new Map(
+    nodeLessons.inherited.map((l) => [
+      l.lessonId,
+      { code: l.originCode, titleEn: l.originEn, titleAr: l.originAr },
+    ])
+  );
+  const lessons = lessonIds
+    .map((id) => lessonById.get(id))
+    .filter((l): l is NonNullable<typeof l> => Boolean(l))
+    .map((l) => ({ ...l, inheritedFrom: originOf.get(l.id) ?? null }));
+  const lessonCounts = {
+    direct: nodeLessons.direct.length + extra.length,
+    inherited: nodeLessons.inherited.length,
+  };
+  const lessonsAggregated = lessonCounts.inherited > 0;
 
   const deps = await db
     .select()
@@ -1202,6 +1270,7 @@ export async function getNodeDetail(user: CurrentUser, nodeId: string) {
     linkedExperts,
     lessons,
     lessonsAggregated,
+    lessonCounts,
     deps,
     depNodes,
     lineage,

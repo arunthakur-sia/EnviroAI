@@ -11,6 +11,7 @@ import { getAiSettings } from "@/server/settings";
 import { whatChanged } from "@/server/ai";
 import { listSignals } from "@/server/services/signals";
 import { loadLeadsFor, getOutcomeStakeholders } from "@/server/services/strategy";
+import { CR07_TOOLS } from "./tools-cr07";
 
 /* ------------------------------------------------------------------ */
 /* Loop state: sources registry + workspace accumulation               */
@@ -1720,6 +1721,8 @@ export const TOOL_DEFINITIONS = [
       "Knowledge continuity from the HR dashboard: readiness and continuity scores, risk counts, department heat, and top risks. Only for users who can see the HR portal; never returns points or badges.",
     input_schema: { type: "object" as const, properties: {} },
   },
+  // CR07 2.5 and 3.7: the Council Strategy, the Organisation, lesson roll-up
+  ...CR07_TOOLS,
 ];
 
 /* CR05 6.1: tools whose portal must be visible for the user. */
@@ -1738,6 +1741,16 @@ const TOOL_PORTAL: Record<string, string> = {
   get_lessons: "lessons",
   get_lesson_themes: "lessons",
   get_signals: "trends",
+  // CR07 2.5 and 3.7
+  query_council_strategy: "council",
+  get_council_node: "council",
+  get_council_indicator: "council",
+  get_council_scorecard: "council",
+  get_council_alignment: "council",
+  get_org_unit: "organisation",
+  query_org: "organisation",
+  get_unit_policies: "organisation",
+  get_lessons_for_node: "lessons",
 };
 
 export async function runTool(
@@ -1794,8 +1807,12 @@ export async function runTool(
         return await toolBenchmarkIndex(ctx, input as never);
       case "get_hr_continuity":
         return await toolGetHrContinuity(ctx);
-      default:
-        return `Unknown tool ${name}.`;
+      default: {
+        // CR07: the Council Strategy, Organisation and lesson roll-up tools
+        const { runCr07Tool } = await import("./tools-cr07");
+        const result = await runCr07Tool(ctx, name, input);
+        return result ?? `Unknown tool ${name}.`;
+      }
     }
   } catch (e: any) {
     return `Tool ${name} failed: ${String(e?.message ?? e).slice(0, 200)}`;

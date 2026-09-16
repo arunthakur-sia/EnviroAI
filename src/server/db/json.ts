@@ -34,6 +34,10 @@ export const MODULES = [
   "settings",
   "analytics",
   "gamification",
+  // CR07: the Council Strategy and the Organisation are their own modules so
+  // editing rights can be granted without opening the whole strategy module
+  "council",
+  "organisation",
 ] as const;
 
 /* CR05 6.1: portals are the top-level modules in the rail, in rail order. */
@@ -41,6 +45,8 @@ export const PORTALS = [
   "home",
   "vault",
   "strategy",
+  // CR07 2.1: the Council's own strategy sits directly under the Living Strategy
+  "council",
   "statistics",
   "indices",
   "trends",
@@ -48,6 +54,8 @@ export const PORTALS = [
   "lessons",
   "podcast",
   "experts",
+  // CR07 3.1: the organisation structure sits under Experts
+  "organisation",
   "hr",
   "settings",
 ] as const;

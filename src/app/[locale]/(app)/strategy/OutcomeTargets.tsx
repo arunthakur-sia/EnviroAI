@@ -7,11 +7,11 @@
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { ArrowLeft, ArrowRight, FileStack, Link as LinkIcon } from "lucide-react";
+import { ArrowLeft, ArrowRight, FileStack, Lightbulb, Link as LinkIcon } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { cn, bi } from "@/lib/utils";
 import { formatNumber } from "@/lib/format";
-import { Chip, ProgressRing, RagDot } from "@/components/ui/primitives";
+import { Chip, ProgressRing, RagDot, Skeleton } from "@/components/ui/primitives";
 import { LeadChips } from "@/components/nexus/LeadChips";
 import type { NavigatorData, NavItem, NavTarget } from "@/server/services/strategy";
 
@@ -123,6 +123,90 @@ export function Lane({
   );
 }
 
+/* CR07 1.3: the lessons of a target and everything beneath it, grouped by the
+   node each one came from, loaded when the target opens rather than with the
+   page so the canvas payload stays small. */
+function TargetLessons({ nodeId, locale }: { nodeId: string; locale: string }) {
+  const t = useTranslations("strategy");
+  const [rows, setRows] = React.useState<
+    | {
+        direct: { lessonId: string; titleEn: string; titleAr: string; originEn: string; originAr: string; originCode: string | null }[];
+        inherited: { lessonId: string; titleEn: string; titleAr: string; originEn: string; originAr: string; originCode: string | null }[];
+      }
+    | null
+  >(null);
+
+  React.useEffect(() => {
+    let alive = true;
+    setRows(null);
+    fetch("/api/v1/lessons/links", {
+      method: "PUT",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ nodeId }),
+    })
+      .then((r) => r.json())
+      .then((j) => {
+        if (alive && j.data) setRows(j.data);
+      })
+      .catch(() => {
+        /* the chip already said how many there are */
+      });
+    return () => {
+      alive = false;
+    };
+  }, [nodeId]);
+
+  if (!rows) {
+    return (
+      <div className="mt-4 flex flex-col gap-2" aria-busy>
+        <Skeleton className="h-3 w-40" />
+        <Skeleton className="h-3 w-64" />
+      </div>
+    );
+  }
+  const all = [...rows.direct, ...rows.inherited];
+  if (!all.length) return null;
+  // group by the node the lesson is actually linked to
+  const groups = new Map<string, { label: string; lessons: typeof all }>();
+  for (const row of all) {
+    const label = `${row.originCode ? `${row.originCode} ` : ""}${bi(locale, row.originEn, row.originAr)}`;
+    const group = groups.get(label) ?? { label, lessons: [] };
+    group.lessons.push(row);
+    groups.set(label, group);
+  }
+
+  return (
+    <div className="mt-4 border-t border-sand-100 pt-3" data-testid="target-lessons">
+      <p
+        className="mb-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-600"
+        style={{ fontFamily: "inherit" }}
+      >
+        {t("lessonsRollup", { count: all.length })}
+      </p>
+      <div className="flex flex-col gap-2.5">
+        {[...groups.values()].map((group) => (
+          <div key={group.label}>
+            <p className="mb-1 truncate text-[11px] text-ink-400">{group.label}</p>
+            <ul className="flex flex-col gap-1">
+              {group.lessons.map((row) => (
+                <li key={row.lessonId}>
+                  <Link
+                    href={`/lessons?lesson=${row.lessonId}` as never}
+                    className="flex items-center gap-1.5 truncate text-xs text-ink-900 hover:text-maroon-700"
+                  >
+                    <Lightbulb className="size-3 shrink-0 text-gold-500" aria-hidden />
+                    <span className="truncate">{bi(locale, row.titleEn, row.titleAr)}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function TargetCard({
   target,
   items,
@@ -134,6 +218,7 @@ export function TargetCard({
   today,
   onOpenItem,
   copyLink,
+  lessonCount,
 }: {
   target: NavTarget;
   items: NavItem[];
@@ -146,6 +231,8 @@ export function TargetCard({
   onOpenItem?: (item: NavItem) => void;
   /** CR04 2.5: copy the deep link for this target */
   copyLink?: () => void;
+  /** CR07 1.3: lessons linked here and beneath */
+  lessonCount?: { direct: number; inherited: number; total: number } | null;
 }) {
   const t = useTranslations("strategy");
   const reduced = useReducedMotion();
@@ -196,6 +283,12 @@ export function TargetCard({
           <span className="ms-auto flex items-center gap-1.5">
             <Chip tone="sand">{t("hero.initiatives", { count: initiatives.length })}</Chip>
             <Chip tone="sand">{t("hero.projects", { count: projects.length })}</Chip>
+            {/* CR07 1.3: the lessons of this target and everything beneath it */}
+            {lessonCount?.total ? (
+              <Chip tone="gold" data-testid="target-lessons-chip">
+                {t("lessonsRollup", { count: lessonCount.total })}
+              </Chip>
+            ) : null}
           </span>
         </span>
         <span className="mt-1.5 block text-[15px] font-medium leading-snug text-ink-900">
@@ -266,6 +359,8 @@ export function TargetCard({
                 <Lane label={t("lanes.initiatives")} items={initiatives} locale={locale} today={today} onOpen={onOpenItem} />
                 <Lane label={t("lanes.projects")} items={projects} locale={locale} today={today} onOpen={onOpenItem} />
               </div>
+              {/* CR07 1.3: the rolled-up lessons, grouped by where they came from */}
+              {lessonCount?.total ? <TargetLessons nodeId={target.id} locale={locale} /> : null}
               <div className="mt-2 flex items-center justify-end gap-3">
                 {copyLink ? (
                   <button

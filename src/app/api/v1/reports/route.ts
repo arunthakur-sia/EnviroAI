@@ -10,7 +10,17 @@ import { audit } from "@/server/auth/audit";
 
 const Body = z.object({
   scope: z.object({
-    kind: z.enum(["signals", "lessons", "vault", "node", "ask", "podcast", "collection"]),
+    kind: z.enum([
+      "signals",
+      "lessons",
+      "vault",
+      "node",
+      "ask",
+      "podcast",
+      "collection",
+      // CR07 2.5: Extract report on any council level
+      "council_node",
+    ]),
     ids: z.array(z.string()).default([]),
     labelEn: z.string(),
     labelAr: z.string().default(""),

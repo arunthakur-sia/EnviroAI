@@ -2108,6 +2108,33 @@ async function main() {
     await seedCr06();
   }
 
+  /* ---------------- 12g. CR07: the organisation from npc.qa ---------------- */
+  console.log("-- CR07: the published organisation structure, policies, council strategy...");
+  {
+    // the two external sources; skippable with SKIP_CR07_FETCH=1 and harmless
+    // when sources/ already holds them
+    if (process.env.SKIP_CR07_FETCH !== "1") {
+      try {
+        const { execFile } = await import("node:child_process");
+        const { promisify } = await import("node:util");
+        await promisify(execFile)("npx", ["tsx", "scripts/fetch-cr07-sources.ts"], {
+          cwd: process.cwd(),
+          windowsHide: true,
+          maxBuffer: 1024 * 1024 * 32,
+          shell: true,
+        });
+      } catch (e) {
+        console.warn("cr07 source fetch failed, reusing sources/:", (e as Error)?.message);
+      }
+    }
+    const { seedCr07OrgAll } = await import("./cr07-org-seed");
+    await seedCr07OrgAll();
+    const { seedCr07Council } = await import("./cr07-council-seed");
+    await seedCr07Council();
+    const { seedCr07LessonLinks } = await import("./cr07-lessons-seed");
+    await seedCr07LessonLinks();
+  }
+
   /* ---------------- 13. report ---------------- */
   const lines = [
     "# Seed report",

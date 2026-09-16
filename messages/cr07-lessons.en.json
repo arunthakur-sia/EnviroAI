@@ -1,0 +1,50 @@
+{
+  "strategy": {
+    "lessonSplit": "{direct} linked here, {inherited} from the work beneath",
+    "inheritedFrom": "From {node}"
+  },
+  "lessons": {
+    "links": {
+      "title": "Linked to",
+      "add": "Link to project",
+      "primary": "Primary",
+      "makePrimary": "Make this the primary link",
+      "unlink": "Remove this link",
+      "linked": "Lesson linked.",
+      "unlinked": "Link removed.",
+      "primarySet": "Primary link updated.",
+      "alreadyLinked": "This lesson is already linked to that node.",
+      "notLinked": "Not linked to a project yet.",
+      "moreLinks": "{count, plural, one {# more link} other {# more links}}",
+      "internal": "Internal",
+      "storeNds": "National strategy",
+      "storeCouncil": "Council Strategy",
+      "searchPlaceholder": "Search by name or code",
+      "noMatches": "Nothing matched that search."
+    },
+    "picker": {
+      "storeNds": "National strategy",
+      "storeCouncil": "Council Strategy",
+      "searchPlaceholder": "Search projects and initiatives",
+      "noMatches": "Nothing matched that search.",
+      "notLinked": "Not linked to a project",
+      "allLinked": "Every lesson is linked to something.",
+      "noLessonsHere": "No lessons recorded here yet.",
+      "direct": "{count, plural, one {# lesson here} other {# lessons here}}",
+      "inherited": "{count, plural, one {# lesson from beneath} other {# lessons from beneath}}",
+      "fromNode": "From {node}",
+      "countTitle": "{direct} linked here, {total} including everything beneath",
+      "internal": "Internal",
+      "levels": {
+        "outcome": "Outcomes",
+        "target": "Targets",
+        "initiative": "Initiatives",
+        "project": "Projects",
+        "goal": "Strategic goals",
+        "intermediate_outcome": "Intermediate outcomes",
+        "output": "Outputs",
+        "activity": "Activities"
+      }
+    }
+  }
+}

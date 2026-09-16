@@ -76,6 +76,18 @@ export async function POST(req: NextRequest) {
     createdAt: nowIso(),
     updatedAt: nowIso(),
   });
+  // CR07 1.2: the node becomes the lesson's primary link
+  if (b.node_id) {
+    await db.insert(schema.lessonNodeLinks).values({
+      id: newId(),
+      lessonId: id,
+      nodeId: b.node_id,
+      nodeKind: "nds",
+      isPrimary: 1,
+      linkedBy: user.id,
+      linkedAt: nowIso(),
+    });
+  }
   // tags
   const codes = [...b.topic_codes, ...(b.outcome_code ? [b.outcome_code] : [])];
   if (codes.length) {

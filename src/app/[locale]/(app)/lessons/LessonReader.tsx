@@ -11,6 +11,7 @@ import { cn, bi } from "@/lib/utils";
 import { formatDate } from "@/lib/format";
 import { Avatar, Button, Chip } from "@/components/ui/primitives";
 import { CATEGORY_TONES } from "@/components/nexus/LessonCard";
+import { LessonLinksSection } from "@/components/nexus/LessonLinks";
 import { useToast } from "@/components/ui/toast";
 import type { RoomLesson } from "@/server/services/lessons";
 
@@ -62,6 +63,24 @@ export function LessonReader({
   const { listen, busyId } = useListen();
   const [both, setBoth] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
+  /* CR07 1.1.4: only the author, the node's owner and verifiers may link, so
+     the control asks the server rather than guessing from the payload */
+  const [canEditLinks, setCanEditLinks] = React.useState(false);
+  React.useEffect(() => {
+    let alive = true;
+    setCanEditLinks(false);
+    fetch(`/api/v1/lessons/links?lessonId=${encodeURIComponent(lesson.id)}`)
+      .then((r) => r.json())
+      .then((j) => {
+        if (alive) setCanEditLinks(Boolean(j.data?.canEdit));
+      })
+      .catch(() => {
+        /* read-only is the safe default */
+      });
+    return () => {
+      alive = false;
+    };
+  }, [lesson.id]);
 
   const field = (en: string | null, ar: string | null) =>
     both ? (
@@ -172,15 +191,18 @@ export function LessonReader({
           ) : null}
         </div>
 
-        {/* links + applied in */}
+        {/* CR07 1.3: every node this lesson links to, with the control to add
+            another, promote one to primary, or unlink */}
+        <div className="mt-4 border-t border-sand-100 pt-3.5">
+          <LessonLinksSection
+            lessonId={lesson.id}
+            links={lesson.links}
+            canEdit={canEditLinks}
+          />
+        </div>
+
+        {/* outcome, documents, author */}
         <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-sand-100 pt-3.5">
-          {lesson.nodeId && lesson.nodeCode ? (
-            <Link href={`/strategy/${lesson.nodeId}` as never}>
-              <Chip tone="sand" className="hover:bg-maroon-100 hover:text-maroon-900">
-                {lesson.nodeCode}
-              </Chip>
-            </Link>
-          ) : null}
           {lesson.outcomeNameEn ? (
             <Chip tone="maroon">{bi(locale, lesson.outcomeNameEn, lesson.outcomeNameAr ?? "")}</Chip>
           ) : null}

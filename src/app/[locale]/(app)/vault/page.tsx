@@ -147,7 +147,11 @@ export default async function VaultPage({
         key: "projects",
         labelEn: tShelves("shelves.projects"),
         labelAr: tShelvesAr("shelves.projects"),
-        count: deliverableDocs.length,
+        /* CR07: count the deliverables this shelf actually carries. Council
+           projects live in their own store and have their own deliverables,
+           which never appear here, so counting every deliverable document
+           would print a number the shelf does not show. */
+        count: projects.reduce((sum, p) => sum + p.docs.length, 0),
         docs: [],
         projects,
       });

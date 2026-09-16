@@ -27,7 +27,16 @@ export async function GET(req: NextRequest) {
 
 const Body = z.object({
   scope: z.object({
-    kind: z.enum(["node", "document", "collection", "lessons", "topic", "conversation"]),
+    // CR07 2.5 adds council_node: an episode from a council goal, output or project
+    kind: z.enum([
+      "node",
+      "document",
+      "collection",
+      "lessons",
+      "topic",
+      "conversation",
+      "council_node",
+    ]),
     ids: z.array(z.string()).default([]),
     labelEn: z.string(),
     labelAr: z.string().default(""),

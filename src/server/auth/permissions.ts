@@ -100,6 +100,10 @@ const PORTAL_OF_RESOURCE: Record<string, Portal> = {
   podcast_episode: "podcast",
   index: "indices",
   index_forecast: "indices",
+  // CR07
+  council_node: "council",
+  council_indicator: "council",
+  org_unit: "organisation",
 };
 
 export function hiddenResourceTypes(user: CurrentUser): Set<string> {
@@ -164,4 +168,48 @@ export function can(
 /** SQL-side clearance ceiling for list queries. */
 export function clearanceCeiling(user: CurrentUser | null): number {
   return user?.clearanceLevel ?? 1;
+}
+
+/* ------------------------------------------------------------------ */
+/* CR07 3.5: document visibility, decided by the owning unit head       */
+/* ------------------------------------------------------------------ */
+
+export type VisibilityFacts = {
+  visibilityScope?: string | null;
+  /** json array of user ids and role ids allowed under `restricted` */
+  visibilityAllowJson?: string | null;
+  /** the unit the document belongs to */
+  departmentId?: string | null;
+  ownerUserId?: string | null;
+  classificationLevel?: number | null;
+};
+
+/**
+ * Visibility sits ON TOP of the classification level: a document marked
+ * "All employees" but classified Confidential is still limited by clearance.
+ * Scopes: all_staff (everyone), unit_only (the unit and its head), restricted
+ * (the head, the Super Admin, and the named people or roles).
+ */
+export function canSeeDocument(user: CurrentUser | null, doc: VisibilityFacts): boolean {
+  if (!user) return false;
+  if ((doc.classificationLevel ?? 1) > user.clearanceLevel) return false;
+  const scope = doc.visibilityScope ?? "all_staff";
+  if (scope === "all_staff") return true;
+  if (doc.ownerUserId && doc.ownerUserId === user.id) return true;
+  // a Super Admin sees everything; the check rides on the manage-settings right
+  if (hasPermission(user, "settings", "manage")) return true;
+  if (scope === "unit_only") {
+    return Boolean(doc.departmentId) && doc.departmentId === user.departmentId;
+  }
+  if (scope === "restricted") {
+    let allow: string[] = [];
+    try {
+      const parsed = JSON.parse(doc.visibilityAllowJson ?? "[]");
+      if (Array.isArray(parsed)) allow = parsed.filter((x) => typeof x === "string");
+    } catch {
+      allow = [];
+    }
+    return allow.includes(user.id) || allow.includes(user.role.id);
+  }
+  return true;
 }

@@ -23,9 +23,11 @@ import { cn, bi, initialsOf } from "@/lib/utils";
 import { Avatar, Button, Chip, EmptyState, NativeSelect, RagDot } from "@/components/ui/primitives";
 import { CATEGORY_TONES } from "@/components/nexus/LessonCard";
 import { ReportButton } from "@/components/nexus/ReportButton";
+import { PrimaryNodeChip } from "@/components/nexus/LessonLinks";
 import type { LearningRoomData, RoomLesson, RoomTheme } from "@/server/services/lessons";
 import { LessonReader, useListen } from "./LessonReader";
 import { LearnMode } from "./LearnMode";
+import { ProjectPicker } from "./ProjectPicker";
 
 const CATEGORY_ORDER = ["delivery", "external", "expert", "institutional"] as const;
 
@@ -39,10 +41,13 @@ function RoomLessonCard({
   lesson,
   onOpen,
   wide = false,
+  inheritedFrom,
 }: {
   lesson: RoomLesson;
   onOpen: () => void;
   wide?: boolean;
+  /** CR07 1.3: set when the card is shown on a parent node */
+  inheritedFrom?: string;
 }) {
   const t = useTranslations("lessons");
   const locale = useLocale();
@@ -85,8 +90,14 @@ function RoomLessonCard({
       <span className="line-clamp-2 text-xs leading-relaxed text-ink-600">
         {firstSentence(bi(locale, lesson.learningEn ?? "", lesson.learningAr ?? ""))}
       </span>
-      <span className="mt-auto flex items-center gap-2 pt-1 text-[11px] text-ink-600">
-        {lesson.nodeCode ? <Chip tone="sand">{lesson.nodeCode}</Chip> : null}
+      {inheritedFrom ? (
+        <span className="truncate text-[11px] text-ink-400" title={inheritedFrom}>
+          {t("picker.fromNode", { node: inheritedFrom })}
+        </span>
+      ) : null}
+      <span className="mt-auto flex flex-wrap items-center gap-2 pt-1 text-[11px] text-ink-600">
+        {/* CR07 1.2: the primary link rides on the card, the rest count up */}
+        <PrimaryNodeChip links={lesson.links} />
         {lesson.reuseCount ? (
           <span className={cn("flex items-center gap-1 tnum", lesson.topReuse && "font-medium text-gold-500")}>
             <Recycle className="size-3" /> {lesson.reuseCount}
@@ -506,28 +517,20 @@ export function LearningRoom({
                   )}
                 </div>
               ) : browseTab === "projects" ? (
-                <div className="flex flex-col gap-2">
-                  {data.projects.slice(0, 10).map((p) => (
-                    <details key={p.id} className="card group/details overflow-hidden">
-                      <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-2.5 hover:bg-maroon-50">
-                        <ChevronDown className="size-4 shrink-0 text-ink-600 transition-transform group-open/details:rotate-180" aria-hidden />
-                        <RagDot status={p.status} />
-                        {p.code ? <span className="text-xs text-ink-600 tnum">{p.code}</span> : null}
-                        <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink-900">
-                          {bi(locale, p.titleEn, p.titleAr)}
-                        </span>
-                        <span className="text-xs text-ink-600 tnum">{t("lessonCount", { count: p.count })}</span>
-                      </summary>
-                      <div className="flex gap-3 overflow-x-auto border-t border-sand-100 p-3">
-                        {data.lessons
-                          .filter((l) => l.nodeId === p.id)
-                          .map((l) => (
-                            <RoomLessonCard key={l.id} lesson={l} onOpen={() => openLesson(l.id, "browse")} />
-                          ))}
-                      </div>
-                    </details>
-                  ))}
-                </div>
+                /* CR07 1.3: a real picker with search, drill down, counts at
+                   every level, the store switch and a Not linked group */
+                <ProjectPicker
+                  picker={data.picker}
+                  lessons={data.lessons}
+                  renderLesson={(lesson, inheritedFrom) => (
+                    <RoomLessonCard
+                      key={lesson.id}
+                      lesson={lesson}
+                      inheritedFrom={inheritedFrom}
+                      onOpen={() => openLesson(lesson.id, "browse")}
+                    />
+                  )}
+                />
               ) : browseTab === "outcomes" ? (
                 <div>
                   <div className="flex flex-wrap gap-2">

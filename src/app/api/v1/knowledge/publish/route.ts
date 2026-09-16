@@ -249,6 +249,30 @@ export async function POST(req: NextRequest) {
         createdAt: nowIso(),
         updatedAt: nowIso(),
       });
+      /* CR07 1.2 and 1.3: the structurer's suggested node becomes the primary
+         link, and the additional accepted nodes follow it. `lessons.node_id`
+         stays as the primary link's mirror. */
+      const lessonNodeIds = [
+        ...new Set(
+          [
+            item.node_link?.id ?? outcomeNodeId,
+            ...(item.outcome_links ?? [])
+              .map((l) => nodeMap.get(l.code))
+              .filter(Boolean),
+          ].filter(Boolean) as string[]
+        ),
+      ];
+      for (let i = 0; i < lessonNodeIds.length && i < 5; i++) {
+        await db.insert(schema.lessonNodeLinks).values({
+          id: newId(),
+          lessonId: id,
+          nodeId: lessonNodeIds[i],
+          nodeKind: "nds",
+          isPrimary: i === 0 ? 1 : 0,
+          linkedBy: user.id,
+          linkedAt: nowIso(),
+        });
+      }
       await tagAndLink("lesson", id, item);
       await enqueue("embed_records", { resourceType: "lesson", resourceId: id });
       published.push({ type: "lesson", id });

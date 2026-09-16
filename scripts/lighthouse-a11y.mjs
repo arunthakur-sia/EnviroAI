@@ -46,6 +46,10 @@ const targets = [
   ["/en/trends", "trends", true],
   ["/en/indices", "indices", true],
   ["/en/hr", "hr", true],
+  // CR07 acceptance 5: performance and accessibility above 90 on the Council
+  // Strategy, the Organisation and Lessons at 1440
+  ["/en/council-strategy", "council-strategy", true],
+  ["/en/organisation", "organisation", true],
   ["/en/podcast", "podcast", false],
   ["/en/ask", "ask", false],
 ];

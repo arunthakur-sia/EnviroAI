@@ -1,0 +1,5 @@
+﻿{
+  "strategy": {
+    "lessonsRollup": "{count, plural, zero {لا دروس} one {درس واحد} two {درسان} few {# دروس} many {# درساً} other {# درس}}"
+  }
+}

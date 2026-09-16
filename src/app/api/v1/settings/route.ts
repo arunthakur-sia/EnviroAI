@@ -12,19 +12,40 @@ export async function GET() {
   if (!user || !can(user, "manage", "settings")) {
     return NextResponse.json({ data: null, error: "forbidden" }, { status: 403 });
   }
-  const [ai, flags, trends, qnvPillars, lessonsSettings, lessonOfWeek, reflectionPrompts, allowedDomains] =
-    await Promise.all([
-      getAiSettings(),
-      getFlags(),
-      getTrendsSettings(),
-      getSetting("qnv_pillars", DEFAULT_QNV_PILLARS),
-      getSetting("lessons_settings", { learnModeEnabled: true, reclusterNightly: true }),
-      getSetting("lesson_of_week", { schedule: [] }),
-      getSetting("reflection_prompts", []),
-      getSetting("allowed_domains", ["npc.qa"]),
-    ]);
+  const [
+    ai,
+    flags,
+    trends,
+    qnvPillars,
+    lessonsSettings,
+    lessonOfWeek,
+    reflectionPrompts,
+    allowedDomains,
+    councilStrategyOffice,
+  ] = await Promise.all([
+    getAiSettings(),
+    getFlags(),
+    getTrendsSettings(),
+    getSetting("qnv_pillars", DEFAULT_QNV_PILLARS),
+    getSetting("lessons_settings", { learnModeEnabled: true, reclusterNightly: true }),
+    getSetting("lesson_of_week", { schedule: [] }),
+    getSetting("reflection_prompts", []),
+    getSetting("allowed_domains", ["npc.qa"]),
+    // CR07 2.1
+    getSetting("council_strategy_office", { unitCode: "IDP" }),
+  ]);
   return NextResponse.json({
-    data: { ai, flags, trends, qnvPillars, lessonsSettings, lessonOfWeek, reflectionPrompts, allowedDomains },
+    data: {
+      ai,
+      flags,
+      trends,
+      qnvPillars,
+      lessonsSettings,
+      lessonOfWeek,
+      reflectionPrompts,
+      allowedDomains,
+      councilStrategyOffice,
+    },
     error: null,
   });
 }
@@ -92,6 +113,8 @@ const Body = z.object({
     .optional(),
   /* CR05 6.3: allowed sign-in domains */
   allowedDomains: z.array(z.string().min(3).max(60)).max(10).optional(),
+  /* CR07 2.1: the unit whose members may edit the Council Strategy */
+  councilStrategyOffice: z.object({ unitCode: z.string().min(1).max(40) }).optional(),
 });
 
 export async function PATCH(req: NextRequest) {
@@ -128,6 +151,9 @@ export async function PATCH(req: NextRequest) {
   }
   if (parsed.data.reflectionPrompts) {
     await setSetting("reflection_prompts", parsed.data.reflectionPrompts);
+  }
+  if (parsed.data.councilStrategyOffice) {
+    await setSetting("council_strategy_office", parsed.data.councilStrategyOffice);
   }
   if (parsed.data.indexAssumption) {
     const { db, schema } = await import("@/server/db/client");

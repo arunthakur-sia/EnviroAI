@@ -118,6 +118,7 @@ export function OutcomePanel({
   const stakeholders = extras.outcomeStakeholders[code] ?? null;
   const signalsCount = extras.signalsCount[code] ?? 0;
   const tax = extras.outcomeTax[code];
+  const lessons = extras.lessonCounts[outcome.id] ?? null;
   const pillarKeys = pillarsOf(Number(outcomeNumber(outcome.code)) || 0);
 
   return (
@@ -148,6 +149,14 @@ export function OutcomePanel({
               <Chip tone="maroon">{t("hero.targets", { count: outcome.targetCount })}</Chip>
               <Chip tone="sand">{t("hero.initiatives", { count: outcome.initiativeCount })}</Chip>
               <Chip tone="sand">{t("hero.projects", { count: outcome.projectCount })}</Chip>
+              {/* CR07 1.3: the lessons of everything beneath this outcome */}
+              {lessons ? (
+                <Link href={`/lessons?outcome=${tax ?? ""}` as never} data-testid="outcome-lessons-chip">
+                  <Chip tone="gold" className="hover:bg-gold-300">
+                    {t("lessonsRollup", { count: lessons.total })}
+                  </Chip>
+                </Link>
+              ) : null}
             </div>
           </div>
           <div className="flex items-start gap-3">
@@ -297,6 +306,7 @@ export function OutcomePanel({
                 locale={locale}
                 today={today}
                 onOpenItem={onOpenItem}
+                lessonCount={extras.lessonCounts[tg.id] ?? null}
                 copyLink={() => {
                   onCopyTargetLink(tg.slug);
                   toast(t("canvas.linkCopied"), "success");

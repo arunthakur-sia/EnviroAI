@@ -107,6 +107,18 @@ export type RoomLesson = {
   departmentEn: string | null;
   departmentAr: string | null;
   documentIds: string[];
+  /* CR07 1.2: every node this lesson links to, the primary one first */
+  links: {
+    id: string;
+    nodeId: string;
+    nodeKind: "nds" | "council";
+    isPrimary: boolean;
+    code: string | null;
+    titleEn: string;
+    titleAr: string;
+    level: string;
+    edition: string | null;
+  }[];
 };
 
 async function loadRoomLessons(user: CurrentUser): Promise<RoomLesson[]> {
@@ -152,9 +164,26 @@ async function loadRoomLessons(user: CurrentUser): Promise<RoomLesson[]> {
   const { outcomeOf, nodeById, outcomeTerms } = await outcomeMaps();
   const termByTax = new Map(outcomeTerms.map((t) => [t.code, t]));
 
+  // CR07 1.2: a lesson carries every link, the primary one first
+  const { loadLinksForLessons } = await import("./lesson-links");
+  const linkMap = await loadLinksForLessons(rows.map((r) => r.lesson.id));
+
   const withScore = rows.map(({ lesson, ...author }) => {
-    const node = lesson.nodeId ? nodeById.get(lesson.nodeId) ?? null : null;
-    const outcome = outcomeOf(lesson.nodeId);
+    const links = linkMap.get(lesson.id) ?? [];
+    const primary = links.find((l) => l.isPrimary) ?? links[0] ?? null;
+    // the card shows the primary link; NDS nodes keep their outcome roll-up
+    const node = primary?.node
+      ? {
+          id: primary.node.id,
+          code: primary.node.code,
+          titleEn: primary.node.titleEn,
+          titleAr: primary.node.titleAr,
+          nodeType: primary.node.level,
+        }
+      : lesson.nodeId
+        ? nodeById.get(lesson.nodeId) ?? null
+        : null;
+    const outcome = outcomeOf(primary?.nodeKind === "nds" ? primary.nodeId : lesson.nodeId);
     const term = outcome ? termByTax.get(outcome.tax) : null;
     let documentIds: string[] = [];
     try {
@@ -183,11 +212,22 @@ async function loadRoomLessons(user: CurrentUser): Promise<RoomLesson[]> {
         endorsements: endorsements.get(lesson.id) ?? 0,
       }),
       topReuse: false,
-      nodeId: lesson.nodeId,
+      nodeId: primary?.nodeId ?? lesson.nodeId,
       nodeCode: node?.code ?? null,
       nodeTitleEn: node?.titleEn ?? null,
       nodeTitleAr: node?.titleAr ?? null,
       nodeType: node?.nodeType ?? null,
+      links: links.map((l) => ({
+        id: l.id,
+        nodeId: l.nodeId,
+        nodeKind: l.nodeKind,
+        isPrimary: l.isPrimary,
+        code: l.node?.code ?? null,
+        titleEn: l.node?.titleEn ?? "",
+        titleAr: l.node?.titleAr ?? "",
+        level: l.node?.level ?? "",
+        edition: l.node?.edition ?? null,
+      })),
       outcome: outcome?.tax ?? null,
       outcomeCode: outcome?.node.code ?? null,
       outcomeNameEn: term?.nameEn ?? null,
@@ -233,6 +273,32 @@ export type LearningRoomData = {
   learnModeEnabled: boolean;
   reflectionPrompts: { en: string; ar: string }[];
   sessionToday: { id: string; completed: boolean; index: number } | null;
+  /* CR07 1.3: the By project picker, both strategy stores */
+  picker: LessonPicker;
+};
+
+/** One node in the By project drill-down, carrying its lesson counts. */
+export type PickerNode = {
+  id: string;
+  kind: "nds" | "council";
+  parentId: string | null;
+  code: string | null;
+  titleEn: string;
+  titleAr: string;
+  /** strategy_nodes.node_type or council_nodes.level */
+  level: string;
+  edition: string | null;
+  /** lessons linked to this node itself */
+  direct: number;
+  /** direct plus everything beneath it, deduplicated */
+  total: number;
+};
+
+export type LessonPicker = {
+  nds: PickerNode[];
+  council: PickerNode[];
+  /** lessons with no link at all */
+  unlinkedIds: string[];
 };
 
 export async function getLearningRoomData(user: CurrentUser): Promise<LearningRoomData> {
@@ -389,6 +455,8 @@ export async function getLearningRoomData(user: CurrentUser): Promise<LearningRo
     };
   }
 
+  const picker = await buildLessonPicker(lessons);
+
   return {
     lessons: [...lessons].sort((a, b) => b.score - a.score),
     categoryCounts,
@@ -401,6 +469,69 @@ export async function getLearningRoomData(user: CurrentUser): Promise<LearningRo
     learnModeEnabled: lessonsSettings.learnModeEnabled !== false,
     reflectionPrompts,
     sessionToday,
+    picker,
+  };
+}
+
+/* ------------------------------------------------------------------ */
+/* CR07 1.3: the By project picker over both strategy stores            */
+/* ------------------------------------------------------------------ */
+
+async function buildLessonPicker(lessons: RoomLesson[]): Promise<LessonPicker> {
+  const { loadNodeIndex, descendantsOf } = await import("./lesson-links");
+  const { byId, childrenOf } = await loadNodeIndex();
+
+  // which of the visible lessons sit on each node
+  const lessonsOnNode = new Map<string, Set<string>>();
+  const linkedLessonIds = new Set<string>();
+  for (const lesson of lessons) {
+    for (const link of lesson.links) {
+      linkedLessonIds.add(lesson.id);
+      (
+        lessonsOnNode.get(link.nodeId) ?? lessonsOnNode.set(link.nodeId, new Set()).get(link.nodeId)!
+      ).add(lesson.id);
+    }
+  }
+
+  // one pass to invert the children map rather than scanning it per node
+  const parentById = new Map<string, string>();
+  for (const [parentId, children] of childrenOf) {
+    for (const child of children) parentById.set(child.id, parentId);
+  }
+
+  const build = (kind: "nds" | "council"): PickerNode[] => {
+    const nodes: PickerNode[] = [];
+    for (const node of byId.values()) {
+      if (node.kind !== kind) continue;
+      const direct = lessonsOnNode.get(node.id) ?? new Set<string>();
+      const all = new Set(direct);
+      for (const child of descendantsOf(node.id, childrenOf)) {
+        for (const id of lessonsOnNode.get(child) ?? []) all.add(id);
+      }
+      // the picker only carries branches that lead somewhere
+      if (!all.size && !["outcome", "target", "goal", "intermediate_outcome"].includes(node.level)) {
+        continue;
+      }
+      nodes.push({
+        id: node.id,
+        kind: node.kind,
+        parentId: parentById.get(node.id) ?? null,
+        code: node.code,
+        titleEn: node.titleEn,
+        titleAr: node.titleAr,
+        level: node.level,
+        edition: node.edition,
+        direct: direct.size,
+        total: all.size,
+      });
+    }
+    return nodes.sort((a, b) => (a.code ?? "").localeCompare(b.code ?? ""));
+  };
+
+  return {
+    nds: build("nds"),
+    council: build("council"),
+    unlinkedIds: lessons.filter((l) => !linkedLessonIds.has(l.id)).map((l) => l.id),
   };
 }
 

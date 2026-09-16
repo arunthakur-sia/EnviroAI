@@ -25,6 +25,7 @@ import { AnalyticsTab, type AnalyticsData } from "./AnalyticsTab";
 import { TrendsSettingsTab } from "./TrendsSettingsTab";
 import { LessonsSettingsTab } from "./LessonsSettingsTab";
 import { EntitiesSettingsTab } from "./EntitiesSettingsTab";
+import { OrganisationSettingsTab } from "./OrganisationSettingsTab";
 import { IndicesSettingsTab } from "./IndicesSettingsTab";
 
 type UserRow = {
@@ -98,6 +99,7 @@ export function SettingsTabs(props: {
             <TabsTrigger value="trends">{t("tabs.trends")}</TabsTrigger>
             <TabsTrigger value="lessons">{t("tabs.lessons")}</TabsTrigger>
             <TabsTrigger value="entities">{t("tabs.entities")}</TabsTrigger>
+            <TabsTrigger value="organisation">{t("tabs.organisation")}</TabsTrigger>
             <TabsTrigger value="indices">{t("tabs.indices")}</TabsTrigger>
             <TabsTrigger value="access">{t("tabs.access")}</TabsTrigger>
             <TabsTrigger value="bounties">{t("tabs.bounties")}</TabsTrigger>
@@ -133,6 +135,9 @@ export function SettingsTabs(props: {
           </TabsContent>
           <TabsContent value="entities" className="mt-5">
             <EntitiesSettingsTab />
+          </TabsContent>
+          <TabsContent value="organisation" className="mt-5">
+            <OrganisationSettingsTab />
           </TabsContent>
           <TabsContent value="indices" className="mt-5">
             <IndicesSettingsTab />

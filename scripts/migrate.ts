@@ -30,6 +30,12 @@ export async function migrate(): Promise<void> {
       } catch (e: any) {
         const msg = String(e?.message || e);
         if (/already exists|duplicate column name/i.test(msg)) continue;
+        // CR07: statements that cannot be written with IF NOT EXISTS (a table
+        // rename, for one) carry this marker and are allowed to fail on reruns.
+        if (/--\s*idempotent:/i.test(stmt)) {
+          console.log(`  (skipped idempotent statement: ${msg.slice(0, 80)})`);
+          continue;
+        }
         console.error(`Migration ${f} failed on:\n${stmt.slice(0, 200)}\n${msg}`);
         throw e;
       }

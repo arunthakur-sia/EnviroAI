@@ -66,22 +66,81 @@ export const roles = sqliteTable("roles", {
   updatedAt: updatedAt(),
 });
 
-export const departments = sqliteTable("departments", {
+/* CR07 3.2: the departments table became the organisation units table. Every
+   id survived the rename, so users, nodes, leads, stakeholders, indicators and
+   HR rows keep pointing at the same units; a read-only `departments` view
+   keeps older raw SQL working. `departments` below is a deprecated alias. */
+export const orgUnits = sqliteTable(
+  "org_units",
+  {
+    id: id(),
+    code: text("code").notNull(),
+    nameEn: text("name_en").notNull(),
+    nameAr: text("name_ar").notNull(),
+    descriptionEn: text("description_en"),
+    descriptionAr: text("description_ar"),
+    headUserId: text("head_user_id"),
+    parentId: text("parent_id"),
+    // CR05 5.2: the HR dashboard's department card content
+    responsibilitiesEn: text("responsibilities_en"),
+    responsibilitiesAr: text("responsibilities_ar"),
+    keyProjectsNote: text("key_projects_note"),
+    // CR07 3.2: secretary_general | sector | office | department | section
+    level: text("level").notNull().default("department"),
+    mandateEn: text("mandate_en"),
+    mandateAr: text("mandate_ar"),
+    mandateSourceUrl: text("mandate_source_url"),
+    mandateSourceUrlAr: text("mandate_source_url_ar"),
+    mandateFetchedAt: text("mandate_fetched_at"),
+    // heads who are not SiaNexus users are stored by name and title
+    headNameEn: text("head_name_en"),
+    headNameAr: text("head_name_ar"),
+    headTitleEn: text("head_title_en"),
+    headTitleAr: text("head_title_ar"),
+    sort: integer("sort").notNull().default(0),
+    isActive: integer("is_active").notNull().default(1),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [index("org_units_parent_idx").on(t.parentId)]
+);
+
+/** @deprecated CR07 renamed this to `orgUnits`; kept so older imports compile. */
+export const departments = orgUnits;
+
+export const orgUnitMembers = sqliteTable(
+  "org_unit_members",
+  {
+    id: id(),
+    unitId: text("unit_id").notNull(),
+    userId: text("user_id").notNull(),
+    // head | deputy | member
+    roleInUnit: text("role_in_unit").notNull().default("member"),
+    since: text("since"),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex("org_unit_members_unique").on(t.unitId, t.userId)]
+);
+
+export const orgSyncRuns = sqliteTable("org_sync_runs", {
   id: id(),
-  code: text("code").notNull(),
-  nameEn: text("name_en").notNull(),
-  nameAr: text("name_ar").notNull(),
-  descriptionEn: text("description_en"),
-  descriptionAr: text("description_ar"),
-  headUserId: text("head_user_id"),
-  parentId: text("parent_id"),
-  // CR05 5.2: the HR dashboard's department card content
-  responsibilitiesEn: text("responsibilities_en"),
-  responsibilitiesAr: text("responsibilities_ar"),
-  keyProjectsNote: text("key_projects_note"),
-  createdAt: createdAt(),
-  updatedAt: updatedAt(),
+  fetchedAt: text("fetched_at").notNull(),
+  diffJson: text("diff_json"),
+  appliedBy: text("applied_by"),
+  appliedAt: text("applied_at"),
 });
+
+/* CR07 3.5: policies, procedures, forms and services belong to a unit */
+export const documentUnitLinks = sqliteTable(
+  "document_unit_links",
+  {
+    id: id(),
+    documentId: text("document_id").notNull(),
+    unitId: text("unit_id").notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex("document_unit_unique").on(t.documentId, t.unitId)]
+);
 
 export const sessions = sqliteTable("sessions", {
   id: id(),
@@ -199,6 +258,14 @@ export const documents = sqliteTable(
     reuseCount: integer("reuse_count").notNull().default(0),
     isSeeded: integer("is_seeded").notNull().default(0),
     sourceRef: text("source_ref"),
+    /* CR07 3.5: policies and procedures carry their own visibility on top of
+       the classification level, plus the version and review fields. */
+    visibilityScope: text("visibility_scope").notNull().default("all_staff"),
+    visibilityAllowJson: text("visibility_allow_json"),
+    effectiveFrom: text("effective_from"),
+    versionLabel: text("version_label"),
+    reviewCycleMonths: integer("review_cycle_months"),
+    supersedesDocumentId: text("supersedes_document_id"),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
     deletedAt: text("deleted_at"),
@@ -463,6 +530,8 @@ export const nodeLeads = sqliteTable(
     role: text("role").notNull().default("lead"), // lead | supporting
     sort: integer("sort").notNull().default(0),
     verified: integer("verified").notNull().default(0),
+    // CR07 2.3: nds = strategy_nodes, council = council_nodes
+    nodeKind: text("node_kind").notNull().default("nds"),
     createdAt: createdAt(),
   },
   (t) => [
@@ -496,6 +565,8 @@ export const nodeStakeholders = sqliteTable(
     sinceDate: text("since_date"),
     untilDate: text("until_date"),
     sort: integer("sort").notNull().default(0),
+    // CR07 2.3: nds = strategy_nodes, council = council_nodes
+    nodeKind: text("node_kind").notNull().default("nds"),
     createdAt: createdAt(),
   },
   (t) => [
@@ -1285,6 +1356,8 @@ export const signalLinks = sqliteTable(
     resourceId: text("resource_id").notNull(),
     relation: text("relation").notNull().default("about"),
     source: text("source").notNull().default("ai"),
+    // CR07 2.3: nds = strategy_nodes, council = council_nodes
+    nodeKind: text("node_kind").notNull().default("nds"),
     createdAt: createdAt(),
   },
   (t) => [
@@ -1639,6 +1712,260 @@ export const apiKeys = sqliteTable("api_keys", {
   isActive: integer("is_active").notNull().default(0),
   createdAt: createdAt(),
 });
+
+/* ------------------------------------------------------------------ */
+/* CR07 1.2: a lesson links to many strategy nodes, one of them primary */
+/* ------------------------------------------------------------------ */
+
+export const lessonNodeLinks = sqliteTable(
+  "lesson_node_links",
+  {
+    id: id(),
+    lessonId: text("lesson_id").notNull(),
+    nodeId: text("node_id").notNull(),
+    // nds = strategy_nodes, council = council_nodes
+    nodeKind: text("node_kind").notNull().default("nds"),
+    isPrimary: integer("is_primary").notNull().default(0),
+    linkedBy: text("linked_by"),
+    linkedAt: text("linked_at").notNull(),
+  },
+  (t) => [
+    index("lesson_links_lesson_idx").on(t.lessonId),
+    index("lesson_links_node_idx").on(t.nodeId),
+    uniqueIndex("lesson_links_unique").on(t.lessonId, t.nodeId, t.nodeKind),
+  ]
+);
+
+/* ------------------------------------------------------------------ */
+/* CR07 2.3: the Council Strategy (NPC's own institutional strategy)   */
+/* ------------------------------------------------------------------ */
+
+export const councilStrategies = sqliteTable("council_strategies", {
+  id: id(),
+  nameEn: text("name_en").notNull(),
+  nameAr: text("name_ar").notNull(),
+  periodFrom: text("period_from"),
+  periodTo: text("period_to"),
+  visionEn: text("vision_en"),
+  visionAr: text("vision_ar"),
+  missionEn: text("mission_en"),
+  missionAr: text("mission_ar"),
+  // [{ name_en, name_ar, description_en, description_ar }]
+  valuesJson: text("values_json"),
+  status: text("status").notNull().default("live"),
+  isDefault: integer("is_default").notNull().default(0),
+  approvedOn: text("approved_on"),
+  sourceDocumentId: text("source_document_id"),
+  ownerUnitId: text("owner_unit_id"),
+  isIllustrative: integer("is_illustrative").notNull().default(1),
+  createdAt: createdAt(),
+  updatedAt: updatedAt(),
+});
+
+export const councilAnalysis = sqliteTable(
+  "council_analysis",
+  {
+    id: id(),
+    strategyId: text("strategy_id").notNull(),
+    // swot | stakeholder | challenge | baseline
+    kind: text("kind").notNull(),
+    payloadJson: text("payload_json").notNull(),
+    sort: integer("sort").notNull().default(0),
+  },
+  (t) => [index("council_analysis_strategy_idx").on(t.strategyId)]
+);
+
+export const councilNodes = sqliteTable(
+  "council_nodes",
+  {
+    id: id(),
+    strategyId: text("strategy_id").notNull(),
+    parentId: text("parent_id"),
+    // goal | intermediate_outcome | output | project | activity
+    level: text("level").notNull(),
+    code: text("code"),
+    titleEn: text("title_en").notNull(),
+    titleAr: text("title_ar").notNull(),
+    descriptionEn: text("description_en"),
+    descriptionAr: text("description_ar"),
+    // goals, intermediate outcomes and outputs are owned by a unit
+    ownerUnitId: text("owner_unit_id"),
+    // projects and activities are owned by a person
+    ownerUserId: text("owner_user_id"),
+    status: text("status").notNull().default("not_started"),
+    startDate: text("start_date"),
+    endDate: text("end_date"),
+    budgetQar: real("budget_qar"),
+    // { people: n, systems: [..], budget_note_en, budget_note_ar }
+    inputsJson: text("inputs_json"),
+    priorityImpact: integer("priority_impact"),
+    priorityFeasibility: integer("priority_feasibility"),
+    sort: integer("sort").notNull().default(0),
+    sourceRef: text("source_ref"),
+    isIllustrative: integer("is_illustrative").notNull().default(1),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [
+    index("council_nodes_strategy_idx").on(t.strategyId),
+    index("council_nodes_parent_idx").on(t.parentId),
+    index("council_nodes_level_idx").on(t.level),
+  ]
+);
+
+export const councilIndicators = sqliteTable(
+  "council_indicators",
+  {
+    id: id(),
+    nodeId: text("node_id").notNull(),
+    code: text("code"),
+    nameEn: text("name_en").notNull(),
+    nameAr: text("name_ar").notNull(),
+    definitionEn: text("definition_en"),
+    definitionAr: text("definition_ar"),
+    formulaEn: text("formula_en"),
+    formulaAr: text("formula_ar"),
+    unit: text("unit"),
+    direction: text("direction").notNull().default("up_good"),
+    baselineYear: text("baseline_year"),
+    baselineValue: real("baseline_value"),
+    // monthly | quarterly | yearly
+    frequency: text("frequency").notNull().default("yearly"),
+    dataSourceEn: text("data_source_en"),
+    dataSourceAr: text("data_source_ar"),
+    meansOfVerificationEn: text("means_of_verification_en"),
+    meansOfVerificationAr: text("means_of_verification_ar"),
+    responsibleUserId: text("responsible_user_id"),
+    linkedStatisticsIndicatorId: text("linked_statistics_indicator_id"),
+    notesEn: text("notes_en"),
+    notesAr: text("notes_ar"),
+    sort: integer("sort").notNull().default(0),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [index("council_indicators_node_idx").on(t.nodeId)]
+);
+
+export const councilIndicatorTargets = sqliteTable(
+  "council_indicator_targets",
+  {
+    id: id(),
+    indicatorId: text("indicator_id").notNull(),
+    // 2026 | 2026-Q3 | 2026-07
+    period: text("period").notNull(),
+    targetValue: real("target_value"),
+  },
+  (t) => [uniqueIndex("council_targets_unique").on(t.indicatorId, t.period)]
+);
+
+export const councilIndicatorValues = sqliteTable(
+  "council_indicator_values",
+  {
+    id: id(),
+    indicatorId: text("indicator_id").notNull(),
+    period: text("period").notNull(),
+    actualValue: real("actual_value"),
+    status: text("status").notNull().default("provisional"),
+    sourceDocumentId: text("source_document_id"),
+    enteredBy: text("entered_by"),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex("council_values_unique").on(t.indicatorId, t.period)]
+);
+
+export const councilMilestones = sqliteTable(
+  "council_milestones",
+  {
+    id: id(),
+    nodeId: text("node_id").notNull(),
+    titleEn: text("title_en").notNull(),
+    titleAr: text("title_ar").notNull(),
+    dueDate: text("due_date"),
+    doneDate: text("done_date"),
+    status: text("status").notNull().default("planned"),
+    sort: integer("sort").notNull().default(0),
+  },
+  (t) => [index("council_milestones_node_idx").on(t.nodeId)]
+);
+
+export const councilDependencies = sqliteTable(
+  "council_dependencies",
+  {
+    id: id(),
+    nodeId: text("node_id").notNull(),
+    dependsOnNodeId: text("depends_on_node_id").notNull(),
+    noteEn: text("note_en"),
+    noteAr: text("note_ar"),
+  },
+  (t) => [index("council_dependencies_node_idx").on(t.nodeId)]
+);
+
+export const councilRisks = sqliteTable(
+  "council_risks",
+  {
+    id: id(),
+    strategyId: text("strategy_id").notNull(),
+    nodeId: text("node_id"),
+    code: text("code"),
+    titleEn: text("title_en").notNull(),
+    titleAr: text("title_ar").notNull(),
+    descriptionEn: text("description_en"),
+    descriptionAr: text("description_ar"),
+    likelihood: integer("likelihood").notNull().default(3),
+    impact: integer("impact").notNull().default(3),
+    ownerUserId: text("owner_user_id"),
+    mitigationEn: text("mitigation_en"),
+    mitigationAr: text("mitigation_ar"),
+    // open | mitigating | closed
+    status: text("status").notNull().default("open"),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [index("council_risks_strategy_idx").on(t.strategyId)]
+);
+
+export const councilGovernance = sqliteTable("council_governance", {
+  id: id(),
+  strategyId: text("strategy_id").notNull(),
+  bodyNameEn: text("body_name_en").notNull(),
+  bodyNameAr: text("body_name_ar").notNull(),
+  roleEn: text("role_en"),
+  roleAr: text("role_ar"),
+  cadence: text("cadence"),
+  membersJson: text("members_json"),
+  sort: integer("sort").notNull().default(0),
+});
+
+export const councilAlignment = sqliteTable(
+  "council_alignment",
+  {
+    id: id(),
+    councilNodeId: text("council_node_id").notNull(),
+    // nds_node | nds_kpi | data_strategy_initiative
+    targetKind: text("target_kind").notNull().default("nds_node"),
+    targetId: text("target_id").notNull(),
+    labelEn: text("label_en"),
+    labelAr: text("label_ar"),
+    noteEn: text("note_en"),
+    noteAr: text("note_ar"),
+  },
+  (t) => [index("council_alignment_node_idx").on(t.councilNodeId)]
+);
+
+export const councilChangeLog = sqliteTable(
+  "council_change_log",
+  {
+    id: id(),
+    strategyId: text("strategy_id").notNull(),
+    entityKind: text("entity_kind").notNull(),
+    entityId: text("entity_id").notNull(),
+    action: text("action").notNull(),
+    detailJson: text("detail_json"),
+    actorId: text("actor_id"),
+    createdAt: createdAt(),
+  },
+  (t) => [index("council_change_log_strategy_idx").on(t.strategyId)]
+);
 
 /* Embeddings for structured records (indicators, nodes, experts, lessons, answers) */
 export const searchIndex = sqliteTable(

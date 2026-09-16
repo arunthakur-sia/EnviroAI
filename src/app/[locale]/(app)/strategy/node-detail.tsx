@@ -83,6 +83,7 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
     linkedExperts,
     lessons,
     lessonsAggregated,
+    lessonCounts,
     deps,
     depNodes,
     lineage,
@@ -227,8 +228,15 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
     content: (
       <div>
         <div className="mb-3 flex items-center justify-between gap-3">
+          {/* CR07 1.3: the counts say what is this node's own and what came
+              from the nodes beneath it */}
           {lessonsAggregated ? (
-            <p className="text-xs text-ink-600">{t("aggregatedLessons")}</p>
+            <p className="text-xs text-ink-600">
+              {t("lessonSplit", {
+                direct: lessonCounts.direct,
+                inherited: lessonCounts.inherited,
+              })}
+            </p>
           ) : (
             <span />
           )}
@@ -243,22 +251,34 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
         {lessons.length ? (
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {lessons.map((l) => (
-              <LessonCard
-                key={l.id}
-                lesson={{
-                  id: l.id,
-                  titleEn: l.titleEn,
-                  titleAr: l.titleAr,
-                  learningEn: l.learningEn,
-                  learningAr: l.learningAr,
-                  recommendationEn: l.recommendationEn,
-                  recommendationAr: l.recommendationAr,
-                  status: l.status,
-                  reuseCount: l.reuseCount,
-                  category: l.category,
-                }}
-                showCategory
-              />
+              <div key={l.id} className="flex flex-col gap-1">
+                <LessonCard
+                  lesson={{
+                    id: l.id,
+                    titleEn: l.titleEn,
+                    titleAr: l.titleAr,
+                    learningEn: l.learningEn,
+                    learningAr: l.learningAr,
+                    recommendationEn: l.recommendationEn,
+                    recommendationAr: l.recommendationAr,
+                    status: l.status,
+                    reuseCount: l.reuseCount,
+                    category: l.category,
+                  }}
+                  showCategory
+                />
+                {l.inheritedFrom ? (
+                  <p className="truncate ps-1 text-[11px] text-ink-400" data-testid="inherited-from">
+                    {t("inheritedFrom", {
+                      node: `${l.inheritedFrom.code ? `${l.inheritedFrom.code} ` : ""}${bi(
+                        locale,
+                        l.inheritedFrom.titleEn,
+                        l.inheritedFrom.titleAr
+                      )}`,
+                    })}
+                  </p>
+                ) : null}
+              </div>
             ))}
           </div>
         ) : (

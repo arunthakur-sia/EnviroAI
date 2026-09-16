@@ -1162,8 +1162,11 @@ async function main() {
       positions.every((p) => p >= 0) && positions.every((p, i) => i === 0 || p > positions[i - 1]),
       positions.join(",")
     );
+    // CR07: the Projects shelf carries NDS deliverables only; council projects
+    // have their own deliverables in their own store
     const delCounts = await db.execute(
-      "select count(*) c, count(distinct node_id) p from deliverable_meta"
+      `select count(*) c, count(distinct dm.node_id) p from deliverable_meta dm
+       join strategy_nodes n on n.id = dm.node_id`
     );
     check(
       "Projects header carries the deliverable and project counts",
@@ -2156,6 +2159,470 @@ async function main() {
       "the CR06 self-critique review exists and closes clean",
       fs.existsSync(reviewFile) && /no High or Critical HIG findings/.test(fs.readFileSync(reviewFile, "utf8"))
     );
+    db.close();
+  }
+
+  /* 18. CR07: lesson linking, the Council Strategy, the Organisation */
+  console.log("\n18. CR07 acceptance");
+  {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const { createClient } = await import("@libsql/client");
+    const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
+
+    /* ---- 18.1 the two external sources ---- */
+    const manualPdf = path.join(process.cwd(), "sources", "manual", "NDS2_Manual_Mar_2018_AR.pdf");
+    const manualMd = path.join(process.cwd(), "sources", "manual", "manual-structure.md");
+    check(
+      "the results-based planning manual was fetched and analysed",
+      fs.existsSync(manualPdf) && fs.existsSync(manualMd)
+    );
+    if (fs.existsSync(manualMd)) {
+      const md = fs.readFileSync(manualMd, "utf8");
+      check(
+        "manual-structure.md carries the results chain and the indicator card fields",
+        /Results chain levels/i.test(md) && /النتائج الوسيطة/.test(md) && /Indicator card fields/i.test(md)
+      );
+    }
+    const orgJson = path.join(process.cwd(), "sources", "org", "org-structure.json");
+    check("the organisational structure was fetched", fs.existsSync(orgJson));
+    if (fs.existsSync(orgJson)) {
+      const payload = JSON.parse(fs.readFileSync(orgJson, "utf8"));
+      check(
+        "every published unit carries a mandate in both languages and a source link",
+        payload.units.length >= 30 &&
+          payload.units.every(
+            (u: Record<string, string>) => u.mandate_en && u.mandate_ar && u.source_url
+          ),
+        `${payload.units.length} units`
+      );
+    }
+
+    /* ---- 18.2 lessons link to several nodes ---- */
+    const links = (
+      await db.execute(
+        "select count(*) c, sum(is_primary) p, count(distinct lesson_id) l from lesson_node_links"
+      )
+    ).rows[0];
+    check(
+      "lessons carry many links with exactly one primary each",
+      Number(links.c) > Number(links.l) && Number(links.p) === Number(links.l),
+      `${links.c} links over ${links.l} lessons, ${links.p} primary`
+    );
+    const multi = (
+      await db.execute(
+        "select count(*) c from (select lesson_id from lesson_node_links group by lesson_id having count(*) > 1)"
+      )
+    ).rows[0];
+    check("some lessons link to several nodes", Number(multi.c) >= 5, `${multi.c} lessons`);
+    const councilLinks = (
+      await db.execute("select count(*) c from lesson_node_links where node_kind = 'council'")
+    ).rows[0];
+    check("lessons link into the Council Strategy too", Number(councilLinks.c) >= 10);
+    const mirror = (
+      await db.execute(`
+        select count(*) c from lessons l
+        where l.node_id is not null
+          and not exists (
+            select 1 from lesson_node_links x
+            where x.lesson_id = l.id and x.node_id = l.node_id and x.is_primary = 1
+          )`)
+    ).rows[0];
+    check("the legacy lessons.node_id mirrors the primary link", Number(mirror.c) === 0);
+
+    /* the roll-up: an outcome counts the lessons of everything beneath it */
+    const { getLessonsForNode } = await import("../src/server/services/lesson-links");
+    const { getCurrentUser } = await import("../src/server/auth/session");
+    void getCurrentUser;
+    const [adminRow] = (
+      await db.execute("select id, clearance_level from users where email = 'admin@npc.qa'")
+    ).rows;
+    const fakeUser = {
+      id: String(adminRow.id),
+      clearanceLevel: Number(adminRow.clearance_level),
+    } as never;
+    const [outcomeRow] = (
+      await db.execute(`
+        select n.id from strategy_nodes n
+        join strategy_editions e on e.id = n.edition_id
+        where e.code = 'nds3' and n.node_type = 'outcome' order by n.sort limit 1`)
+    ).rows;
+    const rollup = await getLessonsForNode(fakeUser, String(outcomeRow.id));
+    check(
+      "an outcome rolls up the lessons of everything beneath it, each naming its origin",
+      rollup.inherited.length > 0 && rollup.inherited.every((r) => r.originId && !r.direct),
+      `${rollup.direct.length} direct, ${rollup.inherited.length} inherited`
+    );
+
+    /* linking rights: a reader may not link, the author may */
+    const readerLink = makeClient();
+    await login(readerLink, "reader@npc.qa");
+    const [anyLesson] = (
+      await db.execute(
+        "select id, author_id from lessons where status in ('published','verified') limit 1"
+      )
+    ).rows;
+    const [anyProject] = (
+      await db.execute("select id from strategy_nodes where node_type = 'project' limit 1")
+    ).rows;
+    const denied = await readerLink("/api/v1/lessons/links", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ lessonId: String(anyLesson.id), nodeId: String(anyProject.id) }),
+    });
+    check("a reader cannot link a lesson they do not own", denied.status === 403);
+
+    /* the Learning Room picker */
+    const roomHtml = await (await admin("/en/lessons")).text();
+    check(
+      "the By project tab is a picker with the store switch and a Not linked group",
+      roomHtml.includes('data-testid="lesson-project-picker"') &&
+        roomHtml.includes('data-testid="picker-store-council"') &&
+        roomHtml.includes('data-testid="picker-unlinked"')
+    );
+
+    /* ---- 18.3 the Council Strategy ---- */
+    const counts = Object.fromEntries(
+      (
+        await db.execute("select level, count(*) c from council_nodes group by level")
+      ).rows.map((r) => [String(r.level), Number(r.c)])
+    );
+    check(
+      "the illustrative strategy is seeded at the stated volumes",
+      counts.goal === 5 &&
+        counts.intermediate_outcome === 12 &&
+        counts.output === 30 &&
+        counts.project === 45 &&
+        counts.activity >= 90,
+      JSON.stringify(counts)
+    );
+    const cadence = Object.fromEntries(
+      (
+        await db.execute("select frequency, count(*) c from council_indicators group by frequency")
+      ).rows.map((r) => [String(r.frequency), Number(r.c)])
+    );
+    check(
+      "eighty indicators with mixed cadences",
+      cadence.monthly + cadence.quarterly + cadence.yearly === 80 &&
+        cadence.monthly >= 20 &&
+        cadence.quarterly >= 30 &&
+        cadence.yearly >= 15,
+      JSON.stringify(cadence)
+    );
+    const bilingual = (
+      await db.execute(`
+        select count(*) c from council_indicators
+        where name_en = '' or name_ar = '' or definition_ar is null or means_of_verification_ar is null`)
+    ).rows[0];
+    check("every indicator card is filled in both languages", Number(bilingual.c) === 0);
+    const actuals = (
+      await db.execute(
+        "select count(*) c from council_indicator_values where period like '2025%' or period like '2026%'"
+      )
+    ).rows[0];
+    check("actuals cover 2025 and 2026", Number(actuals.c) >= 700, `${actuals.c} values`);
+    const risks = (await db.execute("select count(*) c from council_risks")).rows[0];
+    const gov = (await db.execute("select count(*) c from council_governance")).rows[0];
+    const align = (await db.execute("select count(*) c from council_alignment")).rows[0];
+    check(
+      "twenty risks, the governance bodies, and the alignment to NDS3",
+      Number(risks.c) === 20 && Number(gov.c) >= 3 && Number(align.c) >= 10
+    );
+    const swot = (
+      await db.execute("select payload_json from council_analysis where kind = 'swot'")
+    ).rows[0];
+    check(
+      "the SWOT carries four to six items in every quadrant",
+      (() => {
+        const items = JSON.parse(String(swot?.payload_json ?? "[]")) as { quadrant: string }[];
+        return (["strength", "weakness", "opportunity", "threat"] as const).every((q) => {
+          const n = items.filter((i) => i.quadrant === q).length;
+          return n >= 4 && n <= 6;
+        });
+      })()
+    );
+    const councilStake = (
+      await db.execute("select count(*) c from node_stakeholders where node_kind = 'council'")
+    ).rows[0];
+    check("council projects carry stakeholders", Number(councilStake.c) >= 200);
+
+    const councilEn = await admin("/en/council-strategy");
+    const councilHtml = await councilEn.text();
+    check(
+      "the council page renders with the Internal and Illustrative chips",
+      councilEn.status === 200 &&
+        councilHtml.includes('data-testid="internal-chip"') &&
+        councilHtml.includes('data-testid="illustrative-chip"')
+    );
+    check(
+      "the strategic direction band, the scorecard and the chain are present",
+      councilHtml.includes('data-testid="direction-band"') &&
+        councilHtml.includes('data-testid="scorecard-strip"') &&
+        councilHtml.includes('data-testid="period-switch"')
+    );
+    check(
+      "the reference sections include the draggable prioritisation matrix",
+      councilHtml.includes('data-testid="ref-situation"') &&
+        councilHtml.includes('data-testid="ref-implementation"') &&
+        councilHtml.includes('data-testid="ref-me"') &&
+        councilHtml.includes('data-testid="ref-risks"') &&
+        councilHtml.includes('data-testid="ref-governance"') &&
+        councilHtml.includes('data-testid="ref-priority"')
+    );
+    const goalHtml = await (await admin("/en/council-strategy?g=g1")).text();
+    check(
+      "a goal deep link opens its panel with the alignment chips",
+      goalHtml.includes('data-testid="goal-panel"') && goalHtml.includes('data-testid="alignment-chip"')
+    );
+    const resultsHtml = await (await admin("/en/council-strategy?view=results")).text();
+    check(
+      "the results matrix and its narrative render",
+      resultsHtml.includes('data-testid="results-view"') &&
+        resultsHtml.includes('data-testid="results-cell"') &&
+        resultsHtml.includes('data-testid="results-narrative"')
+    );
+    const councilAr = await (await admin("/ar/council-strategy")).text();
+    check(
+      "the Arabic council page mirrors",
+      councilAr.includes('data-testid="council-header"') && councilAr.includes("الاستراتيجية المؤسسية")
+    );
+
+    /* editing: the period picker must match the indicator's own cadence */
+    const [monthlyInd] = (
+      await db.execute("select id, code from council_indicators where frequency = 'monthly' limit 1")
+    ).rows;
+    const wrongCadence = await admin("/api/v1/council", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        kind: "value",
+        indicatorId: String(monthlyInd.id),
+        period: "2026",
+        actualValue: 5,
+      }),
+    });
+    check(
+      "a value refuses a period that does not match the indicator's cadence",
+      wrongCadence.status === 400 && (await wrongCadence.json()).error === "period_cadence_mismatch"
+    );
+    const rightCadence = await admin("/api/v1/council", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        kind: "value",
+        indicatorId: String(monthlyInd.id),
+        period: "2026-10",
+        actualValue: 42,
+        status: "provisional",
+      }),
+    });
+    const stored = (
+      await db.execute({
+        sql: "select actual_value from council_indicator_values where indicator_id = ? and period = '2026-10'",
+        args: [String(monthlyInd.id)],
+      })
+    ).rows[0];
+    check(
+      "entering an actual for the right period works and is logged",
+      rightCadence.status === 200 && Number(stored?.actual_value) === 42
+    );
+    const changeLog = (
+      await db.execute("select count(*) c from council_change_log where action = 'enter'")
+    ).rows[0];
+    check("the change log records the entry", Number(changeLog.c) >= 1);
+    const readerCouncil = makeClient();
+    await login(readerCouncil, "reader@npc.qa");
+    const readerWrite = await readerCouncil("/api/v1/council", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ kind: "node", id: "x", titleEn: "no" }),
+    });
+    check("a reader cannot edit the Council Strategy", readerWrite.status === 403);
+
+    /* ---- 18.4 the Organisation ---- */
+    const units = (await db.execute("select count(*) c from org_units")).rows[0];
+    const levels = Object.fromEntries(
+      (await db.execute("select level, count(*) c from org_units group by level")).rows.map((r) => [
+        String(r.level),
+        Number(r.c),
+      ])
+    );
+    check(
+      "every published level is seeded",
+      Number(units.c) >= 39 && levels.secretary_general === 1 && levels.sector >= 6 && levels.department >= 28,
+      JSON.stringify(levels)
+    );
+    const heads = (
+      await db.execute("select count(*) c from org_units where head_name_en is not null")
+    ).rows[0];
+    check("the published heads are recorded", Number(heads.c) >= 30, `${heads.c} of ${units.c}`);
+    const mandates = (
+      await db.execute(
+        "select count(*) c from org_units where mandate_en is null or mandate_ar is null or mandate_source_url is null"
+      )
+    ).rows[0];
+    check("every unit carries its verbatim mandate and source link", Number(mandates.c) === 0);
+    const refDocs = (
+      await db.execute("select count(*) c from documents where source_ref like 'npc.qa organisational structure:%'")
+    ).rows[0];
+    check("the website pages are in the Vault for Ask NPC to cite", Number(refDocs.c) >= 30);
+    /* the old placeholder departments were rewritten in place, so references survived */
+    const orphanUsers = (
+      await db.execute(
+        "select count(*) c from users where department_id is not null and department_id not in (select id from org_units)"
+      )
+    ).rows[0];
+    check("no reference was orphaned by the departments to org_units change", Number(orphanUsers.c) === 0);
+    const oldCodes = (
+      await db.execute(
+        "select count(*) c from org_units where code in ('econ_planning','stat_operations','planning_policies')"
+      )
+    ).rows[0];
+    check("the placeholder department codes are gone", Number(oldCodes.c) === 0);
+
+    const orgHtml = await (await admin("/en/organisation")).text();
+    check(
+      "the org chart renders with search and the chart/list toggle",
+      orgHtml.includes('data-testid="org-chart"') &&
+        orgHtml.includes('data-testid="org-search"') &&
+        orgHtml.includes('data-testid="org-view-chart"') &&
+        orgHtml.includes('data-testid="org-view-list"')
+    );
+    /* the mini map and the list are drawn once the client has measured, so
+       they are asserted at the source rather than in the first paint */
+    const chartSrc = fs.readFileSync(
+      path.join(process.cwd(), "src", "app", "[locale]", "(app)", "organisation", "OrgChart.tsx"),
+      "utf8"
+    );
+    check(
+      "the chart carries zoom, pan, fit, a mini map, collapse and a list view",
+      chartSrc.includes('data-testid="org-minimap"') &&
+        chartSrc.includes('data-testid="org-list-view"') &&
+        /onWheel|addEventListener\("wheel"/.test(chartSrc) &&
+        chartSrc.includes("setPointerCapture") &&
+        /function fit|const fit =/.test(chartSrc)
+    );
+    const unitHtml = await (await admin("/en/organisation?unit=IDP")).text();
+    check(
+      "the unit panel shows the mandate, the people and the four policy tabs",
+      unitHtml.includes('data-testid="org-unit-panel"') &&
+        unitHtml.includes('data-testid="policy-tabs"') &&
+        unitHtml.includes("npc.qa")
+    );
+    const orgAr = await (await admin("/ar/organisation")).text();
+    check("the Arabic organisation page mirrors", orgAr.includes("الهيكل التنظيمي"));
+
+    /* visibility: a unit-only policy is invisible outside the unit */
+    const [restricted] = (
+      await db.execute(
+        "select id, title_en, visibility_scope from documents where visibility_scope = 'restricted' limit 1"
+      )
+    ).rows;
+    const [unitOnly] = (
+      await db.execute(
+        "select id, title_en from documents where visibility_scope = 'unit_only' limit 1"
+      )
+    ).rows;
+    check("the seeded policies cover all three visibility scopes", Boolean(restricted) && Boolean(unitOnly));
+    if (unitOnly) {
+      const readerDoc = await readerCouncil(`/api/v1/documents/${String(unitOnly.id)}/download`);
+      check("a unit-only policy is not downloadable outside the unit", readerDoc.status === 403);
+    }
+    const readerSearch = await readerCouncil(
+      `/api/v1/search/suggest?q=${encodeURIComponent("security incident reporting")}&locale=en`
+    );
+    const readerGroups = (await readerSearch.json()).data ?? {};
+    const readerHits = Object.values(readerGroups as Record<string, { id: string }[]>).flat();
+    check(
+      "a hidden policy never appears in another user's suggestions",
+      !restricted || !readerHits.some((h) => h.id === String(restricted.id))
+    );
+    /* the head may change visibility, a stranger may not */
+    const bulk = await admin("/api/v1/organisation/policies", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ documentIds: [String(unitOnly.id)], visibilityScope: "all_staff" }),
+    });
+    check("an administrator can change a policy's visibility in bulk", bulk.status === 200);
+    await admin("/api/v1/organisation/policies", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ documentIds: [String(unitOnly.id)], visibilityScope: "unit_only" }),
+    });
+    const readerVisibility = await readerCouncil("/api/v1/organisation/policies", {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ documentId: String(unitOnly.id), visibilityScope: "all_staff" }),
+    });
+    check("someone outside the unit cannot change its visibility", readerVisibility.status === 403);
+
+    /* the re-sync shows a diff before applying */
+    const sync = await admin("/api/v1/organisation/structure?view=sync");
+    const syncJson = await sync.json();
+    check(
+      "the re-sync reports a diff against the website without applying it",
+      sync.status === 200 && Array.isArray(syncJson.data?.changes)
+    );
+
+    /* ---- 18.5 Ask NPC ---- */
+    const { runTool, AnalystState } = await import("../src/server/ai/analyst/tools");
+    const { getUserById } = await import("../src/server/auth/session");
+    const askUser = await getUserById(String(adminRow.id));
+    if (askUser) {
+      const state = new AnalystState();
+      const ctx = { user: askUser, state } as never;
+      const outputs = await runTool(ctx, "query_council_strategy", { level: "output", goal: "G2" });
+      check(
+        "query_council_strategy answers with Internal citations",
+        outputs.includes("Internal") && /G2\./.test(outputs)
+      );
+      const behind = await runTool(ctx, "query_council_strategy", {
+        goal: "G2",
+        level: "output",
+        count_by: "status",
+      });
+      check("query_council_strategy can tally by status", /:\s*\d+/.test(behind));
+      const alignment = await runTool(ctx, "get_council_alignment", { nds_outcome: "O7" });
+      check(
+        "get_council_alignment answers how the council supports NDS3 outcome 7",
+        alignment.includes("supports") && alignment.includes("Council Strategy")
+      );
+      const scorecard = await runTool(ctx, "get_council_scorecard", { period: "2026-Q3" });
+      check(
+        "get_council_scorecard reports per goal and names the other cadences",
+        scorecard.includes("on target") && scorecard.includes("Internal")
+      );
+      const unit = await runTool(ctx, "get_org_unit", { name_or_code: "Statistical Operations" });
+      check(
+        "get_org_unit quotes the published mandate and names the head",
+        unit.includes("npc.qa") && /Head:/.test(unit)
+      );
+      const policies = await runTool(ctx, "get_unit_policies", { unit: "SOA" });
+      check("get_unit_policies returns the unit's published items", policies.includes("procedure"));
+      const lessonsTool = await runTool(ctx, "get_lessons_for_node", {
+        node_id: String(outcomeRow.id),
+      });
+      check(
+        "get_lessons_for_node splits direct from inherited",
+        lessonsTool.includes("direct") && lessonsTool.includes("inherited")
+      );
+    }
+
+    /* ---- 18.6 screenshots and the design reviews ---- */
+    const shotDir = path.join(process.cwd(), "data", "screenshots", "cr07");
+    check(
+      "CR07 screenshots exist in both languages",
+      fs.existsSync(shotDir) &&
+        fs.readdirSync(shotDir).some((f) => f.endsWith("-en.png")) &&
+        fs.readdirSync(shotDir).some((f) => f.endsWith("-ar.png"))
+    );
+    for (const name of ["cr07-council-strategy", "cr07-organisation"]) {
+      const file = path.join(process.cwd(), "docs", "design-reviews", `${name}.md`);
+      check(
+        `the ${name} self-critique review exists and closes clean`,
+        fs.existsSync(file) && /no High or Critical HIG findings/.test(fs.readFileSync(file, "utf8"))
+      );
+    }
     db.close();
   }
 

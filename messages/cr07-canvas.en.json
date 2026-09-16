@@ -1,0 +1,5 @@
+﻿{
+  "strategy": {
+    "lessonsRollup": "{count, plural, one {# lesson} other {# lessons}}"
+  }
+}

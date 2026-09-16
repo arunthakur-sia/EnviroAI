@@ -40,7 +40,9 @@ export type PodcastScope = {
     | "conversation"
     /* CR04 3.6: one lesson (2 minute episode) or one theme (4 minutes) */
     | "lesson"
-    | "theme";
+    | "theme"
+    /* CR07 2.5: a goal, output or project of the Council Strategy */
+    | "council_node";
   ids: string[];
   labelEn: string;
   labelAr: string;
@@ -85,6 +87,14 @@ export async function gatherScopeContent(
     }
     if (focus === "risks") {
       parts.push(await runTool(ctx, "get_signals", { text: scope.labelEn.slice(0, 40), days: 180 }));
+    }
+  } else if (scope.kind === "council_node") {
+    /* CR07 2.5: an episode from a council goal, output or project. Everything
+       it quotes is Internal, which the episode's classification carries. */
+    for (const id of scope.ids.slice(0, 3)) {
+      parts.push(await runTool(ctx, "get_council_node", { id }));
+      parts.push(await runTool(ctx, "get_council_alignment", { node_id: id }));
+      parts.push(await runTool(ctx, "get_lessons_for_node", { node_id: id }));
     }
   } else if (scope.kind === "document") {
     for (const id of scope.ids.slice(0, 4)) {

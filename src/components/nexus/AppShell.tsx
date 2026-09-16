@@ -21,6 +21,8 @@ import {
   Podcast,
   HeartHandshake,
   Eye,
+  Target,
+  Network,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SiaLogo } from "./Logo";
@@ -64,10 +66,13 @@ export type ShellUser = {
    Lessons page, and project Lessons tabs). CR02 4.6: Podcast under Lessons. */
 /* CR05 4.1/6.1: portal order matches the access model; hidden portals are
    filtered out per user. */
+/* CR07 2.1/3.1: Council Strategy sits directly under the Living Strategy,
+   the Organisation directly under Experts. */
 const NAV = [
   { href: "/home", icon: Home, key: "home" },
   { href: "/vault", icon: Library, key: "vault" },
   { href: "/strategy", icon: Compass, key: "strategy" },
+  { href: "/council-strategy", icon: Target, key: "council" },
   { href: "/statistics", icon: BarChart3, key: "statistics" },
   { href: "/indices", icon: Globe2, key: "indices" },
   { href: "/trends", icon: Radar, key: "trends" },
@@ -75,6 +80,7 @@ const NAV = [
   { href: "/lessons", icon: Lightbulb, key: "lessons" },
   { href: "/podcast", icon: Podcast, key: "podcast" },
   { href: "/experts", icon: Users, key: "experts" },
+  { href: "/organisation", icon: Network, key: "organisation" },
   { href: "/hr", icon: HeartHandshake, key: "hr" },
 ] as const;
 
