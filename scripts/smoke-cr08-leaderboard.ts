@@ -159,11 +159,21 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
        runs, and the refresh picks those up too. The invariant that matters is
        that the refresh brings the board to the ledger, and that it is at least
        the twenty points this check itself added. */
+    /* The People board drops two kinds of event and this sum has to drop the
+       same two or it is not the board's ledger: a rule flagged
+       `excluded_from_boards`, and the unit-only awards in `UNIT_ONLY_TYPES`,
+       which are paid to a person's account because the engine pays per user but
+       belong to their unit and are counted on the Departments board alone
+       (DECISIONS 101). */
+    const { UNIT_ONLY_TYPES } = await import("../src/server/gamification/engine");
+    const unitOnly = [...UNIT_ONLY_TYPES];
     const ledger = await ctx.db.execute({
       sql: `select coalesce(sum(e.points), 0) total from game_events e
             join game_rules r on r.event_type = e.event_type
-            where e.user_id = ? and coalesce(r.excluded_from_boards, 0) = 0`,
-      args: [contributorId],
+            where e.user_id = ?
+              and coalesce(r.excluded_from_boards, 0) = 0
+              and e.event_type not in (${unitOnly.map(() => "?").join(", ")})`,
+      args: [contributorId, ...unitOnly],
     });
     const total = Number(ledger.rows[0]?.total ?? 0);
     const now = after.data?.mine?.points ?? 0;

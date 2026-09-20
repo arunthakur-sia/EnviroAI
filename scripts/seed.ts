@@ -627,11 +627,18 @@ async function main() {
   const okFiles = manifest.filter(
     (m) => (m.status === "ok" || m.status === "exists") && fs.existsSync(path.join(SOURCES, m.filename))
   );
-  // dedupe by filename
+  /* Source files the demo deliberately does not carry. The npc.qa news
+     captures are verbatim press releases that name individual officials, and
+     the demo has no business holding a named public servant's quote in its
+     library; they also parse to no text at all, so they contribute nothing to
+     search or to an answer. The files stay in sources/ as provenance. Remove
+     the `npc_news_` pattern here to bring them back. */
+  const NOT_FOR_THE_DEMO = /^npc_news_/;
   const seen = new Set<string>();
   const files = okFiles.filter((m) => {
     if (seen.has(m.filename)) return false;
     seen.add(m.filename);
+    if (NOT_FOR_THE_DEMO.test(m.filename)) return false;
     // skip machine artifacts
     return !/^opendata_catalog|manifest|SOURCES/.test(m.filename) && !m.filename.endsWith(".txt");
   });

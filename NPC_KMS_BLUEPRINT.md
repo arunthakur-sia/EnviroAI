@@ -61,7 +61,7 @@ NEXUS is the living memory of the National Planning Council. It holds every repo
 
 ### 2.2 Known departments (seed these; make them editable)
 1. Department of National Data Affairs (Director: Maha Al-Matwi)
-2. Department of Statistical Systems (Director: Moza Al-Humaidi)
+2. Department of Statistical Systems (Director: Aysha Al-Humaidi)
 3. Department of Statistical Operations (Director: Saud Al-Shammari)
 4. Department of Planning and Development Policies for Institutional Development and Modernization (Director: Nada Al-Mahameed)
 5. Department of Economic Planning (placeholder, no public director)
