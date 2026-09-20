@@ -14,8 +14,9 @@ import { Chip, ProgressRing, Skeleton } from "@/components/ui/primitives";
 import { LeadChips } from "@/components/nexus/LeadChips";
 import { IndicatorTile } from "@/components/nexus/IndicatorTile";
 import { useToast } from "@/components/ui/toast";
+import { OwnerControl, OwnerControlCompact } from "@/components/nexus/people/OwnerControl";
 import type { NavigatorData, NavItem, CanvasExtras } from "@/server/services/strategy";
-import { TargetCard } from "./OutcomeTargets";
+import { TargetCard, itemRefOfNav, type OwnerMap } from "./OutcomeTargets";
 import { OutcomeStakeholdersSection } from "./OutcomeStakeholders";
 
 function outcomeNumber(code: string | null): string {
@@ -58,6 +59,7 @@ export function OutcomePanel({
   canEdit,
   leadFilter,
   onLeadFilter,
+  owners,
 }: {
   data: NavigatorData;
   extras: CanvasExtras;
@@ -73,6 +75,8 @@ export function OutcomePanel({
   canEdit: boolean;
   leadFilter: string | null;
   onLeadFilter: (lead: string | null) => void;
+  /* CR08 9.1: people resolved once on the server (navigator-server.tsx) */
+  owners?: OwnerMap;
 }) {
   const t = useTranslations("strategy");
   const locale = useLocale();
@@ -120,6 +124,18 @@ export function OutcomePanel({
   const tax = extras.outcomeTax[code];
   const lessons = extras.lessonCounts[outcome.id] ?? null;
   const pillarKeys = pillarsOf(Number(outcomeNumber(outcome.code)) || 0);
+  /* CR08 9.1: the outcome's own owner, or the head of the department that
+     owns it; nothing at all when neither is recorded (DECISIONS 121) */
+  const ownerItem = {
+    type: "outcome",
+    id: outcome.id,
+    titleEn: outcome.titleEn,
+    titleAr: outcome.titleAr,
+    href: `/strategy/${outcome.id}`,
+  };
+  const personOwner = outcome.ownerUserId ? owners?.[outcome.ownerUserId] ?? null : null;
+  const headId = stakeholders?.departmentOwner?.head?.id ?? null;
+  const headOwner = personOwner ? null : headId ? owners?.[headId] ?? null : null;
 
   return (
     <div className="relative overflow-hidden rounded-2xl bg-sand-100" data-testid="outcome-panel">
@@ -159,35 +175,43 @@ export function OutcomePanel({
               ) : null}
             </div>
           </div>
-          <div className="flex items-start gap-3">
-            <ProgressRing value={outcome.progress} size={120} stroke={9} aria-label={t("hero.progressAria", { pct })}>
-              <span className="text-xl font-semibold text-maroon-900 tnum">{pct}%</span>
-            </ProgressRing>
-            <div className="flex flex-col gap-1">
-              <button
-                onClick={() => {
-                  onCopyLink();
-                  toast(t("canvas.linkCopied"), "success");
-                }}
-                aria-label={t("canvas.copyLink")}
-                className="rounded-lg p-1.5 text-ink-600 hover:bg-white/70 cursor-pointer"
-              >
-                <LinkIcon className="size-4" />
-              </button>
-              <Link
-                href={`/strategy/${outcome.id}` as never}
-                aria-label={t("canvas.openFullPage")}
-                className="rounded-lg p-1.5 text-ink-600 hover:bg-white/70"
-              >
-                <ExternalLink className="size-4" />
-              </Link>
-              <button
-                onClick={onClose}
-                aria-label={t("canvas.closePanel")}
-                className="rounded-lg p-1.5 text-ink-600 hover:bg-white/70 cursor-pointer"
-              >
-                <X className="size-4" />
-              </button>
+          <div className="flex flex-col items-end gap-3">
+            {/* CR08 9.1: the owner at the end side of the panel header */}
+            {personOwner ? (
+              <OwnerControl owner={personOwner} role="owner" item={ownerItem} align="end" />
+            ) : headOwner ? (
+              <OwnerControl owner={headOwner} role="department_owner" item={ownerItem} align="end" />
+            ) : null}
+            <div className="flex items-start gap-3">
+              <ProgressRing value={outcome.progress} size={120} stroke={9} aria-label={t("hero.progressAria", { pct })}>
+                <span className="text-xl font-semibold text-maroon-900 tnum">{pct}%</span>
+              </ProgressRing>
+              <div className="flex flex-col gap-1">
+                <button
+                  onClick={() => {
+                    onCopyLink();
+                    toast(t("canvas.linkCopied"), "success");
+                  }}
+                  aria-label={t("canvas.copyLink")}
+                  className="rounded-lg p-1.5 text-ink-600 hover:bg-white/70 cursor-pointer"
+                >
+                  <LinkIcon className="size-4" />
+                </button>
+                <Link
+                  href={`/strategy/${outcome.id}` as never}
+                  aria-label={t("canvas.openFullPage")}
+                  className="rounded-lg p-1.5 text-ink-600 hover:bg-white/70"
+                >
+                  <ExternalLink className="size-4" />
+                </Link>
+                <button
+                  onClick={onClose}
+                  aria-label={t("canvas.closePanel")}
+                  className="rounded-lg p-1.5 text-ink-600 hover:bg-white/70 cursor-pointer"
+                >
+                  <X className="size-4" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -306,6 +330,7 @@ export function OutcomePanel({
                 locale={locale}
                 today={today}
                 onOpenItem={onOpenItem}
+                owners={owners}
                 lessonCount={extras.lessonCounts[tg.id] ?? null}
                 copyLink={() => {
                   onCopyTargetLink(tg.slug);
@@ -321,19 +346,32 @@ export function OutcomePanel({
               {t("outcomeLevelLane")}
             </p>
             <div className="flex gap-2.5 overflow-x-auto pb-2">
-              {directItems.map((i) => (
-                <button
-                  key={i.id}
-                  onClick={() => onOpenItem(i)}
-                  data-node-id={i.id}
-                  className="card flex w-60 shrink-0 flex-col gap-1.5 px-3.5 py-3 text-start transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] cursor-pointer"
-                >
-                  <span className="flex items-center gap-2 text-[10px] text-ink-600 tnum">{i.code}</span>
-                  <span className="line-clamp-2 text-sm font-medium leading-snug text-ink-900">
-                    {bi(locale, i.titleEn, i.titleAr)}
-                  </span>
-                </button>
-              ))}
+              {directItems.map((i) => {
+                /* CR08 9.1: the person chip is a button of its own, so the
+                   card frame holds both it and the card's own button */
+                const itemOwner = i.ownerUserId ? owners?.[i.ownerUserId] ?? null : null;
+                return (
+                  <div
+                    key={i.id}
+                    data-node-id={i.id}
+                    className="card flex w-60 shrink-0 flex-col gap-1.5 px-3.5 py-3 transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
+                  >
+                    <button
+                      onClick={() => onOpenItem(i)}
+                      className="flex flex-col gap-1.5 rounded-lg text-start cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+                      data-testid="outcome-level-card"
+                    >
+                      <span className="flex items-center gap-2 text-[10px] text-ink-600 tnum">{i.code}</span>
+                      <span className="line-clamp-2 text-sm font-medium leading-snug text-ink-900">
+                        {bi(locale, i.titleEn, i.titleAr)}
+                      </span>
+                    </button>
+                    {itemOwner ? (
+                      <OwnerControlCompact owner={itemOwner} item={itemRefOfNav(i)} className="mt-auto max-w-full pt-1" />
+                    ) : null}
+                  </div>
+                );
+              })}
             </div>
           </div>
         ) : null}
@@ -346,6 +384,8 @@ export function OutcomePanel({
             canEdit={canEdit}
             leadFilter={leadFilter}
             onLeadFilter={onLeadFilter}
+            owners={owners}
+            item={ownerItem}
           />
         ) : null}
 

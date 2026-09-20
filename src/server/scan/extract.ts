@@ -1,7 +1,7 @@
 // Shared persistence for scan candidates: dedupe, store, link to NDS3 nodes and
 // indicators, and index accepted signals for retrieval.
 import crypto from "node:crypto";
-import { and, eq, isNotNull } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import { newId, nowIso } from "@/lib/ids";
 import {

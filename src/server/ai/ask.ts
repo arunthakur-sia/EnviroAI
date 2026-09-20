@@ -14,6 +14,7 @@ import { isArabicText } from "@/lib/utils";
 import { mockIntent } from "./mock";
 import type { CurrentUser } from "@/server/auth/session";
 import { getAiSettings } from "@/server/settings";
+import { ownerKey, resolveOwners, type OwnerChip } from "@/server/services/owner-lookup";
 
 /** A retrieval source for Ask: a document chunk or a statistical indicator. */
 export type AskSource = RetrievedChunk & { resourceType: "document" | "indicator" };
@@ -27,6 +28,8 @@ export type AskEvent =
       citations: CitationOut[];
       confidence: "high" | "medium" | "low";
       suggestedExperts: SuggestedExpert[];
+      /* CR08 3: the same suggestions in two labelled groups, internal first */
+      suggestedExpertGroups: SuggestedExpertGroups;
       followUps: string[];
       includesSecret: boolean;
       chunkIds: string[];
@@ -41,7 +44,26 @@ export type CitationOut = {
   page: number | null;
   excerpt: string;
   lang: string;
+  /** CR08 9.1: the person behind the cited item, when one is recorded.
+      OPTIONAL for good: citations are persisted in answers.citations_json and
+      every row written before this pass has none. */
+  owner?: OwnerChip | null;
 };
+
+/** CR08 9.1: fills `owner` on the citations whose item records a person (a
+    document's custodian, a strategy node's owner, a lesson's author), in one
+    bulk pass. Citations of anything else are left as they are. */
+export async function attachCitationOwners(citations: CitationOut[]): Promise<void> {
+  const items = citations
+    .filter((c) => c.resource_type === "document" || c.resource_type === "node" || c.resource_type === "lesson")
+    .map((c) => ({ type: c.resource_type, id: c.resource_id }));
+  if (!items.length) return;
+  const owners = await resolveOwners(items);
+  for (const c of citations) {
+    const owner = owners[ownerKey(c.resource_type, c.resource_id)];
+    if (owner) c.owner = owner;
+  }
+}
 
 export type SuggestedExpert = {
   id: string;
@@ -53,6 +75,13 @@ export type SuggestedExpert = {
   availability: string;
   reasonEn: string;
   reasonAr: string;
+  /* CR08 3: NPC staff are internal, everyone else external */
+  kind: "internal" | "external";
+};
+
+export type SuggestedExpertGroups = {
+  internal: SuggestedExpert[];
+  external: SuggestedExpert[];
 };
 
 /**
@@ -193,29 +222,61 @@ export function computeConfidence(
   return "medium";
 }
 
-export async function suggestExperts(
+/**
+ * CR08 3: expert suggestions come back in two labelled groups, internal
+ * first, never blended. The flat list (`suggestExperts`) keeps its shape for
+ * older callers and is simply the internal group followed by the external
+ * one; each entry carries its `kind`. `limit` applies per group.
+ */
+export async function suggestExpertsGrouped(
   query: string,
   user: CurrentUser,
   limit = 3
-): Promise<SuggestedExpert[]> {
+): Promise<SuggestedExpertGroups & { all: SuggestedExpert[] }> {
   const records = await retrieveRecords(
     query,
     { maxClassification: user.clearanceLevel, resourceTypes: ["expert"] },
-    limit * 2
+    limit * 6
   );
-  const ids = records.map((r) => r.resourceId).slice(0, limit * 2);
-  if (!ids.length) return [];
+  const ids = records.map((r) => r.resourceId);
+  if (!ids.length) return { internal: [], external: [], all: [] };
   const rows = await db
     .select()
     .from(schema.experts)
     .where(inArray(schema.experts.id, ids));
   const byId = new Map(rows.map((r) => [r.id, r]));
-  const ordered = ids
+  const visible = ids
     .map((id) => byId.get(id))
     .filter((e): e is NonNullable<typeof e> => Boolean(e))
-    .filter((e) => (e.visibilityClassification ?? 2) <= user.clearanceLevel)
-    .slice(0, limit);
+    .filter((e) => (e.visibilityClassification ?? 2) <= user.clearanceLevel);
+  const kindOf = (e: (typeof visible)[number]): "internal" | "external" =>
+    e.userId || e.type === "npc_employee" ? "internal" : "external";
+  const ordered = [
+    ...visible.filter((e) => kindOf(e) === "internal").slice(0, limit),
+    ...visible.filter((e) => kindOf(e) === "external").slice(0, limit),
+  ];
+  const all = await describeSuggestions(query, ordered, kindOf);
+  return {
+    internal: all.filter((e) => e.kind === "internal"),
+    external: all.filter((e) => e.kind === "external"),
+    all,
+  };
+}
 
+export async function suggestExperts(
+  query: string,
+  user: CurrentUser,
+  limit = 3
+): Promise<SuggestedExpert[]> {
+  return (await suggestExpertsGrouped(query, user, limit)).all;
+}
+
+async function describeSuggestions(
+  query: string,
+  ordered: (typeof schema.experts.$inferSelect)[],
+  kindOf: (e: typeof schema.experts.$inferSelect) => "internal" | "external"
+): Promise<SuggestedExpert[]> {
+  if (!ordered.length) return [];
   const inputs = await Promise.all(
     ordered.map(async (e) => {
       const domains = await db
@@ -250,6 +311,7 @@ export async function suggestExperts(
     availability: e.availability,
     reasonEn: reasonMap.get(e.id)?.reason_en ?? "",
     reasonAr: reasonMap.get(e.id)?.reason_ar ?? "",
+    kind: kindOf(e),
   }));
 }
 
@@ -303,6 +365,8 @@ export async function* askStream(params: {
     excerpt: c.text.slice(0, 280),
     lang: c.lang,
   }));
+  /* CR08 9.1: the citation cards carry the same person chip the item does */
+  await attachCitationOwners(citations);
   yield { type: "sources", citations };
 
   const answerLang = isArabicText(query) ? "ar" : locale === "ar" ? "ar" : "en";
@@ -356,8 +420,10 @@ export async function* askStream(params: {
   );
   const usedCitations = citations.filter((c) => usedNs.has(c.n));
 
-  const suggestedExperts =
-    confidence === "low" ? await suggestExperts(query, user, 3) : [];
+  const suggested =
+    confidence === "low"
+      ? await suggestExpertsGrouped(query, user, 3)
+      : { internal: [], external: [], all: [] };
 
   const followUps: string[] = [];
   yield {
@@ -365,7 +431,8 @@ export async function* askStream(params: {
     markdown,
     citations: usedCitations.length ? usedCitations : citations.slice(0, 3),
     confidence,
-    suggestedExperts,
+    suggestedExperts: suggested.all,
+    suggestedExpertGroups: { internal: suggested.internal, external: suggested.external },
     followUps,
     includesSecret,
     chunkIds: chunks.map((c) => c.chunkId),

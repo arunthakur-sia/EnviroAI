@@ -1,5 +1,9 @@
 // Ingest pipeline: parse -> chunk -> embed -> index. Used by the upload flow,
 // the job worker, and the seed.
+// CR08 Phase B: the document parsers (pdf, docx, xlsx) must never be pulled
+// into a browser bundle; importing this from a client component now fails the
+// build instead of shipping megabytes.
+import "@/server/server-only";
 import { eq, isNull, and } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import { get as storageGet, putText } from "@/server/storage";

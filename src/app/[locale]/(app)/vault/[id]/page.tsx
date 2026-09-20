@@ -11,16 +11,24 @@ import {
   logView,
   relatedItems,
 } from "@/server/services/documents";
+import { getOwnerRefs } from "@/server/services/people";
 import { parseJson, KeyFacts } from "@/server/db/json";
 import { bi } from "@/lib/utils";
-import { Chip, ClassificationChip, EmptyState, Avatar } from "@/components/ui/primitives";
+import { Chip, ClassificationChip, EmptyState } from "@/components/ui/primitives";
+import { OwnerControl } from "@/components/nexus/people/OwnerControl";
 import { Reveal } from "@/components/motion";
 import { BriefDialog } from "@/components/nexus/BriefDialog";
 import { Link } from "@/i18n/navigation";
+import { SetKnowledgeOfWeekButton } from "@/components/nexus/kow";
+import {
+  canManageKnowledgeOfWeek,
+  kowKindForDocument,
+} from "@/server/services/knowledge-of-week";
 import { Reader } from "./Reader";
 import { AiPanel } from "./AiPanel";
 import { VerifyControls } from "./VerifyControls";
 import { RelatedStrip } from "./RelatedStrip";
+import { AskContextItem } from "@/components/nexus/ask/AskContextItem";
 
 export const dynamic = "force-dynamic";
 
@@ -55,7 +63,7 @@ export default async function DocumentPage({
   }
   await logView(user, id);
 
-  const [tags, chunks, tables, related, versions, owner] = await Promise.all([
+  const [tags, chunks, tables, related, versions, ownerRefs, kowKind] = await Promise.all([
     documentTags(id),
     db
       .select({
@@ -77,17 +85,10 @@ export default async function DocumentPage({
       .from(schema.documentVersions)
       .where(eq(schema.documentVersions.documentId, id))
       .orderBy(desc(schema.documentVersions.versionNo)),
-    doc.ownerUserId
-      ? db
-          .select({
-            nameEn: schema.users.nameEn,
-            nameAr: schema.users.nameAr,
-            color: schema.users.avatarColor,
-          })
-          .from(schema.users)
-          .where(eq(schema.users.id, doc.ownerUserId))
-          .limit(1)
-      : Promise.resolve([]),
+    // CR08 9.1: the owner as a person chip, so the card opens from the header
+    getOwnerRefs([doc.ownerUserId]),
+    // CR08 8: a study is offered as a study, everything else as a document
+    kowKindForDocument(id),
   ]);
 
   const keyFacts = parseJson(KeyFacts, doc.keyFactsJson, []);
@@ -101,6 +102,8 @@ export default async function DocumentPage({
   });
   const title = bi(locale, doc.titleEn, doc.titleAr);
   const initialPage = sp.page ? Number(sp.page) : 1;
+  const owner = doc.ownerUserId ? ownerRefs[doc.ownerUserId] ?? null : null;
+  const askItem = { kind: "document" as const, id, titleEn: doc.titleEn, titleAr: doc.titleAr, href: `/vault/${id}` };
 
   const viewerKind = doc.mime?.includes("pdf")
     ? "pdf"
@@ -112,6 +115,8 @@ export default async function DocumentPage({
 
   return (
     <Reveal>
+      {/* CR08 2.3: the Ask NPC launcher knows this document */}
+      <AskContextItem item={askItem} />
       {/* Top bar */}
       <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
@@ -133,12 +138,6 @@ export default async function DocumentPage({
             {doc.titleArMachine || doc.summaryMachine ? (
               <Chip tone="gold">{tc("aiTranslation")}</Chip>
             ) : null}
-            {owner[0] ? (
-              <span className="flex items-center gap-1.5 text-xs text-ink-600">
-                <Avatar name={owner[0].nameEn} color={owner[0].color} size={18} />
-                {bi(locale, owner[0].nameEn, owner[0].nameAr)}
-              </span>
-            ) : null}
             {doc.pageCount ? (
               <span className="text-xs text-ink-400 tnum">
                 {t("pageCount", { count: doc.pageCount })}
@@ -151,22 +150,45 @@ export default async function DocumentPage({
             ) : null}
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          {canVerify && doc.status !== "verified" ? <VerifyControls documentId={id} /> : null}
-          <a
-            href={`/api/v1/documents/${id}/download`}
-            className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-sand-300 bg-white px-4 text-sm font-medium text-ink-900 hover:border-maroon-300 hover:text-maroon-700"
-          >
-            <Download className="size-4" /> {tc("download")}
-          </a>
-          <BriefDialog resourceType="document" resourceId={id} />
-          {/* CR02 4.3: make an episode from this document */}
-          <Link
-            href={`/podcast/new?document=${id}` as never}
-            className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-sand-300 bg-white px-4 text-sm font-medium text-ink-900 hover:border-maroon-300 hover:text-maroon-700"
-          >
-            <Headphones className="size-4" /> {tp("listen")}
-          </Link>
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          {/* CR08 9.1: the owner at the end side of the header, with the
+              person card on hover or tap */}
+          {owner ? (
+            <OwnerControl
+              owner={owner}
+              role="owner"
+              size="sm"
+              align="end"
+              item={{ type: askItem.kind, id, titleEn: doc.titleEn, titleAr: doc.titleAr, href: askItem.href }}
+            />
+          ) : null}
+          <div className="flex flex-wrap items-center gap-2">
+            {/* CR08 8: a Knowledge Admin can make a verified item the week's pick */}
+            {canManageKnowledgeOfWeek(user) && doc.status === "verified" ? (
+              <SetKnowledgeOfWeekButton
+                resourceType={kowKind}
+                resourceId={id}
+                titleEn={doc.titleEn}
+                titleAr={doc.titleAr}
+                numerals={user.numeralsPref}
+              />
+            ) : null}
+            {canVerify && doc.status !== "verified" ? <VerifyControls documentId={id} /> : null}
+            <a
+              href={`/api/v1/documents/${id}/download`}
+              className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-sand-300 bg-white px-4 text-sm font-medium text-ink-900 hover:border-maroon-300 hover:text-maroon-700"
+            >
+              <Download className="size-4" /> {tc("download")}
+            </a>
+            <BriefDialog resourceType="document" resourceId={id} />
+            {/* CR02 4.3: make an episode from this document */}
+            <Link
+              href={`/podcast/new?document=${id}` as never}
+              className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-sand-300 bg-white px-4 text-sm font-medium text-ink-900 hover:border-maroon-300 hover:text-maroon-700"
+            >
+              <Headphones className="size-4" /> {tp("listen")}
+            </Link>
+          </div>
         </div>
       </div>
 

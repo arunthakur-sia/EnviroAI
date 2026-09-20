@@ -3,11 +3,10 @@
 // risk rules (5.5), the handover engine (5.6.4), and the page read models.
 // Privacy: nothing here ever returns gamification points, badges, streaks,
 // Learn sessions, or private notes (5.1).
-import { and, asc, desc, eq, inArray, isNull } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import type { CurrentUser } from "@/server/auth/session";
 import { newId, nowIso } from "@/lib/ids";
-import { notify } from "@/server/gamification/engine";
 
 /* ------------------------------------------------------------------ */
 /* access                                                               */
@@ -269,7 +268,8 @@ async function loadContext() {
     }
   }
   for (const i of items) {
-    if (i.successorUserId && i.resourceType === "node") deputies.set(i.resourceId, true);
+    // CR08 6.3: the recipient decision names the deputy (successor_user_id mirrors it)
+    if ((i.successorUserId || i.recipientUserId) && i.resourceType === "node") deputies.set(i.resourceId, true);
   }
   // recent knowledge capture or Expert Insights lesson (12 months)
   const yearAgo = new Date();
@@ -354,23 +354,69 @@ export async function recomputeHrRisks(): Promise<number> {
   const actFor = (userId: string | null | undefined, departmentId: string | null) =>
     userId ?? (departmentId ? deptHead.get(departmentId) ?? null : null) ?? hrAdmin?.id ?? null;
 
-  /* incomplete handovers */
+  /* incomplete handovers (CR08 6.4: external persons carry no users row, so
+     the name comes from the handover itself) */
+  const [handoverInterviews, handoverPaths] = await Promise.all([
+    db.select().from(schema.handoverInterviews),
+    db.select().from(schema.handoverLearningPaths),
+  ]);
+  const handoverName = (h: (typeof ctx.handovers)[number]) => {
+    const u = userById.get(h.userId);
+    return { en: u?.nameEn ?? h.externalName ?? h.userId, ar: u?.nameAr ?? h.externalName ?? h.userId };
+  };
   for (const h of ctx.handovers) {
     if (h.status === "complete" || !h.dueDate) continue;
     const due = new Date(h.dueDate);
     if (due > now) continue;
     const daysPast = Math.floor((now.getTime() - due.getTime()) / 86400000);
-    const u = userById.get(h.userId);
+    const name = handoverName(h);
     risks.push({
       kind: "incomplete_handover",
       severity: daysPast > 30 ? "critical" : "high",
       departmentId: deptOf(h.userId),
-      userId: h.userId,
+      userId: h.personKind === "external" ? null : h.userId,
       resourceType: "handover",
       resourceId: h.id,
-      title: `Handover of ${u?.nameEn ?? h.userId} is ${daysPast} days past due`,
+      title: `Handover of ${name.en} is ${daysPast} days past due`,
       detailEn: `The ${h.kind} handover was due on ${h.dueDate} and stands at ${h.completionPct}%.`,
       detailAr: `كان تسليم (${h.kind}) مستحقًا في ${h.dueDate} ولا يزال عند ${h.completionPct}%.`,
+      ownerUserId: actFor(h.createdBy ?? deptHead.get(deptOf(h.userId) ?? "") ?? null, deptOf(h.userId)),
+    });
+  }
+
+  /* CR08 6.4: an open handover with undecided items or a missing mandatory
+     interview inside the last 14 days before the last working day is a gap;
+     a closed handover lowers the register (it is skipped above and here) */
+  for (const h of ctx.handovers) {
+    if (h.status === "complete") continue;
+    const day = h.lastWorkingDay ?? h.dueDate;
+    if (!day) continue;
+    const daysLeft = Math.ceil((new Date(day + "T23:59:59Z").getTime() - now.getTime()) / 86400000);
+    if (daysLeft > 14) continue;
+    const items = ctx.handoverItems.filter((i) => i.handoverId === h.id && i.inScope === 1 && i.status !== "not_needed");
+    const undecided = items.filter((i) => !i.recipientKind).length;
+    const interviewDone = handoverInterviews.some((iv) => iv.handoverId === h.id && iv.status === "complete");
+    const unsigned = handoverPaths.filter((p) => p.handoverId === h.id && !p.signedOffAt).length;
+    const gaps: string[] = [];
+    if (undecided) gaps.push(`${undecided} items without a recipient decision`);
+    if (h.interviewRequired === 1 && !interviewDone) gaps.push("the mandatory capture interview is not complete");
+    if (unsigned) gaps.push(`${unsigned} recipients have not signed off`);
+    if (!gaps.length) continue;
+    const gapsAr: string[] = [];
+    if (undecided) gapsAr.push(`${undecided} عناصر بلا قرار مستلم`);
+    if (h.interviewRequired === 1 && !interviewDone) gapsAr.push("مقابلة التوثيق الإلزامية لم تكتمل");
+    if (unsigned) gapsAr.push(`${unsigned} مستلمين لم يوقعوا`);
+    const name = handoverName(h);
+    risks.push({
+      kind: "incomplete_handover",
+      severity: daysLeft <= 1 ? "critical" : "high",
+      departmentId: deptOf(h.userId),
+      userId: h.personKind === "external" ? null : h.userId,
+      resourceType: "handover_gap",
+      resourceId: h.id,
+      title: `Handover of ${name.en}: ${daysLeft <= 0 ? "last working day passed" : `${daysLeft} days left`} with open gaps`,
+      detailEn: `${gaps.join("; ")}.`,
+      detailAr: `${gapsAr.join("؛ ")}.`,
       ownerUserId: actFor(h.createdBy ?? deptHead.get(deptOf(h.userId) ?? "") ?? null, deptOf(h.userId)),
     });
   }
@@ -509,7 +555,7 @@ export async function recomputeHrRisks(): Promise<number> {
         resourceType: "node",
         resourceId: n.id,
         title: `${n.code ?? n.titleEn.slice(0, 40)} has no linked documents`,
-        detailEn: "No Vault documents or deliverables anywhere under this node.",
+        detailEn: "No Institutional Memory documents or deliverables anywhere under this node.",
         detailAr: "لا توجد وثائق أو مخرجات من المستودع تحت هذا البند.",
         ownerUserId: actFor(null, deptOf(n.ownerUserId)),
       });
@@ -543,15 +589,16 @@ export async function recomputeHrRisks(): Promise<number> {
     }
   }
 
-  /* single point of failure + leaving */
+  /* single point of failure + leaving (CR08 6.4: an open handover counts as leaving) */
   const statusByUser = new Map(ctx.statuses.map((s) => [s.userId, s.status]));
+  const openHandoverUsers = new Set(ctx.handovers.filter((h) => h.status !== "complete" && h.personKind !== "external").map((h) => h.userId));
   for (const [userId, items] of ctx.inventory) {
     const owned = items.filter((i) => i.itemKind !== "node_role");
     const unbacked = owned.filter((i) => !ctx.backupSet.has(`${i.resourceType}:${i.resourceId}`));
     const verifiedUnbacked = unbacked.filter((i) => i.verified);
     const criticalUnbacked = unbacked.filter((i) => i.critical);
     if (verifiedUnbacked.length >= 10 || criticalUnbacked.length >= 3) {
-      const leaving = statusByUser.get(userId) === "leaving";
+      const leaving = statusByUser.get(userId) === "leaving" || openHandoverUsers.has(userId);
       const u = userById.get(userId);
       risks.push({
         kind: "single_point_of_failure",
@@ -618,24 +665,9 @@ export async function recomputeHrRisks(): Promise<number> {
     openCount++;
   }
 
-  /* handover due-date reminders (T-14, T-7, T-1) */
-  for (const h of ctx.handovers) {
-    if (h.status === "complete" || !h.dueDate) continue;
-    const days = Math.ceil((new Date(h.dueDate).getTime() - now.getTime()) / 86400000);
-    if (![14, 7, 1].includes(days)) continue;
-    const u = userById.get(h.userId);
-    const head = deptHead.get(deptOf(h.userId) ?? "");
-    for (const to of [h.successorDefaultUserId, head].filter(Boolean) as string[]) {
-      await notify(
-        to,
-        "handover_due",
-        `Handover of ${u?.nameEn ?? ""} due in ${days} day${days === 1 ? "" : "s"}`,
-        `تسليم ${u?.nameAr ?? ""} مستحق خلال ${days} ${days === 1 ? "يوم" : "أيام"}`,
-        `/hr/handovers/${h.id}`,
-        { en: `Completion stands at ${h.completionPct}%.`, ar: `نسبة الإنجاز الحالية ${h.completionPct}%.` }
-      );
-    }
-  }
+  /* handover due-date reminders (T-14, T-7, T-1) moved to the handover_nightly
+     job in src/server/services/handover.ts (CR08 6.4), which also reaches the
+     leaving person and every recipient and never repeats within a day. */
 
   return openCount;
 }
@@ -644,6 +676,10 @@ export async function recomputeHrRisks(): Promise<number> {
 /* the handover engine (5.6.4)                                          */
 /* ------------------------------------------------------------------ */
 
+/** CR05 signature, kept for the People page and the CR05 seed; CR08 6.1
+    rebuilt the engine in src/server/services/handover.ts and this delegates
+    to it (the CR05 kinds map onto the internal kinds, the successor onto the
+    default recipient). */
 export async function startHandover(
   actor: CurrentUser,
   input: {
@@ -653,103 +689,42 @@ export async function startHandover(
     successorDefaultUserId: string | null;
   }
 ): Promise<{ id: string; items: number } | null> {
-  const inventory = await buildInventory();
-  const items = inventory.get(input.userId) ?? [];
-  const id = newId();
-  await db.insert(schema.handovers).values({
-    id,
-    userId: input.userId,
-    kind: input.kind,
-    createdBy: actor.id,
-    createdAt: nowIso(),
+  const { startHandover2 } = await import("@/server/services/handover");
+  const created = await startHandover2(actor, {
+    person: { userId: input.userId },
+    kind: input.kind === "leave" ? "long_leave" : input.kind,
+    reason: null,
+    lastWorkingDay: input.dueDate,
     dueDate: input.dueDate,
-    successorDefaultUserId: input.successorDefaultUserId,
-    status: "open",
-    completionPct: 0,
+    recipient: { mode: input.successorDefaultUserId ? "person" : "per_item", defaultRecipientUserId: input.successorDefaultUserId },
+    notes: null,
   });
-  let count = 0;
-  for (const i of items) {
-    await db.insert(schema.handoverItems).values({
-      id: newId(),
-      handoverId: id,
-      itemKind: i.itemKind,
-      resourceType: i.resourceType,
-      resourceId: i.resourceId,
-      title: i.title,
-      successorUserId: null,
-      status: "pending",
-    });
-    count++;
-  }
-  // a tacit topic per accepted expertise domain of the person
-  const [expert] = await db
-    .select()
-    .from(schema.experts)
-    .where(eq(schema.experts.userId, input.userId))
-    .limit(1);
-  if (expert) {
-    const domains = await db
-      .select()
-      .from(schema.expertDomains)
-      .where(eq(schema.expertDomains.expertId, expert.id));
-    const termIds = domains.map((d) => d.termId);
-    const terms = termIds.length
-      ? await db.select().from(schema.taxonomyTerms).where(inArray(schema.taxonomyTerms.id, termIds))
-      : [];
-    for (const t of terms.slice(0, 4)) {
-      await db.insert(schema.handoverItems).values({
-        id: newId(),
-        handoverId: id,
-        itemKind: "tacit_topic",
-        resourceType: "term",
-        resourceId: t.id,
-        title: `Tacit knowledge: ${t.nameEn}`,
-        successorUserId: null,
-        status: "pending",
-      });
-      count++;
-    }
-  }
-  /* notifications: successor and department head */
-  const [person] = await db.select().from(schema.users).where(eq(schema.users.id, input.userId)).limit(1);
-  const dept = person?.departmentId
-    ? (await db.select().from(schema.departments).where(eq(schema.departments.id, person.departmentId)).limit(1))[0]
-    : null;
-  for (const to of [input.successorDefaultUserId, dept?.headUserId].filter(Boolean) as string[]) {
-    await notify(
-      to,
-      "handover_started",
-      `Handover started for ${person?.nameEn ?? ""}`,
-      `بدأ تسليم مهام ${person?.nameAr ?? ""}`,
-      `/hr/handovers/${id}`,
-      {
-        en: `${count} items to reassign or capture${input.dueDate ? `, due ${input.dueDate}` : ""}.`,
-        ar: `${count} عنصرًا للإسناد أو التوثيق${input.dueDate ? `، والاستحقاق ${input.dueDate}` : ""}.`,
-      }
-    );
-  }
-  return { id, items: count };
+  return { id: created.id, items: created.items };
 }
 
+/** CR08 6.4: completion counts in-scope items only and never closes a
+    handover by itself; closing is the administrator's explicit act
+    (closeHandover), which stamps completed_at. */
 export async function refreshHandoverCompletion(handoverId: string): Promise<number> {
-  const items = await db
-    .select()
-    .from(schema.handoverItems)
-    .where(eq(schema.handoverItems.handoverId, handoverId));
+  const items = (
+    await db
+      .select()
+      .from(schema.handoverItems)
+      .where(eq(schema.handoverItems.handoverId, handoverId))
+  ).filter((i) => i.inScope === 1 && i.status !== "not_needed");
   const done = items.filter((i) => i.status !== "pending").length;
   const pct = items.length ? Math.round((100 * done) / items.length) : 0;
   const [h] = await db.select().from(schema.handovers).where(eq(schema.handovers.id, handoverId)).limit(1);
   if (!h) return pct;
+  if (h.status === "complete" || h.completedAt) {
+    await db.update(schema.handovers).set({ completionPct: 100, status: "complete", updatedAt: nowIso() }).where(eq(schema.handovers.id, handoverId));
+    return 100;
+  }
   const overdue = h.dueDate ? h.dueDate < nowIso().slice(0, 10) : false;
-  const status =
-    pct >= 100 ? "complete" : overdue ? "overdue" : pct > 0 ? "in_progress" : h.status === "overdue" ? "overdue" : "open";
+  const status = overdue ? "overdue" : pct > 0 ? "in_progress" : "open";
   await db
     .update(schema.handovers)
-    .set({
-      completionPct: pct,
-      status,
-      completedAt: pct >= 100 ? h.completedAt ?? nowIso() : null,
-    })
+    .set({ completionPct: pct, status, updatedAt: nowIso() })
     .where(eq(schema.handovers.id, handoverId));
   return pct;
 }
@@ -1078,83 +1053,39 @@ export async function getHrPeople(user: CurrentUser) {
 
 export type HrPeople = NonNullable<Awaited<ReturnType<typeof getHrPeople>>>;
 
+/** CR08 6: the HR handover list reads the rebuilt records (kept as the
+    CR05 export name; the pages import listHandovers directly). */
 export async function getHrHandovers(user: CurrentUser) {
-  const scope = hrScopeFor(user);
-  if (!scope) return null;
-  const ctx = await loadContext();
-  const rows = ctx.handovers
-    .filter((h) => {
-      const u = ctx.users.find((x) => x.id === h.userId);
-      return scope.all || u?.departmentId === scope.departmentId;
-    })
-    .map((h) => {
-      const u = ctx.users.find((x) => x.id === h.userId);
-      const successor = h.successorDefaultUserId
-        ? ctx.users.find((x) => x.id === h.successorDefaultUserId)
-        : null;
-      return {
-        id: h.id,
-        kind: h.kind,
-        status: h.status,
-        dueDate: h.dueDate,
-        completionPct: h.completionPct,
-        createdAt: h.createdAt,
-        person: u
-          ? { id: u.id, nameEn: u.nameEn, nameAr: u.nameAr, avatarColor: u.avatarColor }
-          : null,
-        successor: successor
-          ? { id: successor.id, nameEn: successor.nameEn, nameAr: successor.nameAr }
-          : null,
-        items: ctx.handoverItems.filter((i) => i.handoverId === h.id).length,
-      };
-    })
-    .sort((a, b) => (a.dueDate ?? "9999").localeCompare(b.dueDate ?? "9999"));
-  return { scope, handovers: rows, users: ctx.users.map((u) => ({ id: u.id, nameEn: u.nameEn, nameAr: u.nameAr, departmentId: u.departmentId })) };
+  const { listHandovers } = await import("@/server/services/handover");
+  const data = await listHandovers(user);
+  if (!data) return null;
+  const users = await db
+    .select({ id: schema.users.id, nameEn: schema.users.nameEn, nameAr: schema.users.nameAr, departmentId: schema.users.departmentId })
+    .from(schema.users)
+    .where(isNull(schema.users.deletedAt));
+  return {
+    scope: hrScopeFor(user) ?? { all: false, departmentId: user.departmentId },
+    handovers: data.rows.map((h) => ({
+      id: h.id,
+      kind: h.kind,
+      status: h.status,
+      dueDate: h.dueDate,
+      completionPct: h.items.pct,
+      createdAt: h.createdAt,
+      person: { id: h.person.id, nameEn: h.person.nameEn, nameAr: h.person.nameAr, avatarColor: h.person.avatarColor },
+      successor: h.defaultRecipient ? { id: h.defaultRecipient.id, nameEn: h.defaultRecipient.nameEn, nameAr: h.defaultRecipient.nameAr } : null,
+      items: h.items.total,
+    })),
+    users,
+  };
 }
 
+/** CR08 6: one handover for an administrator in scope (the rebuilt detail). */
 export async function getHrHandover(user: CurrentUser, id: string) {
-  const scope = hrScopeFor(user);
-  if (!scope) return null;
-  const [h] = await db.select().from(schema.handovers).where(eq(schema.handovers.id, id)).limit(1);
-  if (!h) return null;
-  const [person] = await db.select().from(schema.users).where(eq(schema.users.id, h.userId)).limit(1);
-  if (!scope.all && person?.departmentId !== scope.departmentId) return null;
-  const items = await db
-    .select()
-    .from(schema.handoverItems)
-    .where(eq(schema.handoverItems.handoverId, id))
-    .orderBy(asc(schema.handoverItems.itemKind));
-  const captures = await db
-    .select()
-    .from(schema.knowledgeCaptures)
-    .where(eq(schema.knowledgeCaptures.handoverId, id))
-    .orderBy(desc(schema.knowledgeCaptures.createdAt));
-  const captureLessonIds = captures.map((c) => c.lessonId).filter(Boolean) as string[];
-  const captureLessons = captureLessonIds.length
-    ? await db.select().from(schema.lessons).where(inArray(schema.lessons.id, captureLessonIds))
-    : [];
-  const users = await db.select().from(schema.users).where(isNull(schema.users.deletedAt));
-  const successor = h.successorDefaultUserId
-    ? users.find((u) => u.id === h.successorDefaultUserId) ?? null
-    : null;
-  return {
-    handover: h,
-    person: person
-      ? { id: person.id, nameEn: person.nameEn, nameAr: person.nameAr, avatarColor: person.avatarColor }
-      : null,
-    successor: successor
-      ? { id: successor.id, nameEn: successor.nameEn, nameAr: successor.nameAr }
-      : null,
-    items,
-    captures: captures.map((c) => ({
-      id: c.id,
-      topic: c.topic,
-      createdAt: c.createdAt,
-      lesson: captureLessons.find((l) => l.id === c.lessonId) ?? null,
-      documentId: c.documentId,
-    })),
-    users: users.map((u) => ({ id: u.id, nameEn: u.nameEn, nameAr: u.nameAr })),
-  };
+  const { getHandoverForViewer } = await import("@/server/services/handover");
+  const detail = await getHandoverForViewer(user, id);
+  if (!detail || detail.viewer !== "admin") return null;
+  return detail;
 }
 
 export async function getHrRisks(user: CurrentUser) {

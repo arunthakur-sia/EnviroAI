@@ -1550,18 +1550,24 @@ async function main() {
   }
 
   /* ---------------- 10. gamification: levels, badges, rules, history ---------------- */
-  const levels = [
-    { order: 1, nameEn: "Explorer", nameAr: "مستكشف", minPoints: 0 },
-    { order: 2, nameEn: "Contributor", nameAr: "مساهم", minPoints: 150 },
-    { order: 3, nameEn: "Curator", nameAr: "أمين معرفة", minPoints: 600 },
-    { order: 4, nameEn: "Knowledge Keeper", nameAr: "حافظ المعرفة", minPoints: 1500 },
-    { order: 5, nameEn: "NPC Sage", nameAr: "حكيم المجلس", minPoints: 4000 },
-  ];
+  // CR08 7.1: ten numeric levels; the descriptor shows only on hover and on
+  // the profile (the old named levels are gone)
+  const { LEVEL_DEFS } = await import("./cr08-gamification-seed");
+  const levels = LEVEL_DEFS;
   const levelIds: string[] = [];
   for (const l of levels) {
     const id = newId();
     levelIds.push(id);
-    await db.insert(schema.levels).values({ id, order: l.order, nameEn: l.nameEn, nameAr: l.nameAr, minPoints: l.minPoints });
+    await db.insert(schema.levels).values({
+      id,
+      order: l.order,
+      nameEn: l.nameEn,
+      nameAr: l.nameAr,
+      minPoints: l.minPoints,
+      descriptorEn: l.descriptorEn,
+      descriptorAr: l.descriptorAr,
+      unlocksJson: JSON.stringify(l.unlocks),
+    });
   }
   const badgeDefs: [string, string, string, string, string | null][] = [
     ["builder_bronze", "builder", "Builder I", "بنّاء 1", "bronze"],
@@ -1573,9 +1579,10 @@ async function main() {
     ["connector_bronze", "connector", "Connector I", "موصّل 1", "bronze"],
     ["connector_silver", "connector", "Connector II", "موصّل 2", "silver"],
     ["connector_gold", "connector", "Connector III", "موصّل 3", "gold"],
-    ["explorer_bronze", "explorer", "Explorer I", "مستكشف 1", "bronze"],
-    ["explorer_silver", "explorer", "Explorer II", "مستكشف 2", "silver"],
-    ["explorer_gold", "explorer", "Explorer III", "مستكشف 3", "gold"],
+    // CR08 7.1: the family keeps its code; the old level word left the names
+    ["explorer_bronze", "explorer", "Pathfinder I", "رائد 1", "bronze"],
+    ["explorer_silver", "explorer", "Pathfinder II", "رائد 2", "silver"],
+    ["explorer_gold", "explorer", "Pathfinder III", "رائد 3", "gold"],
     ["first_shelf", "builder", "First Shelf", "أول رف", null],
     ["bilingual", "guardian", "Bilingual", "ثنائي اللغة", null],
     ["gap_closer", "connector", "Gap Closer", "سادّ الفجوات", null],
@@ -1624,7 +1631,7 @@ async function main() {
     await db.insert(schema.gameRules).values({ id: newId(), eventType, points, isActive: 1 });
   }
 
-  // history: a plausible spread of levels (one Sage: knowledge admin)
+  // history: a plausible spread of levels (the knowledge admin at the top)
   const spread: [string, number][] = [
     ["knowledge@npc.qa", 4400],
     ["admin@npc.qa", 1900],
@@ -2133,6 +2140,13 @@ async function main() {
     await seedCr07Council();
     const { seedCr07LessonLinks } = await import("./cr07-lessons-seed");
     await seedCr07LessonLinks();
+  }
+
+  /* ---------------- 12h. CR08: every new module, one orchestrator ---------------- */
+  console.log("-- CR08: portals, levels, index groups, reports, handover, leaderboard, KoW, messaging, operating model...");
+  {
+    const { seedCr08 } = await import("./cr08-seed");
+    await seedCr08();
   }
 
   /* ---------------- 13. report ---------------- */

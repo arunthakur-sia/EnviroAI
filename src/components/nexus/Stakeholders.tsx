@@ -9,6 +9,8 @@ import { Link } from "@/i18n/navigation";
 import { Mail, Plus, UserRound, X } from "lucide-react";
 import { cn, bi } from "@/lib/utils";
 import { Avatar, Chip, Button, Input, NativeSelect } from "@/components/ui/primitives";
+import { OwnerControlCompact } from "@/components/nexus/people/OwnerControl";
+import type { ItemRef, OwnerRef } from "@/components/nexus/people/OwnerControl";
 import type { StakeholderRow } from "@/server/services/strategy";
 
 const ROLE_TONES: Record<string, "maroon" | "gulf" | "gold" | "sand" | "ghost"> = {
@@ -161,11 +163,19 @@ export function StakeholdersSection({
   rows: initialRows,
   canEdit,
   compact = false,
+  owners,
+  item,
 }: {
   nodeId: string;
   rows: StakeholderRow[];
   canEdit: boolean;
   compact?: boolean;
+  /** CR08 9.1: user id -> person, resolved on the server with getOwnerRefs.
+      A stakeholder row carries an organisation, not a position and a unit,
+      so the person card is fed from the resolved reference, never the row. */
+  owners?: Record<string, OwnerRef>;
+  /** the item the person card is opened for */
+  item?: ItemRef | null;
 }) {
   const t = useTranslations("strategy.stakeholders");
   const locale = useLocale();
@@ -202,17 +212,34 @@ export function StakeholdersSection({
       ) : null}
 
       <ul className="flex flex-col divide-y divide-sand-100">
-        {rows.map((s) => (
+        {rows.map((s) => {
+          const person = s.userId ? owners?.[s.userId] ?? null : null;
+          return (
           <li key={s.id} className="flex items-center gap-3 py-2.5" data-testid="stakeholder-row">
-            <Avatar name={s.nameEn || s.nameAr} color={s.avatarColor} size={compact ? 30 : 36} />
+            {/* the same monogram size as the person chip, so the rows of a
+                mixed roster keep one column */}
+            {person ? null : (
+              <Avatar name={s.nameEn || s.nameAr} color={s.avatarColor} size={compact ? 22 : 28} />
+            )}
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-ink-900">
-                {bi(locale, s.nameEn, s.nameAr)}
-                <span className="ms-2 inline-block text-xs font-normal text-ink-400" dir="auto">
-                  {locale === "ar" ? s.nameEn : s.nameAr}
-                </span>
-              </p>
-              <p className="truncate text-xs text-ink-600">
+              {person ? (
+                <p className="flex min-w-0 flex-wrap items-center gap-x-2">
+                  <OwnerControlCompact owner={person} item={item} size={compact ? "sm" : "md"} />
+                  <span className="inline-block text-xs font-normal text-ink-400" dir="auto">
+                    {locale === "ar" ? s.nameEn : s.nameAr}
+                  </span>
+                </p>
+              ) : (
+                <p className="truncate text-sm font-medium text-ink-900">
+                  {bi(locale, s.nameEn, s.nameAr)}
+                  <span className="mx-2 inline-block text-xs font-normal text-ink-400" dir="auto">
+                    {locale === "ar" ? s.nameEn : s.nameAr}
+                  </span>
+                </p>
+              )}
+              {/* the organisation line sits under the name, so it is indented
+                  past the monogram the person chip carries */}
+              <p className={cn("truncate text-xs text-ink-600", person && (compact ? "ps-8" : "ps-[38px]"))}>
                 {bi(locale, s.organisationEn ?? "", s.organisationAr ?? "")}
                 {s.roleNoteEn || s.roleNoteAr ? (
                   <span className="text-ink-400"> · {bi(locale, s.roleNoteEn ?? "", s.roleNoteAr ?? "")}</span>
@@ -249,7 +276,8 @@ export function StakeholdersSection({
               ) : null}
             </span>
           </li>
-        ))}
+          );
+        })}
         {!rows.length ? (
           <li className="py-3 text-sm text-ink-600">{t("empty")}</li>
         ) : null}

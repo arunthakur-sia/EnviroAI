@@ -6,6 +6,7 @@ import type { CurrentUser } from "@/server/auth/session";
 import { newId, nowIso } from "@/lib/ids";
 import { audit } from "@/server/auth/audit";
 import { record, notify } from "@/server/gamification/engine";
+import { getKnowledgeOfWeekIds } from "./knowledge-of-week";
 
 export type VaultFilters = {
   q?: string;
@@ -260,6 +261,7 @@ export async function toShelfDocs(docs: DocRow[]) {
           nameEn: schema.users.nameEn,
           nameAr: schema.users.nameAr,
           color: schema.users.avatarColor,
+          deletedAt: schema.users.deletedAt,
         })
         .from(schema.users)
         .where(inArray(schema.users.id, ownerIds))
@@ -277,11 +279,14 @@ export async function toShelfDocs(docs: DocRow[]) {
     : [];
   const ownerMap = new Map(owners.map((o) => [o.id, o]));
   const typeMap = new Map(types.map((t) => [t.id, t]));
+  // CR08 8: this week's Knowledge of the Week wears a ribbon on every shelf
+  const kowIds = await getKnowledgeOfWeekIds();
   return docs.map((d) => {
     const owner = d.ownerUserId ? ownerMap.get(d.ownerUserId) : null;
     const type = d.knowledgeTypeTermId ? typeMap.get(d.knowledgeTypeTermId) : null;
     return {
       id: d.id,
+      kow: kowIds.has(`document:${d.id}`),
       titleEn: d.titleEn,
       titleAr: d.titleAr,
       summaryEn: d.summaryEn,
@@ -291,6 +296,11 @@ export async function toShelfDocs(docs: DocRow[]) {
       typeNameAr: type?.nameAr ?? null,
       classification: d.classificationLevel,
       status: d.status,
+      /* CR08 9.1: the owner id travels with the name and the colour, so every
+         shelf, book and list row can raise the person card for the owner. A
+         retired account keeps its name on the item but has no card to open,
+         so it carries no id. */
+      ownerUserId: owner && !owner.deletedAt ? owner.id : null,
       ownerName: owner?.nameEn ?? null,
       ownerNameAr: owner?.nameAr ?? null,
       ownerColor: owner?.color ?? null,

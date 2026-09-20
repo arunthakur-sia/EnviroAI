@@ -13,9 +13,25 @@ import { cn, bi } from "@/lib/utils";
 import { formatNumber } from "@/lib/format";
 import { Chip, ProgressRing, RagDot, Skeleton } from "@/components/ui/primitives";
 import { LeadChips } from "@/components/nexus/LeadChips";
+import { OwnerControl, OwnerControlCompact } from "@/components/nexus/people/OwnerControl";
+import type { ItemRef, OwnerRef } from "@/components/nexus/people/OwnerControl";
 import type { NavigatorData, NavItem, NavTarget } from "@/server/services/strategy";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+
+/** CR08 9.1: user id -> person, resolved once on the server (navigator-server). */
+export type OwnerMap = Record<string, OwnerRef>;
+
+/** The item a person card is opened for, from a navigator item. */
+export function itemRefOfNav(item: NavItem): ItemRef {
+  return {
+    type: item.type,
+    id: item.id,
+    titleEn: item.titleEn,
+    titleAr: item.titleAr,
+    href: `/strategy/${item.id}`,
+  };
+}
 
 function timelinePct(start: string | null, end: string | null): number | null {
   if (!start || !end) return null;
@@ -36,56 +52,69 @@ export function LaneCard({
   locale,
   today,
   onOpen,
+  owner,
 }: {
   item: NavItem;
   locale: string;
   today: string;
   /** CR04 2.4: the canvas opens a drawer instead of navigating */
   onOpen?: (item: NavItem) => void;
+  /** CR08 9.1: the person who owns this initiative or project */
+  owner?: OwnerRef | null;
 }) {
   const t = useTranslations("strategy");
   const router = useRouter();
   const pct = timelinePct(item.startDate, item.endDate);
+  /* CR08 9.1: the person chip is a button, so it sits beside the card's own
+     button rather than inside it; the card frame carries the hover lift */
   return (
-    <button
-      onClick={() => (onOpen ? onOpen(item) : router.push(`/strategy/${item.id}` as never))}
-      className="card flex w-60 shrink-0 flex-col gap-1.5 px-3.5 py-3 text-start transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] cursor-pointer"
-      data-testid="lane-card"
+    <div
+      className="card flex w-60 shrink-0 flex-col gap-1.5 px-3.5 py-3 transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
       data-node-id={item.id}
     >
-      <span className="flex items-center gap-2">
-        <RagDot status={item.status} />
-        {item.code ? <span className="text-[10px] text-ink-600 tnum">{item.code}</span> : null}
-      </span>
-      <span className="line-clamp-2 min-h-9 text-sm font-medium leading-snug text-ink-900">
-        {bi(locale, item.titleEn, item.titleAr)}
-      </span>
-      <LeadChips leads={item.leads} />
-      {pct != null ? (
-        <span
-          className="relative mt-0.5 block h-1 overflow-visible rounded-full bg-sand-200"
-          role="img"
-          aria-label={`${t("timeline")}: ${Math.round(pct * 100)}%`}
-        >
-          <span
-            className="absolute inset-y-0 start-0 rounded-full bg-gulf-400"
-            style={{ width: `${Math.round(pct * 100)}%` }}
-          />
-          {/* today's mark */}
-          <span
-            className="absolute -top-0.5 h-2 w-0.5 rounded-full bg-maroon-700"
-            style={{ insetInlineStart: `${Math.round(pct * 100)}%` }}
-            title={today}
-          />
+      <button
+        onClick={() => (onOpen ? onOpen(item) : router.push(`/strategy/${item.id}` as never))}
+        className="flex flex-col gap-1.5 rounded-lg text-start cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+        data-testid="lane-card"
+      >
+        <span className="flex items-center gap-2">
+          <RagDot status={item.status} />
+          {item.code ? <span className="text-[10px] text-ink-600 tnum">{item.code}</span> : null}
         </span>
-      ) : null}
-      {item.deliverableCount ? (
-        <span className="mt-0.5 flex items-center gap-1 text-[11px] text-ink-600 tnum">
-          <FileStack className="size-3" aria-hidden />
-          {t("nav.deliverablesCount", { count: item.deliverableCount })}
+        <span className="line-clamp-2 min-h-9 text-sm font-medium leading-snug text-ink-900">
+          {bi(locale, item.titleEn, item.titleAr)}
         </span>
+        <LeadChips leads={item.leads} />
+        {pct != null ? (
+          <span
+            className="relative mt-0.5 block h-1 overflow-visible rounded-full bg-sand-200"
+            role="img"
+            aria-label={`${t("timeline")}: ${Math.round(pct * 100)}%`}
+          >
+            <span
+              className="absolute inset-y-0 start-0 rounded-full bg-gulf-400"
+              style={{ width: `${Math.round(pct * 100)}%` }}
+            />
+            {/* today's mark */}
+            <span
+              className="absolute -top-0.5 h-2 w-0.5 rounded-full bg-maroon-700"
+              style={{ insetInlineStart: `${Math.round(pct * 100)}%` }}
+              title={today}
+            />
+          </span>
+        ) : null}
+        {item.deliverableCount ? (
+          <span className="mt-0.5 flex items-center gap-1 text-[11px] text-ink-600 tnum">
+            <FileStack className="size-3" aria-hidden />
+            {t("nav.deliverablesCount", { count: item.deliverableCount })}
+          </span>
+        ) : null}
+      </button>
+      {/* mt-auto keeps the chips of a row of cards on one line */}
+      {owner ? (
+        <OwnerControlCompact owner={owner} item={itemRefOfNav(item)} className="mt-auto max-w-full pt-1" />
       ) : null}
-    </button>
+    </div>
   );
 }
 
@@ -95,12 +124,14 @@ export function Lane({
   locale,
   today,
   onOpen,
+  owners,
 }: {
   label: string;
   items: NavItem[];
   locale: string;
   today: string;
   onOpen?: (item: NavItem) => void;
+  owners?: OwnerMap;
 }) {
   const t = useTranslations("strategy");
   return (
@@ -111,7 +142,14 @@ export function Lane({
       {items.length ? (
         <div className="flex gap-2.5 overflow-x-auto pb-2" style={{ overscrollBehaviorX: "contain" }}>
           {items.map((i) => (
-            <LaneCard key={i.id} item={i} locale={locale} today={today} onOpen={onOpen} />
+            <LaneCard
+              key={i.id}
+              item={i}
+              locale={locale}
+              today={today}
+              onOpen={onOpen}
+              owner={i.ownerUserId ? owners?.[i.ownerUserId] ?? null : null}
+            />
           ))}
         </div>
       ) : (
@@ -219,6 +257,7 @@ export function TargetCard({
   onOpenItem,
   copyLink,
   lessonCount,
+  owners,
 }: {
   target: NavTarget;
   items: NavItem[];
@@ -233,6 +272,8 @@ export function TargetCard({
   copyLink?: () => void;
   /** CR07 1.3: lessons linked here and beneath */
   lessonCount?: { direct: number; inherited: number; total: number } | null;
+  /** CR08 9.1: the people who own the items in the lanes */
+  owners?: OwnerMap;
 }) {
   const t = useTranslations("strategy");
   const reduced = useReducedMotion();
@@ -356,8 +397,8 @@ export function TargetCard({
           >
             <div className="border-t border-sand-100 px-5 py-4">
               <div className="flex flex-col gap-5 lg:flex-row lg:gap-8">
-                <Lane label={t("lanes.initiatives")} items={initiatives} locale={locale} today={today} onOpen={onOpenItem} />
-                <Lane label={t("lanes.projects")} items={projects} locale={locale} today={today} onOpen={onOpenItem} />
+                <Lane label={t("lanes.initiatives")} items={initiatives} locale={locale} today={today} onOpen={onOpenItem} owners={owners} />
+                <Lane label={t("lanes.projects")} items={projects} locale={locale} today={today} onOpen={onOpenItem} owners={owners} />
               </div>
               {/* CR07 1.3: the rolled-up lessons, grouped by where they came from */}
               {lessonCount?.total ? <TargetLessons nodeId={target.id} locale={locale} /> : null}
@@ -390,9 +431,12 @@ export function TargetCard({
 export function OutcomeTargets({
   data,
   outcomeId,
+  owners,
 }: {
   data: NavigatorData;
   outcomeId: string;
+  /** CR08 9.1: resolved people for this outcome and its items */
+  owners?: OwnerMap;
 }) {
   const t = useTranslations("strategy");
   const locale = useLocale();
@@ -412,6 +456,7 @@ export function OutcomeTargets({
   const directItems = data.items.filter((i) => i.outcomeId === outcomeId && i.targetId === null);
   const today = new Date().toISOString().slice(0, 10);
   const pct = Math.round(Math.min(1, Math.max(0, outcome.progress)) * 100);
+  const outcomeOwner = outcome.ownerUserId ? owners?.[outcome.ownerUserId] ?? null : null;
 
   /* CR03 2.3 keyboard: arrows move between target cards */
   function onKeyDown(e: React.KeyboardEvent) {
@@ -475,6 +520,21 @@ export function OutcomeTargets({
               <Chip tone="sand">{t("hero.projects", { count: outcome.projectCount })}</Chip>
             </div>
           </div>
+          {/* CR08 9.1: the owner sits at the end side of the header */}
+          {outcomeOwner ? (
+            <OwnerControl
+              owner={outcomeOwner}
+              role="owner"
+              item={{
+                type: "outcome",
+                id: outcome.id,
+                titleEn: outcome.titleEn,
+                titleAr: outcome.titleAr,
+                href: `/strategy/${outcome.id}`,
+              }}
+              className="shrink-0"
+            />
+          ) : null}
           <ProgressRing
             value={outcome.progress}
             size={120}
@@ -508,6 +568,7 @@ export function OutcomeTargets({
               outcomeSlug={outcome.slug}
               locale={locale}
               today={today}
+              owners={owners}
             />
           ))}
         </div>
@@ -521,7 +582,13 @@ export function OutcomeTargets({
           </p>
           <div className="flex gap-2.5 overflow-x-auto pb-2">
             {directItems.map((i) => (
-              <LaneCard key={i.id} item={i} locale={locale} today={today} />
+              <LaneCard
+                key={i.id}
+                item={i}
+                locale={locale}
+                today={today}
+                owner={i.ownerUserId ? owners?.[i.ownerUserId] ?? null : null}
+              />
             ))}
           </div>
         </section>

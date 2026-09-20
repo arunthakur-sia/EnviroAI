@@ -12,6 +12,13 @@ import { whatChanged } from "@/server/ai";
 import { listSignals } from "@/server/services/signals";
 import { loadLeadsFor, getOutcomeStakeholders } from "@/server/services/strategy";
 import { CR07_TOOLS } from "./tools-cr07";
+import { CR08_TOOLS, CR08_TOOL_PORTAL } from "./tools-cr08";
+
+/** CR08 Phase A: the only place an unknown error is narrowed. */
+function errMessage(e: unknown): string {
+  return e instanceof Error ? e.message : String(e);
+}
+
 
 /* ------------------------------------------------------------------ */
 /* Loop state: sources registry + workspace accumulation               */
@@ -28,6 +35,10 @@ export type SourceRef = {
   edition?: string | null;
   classification?: number;
   verified?: boolean;
+  /* CR08 9.1: the person responsible for the cited item, attached once before
+     the sources are streamed. Optional for good: answers are persisted with
+     their citations and every row written before this has none. */
+  owner?: import("@/server/services/owner-lookup").OwnerChip | null;
 };
 
 export type WorkspaceStrategyCard = {
@@ -746,7 +757,6 @@ export async function toolGetIndicatorSeries(
   if (!ind) return "Indicator not found.";
   if (ind.classificationLevel > ctx.user.clearanceLevel) return "You do not have clearance for this indicator.";
 
-  const dimensionKey = input.dimension ?? "total";
   const valueConds = [
     eq(schema.indicatorValues.indicatorId, ind.id),
     input.dimension
@@ -762,8 +772,8 @@ export async function toolGetIndicatorSeries(
     .orderBy(asc(schema.indicatorValues.period));
   if (!values.length) return `Indicator "${ind.nameEn}" has no values recorded${input.dimension ? ` for dimension ${input.dimension}` : ""}. The owner should update it.`;
 
-  const totalSeries = values.filter((v) => !input.dimension);
-  const series = (input.dimension ? values : totalSeries).slice(-36);
+  // the dimension filter is already in the query above, so this is the series
+  const series = values.slice(-36);
   const latest = series[series.length - 1];
   const previous = series.length > 1 ? series[series.length - 2] : null;
   const first = series[0];
@@ -875,8 +885,8 @@ export async function toolCompute(
   try {
     const result = safeEval(input.expression, input.inputs ?? {});
     return `compute(${input.expression}) with ${JSON.stringify(input.inputs ?? {})} = ${Number(result.toFixed(6))}`;
-  } catch (e: any) {
-    return `compute error: ${e.message}. Use numbers and variable names you passed in "inputs" with + - * / ( ).`;
+  } catch (e: unknown) {
+    return `compute error: ${errMessage(e)}. Use numbers and variable names you passed in "inputs" with + - * / ( ).`;
   }
 }
 
@@ -1637,7 +1647,7 @@ export const TOOL_DEFINITIONS = [
   {
     name: "get_deliverables",
     description:
-      "The deliverables (contracted outputs stored in the Vault) of an initiative or project, with codes, versions, acceptance status, and summaries. Give node_id or node_code such as PRJ-01a.",
+      "The deliverables (contracted outputs stored in Institutional Memory) of an initiative or project, with codes, versions, acceptance status, and summaries. Give node_id or node_code such as PRJ-01a.",
     input_schema: {
       type: "object" as const,
       properties: { node_id: { type: "string" }, node_code: { type: "string" } },
@@ -1723,6 +1733,8 @@ export const TOOL_DEFINITIONS = [
   },
   // CR07 2.5 and 3.7: the Council Strategy, the Organisation, lesson roll-up
   ...CR07_TOOLS,
+  // CR08 11: every new module's tools, aggregated in tools-cr08.ts
+  ...CR08_TOOLS,
 ];
 
 /* CR05 6.1: tools whose portal must be visible for the user. */
@@ -1751,6 +1763,8 @@ const TOOL_PORTAL: Record<string, string> = {
   query_org: "organisation",
   get_unit_policies: "organisation",
   get_lessons_for_node: "lessons",
+  // CR08
+  ...CR08_TOOL_PORTAL,
 };
 
 export async function runTool(
@@ -1811,10 +1825,14 @@ export async function runTool(
         // CR07: the Council Strategy, Organisation and lesson roll-up tools
         const { runCr07Tool } = await import("./tools-cr07");
         const result = await runCr07Tool(ctx, name, input);
-        return result ?? `Unknown tool ${name}.`;
+        if (result !== null) return result;
+        // CR08: the new modules' tools
+        const { runCr08Tool } = await import("./tools-cr08");
+        const cr08 = await runCr08Tool(ctx, name, input);
+        return cr08 ?? `Unknown tool ${name}.`;
       }
     }
-  } catch (e: any) {
-    return `Tool ${name} failed: ${String(e?.message ?? e).slice(0, 200)}`;
+  } catch (e: unknown) {
+    return `Tool ${name} failed: ${errMessage(e).slice(0, 200)}`;
   }
 }

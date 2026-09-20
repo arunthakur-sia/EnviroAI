@@ -1,5 +1,7 @@
 // Anthropic client wrapper: prompt loading with caching, JSON calls with robust
 // parsing, and streaming. Callers fall back to mock.ts when null is returned.
+// CR08 Phase B: the Anthropic SDK and the prompt files are server-side only.
+import "@/server/server-only";
 import Anthropic from "@anthropic-ai/sdk";
 import fs from "node:fs";
 import path from "node:path";
@@ -11,8 +13,36 @@ export function anthropicKeyPresent(): boolean {
   return Boolean(process.env.ANTHROPIC_API_KEY);
 }
 
+/* A key that is present but refused (no credit, revoked, out of quota) is the
+   one case where the product would otherwise lie on screen: every answer comes
+   from the deterministic writer while the top bar says nothing. One refusal
+   latches the process into mock mode for fifteen minutes, which lights the
+   existing "AI mock mode" chip and keeps every capability consistent. The latch
+   expires on its own, so restoring credit needs no restart. */
+const REFUSAL_COOLDOWN_MS = 15 * 60 * 1000;
+let refusedUntil = 0;
+
+/** True when a failure means the account cannot call the model at all, as
+    opposed to one request going wrong. */
+export function noteAiFailure(e: unknown): void {
+  const err = e as { status?: number; message?: string };
+  const status = typeof err?.status === "number" ? err.status : 0;
+  const message = String(err?.message ?? "");
+  const refused =
+    status === 401 ||
+    status === 403 ||
+    status === 429 ||
+    (status === 400 && /credit balance|billing|quota/i.test(message));
+  if (refused) refusedUntil = Date.now() + REFUSAL_COOLDOWN_MS;
+}
+
+/** True while a refusal is still in force; the top bar reads this. */
+export function aiRefused(): boolean {
+  return Date.now() < refusedUntil;
+}
+
 export async function aiLive(): Promise<boolean> {
-  if (!anthropicKeyPresent()) return false;
+  if (!anthropicKeyPresent() || aiRefused()) return false;
   const settings = await getAiSettings();
   return !settings.mockMode;
 }
@@ -95,6 +125,7 @@ export async function callJson<T = unknown>(
     }
     return extractJson<T>(text);
   } catch (e) {
+    noteAiFailure(e);
     console.error(`[ai] ${promptName} call failed:`, (e as Error)?.message);
     return null;
   }
@@ -120,6 +151,7 @@ export async function streamPrompt(
       messages: [{ role: "user", content: userContent }],
     });
   } catch (e) {
+    noteAiFailure(e);
     console.error(`[ai] stream ${promptName} failed:`, (e as Error)?.message);
     return null;
   }

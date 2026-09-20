@@ -5,7 +5,9 @@ export function formatNumber(
   locale: string,
   opts: { decimals?: number; numerals?: string; compact?: boolean } = {}
 ): string {
-  if (value === null || value === undefined || Number.isNaN(value)) return "—";
+  // CR08 housekeeping: the repository forbids em dashes, so a missing value
+  // reads as a hyphen (the placeholder the rest of the product already uses)
+  if (value === null || value === undefined || Number.isNaN(value)) return "-";
   const numerals = opts.numerals === "eastern" ? "arab" : "latn";
   const tag = locale === "ar" ? `ar-QA-u-nu-${numerals}` : `en-QA-u-nu-${numerals}`;
   return new Intl.NumberFormat(tag, {
@@ -20,7 +22,7 @@ export function formatDate(
   locale: string,
   opts: { style?: "long" | "medium" | "short"; numerals?: string } = {}
 ): string {
-  if (!iso) return "—";
+  if (!iso) return "-";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
   const numerals = opts.numerals === "eastern" ? "arab" : "latn";

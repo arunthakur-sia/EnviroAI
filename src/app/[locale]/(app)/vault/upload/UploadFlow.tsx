@@ -5,6 +5,7 @@ import * as React from "react";
 import { useDropzone } from "react-dropzone";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 import {
   UploadCloud,
   FileText,
@@ -66,6 +67,11 @@ export function UploadFlow({
   const router = useRouter();
   const { toast } = useToast();
   const [jobs, setJobs] = React.useState<FileJob[]>([]);
+  // CR08 2.2: /vault/upload?type=study pre-sets the knowledge type
+  const sp = useSearchParams();
+  const requestedType = sp.get("type");
+  const presetType =
+    requestedType && (terms.knowledge_type ?? []).some((k) => k.code === requestedType) ? requestedType : null;
 
   const startUpload = React.useCallback(async (files: File[]) => {
     for (const file of files) {
@@ -145,9 +151,10 @@ export function UploadFlow({
           job={job}
           terms={terms}
           collections={collections}
+          presetType={presetType}
           onDone={(points) => {
             toast(t("uploadedToast", { points }), "points");
-            router.push("/vault");
+            router.push(presetType === "study" ? ("/studies" as never) : "/vault");
           }}
           onUpdate={(patch) =>
             setJobs((prev) => prev.map((j) => (j === job ? { ...j, ...patch } : j)))
@@ -162,26 +169,35 @@ function FileCard({
   job,
   terms,
   collections,
+  presetType,
   onDone,
   onUpdate,
 }: {
   job: FileJob;
   terms: Record<string, Term[]>;
   collections: { id: string; nameEn: string; nameAr: string }[];
+  /** CR08 2.2: a knowledge type requested through ?type= wins over the AI's guess */
+  presetType?: string | null;
   onDone: (points: number) => void;
   onUpdate: (patch: Partial<FileJob>) => void;
 }) {
   const t = useTranslations("upload");
   const tc = useTranslations("common");
   const locale = useLocale();
+  // one card per dropped file, so the field ids have to be unique per card
+  const uid = React.useId();
   const [form, setForm] = React.useState<Enrichment | null>(null);
   const [reviewMonths, setReviewMonths] = React.useState(12);
   const [collectionId, setCollectionId] = React.useState("");
   const [asVersion, setAsVersion] = React.useState(false);
 
   React.useEffect(() => {
-    if (job.enrichment && !form) setForm(job.enrichment);
-  }, [job.enrichment, form]);
+    if (job.enrichment && !form) {
+      setForm(
+        presetType ? { ...job.enrichment, knowledge_type_code: presetType } : job.enrichment
+      );
+    }
+  }, [job.enrichment, form, presetType]);
 
   async function confirm() {
     if (!form || !job.documentId) return;
@@ -285,16 +301,18 @@ function FileCard({
             <>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <Label>{t("titleEn")}</Label>
+                  <Label htmlFor={`${uid}-title-en`}>{t("titleEn")}</Label>
                   <Input
+                    id={`${uid}-title-en`}
                     value={form.title_en}
                     dir="ltr"
                     onChange={(e) => setForm({ ...form, title_en: e.target.value })}
                   />
                 </div>
                 <div>
-                  <Label>{t("titleAr")}</Label>
+                  <Label htmlFor={`${uid}-title-ar`}>{t("titleAr")}</Label>
                   <Input
+                    id={`${uid}-title-ar`}
                     value={form.title_ar}
                     dir="rtl"
                     onChange={(e) => setForm({ ...form, title_ar: e.target.value })}
@@ -303,8 +321,9 @@ function FileCard({
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <Label>{t("summaryEn")}</Label>
+                  <Label htmlFor={`${uid}-summary-en`}>{t("summaryEn")}</Label>
                   <Textarea
+                    id={`${uid}-summary-en`}
                     value={form.summary_en}
                     dir="ltr"
                     rows={4}
@@ -312,8 +331,9 @@ function FileCard({
                   />
                 </div>
                 <div>
-                  <Label>{t("summaryAr")}</Label>
+                  <Label htmlFor={`${uid}-summary-ar`}>{t("summaryAr")}</Label>
                   <Textarea
+                    id={`${uid}-summary-ar`}
                     value={form.summary_ar}
                     dir="rtl"
                     rows={4}
@@ -324,7 +344,8 @@ function FileCard({
 
               {form.key_facts.length ? (
                 <div>
-                  <Label>{t("keyFacts")}</Label>
+                  {/* a read-only list of extracted facts, not a form control */}
+                  <p className="mb-1.5 block text-xs font-medium text-ink-600">{t("keyFacts")}</p>
                   <ul className="space-y-1.5 rounded-xl bg-sand-50 px-4 py-3">
                     {form.key_facts.map((f, i) => (
                       <li key={i} className="flex gap-2 text-sm text-ink-900">
@@ -345,8 +366,9 @@ function FileCard({
 
               <div className="grid gap-4 sm:grid-cols-3">
                 <div>
-                  <Label>{t("knowledgeType")}</Label>
+                  <Label htmlFor={`${uid}-knowledge-type`}>{t("knowledgeType")}</Label>
                   <NativeSelect
+                    id={`${uid}-knowledge-type`}
                     value={form.knowledge_type_code}
                     onChange={(e) => setForm({ ...form, knowledge_type_code: e.target.value })}
                   >
@@ -358,8 +380,9 @@ function FileCard({
                   </NativeSelect>
                 </div>
                 <div>
-                  <Label>{t("classificationLabel")}</Label>
+                  <Label htmlFor={`${uid}-classification`}>{t("classificationLabel")}</Label>
                   <NativeSelect
+                    id={`${uid}-classification`}
                     value={String(form.classification_level)}
                     onChange={(e) =>
                       setForm({ ...form, classification_level: Number(e.target.value) })
@@ -374,8 +397,9 @@ function FileCard({
                   <p className="mt-1 text-[11px] text-ink-400">{form.classification_reason}</p>
                 </div>
                 <div>
-                  <Label>{t("reviewDate")}</Label>
+                  <Label htmlFor={`${uid}-review-months`}>{t("reviewDate")}</Label>
                   <NativeSelect
+                    id={`${uid}-review-months`}
                     value={String(reviewMonths)}
                     onChange={(e) => setReviewMonths(Number(e.target.value))}
                   >
@@ -406,8 +430,9 @@ function FileCard({
               />
 
               <div>
-                <Label>{t("collection")}</Label>
+                <Label htmlFor={`${uid}-collection`}>{t("collection")}</Label>
                 <NativeSelect
+                  id={`${uid}-collection`}
                   value={collectionId}
                   onChange={(e) => setCollectionId(e.target.value)}
                   className="max-w-xs"
@@ -460,12 +485,16 @@ function TagPicker({
   collapsible?: boolean;
 }) {
   const locale = useLocale();
+  const labelId = React.useId();
   const [open, setOpen] = React.useState(!collapsible);
   const visible = open ? list : list.filter((l) => selected.includes(l.code));
   return (
     <div>
       <div className="mb-1.5 flex items-center gap-2">
-        <Label className="mb-0">{label}</Label>
+        {/* a caption over a set of toggle buttons, not a single control */}
+        <span id={labelId} className="mb-0 block text-xs font-medium text-ink-600">
+          {label}
+        </span>
         {collapsible ? (
           <button
             onClick={() => setOpen(!open)}
@@ -476,7 +505,7 @@ function TagPicker({
           </button>
         ) : null}
       </div>
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-1.5" role="group" aria-labelledby={labelId}>
         {(visible.length || open ? visible : list.slice(0, 8)).map((term) => {
           const active = selected.includes(term.code);
           return (

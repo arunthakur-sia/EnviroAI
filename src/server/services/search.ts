@@ -7,6 +7,7 @@ import { classifyIntent } from "@/server/ai";
 import { makeSnippet } from "@/server/search/fts";
 import { canReadResource } from "@/server/auth/permissions";
 import type { CurrentUser } from "@/server/auth/session";
+import { ownerKey, resolveOwners, type OwnerChip } from "@/server/services/owner-lookup";
 import { newId, nowIso } from "@/lib/ids";
 
 export type SearchResult = {
@@ -20,7 +21,23 @@ export type SearchResult = {
   page: number | null;
   score: number;
   verified?: boolean;
+  /* CR08 3: expert results say which register they belong to */
+  kind?: "internal" | "external";
+  /* CR08 9.1: the person behind the result (a document's custodian, a
+     strategy node's owner, a lesson's author), absent when none is recorded */
+  owner?: OwnerChip | null;
 };
+
+/** CR08 3: the expert results in two labelled groups, internal first. */
+export type ExpertGroups = { internal: SearchResult[]; external: SearchResult[] };
+
+export function groupExpertResults(results: SearchResult[]): ExpertGroups {
+  const experts = results.filter((r) => r.type === "expert");
+  return {
+    internal: experts.filter((r) => r.kind !== "external"),
+    external: experts.filter((r) => r.kind === "external"),
+  };
+}
 
 export async function runSearch(user: CurrentUser, q: string, _locale: string) {
   const intent = await classifyIntent(q);
@@ -56,7 +73,11 @@ export async function runSearch(user: CurrentUser, q: string, _locale: string) {
       resultCount: 0,
       createdAt: nowIso(),
     });
-    return { intent, results: [] as SearchResult[] };
+    return {
+      intent,
+      results: [] as SearchResult[],
+      expertGroups: { internal: [], external: [] } as ExpertGroups,
+    };
   }
 
   const results: SearchResult[] = [];
@@ -69,7 +90,10 @@ export async function runSearch(user: CurrentUser, q: string, _locale: string) {
       r.resourceId
     );
   }
-  const titleMap = new Map<string, { titleEn: string; titleAr: string; verified?: boolean; cls?: number; dept?: string | null }>();
+  const titleMap = new Map<
+    string,
+    { titleEn: string; titleAr: string; verified?: boolean; cls?: number; dept?: string | null; kind?: "internal" | "external" }
+  >();
   if (byType.get("document")?.length) {
     const docs = await db
       .select()
@@ -97,11 +121,19 @@ export async function runSearch(user: CurrentUser, q: string, _locale: string) {
     if (!ids?.length) continue;
     const rows = await db.select().from(table).where(inArray(table.id, ids));
     for (const r of rows as any[]) {
-      const cls = r.classificationLevel ?? 1;
+      const cls = r.classificationLevel ?? r.visibilityClassification ?? 1;
       if (cls > user.clearanceLevel) continue;
       titleMap.set(`${type}:${r.id}`, {
         titleEn: r.titleEn ?? r.nameEn ?? "",
         titleAr: r.titleAr ?? r.nameAr ?? "",
+        // CR08 3: NPC staff are internal, everyone else external
+        kind:
+          type === "expert"
+            ? r.userId || r.type === "npc_employee"
+              ? "internal"
+              : "external"
+            : undefined,
+        verified: type === "expert" ? r.isVerified === 1 : undefined,
       });
     }
   }
@@ -121,6 +153,7 @@ export async function runSearch(user: CurrentUser, q: string, _locale: string) {
       page: null,
       score: r.score,
       verified: meta.verified,
+      kind: meta.kind,
     });
   }
 
@@ -145,6 +178,19 @@ export async function runSearch(user: CurrentUser, q: string, _locale: string) {
 
   results.sort((a, b) => b.score - a.score);
 
+  /* CR08 9.1: the person behind each result, in one bulk pass: documents join
+     their custodian, strategy nodes their owner, lessons their author. A
+     result with nobody recorded simply carries no owner. */
+  const owners = await resolveOwners(
+    results
+      .filter((r) => r.type === "document" || r.type === "node" || r.type === "lesson")
+      .map((r) => ({ type: r.type, id: r.id }))
+  );
+  for (const r of results) {
+    const owner = owners[ownerKey(r.type, r.id)];
+    if (owner) r.owner = owner;
+  }
+
   await db.insert(schema.searchLog).values({
     id: newId(),
     userId: user.id,
@@ -155,5 +201,7 @@ export async function runSearch(user: CurrentUser, q: string, _locale: string) {
     createdAt: nowIso(),
   });
 
-  return { intent, results };
+  // CR08 3: the flat list keeps its shape for older callers; the two expert
+  // groups ride alongside, internal first, never blended.
+  return { intent, results, expertGroups: groupExpertResults(results) };
 }

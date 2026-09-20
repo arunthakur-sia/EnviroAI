@@ -4,9 +4,9 @@ import { and, desc, eq, gte, inArray, like, or, sql } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import type { CurrentUser } from "@/server/auth/session";
 import { can } from "@/server/auth/permissions";
-import { newId, nowIso, todayIso } from "@/lib/ids";
+import { newId, nowIso } from "@/lib/ids";
 import { audit } from "@/server/auth/audit";
-import { record, notify } from "@/server/gamification/engine";
+import { record } from "@/server/gamification/engine";
 import { indexSignal } from "@/server/scan/extract";
 
 export type SignalFilters = {

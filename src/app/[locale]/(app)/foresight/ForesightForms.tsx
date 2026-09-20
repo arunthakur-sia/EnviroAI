@@ -67,12 +67,13 @@ export function ForesightForms() {
         <DialogContent title={t("addSignal")}>
           <div className="flex flex-col gap-3.5">
             <div>
-              <Label>{t("signalTitle")}</Label>
-              <Input value={signal.title} onChange={(e) => setSignal({ ...signal, title: e.target.value })} />
+              <Label htmlFor="signal-title">{t("signalTitle")}</Label>
+              <Input id="signal-title" value={signal.title} onChange={(e) => setSignal({ ...signal, title: e.target.value })} />
             </div>
             <div>
-              <Label>{t("signalDescription")}</Label>
+              <Label htmlFor="signal-description">{t("signalDescription")}</Label>
               <Textarea
+                id="signal-description"
                 value={signal.description}
                 rows={3}
                 onChange={(e) => setSignal({ ...signal, description: e.target.value })}
@@ -80,8 +81,8 @@ export function ForesightForms() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>{t("impactLabel")}</Label>
-                <NativeSelect value={signal.impact} onChange={(e) => setSignal({ ...signal, impact: e.target.value })}>
+                <Label htmlFor="signal-impact">{t("impactLabel")}</Label>
+                <NativeSelect id="signal-impact" value={signal.impact} onChange={(e) => setSignal({ ...signal, impact: e.target.value })}>
                   {["low", "medium", "high"].map((v) => (
                     <option key={v} value={v}>
                       {t(`impact.${v}` as never)}
@@ -90,8 +91,8 @@ export function ForesightForms() {
                 </NativeSelect>
               </div>
               <div>
-                <Label>{t("horizonLabel")}</Label>
-                <NativeSelect value={signal.horizon} onChange={(e) => setSignal({ ...signal, horizon: e.target.value })}>
+                <Label htmlFor="signal-horizon">{t("horizonLabel")}</Label>
+                <NativeSelect id="signal-horizon" value={signal.horizon} onChange={(e) => setSignal({ ...signal, horizon: e.target.value })}>
                   {["near", "mid", "long"].map((v) => (
                     <option key={v} value={v}>
                       {t(`horizon.${v}` as never)}
@@ -118,12 +119,13 @@ export function ForesightForms() {
         <DialogContent title={t("addRisk")}>
           <div className="flex flex-col gap-3.5">
             <div>
-              <Label>{t("riskTitle")}</Label>
-              <Input value={risk.title} onChange={(e) => setRisk({ ...risk, title: e.target.value })} />
+              <Label htmlFor="risk-title">{t("riskTitle")}</Label>
+              <Input id="risk-title" value={risk.title} onChange={(e) => setRisk({ ...risk, title: e.target.value })} />
             </div>
             <div>
-              <Label>{t("mitigation")}</Label>
+              <Label htmlFor="risk-mitigation">{t("mitigation")}</Label>
               <Textarea
+                id="risk-mitigation"
                 value={risk.mitigation}
                 rows={2}
                 onChange={(e) => setRisk({ ...risk, mitigation: e.target.value })}
@@ -131,10 +133,11 @@ export function ForesightForms() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>
+                <Label htmlFor="risk-likelihood">
                   {t("likelihoodAxis")}: <span className="tnum">{risk.likelihood}</span>
                 </Label>
                 <input
+                  id="risk-likelihood"
                   type="range"
                   min={1}
                   max={5}
@@ -145,10 +148,11 @@ export function ForesightForms() {
                 />
               </div>
               <div>
-                <Label>
+                <Label htmlFor="risk-impact">
                   {t("impactAxis")}: <span className="tnum">{risk.impact}</span>
                 </Label>
                 <input
+                  id="risk-impact"
                   type="range"
                   min={1}
                   max={5}

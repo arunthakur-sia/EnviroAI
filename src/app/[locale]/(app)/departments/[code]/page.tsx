@@ -145,7 +145,7 @@ export default async function DepartmentPage({
                       <Avatar name={member.nameEn} color={member.avatarColor} size={22} />
                     ) : null}
                     <span className="min-w-0 truncate text-ink-600">
-                      {member ? bi(locale, member.nameEn, member.nameAr) : "—"}{" "}
+                      {member ? bi(locale, member.nameEn, member.nameAr) : "-"}{" "}
                       <span className="text-ink-400">{t(`actions.${a.action}` as never)}</span>
                     </span>
                     <span className="ms-auto shrink-0 text-[11px] text-ink-400">

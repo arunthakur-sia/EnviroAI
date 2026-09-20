@@ -12,6 +12,12 @@ import { getAiSettings } from "@/server/settings";
 import type { CandidateSignal } from "./extract";
 import { normalizeUrl } from "./extract";
 
+/** CR08 Phase A: the only place an unknown error is narrowed. */
+function errMessage(e: unknown): string {
+  return e instanceof Error ? e.message : String(e);
+}
+
+
 const insecureDispatcher = new Agent({ connect: { rejectUnauthorized: false } });
 const parser = new Parser({ timeout: 20000 });
 
@@ -124,8 +130,8 @@ export async function runRssScan(maxCandidates = 30): Promise<RssOutcome> {
           existing.add(link);
         }
       }
-    } catch (e: any) {
-      const msg = String(e?.message ?? e).slice(0, 200);
+    } catch (e: unknown) {
+      const msg = errMessage(e).slice(0, 200);
       out.errors.push(`${feed.name}: ${msg}`);
       await db
         .update(schema.feeds)

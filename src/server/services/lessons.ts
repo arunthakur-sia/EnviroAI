@@ -101,6 +101,9 @@ export type RoomLesson = {
   outcomeCode: string | null; // O1..O7
   outcomeNameEn: string | null;
   outcomeNameAr: string | null;
+  /** CR08 9.1: the author's account, so the Learning Room and the reader can
+      raise the person card. Null when the account is gone. */
+  authorId: string | null;
   authorNameEn: string | null;
   authorNameAr: string | null;
   authorColor: string | null;
@@ -125,9 +128,12 @@ async function loadRoomLessons(user: CurrentUser): Promise<RoomLesson[]> {
   const rows = await db
     .select({
       lesson: schema.lessons,
+      // CR08 9.1: the id travels with the name for the person card
+      authorId: schema.users.id,
       authorNameEn: schema.users.nameEn,
       authorNameAr: schema.users.nameAr,
       authorColor: schema.users.avatarColor,
+      authorDeletedAt: schema.users.deletedAt,
       departmentEn: schema.departments.nameEn,
       departmentAr: schema.departments.nameAr,
     })
@@ -232,6 +238,7 @@ async function loadRoomLessons(user: CurrentUser): Promise<RoomLesson[]> {
       outcomeCode: outcome?.node.code ?? null,
       outcomeNameEn: term?.nameEn ?? null,
       outcomeNameAr: term?.nameAr ?? null,
+      authorId: author.authorDeletedAt ? null : author.authorId,
       authorNameEn: author.authorNameEn,
       authorNameAr: author.authorNameAr,
       authorColor: author.authorColor,

@@ -104,8 +104,9 @@ export function CaptureForm({
   return (
     <div className="mt-6 flex flex-col gap-5">
       <div className="card p-5">
-        <Label>{t("roughLabel")}</Label>
+        <Label htmlFor="capture-rough">{t("roughLabel")}</Label>
         <Textarea
+          id="capture-rough"
           value={rough}
           onChange={(e) => setRough(e.target.value)}
           rows={5}
@@ -120,12 +121,12 @@ export function CaptureForm({
         <div className="card flex flex-col gap-4 p-5">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <Label>{t("titleField")} (EN)</Label>
-              <Input value={form.title_en} dir="ltr" onChange={(e) => setField("title_en", e.target.value)} />
+              <Label htmlFor="capture-title-en">{t("titleField")} (EN)</Label>
+              <Input id="capture-title-en" value={form.title_en} dir="ltr" onChange={(e) => setField("title_en", e.target.value)} />
             </div>
             <div>
-              <Label>{t("titleField")} (AR)</Label>
-              <Input value={form.title_ar} dir="rtl" onChange={(e) => setField("title_ar", e.target.value)} />
+              <Label htmlFor="capture-title-ar">{t("titleField")} (AR)</Label>
+              <Input id="capture-title-ar" value={form.title_ar} dir="rtl" onChange={(e) => setField("title_ar", e.target.value)} />
             </div>
           </div>
           {(
@@ -137,8 +138,9 @@ export function CaptureForm({
           ).map(([key, label]) => (
             <div key={key} className="grid gap-4 sm:grid-cols-2">
               <div>
-                <Label>{label} (EN)</Label>
+                <Label htmlFor={`capture-${key}-en`}>{label} (EN)</Label>
                 <Textarea
+                  id={`capture-${key}-en`}
                   value={form[`${key}_en` as keyof Structured] as string}
                   dir="ltr"
                   rows={3}
@@ -146,8 +148,9 @@ export function CaptureForm({
                 />
               </div>
               <div>
-                <Label>{label} (AR)</Label>
+                <Label htmlFor={`capture-${key}-ar`}>{label} (AR)</Label>
                 <Textarea
+                  id={`capture-${key}-ar`}
                   value={form[`${key}_ar` as keyof Structured] as string}
                   dir="rtl"
                   rows={3}
@@ -159,8 +162,8 @@ export function CaptureForm({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <Label>{t("filterOutcome")}</Label>
-              <NativeSelect value={outcomeCode} onChange={(e) => setOutcomeCode(e.target.value)}>
+              <Label htmlFor="capture-outcome">{t("filterOutcome")}</Label>
+              <NativeSelect id="capture-outcome" value={outcomeCode} onChange={(e) => setOutcomeCode(e.target.value)}>
                 <option value="">{tc("none")}</option>
                 {outcomes.map((o) => (
                   <option key={o.code} value={o.code}>
@@ -170,8 +173,9 @@ export function CaptureForm({
               </NativeSelect>
             </div>
             <div>
-              <Label>{t("classificationField")}</Label>
+              <Label htmlFor="capture-classification">{t("classificationField")}</Label>
               <NativeSelect
+                id="capture-classification"
                 value={String(classification)}
                 onChange={(e) => setClassification(Number(e.target.value))}
               >
@@ -185,8 +189,11 @@ export function CaptureForm({
           </div>
 
           <div>
-            <Label>{t("topicsField")}</Label>
-            <div className="flex max-h-32 flex-wrap gap-1.5 overflow-y-auto">
+            {/* a caption over a set of toggle buttons, not one control */}
+            <span id="capture-topics-label" className="mb-1.5 block text-xs font-medium text-ink-600">
+              {t("topicsField")}
+            </span>
+            <div className="flex max-h-32 flex-wrap gap-1.5 overflow-y-auto" role="group" aria-labelledby="capture-topics-label">
               {topics.map((topic) => {
                 const active = topicCodes.includes(topic.code);
                 return (

@@ -13,6 +13,7 @@ import { db, schema } from "@/server/db/client";
 import { getCurrentUser } from "@/server/auth/session";
 import { can } from "@/server/auth/permissions";
 import { getNodeDetail, slugOfCode, loadLeadsFor } from "@/server/services/strategy";
+import { getOwnerRefs } from "@/server/services/people";
 import { listDeliverables } from "@/server/services/deliverables";
 import { whatChanged } from "@/server/ai";
 import { toShelfDocs } from "@/server/services/documents";
@@ -31,6 +32,7 @@ import {
 } from "@/components/ui/primitives";
 import { Shelf } from "@/components/nexus/Shelf";
 import { LeadChips } from "@/components/nexus/LeadChips";
+import { OwnerControl } from "@/components/nexus/people/OwnerControl";
 import { StakeholdersSection } from "@/components/nexus/Stakeholders";
 import { BriefDialog } from "@/components/nexus/BriefDialog";
 import { SignalCard } from "@/components/nexus/SignalCard";
@@ -141,6 +143,31 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
     await loadLeadsFor(deliveryItems.map((n) => n.id))
   );
   const allDepartments = await db.select().from(schema.departments);
+
+  /* CR08 9.1: the owner chip. The node's own person first; where none is
+     recorded, the head of the department that leads the node, as the
+     department owner. Nothing at all when neither exists (DECISIONS 121).
+     One bulk resolve covers the header, the KPI custodians and the
+     stakeholder rows. */
+  const leadDepartment = leads.find((l) => l.kind === "department" && l.role === "lead") ?? null;
+  const leadHeadUserId = leadDepartment
+    ? allDepartments.find((d) => d.id === leadDepartment.id)?.headUserId ?? null
+    : null;
+  const ownerRefs = await getOwnerRefs([
+    node.ownerUserId,
+    leadHeadUserId,
+    ...kpis.map((k) => k.ownerUserId),
+    ...stakeholders.map((s) => s.userId),
+  ]);
+  const nodeOwner = node.ownerUserId ? ownerRefs[node.ownerUserId] ?? null : null;
+  const headOwner = nodeOwner ? null : leadHeadUserId ? ownerRefs[leadHeadUserId] ?? null : null;
+  const ownerItem = {
+    type: node.nodeType,
+    id: node.id,
+    titleEn: node.titleEn,
+    titleAr: node.titleAr,
+    href: `/strategy/${node.id}`,
+  };
 
   // hero progress: share of delivery descendants on track
   const heroPool =
@@ -453,6 +480,18 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
           </div>
 
           <div className="flex flex-col items-end gap-3">
+            {/* CR08 9.1: the owner at the end side of the header, beside the
+                lead chips, which name organisations rather than people */}
+            {nodeOwner ? (
+              <OwnerControl
+                owner={nodeOwner}
+                role={isDeliveryNode ? "project_owner" : "owner"}
+                item={ownerItem}
+                align="end"
+              />
+            ) : headOwner ? (
+              <OwnerControl owner={headOwner} role="department_owner" item={ownerItem} align="end" />
+            ) : null}
             {actions}
             {isHeroNode && heroPool.length ? (
               <ProgressRing
@@ -497,6 +536,8 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
             targetValue: k.targetValue,
             targetYear: k.targetYear,
             indicatorId: k.indicatorId,
+            /* CR08 9.1: the KPI's custodian */
+            ownerUserId: k.ownerUserId,
           }))}
           values={kpiValues.map((v) => ({
             kpiId: v.kpiId,
@@ -505,6 +546,8 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
             target: v.targetForPeriod,
             note: v.note,
           }))}
+          owners={ownerRefs}
+          nodeHref={`/strategy/${node.id}`}
         />
       ) : null}
 
@@ -609,6 +652,8 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
               nodeId={id}
               rows={stakeholders}
               canEdit={!isArchived && can(user, "create", "strategy")}
+              owners={ownerRefs}
+              item={ownerItem}
             />
           ) : null}
 

@@ -16,7 +16,12 @@ export type JobType =
   | "lessons_recluster" // CR04 3.7
   | "indices_fetch" // CR05 4.3
   | "indices_forecast_nightly" // CR05 4.6.11
-  | "hr_risks_recompute"; // CR05 5.5
+  | "hr_risks_recompute" // CR05 5.5
+  | "report_build" // CR08 5.4: a Reports-module report, section by section
+  | "report_section_rebuild" // CR08 5.4: regenerate one section
+  | "leaderboard_refresh" // CR08 7.2: every ten minutes and on demand
+  | "kow_rollover" // CR08 8: activate the week's pick, archive the last
+  | "handover_nightly"; // CR08 6: reminders, link expiry, completion
 
 export async function enqueue(
   type: JobType,

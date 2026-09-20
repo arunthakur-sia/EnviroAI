@@ -17,7 +17,7 @@ import type { NavigatorData, NavItem, NavOutcome, CanvasExtras, LeadChip } from 
 import { StrategyMap } from "./StrategyMap";
 import { OutcomePanel, prefetchChapter } from "./OutcomePanel";
 import { NodeDrawer, fetchNodeCard } from "./NodeDrawer";
-import { Lane } from "./OutcomeTargets";
+import { Lane, type OwnerMap } from "./OutcomeTargets";
 
 const RAG: Record<string, string> = {
   on_track: "var(--color-ok)",
@@ -230,9 +230,11 @@ function slugOf(code: string | null, id: string): string {
 function ByLeadView({
   data,
   onOpen,
+  owners,
 }: {
   data: NavigatorData;
   onOpen: (item: NavItem) => void;
+  owners?: OwnerMap;
 }) {
   const t = useTranslations("strategy");
   const locale = useLocale();
@@ -341,6 +343,7 @@ function ByLeadView({
                               locale={locale}
                               today={today}
                               onOpen={onOpen}
+                              owners={owners}
                             />
                             <Lane
                               label={t("lanes.projects")}
@@ -348,6 +351,7 @@ function ByLeadView({
                               locale={locale}
                               today={today}
                               onOpen={onOpen}
+                              owners={owners}
                             />
                           </div>
                         </motion.div>
@@ -374,6 +378,7 @@ export function StrategyCanvas({
   initialView,
   initialState,
   canEdit = false,
+  owners,
 }: {
   data: NavigatorData;
   extras: CanvasExtras;
@@ -381,6 +386,8 @@ export function StrategyCanvas({
   initialState: CanvasState;
   /* CR06: editors get Add stakeholder and Set owner in the outcome panel */
   canEdit?: boolean;
+  /* CR08 9.1: user id -> person for every owner the canvas names */
+  owners?: OwnerMap;
 }) {
   const t = useTranslations("strategy");
   const locale = useLocale();
@@ -781,7 +788,7 @@ export function StrategyCanvas({
       ) : null}
 
       {view === "lead" ? (
-        <ByLeadView data={data} onOpen={openItem} />
+        <ByLeadView data={data} onOpen={openItem} owners={owners} />
       ) : view === "map" ? (
         <StrategyMap
           data={dataView}
@@ -1005,7 +1012,12 @@ export function StrategyCanvas({
             aria-label={t("nav.outcomes")}
             data-testid="medallion-arc"
           >
-            <div className="grid grid-cols-2 gap-x-2 gap-y-8 sm:grid-cols-3 lg:grid-cols-7 lg:gap-x-0">
+            {/* CR08 Phase C: the edge medallion's hover card is 288px wide and
+                centred, so half of it hung past the grid and grew the document
+                sideways (37px, and in Arabic it reached under the rail).
+                Clipping only the horizontal axis keeps the card's pop upwards
+                while the page stops scrolling sideways. */}
+            <div className="grid grid-cols-2 gap-x-2 gap-y-8 overflow-x-clip sm:grid-cols-3 lg:grid-cols-7 lg:gap-x-0">
               {data.outcomes.map((o, i) => (
                 <div key={o.id} className="flex justify-center">
                   <div
@@ -1083,6 +1095,7 @@ export function StrategyCanvas({
                         canEdit={canEdit}
                         leadFilter={state.lead}
                         onLeadFilter={setLeadFilter}
+                        owners={owners}
                       />
                     </motion.div>
                   </AnimatePresence>

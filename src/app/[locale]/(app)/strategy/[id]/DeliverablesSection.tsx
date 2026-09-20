@@ -8,7 +8,7 @@ import { Link } from "@/i18n/navigation";
 import { BadgeCheck, BookOpen, Download, FileStack, Loader2, Upload } from "lucide-react";
 import { cn, bi } from "@/lib/utils";
 import { formatDate } from "@/lib/format";
-import { Chip, ClassificationChip } from "@/components/ui/primitives";
+import { ClassificationChip } from "@/components/ui/primitives";
 import { useToast } from "@/components/ui/toast";
 
 type Row = {

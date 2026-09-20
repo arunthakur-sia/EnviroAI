@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { Sparkles } from "lucide-react";
 import { cn, bi, isArabicText } from "@/lib/utils";
+import { AVAILABILITY_VALUES, EXTERNAL_TYPES, KNOWN_COUNTRIES } from "@/lib/experts-constants";
 import {
   Button,
   Input,
@@ -38,6 +39,7 @@ export function NewExpertForm({
     email: "",
     phone: "",
     nationality: "",
+    country: "QA",
     yearsExperience: "",
     availability: "available",
     domainCodes: [] as string[],
@@ -97,10 +99,10 @@ export function NewExpertForm({
   }
 
   return (
-    <form onSubmit={submit} className="mt-6 flex flex-col gap-4">
+    <form onSubmit={submit} className="mt-6 flex flex-col gap-4" data-testid="new-expert-form">
       <div className="card p-4">
-        <Label>{t("cvPaste")}</Label>
-        <Textarea value={cv} onChange={(e) => setCv(e.target.value)} rows={4} placeholder={t("cvPlaceholder")} />
+        <Label htmlFor="cv">{t("cvPaste")}</Label>
+        <Textarea id="cv" value={cv} onChange={(e) => setCv(e.target.value)} rows={4} placeholder={t("cvPlaceholder")} />
         <Button type="button" variant="ghost" size="sm" className="mt-2" onClick={prefill} disabled={!cv.trim()}>
           <Sparkles className="text-gold-500" /> {t("prefillCta")}
         </Button>
@@ -108,17 +110,17 @@ export function NewExpertForm({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <Label>{t("nameEn")}</Label>
-          <Input value={form.nameEn} dir="ltr" onChange={(e) => set("nameEn", e.target.value)} required={!form.nameAr} />
+          <Label htmlFor="nameEn">{t("nameEn")}</Label>
+          <Input id="nameEn" value={form.nameEn} dir="ltr" onChange={(e) => set("nameEn", e.target.value)} required={!form.nameAr} />
         </div>
         <div>
-          <Label>{t("nameAr")}</Label>
-          <Input value={form.nameAr} dir="rtl" onChange={(e) => set("nameAr", e.target.value)} />
+          <Label htmlFor="nameAr">{t("nameAr")}</Label>
+          <Input id="nameAr" value={form.nameAr} dir="rtl" onChange={(e) => set("nameAr", e.target.value)} />
         </div>
         <div>
-          <Label>{t("filterType")}</Label>
-          <NativeSelect value={form.type} onChange={(e) => set("type", e.target.value)}>
-            {["academic", "government", "consultant", "international"].map((v) => (
+          <Label htmlFor="type">{t("filterType")}</Label>
+          <NativeSelect id="type" value={form.type} onChange={(e) => set("type", e.target.value)}>
+            {EXTERNAL_TYPES.map((v) => (
               <option key={v} value={v}>
                 {t(`types.${v}` as never)}
               </option>
@@ -126,9 +128,9 @@ export function NewExpertForm({
           </NativeSelect>
         </div>
         <div>
-          <Label>{t("filterAvailability")}</Label>
-          <NativeSelect value={form.availability} onChange={(e) => set("availability", e.target.value)}>
-            {["available", "limited", "unavailable"].map((v) => (
+          <Label htmlFor="availability">{t("filterAvailability")}</Label>
+          <NativeSelect id="availability" value={form.availability} onChange={(e) => set("availability", e.target.value)}>
+            {AVAILABILITY_VALUES.map((v) => (
               <option key={v} value={v}>
                 {t(`availability.${v}` as never)}
               </option>
@@ -136,28 +138,39 @@ export function NewExpertForm({
           </NativeSelect>
         </div>
         <div>
-          <Label>{t("organisation")} (EN)</Label>
-          <Input value={form.organisationEn} dir="ltr" onChange={(e) => set("organisationEn", e.target.value)} />
+          <Label htmlFor="organisationEn">{t("organisation")} (EN)</Label>
+          <Input id="organisationEn" value={form.organisationEn} dir="ltr" onChange={(e) => set("organisationEn", e.target.value)} />
         </div>
         <div>
-          <Label>{t("organisation")} (AR)</Label>
-          <Input value={form.organisationAr} dir="rtl" onChange={(e) => set("organisationAr", e.target.value)} />
+          <Label htmlFor="organisationAr">{t("organisation")} (AR)</Label>
+          <Input id="organisationAr" value={form.organisationAr} dir="rtl" onChange={(e) => set("organisationAr", e.target.value)} />
         </div>
         <div>
-          <Label>{t("position")} (EN)</Label>
-          <Input value={form.positionEn} dir="ltr" onChange={(e) => set("positionEn", e.target.value)} />
+          <Label htmlFor="positionEn">{t("position")} (EN)</Label>
+          <Input id="positionEn" value={form.positionEn} dir="ltr" onChange={(e) => set("positionEn", e.target.value)} />
         </div>
         <div>
-          <Label>{t("position")} (AR)</Label>
-          <Input value={form.positionAr} dir="rtl" onChange={(e) => set("positionAr", e.target.value)} />
+          <Label htmlFor="positionAr">{t("position")} (AR)</Label>
+          <Input id="positionAr" value={form.positionAr} dir="rtl" onChange={(e) => set("positionAr", e.target.value)} />
         </div>
         <div>
-          <Label>{t("emailLabel")}</Label>
-          <Input value={form.email} dir="ltr" type="email" onChange={(e) => set("email", e.target.value)} />
+          <Label htmlFor="country">{t("countryLabel")}</Label>
+          <NativeSelect id="country" value={form.country} onChange={(e) => set("country", e.target.value)} data-testid="new-expert-country">
+            {KNOWN_COUNTRIES.map((c) => (
+              <option key={c} value={c}>
+                {t(`countries.${c}` as never)}
+              </option>
+            ))}
+          </NativeSelect>
         </div>
         <div>
-          <Label>{t("yearsLabel")}</Label>
+          <Label htmlFor="email">{t("emailLabel")}</Label>
+          <Input id="email" value={form.email} dir="ltr" type="email" onChange={(e) => set("email", e.target.value)} />
+        </div>
+        <div>
+          <Label htmlFor="years">{t("yearsLabel")}</Label>
           <Input
+            id="years"
             value={form.yearsExperience}
             type="number"
             dir="ltr"
@@ -166,22 +179,24 @@ export function NewExpertForm({
         </div>
       </div>
       <div>
-        <Label>{t("bio")} (EN)</Label>
-        <Textarea value={form.bioEn} dir="ltr" rows={3} onChange={(e) => set("bioEn", e.target.value)} />
+        <Label htmlFor="bioEn">{t("bio")} (EN)</Label>
+        <Textarea id="bioEn" value={form.bioEn} dir="ltr" rows={3} onChange={(e) => set("bioEn", e.target.value)} />
       </div>
       <div>
-        <Label>{t("bio")} (AR)</Label>
-        <Textarea value={form.bioAr} dir="rtl" rows={3} onChange={(e) => set("bioAr", e.target.value)} />
+        <Label htmlFor="bioAr">{t("bio")} (AR)</Label>
+        <Textarea id="bioAr" value={form.bioAr} dir="rtl" rows={3} onChange={(e) => set("bioAr", e.target.value)} />
       </div>
       <div>
-        <Label>{t("domains")}</Label>
-        <div className="flex max-h-40 flex-wrap gap-1.5 overflow-y-auto">
+        {/* a caption over a set of toggle buttons, not a single control */}
+        <span className="mb-1.5 block text-xs font-medium text-ink-600">{t("domains")}</span>
+        <div className="flex max-h-40 flex-wrap gap-1.5 overflow-y-auto" role="group" aria-label={t("domains")}>
           {topics.map((topic) => {
             const active = form.domainCodes.includes(topic.code);
             return (
               <button
                 key={topic.code}
                 type="button"
+                aria-pressed={active}
                 onClick={() =>
                   set(
                     "domainCodes",
@@ -191,7 +206,7 @@ export function NewExpertForm({
                   )
                 }
                 className={cn(
-                  "rounded-lg border px-2.5 py-1 text-xs transition-colors cursor-pointer",
+                  "rounded-lg border px-2.5 py-1 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500",
                   active
                     ? "border-maroon-700 bg-maroon-100 font-medium text-maroon-900"
                     : "border-sand-300 bg-white text-ink-600 hover:border-maroon-300"
@@ -204,7 +219,7 @@ export function NewExpertForm({
         </div>
       </div>
       <div className="flex justify-end">
-        <Button type="submit" size="lg" loading={busy}>
+        <Button type="submit" size="lg" loading={busy} data-testid="new-expert-submit">
           {t("addCta")}
         </Button>
       </div>

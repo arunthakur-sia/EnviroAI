@@ -1,11 +1,12 @@
 "use client";
-// CR05 4.8: Settings > Indices. The register (add index), data refresh,
-// manual observation entry and correction, forecast assumption defaults,
-// peer group presets, and forecast recompute now.
+// CR05 4.8: Settings > Indices. The register, data refresh, manual
+// observation entry and correction, forecast assumption defaults, and
+// forecast recompute now. CR08 4.3: the group manager and the three-step
+// Add index wizard (IndicesGroupManager.tsx, IndicesAddWizard.tsx).
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Plus, RefreshCw, Calculator } from "lucide-react";
-import { bi } from "@/lib/utils";
+import { cn, bi } from "@/lib/utils";
 import {
   Button,
   Input,
@@ -14,8 +15,9 @@ import {
   Label,
   Skeleton,
 } from "@/components/ui/primitives";
-import { Dialog, DialogContent } from "@/components/ui/overlays";
 import { useToast } from "@/components/ui/toast";
+import { IndicesGroupManager } from "./IndicesGroupManager";
+import { IndicesAddWizard } from "./IndicesAddWizard";
 
 type IndexRow = {
   id: string;
@@ -29,6 +31,8 @@ type IndexRow = {
   latestYear: number | null;
   isActive: number;
   sourceNotes: string | null;
+  sdgGoal: number | null;
+  forecastEnabled: number;
 };
 
 type AssumptionRow = {
@@ -44,6 +48,8 @@ type AssumptionRow = {
   editableBy: string;
 };
 
+const REGISTER_COLS = "grid-cols-[minmax(200px,2.2fr)_minmax(120px,1.2fr)_minmax(90px,0.9fr)_minmax(110px,1fr)_minmax(80px,0.7fr)_minmax(90px,0.8fr)]";
+
 export function IndicesSettingsTab() {
   const t = useTranslations("settings.indicesTab");
   const tc = useTranslations("common");
@@ -53,14 +59,6 @@ export function IndicesSettingsTab() {
   const [assumptions, setAssumptions] = React.useState<AssumptionRow[]>([]);
   const [adding, setAdding] = React.useState(false);
   const [busy, setBusy] = React.useState<string | null>(null);
-  const [form, setForm] = React.useState({
-    code: "",
-    nameEn: "",
-    nameAr: "",
-    publisher: "",
-    category: "economy",
-    higherIsBetter: true,
-  });
   const [obsForm, setObsForm] = React.useState({
     indexCode: "",
     country: "QAT",
@@ -76,7 +74,7 @@ export function IndicesSettingsTab() {
       const j = await res.json();
       setRows(j.data?.indices ?? []);
       setAssumptions(j.data?.assumptions ?? []);
-      setObsForm((f) => ({ ...f, indexCode: j.data?.indices?.[0]?.code ?? "" }));
+      setObsForm((f) => ({ ...f, indexCode: f.indexCode || (j.data?.indices?.[0]?.code ?? "") }));
     } catch {
       setRows([]);
     }
@@ -106,13 +104,19 @@ export function IndicesSettingsTab() {
 
   if (!rows) {
     return (
-      <div className="flex flex-col gap-2.5">
+      <div className="flex flex-col gap-2.5" aria-busy>
         {[0, 1, 2].map((i) => (
           <Skeleton key={i} className="h-12 w-full rounded-xl" />
         ))}
       </div>
     );
   }
+
+  const head = (label: string) => (
+    <div role="columnheader" className="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-ink-600 rtl:tracking-normal">
+      {label}
+    </div>
+  );
 
   return (
     <div className="flex flex-col gap-6" data-testid="indices-settings">
@@ -141,34 +145,41 @@ export function IndicesSettingsTab() {
         </Button>
       </div>
 
+      {/* CR08 4.3: the group manager */}
+      <IndicesGroupManager />
+
       {/* the register */}
-      <div className="card overflow-x-auto">
-        <table className="w-full min-w-[760px] text-sm">
-          <thead>
-            <tr className="border-b border-sand-100 text-[11px] uppercase tracking-wider text-ink-600">
-              <th className="px-4 py-2.5 text-start">{t("colIndex")}</th>
-              <th className="px-4 py-2.5 text-start">{t("colPublisher")}</th>
-              <th className="px-4 py-2.5 text-start">{t("colCategory")}</th>
-              <th className="px-4 py-2.5 text-start">{t("colDirection")}</th>
-              <th className="px-4 py-2.5 text-start">{t("colLatest")}</th>
-              <th className="px-4 py-2.5 text-start">{t("colStatus")}</th>
-            </tr>
-          </thead>
-          <tbody>
+      <div className="card overflow-x-auto" data-testid="indices-register">
+        <div role="table" aria-label={t("register")} className="min-w-[760px] text-sm">
+          <div role="rowgroup">
+            <div role="row" className={cn("grid border-b border-sand-100", REGISTER_COLS)}>
+              {head(t("colIndex"))}
+              {head(t("colPublisher"))}
+              {head(t("colCategory"))}
+              {head(t("colDirection"))}
+              {head(t("colLatest"))}
+              {head(t("colStatus"))}
+            </div>
+          </div>
+          <div role="rowgroup">
             {rows.map((r) => (
-              <tr key={r.id} className="border-b border-sand-100 last:border-0" data-testid="settings-index-row">
-                <td className="px-4 py-2.5">
-                  <span className="block font-medium text-ink-900">{bi(locale, r.nameEn, r.nameAr)}</span>
-                  <span className="block text-xs text-ink-400 tnum">{r.code}</span>
-                </td>
-                <td className="px-4 py-2.5 text-xs text-ink-600">{r.publisher ?? "-"}</td>
-                <td className="px-4 py-2.5"><Chip tone="sand">{r.category}</Chip></td>
-                <td className="px-4 py-2.5 text-xs text-ink-600">
+              <div key={r.id} role="row" className={cn("grid items-center border-b border-sand-100 last:border-0", REGISTER_COLS)} data-testid="settings-index-row">
+                <div role="cell" className="min-w-0 px-4 py-2.5">
+                  <span className="block truncate font-medium text-ink-900">
+                    {r.sdgGoal != null ? <span className="me-1.5 tnum text-ink-400">SDG {r.sdgGoal}</span> : null}
+                    {bi(locale, r.nameEn, r.nameAr)}
+                  </span>
+                  <span className="block text-xs text-ink-400 tnum" dir="ltr">{r.code}</span>
+                </div>
+                <div role="cell" className="truncate px-4 py-2.5 text-xs text-ink-600">{r.publisher ?? "-"}</div>
+                <div role="cell" className="px-4 py-2.5"><Chip tone="sand">{r.category}</Chip></div>
+                <div role="cell" className="px-4 py-2.5 text-xs text-ink-600">
                   {r.higherIsBetter ? t("higherBetter") : t("lowerBetter")}
-                </td>
-                <td className="px-4 py-2.5 tnum">{r.latestYear ?? "-"}</td>
-                <td className="px-4 py-2.5">
+                </div>
+                <div role="cell" className="px-4 py-2.5 tnum">{r.latestYear ?? "-"}</div>
+                <div role="cell" className="flex items-center gap-1.5 px-4 py-2.5">
                   <button
+                    type="button"
                     onClick={async () => {
                       await fetch("/api/v1/indices", {
                         method: "PATCH",
@@ -177,15 +188,18 @@ export function IndicesSettingsTab() {
                       });
                       void load();
                     }}
-                    className="cursor-pointer"
+                    className="cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+                    aria-label={r.isActive ? t("deactivate", { name: r.nameEn }) : t("activate", { name: r.nameEn })}
+                    data-testid="settings-index-toggle"
                   >
                     {r.isActive ? <Chip tone="ok">{t("active")}</Chip> : <Chip tone="ghost">{t("inactive")}</Chip>}
                   </button>
-                </td>
-              </tr>
+                  {!r.forecastEnabled ? <Chip tone="ghost">{t("forecastOff")}</Chip> : null}
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </div>
       </div>
 
       {/* manual observation entry */}
@@ -193,8 +207,9 @@ export function IndicesSettingsTab() {
         <p className="mb-3 text-sm font-semibold text-ink-900">{t("manualEntry")}</p>
         <div className="flex flex-wrap items-end gap-2.5">
           <div>
-            <Label>{t("colIndex")}</Label>
+            <Label htmlFor="obs-index">{t("colIndex")}</Label>
             <NativeSelect
+              id="obs-index"
               value={obsForm.indexCode}
               onChange={(e) => setObsForm((f) => ({ ...f, indexCode: e.target.value }))}
               className="w-56"
@@ -207,8 +222,9 @@ export function IndicesSettingsTab() {
             </NativeSelect>
           </div>
           <div>
-            <Label>{t("country")}</Label>
+            <Label htmlFor="obs-country">{t("country")}</Label>
             <Input
+              id="obs-country"
               value={obsForm.country}
               onChange={(e) => setObsForm((f) => ({ ...f, country: e.target.value.toUpperCase() }))}
               className="w-24"
@@ -217,8 +233,9 @@ export function IndicesSettingsTab() {
             />
           </div>
           <div>
-            <Label>{t("year")}</Label>
+            <Label htmlFor="obs-year">{t("year")}</Label>
             <Input
+              id="obs-year"
               value={obsForm.year}
               onChange={(e) => setObsForm((f) => ({ ...f, year: e.target.value }))}
               className="w-24"
@@ -226,8 +243,9 @@ export function IndicesSettingsTab() {
             />
           </div>
           <div>
-            <Label>{t("rank")}</Label>
+            <Label htmlFor="obs-rank">{t("rank")}</Label>
             <Input
+              id="obs-rank"
               value={obsForm.rank}
               onChange={(e) => setObsForm((f) => ({ ...f, rank: e.target.value }))}
               className="w-24"
@@ -235,8 +253,9 @@ export function IndicesSettingsTab() {
             />
           </div>
           <div>
-            <Label>{t("score")}</Label>
+            <Label htmlFor="obs-score">{t("score")}</Label>
             <Input
+              id="obs-score"
               value={obsForm.score}
               onChange={(e) => setObsForm((f) => ({ ...f, score: e.target.value }))}
               className="w-28"
@@ -244,8 +263,9 @@ export function IndicesSettingsTab() {
             />
           </div>
           <div className="min-w-56 flex-1">
-            <Label>{t("sourceUrl")}</Label>
+            <Label htmlFor="obs-source-url">{t("sourceUrl")}</Label>
             <Input
+              id="obs-source-url"
               value={obsForm.sourceUrl}
               onChange={(e) => setObsForm((f) => ({ ...f, sourceUrl: e.target.value }))}
               dir="ltr"
@@ -319,71 +339,8 @@ export function IndicesSettingsTab() {
         <p className="mt-2 text-[11px] text-ink-400">{t("assumptionsHint")}</p>
       </div>
 
-      <Dialog open={adding} onOpenChange={setAdding}>
-        <DialogContent title={t("addIndex")}>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div>
-              <Label>{t("code")}</Label>
-              <Input
-                value={form.code}
-                onChange={(e) => setForm((f) => ({ ...f, code: e.target.value.toLowerCase() }))}
-                dir="ltr"
-                placeholder="gci"
-              />
-            </div>
-            <div>
-              <Label>{t("colCategory")}</Label>
-              <NativeSelect
-                value={form.category}
-                onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-              >
-                {["economy", "governance", "society", "environment", "technology", "human"].map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </NativeSelect>
-            </div>
-            <div>
-              <Label>{t("nameEn")}</Label>
-              <Input value={form.nameEn} onChange={(e) => setForm((f) => ({ ...f, nameEn: e.target.value }))} dir="ltr" />
-            </div>
-            <div>
-              <Label>{t("nameAr")}</Label>
-              <Input value={form.nameAr} onChange={(e) => setForm((f) => ({ ...f, nameAr: e.target.value }))} dir="rtl" />
-            </div>
-            <div>
-              <Label>{t("colPublisher")}</Label>
-              <Input value={form.publisher} onChange={(e) => setForm((f) => ({ ...f, publisher: e.target.value }))} />
-            </div>
-            <div>
-              <Label>{t("colDirection")}</Label>
-              <NativeSelect
-                value={form.higherIsBetter ? "1" : "0"}
-                onChange={(e) => setForm((f) => ({ ...f, higherIsBetter: e.target.value === "1" }))}
-              >
-                <option value="1">{t("higherBetter")}</option>
-                <option value="0">{t("lowerBetter")}</option>
-              </NativeSelect>
-            </div>
-          </div>
-          <div className="mt-4 flex justify-end">
-            <Button
-              loading={busy === "add"}
-              disabled={form.code.length < 2 || form.nameEn.length < 2 || !form.nameAr}
-              onClick={async () => {
-                const ok = await act("add", "/api/v1/indices", form, t("indexAdded"));
-                if (ok) {
-                  setAdding(false);
-                  void load();
-                }
-              }}
-            >
-              {tc("save")}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* CR08 4.3: the three-step Add index */}
+      <IndicesAddWizard open={adding} onOpenChange={setAdding} onCreated={load} />
     </div>
   );
 }

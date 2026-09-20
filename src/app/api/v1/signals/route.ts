@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       text = text || page.text;
       title = title || page.title;
       publisher = new URL(parsed.data.url).hostname.replace(/^www\./, "");
-    } catch (e) {
+    } catch {
       if (!text) {
         return NextResponse.json(
           { data: null, error: "fetch_failed" },

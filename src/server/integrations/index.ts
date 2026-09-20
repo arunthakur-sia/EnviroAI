@@ -14,11 +14,11 @@ export const sharepoint = {
       code: "sharepoint",
       name: "SharePoint",
       status: "not_configured",
-      description: "Will sync document libraries into the Vault with metadata mapping.",
+      description: "Will sync document libraries into Institutional Memory with metadata mapping.",
     };
   },
   // TODO: syncLibrary(siteUrl: string, libraryName: string): pull documents + metadata
-  // TODO: pushDocument(documentId: string): publish a Vault document back to SharePoint
+  // TODO: pushDocument(documentId: string): publish an Institutional Memory document back to SharePoint
 };
 
 export const email = {
@@ -31,7 +31,7 @@ export const email = {
     };
   },
   // TODO: sendDigest(userId: string): weekly personal digest
-  // TODO: ingestInbox(): turn flagged emails into draft Vault documents
+  // TODO: ingestInbox(): turn flagged emails into draft Institutional Memory documents
 };
 
 export const qinsights = {

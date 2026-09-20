@@ -12,7 +12,10 @@ import { BriefDialog } from "@/components/nexus/BriefDialog";
 import { SignalCard } from "@/components/nexus/SignalCard";
 import { toSignalCardData } from "@/components/nexus/signal-card-data";
 import { listSignals, canTriage } from "@/server/services/signals";
+import { resolveOwner } from "@/server/services/owner-lookup";
+import { OwnerControl } from "@/components/nexus/people/OwnerControl";
 import { IndicatorDetailClient } from "./IndicatorDetailClient";
+import { AskContextItem } from "@/components/nexus/ask/AskContextItem";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +35,10 @@ export default async function IndicatorPage({
   const { ind, values, dimensions, kpiLinks, linkedReleases } = detail;
 
   const canEnter = can(user, "create", "statistics");
+  // CR08 9.1: an indicator records no owner of its own, so the person shown is
+  // the head of its own department, the fallback the Ask NPC owner tool uses.
+  // No department, or a head with no account, shows nothing at all.
+  const owner = await resolveOwner("indicator", id);
   // CR01 2.8: accepted signals linked to this indicator, last 90 days
   const indicatorSignals = (
     await listSignals(user, { indicatorId: id, triage: "accepted", days: 90, limit: 6 })
@@ -41,6 +48,8 @@ export default async function IndicatorPage({
 
   return (
     <Reveal>
+      {/* CR08 2.3: the Ask NPC launcher knows this indicator */}
+      <AskContextItem item={{ kind: "indicator", id, code: ind.code, titleEn: ind.nameEn, titleAr: ind.nameAr, href: `/statistics/${id}` }} />
       <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
         <div className="max-w-2xl">
           <h1 className="text-2xl">{bi(locale, ind.nameEn, ind.nameAr)}</h1>
@@ -53,7 +62,20 @@ export default async function IndicatorPage({
             <span>{bi(locale, ind.sourceEn ?? "", ind.sourceAr ?? "")}</span>
           </div>
         </div>
-        <BriefDialog resourceType="indicator" resourceId={id} />
+        {/* ms-auto: the owner and Brief me stay at the end side of the header,
+            on the second line when the title block fills the first */}
+        <div className="ms-auto flex flex-wrap items-center gap-4">
+          {owner ? (
+            <OwnerControl
+              owner={owner}
+              role="department_owner"
+              size="md"
+              align="end"
+              item={{ type: "indicator", id, titleEn: ind.nameEn, titleAr: ind.nameAr, href: `/statistics/${id}` }}
+            />
+          ) : null}
+          <BriefDialog resourceType="indicator" resourceId={id} />
+        </div>
       </div>
 
       <IndicatorDetailClient

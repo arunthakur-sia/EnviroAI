@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/server/auth/session";
 import { getIndexPage } from "@/server/services/indices";
+import { resolveOwner } from "@/server/services/owner-lookup";
 import { assembleInputs } from "@/server/indices/compute";
 import { EmptyState } from "@/components/ui/primitives";
 import { Reveal } from "@/components/motion";
@@ -25,10 +26,15 @@ export default async function IndexDetailPage({
   // the what-if simulator re-runs the engine in the browser over the same
   // assembled inputs at 1,000 runs (CR05 4.6.10); never stored
   const assembled = await assembleInputs(data.index.id, {}, 1000);
+  // CR08 9.1: an index is published by an entity, which is an organisation and
+  // not a person, so no owner is invented here. A national indicator that
+  // reads a Statistics Hub series does have one: the head of that series'
+  // department, exactly as the indicator page shows it.
+  const statisticsOwner = data.statistics ? await resolveOwner("indicator", data.statistics.id) : null;
 
   return (
     <Reveal>
-      <IndexPage data={data} whatIfInputs={assembled?.inputs ?? null} />
+      <IndexPage data={data} whatIfInputs={assembled?.inputs ?? null} statisticsOwner={statisticsOwner} />
     </Reveal>
   );
 }

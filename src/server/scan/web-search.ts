@@ -4,6 +4,12 @@ import { aiLive, getClient, loadPrompt, extractJson } from "@/server/ai/client";
 import { getAiSettings } from "@/server/settings";
 import type { CandidateSignal } from "./extract";
 
+/** CR08 Phase A: the only place an unknown error is narrowed. */
+function errMessage(e: unknown): string {
+  return e instanceof Error ? e.message : String(e);
+}
+
+
 export type WebSearchOutcome = {
   candidates: CandidateSignal[];
   tokensIn: number;
@@ -63,11 +69,13 @@ export async function runWebSearchBrief(
         error: null,
         toolUnavailable: false,
       };
-    } catch (e: any) {
-      lastError = String(e?.message ?? e).slice(0, 300);
+    } catch (e: unknown) {
+      lastError = errMessage(e).slice(0, 300);
       const msg = lastError.toLowerCase();
       // wrong/unknown tool type: try the next variant; other errors: stop
-      if (e?.status === 400 && /tool|web_search/.test(msg)) continue;
+      // the SDK puts the HTTP status on the error object
+      const status = typeof e === "object" && e !== null && "status" in e ? (e as { status?: number }).status : null;
+      if (status === 400 && /tool|web_search/.test(msg)) continue;
       return { candidates: [], tokensIn: 0, tokensOut: 0, error: lastError, toolUnavailable: false };
     }
   }

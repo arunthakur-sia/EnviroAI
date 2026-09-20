@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { eq } from "drizzle-orm";
-import { BadgeCheck, GraduationCap, Medal } from "lucide-react";
+import { BadgeCheck, Building2, ChevronRight, FolderKanban, GraduationCap, Handshake, Medal } from "lucide-react";
 import { db, schema } from "@/server/db/client";
 import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/server/auth/session";
@@ -9,13 +9,9 @@ import { getExpertProfile } from "@/server/services/experts";
 import { Reveal } from "@/components/motion";
 import { bi } from "@/lib/utils";
 import { cn } from "@/lib/utils";
-import {
-  EmptyState,
-  Avatar,
-  Chip,
-  SectionTitle,
-} from "@/components/ui/primitives";
+import { EmptyState, Avatar, Chip, SectionTitle } from "@/components/ui/primitives";
 import { BriefDialog } from "@/components/nexus/BriefDialog";
+import { AskContextItem } from "@/components/nexus/ask/AskContextItem";
 import { ExpertActions } from "./ExpertActions";
 
 export const dynamic = "force-dynamic";
@@ -40,7 +36,9 @@ export default async function ExpertProfilePage({
 
   const profile = await getExpertProfile(user, id);
   if (!profile) return <EmptyState title={tc("notFound")} className="mt-12" />;
-  const { expert, domains, endorsementCounts, skills, engagements, publications, contributions, badges } = profile;
+  const { expert, card, domains, endorsementCounts, skills, engagements, publications, contributions, badges } = profile;
+  const internal = card.kind === "internal";
+  const name = bi(locale, expert.nameEn, expert.nameAr);
 
   // CR05 3.2: project involvement from node_stakeholders
   const stakeRows = await db
@@ -77,16 +75,33 @@ export default async function ExpertProfilePage({
     expert: "w-3/4",
     authority: "w-full",
   };
+  const countryName =
+    card.country && t.has(`countries.${card.country}` as never)
+      ? t(`countries.${card.country}` as never)
+      : card.country;
 
   return (
     <Reveal>
+      <AskContextItem
+        item={{ kind: "expert", id, titleEn: expert.nameEn, titleAr: expert.nameAr, href: `/experts/${id}` }}
+      />
       {/* Header */}
-      <div className="card mb-6 flex flex-wrap items-start gap-5 p-6">
+      <div
+        className="card relative mb-6 flex flex-wrap items-start gap-5 overflow-hidden p-6 ps-7"
+        data-testid="expert-header"
+        data-kind={card.kind}
+      >
+        <span aria-hidden className={cn("absolute inset-y-0 start-0 w-1.5", internal ? "bg-maroon-700" : "bg-gulf-600")} />
         <Avatar name={expert.nameEn} color={expert.avatarColor} size={76} />
         <div className="min-w-0 flex-1">
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal">
+            {t(`kind.${card.kind}`)}
+          </p>
           <h1 className="flex flex-wrap items-center gap-2 text-2xl">
-            {bi(locale, expert.nameEn, expert.nameAr)}
-            {expert.isVerified ? <BadgeCheck className="size-5 text-gulf-600" /> : null}
+            {name}
+            {expert.isVerified ? (
+              <BadgeCheck className="size-5 text-gulf-600" role="img" aria-label={t("verified")} />
+            ) : null}
           </h1>
           <p className="mt-1 text-sm text-ink-600">
             {bi(locale, expert.positionEn ?? "", expert.positionAr ?? "")}
@@ -94,25 +109,51 @@ export default async function ExpertProfilePage({
               <> · {bi(locale, expert.organisationEn ?? "", expert.organisationAr ?? "")}</>
             ) : null}
           </p>
+          {internal && card.unitPath.length ? (
+            <p className="mt-1.5 flex flex-wrap items-center gap-1 text-xs text-ink-600" data-testid="profile-unit">
+              <Building2 className="size-3.5 text-ink-400" aria-hidden />
+              {card.unitPath.map((u, i) => (
+                <span key={u.id} className="flex items-center gap-1">
+                  {i > 0 ? <ChevronRight className="size-3 text-ink-400 flip-rtl" aria-hidden /> : null}
+                  <Link href={`/organisation?unit=${u.code}` as never} className="hover:text-maroon-700">
+                    {bi(locale, u.nameEn, u.nameAr)}
+                  </Link>
+                </span>
+              ))}
+            </p>
+          ) : null}
           <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs">
-            <Chip tone="sand">{t(`types.${expert.type}` as never)}</Chip>
+            {!internal ? <Chip tone="gulf">{t(`types.${expert.type}` as never)}</Chip> : null}
             <span className="flex items-center gap-1.5 text-ink-600">
-              <span className={cn("h-2 w-2 rounded-full", AVAILABILITY_DOT[expert.availability])} />
+              <span className={cn("h-2 w-2 rounded-full", AVAILABILITY_DOT[expert.availability])} aria-hidden />
               {t(`availability.${expert.availability}` as never)}
             </span>
+            {countryName ? <span className="text-ink-600">{countryName}</span> : null}
             {expert.yearsExperience ? (
-              <span className="text-ink-400 tnum">
+              <span className="text-ink-600 tnum">
                 {t("yearsExperience", { count: expert.yearsExperience })}
               </span>
             ) : null}
-            {languages.length ? <span className="text-ink-400">{languages.join(" · ")}</span> : null}
+            {languages.length ? <span className="text-ink-600">{languages.join(" · ")}</span> : null}
             {expert.contactProtocol ? (
               <Chip tone="gold">{expert.contactProtocol}</Chip>
             ) : null}
+            {internal ? (
+              <span className="flex items-center gap-1 text-ink-600 tnum" data-testid="profile-projects">
+                <FolderKanban className="size-3.5 text-maroon-700" aria-hidden />
+                {t("projectsCount", { count: card.projectCount })}
+              </span>
+            ) : (
+              <span className="flex items-center gap-1 text-ink-600 tnum" data-testid="profile-engagements">
+                <Handshake className="size-3.5 text-gulf-600" aria-hidden />
+                {t("engagementsCount", { count: card.engagementCount })}
+                {card.lastEngagementYear ? ` · ${t("lastEngagement", { year: String(card.lastEngagementYear) })}` : ""}
+              </span>
+            )}
           </div>
         </div>
         <div className="flex gap-2">
-          <ExpertActions expertId={id} domains={domains.filter((d) => d.accepted === 1).map((d) => ({ code: d.code, nameEn: d.nameEn, nameAr: d.nameAr }))} />
+          <ExpertActions expertId={id} expertName={name} />
           <BriefDialog resourceType="expert" resourceId={id} />
         </div>
       </div>
@@ -128,37 +169,37 @@ export default async function ExpertProfilePage({
             </section>
           ) : null}
 
-          {/* Engagements */}
+          {/* Engagements: a grid with table roles (no HTML table, CR08 design rule) */}
           {engagements.length ? (
-            <section>
+            <section data-testid="expert-engagements">
               <SectionTitle>{t("engagements")}</SectionTitle>
               <div className="card overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-sand-50 text-start">
-                      <th className="px-4 py-2 text-start text-xs font-semibold text-ink-600">{t("engYear")}</th>
-                      <th className="px-4 py-2 text-start text-xs font-semibold text-ink-600">{t("engTitle")}</th>
-                      <th className="px-4 py-2 text-start text-xs font-semibold text-ink-600">{t("engRole")}</th>
-                      <th className="px-4 py-2 text-start text-xs font-semibold text-ink-600">{t("engOutcome")}</th>
-                      <th className="px-4 py-2 text-start text-xs font-semibold text-ink-600">{t("engRating")}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {engagements.map((e) => (
-                      <tr key={e.id} className="border-t border-sand-100">
-                        <td className="px-4 py-2.5 text-ink-400 tnum">{e.year ?? "-"}</td>
-                        <td className="px-4 py-2.5 font-medium text-ink-900">{e.title}</td>
-                        <td className="px-4 py-2.5 text-ink-600">{e.role ?? "-"}</td>
-                        <td className="max-w-64 px-4 py-2.5 text-xs text-ink-600">
-                          {bi(locale, e.outcomeEn ?? "", e.outcomeAr ?? "")}
-                        </td>
-                        <td className="px-4 py-2.5 text-gold-500 tnum">
-                          {e.rating ? "★".repeat(e.rating) : "-"}
-                        </td>
-                      </tr>
+                <div role="table" className="min-w-[640px] text-sm">
+                  <div role="row" className="grid grid-cols-[64px_minmax(0,1.4fr)_minmax(0,0.8fr)_minmax(0,1.2fr)_80px] bg-sand-50">
+                    {["engYear", "engTitle", "engRole", "engOutcome", "engRating"].map((k) => (
+                      <div key={k} role="columnheader" className="px-4 py-2 text-start text-xs font-semibold text-ink-600">
+                        {t(k as never)}
+                      </div>
                     ))}
-                  </tbody>
-                </table>
+                  </div>
+                  {engagements.map((e) => (
+                    <div
+                      key={e.id}
+                      role="row"
+                      className="grid grid-cols-[64px_minmax(0,1.4fr)_minmax(0,0.8fr)_minmax(0,1.2fr)_80px] border-t border-sand-100"
+                    >
+                      <div role="cell" className="px-4 py-2.5 text-ink-600 tnum">{e.year ?? "-"}</div>
+                      <div role="cell" className="px-4 py-2.5 font-medium text-ink-900">{e.title}</div>
+                      <div role="cell" className="px-4 py-2.5 text-ink-600">{e.role ?? "-"}</div>
+                      <div role="cell" className="px-4 py-2.5 text-xs text-ink-600">
+                        {bi(locale, e.outcomeEn ?? "", e.outcomeAr ?? "")}
+                      </div>
+                      <div role="cell" className="px-4 py-2.5 text-gold-500 tnum" aria-label={e.rating ? `${e.rating}/5` : undefined}>
+                        {e.rating ? "★".repeat(e.rating) : "-"}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </section>
           ) : null}
@@ -176,7 +217,7 @@ export default async function ExpertProfilePage({
                   >
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-sm font-medium text-ink-900">
-                        {r.code ? <span className="me-1.5 text-xs text-ink-400 tnum">{r.code}</span> : null}
+                        {r.code ? <span className="me-1.5 text-xs text-ink-600 tnum">{r.code}</span> : null}
                         {bi(locale, r.titleEn, r.titleAr)}
                       </span>
                       {r.noteEn || r.noteAr ? (
@@ -199,9 +240,9 @@ export default async function ExpertProfilePage({
               <ul className="space-y-2">
                 {education.map((e, i) => (
                   <li key={i} className="flex items-center gap-3 text-sm text-ink-900">
-                    <GraduationCap className="size-4 shrink-0 text-ink-400" />
+                    <GraduationCap className="size-4 shrink-0 text-ink-400" aria-hidden />
                     {e.degree}, {e.institution}
-                    {e.year ? <span className="text-xs text-ink-400 tnum">({e.year})</span> : null}
+                    {e.year ? <span className="text-xs text-ink-600 tnum">({e.year})</span> : null}
                   </li>
                 ))}
               </ul>
@@ -215,7 +256,7 @@ export default async function ExpertProfilePage({
               <ul className="space-y-1.5 text-sm text-ink-900">
                 {publications.map((p) => (
                   <li key={p.id}>
-                    {p.title} {p.year ? <span className="text-xs text-ink-400 tnum">({p.year})</span> : null}
+                    {p.title} {p.year ? <span className="text-xs text-ink-600 tnum">({p.year})</span> : null}
                   </li>
                 ))}
               </ul>
@@ -237,7 +278,7 @@ export default async function ExpertProfilePage({
                       <div key={d.id}>
                         <div className="mb-1 flex items-center justify-between gap-2 text-sm">
                           <span className="text-ink-900">{bi(locale, d.nameEn, d.nameAr)}</span>
-                          <span className="text-[11px] text-ink-400">
+                          <span className="text-[11px] text-ink-600">
                             {t(`levels.${d.level}` as never)}
                             {endorsed ? ` · ${t("endorsements", { count: endorsed })}` : ""}
                           </span>
@@ -284,7 +325,7 @@ export default async function ExpertProfilePage({
                   ] as const
                 ).map(([k, v]) => (
                   <div key={k} className="px-2 py-3">
-                    <p className="font-[family-name:var(--font-display)] text-xl font-semibold text-maroon-900 tnum">
+                    <p className="font-display text-xl font-semibold text-maroon-900 tnum">
                       {v}
                     </p>
                     <p className="text-[11px] text-ink-600">{t(`contrib.${k}` as never)}</p>
@@ -301,7 +342,7 @@ export default async function ExpertProfilePage({
               <div className="flex flex-wrap gap-1.5">
                 {badges.map((b) => (
                   <Chip key={b.code} tone="gold">
-                    <Medal className="size-3" /> {bi(locale, b.nameEn, b.nameAr)}
+                    <Medal className="size-3" aria-hidden /> {bi(locale, b.nameEn, b.nameAr)}
                   </Chip>
                 ))}
               </div>

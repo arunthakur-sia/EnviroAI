@@ -55,8 +55,8 @@ export function VerifyControls({ documentId }: { documentId: string }) {
           />
           {t("bothLanguagesChecked")}
         </label>
-        <Label>{t("verifyNote")}</Label>
-        <Textarea value={note} onChange={(e) => setNote(e.target.value)} rows={3} />
+        <Label htmlFor="verify-note">{t("verifyNote")}</Label>
+        <Textarea id="verify-note" value={note} onChange={(e) => setNote(e.target.value)} rows={3} />
         <div className="mt-4 flex justify-end gap-2">
           <Button variant="secondary" loading={busy} onClick={() => submit("needs_changes")}>
             <MessageSquareWarning /> {tc("needsChanges")}

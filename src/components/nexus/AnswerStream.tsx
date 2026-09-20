@@ -15,6 +15,8 @@ import {
 import { cn } from "@/lib/utils";
 import { Button, Chip, Avatar } from "@/components/ui/primitives";
 import { Tip } from "@/components/ui/overlays";
+import { OwnerControlCompact } from "@/components/nexus/people/OwnerControl";
+import type { OwnerRef, OwnerRole } from "@/components/nexus/people/types";
 
 export type Citation = {
   n: number;
@@ -27,6 +29,9 @@ export type Citation = {
   edition?: string | null;
   verified?: boolean;
   classification?: number;
+  /* CR08 9.1: the person behind the cited item. OPTIONAL for good: answers
+     are persisted with their citations and older rows carry none. */
+  owner?: (OwnerRef & { role: OwnerRole }) | null;
 };
 
 export function citationHref(c: Citation): string {
@@ -68,6 +73,8 @@ export type SuggestedExpert = {
   availability: string;
   reasonEn: string;
   reasonAr: string;
+  /* CR08 3: NPC staff are internal, everyone else external */
+  kind?: "internal" | "external";
 };
 
 export type AskFinal = {
@@ -75,6 +82,8 @@ export type AskFinal = {
   citations: Citation[];
   confidence: "high" | "medium" | "low";
   suggestedExperts: SuggestedExpert[];
+  /* CR08 3: the same suggestions in two labelled groups, internal first */
+  suggestedExpertGroups?: { internal: SuggestedExpert[]; external: SuggestedExpert[] };
   includesSecret: boolean;
 };
 
@@ -229,10 +238,13 @@ export function SourceList({ citations }: { citations: Citation[] }) {
           const isIndicator = c.resource_type === "indicator";
           const Icon = isIndicator ? BarChart3 : FileText;
           return (
-            <Link
+            /* CR08 9.1: the card is no longer one link: the title carries a
+               stretched link and the person chip sits beside it, because the
+               person card opens from a button */
+            <div
               key={c.n}
-              href={citationHref(c) as never}
-              className="group flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-maroon-50"
+              className="group relative flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-maroon-50"
+              data-testid="citation-row"
             >
               <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-maroon-100 text-[10px] font-semibold text-maroon-900 tnum">
                 {c.n}
@@ -242,7 +254,14 @@ export function SourceList({ citations }: { citations: Citation[] }) {
                   isIndicator ? "size-3.5 shrink-0 text-gulf-600" : "size-3.5 shrink-0 text-ink-400"
                 }
               />
-              <span className="truncate text-ink-900 group-hover:text-maroon-900">{c.title}</span>
+              <Link
+                href={citationHref(c) as never}
+                /* flex-1: the title takes the free space, so every tag and the
+                   person chip keep to the end of the row */
+                className="min-w-0 flex-1 truncate rounded text-ink-900 after:absolute after:inset-0 after:content-[''] group-hover:text-maroon-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+              >
+                {c.title}
+              </Link>
               {c.edition && c.edition !== "nds3" ? (
                 <span className="shrink-0 rounded bg-sand-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-ink-600">
                   {c.edition}
@@ -272,7 +291,23 @@ export function SourceList({ citations }: { citations: Citation[] }) {
               ) : c.page ? (
                 <span className="ms-auto shrink-0 text-xs text-ink-400 tnum">p. {c.page}</span>
               ) : null}
-            </Link>
+              {/* z-[1]: above the stretched link that covers the card */}
+              {c.owner ? (
+                <span className="relative z-[1] shrink-0" data-testid="citation-owner">
+                  <OwnerControlCompact
+                    owner={c.owner}
+                    align="end"
+                    item={{
+                      type: c.resource_type ?? "document",
+                      id: c.resource_id,
+                      titleEn: c.title,
+                      titleAr: c.title,
+                      href: citationHref(c),
+                    }}
+                  />
+                </span>
+              ) : null}
+            </div>
           );
         })}
       </div>
@@ -292,7 +327,26 @@ export function AnswerFooter({
   onFeedback?: (helpful: boolean) => void;
 }) {
   const t = useTranslations("ask");
+  const te = useTranslations("experts");
   const [voted, setVoted] = React.useState<null | boolean>(null);
+  // CR08 3: two labelled groups, internal first; older payloads without
+  // groups or kinds fall back to one internal group
+  const expertGroups = (
+    [
+      {
+        key: "internal",
+        items:
+          final.suggestedExpertGroups?.internal ??
+          final.suggestedExperts.filter((e) => e.kind !== "external"),
+      },
+      {
+        key: "external",
+        items:
+          final.suggestedExpertGroups?.external ??
+          final.suggestedExperts.filter((e) => e.kind === "external"),
+      },
+    ] as { key: "internal" | "external"; items: SuggestedExpert[] }[]
+  ).filter((g) => g.items.length);
   return (
     <div className="mt-4 border-t border-sand-100 pt-3">
       <div className="flex flex-wrap items-center gap-3">
@@ -332,30 +386,43 @@ export function AnswerFooter({
         </span>
       </div>
 
-      {final.suggestedExperts.length ? (
-        <div className="mt-3 rounded-xl bg-sand-50 p-3">
+      {expertGroups.length ? (
+        <div className="mt-3 rounded-xl bg-sand-50 p-3" data-testid="suggested-experts">
           <p className="mb-2 text-sm font-medium text-ink-900">
             {final.confidence === "low" ? t("routePrimary") : t("routeSecondary")}
           </p>
-          <div className="flex flex-col gap-2">
-            {final.suggestedExperts.map((e) => (
-              <div key={e.id} className="flex items-center gap-3">
-                <Avatar name={e.nameEn} color="gulf" size={30} />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-ink-900">
-                    {locale === "ar" ? e.nameAr : e.nameEn}
-                  </p>
-                  <p className="truncate text-xs text-ink-600">
-                    {locale === "ar" ? e.reasonAr : e.reasonEn}
-                  </p>
-                </div>
-                <Button
-                  size="sm"
-                  variant={final.confidence === "low" ? "primary" : "secondary"}
-                  onClick={() => onRoute?.(e.id)}
-                >
-                  <Send /> {t("route")}
-                </Button>
+          <div className="flex flex-col gap-3">
+            {expertGroups.map((g) => (
+              <div key={g.key} className="flex flex-col gap-2" data-testid={`suggested-${g.key}`}>
+                <p className="flex items-center gap-2">
+                  <span
+                    aria-hidden
+                    className={cn("h-3 w-1 rounded-full", g.key === "internal" ? "bg-maroon-700" : "bg-gulf-600")}
+                  />
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-600 rtl:tracking-normal">
+                    {te(`groups.${g.key}`)}
+                  </span>
+                </p>
+                {g.items.map((e) => (
+                  <div key={e.id} className="flex items-center gap-3">
+                    <Avatar name={e.nameEn} color={g.key === "internal" ? "maroon" : "gulf"} size={30} />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium text-ink-900">
+                        {locale === "ar" ? e.nameAr : e.nameEn}
+                      </p>
+                      <p className="truncate text-xs text-ink-600">
+                        {locale === "ar" ? e.reasonAr : e.reasonEn}
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant={final.confidence === "low" ? "primary" : "secondary"}
+                      onClick={() => onRoute?.(e.id)}
+                    >
+                      <Send /> {t("route")}
+                    </Button>
+                  </div>
+                ))}
               </div>
             ))}
           </div>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { asc, eq, like, or } from "drizzle-orm";
+import { asc, eq, like } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import { getCurrentUser } from "@/server/auth/session";
 import { can } from "@/server/auth/permissions";

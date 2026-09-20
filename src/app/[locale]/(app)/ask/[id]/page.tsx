@@ -1,13 +1,15 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { asc, eq, inArray, sql } from "drizzle-orm";
+import { asc, eq, sql } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import { getCurrentUser } from "@/server/auth/session";
 import { can } from "@/server/auth/permissions";
 import { Reveal } from "@/components/motion";
 import { bi } from "@/lib/utils";
 import { relativeTime } from "@/lib/format";
-import { EmptyState, Avatar, Chip } from "@/components/ui/primitives";
+import { EmptyState, Chip } from "@/components/ui/primitives";
+import { OwnerControl } from "@/components/nexus/people/OwnerControl";
+import { getOwnerRefs } from "@/server/services/people";
 import { BriefDialog } from "@/components/nexus/BriefDialog";
 import { ThreadAnswers } from "./ThreadAnswers";
 
@@ -33,29 +35,15 @@ export default async function QuestionThreadPage({
     .set({ viewCount: sql`${schema.questions.viewCount} + 1` })
     .where(eq(schema.questions.id, id));
 
-  const [author] = await db
-    .select({ nameEn: schema.users.nameEn, nameAr: schema.users.nameAr, color: schema.users.avatarColor })
-    .from(schema.users)
-    .where(eq(schema.users.id, q.authorId))
-    .limit(1);
-
   const answers = await db
     .select()
     .from(schema.answers)
     .where(eq(schema.answers.questionId, id))
     .orderBy(asc(schema.answers.createdAt));
-  const authorIds = [...new Set(answers.map((a) => a.authorId).filter(Boolean))] as string[];
-  const authors = authorIds.length
-    ? await db
-        .select({
-          id: schema.users.id,
-          nameEn: schema.users.nameEn,
-          nameAr: schema.users.nameAr,
-          color: schema.users.avatarColor,
-        })
-        .from(schema.users)
-        .where(inArray(schema.users.id, authorIds))
-    : [];
+  /* CR08 9.1: one bulk load for the asker and every human answer author, so
+     each of them carries the id the person card needs */
+  const people = await getOwnerRefs([q.authorId, ...answers.map((a) => a.authorId)]);
+  const author = q.authorId ? people[q.authorId] ?? null : null;
 
   const bounty = q.bountyId
     ? (await db.select().from(schema.bounties).where(eq(schema.bounties.id, q.bountyId)).limit(1))[0]
@@ -66,6 +54,7 @@ export default async function QuestionThreadPage({
     classificationLevel: q.classificationLevel,
   });
   const canAnswer = can(user, "create", "ask");
+  const item = { type: "question", id, titleEn: q.titleEn, titleAr: q.titleAr, href: `/ask/${id}` };
 
   return (
     <Reveal>
@@ -88,11 +77,11 @@ export default async function QuestionThreadPage({
               {bi(locale, q.bodyEn ?? "", q.bodyAr ?? "")}
             </p>
           ) : null}
+          {/* CR08 9.1: the person who asked, with the person card */}
           {author ? (
-            <p className="mt-3 flex items-center gap-2 text-sm text-ink-600">
-              <Avatar name={author.nameEn} color={author.color} size={24} />
-              {bi(locale, author.nameEn, author.nameAr)}
-            </p>
+            <div className="mt-3">
+              <OwnerControl owner={author} role="author" size="sm" align="start" item={item} />
+            </div>
           ) : null}
         </div>
 
@@ -101,8 +90,9 @@ export default async function QuestionThreadPage({
           verifiedAnswerId={q.verifiedAnswerId}
           canVerify={canVerify}
           canAnswer={canAnswer}
+          item={item}
           answers={answers.map((a) => {
-            const authorMeta = authors.find((x) => x.id === a.authorId);
+            const authorMeta = a.authorId ? people[a.authorId] ?? null : null;
             return {
               id: a.id,
               isAi: a.isAi === 1,
@@ -113,9 +103,10 @@ export default async function QuestionThreadPage({
               isVerified: a.isVerified === 1,
               helpfulCount: a.helpfulCount,
               createdAt: a.createdAt,
+              authorId: authorMeta?.id ?? null,
               authorNameEn: authorMeta?.nameEn ?? null,
               authorNameAr: authorMeta?.nameAr ?? null,
-              authorColor: authorMeta?.color ?? "maroon",
+              authorColor: authorMeta?.avatarColor ?? "maroon",
             };
           })}
         />

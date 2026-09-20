@@ -157,10 +157,12 @@ export function ClassificationChip({
 
 /* ---------------- Avatar ---------------- */
 
+/* Each ground carries its own ink: white initials on gold-500 measure 2.4 to 1,
+   which no amount of weight rescues, so the gold monogram reads in ink. */
 const AVATAR_BG: Record<string, string> = {
-  maroon: "bg-maroon-700",
-  gulf: "bg-gulf-600",
-  gold: "bg-gold-500",
+  maroon: "bg-maroon-700 text-white",
+  gulf: "bg-gulf-600 text-white",
+  gold: "bg-gold-500 text-ink-900",
 };
 
 export function Avatar({
@@ -177,8 +179,8 @@ export function Avatar({
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 select-none items-center justify-center rounded-full font-semibold text-white",
-        AVATAR_BG[color] ?? "bg-maroon-700",
+        "inline-flex shrink-0 select-none items-center justify-center rounded-full font-semibold",
+        AVATAR_BG[color] ?? "bg-maroon-700 text-white",
         className
       )}
       style={{ width: size, height: size, fontSize: Math.max(10, size * 0.38) }}

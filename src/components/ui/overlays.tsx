@@ -99,7 +99,10 @@ export function TabsList({
   return (
     <TabsPrimitive.List
       className={cn(
-        "inline-flex items-center gap-1 rounded-xl bg-sand-100 p-1",
+        /* CR08 Phase C: a strip of tabs wider than a phone scrolls inside
+           itself rather than widening the page. `max-w-full` is what makes
+           the inline-flex give way; the triggers keep their size. */
+        "inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-xl bg-sand-100 p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         className
       )}
       {...props}
@@ -114,7 +117,7 @@ export function TabsTrigger({
   return (
     <TabsPrimitive.Trigger
       className={cn(
-        "rounded-lg px-3.5 py-1.5 text-sm text-ink-600 transition-colors data-[state=active]:bg-white data-[state=active]:text-maroon-900 data-[state=active]:shadow-sm hover:text-ink-900 cursor-pointer",
+        "shrink-0 whitespace-nowrap rounded-lg px-3.5 py-1.5 text-sm text-ink-600 transition-colors data-[state=active]:bg-white data-[state=active]:text-maroon-900 data-[state=active]:shadow-sm hover:text-ink-900 cursor-pointer",
         className
       )}
       {...props}

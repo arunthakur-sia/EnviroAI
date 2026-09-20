@@ -1,6 +1,6 @@
 # Task: Smart upload enrichment
 
-You receive the extracted text of a document uploaded to the Knowledge Vault plus the available taxonomy terms. Produce complete bilingual metadata.
+You receive the extracted text of a document uploaded to Institutional Memory (the document library) plus the available taxonomy terms. Produce complete bilingual metadata.
 
 # Output: JSON only, exactly this shape
 

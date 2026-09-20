@@ -1,5 +1,14 @@
 // In-process job worker, started once from instrumentation.ts alongside the dev server.
-import { claimNextJob, completeJob, failJob } from "./queue";
+import { claimNextJob, completeJob, failJob, type JobType } from "./queue";
+
+/** CR08 Phase A: the only place an unknown error is narrowed. */
+function errMessage(e: unknown): string {
+  return e instanceof Error ? e.message : String(e);
+}
+function errStack(e: unknown): string {
+  return e instanceof Error ? (e.stack ?? e.message) : String(e);
+}
+
 
 let started = false;
 let stopping = false;
@@ -97,16 +106,86 @@ async function handle(job: {
       if (payload.nightly) await scheduleNextHrRisks();
       break;
     }
+    case "report_build": {
+      // CR08 5.4: a Reports-module report, section by section
+      const { runReportBuild } = await import("@/server/reports/build");
+      await runReportBuild(payload.reportId);
+      break;
+    }
+    case "report_section_rebuild": {
+      const { runSectionRebuild } = await import("@/server/reports/build");
+      await runSectionRebuild(payload.reportId, payload.sectionCode);
+      break;
+    }
+    case "leaderboard_refresh": {
+      // CR08 7.2: the materialised boards, every ten minutes and on demand
+      const { refreshLeaderboards } = await import("@/server/services/leaderboard");
+      const n = await refreshLeaderboards();
+      if (payload.scheduled) {
+        console.log(`[jobs] leaderboards refreshed: ${n} rows`);
+        await scheduleNextOf("leaderboard_refresh", { scheduled: true }, 10 * 60_000);
+      }
+      break;
+    }
+    case "kow_rollover": {
+      // CR08 8: activate this week's pick, archive the previous one
+      const { rolloverKnowledgeOfWeek } = await import("@/server/services/knowledge-of-week");
+      await rolloverKnowledgeOfWeek();
+      if (payload.scheduled) await scheduleNextOf("kow_rollover", { scheduled: true }, 60 * 60_000);
+      break;
+    }
+    case "handover_nightly": {
+      // CR08 6: reminders, external link expiry, completion refresh
+      const { runHandoverNightly } = await import("@/server/services/handover");
+      await runHandoverNightly();
+      if (payload.scheduled) await scheduleNextAt("handover_nightly", { scheduled: true }, 3, 30);
+      break;
+    }
     default:
       throw new Error(`Unknown job type ${job.type}`);
   }
+}
+
+/** CR08: keeps exactly one future job of `type` queued, `delayMs` from now. */
+async function scheduleNextOf(
+  type: JobType,
+  payload: Record<string, unknown>,
+  delayMs: number
+): Promise<void> {
+  try {
+    const { db, schema } = await import("@/server/db/client");
+    const { and, eq } = await import("drizzle-orm");
+    const { enqueue } = await import("./queue");
+    const pending = await db
+      .select({ id: schema.jobs.id })
+      .from(schema.jobs)
+      .where(and(eq(schema.jobs.type, type), eq(schema.jobs.status, "queued")))
+      .limit(1);
+    if (pending.length) return;
+    await enqueue(type, payload, { runAfter: new Date(Date.now() + delayMs).toISOString() });
+  } catch (e) {
+    console.error(`[jobs] scheduleNextOf(${type}) failed`, e);
+  }
+}
+
+/** CR08: keeps exactly one future job of `type` queued for tomorrow at hh:mm UTC. */
+async function scheduleNextAt(
+  type: JobType,
+  payload: Record<string, unknown>,
+  hourUtc: number,
+  minuteUtc: number
+): Promise<void> {
+  const next = new Date();
+  next.setUTCDate(next.getUTCDate() + 1);
+  next.setUTCHours(hourUtc, minuteUtc, 0, 0);
+  await scheduleNextOf(type, payload, next.getTime() - Date.now());
 }
 
 /** Keeps exactly one future scheduled scan in the queue (interval from Settings). */
 async function scheduleNextScan(): Promise<void> {
   try {
     const { db, schema } = await import("@/server/db/client");
-    const { and, eq, gt } = await import("drizzle-orm");
+    const { and, eq } = await import("drizzle-orm");
     const { enqueue } = await import("./queue");
     const { getTrendsSettings } = await import("@/server/scan");
     const pending = await db
@@ -202,9 +281,9 @@ export function startWorker(): void {
         try {
           await handle(job);
           await completeJob(job.id);
-        } catch (e: any) {
-          console.error(`[jobs] ${job.type} failed:`, e?.message || e);
-          await failJob(job.id, String(e?.stack || e), job.attempts + 1);
+        } catch (e: unknown) {
+          console.error(`[jobs] ${job.type} failed:`, errMessage(e));
+          await failJob(job.id, errStack(e), job.attempts + 1);
         }
       } catch (e) {
         // Never let the loop die.
@@ -220,6 +299,12 @@ export function startWorker(): void {
   scheduleNextRecluster();
   scheduleNextIndicesForecast();
   scheduleNextHrRisks();
+  // CR08: the ten-minute leaderboard refresh, the hourly Knowledge of the
+  // Week rollover check and the nightly handover pass. Each is queued for
+  // later, never run at startup (Phase B cold-start rule).
+  scheduleNextOf("leaderboard_refresh", { scheduled: true }, 60_000);
+  scheduleNextOf("kow_rollover", { scheduled: true }, 90_000);
+  scheduleNextAt("handover_nightly", { scheduled: true }, 3, 30);
   console.log("[jobs] worker started");
 }
 

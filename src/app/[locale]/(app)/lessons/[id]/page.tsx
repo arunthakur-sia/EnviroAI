@@ -8,9 +8,14 @@ import { Reveal } from "@/components/motion";
 import { bi } from "@/lib/utils";
 import { formatDate } from "@/lib/format";
 import { Link } from "@/i18n/navigation";
-import { EmptyState, Avatar, Chip, RagDot } from "@/components/ui/primitives";
+import { EmptyState, Chip, RagDot } from "@/components/ui/primitives";
+import { OwnerControl } from "@/components/nexus/people/OwnerControl";
+import { getOwnerRefs } from "@/server/services/people";
 import { BadgeCheck } from "lucide-react";
 import { LessonVerify } from "./LessonVerify";
+import { AskContextItem } from "@/components/nexus/ask/AskContextItem";
+import { SetKnowledgeOfWeekButton } from "@/components/nexus/kow";
+import { canManageKnowledgeOfWeek } from "@/server/services/knowledge-of-week";
 
 export const dynamic = "force-dynamic";
 
@@ -31,11 +36,9 @@ export default async function LessonPage({
   }
   const { audit } = await import("@/server/auth/audit");
   await audit(user.id, "view", "lesson", id);
-  const [author] = await db
-    .select({ nameEn: schema.users.nameEn, nameAr: schema.users.nameAr, color: schema.users.avatarColor })
-    .from(schema.users)
-    .where(eq(schema.users.id, lesson.authorId))
-    .limit(1);
+  // CR08 9.1: the author as a person chip, so the card opens from the lesson
+  const authorRefs = await getOwnerRefs([lesson.authorId]);
+  const author = lesson.authorId ? authorRefs[lesson.authorId] ?? null : null;
   const node = lesson.nodeId
     ? (
         await db
@@ -71,6 +74,8 @@ export default async function LessonPage({
 
   return (
     <Reveal>
+      {/* CR08 2.3: the Ask NPC launcher knows this lesson */}
+      <AskContextItem item={{ kind: "lesson", id, titleEn: lesson.titleEn, titleAr: lesson.titleAr, href: `/lessons/${id}` }} />
       <div className="mx-auto max-w-2xl">
         <div className="mb-6">
           <div className="flex flex-wrap items-center gap-2">
@@ -88,17 +93,32 @@ export default async function LessonPage({
             ))}
           </div>
           <h1 className="mt-3 text-2xl leading-snug">{bi(locale, lesson.titleEn, lesson.titleAr)}</h1>
-          <div className="mt-3 flex items-center gap-2 text-sm text-ink-600">
+          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-ink-600">
             {author ? (
-              <>
-                <Avatar name={author.nameEn} color={author.color} size={24} />
-                {bi(locale, author.nameEn, author.nameAr)}
-              </>
+              <OwnerControl
+                owner={author}
+                role="author"
+                size="sm"
+                align="start"
+                item={{ type: "lesson", id, titleEn: lesson.titleEn, titleAr: lesson.titleAr, href: `/lessons/${id}` }}
+              />
             ) : null}
             <span className="text-xs text-ink-400 tnum">
               {formatDate(lesson.createdAt, locale)}
             </span>
-            {canVerify ? <span className="ms-auto"><LessonVerify lessonId={id} /></span> : null}
+            <span className="ms-auto flex items-center gap-2">
+              {/* CR08 8: a Knowledge Admin can make a verified lesson the week's pick */}
+              {canManageKnowledgeOfWeek(user) && lesson.status === "verified" ? (
+                <SetKnowledgeOfWeekButton
+                  resourceType="lesson"
+                  resourceId={id}
+                  titleEn={lesson.titleEn}
+                  titleAr={lesson.titleAr}
+                  numerals={user.numeralsPref}
+                />
+              ) : null}
+              {canVerify ? <LessonVerify lessonId={id} /> : null}
+            </span>
           </div>
         </div>
 

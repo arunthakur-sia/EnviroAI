@@ -15,6 +15,36 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // CR08: the dev-tools badge sat over the rail's Settings row in screenshots
+  devIndicators: false,
+  /* CR08 Phase A, security headers. The app is same-origin only: it loads no
+     third-party script, frames nothing and is framed by nothing. The CSP is
+     deliberately not set here because Next injects inline bootstrap scripts
+     and the dev server needs eval; it belongs to the deployment, and this is
+     recorded in DECISIONS. */
+  poweredByHeader: false,
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-DNS-Prefetch-Control", value: "off" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), geolocation=(), payment=(), usb=(), microphone=(self)",
+          },
+        ],
+      },
+      {
+        // uploads and generated documents are never a page
+        source: "/api/v1/:path*/download",
+        headers: [{ key: "X-Content-Type-Options", value: "nosniff" }],
+      },
+    ];
+  },
   outputFileTracingExcludes: {
     "*": ["./sources/**", "./data/**"],
   },
@@ -34,4 +64,16 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+/* CR08 Phase B: `npm run analyze` writes the treemaps to .next/analyze/. The
+   plugin is a dev dependency, so a production install without it still builds. */
+let withAnalyzer = (config) => config;
+if (process.env.ANALYZE === "true") {
+  try {
+    const mod = await import("@next/bundle-analyzer");
+    withAnalyzer = mod.default({ enabled: true, openAnalyzer: false });
+  } catch {
+    console.warn("@next/bundle-analyzer is not installed; building without it");
+  }
+}
+
+export default withAnalyzer(nextConfig);

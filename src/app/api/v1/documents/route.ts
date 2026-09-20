@@ -1,12 +1,12 @@
 // POST: multipart upload -> draft document + parse + AI enrichment + duplicate check.
 // GET: list documents (JSON API mirror of the Vault page).
 import { NextRequest, NextResponse } from "next/server";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import { getCurrentUser } from "@/server/auth/session";
 import { can } from "@/server/auth/permissions";
 import { newId, nowIso } from "@/lib/ids";
-import { put } from "@/server/storage";
+import { isAllowedUpload, put } from "@/server/storage";
 import { parseDocument, mimeFromFilename } from "@/server/ingest/parse";
 import { enrichContent } from "@/server/ai";
 import { getAllTerms } from "@/server/services/taxonomy";
@@ -44,6 +44,10 @@ export async function POST(req: NextRequest) {
   const file = form?.get("file");
   if (!form || !(file instanceof File)) {
     return NextResponse.json({ data: null, error: "file_required" }, { status: 400 });
+  }
+  // CR08 Phase A: refuse what the product cannot read, before storing it
+  if (!isAllowedUpload(file.name)) {
+    return NextResponse.json({ data: null, error: "file_type_not_allowed" }, { status: 415 });
   }
   const buf = Buffer.from(await file.arrayBuffer());
   if (buf.length > 100 * 1024 * 1024) {

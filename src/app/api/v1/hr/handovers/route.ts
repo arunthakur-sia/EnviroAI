@@ -1,164 +1,114 @@
+// CR05 5.6.4 surface, delegating to the CR08 6 handover service. The People
+// page still POSTs the CR05 body (userId, kind leaving|transferring|leave,
+// dueDate, successorDefaultUserId); the CR08 start form uses
+// /api/v1/handover. PATCH keeps the CR05 item actions as thin wrappers over
+// the recipient decision.
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { eq } from "drizzle-orm";
-import { db, schema } from "@/server/db/client";
 import { getCurrentUser } from "@/server/auth/session";
-import { hrScopeFor, refreshHandoverCompletion, startHandover } from "@/server/services/hr";
+import { hrScopeFor } from "@/server/services/hr";
+import {
+  getHandoverForViewer,
+  HandoverError,
+  listHandovers,
+  setItemNote,
+  setItemRecipient,
+  setItemStatusCompat,
+  startHandover2,
+} from "@/server/services/handover";
 import { audit } from "@/server/auth/audit";
-import { notify, record } from "@/server/gamification/engine";
-import { nowIso } from "@/lib/ids";
 
-/* CR05 5.6.4: create a handover with its generated checklist. */
+function fail(e: unknown) {
+  if (e instanceof HandoverError) return NextResponse.json({ data: e.extra ?? null, error: e.code }, { status: e.status });
+  console.error("[hr handovers api]", (e as Error)?.message ?? e);
+  return NextResponse.json({ data: null, error: "server_error" }, { status: 500 });
+}
+
+export async function GET() {
+  const user = await getCurrentUser();
+  if (!user) return NextResponse.json({ data: null, error: "unauthorized" }, { status: 401 });
+  const list = await listHandovers(user);
+  if (!list) return NextResponse.json({ data: null, error: "forbidden" }, { status: 403 });
+  return NextResponse.json({ data: list, error: null });
+}
+
 const CreateBody = z.object({
   userId: z.string().min(1),
-  kind: z.enum(["leaving", "transferring", "leave"]),
+  kind: z.enum(["leaving", "transferring", "leave", "long_leave"]),
   dueDate: z.string().nullable().optional(),
+  lastWorkingDay: z.string().nullable().optional(),
   successorDefaultUserId: z.string().nullable().optional(),
+  reason: z.string().max(500).nullable().optional(),
+  notes: z.string().max(2000).nullable().optional(),
 });
 
 export async function POST(req: NextRequest) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ data: null, error: "unauthorized" }, { status: 401 });
-  const scope = hrScopeFor(user);
-  if (!scope) return NextResponse.json({ data: null, error: "forbidden" }, { status: 403 });
+  if (!hrScopeFor(user)) return NextResponse.json({ data: null, error: "forbidden" }, { status: 403 });
   const parsed = CreateBody.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ data: null, error: "invalid" }, { status: 400 });
   const b = parsed.data;
-  const [target] = await db.select().from(schema.users).where(eq(schema.users.id, b.userId)).limit(1);
-  if (!target) return NextResponse.json({ data: null, error: "not_found" }, { status: 404 });
-  if (!scope.all && target.departmentId !== scope.departmentId) {
-    return NextResponse.json({ data: null, error: "forbidden" }, { status: 403 });
+  try {
+    const created = await startHandover2(user, {
+      person: { userId: b.userId },
+      kind: b.kind === "leave" ? "long_leave" : b.kind,
+      reason: b.reason ?? null,
+      lastWorkingDay: b.lastWorkingDay ?? b.dueDate ?? null,
+      dueDate: b.dueDate ?? b.lastWorkingDay ?? null,
+      recipient: { mode: b.successorDefaultUserId ? "person" : "per_item", defaultRecipientUserId: b.successorDefaultUserId ?? null },
+      notes: b.notes ?? null,
+    });
+    await audit(user.id, "handover_started", "handover", created.id, { kind: b.kind, via: "hr" });
+    return NextResponse.json({ data: { id: created.id, items: created.items }, error: null });
+  } catch (e) {
+    return fail(e);
   }
-  const created = await startHandover(user, {
-    userId: b.userId,
-    kind: b.kind,
-    dueDate: b.dueDate ?? null,
-    successorDefaultUserId: b.successorDefaultUserId ?? null,
-  });
-  await audit(user.id, "handover_started", "handover", created?.id, { kind: b.kind });
-  return NextResponse.json({ data: created, error: null });
 }
 
-/* item updates, bulk assignment to the default successor, completion */
 const PatchBody = z.object({
   handoverId: z.string().min(1),
   action: z.enum(["bulk_assign", "item"]),
   itemId: z.string().optional(),
   status: z.enum(["pending", "reassigned", "captured", "not_needed"]).optional(),
   successorUserId: z.string().nullable().optional(),
-  note: z.string().max(500).nullable().optional(),
+  note: z.string().max(2000).nullable().optional(),
 });
 
 export async function PATCH(req: NextRequest) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ data: null, error: "unauthorized" }, { status: 401 });
-  const scope = hrScopeFor(user);
-  if (!scope) return NextResponse.json({ data: null, error: "forbidden" }, { status: 403 });
   const parsed = PatchBody.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ data: null, error: "invalid" }, { status: 400 });
   const b = parsed.data;
-  const [h] = await db.select().from(schema.handovers).where(eq(schema.handovers.id, b.handoverId)).limit(1);
-  if (!h) return NextResponse.json({ data: null, error: "not_found" }, { status: 404 });
-  const [person] = await db.select().from(schema.users).where(eq(schema.users.id, h.userId)).limit(1);
-  if (!scope.all && person?.departmentId !== scope.departmentId) {
-    return NextResponse.json({ data: null, error: "forbidden" }, { status: 403 });
-  }
-  const wasComplete = h.status === "complete";
-
-  if (b.action === "bulk_assign") {
-    if (!h.successorDefaultUserId) {
-      return NextResponse.json({ data: null, error: "no_default_successor" }, { status: 400 });
-    }
-    const items = await db
-      .select()
-      .from(schema.handoverItems)
-      .where(eq(schema.handoverItems.handoverId, h.id));
-    let assigned = 0;
-    for (const i of items) {
-      if (i.successorUserId) continue;
-      await db
-        .update(schema.handoverItems)
-        .set({ successorUserId: h.successorDefaultUserId })
-        .where(eq(schema.handoverItems.id, i.id));
-      assigned++;
-    }
-    await audit(user.id, "handover_bulk_assigned", "handover", h.id, { assigned });
-  } else {
-    if (!b.itemId) return NextResponse.json({ data: null, error: "item_required" }, { status: 400 });
-    const [item] = await db
-      .select()
-      .from(schema.handoverItems)
-      .where(eq(schema.handoverItems.id, b.itemId))
-      .limit(1);
-    if (!item || item.handoverId !== h.id) {
-      return NextResponse.json({ data: null, error: "not_found" }, { status: 404 });
-    }
-    const nextStatus = b.status ?? item.status;
-    const successor = b.successorUserId === undefined ? item.successorUserId : b.successorUserId;
-    await db
-      .update(schema.handoverItems)
-      .set({
-        status: nextStatus,
-        successorUserId: successor,
-        note: b.note === undefined ? item.note : b.note,
-        doneAt: nextStatus !== "pending" ? item.doneAt ?? nowIso() : null,
-      })
-      .where(eq(schema.handoverItems.id, b.itemId));
-    // points to the successor for a newly completed item (5, cap 50/day)
-    if (item.status === "pending" && nextStatus !== "pending" && nextStatus !== "not_needed") {
-      const receiver = successor ?? h.successorDefaultUserId;
-      if (receiver) {
-        await record({
-          userId: receiver,
-          type: "handover_item_completed",
-          resourceType: "handover_item",
-          resourceId: item.id,
-        });
+  try {
+    const detail = await getHandoverForViewer(user, b.handoverId);
+    if (!detail) return NextResponse.json({ data: null, error: "not_found" }, { status: 404 });
+    if (detail.viewer !== "admin") return NextResponse.json({ data: null, error: "forbidden" }, { status: 403 });
+    if (b.action === "bulk_assign") {
+      if (!detail.defaultRecipient) return NextResponse.json({ data: null, error: "no_default_successor" }, { status: 400 });
+      let assigned = 0;
+      for (const i of detail.items) {
+        if (!i.inScope || i.recipientKind) continue;
+        await setItemRecipient(user, i.id, { recipientKind: "person", recipientUserId: detail.defaultRecipient.id });
+        assigned++;
+      }
+      await audit(user.id, "handover_bulk_assigned", "handover", b.handoverId, { assigned });
+    } else {
+      if (!b.itemId) return NextResponse.json({ data: null, error: "item_required" }, { status: 400 });
+      const item = detail.items.find((i) => i.id === b.itemId);
+      if (!item) return NextResponse.json({ data: null, error: "not_found" }, { status: 404 });
+      if (b.status) {
+        await setItemStatusCompat(user, item.id, b.status, { recipientUserId: b.successorUserId, note: b.note });
+      } else if (b.successorUserId !== undefined) {
+        await setItemRecipient(user, item.id, { recipientKind: b.successorUserId ? "person" : null, recipientUserId: b.successorUserId, note: b.note });
+      } else if (b.note !== undefined && b.note !== null) {
+        await setItemNote({ userId: user.id, admin: true }, item.id, b.note);
       }
     }
-    // successor and department head hear about each reassignment
-    if (successor && successor !== item.successorUserId) {
-      const dept = person?.departmentId
-        ? (
-            await db
-              .select()
-              .from(schema.departments)
-              .where(eq(schema.departments.id, person.departmentId))
-              .limit(1)
-          )[0]
-        : null;
-      for (const to of [successor, dept?.headUserId].filter(Boolean) as string[]) {
-        await notify(
-          to,
-          "handover_item_reassigned",
-          `Handover item assigned: ${item.title.slice(0, 60)}`,
-          `أُسند إليك عنصر تسليم: ${item.title.slice(0, 60)}`,
-          `/hr/handovers/${h.id}`
-        );
-      }
-    }
+    const fresh = await getHandoverForViewer(user, b.handoverId);
+    return NextResponse.json({ data: { completionPct: fresh?.progress.items.pct ?? 0 }, error: null });
+  } catch (e) {
+    return fail(e);
   }
-
-  const pct = await refreshHandoverCompletion(h.id);
-  if (!wasComplete && pct >= 100) {
-    // 60 to the successor; 40 to the leaving person when before the due date
-    const beforeDue = !h.dueDate || nowIso().slice(0, 10) <= h.dueDate;
-    if (h.successorDefaultUserId) {
-      await record({
-        userId: h.successorDefaultUserId,
-        type: "handover_completed",
-        resourceType: "handover",
-        resourceId: h.id,
-      });
-    }
-    if (beforeDue) {
-      await record({
-        userId: h.userId,
-        type: "handover_completed_owner",
-        resourceType: "handover",
-        resourceId: h.id,
-      });
-    }
-  }
-  return NextResponse.json({ data: { completionPct: pct }, error: null });
 }

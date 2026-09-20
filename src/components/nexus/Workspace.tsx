@@ -14,10 +14,9 @@ import {
   Radar as RadarIcon,
   Users,
   Send,
-  ExternalLink,
 } from "lucide-react";
 import { cn, bi } from "@/lib/utils";
-import { formatNumber, formatPeriod } from "@/lib/format";
+import { formatNumber } from "@/lib/format";
 import { Chip, RagDot, Avatar, Button } from "@/components/ui/primitives";
 import {
   AnswerMarkdown,
@@ -163,6 +162,8 @@ export function useAnalyst() {
       locale: string;
       conversationId?: string | null;
       context?: { type: string; id: string } | null;
+      /* CR08 2.3: the item the reader is looking at, from the Ask NPC panel */
+      contextItem?: { kind: string; id: string; code?: string | null; title: string } | null;
       onFinal?: (turn: AnalystTurnData, conversationId: string) => void;
       onConversation?: (id: string) => void;
     }) => {
@@ -186,6 +187,7 @@ export function useAnalyst() {
             locale: params.locale,
             conversationId: params.conversationId ?? undefined,
             context: params.context ?? undefined,
+            contextItem: params.contextItem ?? undefined,
           }),
         });
         if (!res.ok || !res.body) throw new Error("analyst_failed");
@@ -279,18 +281,23 @@ export function AnalystAnswer({
   chips,
   onFollowUp,
   showFollowUps = true,
+  compact = false,
 }: {
   turn: AnalystTurnData;
   streaming?: boolean;
   chips?: { labelEn: string; labelAr: string }[];
   onFollowUp?: (text: string) => void;
   showFollowUps?: boolean;
+  /* CR08 2.3: one column everywhere, for the 480px Ask NPC panel */
+  compact?: boolean;
 }) {
   const locale = useLocale();
   const t = useTranslations("analyst");
   const router = useRouter();
   const workspace = turn.workspace ?? EMPTY_WORKSPACE;
   const citations = turn.citations ?? [];
+  const twoCols = compact ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2";
+  const threeCols = compact ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
 
   return (
     <div className="flex flex-col gap-5">
@@ -328,7 +335,7 @@ export function AnalystAnswer({
       {workspace.strategy.length ? (
         <div>
           <SectionLabel icon={Compass}>{t("sectionStrategy")}</SectionLabel>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className={cn("grid gap-3", twoCols)}>
             {workspace.strategy.map((s) => (
               <Link key={s.id} href={`/strategy/${s.id}` as never} className="card card-hover flex flex-col gap-1.5 p-3.5">
                 <div className="flex items-center gap-2 text-[11px] text-ink-400">
@@ -367,7 +374,7 @@ export function AnalystAnswer({
       {workspace.numbers.length ? (
         <div>
           <SectionLabel icon={BarChart3}>{t("sectionNumbers")}</SectionLabel>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className={cn("grid gap-3", threeCols)}>
             {workspace.numbers.map((n) => (
               <div key={n.id} className="flex flex-col gap-1">
                 <IndicatorTile
@@ -405,7 +412,7 @@ export function AnalystAnswer({
       {workspace.documents.length ? (
         <div>
           <SectionLabel icon={FileText}>{t("sectionDocuments")}</SectionLabel>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className={cn("grid gap-3", threeCols)}>
             {workspace.documents.slice(0, 6).map((d) => (
               <div key={d.id} className="relative">
                 <KnowledgeCard
@@ -447,7 +454,7 @@ export function AnalystAnswer({
       {workspace.lessons.length ? (
         <div>
           <SectionLabel icon={Lightbulb}>{t("sectionLessons")}</SectionLabel>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className={cn("grid gap-3", threeCols)}>
             {workspace.lessons.slice(0, 6).map((l) => (
               <LessonCard
                 key={l.id}
@@ -471,7 +478,7 @@ export function AnalystAnswer({
       {workspace.signals.length ? (
         <div>
           <SectionLabel icon={RadarIcon}>{t("sectionSignals")}</SectionLabel>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className={cn("grid gap-3", twoCols)}>
             {workspace.signals.slice(0, 4).map((s) => (
               <SignalCard
                 key={s.id}

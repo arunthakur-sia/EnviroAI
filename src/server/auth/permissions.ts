@@ -104,6 +104,12 @@ const PORTAL_OF_RESOURCE: Record<string, Portal> = {
   council_node: "council",
   council_indicator: "council",
   org_unit: "organisation",
+  // CR08
+  report: "reports",
+  process: "processes",
+  operating_model: "operating_model",
+  index_group: "indices",
+  handover: "handover",
 };
 
 export function hiddenResourceTypes(user: CurrentUser): Set<string> {

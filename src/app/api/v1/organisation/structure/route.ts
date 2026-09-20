@@ -10,7 +10,7 @@ import { getCurrentUser } from "@/server/auth/session";
 import { can } from "@/server/auth/permissions";
 import { audit } from "@/server/auth/audit";
 import { newId, nowIso } from "@/lib/ids";
-import { UNIT_LEVELS } from "@/server/services/organisation";
+import { getOrgLevels, takeSnapshot } from "@/server/services/organisation";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ data: runs, error: null });
   }
 
-  const [units, users, members] = await Promise.all([
+  const [units, users, members, levelDefs] = await Promise.all([
     db.select().from(schema.orgUnits).orderBy(asc(schema.orgUnits.sort)),
     db
       .select({
@@ -51,6 +51,8 @@ export async function GET(req: NextRequest) {
       .from(schema.users)
       .where(isNull(schema.users.deletedAt)),
     db.select().from(schema.orgUnitMembers),
+    // CR08 1.2: the levels come from the editable org_levels table
+    getOrgLevels(),
   ]);
   const counts = new Map<string, number>();
   for (const u of users) {
@@ -71,14 +73,22 @@ export async function GET(req: NextRequest) {
         headNameAr: u.headNameAr,
         headTitleEn: u.headTitleEn,
         headTitleAr: u.headTitleAr,
+        // CR08 1.2: the editor's kebab edits the mandate and responsibilities
+        mandateEn: u.mandateEn,
+        mandateAr: u.mandateAr,
+        responsibilitiesEn: u.responsibilitiesEn,
+        responsibilitiesAr: u.responsibilitiesAr,
         sort: u.sort,
         isActive: u.isActive === 1,
         headcount: counts.get(u.id) ?? 0,
         memberCount: members.filter((m) => m.unitId === u.id).length,
       })),
       users,
-      levels: UNIT_LEVELS,
+      levels: levelDefs.map((l) => l.code),
+      levelDefs,
       canManage: mayManage(user),
+      // CR08 1.2: the structure editor itself is Super Admin only
+      canEditStructure: can(user, "manage", "settings"),
     },
     error: null,
   });
@@ -89,7 +99,8 @@ const UnitBody = z.object({
   code: z.string().min(1).max(40).optional(),
   nameEn: z.string().min(1).max(300).optional(),
   nameAr: z.string().min(1).max(300).optional(),
-  level: z.enum(UNIT_LEVELS).optional(),
+  /** validated against org_levels in the handler */
+  level: z.string().min(1).max(60).optional(),
   parentId: z.string().nullable().optional(),
   headUserId: z.string().nullable().optional(),
   headNameEn: z.string().max(200).nullable().optional(),
@@ -116,6 +127,9 @@ export async function POST(req: NextRequest) {
   if (!code || !nameEn || !nameAr) {
     return NextResponse.json({ data: null, error: "invalid" }, { status: 400 });
   }
+  if (b.level && !(await getOrgLevels()).some((l) => l.code === b.level)) {
+    return NextResponse.json({ data: null, error: "unknown_level" }, { status: 400 });
+  }
   const [clash] = await db
     .select()
     .from(schema.orgUnits)
@@ -141,6 +155,7 @@ export async function POST(req: NextRequest) {
     updatedAt: nowIso(),
   });
   await audit(user.id, "org_unit_created", "org_unit", id, { code });
+  await takeSnapshot(user.id, `added ${code} ${nameEn}`.slice(0, 120));
   return NextResponse.json({ data: { id }, error: null });
 }
 
@@ -156,6 +171,9 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ data: null, error: "invalid" }, { status: 400 });
   }
   const { id, isActive, ...rest } = parsed.data;
+  if (rest.level && !(await getOrgLevels()).some((l) => l.code === rest.level)) {
+    return NextResponse.json({ data: null, error: "unknown_level" }, { status: 400 });
+  }
   // a unit cannot become its own ancestor
   if (rest.parentId) {
     const units = await db.select().from(schema.orgUnits);
@@ -177,6 +195,7 @@ export async function PATCH(req: NextRequest) {
     })
     .where(eq(schema.orgUnits.id, id));
   await audit(user.id, "org_unit_edited", "org_unit", id, rest);
+  await takeSnapshot(user.id, `edited unit ${id}`);
   return NextResponse.json({ data: { ok: true }, error: null });
 }
 
@@ -414,5 +433,6 @@ export async function DELETE(req: NextRequest) {
     appliedAt: nowIso(),
   });
   await audit(user.id, "org_resync_applied", "org_unit", "structure", { applied });
+  await takeSnapshot(user.id, `website re-sync: ${applied} changes applied`);
   return NextResponse.json({ data: { applied }, error: null });
 }

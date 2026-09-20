@@ -116,7 +116,11 @@ export function HomeAsk({
           {/* the soft radial glow when focused (CR03 4.2) */}
           <span
             aria-hidden
-            className="pointer-events-none absolute -inset-8 rounded-full transition-opacity duration-300"
+            /* CR08 Phase C: the glow used to reach 32px past the hero, which
+               is 8px more than the page's own gutter, so every Home page
+               carried a horizontal scrollbar for a decoration that is
+               invisible until the box is focused. */
+            className="pointer-events-none absolute -inset-5 rounded-full transition-opacity duration-300"
             style={{
               background: "radial-gradient(ellipse, var(--color-maroon-100), transparent 65%)",
               opacity: conn?.askFocused ? 1 : 0,

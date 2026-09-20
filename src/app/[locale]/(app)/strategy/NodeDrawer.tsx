@@ -21,6 +21,8 @@ import { Avatar, Chip, RagDot, Skeleton } from "@/components/ui/primitives";
 import { useToast } from "@/components/ui/toast";
 import { Shelf, type ShelfDoc } from "@/components/nexus/Shelf";
 import { LeadChips, LeadChipPill } from "@/components/nexus/LeadChips";
+import { OwnerControl } from "@/components/nexus/people/OwnerControl";
+import type { ItemRef, OwnerRef } from "@/components/nexus/people/OwnerControl";
 import { StakeholdersSection } from "@/components/nexus/Stakeholders";
 import type { LeadChip as LeadChipData, StakeholderRow } from "@/server/services/strategy";
 import { BriefDialog } from "@/components/nexus/BriefDialog";
@@ -43,6 +45,9 @@ export type DrawerPayload = {
   };
   /* CR05 2.2: lead chips (joint leads = several) and supporting entities */
   leads: LeadChipData[];
+  /* CR08 9.1: the node's owner, and every person the drawer names by id */
+  owner: OwnerRef | null;
+  owners: Record<string, OwnerRef>;
   /* CR05 3.2: the stakeholder section before the actions */
   stakeholders: StakeholderRow[];
   kpis: {
@@ -56,6 +61,7 @@ export type DrawerPayload = {
     targetValue: number | null;
     targetYear: number | null;
     indicatorId: string | null;
+    ownerUserId: string | null;
   }[];
   kpiValues: { kpiId: string; period: string; actual: number | null; target: number | null; note: string | null }[];
   deliverables: {
@@ -164,6 +170,15 @@ export function NodeDrawer({
 
   React.useEffect(() => {
     function onKey(e: KeyboardEvent) {
+      /* CR08 9.1: an overlay opened from inside the drawer (a person card, a
+         dialog) is the layer on top, so it owns Escape and the arrow keys
+         until it is dismissed (DECISIONS 117) */
+      if (
+        e.defaultPrevented ||
+        document.querySelector('[data-testid="person-card-popover"], [role="dialog"][data-state="open"]')
+      ) {
+        return;
+      }
       if (e.key === "Escape") onClose();
       const back = locale === "ar" ? "ArrowRight" : "ArrowLeft";
       const fwd = locale === "ar" ? "ArrowLeft" : "ArrowRight";
@@ -185,6 +200,10 @@ export function NodeDrawer({
     .filter((m) => m.date)
     .map((m) => ({ ...m, pct: node ? timelinePct(node.startDate, node.endDate, m.date!) : null }))
     .filter((m) => m.pct !== null);
+  /* CR08 9.1: what a person card is opened for inside this drawer */
+  const drawerItem: ItemRef | null = node
+    ? { type: node.nodeType, id: node.id, titleEn: node.titleEn, titleAr: node.titleAr, href: `/strategy/${node.id}` }
+    : null;
 
   return (
     <div className="fixed inset-0 z-[60]" role="dialog" aria-modal="true" data-testid="node-drawer">
@@ -279,6 +298,22 @@ export function NodeDrawer({
                         </span>
                       ) : null}
                     </p>
+                    {/* CR08 9.1: the owner, after the lead chips (which name
+                        organisations, not people) */}
+                    {payload.owner ? (
+                      <div className="mt-2.5">
+                        <OwnerControl
+                          owner={payload.owner}
+                          role={
+                            node.nodeType === "project" || node.nodeType === "initiative"
+                              ? "project_owner"
+                              : "owner"
+                          }
+                          item={drawerItem}
+                          align="start"
+                        />
+                      </div>
+                    ) : null}
                     {/* CR05 2.2: supporting entities under the lead chips */}
                     {(payload.leads ?? []).some((l) => l.role === "supporting") ? (
                       <p className="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-ink-600" data-testid="supporting-leads">
@@ -327,7 +362,12 @@ export function NodeDrawer({
 
                   {/* KPIs */}
                   {payload.kpis.length ? (
-                    <KpiSection kpis={payload.kpis} values={payload.kpiValues} />
+                    <KpiSection
+                      kpis={payload.kpis}
+                      values={payload.kpiValues}
+                      owners={payload.owners}
+                      nodeHref={`/strategy/${node.id}`}
+                    />
                   ) : null}
 
                   {/* deliverables: the mini shelf plus the compact list */}
@@ -482,6 +522,8 @@ export function NodeDrawer({
                       rows={payload.stakeholders}
                       canEdit={false}
                       compact
+                      owners={payload.owners}
+                      item={drawerItem}
                     />
                   ) : null}
 

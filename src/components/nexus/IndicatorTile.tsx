@@ -39,7 +39,7 @@ export function IndicatorTile({ tile, animate }: { tile: TileData; animate?: boo
         {bi(locale, tile.nameEn, tile.nameAr)}
       </p>
       <div className="flex items-end justify-between gap-2">
-        <p className="font-[family-name:var(--font-display)] text-[26px] font-semibold leading-none text-ink-900 tnum">
+        <p className="min-w-0 font-[family-name:var(--font-display)] text-[26px] font-semibold leading-none text-ink-900 tnum">
           {tile.latestValue !== null ? (
             animate ? (
               <CountUp

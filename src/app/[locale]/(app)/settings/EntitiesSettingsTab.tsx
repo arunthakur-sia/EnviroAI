@@ -268,24 +268,24 @@ export function EntitiesSettingsTab() {
         <DialogContent title={creating ? t("add") : t("edit")}>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
-              <Label>{t("nameEn")}</Label>
-              <Input value={form.nameEn} onChange={(e) => setForm((f) => ({ ...f, nameEn: e.target.value }))} dir="ltr" />
+              <Label htmlFor="entity-name-en">{t("nameEn")}</Label>
+              <Input id="entity-name-en" value={form.nameEn} onChange={(e) => setForm((f) => ({ ...f, nameEn: e.target.value }))} dir="ltr" />
             </div>
             <div>
-              <Label>{t("nameAr")}</Label>
-              <Input value={form.nameAr} onChange={(e) => setForm((f) => ({ ...f, nameAr: e.target.value }))} dir="rtl" />
+              <Label htmlFor="entity-name-ar">{t("nameAr")}</Label>
+              <Input id="entity-name-ar" value={form.nameAr} onChange={(e) => setForm((f) => ({ ...f, nameAr: e.target.value }))} dir="rtl" />
             </div>
             <div>
-              <Label>{t("shortEn")}</Label>
-              <Input value={form.shortNameEn} onChange={(e) => setForm((f) => ({ ...f, shortNameEn: e.target.value }))} dir="ltr" />
+              <Label htmlFor="entity-short-en">{t("shortEn")}</Label>
+              <Input id="entity-short-en" value={form.shortNameEn} onChange={(e) => setForm((f) => ({ ...f, shortNameEn: e.target.value }))} dir="ltr" />
             </div>
             <div>
-              <Label>{t("shortAr")}</Label>
-              <Input value={form.shortNameAr} onChange={(e) => setForm((f) => ({ ...f, shortNameAr: e.target.value }))} dir="rtl" />
+              <Label htmlFor="entity-short-ar">{t("shortAr")}</Label>
+              <Input id="entity-short-ar" value={form.shortNameAr} onChange={(e) => setForm((f) => ({ ...f, shortNameAr: e.target.value }))} dir="rtl" />
             </div>
             <div>
-              <Label>{t("kind")}</Label>
-              <NativeSelect value={form.kind} onChange={(e) => setForm((f) => ({ ...f, kind: e.target.value }))}>
+              <Label htmlFor="entity-kind">{t("kind")}</Label>
+              <NativeSelect id="entity-kind" value={form.kind} onChange={(e) => setForm((f) => ({ ...f, kind: e.target.value }))}>
                 {KINDS.map((k) => (
                   <option key={k} value={k}>
                     {t(`kinds.${k}` as never)}
@@ -294,16 +294,16 @@ export function EntitiesSettingsTab() {
               </NativeSelect>
             </div>
             <div>
-              <Label>{t("website")}</Label>
-              <Input value={form.website} onChange={(e) => setForm((f) => ({ ...f, website: e.target.value }))} dir="ltr" />
+              <Label htmlFor="entity-website">{t("website")}</Label>
+              <Input id="entity-website" value={form.website} onChange={(e) => setForm((f) => ({ ...f, website: e.target.value }))} dir="ltr" />
             </div>
             <div>
-              <Label>{t("contactName")}</Label>
-              <Input value={form.contactName} onChange={(e) => setForm((f) => ({ ...f, contactName: e.target.value }))} />
+              <Label htmlFor="entity-contact-name">{t("contactName")}</Label>
+              <Input id="entity-contact-name" value={form.contactName} onChange={(e) => setForm((f) => ({ ...f, contactName: e.target.value }))} />
             </div>
             <div>
-              <Label>{t("contactEmail")}</Label>
-              <Input value={form.contactEmail} onChange={(e) => setForm((f) => ({ ...f, contactEmail: e.target.value }))} dir="ltr" />
+              <Label htmlFor="entity-contact-email">{t("contactEmail")}</Label>
+              <Input id="entity-contact-email" value={form.contactEmail} onChange={(e) => setForm((f) => ({ ...f, contactEmail: e.target.value }))} dir="ltr" />
             </div>
           </div>
           <div className="mt-4 flex justify-end">
@@ -317,7 +317,8 @@ export function EntitiesSettingsTab() {
       <Dialog open={!!merging} onOpenChange={(o) => !o && setMerging(null)}>
         <DialogContent title={t("mergeTitle", { name: merging?.nameEn ?? "" })}>
           <p className="mb-3 text-sm text-ink-600">{t("mergeHint")}</p>
-          <NativeSelect value={mergeTarget} onChange={(e) => setMergeTarget(e.target.value)}>
+          {/* the only control in the merge dialog, and it had no name at all */}
+          <NativeSelect value={mergeTarget} onChange={(e) => setMergeTarget(e.target.value)} aria-label={t("pickTarget")}>
             <option value="">{t("pickTarget")}</option>
             {(rows ?? [])
               .filter((r) => r.id !== merging?.id && !r.mergedIntoId)

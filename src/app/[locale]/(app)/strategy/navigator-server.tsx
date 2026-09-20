@@ -12,6 +12,7 @@ import {
   getNavigator,
   getCanvasExtras,
 } from "@/server/services/strategy";
+import { getOwnerRefs } from "@/server/services/people";
 import { Reveal } from "@/components/motion";
 import { bi } from "@/lib/utils";
 import { StrategyCanvas } from "./StrategyCanvas";
@@ -62,15 +63,34 @@ export async function renderNavigator({
 
   // CR03 2.3: one outcome's targets
   if (outcome) {
+    /* CR08 9.1: one bulk resolve for every person the page will name */
+    const targetOwners = await getOwnerRefs([
+      outcome.ownerUserId,
+      ...data.items.filter((i) => i.outcomeId === outcome.id).map((i) => i.ownerUserId),
+    ]);
     return (
       <Reveal>
-        <OutcomeTargets data={data} outcomeId={outcome.id} />
+        <OutcomeTargets data={data} outcomeId={outcome.id} owners={targetOwners} />
       </Reveal>
     );
   }
 
   // CR04 2: the Strategy Canvas (one page, everything in place)
   const extras = await getCanvasExtras(edition.id);
+  /* CR08 9.1: the canvas names owners on the outcome panel, the lane cards
+     and the outcome stakeholder groups. Every id the canvas can show is
+     resolved once here, so no client component reaches for a person. */
+  const owners = await getOwnerRefs([
+    ...data.outcomes.map((o) => o.ownerUserId),
+    ...data.items.map((i) => i.ownerUserId),
+    ...Object.values(extras.outcomeStakeholders).flatMap((s) => [
+      s.departmentOwner?.head?.id ?? null,
+      ...s.experts.map((p) => p.userId),
+      ...s.leaders.sponsor.map((p) => p.userId),
+      ...s.leaders.owner.map((p) => p.userId),
+      ...s.leaders.manager.map((p) => p.userId),
+    ]),
+  ]);
   return (
     <Reveal>
       <div className="mb-4">
@@ -82,6 +102,7 @@ export async function renderNavigator({
       <StrategyCanvas
         data={data}
         extras={extras}
+        owners={owners}
         canEdit={can(user, "create", "strategy")}
         initialView={view === "map" ? "map" : view === "lead" ? "lead" : "canvas"}
         initialState={{

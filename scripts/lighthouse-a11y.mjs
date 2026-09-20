@@ -38,6 +38,7 @@ fs.writeFileSync(headersPath, JSON.stringify({ Cookie: cookie }));
 // CR04 acceptance 6 + CR05 acceptance 7: performance and accessibility above
 // 90 on Home, Indices, HR overview, Strategy (and the CR04 set) at 1440;
 // Podcast and Ask stay on accessibility from CR02.
+// CR08 14.4 raises this to every page and adds best practices to the gate.
 const targets = [
   ["/en/home", "home", true],
   ["/en/vault", "vault", true],
@@ -52,12 +53,28 @@ const targets = [
   ["/en/organisation", "organisation", true],
   ["/en/podcast", "podcast", false],
   ["/en/ask", "ask", false],
+  // the CR08 pages
+  ["/en/reports", "reports", true],
+  ["/en/processes", "processes", true],
+  ["/en/operating-model", "operating-model", true],
+  ["/en/leaderboard", "leaderboard", true],
+  ["/en/studies", "studies", true],
+  ["/en/experts", "experts", true],
+  ["/en/inbox", "inbox", true],
+  ["/en/handover/mine", "handover-mine", true],
+  ["/en/hall-of-knowledge", "hall-of-knowledge", true],
+  ["/en/statistics", "statistics", true],
+  ["/en/search?q=qatar", "search", true],
+  ["/en/settings", "settings", true],
+  ["/en/profile", "profile", true],
 ];
 
 let failed = 0;
 for (const [url, name, withPerf] of targets) {
   const outPath = path.join(outDir, `${name}.json`);
-  const categories = withPerf ? "performance,accessibility" : "accessibility";
+  const categories = withPerf
+    ? "performance,accessibility,best-practices"
+    : "accessibility,best-practices";
   const args = [
     "--yes",
     "lighthouse@12",
@@ -82,10 +99,11 @@ for (const [url, name, withPerf] of targets) {
   const report = JSON.parse(fs.readFileSync(outPath, "utf8"));
   const a11y = Math.round((report.categories?.accessibility?.score ?? 0) * 100);
   const perf = withPerf ? Math.round((report.categories?.performance?.score ?? 0) * 100) : null;
-  const ok = a11y >= 90 && (perf === null || perf >= 90);
+  const best = Math.round((report.categories?.["best-practices"]?.score ?? 0) * 100);
+  const ok = a11y >= 90 && best >= 90 && (perf === null || perf >= 90);
   if (!ok) failed++;
   console.log(
-    `${ok ? "ok  " : "FAIL"} ${name}: accessibility ${a11y}${perf !== null ? ` · performance ${perf}` : ""}`
+    `${ok ? "ok  " : "FAIL"} ${name}: accessibility ${a11y}, best practices ${best}${perf !== null ? `, performance ${perf}` : ""}`
   );
   if (!ok) {
     const audits = Object.values(report.audits ?? {})

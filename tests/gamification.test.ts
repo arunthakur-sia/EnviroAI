@@ -4,9 +4,7 @@ import { describe, it, expect, beforeAll } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 
-// isolate the database before any server import
-const TEST_DIR = fs.mkdtempSync(path.join(process.cwd(), "data", "test-"));
-process.chdir; // keep cwd; we point the db by copying after migrate below
+// the engine tests run against the seeded data/nexus.db (npm run seed)
 
 describe("i18n key parity", () => {
   it("en.json and ar.json have identical key sets", () => {
@@ -25,7 +23,7 @@ describe("i18n key parity", () => {
   it("no em dashes in UI messages", () => {
     for (const f of ["en.json", "ar.json"]) {
       const text = fs.readFileSync(path.join(process.cwd(), "messages", f), "utf8");
-      expect(text.includes("—"), `${f} contains an em dash`).toBe(false);
+      expect(text.includes(String.fromCharCode(0x2014)), `${f} contains an em dash`).toBe(false);
     }
   });
 });
@@ -54,6 +52,131 @@ describe("engine primitives", () => {
     const { isoWeekKey } = await import("../src/lib/ids");
     expect(isoWeekKey(new Date("2026-01-01T12:00:00Z"))).toMatch(/^202[56]-W\d{2}$/);
     expect(isoWeekKey(new Date("2026-09-08T12:00:00Z"))).toBe("2026-W37");
+  });
+});
+
+/* CR08 7.2: the leaderboard arithmetic needs no database */
+describe("leaderboard period keys", () => {
+  it("keys every window kind from one date", async () => {
+    const m = await import("../src/lib/leaderboard-math");
+    const d = new Date("2026-09-19T10:00:00Z");
+    expect(m.periodKeyFor("week", d)).toBe("2026-W38");
+    expect(m.periodKeyFor("month", d)).toBe("2026-09");
+    expect(m.periodKeyFor("quarter", d)).toBe("2026-Q3");
+    expect(m.periodKeyFor("year", d)).toBe("2026");
+    expect(m.periodKeyFor("all", d)).toBe("all");
+  });
+
+  it("puts the first days of January in the last ISO week of the previous year", async () => {
+    const m = await import("../src/lib/leaderboard-math");
+    expect(m.periodKeyFor("week", new Date("2027-01-01T12:00:00Z"))).toBe("2026-W53");
+    expect(m.periodKeyFor("week", new Date("2026-01-01T12:00:00Z"))).toBe("2026-W01");
+    expect(m.periodKeyFor("week", new Date("2021-01-03T12:00:00Z"))).toBe("2020-W53");
+  });
+
+  it("walks back to the previous period across year boundaries", async () => {
+    const m = await import("../src/lib/leaderboard-math");
+    expect(m.previousPeriodKey("week", "2026-W38")).toBe("2026-W37");
+    expect(m.previousPeriodKey("week", "2026-W01")).toBe("2025-W52");
+    expect(m.previousPeriodKey("month", "2026-01")).toBe("2025-12");
+    expect(m.previousPeriodKey("month", "2026-09")).toBe("2026-08");
+    expect(m.previousPeriodKey("quarter", "2026-Q1")).toBe("2025-Q4");
+    expect(m.previousPeriodKey("quarter", "2026-Q3")).toBe("2026-Q2");
+    expect(m.previousPeriodKey("year", "2026")).toBe("2025");
+    expect(m.previousPeriodKey("all", "all")).toBeNull();
+    expect(m.previousPeriodKey("month", "nonsense")).toBeNull();
+  });
+
+  it("ranges are half-open and start on Monday for weeks", async () => {
+    const m = await import("../src/lib/leaderboard-math");
+    const week = m.periodRange("week", "2026-W38");
+    expect(week.start).toBe("2026-09-14T00:00:00.000Z");
+    expect(week.end).toBe("2026-09-21T00:00:00.000Z");
+    const month = m.periodRange("month", "2026-09");
+    expect(month.start).toBe("2026-09-01T00:00:00.000Z");
+    expect(month.end).toBe("2026-10-01T00:00:00.000Z");
+    const quarter = m.periodRange("quarter", "2026-Q4");
+    expect(quarter.start).toBe("2026-10-01T00:00:00.000Z");
+    expect(quarter.end).toBe("2027-01-01T00:00:00.000Z");
+    expect(m.periodRange("all", "all")).toEqual({ start: null, end: null });
+    expect(m.inRange("2026-09-21T00:00:00.000Z", week)).toBe(false);
+    expect(m.inRange("2026-09-20T23:59:59.000Z", week)).toBe(true);
+    expect(m.inRange("2026-09-13T23:59:59.000Z", week)).toBe(false);
+    expect(m.inRange("1999-01-01T00:00:00.000Z", m.periodRange("all", "all"))).toBe(true);
+  });
+
+  it("every period key round-trips through its own range", async () => {
+    const m = await import("../src/lib/leaderboard-math");
+    for (const kind of ["week", "month", "quarter", "year"] as const) {
+      const key = m.periodKeyFor(kind, new Date("2026-03-31T23:30:00Z"));
+      const range = m.periodRange(kind, key);
+      expect(m.inRange("2026-03-31T23:30:00.000Z", range)).toBe(true);
+      expect(m.periodKeyFor(kind, new Date(range.start!))).toBe(key);
+    }
+  });
+
+  it("labels periods in both languages", async () => {
+    const m = await import("../src/lib/leaderboard-math");
+    expect(m.periodLabel("month", "2026-09", "en")).toBe("September 2026");
+    expect(m.periodLabel("month", "2026-09", "ar")).toBe("سبتمبر 2026");
+    expect(m.periodLabel("quarter", "2026-Q3", "en")).toBe("Q3 2026");
+    expect(m.periodLabel("all", "all", "ar")).toBe("منذ البداية");
+    expect(m.periodLabel("week", "2026-W38", "en")).toContain("Week 38, 2026");
+    expect(m.ordinalWord(1, "en")).toBe("1st");
+    expect(m.ordinalWord(2, "en")).toBe("2nd");
+    expect(m.ordinalWord(3, "en")).toBe("3rd");
+    expect(m.ordinalWord(11, "en")).toBe("11th");
+    expect(m.ordinalWord(22, "en")).toBe("22nd");
+    expect(m.ordinalWord(2, "ar")).toBe("الثاني");
+  });
+});
+
+describe("leaderboard ranking", () => {
+  it("ranks by points, breaks ties by name, and numbers 1..n", async () => {
+    const { rankSubjects } = await import("../src/lib/leaderboard-math");
+    const ranked = rankSubjects([
+      { id: "c", name: "Noora", points: 120 },
+      { id: "a", name: "Hamad", points: 340 },
+      { id: "b", name: "Aisha", points: 120 },
+      { id: "d", name: "Khalid", points: 0 },
+    ]);
+    expect(ranked.map((r) => r.id)).toEqual(["a", "b", "c", "d"]);
+    expect(ranked.map((r) => r.rank)).toEqual([1, 2, 3, 4]);
+    // equal points, equal names: the id keeps the order stable
+    const twins = rankSubjects([
+      { id: "z", name: "Same", points: 5 },
+      { id: "y", name: "Same", points: 5 },
+    ]);
+    expect(twins.map((r) => r.id)).toEqual(["y", "z"]);
+  });
+
+  it("does not mutate its input", async () => {
+    const { rankSubjects } = await import("../src/lib/leaderboard-math");
+    const input = [
+      { id: "1", name: "B", points: 1 },
+      { id: "2", name: "A", points: 9 },
+    ];
+    rankSubjects(input);
+    expect(input[0].id).toBe("1");
+  });
+
+  it("derives trends against the previous period", async () => {
+    const { trendOf } = await import("../src/lib/leaderboard-math");
+    expect(trendOf(1, 3)).toBe("up");
+    expect(trendOf(5, 2)).toBe("down");
+    expect(trendOf(4, 4)).toBe("same");
+    expect(trendOf(2, null)).toBe("new");
+    expect(trendOf(null, 2)).toBe("same");
+  });
+
+  it("computes unit measures without dividing by zero", async () => {
+    const { pointsPerMember, activeShare } = await import("../src/lib/leaderboard-math");
+    expect(pointsPerMember(300, 4)).toBe(75);
+    expect(pointsPerMember(100, 3)).toBe(33.3);
+    expect(pointsPerMember(100, 0)).toBe(0);
+    expect(activeShare(2, 8)).toBe(0.25);
+    expect(activeShare(9, 8)).toBe(1);
+    expect(activeShare(1, 0)).toBe(0);
   });
 });
 
@@ -140,10 +263,14 @@ describe("gamification engine against the seeded database", () => {
     expect(r.points).toBe(50); // 25 x 2
   });
 
-  it("level thresholds match the blueprint", async () => {
+  it("level thresholds match CR08 7.1 and carry only numeric names", async () => {
     const levels = await db.select().from(schema.levels).orderBy(schema.levels.order);
-    expect(levels.map((l) => l.minPoints)).toEqual([0, 150, 600, 1500, 4000]);
-    expect(levels[4].nameEn).toBe("NPC Sage");
+    expect(levels.map((l) => l.minPoints)).toEqual([
+      0, 100, 300, 700, 1300, 2200, 3500, 5500, 8500, 13000,
+    ]);
+    expect(levels.map((l) => l.nameEn)).toEqual(levels.map((_, i) => `Level ${i + 1}`));
+    expect(levels.map((l) => l.nameAr)).toEqual(levels.map((_, i) => `المستوى ${i + 1}`));
+    for (const l of levels) expect(l.descriptorEn).toBeTruthy();
   });
 
   it("streak freezes: earn one per 5 contributions, capped at 3", async () => {

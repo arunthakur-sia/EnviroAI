@@ -8,9 +8,13 @@ import { newId, nowIso } from "@/lib/ids";
 import { Reveal } from "@/components/motion";
 import { bi } from "@/lib/utils";
 import { Avatar, Chip, SectionTitle, ProgressRing } from "@/components/ui/primitives";
+import { Tip } from "@/components/ui/overlays";
+import { formatNumber } from "@/lib/format";
 import { Flame, Medal } from "lucide-react";
 import { ProfileForm } from "./ProfileForm";
 import { SuggestedDomains } from "./SuggestedDomains";
+import { getKnowledgeOfWeekAward } from "@/server/services/knowledge-of-week";
+import { KnowledgeOfWeekAward } from "@/components/nexus/kow/KnowledgeOfWeekAward";
 
 export const dynamic = "force-dynamic";
 
@@ -66,8 +70,19 @@ export default async function ProfilePage({
     .where(eq(schema.userGameState.userId, user.id))
     .limit(1);
   const levels = await db.select().from(schema.levels).orderBy(schema.levels.order);
-  const level = levels.filter((l) => l.minPoints <= (state?.totalPoints ?? 0)).pop();
-  const badges = profile?.badges ?? [];
+  const totalPoints = state?.totalPoints ?? 0;
+  const level = levels.filter((l) => l.minPoints <= totalPoints).pop();
+  // CR08 7.1: the descriptor shows only on hover and here on the profile
+  const nextLevel = levels.find((l) => l.minPoints > totalPoints) ?? null;
+  const descriptor = level ? bi(locale, level.descriptorEn, level.descriptorAr) : "";
+  const showLevel = user.quietMode !== 1 && Boolean(level);
+  // CR08 8: the permanent Knowledge of the Week award, an honour rather than a
+  // score. It has its own chip with the count of weeks and the latest date, so
+  // the plain badge of the same name is dropped from My badges: the same
+  // honour twice, one line apart, reads as a duplicate.
+  const kowAward = await getKnowledgeOfWeekAward(user.id);
+  const tk = await getTranslations("kow");
+  const badges = (profile?.badges ?? []).filter((b) => !(kowAward.weeks > 0 && b.code === "knowledge_of_week"));
 
   let languages: string[] = [];
   try {
@@ -90,8 +105,25 @@ export default async function ProfilePage({
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
             <Chip tone="gold">{t("completion", { pct: Math.round(completion * 100) })}</Chip>
-            {user.quietMode !== 1 && level ? (
-              <Chip tone="maroon">{bi(locale, level.nameEn, level.nameAr)}</Chip>
+            {showLevel && level ? (
+              descriptor ? (
+                <Tip content={t("levelTip", { level: bi(locale, level.nameEn, level.nameAr), descriptor })}>
+                  <span
+                    className="inline-flex cursor-default"
+                    tabIndex={0}
+                    aria-label={t("levelTip", { level: bi(locale, level.nameEn, level.nameAr), descriptor })}
+                    data-testid="profile-level-chip"
+                  >
+                    <Chip tone="maroon" className="tnum">
+                      {bi(locale, level.nameEn, level.nameAr)}
+                    </Chip>
+                  </span>
+                </Tip>
+              ) : (
+                <Chip tone="maroon" className="tnum" data-testid="profile-level-chip">
+                  {bi(locale, level.nameEn, level.nameAr)}
+                </Chip>
+              )
             ) : null}
             {user.quietMode !== 1 && state ? (
               <>
@@ -136,6 +168,32 @@ export default async function ProfilePage({
         />
 
         <aside className="space-y-6">
+          {showLevel && level ? (
+            <div className="card p-4" data-testid="profile-level-card">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal">
+                {t("levelEyebrow")}
+              </p>
+              <p className="mt-1 font-display text-2xl font-semibold text-maroon-900 tnum">
+                {bi(locale, level.nameEn, level.nameAr)}
+              </p>
+              {descriptor ? (
+                <p className="mt-0.5 text-sm text-ink-600" data-testid="profile-level-descriptor">
+                  {descriptor}
+                </p>
+              ) : null}
+              <p className="mt-2 text-xs text-ink-400 tnum">
+                {nextLevel
+                  ? t("nextLevel", {
+                      points: formatNumber(nextLevel.minPoints - totalPoints, locale, {
+                        numerals: user.numeralsPref,
+                        decimals: 0,
+                      }),
+                      level: bi(locale, nextLevel.nameEn, nextLevel.nameAr),
+                    })
+                  : t("topLevel")}
+              </p>
+            </div>
+          ) : null}
           {accepted.length ? (
             <div>
               <SectionTitle>{t("myDomains")}</SectionTitle>
@@ -146,6 +204,16 @@ export default async function ProfilePage({
                   </Chip>
                 ))}
               </div>
+            </div>
+          ) : null}
+          {kowAward.weeks ? (
+            <div data-testid="profile-kow-award">
+              <SectionTitle>{tk("awardsSection")}</SectionTitle>
+              <KnowledgeOfWeekAward
+                weeks={kowAward.weeks}
+                latestWeekStart={kowAward.latestWeekStart}
+                numerals={user.numeralsPref}
+              />
             </div>
           ) : null}
           {user.quietMode !== 1 && badges.length ? (

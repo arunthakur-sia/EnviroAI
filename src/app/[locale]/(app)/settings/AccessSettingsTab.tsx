@@ -160,8 +160,9 @@ export function AccessSettingsTab({
         <p className="mb-3 text-sm font-semibold text-ink-900">{t("inviteTitle")}</p>
         <div className="flex flex-wrap items-end gap-2.5">
           <div>
-            <Label>{t("inviteEmail")}</Label>
+            <Label htmlFor="access-invite-email">{t("inviteEmail")}</Label>
             <Input
+              id="access-invite-email"
               value={form.email}
               onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
               dir="ltr"
@@ -170,16 +171,18 @@ export function AccessSettingsTab({
             />
           </div>
           <div>
-            <Label>{t("inviteName")}</Label>
+            <Label htmlFor="access-invite-name">{t("inviteName")}</Label>
             <Input
+              id="access-invite-name"
               value={form.nameEn}
               onChange={(e) => setForm((f) => ({ ...f, nameEn: e.target.value }))}
               className="w-44"
             />
           </div>
           <div>
-            <Label>{t("inviteRole")}</Label>
+            <Label htmlFor="access-invite-role">{t("inviteRole")}</Label>
             <NativeSelect
+              id="access-invite-role"
               value={form.roleId}
               onChange={(e) => setForm((f) => ({ ...f, roleId: e.target.value }))}
               className="w-40"
@@ -192,8 +195,9 @@ export function AccessSettingsTab({
             </NativeSelect>
           </div>
           <div>
-            <Label>{t("inviteDepartment")}</Label>
+            <Label htmlFor="access-invite-department">{t("inviteDepartment")}</Label>
             <NativeSelect
+              id="access-invite-department"
               value={form.departmentId}
               onChange={(e) => setForm((f) => ({ ...f, departmentId: e.target.value }))}
               className="w-48"
@@ -207,8 +211,9 @@ export function AccessSettingsTab({
             </NativeSelect>
           </div>
           <div>
-            <Label>{t("inviteClearance")}</Label>
+            <Label htmlFor="access-invite-clearance">{t("inviteClearance")}</Label>
             <NativeSelect
+              id="access-invite-clearance"
               value={form.clearance}
               onChange={(e) => setForm((f) => ({ ...f, clearance: e.target.value }))}
               className="w-32"
@@ -241,8 +246,9 @@ export function AccessSettingsTab({
           </Button>
         </div>
         <div className="mt-3">
-          <Label>{t("csvTitle")}</Label>
+          <Label htmlFor="access-invite-csv">{t("csvTitle")}</Label>
           <Textarea
+            id="access-invite-csv"
             value={csv}
             onChange={(e) => setCsv(e.target.value)}
             rows={2}

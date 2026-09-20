@@ -353,8 +353,8 @@ export function HrPeopleClient({ data, focusId }: { data: HrPeople; focusId: str
             <div className="flex flex-col gap-3">
               <p className="text-sm text-ink-600">{t("assignBackupHint")}</p>
               <div>
-                <Label>{t("backupPerson")}</Label>
-                <NativeSelect value={form.backup ?? ""} onChange={(e) => setForm((f) => ({ ...f, backup: e.target.value }))}>
+                <Label htmlFor="hr-backup-person">{t("backupPerson")}</Label>
+                <NativeSelect id="hr-backup-person" value={form.backup ?? ""} onChange={(e) => setForm((f) => ({ ...f, backup: e.target.value }))}>
                   <option value="">{tc("choose")}</option>
                   {data.people
                     .filter((x) => x.id !== dialog.person?.id)
@@ -369,8 +369,8 @@ export function HrPeopleClient({ data, focusId }: { data: HrPeople; focusId: str
           ) : dialog.kind === "status" ? (
             <div className="flex flex-col gap-3">
               <div>
-                <Label>{t("statusLabel")}</Label>
-                <NativeSelect value={form.status ?? "active"} onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}>
+                <Label htmlFor="hr-status">{t("statusLabel")}</Label>
+                <NativeSelect id="hr-status" value={form.status ?? "active"} onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}>
                   {["active", "leaving", "transferring", "long_leave"].map((s) => (
                     <option key={s} value={s}>
                       {t(`status.${s}` as never)}
@@ -379,19 +379,19 @@ export function HrPeopleClient({ data, focusId }: { data: HrPeople; focusId: str
                 </NativeSelect>
               </div>
               <div>
-                <Label>{t("effectiveDate")}</Label>
-                <Input type="date" value={form.effectiveDate ?? ""} onChange={(e) => setForm((f) => ({ ...f, effectiveDate: e.target.value }))} dir="ltr" />
+                <Label htmlFor="hr-effective-date">{t("effectiveDate")}</Label>
+                <Input id="hr-effective-date" type="date" value={form.effectiveDate ?? ""} onChange={(e) => setForm((f) => ({ ...f, effectiveDate: e.target.value }))} dir="ltr" />
               </div>
               <div>
-                <Label>{t("note")}</Label>
-                <Input value={form.note ?? ""} onChange={(e) => setForm((f) => ({ ...f, note: e.target.value }))} />
+                <Label htmlFor="hr-status-note">{t("note")}</Label>
+                <Input id="hr-status-note" value={form.note ?? ""} onChange={(e) => setForm((f) => ({ ...f, note: e.target.value }))} />
               </div>
             </div>
           ) : (
             <div className="flex flex-col gap-3">
               <div>
-                <Label>{t("handoverKind")}</Label>
-                <NativeSelect value={form.kind ?? "leaving"} onChange={(e) => setForm((f) => ({ ...f, kind: e.target.value }))}>
+                <Label htmlFor="hr-handover-kind">{t("handoverKind")}</Label>
+                <NativeSelect id="hr-handover-kind" value={form.kind ?? "leaving"} onChange={(e) => setForm((f) => ({ ...f, kind: e.target.value }))}>
                   {["leaving", "transferring", "leave"].map((k) => (
                     <option key={k} value={k}>
                       {t(`handoverKinds.${k}` as never)}
@@ -400,12 +400,12 @@ export function HrPeopleClient({ data, focusId }: { data: HrPeople; focusId: str
                 </NativeSelect>
               </div>
               <div>
-                <Label>{t("dueDate")}</Label>
-                <Input type="date" value={form.dueDate ?? ""} onChange={(e) => setForm((f) => ({ ...f, dueDate: e.target.value }))} dir="ltr" />
+                <Label htmlFor="hr-handover-due">{t("dueDate")}</Label>
+                <Input id="hr-handover-due" type="date" value={form.dueDate ?? ""} onChange={(e) => setForm((f) => ({ ...f, dueDate: e.target.value }))} dir="ltr" />
               </div>
               <div>
-                <Label>{t("defaultSuccessor")}</Label>
-                <NativeSelect value={form.successor ?? ""} onChange={(e) => setForm((f) => ({ ...f, successor: e.target.value }))}>
+                <Label htmlFor="hr-handover-successor">{t("defaultSuccessor")}</Label>
+                <NativeSelect id="hr-handover-successor" value={form.successor ?? ""} onChange={(e) => setForm((f) => ({ ...f, successor: e.target.value }))}>
                   <option value="">{t("noSuccessor")}</option>
                   {data.people
                     .filter((x) => x.id !== dialog.person?.id)

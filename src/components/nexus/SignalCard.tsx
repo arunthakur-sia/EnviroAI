@@ -14,7 +14,7 @@ import {
   BarChart3,
   ExternalLink,
 } from "lucide-react";
-import { bi, cn } from "@/lib/utils";
+import { bi } from "@/lib/utils";
 import { formatDate } from "@/lib/format";
 import { Chip, Button } from "@/components/ui/primitives";
 import {
@@ -27,6 +27,12 @@ import {
 import { useToast } from "@/components/ui/toast";
 
 import type { SignalCardData } from "./signal-card-data";
+
+/** CR08 Phase A: the only place an unknown error is narrowed. */
+function errMessage(e: unknown): string {
+  return e instanceof Error ? e.message : String(e);
+}
+
 
 export type { SignalCardData, SignalLinkChip } from "./signal-card-data";
 
@@ -91,8 +97,8 @@ export function SignalCard({
         if (target === "document") router.push(`/vault/${rid}` as never);
       }
       router.refresh();
-    } catch (e: any) {
-      toast(e?.message === "no_url" ? t("noUrlToConvert") : tc("error"), "error");
+    } catch (e: unknown) {
+      toast(errMessage(e) === "no_url" ? t("noUrlToConvert") : tc("error"), "error");
     } finally {
       setBusy(false);
     }

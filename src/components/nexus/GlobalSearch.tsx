@@ -45,7 +45,16 @@ export function GlobalSearch() {
 
   React.useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+      // CR08 2.3: Ctrl/Cmd+K now opens Ask NPC; "/" focuses the search when
+      // the reader is not typing in a field
+      if (e.key === "/" && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        const target = e.target as HTMLElement | null;
+        const typing =
+          target &&
+          (target.tagName === "INPUT" ||
+            target.tagName === "TEXTAREA" ||
+            target.isContentEditable);
+        if (typing) return;
         e.preventDefault();
         inputRef.current?.focus();
       }
@@ -112,7 +121,7 @@ export function GlobalSearch() {
       />
       <Search className="pointer-events-none absolute start-3.5 top-1/2 size-4 -translate-y-1/2 text-white/70 peer-focus:text-ink-400" />
       <kbd className="pointer-events-none absolute end-3 top-1/2 hidden -translate-y-1/2 rounded border border-white/25 bg-white/10 px-1.5 py-0.5 text-[10px] text-white/70 peer-focus:border-sand-300 peer-focus:bg-sand-50 peer-focus:text-ink-400 md:block">
-        Ctrl K
+        /
       </kbd>
 
       {open && (hasResults || loading) ? (

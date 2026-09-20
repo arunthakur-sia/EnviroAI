@@ -145,8 +145,8 @@ export function ImportFlow({
   return (
     <div className="mt-6 flex flex-col gap-5">
       <div>
-        <Label>{t("chooseIndicator")}</Label>
-        <NativeSelect value={indicatorId} onChange={(e) => setIndicatorId(e.target.value)}>
+        <Label htmlFor="import-indicator">{t("chooseIndicator")}</Label>
+        <NativeSelect id="import-indicator" value={indicatorId} onChange={(e) => setIndicatorId(e.target.value)}>
           <option value="">{t("chooseIndicatorPlaceholder")}</option>
           {indicators.map((i) => (
             <option key={i.id} value={i.id}>
@@ -188,8 +188,9 @@ export function ImportFlow({
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <Label>{t("periodColumn")}</Label>
+              <Label htmlFor="import-period-column">{t("periodColumn")}</Label>
               <NativeSelect
+                id="import-period-column"
                 value={preview.mapping.period_column}
                 onChange={(e) => remapPreview(e.target.value, preview.mapping.value_column)}
               >
@@ -201,8 +202,9 @@ export function ImportFlow({
               </NativeSelect>
             </div>
             <div>
-              <Label>{t("valueColumn")}</Label>
+              <Label htmlFor="import-value-column">{t("valueColumn")}</Label>
               <NativeSelect
+                id="import-value-column"
                 value={preview.mapping.value_column}
                 onChange={(e) => remapPreview(preview.mapping.period_column, e.target.value)}
               >
@@ -237,8 +239,8 @@ export function ImportFlow({
               <tbody>
                 {preview.preview.map((p, i) => (
                   <tr key={i} className="border-t border-sand-100">
-                    <td className="px-3 py-1.5 tnum">{p.period ?? "—"}</td>
-                    <td className="px-3 py-1.5 text-end tnum">{p.value ?? "—"}</td>
+                    <td className="px-3 py-1.5 tnum">{p.period ?? "-"}</td>
+                    <td className="px-3 py-1.5 text-end tnum">{p.value ?? "-"}</td>
                     <td className="px-3 py-1.5">
                       {p.period && p.value !== null ? (
                         <Check className="size-4 text-ok" />

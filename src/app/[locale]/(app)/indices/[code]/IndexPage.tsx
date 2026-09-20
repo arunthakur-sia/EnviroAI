@@ -29,6 +29,11 @@ import { cn, bi } from "@/lib/utils";
 import { Button, Chip, SectionTitle } from "@/components/ui/primitives";
 import { BriefDialog } from "@/components/nexus/BriefDialog";
 import { ReportButton } from "@/components/nexus/ReportButton";
+import { AskContextItem } from "@/components/nexus/ask/AskContextItem";
+import { OwnerControl } from "@/components/nexus/people/OwnerControl";
+import type { OwnerRef } from "@/components/nexus/people/types";
+import { groupStyle } from "@/lib/sdg-colours";
+import { SdgChip, TargetLine } from "../board-shared";
 import {
   runForecast,
   DEFAULT_ASSUMPTIONS,
@@ -36,6 +41,7 @@ import {
   type ForecastResult,
 } from "@/server/indices/forecast";
 import type { IndexPageData } from "@/server/services/indices";
+import { targetGap, targetIsRank } from "@/lib/index-targets";
 
 const GCC = ["QAT", "SAU", "ARE", "KWT", "BHR", "OMN"];
 const PEER_COLORS = ["#8a93a0", "#b0b7c1", "#9aa3ae", "#c3c9d1", "#a5adb8"];
@@ -54,25 +60,52 @@ function DirIcon({ d }: { d: string | null }) {
 export function IndexPage({
   data,
   whatIfInputs,
+  statisticsOwner = null,
 }: {
   data: IndexPageData;
   whatIfInputs: ForecastInputs | null;
+  /** CR08 9.1: the department owner of the linked Statistics Hub series, when there is one */
+  statisticsOwner?: OwnerRef | null;
 }) {
   const t = useTranslations("indices");
-  const tc = useTranslations("common");
   const locale = useLocale();
   const { index } = data;
   const higherBetter = index.higherIsBetter === 1;
 
   const [methodOpen, setMethodOpen] = React.useState(false);
-  const [historyView, setHistoryView] = React.useState<"rank" | "score">("rank");
+  // a score-only series (an SDG goal, a national indicator) opens on its scores
+  const hasRanks = data.focusObservations.some((o) => o.country === "QAT" && o.rank != null);
+  const [historyView, setHistoryView] = React.useState<"rank" | "score">(hasRanks ? "rank" : "score");
   const [tableOpen, setTableOpen] = React.useState(false);
   const [forecastMethodOpen, setForecastMethodOpen] = React.useState(false);
 
-  const qat = data.focusObservations
-    .filter((o) => o.country === "QAT")
-    .sort((a, b) => a.year - b.year);
+  const qat = React.useMemo(() => {
+    const published = data.focusObservations
+      .filter((o) => o.country === "QAT")
+      .sort((a, b) => a.year - b.year);
+    if (published.length || !data.statistics) return published;
+    // CR08 4.1: a national indicator reads its values from the Statistics Hub
+    return data.statistics.series.map((p) => ({
+      country: "QAT",
+      year: p.year,
+      rank: null as number | null,
+      score: p.value as number | null,
+    }));
+  }, [data.focusObservations, data.statistics]);
   const latest = qat[qat.length - 1] ?? null;
+  /* CR08 4.1: the national target and the distance still to go */
+  const nationalTarget = React.useMemo(() => {
+    if (index.targetValue == null) return null;
+    const rankBased = targetIsRank(index.forecastMode, latest?.rank ?? null, latest?.score ?? null);
+    const current = rankBased ? latest?.rank ?? null : latest?.score ?? null;
+    const gap = targetGap(index.targetValue, current, rankBased, higherBetter);
+    return {
+      value: index.targetValue,
+      year: index.targetYear,
+      gap,
+      met: gap != null && gap <= 0,
+    };
+  }, [index.targetValue, index.targetYear, index.forecastMode, latest, higherBetter]);
 
   /* GCC leader for the faint comparison line: best latest rank/score */
   const leader = React.useMemo(() => {
@@ -336,6 +369,10 @@ export function IndexPage({
   const maxBin = Math.max(1, ...histogram.map((b) => b.n));
 
   const fallbackMode = !!whatIfInputs?.usingRankFallback;
+  // `low`/`high` are the bounds that belong with the tile's headline: score
+  // bounds for a score headline, rank bounds for a rank one. In the what-if
+  // rank fallback the simulator already works in negated scores, so its
+  // bounds are ranks; otherwise the rank bounds come from the forecast row.
   const horizonsShown = whatIf
     ? whatIf.horizons.map((h) => ({
         horizon: h.horizon,
@@ -343,6 +380,8 @@ export function IndexPage({
         score: fallbackMode ? null : h.central,
         low: fallbackMode ? -h.high : h.low,
         high: fallbackMode ? -h.low : h.high,
+        rankLow: fallbackMode ? -h.high : null,
+        rankHigh: fallbackMode ? -h.low : null,
         direction: whatIf.direction,
       }))
     : data.forecasts.map((f) => ({
@@ -351,11 +390,39 @@ export function IndexPage({
         score: f.centralScore,
         low: f.low,
         high: f.high,
+        rankLow: f.rankLow,
+        rankHigh: f.rankHigh,
         direction: f.direction,
       }));
 
+  /**
+   * The uncertainty range on the same basis as the tile's headline. A rank
+   * headline above a score range read as one number pair before, which was
+   * simply wrong. Rank bounds are whole places and are ordered so the label
+   * always runs from the smaller number to the larger.
+   */
+  function rangeLabel(h: (typeof horizonsShown)[number]): string {
+    const rankBased = h.rank != null && h.rankLow != null && h.rankHigh != null;
+    const lo = rankBased ? h.rankLow : h.low;
+    const hi = rankBased ? h.rankHigh : h.high;
+    if (lo == null || hi == null) return "";
+    const [a, b] = lo <= hi ? [lo, hi] : [hi, lo];
+    const show = (v: number) => (rankBased ? `#${Math.round(v)}` : fmt(v));
+    return `${t("forecast.range")}: ${show(a)} ${t("forecast.to")} ${show(b)}`;
+  }
+
   return (
     <div data-testid="index-page">
+      <AskContextItem
+        item={{
+          kind: "index",
+          id: index.id,
+          code: index.code,
+          titleEn: index.nameEn,
+          titleAr: index.nameAr,
+          href: `/indices/${index.code}`,
+        }}
+      />
       {/* 1. header */}
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 max-w-3xl">
@@ -366,7 +433,23 @@ export function IndexPage({
           </p>
           <h1 className="mt-1 text-2xl">{bi(locale, index.nameEn, index.nameAr)}</h1>
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            {index.sdgGoal != null ? <SdgChip goal={index.sdgGoal} withTitle locale={locale} /> : null}
+            {data.groups.map((g) => {
+              const style = groupStyle(g.colourToken);
+              return (
+                <Link key={g.id} href={`/indices?group=${g.code}` as never} data-testid="index-group-chip">
+                  <Chip tone={style.chip} className="hover:opacity-80">
+                    {bi(locale, g.nameEn, g.nameAr)}
+                  </Chip>
+                </Link>
+              );
+            })}
             <Chip tone="sand">{t(`categories.${index.category}` as never)}</Chip>
+            {data.statistics ? (
+              <Chip tone="gulf" data-testid="index-statistics-chip">
+                {t("statisticsChip")} · {bi(locale, data.statistics.nameEn, data.statistics.nameAr)}
+              </Chip>
+            ) : null}
             {data.entity ? (
               <Chip tone="gulf">
                 {bi(locale, data.entity.shortNameEn ?? data.entity.nameEn, data.entity.shortNameAr ?? data.entity.nameAr)}
@@ -390,6 +473,30 @@ export function IndexPage({
               </a>
             ) : null}
           </div>
+          {/* CR08 9.1: the responsible entity stays a chip, because an entity
+              is an organisation and not a person. Only a national indicator
+              that mirrors a Statistics Hub series carries a person: the head
+              of that series' department. */}
+          {statisticsOwner && data.statistics ? (
+            <div className="mt-2.5" data-testid="index-statistics-owner">
+              <OwnerControl
+                owner={statisticsOwner}
+                role="department_owner"
+                size="sm"
+                align="start"
+                item={{
+                  type: "indicator",
+                  id: data.statistics.id,
+                  titleEn: data.statistics.nameEn,
+                  titleAr: data.statistics.nameAr,
+                  href: `/statistics/${data.statistics.id}`,
+                }}
+              />
+            </div>
+          ) : null}
+          {nationalTarget ? (
+            <TargetLine target={nationalTarget} unit={data.statistics?.unit} className="mt-2 text-xs" />
+          ) : null}
           <button
             onClick={() => setMethodOpen((v) => !v)}
             className="mt-2 flex items-center gap-1 text-xs font-medium text-ink-600 hover:text-maroon-700 cursor-pointer"
@@ -413,8 +520,12 @@ export function IndexPage({
           </p>
           <p className="text-xs text-ink-600 tnum">
             {latest?.rank != null
-              ? t("rankOf", { total: qat.find((o) => o.year === latest.year && o.rank != null) ? data.observations.find((o) => o.country === "QAT" && o.year === latest.year)?.total ?? "-" : "-" })
-              : t("scoreLabel")}
+              ? (() => {
+                  // manual rows may carry no field size: say "rank" rather than "of -"
+                  const total = data.observations.find((o) => o.country === "QAT" && o.year === latest.year)?.total;
+                  return total ? t("rankOf", { total }) : t("colRank");
+                })()
+              : data.statistics?.unit ?? t("scoreLabel")}
             {latest?.rank != null && latest?.score != null ? ` · ${t("scoreShort")} ${fmt(latest.score)}` : ""}
           </p>
         </div>
@@ -659,11 +770,7 @@ export function IndexPage({
                 <p className="mt-1 text-2xl font-semibold text-maroon-900 tnum" style={{ fontFamily: "var(--font-display)" }}>
                   {h.rank != null ? `#${Math.round(h.rank)}` : fmt(h.score)}
                 </p>
-                <p className="text-[11px] text-ink-600 tnum">
-                  {h.low != null && h.high != null
-                    ? `${t("forecast.range")}: ${fmt(h.low)} – ${fmt(h.high)}`
-                    : ""}
-                </p>
+                <p className="text-[11px] text-ink-600 tnum">{rangeLabel(h)}</p>
               </div>
             ))}
           </div>
@@ -690,7 +797,7 @@ export function IndexPage({
                   width={40}
                   domain={["auto", "auto"]}
                 />
-                <Tooltip formatter={(v: number | number[]) => (Array.isArray(v) ? v.map((x) => fmt(x)).join(" – ") : fmt(v))} />
+                <Tooltip formatter={(v: number | number[]) => (Array.isArray(v) ? v.map((x) => fmt(x)).join(` ${t("forecast.to")} `) : fmt(v))} />
                 <Area
                   dataKey="band"
                   fill="var(--color-maroon-100)"
@@ -820,8 +927,8 @@ export function IndexPage({
                       style={{ height: `${(b.n / maxBin) * 100}%` }}
                       title={
                         fallbackMode
-                          ? `${fmt(-b.x1)} – ${fmt(-b.x0)}: ${b.n}`
-                          : `${fmt(b.x0)} – ${fmt(b.x1)}: ${b.n}`
+                          ? `${fmt(-b.x1)} ${t("forecast.to")} ${fmt(-b.x0)}: ${b.n}`
+                          : `${fmt(b.x0)} ${t("forecast.to")} ${fmt(b.x1)}: ${b.n}`
                       }
                     />
                   ))}

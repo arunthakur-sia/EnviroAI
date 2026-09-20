@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { Lightbulb, BadgeCheck, Recycle } from "lucide-react";
 import { bi } from "@/lib/utils";
 import { Chip } from "@/components/ui/primitives";
+import { KowRibbon } from "@/components/nexus/kow/KowRibbon";
 
 export type LessonCardData = {
   id: string;
@@ -24,6 +25,8 @@ export type LessonCardData = {
   nodeCode?: string | null;
   nodeTitleEn?: string | null;
   nodeTitleAr?: string | null;
+  /* CR08 8: this week's Knowledge of the Week; undefined lets the ribbon look itself up */
+  kow?: boolean;
 };
 
 /* CR02 3.1: one tone per category, consistent everywhere. */
@@ -37,9 +40,12 @@ export const CATEGORY_TONES: Record<string, "maroon" | "gulf" | "gold" | "sand">
 export function LessonCard({
   lesson,
   showCategory = false,
+  kow,
 }: {
   lesson: LessonCardData;
   showCategory?: boolean;
+  /** CR08 8: pass when the server knows; omitted, the ribbon looks itself up */
+  kow?: boolean;
 }) {
   const locale = useLocale();
   const t = useTranslations("lessons");
@@ -79,12 +85,18 @@ export function LessonCard({
           );
         })()
       ) : null}
+      {/* the clamp sits on an inner span: on the padded box it cuts at the
+          padding edge and leaves a sliver of the third line showing */}
       {(lesson.recommendationEn || lesson.recommendationAr) ? (
-        <p className="line-clamp-2 rounded-lg bg-gulf-100/50 px-2.5 py-1.5 text-xs leading-relaxed text-gulf-600">
-          {bi(locale, lesson.recommendationEn ?? "", lesson.recommendationAr ?? "")}
+        <p className="rounded-lg bg-gulf-100/50 px-2.5 py-1.5 text-xs leading-relaxed text-gulf-600">
+          <span className="line-clamp-2 block">
+            {bi(locale, lesson.recommendationEn ?? "", lesson.recommendationAr ?? "")}
+          </span>
         </p>
       ) : null}
       <div className="mt-auto flex flex-wrap items-center gap-2 pt-1">
+        {/* CR08 8: the gold ribbon on this week's pick */}
+        <KowRibbon resourceType="lesson" resourceId={lesson.id} active={kow ?? lesson.kow} />
         {showCategory && category ? (
           <Chip
             tone={CATEGORY_TONES[category] ?? "sand"}

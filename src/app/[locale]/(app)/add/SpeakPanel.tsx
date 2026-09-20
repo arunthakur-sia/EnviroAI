@@ -75,7 +75,7 @@ export function SpeakPanel({
     cancelAnimationFrame(rafRef.current);
     recognitionRef.current?.stop();
     recognitionRef.current = null;
-    mediaRef.current?.state !== "inactive" && mediaRef.current?.stop();
+    if (mediaRef.current && mediaRef.current.state !== "inactive") mediaRef.current.stop();
     streamRef.current?.getTracks().forEach((tr) => tr.stop());
     audioCtxRef.current?.close().catch(() => {});
     audioCtxRef.current = null;

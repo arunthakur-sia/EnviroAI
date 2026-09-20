@@ -6,11 +6,12 @@ import { desc, eq } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import type { CurrentUser } from "@/server/auth/session";
 import { getAiSettings } from "@/server/settings";
-import { aiLive, getClient, loadPrompt, callJson, extractJson } from "@/server/ai/client";
+import { aiLive, getClient, loadPrompt, callJson, noteAiFailure } from "@/server/ai/client";
 import {
   mockAnalystPlan,
   mockAnalystAnswer,
   mockAnalystFollowUps,
+  type MockPlannedTool,
 } from "@/server/ai/mock";
 import { AnalystState, TOOL_DEFINITIONS, runTool, type Workspace, type SourceRef } from "./tools";
 import { isArabicText } from "@/lib/utils";
@@ -38,7 +39,7 @@ export type AnalystEvent =
 function chipFor(name: string, input: Record<string, unknown>): { labelEn: string; labelAr: string } {
   switch (name) {
     case "search_knowledge":
-      return { labelEn: "Searching the Vault", labelAr: "يبحث في خزانة المعرفة" };
+      return { labelEn: "Searching Institutional Memory", labelAr: "يبحث في مكتبة المعرفة" };
     case "get_document":
       return { labelEn: "Reading a document", labelAr: "يقرأ وثيقة" };
     case "query_strategy":
@@ -162,7 +163,104 @@ function computeAnalystConfidence(
   return citedVerified >= 2 ? "high" : "medium";
 }
 
+/* CR08 9.1: the person responsible for each cited document, strategy node or
+   lesson, resolved in one bulk pass so the answer's source cards carry the
+   same person chip the item's own page does. Never fails the answer. */
+async function attachSourceOwners(sources: SourceRef[]): Promise<void> {
+  const wanted = sources.filter((s) =>
+    ["document", "node", "lesson"].includes(s.resource_type)
+  );
+  if (!wanted.length) return;
+  try {
+    const { ownerKey, resolveOwners } = await import("@/server/services/owner-lookup");
+    const owners = await resolveOwners(
+      wanted.map((s) => ({ type: s.resource_type, id: s.resource_id }))
+    );
+    for (const s of wanted) {
+      const owner = owners[ownerKey(s.resource_type, s.resource_id)];
+      if (owner) s.owner = owner;
+    }
+  } catch {
+    /* an answer is worth more than a person chip */
+  }
+}
+
 /* ---------------- the loop ---------------- */
+
+/* CR08 2.3: the item the reader is looking at when asking from the panel */
+export type AnalystContextItem = {
+  kind: string;
+  id: string;
+  code?: string | null;
+  title: string;
+};
+
+/** One line prepended to the user turn so "this project" resolves. */
+function contextItemLine(item: AnalystContextItem | null | undefined): string {
+  if (!item) return "";
+  const kind = item.kind.replace(/_/g, " ");
+  return `The user is looking at ${kind} ${item.title}${item.code ? ` (${item.code})` : ""}; "this" and "it" refer to that item.\n`;
+}
+
+/** Mock mode: read the item directly before the planned tools run. */
+function contextItemTool(
+  item: AnalystContextItem | null | undefined
+): { name: string; input: Record<string, unknown> } | null {
+  if (!item) return null;
+  switch (item.kind) {
+    case "document":
+      return { name: "get_document", input: { id: item.id } };
+    case "project":
+    case "initiative":
+    case "outcome":
+    case "target":
+      return { name: "get_node", input: { id: item.id } };
+    case "indicator":
+      return { name: "get_indicator_series", input: { indicator_id: item.id } };
+    case "index":
+      return { name: "get_index", input: { code: item.code ?? item.title } };
+    case "council_node":
+      return { name: "get_council_node", input: { id: item.id } };
+    case "unit":
+      return { name: "get_org_unit", input: { name_or_code: item.code ?? item.title } };
+    default:
+      return { name: "search_knowledge", input: { query: item.title, limit: 5 } };
+  }
+}
+
+/**
+ * The planned tools, run directly. This is the whole gather in mock mode, and
+ * it is also the rescue when a live gather call fails: without it the answer
+ * would be written from nothing and would tell the reader the memory holds
+ * no answer, when in truth only the model call failed.
+ */
+async function* gatherFromPlan(
+  ctx: { user: CurrentUser; state: AnalystState },
+  plan: { tools: MockPlannedTool[] },
+  contextItem: AnalystContextItem | null | undefined,
+  toolOutputs: { name: string; output: string }[],
+  deadline: number
+): AsyncGenerator<AnalystEvent> {
+  const { state } = ctx;
+  const itemTool = contextItemTool(contextItem);
+  const plannedTools =
+    itemTool && !plan.tools.some((t) => t.name === itemTool.name) ? [itemTool, ...plan.tools] : plan.tools;
+  for (const t of plannedTools) {
+    if (state.toolCalls >= MAX_TOOL_CALLS || Date.now() > deadline) break;
+    yield { type: "chip", ...chipFor(t.name, t.input) };
+    const output = await runTool(ctx, t.name, t.input);
+    toolOutputs.push({ name: t.name, output });
+    if (t.name === "query_indicators" && !/No indicators matched/.test(output)) {
+      const code = /code=([a-z0-9_]+)/i.exec(output)?.[1];
+      if (code && state.toolCalls < MAX_TOOL_CALLS) {
+        yield { type: "chip", ...chipFor("get_indicator_series", {}) };
+        const seriesOut = await runTool(ctx, "get_indicator_series", { code });
+        toolOutputs.push({ name: "get_indicator_series", output: seriesOut });
+      }
+    }
+    // chain: at-risk list feeds what_changed already planned; node ids not needed
+  }
+}
 
 export async function* analystStream(params: {
   user: CurrentUser;
@@ -170,6 +268,7 @@ export async function* analystStream(params: {
   locale: string;
   conversationId: string;
   context?: { type: string; id: string } | null;
+  contextItem?: AnalystContextItem | null;
 }): AsyncGenerator<AnalystEvent> {
   const { user, message, locale, conversationId } = params;
   const settings = await getAiSettings();
@@ -232,21 +331,7 @@ export async function* analystStream(params: {
 
   if (!live) {
     /* ---- mock gather: run the planned tools directly ---- */
-    for (const t of plan.tools) {
-      if (state.toolCalls >= MAX_TOOL_CALLS || Date.now() > deadline) break;
-      yield { type: "chip", ...chipFor(t.name, t.input) };
-      const output = await runTool(ctx, t.name, t.input);
-      toolOutputs.push({ name: t.name, output });
-      if (t.name === "query_indicators" && !/No indicators matched/.test(output)) {
-        const code = /code=([a-z0-9_]+)/i.exec(output)?.[1];
-        if (code && state.toolCalls < MAX_TOOL_CALLS) {
-          yield { type: "chip", ...chipFor("get_indicator_series", {}) };
-          const seriesOut = await runTool(ctx, "get_indicator_series", { code });
-          toolOutputs.push({ name: "get_indicator_series", output: seriesOut });
-        }
-      }
-      // chain: at-risk list feeds what_changed already planned; node ids not needed
-    }
+    yield* gatherFromPlan(ctx, plan, params.contextItem, toolOutputs, deadline);
   } else {
     /* ---- live gather: Anthropic tool loop ---- */
     const { shared } = loadPrompt("system_analyst_planner");
@@ -270,7 +355,7 @@ export async function* analystStream(params: {
     }
     messages.push({
       role: "user",
-      content: `Question (answer language: ${answerLang}): ${plan.rewritten}${contextNote}\nGather evidence now. Budget: ${MAX_TOOL_CALLS} tool calls, then reply READY.`,
+      content: `${contextItemLine(params.contextItem)}Question (answer language: ${answerLang}): ${plan.rewritten}${contextNote}\nGather evidence now. Budget: ${MAX_TOOL_CALLS} tool calls, then reply READY.`,
     });
 
     let currentModel = model;
@@ -291,6 +376,7 @@ export async function* analystStream(params: {
           currentModel = settings.modelDefault; // opus unavailable: fall back
           continue;
         }
+        noteAiFailure(e);
         console.error("[analyst] gather call failed", (e as Error)?.message);
         break;
       }
@@ -318,6 +404,7 @@ export async function* analystStream(params: {
     }
 
     /* workspace + sources before the answer streams */
+    await attachSourceOwners(state.sources);
     yield { type: "workspace", workspace: state.workspace };
     yield { type: "sources", citations: state.sources };
 
@@ -349,6 +436,7 @@ export async function* analystStream(params: {
         }
       }
     } catch (e) {
+      noteAiFailure(e);
       console.error("[analyst] answer stream failed", (e as Error)?.message);
     }
     if (full) {
@@ -374,6 +462,16 @@ export async function* analystStream(params: {
   }
 
   /* ---- mock answer path (also the live-failure fallback) ---- */
+  /* A live gather whose calls all failed (an unreachable, refusing or
+     out-of-credit API) leaves the analyst with no evidence at all, and the
+     fallback writer would then tell the reader that SiaNexus holds nothing on
+     the question. Run the planned tools first, so the fallback answer is
+     grounded in the same real sources mock mode uses and the citations under
+     it are genuine. */
+  if (live && !toolOutputs.length) {
+    yield* gatherFromPlan(ctx, plan, params.contextItem, toolOutputs, Date.now() + GATHER_BUDGET_MS);
+  }
+  await attachSourceOwners(state.sources);
   yield { type: "workspace", workspace: state.workspace };
   yield { type: "sources", citations: state.sources };
   const markdown = mockAnalystAnswer(toolOutputs, answerLang);

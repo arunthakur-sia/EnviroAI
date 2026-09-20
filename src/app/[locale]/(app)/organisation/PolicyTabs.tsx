@@ -13,6 +13,7 @@ import { formatDate } from "@/lib/format";
 import { Button, Chip, EmptyState } from "@/components/ui/primitives";
 import { useToast } from "@/components/ui/toast";
 import { Book, type ShelfDoc } from "@/components/nexus/Shelf";
+import { OwnerControlCompact } from "@/components/nexus/people/OwnerControl";
 import type { PolicyTab, UnitPolicy } from "@/server/services/organisation";
 
 /* the four tabs, in order; kept local so the client never imports the service */
@@ -46,6 +47,7 @@ export function PolicyTabs({
 }) {
   const t = useTranslations("organisation");
   const tc = useTranslations("common");
+  const tp = useTranslations("people");
   const locale = useLocale();
   const isRtl = locale === "ar";
   const router = useRouter();
@@ -319,6 +321,17 @@ export function PolicyTabs({
                       ) : null}
                       {item.status === "verified" ? (
                         <Chip tone="ok">{tc("verified")}</Chip>
+                      ) : null}
+                      {/* CR08 9.1: the custodian, beside the title link and
+                          never inside it: the person card opens from a button */}
+                      {item.owner ? (
+                        <span className="inline-flex items-center gap-1.5" data-testid="policy-owner">
+                          <span className="text-[11px] text-ink-400">{tp("roles.custodian")}</span>
+                          <OwnerControlCompact
+                            owner={item.owner}
+                            item={{ type: "policy", id: item.id, titleEn: item.titleEn, titleAr: item.titleAr, href: `/vault/${item.id}` }}
+                          />
+                        </span>
                       ) : null}
                     </div>
                     {canEdit ? (

@@ -7,7 +7,10 @@ import { getCurrentUser } from "@/server/auth/session";
 export const maxDuration = 120;
 
 export async function GET() {
-  // capability probe for the client
+  // capability probe for the client; behind the session like every other route,
+  // so an anonymous caller learns nothing about how this server is configured
+  const user = await getCurrentUser();
+  if (!user) return NextResponse.json({ data: null, error: "unauthorized" }, { status: 401 });
   return NextResponse.json({
     data: { available: Boolean(process.env.OPENAI_API_KEY) },
     error: null,

@@ -249,15 +249,16 @@ export function ComposerClient({
           </p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
-              <Label>{t("languageLabel")}</Label>
-              <NativeSelect value={language} onChange={(e) => setLanguage(e.target.value as never)}>
+              <Label htmlFor="composer-language">{t("languageLabel")}</Label>
+              <NativeSelect id="composer-language" value={language} onChange={(e) => setLanguage(e.target.value as never)}>
                 <option value="ar">{t("langNames.ar")}</option>
                 <option value="en">{t("langNames.en")}</option>
               </NativeSelect>
             </div>
             <div>
-              <Label>{t("lengthLabel")}</Label>
+              <Label htmlFor="composer-length">{t("lengthLabel")}</Label>
               <NativeSelect
+                id="composer-length"
                 value={String(minutes)}
                 onChange={(e) => setMinutes(Number(e.target.value) as 3 | 5)}
               >
@@ -266,8 +267,8 @@ export function ComposerClient({
               </NativeSelect>
             </div>
             <div>
-              <Label>{t("focusLabel")}</Label>
-              <NativeSelect value={focus} onChange={(e) => setFocus(e.target.value as never)}>
+              <Label htmlFor="composer-focus">{t("focusLabel")}</Label>
+              <NativeSelect id="composer-focus" value={focus} onChange={(e) => setFocus(e.target.value as never)}>
                 {(["overview", "lessons", "numbers", "risks"] as const).map((f) => (
                   <option key={f} value={f}>
                     {t(`focus.${f}`)}

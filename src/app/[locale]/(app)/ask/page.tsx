@@ -58,7 +58,7 @@ export default async function AskPage({
           <h1 className="text-2xl">{t("title")}</h1>
           <p className="mt-1 text-sm text-ink-600">{t("subtitle")}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Link href="/ask/communities">
             <Button variant="secondary">
               <Users2 /> {t("communities")}

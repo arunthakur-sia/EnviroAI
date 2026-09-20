@@ -42,8 +42,13 @@ const SESSION_OPTIONS = () => ({
   cookieOptions: {
     httpOnly: true,
     sameSite: "lax" as const,
-    secure: false, // local prototype over http
+    /* CR08 Phase A: the prototype is served over plain http on this machine,
+       including `npm run start:demo`, so a Secure cookie would never be sent
+       back and nobody could sign in. It is opt-in for a TLS deployment:
+       SESSION_COOKIE_SECURE=1. */
+    secure: process.env.SESSION_COOKIE_SECURE === "1",
     maxAge: 60 * 60 * 24 * 14,
+    path: "/",
   },
 });
 

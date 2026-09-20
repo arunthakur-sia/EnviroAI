@@ -12,6 +12,7 @@ import { formatDate } from "@/lib/format";
 import { Avatar, Button, Chip } from "@/components/ui/primitives";
 import { CATEGORY_TONES } from "@/components/nexus/LessonCard";
 import { LessonLinksSection } from "@/components/nexus/LessonLinks";
+import { OwnerControlCompact } from "@/components/nexus/people/OwnerControl";
 import { useToast } from "@/components/ui/toast";
 import type { RoomLesson } from "@/server/services/lessons";
 
@@ -211,8 +212,20 @@ export function LessonReader({
               <Chip tone="ghost" className="border border-sand-300 hover:text-maroon-700">doc</Chip>
             </Link>
           ))}
-          <span className="ms-auto flex items-center gap-1.5 text-[11px] text-ink-600">
-            {lesson.authorNameEn ? (
+          <span className="ms-auto flex min-w-0 items-center gap-1.5 text-[11px] text-ink-600">
+            {/* CR08 9.1: the author, with the person card on hover or tap */}
+            {lesson.authorId && lesson.authorNameEn ? (
+              <OwnerControlCompact
+                owner={{
+                  id: lesson.authorId,
+                  nameEn: lesson.authorNameEn,
+                  nameAr: lesson.authorNameAr ?? lesson.authorNameEn,
+                  avatarColor: lesson.authorColor ?? "maroon",
+                }}
+                item={{ type: "lesson", id: lesson.id, titleEn: lesson.titleEn, titleAr: lesson.titleAr, href: `/lessons/${lesson.id}` }}
+                align="end"
+              />
+            ) : lesson.authorNameEn ? (
               <>
                 <Avatar name={lesson.authorNameEn} color={lesson.authorColor ?? "maroon"} size={18} />
                 {bi(locale, lesson.authorNameEn, lesson.authorNameAr ?? lesson.authorNameEn)}

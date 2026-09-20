@@ -11,6 +11,12 @@ import { runWebSearchBrief } from "./web-search";
 import { runRssScan } from "./rss";
 import { persistCandidates } from "./extract";
 
+/** CR08 Phase A: the only place an unknown error is narrowed. */
+function errMessage(e: unknown): string {
+  return e instanceof Error ? e.message : String(e);
+}
+
+
 export type TrendsSettings = {
   intervalHours: number;
   webSearchOn: boolean;
@@ -145,8 +151,8 @@ export async function runScan(opts: {
         tokensOut,
       })
       .where(eq(schema.scanRuns.id, runId));
-  } catch (e: any) {
-    errors.push(String(e?.message ?? e).slice(0, 300));
+  } catch (e: unknown) {
+    errors.push(errMessage(e).slice(0, 300));
     await db
       .update(schema.scanRuns)
       .set({

@@ -20,8 +20,9 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { cn, bi, initialsOf } from "@/lib/utils";
-import { Avatar, Button, Chip, EmptyState, NativeSelect, RagDot } from "@/components/ui/primitives";
+import { Avatar, Button, Chip, EmptyState, NativeSelect } from "@/components/ui/primitives";
 import { CATEGORY_TONES } from "@/components/nexus/LessonCard";
+import { OwnerControlCompact } from "@/components/nexus/people/OwnerControl";
 import { ReportButton } from "@/components/nexus/ReportButton";
 import { PrimaryNodeChip } from "@/components/nexus/LessonLinks";
 import type { LearningRoomData, RoomLesson, RoomTheme } from "@/server/services/lessons";
@@ -58,10 +59,12 @@ function RoomLessonCard({
     institutional: "group-hover/rl:bg-sand-300 group-hover/rl:text-ink-900",
   };
   return (
-    <button
-      onClick={onOpen}
+    /* CR08 9.1: the author is a person chip, which is a button of its own, so
+       the card is no longer one button: the title carries the open action and
+       stretches over the card (::after), the chip sits above that overlay */
+    <div
       className={cn(
-        "group/rl card flex shrink-0 flex-col gap-1.5 p-4 text-start transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]",
+        "group/rl card relative flex shrink-0 flex-col gap-1.5 p-4 text-start transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]",
         wide ? "w-full" : "w-72"
       )}
       data-testid="room-lesson"
@@ -84,9 +87,16 @@ function RoomLessonCard({
           <span className="ms-auto size-2 rounded-full bg-gold-500" title={t("room.goldMark")} aria-label={t("room.goldMark")} />
         ) : null}
       </span>
-      <span className="line-clamp-2 text-sm font-medium leading-snug text-ink-900">
-        {bi(locale, lesson.titleEn, lesson.titleAr)}
-      </span>
+      <button
+        type="button"
+        onClick={onOpen}
+        className="rounded-md text-start after:absolute after:inset-0 after:rounded-[inherit] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+        data-testid="room-lesson-open"
+      >
+        <span className="line-clamp-2 text-sm font-medium leading-snug text-ink-900">
+          {bi(locale, lesson.titleEn, lesson.titleAr)}
+        </span>
+      </button>
       <span className="line-clamp-2 text-xs leading-relaxed text-ink-600">
         {firstSentence(bi(locale, lesson.learningEn ?? "", lesson.learningAr ?? ""))}
       </span>
@@ -103,13 +113,25 @@ function RoomLessonCard({
             <Recycle className="size-3" /> {lesson.reuseCount}
           </span>
         ) : null}
-        {lesson.authorNameEn ? (
+        {lesson.authorId && lesson.authorNameEn ? (
+          <OwnerControlCompact
+            owner={{
+              id: lesson.authorId,
+              nameEn: lesson.authorNameEn,
+              nameAr: lesson.authorNameAr ?? lesson.authorNameEn,
+              avatarColor: lesson.authorColor ?? "maroon",
+            }}
+            item={{ type: "lesson", id: lesson.id, titleEn: lesson.titleEn, titleAr: lesson.titleAr, href: `/lessons/${lesson.id}` }}
+            align="end"
+            className="relative z-[1] ms-auto max-w-[60%]"
+          />
+        ) : lesson.authorNameEn ? (
           <span className="ms-auto">
             <Avatar name={lesson.authorNameEn} color={lesson.authorColor ?? "maroon"} size={18} />
           </span>
         ) : null}
       </span>
-    </button>
+    </div>
   );
 }
 
@@ -306,7 +328,32 @@ export function LearningRoom({
                         {bi(locale, week.lesson.outcomeNameEn, week.lesson.outcomeNameAr ?? "")}
                       </Chip>
                     ) : null}
-                    {week.lesson.authorNameEn ? (
+                    {/* CR08 9.1: the author of the week's lesson, with the person card */}
+                    {week.lesson.authorId && week.lesson.authorNameEn ? (
+                      <span className="flex min-w-0 items-center gap-1.5">
+                        <OwnerControlCompact
+                          owner={{
+                            id: week.lesson.authorId,
+                            nameEn: week.lesson.authorNameEn,
+                            nameAr: week.lesson.authorNameAr ?? week.lesson.authorNameEn,
+                            avatarColor: week.lesson.authorColor ?? "maroon",
+                          }}
+                          item={{
+                            type: "lesson",
+                            id: week.lesson.id,
+                            titleEn: week.lesson.titleEn,
+                            titleAr: week.lesson.titleAr,
+                            href: `/lessons/${week.lesson.id}`,
+                          }}
+                          size="md"
+                        />
+                        {week.lesson.departmentEn ? (
+                          <span className="truncate text-ink-600">
+                            · {bi(locale, week.lesson.departmentEn, week.lesson.departmentAr ?? "")}
+                          </span>
+                        ) : null}
+                      </span>
+                    ) : week.lesson.authorNameEn ? (
                       <span className="flex items-center gap-1.5">
                         <Avatar name={week.lesson.authorNameEn} color={week.lesson.authorColor ?? "maroon"} size={20} />
                         {bi(locale, week.lesson.authorNameEn, week.lesson.authorNameAr ?? "")}
@@ -651,7 +698,9 @@ function ThemeCard({
       onClick={onToggle}
       aria-expanded={open}
       className={cn(
-        "bento-card flex flex-col gap-1.5 p-4 text-start cursor-pointer",
+        // min-w-0: a grid item will not shrink below its content otherwise, and
+        // the footer row below carries a count, two chips and a sparkline
+        "bento-card flex min-w-0 flex-col gap-1.5 p-4 text-start cursor-pointer",
         open && "border-maroon-300"
       )}
       data-testid="theme-card"
@@ -664,14 +713,14 @@ function ThemeCard({
           {bi(locale, theme.summaryEn ?? "", theme.summaryAr ?? "")}
         </span>
       ) : null}
-      <span className="mt-auto flex items-center justify-between gap-2 pt-1">
-        <span className="flex items-center gap-1.5">
-          <span className="text-[11px] text-ink-600 tnum">{t("room.themeLessons", { count: theme.count })}</span>
+      <span className="mt-auto flex min-w-0 items-center justify-between gap-2 pt-1">
+        <span className="flex min-w-0 items-center gap-1.5">
+          <span className="truncate text-[11px] text-ink-600 tnum">{t("room.themeLessons", { count: theme.count })}</span>
           {theme.outcomes.slice(0, 2).map((o) => (
-            <Chip key={o.code} tone="maroon">{o.code}</Chip>
+            <Chip key={o.code} tone="maroon" className="shrink-0">{o.code}</Chip>
           ))}
         </span>
-        <span className="flex flex-col items-end">
+        <span className="flex shrink-0 flex-col items-end">
           <ThemeSparkline values={theme.perMonth} />
           <span className="text-[9px] text-ink-600">{t("room.perMonth")}</span>
         </span>

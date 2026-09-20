@@ -4,11 +4,13 @@ import { and, eq, inArray } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import { getCurrentUser } from "@/server/auth/session";
 import { toShelfDocs } from "@/server/services/documents";
+import { getOwnerRefs } from "@/server/services/people";
 import { canReadResource } from "@/server/auth/permissions";
 import { bi } from "@/lib/utils";
 import { Reveal } from "@/components/motion";
 import { Shelf } from "@/components/nexus/Shelf";
-import { EmptyState, Avatar } from "@/components/ui/primitives";
+import { OwnerControl } from "@/components/nexus/people/OwnerControl";
+import { EmptyState } from "@/components/ui/primitives";
 import { ReportButton } from "@/components/nexus/ReportButton";
 import { Link } from "@/i18n/navigation";
 import { Headphones } from "lucide-react";
@@ -59,15 +61,9 @@ export default async function CollectionPage({
   );
   const shelfDocs = await toShelfDocs(visible);
 
-  const curator = collection.ownerUserId
-    ? (
-        await db
-          .select({ nameEn: schema.users.nameEn, nameAr: schema.users.nameAr, color: schema.users.avatarColor })
-          .from(schema.users)
-          .where(eq(schema.users.id, collection.ownerUserId))
-          .limit(1)
-      )[0]
-    : null;
+  // CR08 9.1: the custodian of the collection, with the person card
+  const curatorRefs = await getOwnerRefs([collection.ownerUserId]);
+  const curator = collection.ownerUserId ? curatorRefs[collection.ownerUserId] ?? null : null;
 
   return (
     <Reveal>
@@ -78,10 +74,21 @@ export default async function CollectionPage({
           {bi(locale, collection.descriptionEn ?? "", collection.descriptionAr ?? "")}
         </p>
         {curator ? (
-          <p className="mt-3 flex items-center gap-2 text-xs text-ink-600">
-            <Avatar name={curator.nameEn} color={curator.color} size={20} />
-            {t("curatedBy", { name: bi(locale, curator.nameEn, curator.nameAr) })}
-          </p>
+          <div className="mt-3">
+            <OwnerControl
+              owner={curator}
+              role="custodian"
+              size="sm"
+              align="start"
+              item={{
+                type: "collection",
+                id: collection.id,
+                titleEn: collection.nameEn,
+                titleAr: collection.nameAr,
+                href: `/vault/collections/${collection.id}`,
+              }}
+            />
+          </div>
         ) : null}
         </div>
         <div className="flex items-center gap-2">

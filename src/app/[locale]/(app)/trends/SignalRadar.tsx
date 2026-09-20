@@ -7,7 +7,7 @@
 // Small screens get a full 320px circle with the labels listed beneath.
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { cn, bi } from "@/lib/utils";
+import { bi } from "@/lib/utils";
 import { formatDate } from "@/lib/format";
 import { Chip } from "@/components/ui/primitives";
 import type { BoardSignal } from "./board-types";

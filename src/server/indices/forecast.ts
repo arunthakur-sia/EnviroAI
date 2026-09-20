@@ -61,6 +61,63 @@ export type ForecastInputs = {
   assumptions: ForecastAssumptions;
   runs: number; // 5000 official, 1000 what-if
   seed: number;
+  /** CR08 4.1: the forecast mode. "rank" and "score" leave the engine as it
+      was (the series compute.ts assembled is what gets forecast, in -rank or
+      score units); "target_gap" forecasts a national indicator's value series
+      and measures the gap to its target (see targetGap and TargetGapResult). */
+  mode?: "rank" | "score" | "target_gap";
+  /** the national target for target_gap mode, in series units */
+  targetGap?: { value: number; year: number } | null;
+};
+
+/* ------------------------------------------------------------------ */
+/* CR08 4.1: target_gap mode                                            */
+/* ------------------------------------------------------------------ */
+/*
+  A national indicator carries a numeric target and a target year (NDS3).
+  The engine keeps the same machinery, Holt or damped baseline on the value
+  series, bounded signal adjustment, and the seeded bootstrap Monte Carlo,
+  and adds one simulated horizon at the target year. Two things differ:
+
+  1. The target pull is switched off. Pulling the path toward the target and
+     then measuring the distance to it would be circular; the gap must read
+     the historical trajectory, not the aspiration.
+  2. The scale of the bounded adjustment and of the residual floors is the
+     larger of the distance to the target and the observed range of the
+     series, because national indicators have open scales (persons, QAR
+     billion, percentage points) rather than a 0-100 score.
+
+  The gap is direction-corrected: gap = (target - value) * (higherIsBetter
+  ? 1 : -1), so a positive gap always means "short of the target". The
+  result reports the gap today, the central/low/high value at the target
+  year, the share of simulation runs that reach the target by that year,
+  the pace per year the target needs against the fitted trend per year, and
+  the first year in which the central path reaches the target (null when it
+  does not within fifteen years). The horizons 1/3/5 keep their shape so the
+  stored forecast rows are identical to the other modes.
+*/
+
+export type TargetGapResult = {
+  targetValue: number;
+  targetYear: number;
+  /** years between the latest observation and the target year, 1..15 */
+  horizonYears: number;
+  /** the gap today; positive = short of the target (series units) */
+  gapNow: number;
+  /** simulated value at the target year */
+  central: number;
+  low: number;
+  high: number;
+  /** central gap at the target year; positive = short of the target */
+  gapCentral: number;
+  /** share of simulation runs that meet the target by the target year */
+  probability: number;
+  /** change per year the target needs from the latest value (signed, raw units) */
+  requiredPacePerYear: number;
+  /** the fitted one-step trend per year (signed, raw units) */
+  trendPerYear: number;
+  /** first year the central path reaches the target; null if not within 15 years */
+  closingYear: number | null;
 };
 
 export type HorizonResult = {
@@ -99,6 +156,10 @@ export type ForecastResult = {
   sensitivity: { key: string; impact: number }[];
   /** per-horizon simulated distribution summaries for the histogram chart */
   histograms: { horizon: 1 | 3 | 5; bins: { x0: number; x1: number; n: number }[] }[];
+  /** the mode the engine ran in */
+  mode: "rank" | "score" | "target_gap";
+  /** target_gap mode only */
+  targetGap?: TargetGapResult;
 };
 
 /* ------------------------------------------------------------------ */
@@ -330,9 +391,27 @@ export function runForecast(inputs: ForecastInputs): ForecastResult {
   const values = series.map((p) => p.value);
   if (!values.length) throw new Error("empty series");
 
+  // CR08 4.1: target_gap runs on the value series (never on ranks)
+  const gapTarget =
+    inputs.mode === "target_gap" && inputs.targetGap && !usingRankFallback
+      ? inputs.targetGap
+      : null;
+  const mode: ForecastResult["mode"] = gapTarget
+    ? "target_gap"
+    : usingRankFallback
+      ? "rank"
+      : "score";
+
   const range = usingRankFallback
     ? Math.max(20, Math.abs(values[values.length - 1]) * 0.5)
-    : scoreMax - scoreMin;
+    : gapTarget
+      ? Math.max(
+          Math.abs(gapTarget.value - values[values.length - 1]),
+          Math.max(...values) - Math.min(...values),
+          Math.abs(values[values.length - 1]) * 0.1,
+          1e-6
+        )
+      : scoreMax - scoreMin;
 
   // 1. baseline
   let method: "holt" | "damped";
@@ -384,9 +463,10 @@ export function runForecast(inputs: ForecastInputs): ForecastResult {
     return sum;
   };
 
-  // 3. target value in series units
+  // 3. target value in series units (the pull is off in target_gap mode:
+  //    the gap must read the trajectory, not the aspiration)
   let targetValue: number | null = null;
-  if (target) {
+  if (target && !gapTarget) {
     if (target.score != null && !usingRankFallback) targetValue = target.score;
     else if (target.rank != null && usingRankFallback) targetValue = -target.rank; // rank fallback stores -rank so higher = better
     else if (target.score != null && usingRankFallback) targetValue = null;
@@ -394,9 +474,15 @@ export function runForecast(inputs: ForecastInputs): ForecastResult {
   const statusScale = target ? targetStatusScale(target.status) : 0;
 
   const horizonsSpec: (1 | 3 | 5)[] = [1, 3, 5];
+  // the target year joins the simulated horizons in target_gap mode
+  const gapHorizon = gapTarget
+    ? Math.max(1, Math.min(15, gapTarget.year - latestYear))
+    : null;
+  const simHorizons: number[] = [...horizonsSpec];
+  if (gapHorizon != null && !simHorizons.includes(gapHorizon)) simHorizons.push(gapHorizon);
 
   const centralOf = (
-    h: 1 | 3 | 5,
+    h: number,
     opts: {
       signalFactor?: (i: number) => number;
       pullDelta?: number;
@@ -406,19 +492,22 @@ export function runForecast(inputs: ForecastInputs): ForecastResult {
       shock?: number;
     } = {}
   ): { value: number; baseline: number; adj: number; pull: number } => {
+    // the signal caps and the pull weights are defined at 1/3/5; other
+    // horizons (the target year) borrow the nearest of the three
+    const hs: 1 | 3 | 5 = h <= 2 ? 1 : h <= 4 ? 3 : 5;
     const baseline = pointForecast(method, level, trend, phi, h) + (opts.residualDraw ?? 0);
     const adj =
       sign *
       boundedAdjustment(
-        weightedSum(h, opts.signalFactor),
-        h,
+        weightedSum(hs, opts.signalFactor),
+        hs,
         range,
         (opts.strength ?? assumptions.signalStrength)
       );
     let value = baseline + adj;
     let pull = 0;
     if (targetValue != null) {
-      const baseW = TARGET_PULL_WEIGHT[h] * statusScale * (opts.pullMult ?? assumptions.targetPullWeight);
+      const baseW = TARGET_PULL_WEIGHT[hs] * statusScale * (opts.pullMult ?? assumptions.targetPullWeight);
       const w = Math.max(0, Math.min(1, baseW + (opts.pullDelta ?? 0)));
       const pulled = value * (1 - w) + targetValue * w;
       pull = pulled - value;
@@ -432,12 +521,13 @@ export function runForecast(inputs: ForecastInputs): ForecastResult {
 
   // 4. simulation
   const rand = mulberry32(seed);
-  const sims: Record<number, number[]> = { 1: [], 3: [], 5: [] };
+  const sims: Record<number, number[]> = {};
+  for (const h of simHorizons) sims[h] = [];
   const nRuns = Math.max(100, runs);
   for (let r = 0; r < nRuns; r++) {
     const factors = signals.map(() => 0.5 + rand());
     const pullDelta = (rand() * 2 - 1) * 0.15;
-    for (const h of horizonsSpec) {
+    for (const h of simHorizons) {
       // bootstrap: sum h resampled residuals for the cumulative path error
       let draw = 0;
       for (let i = 0; i < h; i++) {
@@ -560,6 +650,41 @@ export function runForecast(inputs: ForecastInputs): ForecastResult {
     return { horizon: h, bins };
   });
 
+  // 7. CR08 4.1: the gap to the national target
+  let targetGap: TargetGapResult | undefined;
+  if (gapTarget && gapHorizon != null) {
+    const gapOf = (v: number) => (gapTarget.value - v) * sign;
+    const runsAtTarget = [...sims[gapHorizon]].sort((a, b) => a - b);
+    const p10 = percentile(runsAtTarget, 0.1);
+    const p50 = percentile(runsAtTarget, 0.5);
+    const p90 = percentile(runsAtTarget, 0.9);
+    const reached = runsAtTarget.filter((v) => gapOf(v) <= 0).length;
+    const gapNow = gapOf(latest);
+    let closingYear: number | null = gapNow <= 0 ? latestYear : null;
+    if (closingYear == null) {
+      for (let h = 1; h <= 15; h++) {
+        if (gapOf(centralOf(h).value) <= 0) {
+          closingYear = latestYear + h;
+          break;
+        }
+      }
+    }
+    targetGap = {
+      targetValue: gapTarget.value,
+      targetYear: gapTarget.year,
+      horizonYears: gapHorizon,
+      gapNow,
+      central: p50,
+      low: Math.min(p10, p90),
+      high: Math.max(p10, p90),
+      gapCentral: gapOf(p50),
+      probability: runsAtTarget.length ? reached / runsAtTarget.length : 0,
+      requiredPacePerYear: (gapTarget.value - latest) / gapHorizon,
+      trendPerYear: pointForecast(method, level, trend, phi, 1) - level,
+      closingYear,
+    };
+  }
+
   return {
     method,
     alpha,
@@ -573,5 +698,7 @@ export function runForecast(inputs: ForecastInputs): ForecastResult {
     direction,
     sensitivity,
     histograms,
+    mode,
+    targetGap,
   };
 }

@@ -17,13 +17,18 @@ export function Reveal({
   className?: string;
   y?: number;
 }) {
+  // CR08 Phase A: useReducedMotion() is null on the server, so switching
+  // `initial` on it made the server write style="opacity:0" where a
+  // reduced-motion client wrote none, a hydration attribute mismatch on every
+  // page. The initial state is now the same on both sides and the preference
+  // collapses the duration instead, which is what "no animation" means here.
   const reduced = useReducedMotion();
   return (
     <motion.div
       className={className}
-      initial={reduced ? false : { opacity: 0, y }}
+      initial={{ opacity: 0, y }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.32, delay, ease: EASE }}
+      transition={reduced ? { duration: 0 } : { duration: 0.32, delay, ease: EASE }}
     >
       {children}
     </motion.div>
@@ -48,9 +53,11 @@ export function Stagger({
       {items.map((child, i) => (
         <motion.div
           key={i}
-          initial={reduced ? false : { opacity: 0, x: fromEnd ? 14 : 0, y: fromEnd ? 0 : 10 }}
+          // same hydration rule as Reveal: one initial state, the preference
+          // collapses the duration
+          initial={{ opacity: 0, x: fromEnd ? 14 : 0, y: fromEnd ? 0 : 10 }}
           animate={{ opacity: 1, x: 0, y: 0 }}
-          transition={{ duration: 0.32, delay: i * step, ease: EASE }}
+          transition={reduced ? { duration: 0 } : { duration: 0.32, delay: i * step, ease: EASE }}
           className="contents-none"
         >
           {child}

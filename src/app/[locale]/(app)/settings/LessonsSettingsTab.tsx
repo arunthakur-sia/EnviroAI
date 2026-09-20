@@ -158,13 +158,14 @@ export function LessonsSettingsTab() {
             {reclustering ? <Loader2 className="animate-spin" /> : <Play />} {t("lessonsTab.reclusterNow")}
           </Button>
         </div>
+        {/* a Radix switch is a button: the wrapping label does not name it */}
         <label className="flex items-center justify-between gap-3 text-sm">
           {t("lessonsTab.reclusterNightly")}
-          <Switch checked={reclusterNightly} onCheckedChange={setReclusterNightly} />
+          <Switch checked={reclusterNightly} onCheckedChange={setReclusterNightly} aria-label={t("lessonsTab.reclusterNightly")} />
         </label>
         <label className="flex items-center justify-between gap-3 text-sm">
           {t("lessonsTab.learnMode")}
-          <Switch checked={learnModeEnabled} onCheckedChange={setLearnModeEnabled} />
+          <Switch checked={learnModeEnabled} onCheckedChange={setLearnModeEnabled} aria-label={t("lessonsTab.learnMode")} />
         </label>
       </div>
 
@@ -175,16 +176,18 @@ export function LessonsSettingsTab() {
           {prompts.map((p, i) => (
             <div key={i} className="flex flex-wrap items-start gap-2">
               <div className="min-w-0 flex-1">
-                <Label>{t("lessonsTab.promptEn")}</Label>
+                <Label htmlFor={`reflection-prompt-${i}-en`}>{t("lessonsTab.promptEn")}</Label>
                 <Input
+                  id={`reflection-prompt-${i}-en`}
                   value={p.en}
                   onChange={(e) => setPrompts((prev) => prev.map((x, j) => (j === i ? { ...x, en: e.target.value } : x)))}
                   dir="ltr"
                 />
               </div>
               <div className="min-w-0 flex-1">
-                <Label>{t("lessonsTab.promptAr")}</Label>
+                <Label htmlFor={`reflection-prompt-${i}-ar`}>{t("lessonsTab.promptAr")}</Label>
                 <Input
+                  id={`reflection-prompt-${i}-ar`}
                   value={p.ar}
                   onChange={(e) => setPrompts((prev) => prev.map((x, j) => (j === i ? { ...x, ar: e.target.value } : x)))}
                   dir="rtl"

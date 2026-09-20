@@ -244,3 +244,128 @@ describe("direction", () => {
     expect(r.direction).toBe("up");
   });
 });
+
+/* CR08 4.1: target_gap mode (national indicators against their NDS3 target) */
+describe("target gap mode", () => {
+  // an LFPR-like series: 52.2 to 55.3 over 2019-2026, target 75 by 2030
+  const lfpr = baseInputs({
+    latestYear: 2026,
+    series: Array.from({ length: 8 }, (_, i) => ({ year: 2019 + i, value: 52.2 + i * 0.45 })),
+    mode: "target_gap",
+    targetGap: { value: 75, year: 2030 },
+  });
+
+  it("reports the gap, the target-year horizon and the same 1/3/5 row shape", () => {
+    const r = runForecast(lfpr);
+    expect(r.mode).toBe("target_gap");
+    expect(r.horizons.map((h) => h.horizon)).toEqual([1, 3, 5]);
+    expect(r.targetGap).toBeDefined();
+    const g = r.targetGap!;
+    expect(g.targetYear).toBe(2030);
+    expect(g.horizonYears).toBe(4);
+    expect(g.gapNow).toBeCloseTo(75 - (52.2 + 7 * 0.45), 5);
+    expect(g.low).toBeLessThanOrEqual(g.central);
+    expect(g.central).toBeLessThanOrEqual(g.high);
+    expect(g.gapCentral).toBeCloseTo(75 - g.central, 5);
+    // a 0.45 per year trend cannot close a 19-point gap in four years
+    expect(g.probability).toBeLessThan(0.05);
+    expect(g.requiredPacePerYear).toBeGreaterThan(g.trendPerYear);
+    expect(g.closingYear == null || g.closingYear > 2030).toBe(true);
+  });
+
+  it("finds the closing year and a high probability when the trend closes the gap", () => {
+    const r = runForecast(
+      baseInputs({
+        latestYear: 2025,
+        series: Array.from({ length: 6 }, (_, i) => ({ year: 2020 + i, value: 70 + i * 4 })),
+        mode: "target_gap",
+        targetGap: { value: 90, year: 2030 },
+      })
+    );
+    const g = r.targetGap!;
+    // latest 90 already meets 90: closing year is the latest year
+    expect(g.gapNow).toBeLessThanOrEqual(0);
+    expect(g.closingYear).toBe(2025);
+    expect(g.probability).toBeGreaterThan(0.9);
+    const r2 = runForecast(
+      baseInputs({
+        latestYear: 2025,
+        series: Array.from({ length: 6 }, (_, i) => ({ year: 2020 + i, value: 60 + i * 4 })),
+        mode: "target_gap",
+        targetGap: { value: 90, year: 2030 },
+      })
+    );
+    const g2 = r2.targetGap!;
+    expect(g2.gapNow).toBeCloseTo(10, 5);
+    expect(g2.closingYear).not.toBeNull();
+    expect(g2.closingYear!).toBeLessThanOrEqual(2030);
+    expect(g2.probability).toBeGreaterThan(0.5);
+  });
+
+  it("direction-corrects the gap when lower values are better", () => {
+    // unemployment-like series falling toward a target of 0.1
+    const r = runForecast(
+      baseInputs({
+        higherIsBetter: false,
+        scoreMin: 0,
+        scoreMax: 100,
+        latestYear: 2026,
+        series: Array.from({ length: 6 }, (_, i) => ({ year: 2021 + i, value: 0.4 - i * 0.04 })),
+        mode: "target_gap",
+        targetGap: { value: 0.1, year: 2030 },
+      })
+    );
+    const g = r.targetGap!;
+    // latest 0.2, target 0.1: gap positive (short of the target) despite target < value
+    expect(g.gapNow).toBeCloseTo(0.1, 5);
+    expect(g.requiredPacePerYear).toBeLessThan(0);
+    expect(g.closingYear).not.toBeNull();
+    expect(g.closingYear!).toBeLessThanOrEqual(2030);
+    expect(r.direction).toBe("up");
+  });
+
+  it("switches the target pull off and ignores the mode for rank series", () => {
+    const withPull = runForecast({
+      ...lfpr,
+      target: { year: 2030, score: 75, rank: null, status: "on_track" },
+    });
+    for (const h of withPull.horizons) expect(h.targetPull).toBe(0);
+    const scoreMode = runForecast({
+      ...lfpr,
+      mode: "score",
+      target: { year: 2030, score: 75, rank: null, status: "on_track" },
+    });
+    expect(scoreMode.mode).toBe("score");
+    expect(scoreMode.targetGap).toBeUndefined();
+    expect(scoreMode.horizons[2].targetPull).toBeGreaterThan(0);
+    // a rank-fallback series never runs the gap mode
+    const rankSeries = runForecast(
+      baseInputs({
+        usingRankFallback: true,
+        latestRank: 30,
+        series: Array.from({ length: 6 }, (_, i) => ({ year: 2020 + i, value: -(34 - i) })),
+        mode: "target_gap",
+        targetGap: { value: -10, year: 2030 },
+      })
+    );
+    expect(rankSeries.mode).toBe("rank");
+    expect(rankSeries.targetGap).toBeUndefined();
+  });
+
+  it("is deterministic and scales its bounds to the gap, not to a 0-100 score", () => {
+    // a population-like series in millions: the 0-100 clamp must not bite
+    const pop = baseInputs({
+      scoreMin: 0,
+      scoreMax: 100_000_000,
+      latestYear: 2026,
+      series: Array.from({ length: 6 }, (_, i) => ({ year: 2021 + i, value: 2_900_000 + i * 45_000 })),
+      mode: "target_gap",
+      targetGap: { value: 3_400_000, year: 2030 },
+    });
+    const a = runForecast(pop);
+    const b = runForecast(pop);
+    expect(a.targetGap!.central).toBe(b.targetGap!.central);
+    expect(a.horizons[2].central).toBeGreaterThan(3_000_000);
+    expect(a.targetGap!.gapNow).toBeCloseTo(3_400_000 - 3_125_000, 0);
+  });
+});

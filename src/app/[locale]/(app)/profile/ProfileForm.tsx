@@ -5,6 +5,7 @@ import { useRouter } from "@/i18n/navigation";
 import { Button, Textarea, Label, NativeSelect, Input } from "@/components/ui/primitives";
 import { Switch } from "@/components/ui/overlays";
 import { useToast } from "@/components/ui/toast";
+import { DelegateBlock } from "@/components/nexus/people/DelegateBlock";
 
 type Initial = {
   bioEn: string;
@@ -58,26 +59,26 @@ export function ProfileForm({ initial }: { initial: Initial }) {
         <p className="text-sm font-medium text-ink-900">{t("aboutSection")}</p>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <Label>{te("position")} (EN)</Label>
-            <Input value={form.positionEn} dir="ltr" onChange={(e) => set("positionEn", e.target.value)} />
+            <Label htmlFor="profile-position-en">{te("position")} (EN)</Label>
+            <Input id="profile-position-en" value={form.positionEn} dir="ltr" onChange={(e) => set("positionEn", e.target.value)} />
           </div>
           <div>
-            <Label>{te("position")} (AR)</Label>
-            <Input value={form.positionAr} dir="rtl" onChange={(e) => set("positionAr", e.target.value)} />
+            <Label htmlFor="profile-position-ar">{te("position")} (AR)</Label>
+            <Input id="profile-position-ar" value={form.positionAr} dir="rtl" onChange={(e) => set("positionAr", e.target.value)} />
           </div>
         </div>
         <div>
-          <Label>{te("bio")} (EN)</Label>
-          <Textarea value={form.bioEn} dir="ltr" rows={3} onChange={(e) => set("bioEn", e.target.value)} />
+          <Label htmlFor="profile-bio-en">{te("bio")} (EN)</Label>
+          <Textarea id="profile-bio-en" value={form.bioEn} dir="ltr" rows={3} onChange={(e) => set("bioEn", e.target.value)} />
         </div>
         <div>
-          <Label>{te("bio")} (AR)</Label>
-          <Textarea value={form.bioAr} dir="rtl" rows={3} onChange={(e) => set("bioAr", e.target.value)} />
+          <Label htmlFor="profile-bio-ar">{te("bio")} (AR)</Label>
+          <Textarea id="profile-bio-ar" value={form.bioAr} dir="rtl" rows={3} onChange={(e) => set("bioAr", e.target.value)} />
         </div>
         <div className="grid gap-4 sm:grid-cols-3">
           <div>
-            <Label>{te("filterAvailability")}</Label>
-            <NativeSelect value={form.availability} onChange={(e) => set("availability", e.target.value)}>
+            <Label htmlFor="profile-availability">{te("filterAvailability")}</Label>
+            <NativeSelect id="profile-availability" value={form.availability} onChange={(e) => set("availability", e.target.value)}>
               {["available", "limited", "unavailable"].map((v) => (
                 <option key={v} value={v}>
                   {te(`availability.${v}` as never)}
@@ -86,8 +87,9 @@ export function ProfileForm({ initial }: { initial: Initial }) {
             </NativeSelect>
           </div>
           <div>
-            <Label>{te("yearsLabel")}</Label>
+            <Label htmlFor="profile-years">{te("yearsLabel")}</Label>
             <Input
+              id="profile-years"
               type="number"
               dir="ltr"
               value={form.yearsExperience ?? ""}
@@ -95,8 +97,9 @@ export function ProfileForm({ initial }: { initial: Initial }) {
             />
           </div>
           <div>
-            <Label>{t("languagesLabel")}</Label>
+            <Label htmlFor="profile-languages">{t("languagesLabel")}</Label>
             <Input
+              id="profile-languages"
               value={form.languages.join(", ")}
               onChange={(e) =>
                 set(
@@ -114,15 +117,16 @@ export function ProfileForm({ initial }: { initial: Initial }) {
         <p className="text-sm font-medium text-ink-900">{t("preferences")}</p>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <Label>{t("languagePref")}</Label>
-            <NativeSelect value={form.localePref} onChange={(e) => set("localePref", e.target.value as "en" | "ar")}>
+            <Label htmlFor="profile-locale-pref">{t("languagePref")}</Label>
+            <NativeSelect id="profile-locale-pref" value={form.localePref} onChange={(e) => set("localePref", e.target.value as "en" | "ar")}>
               <option value="en">English</option>
               <option value="ar">العربية</option>
             </NativeSelect>
           </div>
           <div>
-            <Label>{t("numeralsPref")}</Label>
+            <Label htmlFor="profile-numerals-pref">{t("numeralsPref")}</Label>
             <NativeSelect
+              id="profile-numerals-pref"
               value={form.numeralsPref}
               onChange={(e) => set("numeralsPref", e.target.value as "western" | "eastern")}
             >
@@ -136,7 +140,8 @@ export function ProfileForm({ initial }: { initial: Initial }) {
             <span className="block text-sm text-ink-900">{t("quietMode")}</span>
             <span className="block text-xs text-ink-600">{t("quietModeHint")}</span>
           </span>
-          <Switch checked={form.quietMode} onCheckedChange={(v) => set("quietMode", v)} />
+          {/* a Radix switch is a button: the wrapping label does not name it */}
+          <Switch checked={form.quietMode} onCheckedChange={(v) => set("quietMode", v)} aria-label={t("quietMode")} />
         </label>
         {/* CR05 6.3: sessions end after 12 hours idle and 7 days absolute */}
         <div className="flex items-center justify-between gap-3 border-t border-sand-100 pt-4">
@@ -157,6 +162,9 @@ export function ProfileForm({ initial }: { initial: Initial }) {
           </Button>
         </div>
       </div>
+
+      {/* CR08 9.3: delegate my messages to (self-saving over /api/v1/profile/delegate) */}
+      <DelegateBlock />
 
       <div className="flex justify-end">
         <Button size="lg" loading={busy} onClick={save}>

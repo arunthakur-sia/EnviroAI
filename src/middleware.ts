@@ -9,8 +9,26 @@ const intl = createMiddleware(routing);
 // handler runs. Ending the preview and logging out stay possible.
 const PREVIEW_WRITE_ALLOWLIST = ["/api/v1/preview", "/api/v1/auth/logout"];
 
+/* CR08 Phase B: two routes that only ever redirect. They used to be pages
+   whose body called redirect(), which answers 307 only while nothing above
+   them streams; once their segment gained a loading skeleton the redirect
+   arrived inside a 200 instead. Doing it here keeps the real status code and
+   costs nothing. */
+const REDIRECTS: [RegExp, string][] = [
+  [/^\/(en|ar)\/foresight(\/.*)?$/, "/trends"],
+  [/^\/(en|ar)\/lessons\/new$/, "/add"],
+];
+
 export default function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  for (const [pattern, to] of REDIRECTS) {
+    const m = pattern.exec(pathname);
+    if (m) {
+      const url = req.nextUrl.clone();
+      url.pathname = `/${m[1]}${to}`;
+      return NextResponse.redirect(url, 307);
+    }
+  }
   if (pathname.startsWith("/api")) {
     const method = req.method.toUpperCase();
     // an empty cookie value is a deleted preview, not an active one

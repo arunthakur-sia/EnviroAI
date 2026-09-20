@@ -139,8 +139,15 @@ function LeadsEditor({
         <div className="flex flex-col gap-4">
           {(["lead", "supporting"] as const).map((role) => (
             <div key={role}>
-              <Label>{role === "lead" ? t("leads") : t("supporting")}</Label>
-              <div className="mt-1 flex min-h-9 flex-wrap items-center gap-1.5 rounded-lg border border-sand-300 bg-sand-50 p-1.5">
+              {/* names the chips already chosen, which are not a form control */}
+              <span id={`leads-${role}-label`} className="mb-1.5 block text-xs font-medium text-ink-600">
+                {role === "lead" ? t("leads") : t("supporting")}
+              </span>
+              <div
+                className="mt-1 flex min-h-9 flex-wrap items-center gap-1.5 rounded-lg border border-sand-300 bg-sand-50 p-1.5"
+                role="group"
+                aria-labelledby={`leads-${role}-label`}
+              >
                 {group(role).map((r) => (
                   <span
                     key={`${r.kind}:${r.id}`}
@@ -169,9 +176,9 @@ function LeadsEditor({
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
-              <Label>{t("addDepartment")}</Label>
+              <Label htmlFor="leads-add-department">{t("addDepartment")}</Label>
               <div className="flex gap-1.5">
-                <NativeSelect value={deptPick} onChange={(e) => setDeptPick(e.target.value)} className="flex-1">
+                <NativeSelect id="leads-add-department" value={deptPick} onChange={(e) => setDeptPick(e.target.value)} className="flex-1">
                   <option value="">{t("pickDepartment")}</option>
                   {departments.map((d) => (
                     <option key={d.id} value={d.id}>
@@ -204,8 +211,11 @@ function LeadsEditor({
               </div>
             </div>
             <div>
-              <Label>{t("addEntity")}</Label>
-              <div className="flex gap-1.5">
+              {/* two controls under one caption, each already named in place */}
+              <span id="leads-add-entity-label" className="mb-1.5 block text-xs font-medium text-ink-600">
+                {t("addEntity")}
+              </span>
+              <div className="flex gap-1.5" role="group" aria-labelledby="leads-add-entity-label">
                 <NativeSelect
                   value={entityRole}
                   onChange={(e) => setEntityRole(e.target.value as "lead" | "supporting")}
@@ -370,8 +380,8 @@ export function NodeActions({
           <div className="flex flex-col gap-3.5">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>{t("statusLabel")}</Label>
-                <NativeSelect value={status} onChange={(e) => setStatus(e.target.value)}>
+                <Label htmlFor="node-status">{t("statusLabel")}</Label>
+                <NativeSelect id="node-status" value={status} onChange={(e) => setStatus(e.target.value)}>
                   {["not_started", "on_track", "at_risk", "delayed", "completed"].map((s) => (
                     <option key={s} value={s}>
                       {tc(`status.${s}` as never)}
@@ -380,10 +390,11 @@ export function NodeActions({
                 </NativeSelect>
               </div>
               <div>
-                <Label>
+                <Label htmlFor="node-progress">
                   {t("progress")}: <span className="tnum">{progress}%</span>
                 </Label>
                 <input
+                  id="node-progress"
                   type="range"
                   min={0}
                   max={100}
@@ -396,16 +407,16 @@ export function NodeActions({
               </div>
             </div>
             <div>
-              <Label>{t("updateSummary")}</Label>
-              <Textarea value={summary} onChange={(e) => setSummary(e.target.value)} rows={3} />
+              <Label htmlFor="node-summary">{t("updateSummary")}</Label>
+              <Textarea id="node-summary" value={summary} onChange={(e) => setSummary(e.target.value)} rows={3} />
             </div>
             <div>
-              <Label>{t("risksLines")}</Label>
-              <Textarea value={risks} onChange={(e) => setRisks(e.target.value)} rows={2} />
+              <Label htmlFor="node-risks">{t("risksLines")}</Label>
+              <Textarea id="node-risks" value={risks} onChange={(e) => setRisks(e.target.value)} rows={2} />
             </div>
             <div>
-              <Label>{t("nextStepsLines")}</Label>
-              <Textarea value={nextSteps} onChange={(e) => setNextSteps(e.target.value)} rows={2} />
+              <Label htmlFor="node-next-steps">{t("nextStepsLines")}</Label>
+              <Textarea id="node-next-steps" value={nextSteps} onChange={(e) => setNextSteps(e.target.value)} rows={2} />
             </div>
             <div className="flex justify-end">
               <Button loading={busy} onClick={postUpdate}>
@@ -426,8 +437,8 @@ export function NodeActions({
           <DialogContent title={t("enterKpiValue")}>
             <div className="flex flex-col gap-3.5">
               <div>
-                <Label>{t("kpi")}</Label>
-                <NativeSelect value={kpiId} onChange={(e) => setKpiId(e.target.value)}>
+                <Label htmlFor="node-kpi">{t("kpi")}</Label>
+                <NativeSelect id="node-kpi" value={kpiId} onChange={(e) => setKpiId(e.target.value)}>
                   {kpis.map((k) => (
                     <option key={k.id} value={k.id}>
                       {k.nameEn}
@@ -438,8 +449,9 @@ export function NodeActions({
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label>{t("period")}</Label>
+                  <Label htmlFor="node-period">{t("period")}</Label>
                   <Input
+                    id="node-period"
                     value={period}
                     onChange={(e) => setPeriod(e.target.value)}
                     placeholder="2026-Q3"
@@ -447,8 +459,9 @@ export function NodeActions({
                   />
                 </div>
                 <div>
-                  <Label>{t("valueLabel")}</Label>
+                  <Label htmlFor="node-value">{t("valueLabel")}</Label>
                   <Input
+                    id="node-value"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                     type="number"

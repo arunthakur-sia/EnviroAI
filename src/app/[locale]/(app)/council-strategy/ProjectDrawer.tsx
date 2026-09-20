@@ -25,9 +25,11 @@ import {
 import { motion, useReducedMotion } from "framer-motion";
 import { cn, bi } from "@/lib/utils";
 import { formatDate, formatNumber, formatPeriod } from "@/lib/format";
-import { Avatar, Chip, Skeleton } from "@/components/ui/primitives";
+import { Chip, Skeleton } from "@/components/ui/primitives";
 import { useToast } from "@/components/ui/toast";
 import { Shelf, type ShelfDoc } from "@/components/nexus/Shelf";
+import { OwnerControl } from "@/components/nexus/people/OwnerControl";
+import type { ItemRef } from "@/components/nexus/people/OwnerControl";
 import type {
   CouncilIndicatorCard,
   CouncilProjectDetail,
@@ -37,6 +39,7 @@ import type {
 import type { NodeLessonRow } from "@/server/services/lesson-links";
 import type { DeliverableRow } from "@/server/services/deliverables";
 import { StakeholdersSection } from "@/components/nexus/Stakeholders";
+import { AskContextItem } from "@/components/nexus/ask/AskContextItem";
 
 /* ------------------------------------------------------------------ */
 /* shared bits                                                          */
@@ -345,6 +348,7 @@ export function ProjectDrawer({
   onClose,
   onCopyLink,
   onOpenIndicator,
+  dimmed = false,
 }: {
   nodeId: string;
   /** moves the drawer to another council node, by id */
@@ -352,6 +356,9 @@ export function ProjectDrawer({
   onClose: () => void;
   onCopyLink: () => void;
   onOpenIndicator?: (indicator: CouncilIndicatorCard) => void;
+  /** CR08 overlay layering: a dialog opened from the drawer rises above it, so
+      the drawer dims itself and the page still reads as one stack */
+  dimmed?: boolean;
 }) {
   const t = useTranslations("council");
   const tc = useTranslations("common");
@@ -406,6 +413,16 @@ export function ProjectDrawer({
 
   React.useEffect(() => {
     function onKey(e: KeyboardEvent) {
+      /* CR08 9.1: an overlay opened from inside the drawer (a person card, the
+         indicator dialog) is the layer on top, so it owns Escape and the arrow
+         keys until it is dismissed (DECISIONS 117) */
+      if (
+        e.defaultPrevented ||
+        dimmed ||
+        document.querySelector('[data-testid="person-card-popover"], [role="dialog"][data-state="open"]')
+      ) {
+        return;
+      }
       if (e.key === "Escape") {
         onClose();
         return;
@@ -417,7 +434,7 @@ export function ProjectDrawer({
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, onNavigate, prevId, nextId, locale]);
+  }, [onClose, onNavigate, prevId, nextId, locale, dimmed]);
 
   const node = detail?.node;
   const todayPct = node ? timelinePct(node.startDate, node.endDate) : null;
@@ -433,6 +450,19 @@ export function ProjectDrawer({
     locale === "ar" && detail?.inputs.systemsAr.length
       ? detail.inputs.systemsAr
       : (detail?.inputs.systemsEn ?? []);
+
+  /* CR08 9.1: what a person card opened in this drawer is opened for */
+  const ownerItem: ItemRef | null = node
+    ? {
+        type: "council_node",
+        id: node.id,
+        titleEn: node.titleEn,
+        titleAr: node.titleAr,
+        href: `/council-strategy?p=${encodeURIComponent(
+          node.code ? node.code.toLowerCase().replace(/\./g, "-") : node.id
+        )}`,
+      }
+    : null;
 
   const shelfDocs: ShelfDoc[] = deliverables.map((d) => ({
     id: d.documentId,
@@ -523,6 +553,8 @@ export function ProjectDrawer({
               transition={{ duration: 0.16 }}
               className="flex flex-col gap-5 p-5"
             >
+              {/* CR08 2.3: the Ask NPC launcher knows this council node while the drawer is open */}
+              <AskContextItem item={{ kind: "council_node", id: node.id, code: node.code, titleEn: node.titleEn, titleAr: node.titleAr, href: `/council-strategy?p=${encodeURIComponent(node.code ? node.code.toLowerCase().replace(/\./g, "-") : node.id)}` }} />
               {/* identity */}
               <div>
                 <p className="flex flex-wrap items-center gap-2 text-xs text-ink-600">
@@ -564,21 +596,15 @@ export function ProjectDrawer({
 
               {/* owner and department */}
               {node.ownerUser || node.ownerUnit ? (
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2" data-testid="council-owner">
+                  {/* CR08 9.1: the owner is a person chip with the card */}
                   {node.ownerUser ? (
-                    <span className="flex items-center gap-2 text-sm text-ink-900">
-                      <Avatar
-                        name={node.ownerUser.nameEn}
-                        color={node.ownerUser.avatarColor}
-                        size={26}
-                      />
-                      <span>
-                        <span className="block text-[10px] uppercase tracking-[0.1em] text-ink-400">
-                          {t("drawer.owner")}
-                        </span>
-                        {bi(locale, node.ownerUser.nameEn, node.ownerUser.nameAr)}
-                      </span>
-                    </span>
+                    <OwnerControl
+                      owner={node.ownerUser}
+                      role="project_owner"
+                      item={ownerItem}
+                      align="start"
+                    />
                   ) : null}
                   {node.ownerUnit ? (
                     <span className="text-sm">
@@ -856,6 +882,8 @@ export function ProjectDrawer({
                     rows={detail.stakeholders}
                     canEdit={false}
                     compact
+                    owners={detail.stakeholderOwners}
+                    item={ownerItem}
                   />
                 </div>
               ) : null}
@@ -960,6 +988,11 @@ export function ProjectDrawer({
           )}
         </div>
       </motion.aside>
+      {/* CR08 overlay layering: the indicator card opens above the drawer, so
+          the drawer dims with the page beneath it (DECISIONS 117) */}
+      {dimmed ? (
+        <span aria-hidden className="absolute inset-0 bg-ink-900/25 backdrop-blur-[2px]" />
+      ) : null}
     </div>
   );
 }

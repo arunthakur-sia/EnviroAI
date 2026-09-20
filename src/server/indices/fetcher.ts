@@ -10,9 +10,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fetch as undiciFetch, Agent } from "undici";
 import * as XLSX from "xlsx";
-import { eq, inArray } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import { newId, nowIso } from "@/lib/ids";
+import { CR08_INDEX_DEFS, type Cr08IndexDef } from "./defs-cr08";
 
 // The corporate proxy re-signs public sites (DECISIONS 8/23): these are
 // read-only public data files, so verification is relaxed for them only.
@@ -41,7 +42,8 @@ export type IndexDef = {
   sourceNotes: string;
 };
 
-export const INDEX_DEFS: IndexDef[] = [
+/** The twelve CR05 indices. */
+export const CR05_INDEX_DEFS: IndexDef[] = [
   {
     code: "hdi",
     nameEn: "Human Development Index",
@@ -292,6 +294,10 @@ export const INDEX_DEFS: IndexDef[] = [
   },
 ];
 
+/** CR08 4.1: the CR05 twelve plus the additions of both research agents
+    (src/server/indices/defs-cr08-a.ts and defs-cr08-b.ts). */
+export const INDEX_DEFS: IndexDef[] = [...CR05_INDEX_DEFS, ...CR08_INDEX_DEFS];
+
 export const INDEX_COUNTRIES: { iso3: string; en: string; ar: string; region: string }[] = [
   { iso3: "QAT", en: "Qatar", ar: "قطر", region: "GCC" },
   { iso3: "SAU", en: "Saudi Arabia", ar: "السعودية", region: "GCC" },
@@ -313,8 +319,6 @@ export const INDEX_COUNTRIES: { iso3: string; en: string; ar: string; region: st
   { iso3: "CHN", en: "China", ar: "الصين", region: "G20" },
   { iso3: "IND", en: "India", ar: "الهند", region: "G20" },
 ];
-
-const FOCUS = new Set(INDEX_COUNTRIES.map((c) => c.iso3));
 
 type Obs = {
   country: string;
@@ -392,12 +396,13 @@ async function download(
   url: string,
   filename: string,
   manifest: ManifestEntry[],
-  wantDownload: boolean
+  wantDownload: boolean,
+  attempts = 3
 ): Promise<Buffer | null> {
   fs.mkdirSync(RAW_DIR, { recursive: true });
   const target = path.join(RAW_DIR, filename);
   if (wantDownload) {
-    for (let attempt = 0; attempt < 3; attempt++) {
+    for (let attempt = 0; attempt < attempts; attempt++) {
       try {
         const res = await undiciFetch(url, {
           dispatcher: insecureDispatcher,
@@ -417,8 +422,8 @@ async function download(
         });
         return buf;
       } catch (e) {
-        if (attempt === 2) {
-          console.warn(`download failed after 3 tries: ${url}: ${String(e)}`);
+        if (attempt === attempts - 1) {
+          console.warn(`download failed after ${attempts} tries: ${url}: ${String(e)}`);
         }
       }
     }
@@ -609,6 +614,139 @@ function parseLpi(buf: Buffer): Obs[] {
   return out;
 }
 
+/** Competition ranking (ties share a rank, the next rank skips) over the
+    official scores of one edition; used where a publisher releases scores
+    but no ranks (Heritage workbooks, the World Bank GovTech dataset), the
+    same derivation the HDI and EPI parsers apply (DECISIONS 67). */
+function deriveRanks(
+  rows: { key: string; score: number }[],
+  higherIsBetter = true
+): Map<string, number> {
+  const sorted = [...rows].sort((a, b) => (higherIsBetter ? b.score - a.score : a.score - b.score));
+  const out = new Map<string, number>();
+  let lastScore = Number.NaN;
+  let lastRank = 0;
+  sorted.forEach((x, i) => {
+    const rank = x.score === lastScore ? lastRank : i + 1;
+    lastScore = x.score;
+    lastRank = rank;
+    out.set(x.key, rank);
+  });
+  return out;
+}
+
+/* CR08 4.1: Heritage Index of Economic Freedom data workbooks (one per
+   edition, every graded economy with its overall score; no ISO codes and no
+   rank column, so the focus countries are matched by name and ranks are
+   derived by sorting the official overall scores). */
+const heritageUrl = (year: number) =>
+  `https://static.heritage.org/index/data/${year}/${year}_indexofeconomicfreedom_data.xlsx`;
+const HERITAGE_FIRST_YEAR = 2024; // the data workbook exists from the 2024 edition
+const HERITAGE_NAMES: Record<string, string> = {
+  Qatar: "QAT",
+  "Saudi Arabia": "SAU",
+  "United Arab Emirates": "ARE",
+  Kuwait: "KWT",
+  Bahrain: "BHR",
+  Oman: "OMN",
+  "United States": "USA",
+  "United Kingdom": "GBR",
+  Singapore: "SGP",
+  "South Korea": "KOR",
+  "Korea, South": "KOR",
+  Turkey: "TUR",
+  "Türkiye": "TUR",
+  Egypt: "EGY",
+  Jordan: "JOR",
+  Morocco: "MAR",
+  Germany: "DEU",
+  France: "FRA",
+  Japan: "JPN",
+  China: "CHN",
+  India: "IND",
+};
+
+function parseHeritage(buf: Buffer, year: number, url: string): Obs[] {
+  const wb = XLSX.read(buf, { type: "buffer" });
+  const grid = XLSX.utils.sheet_to_json<unknown[]>(wb.Sheets[wb.SheetNames[0]], {
+    header: 1,
+  }) as unknown[][];
+  const hIdx = grid.findIndex(
+    (r) =>
+      r.some((c) => String(c ?? "").trim() === "Country") &&
+      r.some((c) => /overall score/i.test(String(c ?? "")))
+  );
+  if (hIdx === -1) return [];
+  const header = grid[hIdx].map((c) => String(c ?? "").trim());
+  const iName = header.indexOf("Country");
+  const iScore = header.findIndex((c) => /overall score/i.test(c));
+  const rows = grid
+    .slice(hIdx + 1)
+    .map((r) => ({ key: String(r[iName] ?? "").trim(), score: Number(r[iScore]) }))
+    .filter((x) => x.key !== "" && Number.isFinite(x.score));
+  const ranks = deriveRanks(rows);
+  const out: Obs[] = [];
+  for (const r of rows) {
+    const iso = HERITAGE_NAMES[r.key];
+    if (!iso) continue;
+    out.push({
+      country: iso,
+      year,
+      rank: ranks.get(r.key) ?? null,
+      score: r.score,
+      total: rows.length,
+      sourceUrl: url,
+    });
+  }
+  return out;
+}
+
+/* CR08 4.1: World Bank GovTech Maturity Index dataset (December 2025
+   workbook; sheet GTMI_Data holds the 2020, 2022 and 2025 editions for
+   every economy with the GTMI score and group). The Bank publishes no
+   ranks, so they are derived by sorting the official scores per edition. */
+const GTMI_URL =
+  "https://datacatalogfiles.worldbank.org/ddh-published/0037889/DR0095721/WBG_GovTech_Dataset_Dec2025.xlsx";
+
+function parseGtmi(buf: Buffer): Obs[] {
+  const wb = XLSX.read(buf, { type: "buffer" });
+  const sheetName =
+    wb.SheetNames.find((n) => /^GTMI_Data$/i.test(n)) ??
+    wb.SheetNames.find((n) => /GTMI_Data/i.test(n));
+  if (!sheetName) return [];
+  const grid = XLSX.utils.sheet_to_json<unknown[]>(wb.Sheets[sheetName], {
+    header: 1,
+  }) as unknown[][];
+  const header = (grid[0] ?? []).map((c) => String(c ?? "").trim());
+  const iYear = header.indexOf("Year");
+  const iCode = header.indexOf("Code");
+  const iScore = header.indexOf("GTMI");
+  if ([iYear, iCode, iScore].some((i) => i === -1)) return [];
+  const byYear = new Map<number, { key: string; score: number }[]>();
+  for (const r of grid.slice(1)) {
+    const year = Number(r[iYear]);
+    const iso = String(r[iCode] ?? "").trim().toUpperCase();
+    const score = Number(r[iScore]);
+    if (!Number.isFinite(year) || !/^[A-Z]{3}$/.test(iso) || !Number.isFinite(score)) continue;
+    (byYear.get(year) ?? byYear.set(year, []).get(year)!).push({ key: iso, score });
+  }
+  const out: Obs[] = [];
+  for (const [year, rows] of byYear) {
+    const ranks = deriveRanks(rows);
+    for (const r of rows) {
+      out.push({
+        country: r.key,
+        year,
+        rank: ranks.get(r.key) ?? null,
+        score: r.score,
+        total: rows.length,
+        sourceUrl: GTMI_URL,
+      });
+    }
+  }
+  return out;
+}
+
 /* ------------------------------------------------------------------ */
 /* research-file loaders                                                */
 /* ------------------------------------------------------------------ */
@@ -625,10 +763,19 @@ type ResearchFile = {
   pillars?: unknown;
 };
 
-function loadResearch(code: string): { obs: Obs[]; pillars: PillarValueRow[] } {
+function loadResearch(def: IndexDef): { obs: Obs[]; pillars: PillarValueRow[] } {
   const obs: Obs[] = [];
   const pillars: PillarValueRow[] = [];
-  const files = [`${code}.extracted.json`, `${code}-history.extracted.json`];
+  const code = def.code;
+  // CR05 extractions, then the CR08 research files (cr08-<code>.json plus an
+  // optional extra file named on the def); later files win on the same key
+  const files = [
+    `${code}.extracted.json`,
+    `${code}-history.extracted.json`,
+    `cr08-${code}.json`,
+  ];
+  const extra = (def as Partial<Cr08IndexDef>).researchFile;
+  if (extra && !files.includes(extra)) files.push(extra);
   for (const f of files) {
     const p = path.join(RESEARCH_DIR, f);
     if (!fs.existsSync(p)) continue;
@@ -711,37 +858,31 @@ export type FetchReport = {
   }[];
 };
 
-export async function runIndicesFetch(
-  opts: { download?: boolean } = {}
-): Promise<FetchReport> {
-  const wantDownload =
-    opts.download !== false && process.env.SKIP_INDICES_FETCH !== "1";
-  const manifest: ManifestEntry[] = [];
-
-  /* countries */
-  const existingCountries = await db.select().from(schema.countries);
-  const haveIso = new Set(existingCountries.map((c) => c.iso3));
-  for (const c of INDEX_COUNTRIES) {
-    if (!haveIso.has(c.iso3)) {
-      await db.insert(schema.countries).values({
-        iso3: c.iso3,
-        nameEn: c.en,
-        nameAr: c.ar,
-        region: c.region,
-      });
-    }
-  }
-
-  /* register rows */
+/** Ensures one indices row per definition (CR05 and CR08). New rows carry
+    the CR08 columns from the def (sdg_goal, forecast_mode, forecast_enabled);
+    existing rows only get sdg_goal / forecast_mode filled where they are
+    still null, so a Super Admin's settings are never overwritten. Returns
+    code -> id. Used by runIndicesFetch and by scripts/cr08-indices-seed.ts. */
+export async function ensureIndexRows(defs: IndexDef[]): Promise<Map<string, string>> {
   const entities = await db.select().from(schema.entities);
   const entityByName = new Map(entities.map((e) => [e.nameEn.toLowerCase(), e.id]));
   const existing = await db.select().from(schema.indices);
   const byCode = new Map(existing.map((i) => [i.code, i]));
   const idOfIndex = new Map<string, string>();
-  for (const def of INDEX_DEFS) {
+  for (const def of defs) {
+    const cr08 = def as Partial<Cr08IndexDef>;
     const found = byCode.get(def.code);
     if (found) {
       idOfIndex.set(def.code, found.id);
+      const patch: Partial<typeof schema.indices.$inferInsert> = {};
+      if (found.sdgGoal == null && cr08.sdgGoal != null) patch.sdgGoal = cr08.sdgGoal;
+      if (found.forecastMode == null && cr08.forecastMode) patch.forecastMode = cr08.forecastMode;
+      if (Object.keys(patch).length) {
+        await db
+          .update(schema.indices)
+          .set({ ...patch, updatedAt: nowIso() })
+          .where(eq(schema.indices.id, found.id));
+      }
       continue;
     }
     const id = newId();
@@ -764,11 +905,51 @@ export async function runIndicesFetch(
       linkedNodeIdsJson: null,
       isActive: 1,
       sourceNotes: def.sourceNotes,
+      sdgGoal: cr08.sdgGoal ?? null,
+      forecastMode: cr08.forecastMode ?? null,
+      forecastEnabled: cr08.forecastEnabled === false ? 0 : 1,
       createdAt: nowIso(),
       updatedAt: nowIso(),
     });
     idOfIndex.set(def.code, id);
   }
+  return idOfIndex;
+}
+
+export async function runIndicesFetch(
+  opts: { download?: boolean; codes?: string[] } = {}
+): Promise<FetchReport> {
+  const wantDownload =
+    opts.download !== false && process.env.SKIP_INDICES_FETCH !== "1";
+  const manifest: ManifestEntry[] = [];
+  // CR08 4.1: a partial run (the cr08 seed) only ingests the listed codes and
+  // leaves the manifest and the refresh stamp to full runs
+  const partial = Array.isArray(opts.codes);
+  const defs = partial
+    ? INDEX_DEFS.filter((d) => opts.codes!.includes(d.code))
+    : INDEX_DEFS;
+  // the refresh job and the seeds share the SQLite file with the app: wait
+  // for concurrent writers instead of failing with SQLITE_BUSY
+  await db.run(sql`PRAGMA busy_timeout = 30000`);
+
+  /* countries */
+  const existingCountries = await db.select().from(schema.countries);
+  const haveIso = new Set(existingCountries.map((c) => c.iso3));
+  for (const c of INDEX_COUNTRIES) {
+    if (!haveIso.has(c.iso3)) {
+      await db.insert(schema.countries).values({
+        iso3: c.iso3,
+        nameEn: c.en,
+        nameAr: c.ar,
+        region: c.region,
+      });
+    }
+  }
+
+  /* register rows (every def, so the board sees the whole register) */
+  const idOfIndex = await ensureIndexRows(INDEX_DEFS);
+  const registered = await db.select().from(schema.indices);
+  const byCode = new Map(registered.map((i) => [i.code, i]));
 
   /* link NDS3 targets by keyword (plausible, presentation-level) */
   const [nds3] = await db
@@ -781,7 +962,7 @@ export async function runIndicesFetch(
       .from(schema.strategyNodes)
       .where(eq(schema.strategyNodes.editionId, nds3.id));
     const targetRows = targets.filter((t) => t.nodeType === "target");
-    for (const def of INDEX_DEFS) {
+    for (const def of defs) {
       const id = idOfIndex.get(def.code)!;
       const row = byCode.get(def.code);
       if (row?.linkedNodeIdsJson) continue; // keep manual links
@@ -802,7 +983,8 @@ export async function runIndicesFetch(
 
   /* observations per index */
   const report: FetchReport = { perIndex: [] };
-  for (const def of INDEX_DEFS) {
+  const thisYear = new Date().getFullYear();
+  for (const def of defs) {
     const indexId = idOfIndex.get(def.code)!;
     let obs: Obs[] = [];
     let pillarRows: PillarValueRow[] = [];
@@ -816,16 +998,48 @@ export async function runIndicesFetch(
     } else if (def.code === "epi") {
       const buf = await download(EPI_URL, "epi2026-results.xlsx", manifest, wantDownload);
       if (buf) obs = parseEpi(buf);
-      const research = loadResearch("epi");
+      const research = loadResearch(def);
       obs = obs.concat(research.obs);
       pillarRows = research.pillars;
     } else if (def.code === "lpi") {
       const buf = await download(LPI_URL, "lpi-data360.csv", manifest, wantDownload);
       if (buf) obs = parseLpi(buf);
+    } else if (def.code === "economic_freedom") {
+      // CR08 4.1: one workbook per edition; next year's file is probed once
+      // so a refresh picks it up when Heritage publishes it
+      for (let year = HERITAGE_FIRST_YEAR; year <= thisYear + 1; year++) {
+        const buf = await download(
+          heritageUrl(year),
+          `heritage-${year}-data.xlsx`,
+          manifest,
+          wantDownload,
+          year > thisYear ? 1 : 3
+        );
+        if (buf) obs = obs.concat(parseHeritage(buf, year, heritageUrl(year)));
+      }
+      // the research file carries Qatar's published ranks and earlier scores
+      // and wins over the derived rows on the same key
+      const research = loadResearch(def);
+      obs = obs.concat(research.obs);
+      pillarRows = research.pillars;
+    } else if (def.code === "govtech") {
+      const buf = await download(GTMI_URL, "govtech-dataset-dec2025.xlsx", manifest, wantDownload);
+      if (buf) obs = parseGtmi(buf);
+      const research = loadResearch(def);
+      obs = obs.concat(research.obs);
+      pillarRows = research.pillars;
     } else {
-      const research = loadResearch(def.code);
+      const research = loadResearch(def);
       obs = research.obs;
       pillarRows = research.pillars;
+    }
+
+    // one row per country and year: the last source listed wins (research
+    // corrections over bulk-file derivations)
+    const dedup = new Map<string, Obs>();
+    for (const o of obs) {
+      if (!/^[A-Z]{3}$/.test(o.country)) continue;
+      dedup.set(`${o.country}:${o.year}`, o);
     }
 
     // upsert observations; never clobber manual or verified corrections
@@ -837,8 +1051,7 @@ export async function runIndicesFetch(
       existingObs.map((o) => [`${o.countryCode}:${o.year}`, o])
     );
     let inserted = 0;
-    for (const o of obs) {
-      if (!/^[A-Z]{3}$/.test(o.country)) continue;
+    for (const o of dedup.values()) {
       const key = `${o.country}:${o.year}`;
       const prior = existingByKey.get(key);
       if (prior) {
@@ -968,13 +1181,15 @@ export async function runIndicesFetch(
     });
   }
 
-  /* manifest + coverage report */
+  /* manifest + coverage report (a partial run keeps the last full manifest
+     and refresh stamp) */
+  await writeCoverageReport();
+  if (partial) return report;
   fs.mkdirSync(path.join(process.cwd(), "sources", "indices"), { recursive: true });
   fs.writeFileSync(
     path.join(process.cwd(), "sources", "indices", "manifest.json"),
     JSON.stringify({ generatedAt: nowIso(), files: manifest }, null, 2)
   );
-  await writeCoverageReport();
   // stored as an object: getSetting merges objects over the fallback and
   // would shred a bare string into character indices
   const stamp = JSON.stringify({ at: nowIso() });

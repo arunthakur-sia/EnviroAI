@@ -316,6 +316,8 @@ export type NavOutcome = {
   descriptionAr: string | null;
   /* CR05 2.2: lead chips replace the old free-text owner */
   leads: LeadChip[];
+  /* CR08 9.1: the person who owns the outcome, resolved by the page */
+  ownerUserId: string | null;
   status: string;
   progress: number; // share of targets on track
   targetCount: number;
@@ -358,6 +360,8 @@ export type NavItem = {
   status: string;
   /* CR05 2.2: lead and supporting chips replace the old free-text owner */
   leads: LeadChip[];
+  /* CR08 9.1: the person who owns the initiative or project */
+  ownerUserId: string | null;
   startDate: string | null;
   endDate: string | null;
   deliverableCount: number;
@@ -534,6 +538,7 @@ export async function getNavigator(editionId: string): Promise<NavigatorData> {
       titleAr: n.titleAr,
       status: n.status,
       leads: leadsByNode.get(n.id) ?? [],
+      ownerUserId: n.ownerUserId,
       startDate: n.startDate,
       endDate: n.endDate,
       deliverableCount: deliverableCounts.get(n.id) ?? 0,
@@ -593,6 +598,7 @@ export async function getNavigator(editionId: string): Promise<NavigatorData> {
       descriptionEn: o.descriptionEn,
       descriptionAr: o.descriptionAr,
       leads: leadsByNode.get(o.id) ?? [],
+      ownerUserId: o.ownerUserId,
       slug: slugOfCode(o.code, o.id),
       titleEn: o.titleEn,
       titleAr: o.titleAr,

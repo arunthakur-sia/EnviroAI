@@ -3,7 +3,7 @@
 // run history, web search toggle, scan token budget. Self-fetching tab.
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Plus, Save } from "lucide-react";
+import { Plus } from "lucide-react";
 import { bi } from "@/lib/utils";
 import { formatDate } from "@/lib/format";
 import {
@@ -52,7 +52,6 @@ type Run = {
 
 export function TrendsSettingsTab() {
   const t = useTranslations("settings");
-  const tt = useTranslations("trends");
   const tc = useTranslations("common");
   const locale = useLocale();
   const { toast } = useToast();

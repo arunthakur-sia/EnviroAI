@@ -36,6 +36,12 @@ import { useToast } from "@/components/ui/toast";
 import type { KnowledgeItem } from "@/server/ai/knowledge_structurer";
 import { SpeakPanel } from "./SpeakPanel";
 
+/** CR08 Phase A: the only place an unknown error is narrowed. */
+function errMessage(e: unknown): string {
+  return e instanceof Error ? e.message : String(e);
+}
+
+
 type Topic = { code: string; nameEn: string; nameAr: string };
 type Mode = "write" | "upload" | "speak";
 
@@ -140,8 +146,8 @@ export function AddKnowledgeClient({
       setItems(json.data.items);
       if (json.data.audioRef) setAudioRef(json.data.audioRef);
       if (mode === "speak" || audioFile) setWasVoice(true);
-    } catch (e: any) {
-      toast(e?.message === "nothing_to_structure" ? t("nothingToStructure") : tc("error"), "error");
+    } catch (e: unknown) {
+      toast(errMessage(e) === "nothing_to_structure" ? t("nothingToStructure") : tc("error"), "error");
     } finally {
       setStructuring(false);
     }
@@ -486,16 +492,18 @@ export function AddKnowledgeClient({
 
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 <div>
-                  <Label>{t("titleEn")}</Label>
+                  <Label htmlFor={`add-item-${i}-title-en`}>{t("titleEn")}</Label>
                   <Input
+                    id={`add-item-${i}-title-en`}
                     dir="ltr"
                     value={item.title_en}
                     onChange={(e) => patchItem(i, { title_en: e.target.value })}
                   />
                 </div>
                 <div>
-                  <Label>{t("titleAr")}</Label>
+                  <Label htmlFor={`add-item-${i}-title-ar`}>{t("titleAr")}</Label>
                   <Input
+                    id={`add-item-${i}-title-ar`}
                     dir="rtl"
                     value={item.title_ar}
                     onChange={(e) => patchItem(i, { title_ar: e.target.value })}
@@ -503,8 +511,11 @@ export function AddKnowledgeClient({
                 </div>
               </div>
               <div className="mt-3">
-                <Label>{locale === "ar" ? t("cleanedAr") : t("cleanedEn")}</Label>
+                <Label htmlFor={`add-item-${i}-cleaned`}>
+                  {locale === "ar" ? t("cleanedAr") : t("cleanedEn")}
+                </Label>
                 <Textarea
+                  id={`add-item-${i}-cleaned`}
                   dir={locale === "ar" ? "rtl" : "ltr"}
                   rows={4}
                   value={locale === "ar" ? item.cleaned_ar || item.cleaned_en : item.cleaned_en || item.cleaned_ar}

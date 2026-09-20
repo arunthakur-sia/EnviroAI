@@ -14,6 +14,8 @@ import { Avatar, Button, Chip, NativeSelect } from "@/components/ui/primitives";
 import { useToast } from "@/components/ui/toast";
 import { KindGlyph } from "@/components/nexus/LeadChips";
 import { AddStakeholderInline } from "@/components/nexus/Stakeholders";
+import { OwnerControl, OwnerControlCompact } from "@/components/nexus/people/OwnerControl";
+import type { ItemRef, OwnerRef } from "@/components/nexus/people/OwnerControl";
 import type { OutcomeStakeholders, OutcomePerson } from "@/server/services/strategy";
 
 const EYEBROW =
@@ -42,10 +44,15 @@ function DepartmentOwnerRow({
   outcomeId,
   owner,
   canEdit,
+  head,
+  item,
 }: {
   outcomeId: string;
   owner: OutcomeStakeholders["departmentOwner"];
   canEdit: boolean;
+  /** CR08 9.1: the department head as a person card trigger */
+  head?: OwnerRef | null;
+  item?: ItemRef | null;
 }) {
   const t = useTranslations("strategy.outcomeStakeholders");
   const locale = useLocale();
@@ -117,7 +124,24 @@ function DepartmentOwnerRow({
                   {locale === "ar" ? owner.nameEn : owner.nameAr}
                 </span>
               </p>
-              {owner.head ? (
+              {/* CR08 9.1: the head of the owning department is the person
+                  behind the department, with the full card */}
+              {head ? (
+                <div className="mt-1">
+                  <OwnerControl
+                    owner={
+                      /* the unit line would repeat the department named above */
+                      head.unitEn === owner.nameEn || head.unitAr === owner.nameAr
+                        ? { ...head, unitEn: null, unitAr: null }
+                        : head
+                    }
+                    role="department_owner"
+                    item={item}
+                    size="sm"
+                    align="start"
+                  />
+                </div>
+              ) : owner.head ? (
                 <p className="mt-0.5 flex items-center gap-1.5 text-xs text-ink-600">
                   <Avatar
                     name={owner.head.nameEn || owner.head.nameAr}
@@ -188,9 +212,13 @@ function DepartmentOwnerRow({
 function LeaderGroup({
   labelKey,
   people,
+  owners,
+  item,
 }: {
   labelKey: "sponsors" | "owners" | "managers";
   people: OutcomePerson[];
+  owners?: Record<string, OwnerRef>;
+  item?: ItemRef | null;
 }) {
   const t = useTranslations("strategy.outcomeStakeholders");
   const ts = useTranslations("strategy.stakeholders");
@@ -201,13 +229,26 @@ function LeaderGroup({
         {t(labelKey)} <span className="tnum font-medium">{people.length}</span>
       </p>
       <ul className="flex flex-col">
-        {people.map((p) => (
+        {people.map((p) => {
+          /* CR08 9.1: a colleague opens their person card; an external
+             contact keeps the plain monogram */
+          const person = p.userId ? owners?.[p.userId] ?? null : null;
+          return (
           <li key={p.key} className="flex items-center gap-2 py-1.5" data-testid="leader-row">
-            <Avatar name={p.nameEn || p.nameAr} color={p.avatarColor} size={24} />
-            <span className="min-w-0 flex-1 truncate text-sm text-ink-900">
-              {bi(locale, p.nameEn, p.nameAr)}
-              {p.direct ? <DirectChip /> : null}
-            </span>
+            {person ? (
+              <span className="min-w-0 flex-1">
+                <OwnerControlCompact owner={person} item={item} />
+                {p.direct ? <DirectChip /> : null}
+              </span>
+            ) : (
+              <>
+                <Avatar name={p.nameEn || p.nameAr} color={p.avatarColor} size={24} />
+                <span className="min-w-0 flex-1 truncate text-sm text-ink-900">
+                  {bi(locale, p.nameEn, p.nameAr)}
+                  {p.direct ? <DirectChip /> : null}
+                </span>
+              </>
+            )}
             <span className="shrink-0 text-[11px] text-ink-600 tnum">
               {t("nodesCount", { count: p.count })}
             </span>
@@ -229,7 +270,8 @@ function LeaderGroup({
               </Link>
             ) : null}
           </li>
-        ))}
+          );
+        })}
         {!people.length ? (
           <li className="py-1.5 text-xs text-ink-600">{t("leadersEmpty")}</li>
         ) : null}
@@ -244,12 +286,17 @@ export function OutcomeStakeholdersSection({
   canEdit,
   leadFilter,
   onLeadFilter,
+  owners,
+  item,
 }: {
   outcomeId: string;
   data: OutcomeStakeholders;
   canEdit: boolean;
   leadFilter: string | null;
   onLeadFilter: (lead: string | null) => void;
+  /** CR08 9.1: user id -> person, resolved on the server */
+  owners?: Record<string, OwnerRef>;
+  item?: ItemRef | null;
 }) {
   const t = useTranslations("strategy.outcomeStakeholders");
   const ts = useTranslations("strategy.stakeholders");
@@ -301,7 +348,13 @@ export function OutcomeStakeholdersSection({
       ) : null}
 
       {/* 1. the department owner */}
-      <DepartmentOwnerRow outcomeId={outcomeId} owner={data.departmentOwner} canEdit={canEdit} />
+      <DepartmentOwnerRow
+        outcomeId={outcomeId}
+        owner={data.departmentOwner}
+        canEdit={canEdit}
+        head={data.departmentOwner?.head ? owners?.[data.departmentOwner.head.id] ?? null : null}
+        item={item}
+      />
 
       {/* 2. lead entities, chips filter the lanes above */}
       <div className="mb-3">
@@ -357,7 +410,10 @@ export function OutcomeStakeholdersSection({
         {data.experts.length ? (
           <>
             <ul className="flex flex-col divide-y divide-sand-100" data-testid="outcome-experts">
-              {experts.map((e) => (
+              {experts.map((e) => {
+                /* CR08 9.1: an expert with an account opens their card */
+                const person = e.userId ? owners?.[e.userId] ?? null : null;
+                return (
                 <li
                   key={e.key}
                   className="flex items-center gap-3 py-2"
@@ -367,13 +423,24 @@ export function OutcomeStakeholdersSection({
                   onFocus={() => setLaneGlow(e.items.map((i) => i.id), true)}
                   onBlur={() => setLaneGlow(e.items.map((i) => i.id), false)}
                 >
-                  <Avatar name={e.nameEn || e.nameAr} color={e.avatarColor} size={30} />
+                  {/* the same monogram size as the person chip, so the rows
+                      of a mixed roster keep one column */}
+                  {person ? null : (
+                    <Avatar name={e.nameEn || e.nameAr} color={e.avatarColor} size={28} />
+                  )}
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-ink-900">
-                      {bi(locale, e.nameEn, e.nameAr)}
-                      {e.direct ? <DirectChip /> : null}
-                    </p>
-                    <p className="truncate text-xs text-ink-600">
+                    {person ? (
+                      <p className="flex min-w-0 items-center gap-1">
+                        <OwnerControlCompact owner={person} item={item} size="md" />
+                        {e.direct ? <DirectChip /> : null}
+                      </p>
+                    ) : (
+                      <p className="truncate text-sm font-medium text-ink-900">
+                        {bi(locale, e.nameEn, e.nameAr)}
+                        {e.direct ? <DirectChip /> : null}
+                      </p>
+                    )}
+                    <p className={cn("truncate text-xs text-ink-600", person && "ps-[38px]")}>
                       {bi(locale, e.organisationEn ?? "", e.organisationAr ?? "")}
                     </p>
                   </div>
@@ -423,7 +490,8 @@ export function OutcomeStakeholdersSection({
                     ) : null}
                   </span>
                 </li>
-              ))}
+                );
+              })}
             </ul>
             {data.experts.length > 6 ? (
               <button
@@ -469,9 +537,9 @@ export function OutcomeStakeholdersSection({
               className="overflow-hidden"
             >
               <div className="grid gap-x-6 gap-y-4 border-t border-sand-100 px-3.5 py-3 sm:grid-cols-3">
-                <LeaderGroup labelKey="sponsors" people={data.leaders.sponsor} />
-                <LeaderGroup labelKey="owners" people={data.leaders.owner} />
-                <LeaderGroup labelKey="managers" people={data.leaders.manager} />
+                <LeaderGroup labelKey="sponsors" people={data.leaders.sponsor} owners={owners} item={item} />
+                <LeaderGroup labelKey="owners" people={data.leaders.owner} owners={owners} item={item} />
+                <LeaderGroup labelKey="managers" people={data.leaders.manager} owners={owners} item={item} />
               </div>
             </motion.div>
           ) : null}

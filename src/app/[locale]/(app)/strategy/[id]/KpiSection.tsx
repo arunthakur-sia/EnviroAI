@@ -6,10 +6,14 @@ import { bi } from "@/lib/utils";
 import { formatNumber } from "@/lib/format";
 import { IndicatorChart } from "@/components/nexus/IndicatorChart";
 import { Chip, SectionTitle } from "@/components/ui/primitives";
+import { OwnerControl } from "@/components/nexus/people/OwnerControl";
+import type { OwnerRef } from "@/components/nexus/people/OwnerControl";
 
 export function KpiSection({
   kpis,
   values,
+  owners,
+  nodeHref,
 }: {
   kpis: {
     id: string;
@@ -22,8 +26,14 @@ export function KpiSection({
     targetValue: number | null;
     targetYear: number | null;
     indicatorId: string | null;
+    /** CR08 9.1: the KPI custodian, when one is recorded */
+    ownerUserId?: string | null;
   }[];
   values: { kpiId: string; period: string; actual: number | null; target: number | null; note: string | null }[];
+  /** CR08 9.1: user id -> person, resolved on the server */
+  owners?: Record<string, OwnerRef>;
+  /** where the person card links the KPI back to */
+  nodeHref?: string;
 }) {
   const t = useTranslations("strategy");
   const tc = useTranslations("common");
@@ -47,6 +57,7 @@ export function KpiSection({
                 ? latest.value <= kpi.targetValue * 1.15
                 : latest.value >= kpi.targetValue * 0.7
               : null;
+          const custodian = kpi.ownerUserId ? owners?.[kpi.ownerUserId] ?? null : null;
           return (
             <div key={kpi.id} className="card p-4">
               <div className="mb-1 flex flex-wrap items-center gap-2">
@@ -59,6 +70,23 @@ export function KpiSection({
                   </Chip>
                 ) : null}
                 {illustrative ? <Chip tone="warn">{tc("illustrative")}</Chip> : null}
+                {/* CR08 9.1: the KPI custodian, at the end side of the head */}
+                {custodian ? (
+                  <OwnerControl
+                    owner={custodian}
+                    role="custodian"
+                    size="sm"
+                    align="end"
+                    className="ms-auto"
+                    item={{
+                      type: "indicator",
+                      id: kpi.id,
+                      titleEn: kpi.nameEn,
+                      titleAr: kpi.nameAr,
+                      href: nodeHref ?? "/strategy",
+                    }}
+                  />
+                ) : null}
               </div>
               <p className="mb-2 text-xs text-ink-400 tnum">
                 {kpi.baselineValue !== null

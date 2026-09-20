@@ -1,99 +1,83 @@
 "use client";
-// CR05 4.4: the Indices board. Cards ranked by Qatar's latest rank (default)
-// or a compact sortable table; a summary strip; category chips; a Qatar vs
-// GCC mode; the forecast summary table with expanding analysis rows.
+// CR05 4.4: the Indices board. CR08 4.2: grouped. A group switcher at the top
+// (All, then each active group with its count, deep-linkable with ?group=),
+// one section per group with its colour cue, summary strip, cards or table,
+// the SDG headline, and the Super Admin's edit mode: drag cards between
+// groups or reorder them, reorder the groups, everything saved at once.
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter, Link } from "@/i18n/navigation";
-import {
-  ArrowDownRight,
-  ArrowUpRight,
-  ChevronDown,
-  Download,
-  LayoutGrid,
-  Minus,
-  RefreshCw,
-  Table2,
-} from "lucide-react";
+import { useRouter } from "@/i18n/navigation";
+import { Check, Download, Pencil, RefreshCw } from "lucide-react";
 import { cn, bi } from "@/lib/utils";
-import { Chip, Button } from "@/components/ui/primitives";
+import { Button, EmptyState } from "@/components/ui/primitives";
 import { useToast } from "@/components/ui/toast";
 import { ReportButton } from "@/components/nexus/ReportButton";
-import type { getIndicesBoard } from "@/server/services/indices";
+import { groupStyle } from "@/lib/sdg-colours";
+import { GroupSection, type SectionEdit } from "./GroupSection";
+import { ForecastSummary } from "./ForecastSummary";
+import type { BoardData, Card, Group } from "./board-shared";
 
-type BoardData = Awaited<ReturnType<typeof getIndicesBoard>>;
-type Card = BoardData["cards"][number];
-
-const CATEGORIES = ["economy", "governance", "society", "environment", "technology", "human"];
-
-function DirectionIcon({ d, className }: { d: string | null; className?: string }) {
-  if (d === "up") return <ArrowUpRight className={cn("size-3.5 text-ok", className)} aria-hidden />;
-  if (d === "down")
-    return <ArrowDownRight className={cn("size-3.5 text-danger", className)} aria-hidden />;
-  return <Minus className={cn("size-3.5 text-ink-400", className)} aria-hidden />;
-}
-
-/** 10-year rank sparkline, inverted so up means better. */
-function RankSparkline({
-  points,
-  highlight,
-}: {
-  points: { year: number; rank: number }[];
-  highlight: boolean;
-}) {
-  if (points.length < 2) return <span className="block h-11" aria-hidden />;
-  const w = 148;
-  const h = 44;
-  const ranks = points.map((p) => p.rank);
-  const min = Math.min(...ranks);
-  const max = Math.max(...ranks);
-  const span = max - min || 1;
-  const xy = points.map((p, i) => ({
-    x: (i / (points.length - 1)) * (w - 8) + 4,
-    y: 5 + ((p.rank - min) / span) * (h - 12), // small rank = top
-  }));
-  const path = xy.map((p, i) => `${i === 0 ? "M" : "L"}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
-  const last = xy[xy.length - 1];
-  return (
-    <svg width={w} height={h} className="block" aria-hidden style={{ direction: "ltr" }}>
-      <path d={path} fill="none" stroke="var(--color-maroon-500)" strokeWidth={1.75} strokeLinejoin="round" />
-      <circle
-        cx={last.x}
-        cy={last.y}
-        r={highlight ? 4 : 2.5}
-        fill="var(--color-maroon-700)"
-        stroke="#fff"
-        strokeWidth={highlight ? 1.5 : 0}
-      />
-    </svg>
-  );
+function summarise(cards: Card[]): BoardData["summary"] {
+  return {
+    improving: cards.filter((c) => (c.change ?? 0) > 0).length,
+    declining: cards.filter((c) => (c.change ?? 0) < 0).length,
+    stable: cards.filter((c) => c.change === 0 || c.change === null).length,
+    gccLead: cards.filter((c) => c.gccPosition === 1).length,
+  };
 }
 
 export function IndicesBoard({
   data,
   canRefresh,
+  canManage,
   initialView,
-  initialCategory,
+  initialGroup,
 }: {
   data: BoardData;
   canRefresh: boolean;
+  canManage: boolean;
   initialView: "cards" | "table";
-  initialCategory: string | null;
+  initialGroup: string | null;
 }) {
   const t = useTranslations("indices");
   const tc = useTranslations("common");
   const locale = useLocale();
   const router = useRouter();
   const { toast } = useToast();
-  const [view, setView] = React.useState<"cards" | "table">(initialView);
-  const [category, setCategory] = React.useState<string | null>(initialCategory);
+
+  const [groups, setGroups] = React.useState<Group[]>(data.groups);
+  const [ungrouped, setUngrouped] = React.useState<Card[]>(data.ungrouped);
+  React.useEffect(() => {
+    setGroups(data.groups);
+    setUngrouped(data.ungrouped);
+  }, [data]);
+
+  const [active, setActive] = React.useState<string | null>(
+    initialGroup && data.groups.some((g) => g.code === initialGroup) ? initialGroup : null
+  );
+  const [editing, setEditing] = React.useState(false);
   const [gccMode, setGccMode] = React.useState(false);
   const [hover, setHover] = React.useState<string | null>(null);
-  const [sort, setSort] = React.useState<{ key: string; dir: 1 | -1 }>({ key: "rank", dir: 1 });
-  const [openForecast, setOpenForecast] = React.useState<string | null>(null);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [drag, setDrag] = React.useState<{ indexId: string; fromGroupId: string | null } | null>(null);
+  const [dropTarget, setDropTarget] = React.useState<{ groupId: string | null; beforeId: string | null } | null>(null);
+  const [saving, setSaving] = React.useState(false);
 
-  const cards = data.cards.filter((c) => !category || c.category === category);
+  function selectGroup(code: string | null) {
+    setActive(code);
+    router.replace((code ? `/indices?group=${encodeURIComponent(code)}` : "/indices") as never, {
+      scroll: false,
+    });
+  }
+
+  const visibleGroups = active ? groups.filter((g) => g.code === active) : groups;
+  const visibleCards = active
+    ? visibleGroups.flatMap((g) => g.cards)
+    : data.cards.filter((c) => !(data.sdgHeadline && c.id === data.sdgHeadline.indexId));
+  const visibleCardIds = new Set(visibleCards.map((c) => c.id));
+  const forecastRows = data.forecastTable.filter((f) =>
+    visibleCards.some((c) => c.code === f.code)
+  );
 
   async function refresh() {
     setRefreshing(true);
@@ -108,21 +92,22 @@ export function IndicesBoard({
 
   function exportCsv() {
     const head = [
-      "code,name,publisher,year,rank,score,change,gcc_rank,forecast_1y,forecast_3y,forecast_5y,entity",
+      "code,name,publisher,groups,year,rank,score,change,gcc_rank,target,forecast_1y,forecast_3y,forecast_5y,entity",
     ];
-    const rows = cards.map((c) => {
+    const rows = visibleCards.map((c) => {
       const f = data.forecastTable.find((x) => x.code === c.code);
-      const dir = (h: number) =>
-        f?.horizons.find((r) => r.horizon === h)?.direction ?? "";
+      const dir = (h: number) => f?.horizons.find((r) => r.horizon === h)?.direction ?? "";
       return [
         c.code,
         JSON.stringify(c.nameEn),
         JSON.stringify(c.publisher ?? ""),
+        JSON.stringify(c.groupCodes.join("|")),
         c.qatar?.year ?? "",
         c.qatar?.rank ?? "",
         c.qatar?.score ?? "",
         c.change ?? "",
         c.gccPosition ?? "",
+        c.target?.value ?? "",
         dir(1),
         dir(3),
         dir(5),
@@ -137,37 +122,126 @@ export function IndicesBoard({
     URL.revokeObjectURL(a.href);
   }
 
-  const sortedTable = [...cards].sort((a, b) => {
-    const dir = sort.dir;
-    switch (sort.key) {
-      case "name":
-        return a.nameEn.localeCompare(b.nameEn) * dir;
-      case "year":
-        return ((a.qatar?.year ?? 0) - (b.qatar?.year ?? 0)) * dir;
-      case "score":
-        return ((a.qatar?.score ?? -1) - (b.qatar?.score ?? -1)) * dir;
-      case "change":
-        return ((a.change ?? -999) - (b.change ?? -999)) * dir;
-      case "gcc":
-        return ((a.gccPosition ?? 99) - (b.gccPosition ?? 99)) * dir;
-      default:
-        return ((a.qatar?.rank ?? 9999) - (b.qatar?.rank ?? 9999)) * dir;
-    }
-  });
+  /* ---------------- edit mode ---------------- */
 
-  const th = (key: string, label: string) => (
-    <th
-      className="cursor-pointer select-none px-3 py-2.5 text-start text-[11px] font-semibold uppercase tracking-wider text-ink-600 hover:text-maroon-700"
-      onClick={() => setSort((s) => ({ key, dir: s.key === key ? ((s.dir * -1) as 1 | -1) : 1 }))}
-      aria-sort={sort.key === key ? (sort.dir === 1 ? "ascending" : "descending") : "none"}
-    >
-      {label}
-    </th>
-  );
+  async function persist(changed: Group[], nextGroups: Group[]) {
+    if (!changed.length) return;
+    setSaving(true);
+    try {
+      const res = await fetch("/api/v1/indices/groups/members", {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          groups: changed.map((g) => ({ groupId: g.id, indexIds: g.cards.map((c) => c.id) })),
+        }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      toast(t("membershipSaved"), "points");
+      // keep group codes on the cards honest after the move
+      const codesOf = new Map<string, string[]>();
+      for (const g of nextGroups) for (const c of g.cards) codesOf.set(c.id, [...(codesOf.get(c.id) ?? []), g.code]);
+      setGroups((cur) =>
+        cur.map((g) => ({ ...g, cards: g.cards.map((c) => ({ ...c, groupCodes: codesOf.get(c.id) ?? [] })) }))
+      );
+    } catch {
+      toast(tc("error"), "error");
+      router.refresh();
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function applyMove(
+    indexId: string,
+    fromGroupId: string | null,
+    toGroupId: string | null,
+    beforeId: string | null,
+    copy: boolean
+  ) {
+    const card =
+      groups.flatMap((g) => g.cards).find((c) => c.id === indexId) ??
+      ungrouped.find((c) => c.id === indexId) ??
+      data.cards.find((c) => c.id === indexId);
+    if (!card) return;
+    if (fromGroupId === toGroupId && beforeId === indexId) return;
+    const next = groups.map((g) => ({ ...g, cards: [...g.cards] }));
+    const changed = new Set<string>();
+    if (fromGroupId && !copy) {
+      const src = next.find((g) => g.id === fromGroupId);
+      if (src) {
+        const before = src.cards.length;
+        src.cards = src.cards.filter((c) => c.id !== indexId);
+        if (src.cards.length !== before) changed.add(src.id);
+      }
+    }
+    if (toGroupId) {
+      const dst = next.find((g) => g.id === toGroupId);
+      if (dst) {
+        dst.cards = dst.cards.filter((c) => c.id !== indexId);
+        const at = beforeId ? dst.cards.findIndex((c) => c.id === beforeId) : -1;
+        if (at === -1) dst.cards.push(card);
+        else dst.cards.splice(at, 0, card);
+        changed.add(dst.id);
+      }
+    }
+    for (const g of next) if (changed.has(g.id)) g.summary = summarise(g.cards);
+    const grouped = new Set(next.flatMap((g) => g.cards.map((c) => c.id)));
+    setGroups(next);
+    setUngrouped(
+      data.cards.filter((c) => !grouped.has(c.id) && !(data.sdgHeadline && c.id === data.sdgHeadline.indexId))
+    );
+    void persist(next.filter((g) => changed.has(g.id)), next);
+  }
+
+  async function reorderGroup(groupId: string, dir: -1 | 1) {
+    const ids = groups.map((g) => g.id);
+    const i = ids.indexOf(groupId);
+    const j = i + dir;
+    if (i === -1 || j < 0 || j >= ids.length) return;
+    const next = [...groups];
+    [next[i], next[j]] = [next[j], next[i]];
+    setGroups(next.map((g, k) => ({ ...g, sort: k + 1 })));
+    const res = await fetch("/api/v1/indices/groups", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ action: "reorder", ids: next.map((g) => g.id) }),
+    });
+    if (res.ok) toast(t("groupOrderSaved"), "points");
+    else {
+      toast(tc("error"), "error");
+      router.refresh();
+    }
+  }
+
+  const sectionEdit: SectionEdit | null =
+    editing && canManage
+      ? {
+          groups: groups.map((g) => ({ id: g.id, code: g.code, nameEn: g.nameEn, nameAr: g.nameAr })),
+          drag,
+          dropTarget,
+          setDropTarget,
+          onDragStart: (indexId, fromGroupId) => setDrag({ indexId, fromGroupId }),
+          onDragEnd: () => {
+            setDrag(null);
+            setDropTarget(null);
+          },
+          onDrop: (toGroupId, beforeId) => {
+            if (drag) applyMove(drag.indexId, drag.fromGroupId, toGroupId, beforeId, false);
+            setDrag(null);
+            setDropTarget(null);
+          },
+          onMove: (indexId, fromGroupId, toGroupId, copy) =>
+            applyMove(indexId, fromGroupId, toGroupId, null, copy),
+          onRemove: (indexId, groupId) => applyMove(indexId, groupId, null, null, false),
+          onReorderGroup: reorderGroup,
+          canMoveUp: false,
+          canMoveDown: false,
+        }
+      : null;
 
   return (
-    <div data-testid="indices-board">
-      {/* header row: refresh, filters, view toggle */}
+    <div data-testid="indices-board" data-editing={editing || undefined}>
+      {/* header row: refresh, edit mode, gcc mode, export */}
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <span className="text-xs text-ink-600">
           {t("lastRefresh")}{" "}
@@ -178,339 +252,161 @@ export function IndicesBoard({
             <RefreshCw /> {t("refresh")}
           </Button>
         ) : null}
-        <span className="mx-1 hidden h-5 w-px bg-sand-300 sm:block" />
-        <div className="flex flex-wrap items-center gap-1" role="group" aria-label={t("categoryFilter")}>
-          <button
-            onClick={() => setCategory(null)}
-            className={cn(
-              "rounded-lg px-2.5 py-1 text-xs transition-colors cursor-pointer",
-              !category ? "bg-maroon-100 font-medium text-maroon-700" : "text-ink-600 hover:bg-sand-100"
-            )}
-          >
-            {t("allCategories")}
-          </button>
-          {CATEGORIES.map((c) => (
-            <button
-              key={c}
-              onClick={() => setCategory(category === c ? null : c)}
-              className={cn(
-                "rounded-lg px-2.5 py-1 text-xs transition-colors cursor-pointer",
-                category === c ? "bg-maroon-100 font-medium text-maroon-700" : "text-ink-600 hover:bg-sand-100"
-              )}
+        <span className="ms-auto flex flex-wrap items-center gap-2">
+          {canManage ? (
+            <Button
+              size="sm"
+              variant={editing ? "gold" : "secondary"}
+              onClick={() => {
+                setEditing((v) => !v);
+                setDrag(null);
+                setDropTarget(null);
+              }}
+              loading={saving}
+              data-testid="indices-edit-toggle"
+              aria-pressed={editing}
             >
-              {t(`categories.${c}` as never)}
+              {editing ? <Check /> : <Pencil />} {editing ? t("doneEditing") : t("editGroups")}
+            </Button>
+          ) : null}
+          <span className="inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5">
+            <button
+              type="button"
+              onClick={() => setGccMode((v) => !v)}
+              className={cn(
+                "rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500",
+                gccMode ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+              )}
+              aria-pressed={gccMode}
+              data-testid="gcc-mode"
+            >
+              {t("qatarVsGcc")}
             </button>
-          ))}
-        </div>
-        <span className="ms-auto inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5">
+          </span>
           <button
-            onClick={() => setGccMode((v) => !v)}
-            className={cn(
-              "rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
-              gccMode ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
-            )}
-            data-testid="gcc-mode"
-          >
-            {t("qatarVsGcc")}
-          </button>
-          <button
-            onClick={() => setView("cards")}
-            className={cn(
-              "flex items-center gap-1 rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
-              view === "cards" ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
-            )}
-          >
-            <LayoutGrid className="size-3.5" /> {t("cards")}
-          </button>
-          <button
-            onClick={() => setView("table")}
-            className={cn(
-              "flex items-center gap-1 rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
-              view === "table" ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
-            )}
-            data-testid="indices-table-toggle"
-          >
-            <Table2 className="size-3.5" /> {t("table")}
-          </button>
-        </span>
-      </div>
-
-      {/* summary strip */}
-      <div className="mb-5 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-xl bg-sand-100 px-4 py-2.5 text-sm" data-testid="indices-summary">
-        <span className="flex items-center gap-1.5">
-          <ArrowUpRight className="size-4 text-ok" aria-hidden />
-          <span className="tnum font-semibold">{data.summary.improving}</span> {t("improving")}
-        </span>
-        <span className="flex items-center gap-1.5">
-          <Minus className="size-4 text-ink-400" aria-hidden />
-          <span className="tnum font-semibold">{data.summary.stable}</span> {t("stableCount")}
-        </span>
-        <span className="flex items-center gap-1.5">
-          <ArrowDownRight className="size-4 text-danger" aria-hidden />
-          <span className="tnum font-semibold">{data.summary.declining}</span> {t("declining")}
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="tnum font-semibold">{data.summary.gccLead}</span> {t("gccLeadCount")}
-        </span>
-        <span className="ms-auto flex items-center gap-2">
-          <button
+            type="button"
             onClick={exportCsv}
-            className="flex items-center gap-1 text-xs font-medium text-ink-600 hover:text-maroon-700 cursor-pointer"
+            className="flex items-center gap-1 text-xs font-medium text-ink-600 hover:text-maroon-700 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
           >
-            <Download className="size-3.5" /> CSV
+            <Download className="size-3.5" aria-hidden /> CSV
           </button>
           <ReportButton
-            scope={{ kind: "indices", ids: cards.map((c) => c.id), labelEn: "International indices", labelAr: "المؤشرات الدولية" }}
+            scope={{ kind: "indices", ids: visibleCards.map((c) => c.id), labelEn: "International indices", labelAr: "المؤشرات الدولية" }}
           />
         </span>
       </div>
 
-      {view === "cards" ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {cards.map((c) => (
+      {/* group switcher */}
+      <nav
+        className="mb-5 flex flex-wrap items-center gap-1.5"
+        role="tablist"
+        aria-label={t("groupSwitcher")}
+        data-testid="group-switcher"
+      >
+        <button
+          type="button"
+          role="tab"
+          aria-selected={active === null}
+          onClick={() => selectGroup(null)}
+          className={cn(
+            "rounded-lg px-3 py-1.5 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500",
+            active === null ? "bg-maroon-700 font-medium text-white" : "bg-sand-100 text-ink-600 hover:text-ink-900"
+          )}
+          data-testid="group-tab-all"
+        >
+          {t("allGroups")}
+          <span className={cn("ms-1.5 tnum", active === null ? "text-white/80" : "text-ink-400")}>{data.cards.length}</span>
+        </button>
+        {groups.map((g) => {
+          const style = groupStyle(g.colourToken);
+          const on = active === g.code;
+          return (
             <button
-              key={c.id}
-              onClick={() => router.push(`/indices/${c.code}` as never)}
-              onMouseEnter={() => setHover(c.id)}
-              onMouseLeave={() => setHover(null)}
-              className="card card-hover flex flex-col gap-2 p-4 text-start cursor-pointer"
-              data-testid="index-card"
+              key={g.id}
+              type="button"
+              role="tab"
+              aria-selected={on}
+              onClick={() => selectGroup(on ? null : g.code)}
+              className={cn(
+                "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500",
+                on ? cn("font-medium text-ink-900 ring-1", style.soft, style.ring) : "bg-sand-100 text-ink-600 hover:text-ink-900"
+              )}
+              data-testid={`group-tab-${g.code}`}
             >
-              <span className="flex items-start justify-between gap-2">
-                <span className="min-w-0">
-                  <span className="block truncate text-sm font-semibold text-ink-900">
-                    {bi(locale, c.nameEn, c.nameAr)}
-                  </span>
-                  <span className="block text-xs text-ink-600">{c.publisher}</span>
-                </span>
-                <DirectionIcon d={c.forecastDirection} className="mt-1 size-4" />
-              </span>
-              <span className="flex items-end justify-between gap-3">
-                <span>
-                  <span className="block text-2xl font-semibold text-maroon-900 tnum" style={{ fontFamily: "var(--font-display)" }}>
-                    {c.qatar?.rank != null ? c.qatar.rank : c.qatar?.score != null ? c.qatar.score.toFixed(2) : "-"}
-                  </span>
-                  <span className="block text-[11px] text-ink-600 tnum">
-                    {c.qatar?.rank != null && c.qatar?.total
-                      ? t("rankOf", { total: c.qatar.total })
-                      : c.qatar?.score != null
-                        ? t("scoreLabel")
-                        : t("noData")}
-                    {" · "}
-                    {c.qatar?.year ?? "-"}
-                  </span>
-                  {c.qatar?.score != null && c.qatar?.rank != null ? (
-                    <span className="block text-[11px] text-ink-600 tnum">
-                      {t("scoreShort")} {c.qatar.score.toFixed(c.qatar.score < 10 ? 2 : 1)}
-                    </span>
-                  ) : null}
-                </span>
-                <RankSparkline points={c.sparkline} highlight={hover === c.id} />
-              </span>
-              <span className="flex flex-wrap items-center gap-1.5 text-[11px]">
-                {c.change != null && c.change !== 0 ? (
-                  <span
-                    className={cn(
-                      "flex items-center gap-0.5 tnum",
-                      c.change > 0 ? "text-ok" : "text-danger"
-                    )}
-                  >
-                    {c.change > 0 ? (
-                      <ArrowUpRight className="size-3" />
-                    ) : (
-                      <ArrowDownRight className="size-3" />
-                    )}
-                    {c.changeKind === "rank"
-                      ? t("rankChange", { n: Math.abs(c.change) })
-                      : Math.abs(c.change).toFixed(2)}
-                  </span>
-                ) : null}
-                {c.gccPosition ? (
-                  <Chip tone={c.gccPosition === 1 ? "gold" : "sand"}>
-                    {t("gccPosition", { pos: c.gccPosition })}
-                  </Chip>
-                ) : null}
-                {c.entity ? <Chip tone="gulf">{bi(locale, c.entity.shortEn, c.entity.shortAr)}</Chip> : null}
-                {c.linkedTargets.slice(0, 1).map((tg) => (
-                  <Chip key={tg.id} tone="maroon">{tg.code ?? bi(locale, tg.titleEn, tg.titleAr).slice(0, 18)}</Chip>
-                ))}
-              </span>
-              {gccMode ? (
-                <span className="mt-1 border-t border-sand-100 pt-2" data-testid="gcc-scale">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-ink-600">
-                    {t("gccScale")}
-                    {c.gccLeader ? (
-                      <span className="ms-1 font-normal normal-case tracking-normal">
-                        · {t("leaderIs", { country: c.gccLeader.country })}
-                      </span>
-                    ) : null}
-                  </span>
-                  <span className="flex items-center gap-1" dir="ltr">
-                    {Array.from({ length: c.gccCount || 6 }, (_, i) => (
-                      <span
-                        key={i}
-                        className={cn(
-                          "h-2 flex-1 rounded-full",
-                          i + 1 === c.gccPosition ? "bg-maroon-700" : "bg-sand-300"
-                        )}
-                        title={`${i + 1}`}
-                      />
-                    ))}
-                  </span>
-                </span>
-              ) : null}
+              <span className={cn("size-2 rounded-full", style.bar)} aria-hidden />
+              {bi(locale, g.nameEn, g.nameAr)}
+              <span className="tnum text-ink-400">{g.cards.length}</span>
             </button>
-          ))}
-        </div>
-      ) : (
-        <div className="card overflow-x-auto" data-testid="indices-table">
-          <table className="w-full min-w-[980px] text-sm">
-            <thead>
-              <tr className="border-b border-sand-100">
-                {th("name", t("colIndex"))}
-                {th("year", t("colYear"))}
-                {th("rank", t("colRank"))}
-                {th("score", t("colScore"))}
-                {th("change", t("colChange"))}
-                {th("gcc", t("colGcc"))}
-                <th className="px-3 py-2.5 text-start text-[11px] font-semibold uppercase tracking-wider text-ink-600">1y</th>
-                <th className="px-3 py-2.5 text-start text-[11px] font-semibold uppercase tracking-wider text-ink-600">3y</th>
-                <th className="px-3 py-2.5 text-start text-[11px] font-semibold uppercase tracking-wider text-ink-600">5y</th>
-                <th className="px-3 py-2.5 text-start text-[11px] font-semibold uppercase tracking-wider text-ink-600">{t("colEntity")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedTable.map((c) => {
-                const f = data.forecastTable.find((x) => x.code === c.code);
-                const dir = (h: number) => f?.horizons.find((r) => r.horizon === h)?.direction ?? null;
-                return (
-                  <tr
-                    key={c.id}
-                    className="cursor-pointer border-b border-sand-100 last:border-0 hover:bg-maroon-50/60"
-                    onClick={() => router.push(`/indices/${c.code}` as never)}
-                  >
-                    <td className="px-3 py-2.5">
-                      <span className="block font-medium text-ink-900">{bi(locale, c.nameEn, c.nameAr)}</span>
-                      <span className="block text-xs text-ink-600">{c.publisher}</span>
-                    </td>
-                    <td className="px-3 py-2.5 tnum">{c.qatar?.year ?? "-"}</td>
-                    <td className="px-3 py-2.5 tnum font-semibold text-maroon-900">
-                      {c.qatar?.rank ?? "-"}
-                      {c.qatar?.total ? <span className="font-normal text-ink-400"> / {c.qatar.total}</span> : null}
-                    </td>
-                    <td className="px-3 py-2.5 tnum">{c.qatar?.score != null ? c.qatar.score.toFixed(c.qatar.score < 10 ? 2 : 1) : "-"}</td>
-                    <td className={cn("px-3 py-2.5 tnum", (c.change ?? 0) > 0 ? "text-ok" : (c.change ?? 0) < 0 ? "text-danger" : "text-ink-400")}>
-                      {c.change != null ? (c.change > 0 ? `+${c.change}` : c.change) : "-"}
-                    </td>
-                    <td className="px-3 py-2.5 tnum">{c.gccPosition ?? "-"}</td>
-                    <td className="px-3 py-2.5"><DirectionIcon d={dir(1)} /></td>
-                    <td className="px-3 py-2.5"><DirectionIcon d={dir(3)} /></td>
-                    <td className="px-3 py-2.5"><DirectionIcon d={dir(5)} /></td>
-                    <td className="px-3 py-2.5 text-xs text-ink-600">
-                      {c.entity ? bi(locale, c.entity.shortEn, c.entity.shortAr) : "-"}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
+          );
+        })}
+      </nav>
 
-      {/* CR05 4.6.8: the forecast summary table */}
-      <div className="mt-8" data-testid="forecast-summary">
-        <h2 className="mb-1 text-lg">{t("forecastSummary")}</h2>
-        <p className="mb-3 text-xs text-ink-600">{t("forecastDisclaimer")}</p>
-        <div className="card overflow-x-auto">
-          <table className="w-full min-w-[860px] text-sm">
-            <thead>
-              <tr className="border-b border-sand-100 text-[11px] uppercase tracking-wider text-ink-600">
-                <th className="px-3 py-2.5 text-start">{t("colIndex")}</th>
-                <th className="px-3 py-2.5 text-start">{t("colLatest")}</th>
-                <th className="px-3 py-2.5 text-start">+1</th>
-                <th className="px-3 py-2.5 text-start">+3</th>
-                <th className="px-3 py-2.5 text-start">+5</th>
-                <th className="px-3 py-2.5 text-start">{t("colRange")}</th>
-                <th className="px-3 py-2.5 text-start">{t("colConfidence")}</th>
-                <th className="px-3 py-2.5" />
-              </tr>
-            </thead>
-            <tbody>
-              {data.forecastTable
-                .filter((f) => !category || cards.some((c) => c.code === f.code))
-                .map((f) => {
-                  const open = openForecast === f.code;
-                  const cell = (h: number) => {
-                    const row = f.horizons.find((r) => r.horizon === h);
-                    if (!row) return <span className="text-ink-400">-</span>;
-                    const v =
-                      row.centralRank != null
-                        ? Math.round(row.centralRank)
-                        : row.centralScore != null
-                          ? row.centralScore.toFixed(row.centralScore < 10 ? 2 : 1)
-                          : "-";
-                    return (
-                      <span className="flex items-center gap-1 tnum">
-                        {v} <DirectionIcon d={row.direction} />
-                      </span>
-                    );
-                  };
-                  const f3 = f.horizons.find((r) => r.horizon === 3);
-                  return (
-                    <React.Fragment key={f.code}>
-                      <tr
-                        className="cursor-pointer border-b border-sand-100 hover:bg-maroon-50/60"
-                        onClick={() => setOpenForecast(open ? null : f.code)}
-                        data-testid="forecast-row"
-                      >
-                        <td className="px-3 py-2.5 font-medium text-ink-900">{bi(locale, f.nameEn, f.nameAr)}</td>
-                        <td className="px-3 py-2.5 tnum">
-                          {f.latest?.rank ?? (f.latest?.score != null ? f.latest.score.toFixed(2) : "-")}
-                          <span className="text-xs text-ink-400"> · {f.latest?.year ?? "-"}</span>
-                        </td>
-                        <td className="px-3 py-2.5">{cell(1)}</td>
-                        <td className="px-3 py-2.5">{cell(3)}</td>
-                        <td className="px-3 py-2.5">{cell(5)}</td>
-                        <td className="px-3 py-2.5 tnum text-xs text-ink-600">
-                          {f3 && f3.low != null && f3.high != null
-                            ? `${f3.low.toFixed(f3.low < 10 && f3.low > -10 ? 2 : 1)} – ${f3.high.toFixed(f3.high < 10 && f3.high > -10 ? 2 : 1)}`
-                            : "-"}
-                        </td>
-                        <td className="px-3 py-2.5">
-                          {f.confidence ? (
-                            <Chip tone={f.confidence === "narrow" ? "ok" : f.confidence === "medium" ? "sand" : "warn"}>
-                              {t(`confidence.${f.confidence}` as never)}
-                            </Chip>
-                          ) : (
-                            "-"
-                          )}
-                        </td>
-                        <td className="px-3 py-2.5 text-end">
-                          <ChevronDown className={cn("size-4 text-ink-400 transition-transform", open && "rotate-180")} aria-hidden />
-                        </td>
-                      </tr>
-                      {open && f3 ? (
-                        <tr className="border-b border-sand-100 bg-sand-50/60">
-                          <td colSpan={8} className="px-4 py-3">
-                            <p className="max-w-3xl whitespace-pre-line text-xs leading-relaxed text-ink-600">
-                              {bi(locale, f3.explanationEn ?? "", f3.explanationAr ?? "")}
-                            </p>
-                            <Link
-                              href={`/indices/${f.code}` as never}
-                              className="link-draw mt-2 inline-block text-xs font-medium text-maroon-700"
-                            >
-                              {t("openMethod")}
-                            </Link>
-                          </td>
-                        </tr>
-                      ) : null}
-                    </React.Fragment>
-                  );
-                })}
-            </tbody>
-          </table>
+      {/* the whole-board summary strip (All view) */}
+      {!active ? (
+        <div className="mb-6 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-xl border border-sand-300 bg-white px-4 py-2.5 text-sm" data-testid="indices-summary">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal">
+            {t("acrossBoard")}
+          </span>
+          <span><span className="tnum font-semibold text-ok">{data.summary.improving}</span> {t("improving")}</span>
+          <span><span className="tnum font-semibold">{data.summary.stable}</span> {t("stableCount")}</span>
+          <span><span className="tnum font-semibold text-danger">{data.summary.declining}</span> {t("declining")}</span>
+          <span><span className="tnum font-semibold">{data.summary.gccLead}</span> {t("gccLeadCount")}</span>
         </div>
-      </div>
+      ) : null}
+
+      {editing ? (
+        <p className="mb-4 rounded-lg bg-gold-100 px-3 py-2 text-xs text-maroon-900" data-testid="edit-hint">
+          {t("editHint")}
+        </p>
+      ) : null}
+
+      {visibleGroups.length === 0 && ungrouped.length === 0 ? (
+        <EmptyState title={t("emptyBoard")} hint={t("emptyBoardHint")} className="py-12" />
+      ) : null}
+
+      {visibleGroups.map((g, i) => (
+        <GroupSection
+          key={g.id}
+          index={i}
+          group={g}
+          cards={g.cards}
+          summary={g.summary}
+          colourToken={g.colourToken}
+          sdgHeadline={data.sdgHeadline}
+          initialView={initialView}
+          gccMode={gccMode}
+          hover={hover}
+          setHover={setHover}
+          edit={
+            sectionEdit
+              ? {
+                  ...sectionEdit,
+                  canMoveUp: groups.findIndex((x) => x.id === g.id) > 0,
+                  canMoveDown: groups.findIndex((x) => x.id === g.id) < groups.length - 1,
+                }
+              : null
+          }
+        />
+      ))}
+
+      {!active && (ungrouped.length > 0 || editing) ? (
+        <GroupSection
+          index={visibleGroups.length}
+          group={null}
+          ungrouped
+          cards={ungrouped}
+          summary={summarise(ungrouped)}
+          colourToken="ink"
+          initialView={initialView}
+          gccMode={gccMode}
+          hover={hover}
+          setHover={setHover}
+          edit={sectionEdit}
+        />
+      ) : null}
+
+      {/* CR05 4.6.8: the forecast summary */}
+      <ForecastSummary rows={forecastRows.filter((f) => visibleCardIds.size === 0 || visibleCards.some((c) => c.code === f.code))} />
     </div>
   );
 }

@@ -167,7 +167,18 @@ export function Sparkline({
     )
     .join(" ");
   return (
-    <svg width={width} height={height} aria-hidden style={{ direction: "ltr" }} className="shrink-0">
+    /* CR08 Phase C: the spark keeps its drawn geometry in the viewBox and is
+       allowed to shrink with its tile. At a phone width the headline tiles are
+       about 130px wide, and a rigid 96px spark beside the number pushed the
+       card past the screen. */
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      preserveAspectRatio="none"
+      height={height}
+      aria-hidden
+      style={{ direction: "ltr", width, maxWidth: "100%" }}
+      className="min-w-0 shrink"
+    >
       <polyline points={points} fill="none" stroke={stroke} strokeWidth="1.5" strokeLinejoin="round" />
     </svg>
   );

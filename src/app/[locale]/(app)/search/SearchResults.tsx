@@ -1,6 +1,8 @@
 "use client";
 // Result list with intent banner and type tabs. Snippets highlight the match;
-// semantic matches carry a small chip. Clicking logs the click for gap analytics.
+// semantic matches carry a small chip. CR08 3: expert results never blend
+// with the stream: they render as two labelled groups, internal first, where
+// the first expert would have appeared.
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -17,6 +19,8 @@ import {
 import { cn, bi } from "@/lib/utils";
 import { formatNumber } from "@/lib/format";
 import { Chip } from "@/components/ui/primitives";
+import { KowRibbon } from "@/components/nexus/kow/KowRibbon";
+import { OwnerControl } from "@/components/nexus/people/OwnerControl";
 import type { SearchResult } from "@/server/services/search";
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -70,6 +74,15 @@ export function SearchResults({
 
   const visible = tab === "all" ? results : results.filter((r) => r.type === tab);
 
+  // CR08 3: the expert block sits where the first expert ranked; the two
+  // groups inside it are internal first, then external.
+  const experts = visible.filter((r) => r.type === "expert");
+  const internal = experts.filter((r) => r.kind !== "external");
+  const external = experts.filter((r) => r.kind === "external");
+  const firstExpert = visible.findIndex((r) => r.type === "expert");
+  const before = (firstExpert === -1 ? visible : visible.slice(0, firstExpert)).filter((r) => r.type !== "expert");
+  const after = firstExpert === -1 ? [] : visible.slice(firstExpert).filter((r) => r.type !== "expert");
+
   return (
     <div>
       {/* Intent banner */}
@@ -87,9 +100,7 @@ export function SearchResults({
           </div>
           <div className="ms-auto text-end">
             <p className="font-[family-name:var(--font-display)] text-3xl font-semibold text-maroon-900 tnum">
-              {indicatorTile.value !== null
-                ? formatNumber(indicatorTile.value, locale, { decimals: indicatorTile.decimals })
-                : "—"}
+              {formatNumber(indicatorTile.value, locale, { decimals: indicatorTile.decimals })}
               {indicatorTile.unit ? (
                 <span className="ms-1 text-base text-ink-600">{indicatorTile.unit}</span>
               ) : null}
@@ -125,44 +136,118 @@ export function SearchResults({
 
       {/* Results */}
       <div className="flex flex-col gap-2">
-        {visible.map((r, i) => {
-          const Icon = ICONS[r.type] ?? FileText;
-          return (
-            <Link
-              key={`${r.type}:${r.id}:${i}`}
-              href={
-                `${HREFS[r.type]?.(r.id) ?? "#"}${r.page ? `?page=${r.page}` : ""}` as never
-              }
-              className="card card-hover flex gap-3.5 p-4"
-            >
-              <Icon className="mt-0.5 size-5 shrink-0 text-ink-400" />
-              <div className="min-w-0">
-                <p className="flex flex-wrap items-center gap-2 font-medium text-ink-900">
-                  {bi(locale, r.titleEn, r.titleAr)}
-                  {r.verified ? <BadgeCheck className="size-4 text-gulf-600" /> : null}
-                  {r.semantic ? (
-                    <Chip tone="gulf">
-                      <Sparkles className="size-3" /> {t("semanticMatch")}
-                    </Chip>
-                  ) : null}
-                  {r.page ? (
-                    <span className="text-xs text-ink-400 tnum">
-                      {t("page")} {r.page}
-                    </span>
-                  ) : null}
-                </p>
-                <p
-                  className="mt-1 line-clamp-2 text-sm text-ink-600"
-                  dir={r.snippetLang === "ar" ? "rtl" : "ltr"}
-                >
-                  <Highlighted text={r.snippet} q={q} />
-                </p>
-              </div>
-            </Link>
-          );
-        })}
+        {before.map((r, i) => (
+          <ResultRow key={`${r.type}:${r.id}:${i}`} r={r} q={q} />
+        ))}
+        {experts.length ? <ExpertGroups internal={internal} external={external} q={q} /> : null}
+        {after.map((r, i) => (
+          <ResultRow key={`${r.type}:${r.id}:after:${i}`} r={r} q={q} />
+        ))}
       </div>
     </div>
+  );
+}
+
+function ResultRow({ r, q, accent }: { r: SearchResult; q: string; accent?: "maroon" | "gulf" }) {
+  const t = useTranslations("search");
+  const locale = useLocale();
+  const Icon = ICONS[r.type] ?? FileText;
+  const href = `${HREFS[r.type]?.(r.id) ?? "#"}${r.page ? `?page=${r.page}` : ""}`;
+  return (
+    /* CR08 9.1: the row is no longer one link. The title carries a stretched
+       link so the whole card still opens the item, and the owner control sits
+       beside it as a sibling, because a button may never live inside a link. */
+    <div
+      className={cn("card card-hover relative flex gap-3.5 overflow-hidden p-4", accent && "ps-5")}
+      data-testid={`result-${r.type}`}
+      data-kind={r.kind}
+    >
+      {accent ? (
+        <span aria-hidden className={cn("absolute inset-y-0 start-0 w-1", accent === "maroon" ? "bg-maroon-700" : "bg-gulf-600")} />
+      ) : null}
+      <Icon className="mt-0.5 size-5 shrink-0 text-ink-400" />
+      <div className="min-w-0 flex-1">
+        <p className="flex flex-wrap items-center gap-2 font-medium text-ink-900">
+          <Link
+            href={href as never}
+            className="rounded after:absolute after:inset-0 after:content-[''] hover:text-maroon-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+            data-testid="result-link"
+          >
+            {bi(locale, r.titleEn, r.titleAr)}
+          </Link>
+          {r.verified ? <BadgeCheck className="size-4 text-gulf-600" /> : null}
+          {/* CR08 8: the ribbon on this week's document or lesson */}
+          {r.type === "document" || r.type === "lesson" ? <KowRibbon resourceType={r.type} resourceId={r.id} /> : null}
+          {r.semantic ? (
+            <Chip tone="gulf">
+              <Sparkles className="size-3" /> {t("semanticMatch")}
+            </Chip>
+          ) : null}
+          {r.page ? (
+            <span className="text-xs text-ink-400 tnum">
+              {t("page")} {r.page}
+            </span>
+          ) : null}
+        </p>
+        <p
+          className="mt-1 line-clamp-2 text-sm text-ink-600"
+          dir={r.snippetLang === "ar" ? "rtl" : "ltr"}
+        >
+          <Highlighted text={r.snippet} q={q} />
+        </p>
+      </div>
+      {/* z-[1]: above the stretched link that covers the card */}
+      {r.owner ? (
+        <div className="relative z-[1] max-w-[45%] shrink-0 self-center" data-testid="result-owner">
+          <OwnerControl
+            owner={r.owner}
+            role={r.owner.role}
+            size="sm"
+            align="end"
+            item={{ type: r.type, id: r.id, titleEn: r.titleEn, titleAr: r.titleAr, href: HREFS[r.type]?.(r.id) ?? "#" }}
+          />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/** CR08 3: the two expert groups, labelled, internal first. */
+function ExpertGroups({
+  internal,
+  external,
+  q,
+}: {
+  internal: SearchResult[];
+  external: SearchResult[];
+  q: string;
+}) {
+  const te = useTranslations("experts");
+  const locale = useLocale();
+  const groups: { key: "internal" | "external"; items: SearchResult[]; accent: "maroon" | "gulf" }[] = [
+    { key: "internal", items: internal, accent: "maroon" },
+    { key: "external", items: external, accent: "gulf" },
+  ];
+  return (
+    <section className="my-1 flex flex-col gap-3" data-testid="expert-groups" aria-label={te("title")}>
+      {groups
+        .filter((g) => g.items.length)
+        .map((g) => (
+          <div key={g.key} data-testid={`expert-group-${g.key}`} className="flex flex-col gap-2">
+            <p className="flex items-center gap-2 px-1">
+              <span aria-hidden className={cn("h-3.5 w-1 rounded-full", g.accent === "maroon" ? "bg-maroon-700" : "bg-gulf-600")} />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-600 rtl:tracking-normal">
+                {te(`groups.${g.key}`)}
+              </span>
+              <span className="text-xs text-ink-600 tnum">{formatNumber(g.items.length, locale, { decimals: 0 })}</span>
+              <span className="text-xs text-ink-400">{te(`groups.${g.key}Hint`)}</span>
+            </p>
+            {g.items.map((r, i) => (
+              <ResultRow key={`${r.type}:${r.id}:${i}`} r={r} q={q} accent={g.accent} />
+            ))}
+          </div>
+        ))}
+    </section>
   );
 }
 

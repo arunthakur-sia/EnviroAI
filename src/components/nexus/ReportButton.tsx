@@ -37,6 +37,9 @@ export function ReportButton({
   const t = useTranslations("reports");
   const locale = useLocale();
   const { toast } = useToast();
+  // more than one extract panel can sit on a page (a node drawer over a node
+  // page, for instance), so the field ids are per instance
+  const uid = React.useId();
   const [open, setOpen] = React.useState(false);
   const [phase, setPhase] = React.useState<Phase>("form");
   const [audience, setAudience] = React.useState<"leadership" | "working">("working");
@@ -161,8 +164,9 @@ export function ReportButton({
           <div className="flex flex-col gap-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>{t("audience")}</Label>
+                <Label htmlFor={`${uid}-audience`}>{t("audience")}</Label>
                 <NativeSelect
+                  id={`${uid}-audience`}
                   value={audience}
                   onChange={(e) => setAudience(e.target.value as never)}
                 >
@@ -171,8 +175,9 @@ export function ReportButton({
                 </NativeSelect>
               </div>
               <div>
-                <Label>{t("language")}</Label>
+                <Label htmlFor={`${uid}-language`}>{t("language")}</Label>
                 <NativeSelect
+                  id={`${uid}-language`}
                   value={language}
                   onChange={(e) => setLanguage(e.target.value as never)}
                 >
@@ -184,17 +189,18 @@ export function ReportButton({
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>{t("dateFrom")}</Label>
-                <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+                <Label htmlFor={`${uid}-date-from`}>{t("dateFrom")}</Label>
+                <Input id={`${uid}-date-from`} type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
               </div>
               <div>
-                <Label>{t("dateTo")}</Label>
-                <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+                <Label htmlFor={`${uid}-date-to`}>{t("dateTo")}</Label>
+                <Input id={`${uid}-date-to`} type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
               </div>
             </div>
             <div>
-              <Label>{t("summaryLength")}</Label>
+              <Label htmlFor={`${uid}-summary-length`}>{t("summaryLength")}</Label>
               <NativeSelect
+                id={`${uid}-summary-length`}
                 value={summaryLength}
                 onChange={(e) => setSummaryLength(e.target.value as never)}
               >

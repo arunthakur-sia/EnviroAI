@@ -82,6 +82,73 @@ export const CONTRIBUTION_TYPES = new Set([
   "signal_accepted", // CR01 2.6 triage
 ]);
 
+/* ------------------------------------------------------------------ */
+/* CR08 7.2: the leaderboard category sets and the board exclusions      */
+/* ------------------------------------------------------------------ */
+
+/** Guardians: points the verifier or reviewer earns for keeping the
+    memory trustworthy (the author-side rewards such as document_verified
+    are contributions, not guardianship). */
+export const GUARDIAN_TYPES = new Set([
+  "content_verified",
+  "translation_reviewed",
+  "signal_accepted",
+]);
+
+/** Learners: reading, listening, quizzes and guided learning. */
+export const LEARNER_TYPES = new Set([
+  "daily_quiz_correct",
+  "document_read_fully",
+  "podcast_listened_full",
+  "learning_path_completed", // CR08 6: a handover learning path signed off
+  "lesson_read_fully",
+  "learn_session_completed",
+  "reflection_saved",
+  "mystery_shelf_opened",
+  "kow_read", // CR08 8: read the Knowledge of the Week in full
+]);
+
+/** Rules that count for the Departments board only: the CR08 8 unit award
+    is paid to the contributor's account (the engine pays per user) but is a
+    unit achievement, so the People board ignores it. */
+export const UNIT_ONLY_TYPES = new Set(["kow_unit"]);
+
+/** Rules seeded as "excluded from boards": attendance and bulk operations
+    that reward a duty rather than knowledge work. Editable in Settings >
+    Gamification; the flag lives on game_rules.excluded_from_boards. */
+export const BOARD_EXCLUDED_DEFAULT_TYPES = [
+  "daily_login",
+  "indicator_import_completed",
+] as const;
+
+/** Contributors: the streak-earning contribution types plus the author-side
+    rewards paid when someone's work is verified, and the CR08 8 award. */
+export const CONTRIBUTOR_BOARD_TYPES = new Set([
+  ...[...CONTRIBUTION_TYPES].filter((t) => !GUARDIAN_TYPES.has(t)),
+  "document_verified",
+  "answer_verified",
+  "lesson_verified",
+  "knowledge_verified",
+  "podcast_created",
+  "report_extracted",
+  "knowledge_by_voice",
+  "knowledge_from_event",
+  "knowledge_linked_to_nds",
+  "expert_profile_completed",
+  "expert_profile_domain_accepted",
+  "kow_contributor", // CR08 8: the Knowledge of the Week award
+]);
+
+export function boardCategoryOf(
+  type: string
+): "guardians" | "learners" | "contributors" | "unit" | null {
+  if (UNIT_ONLY_TYPES.has(type)) return "unit";
+  if (GUARDIAN_TYPES.has(type)) return "guardians";
+  if (LEARNER_TYPES.has(type)) return "learners";
+  if (CONTRIBUTOR_BOARD_TYPES.has(type)) return "contributors";
+  return null;
+}
+
 async function ruleFor(type: string): Promise<{ points: number; active: boolean }> {
   const rows = await db
     .select()
@@ -327,12 +394,17 @@ export async function record(input: GameEventInput): Promise<GameEventResult> {
   let leveledUp: GameEventResult["leveledUp"] = null;
   if (next && next.id !== current?.id) {
     leveledUp = { nameEn: next.nameEn, nameAr: next.nameAr };
+    // CR08 7.1: the levels are numeric ("Level 5" / "المستوى 5"); the
+    // descriptor rides in the body and shows on the profile, never in the title
     await notify(
       userId,
       "game_level",
       `You reached ${next.nameEn}`,
-      `وصلت إلى مستوى ${next.nameAr}`,
-      "/profile"
+      `وصلت إلى ${next.nameAr}`,
+      "/profile",
+      next.descriptorEn || next.descriptorAr
+        ? { en: next.descriptorEn ?? undefined, ar: next.descriptorAr ?? undefined }
+        : undefined
     );
   }
 
@@ -430,7 +502,7 @@ async function evaluateBadges(
   check("connector_bronze", connectorCount >= 3);
   check("connector_silver", connectorCount >= 15);
   check("connector_gold", connectorCount >= 50);
-  // CR02 4.6: completed podcast episodes count toward Explorer
+  // CR02 4.6: completed podcast episodes count toward the explorer badge family
   const podcastListens = await countEvents(userId, ["podcast_listened_full"]);
   check("explorer_bronze", extra.breadthCount >= 3 || extra.quizStreak >= 7 || podcastListens >= 3);
   check("explorer_silver", extra.breadthCount >= 5 || extra.quizStreak >= 30 || podcastListens >= 10);

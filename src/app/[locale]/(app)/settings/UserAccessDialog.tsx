@@ -132,8 +132,9 @@ export function UserAccessDialog({
             {/* role / clearance / scope / preview */}
             <div className="flex flex-wrap items-end gap-3">
               <div>
-                <Label>{ts("role")}</Label>
+                <Label htmlFor="user-access-role">{ts("role")}</Label>
                 <NativeSelect
+                  id="user-access-role"
                   value={data.user.roleId}
                   onChange={(e) => patchUser({ roleId: e.target.value })}
                   className="w-44"
@@ -146,8 +147,9 @@ export function UserAccessDialog({
                 </NativeSelect>
               </div>
               <div>
-                <Label>{ts("clearance")}</Label>
+                <Label htmlFor="user-access-clearance">{ts("clearance")}</Label>
                 <NativeSelect
+                  id="user-access-clearance"
                   value={String(data.user.clearanceLevel)}
                   onChange={(e) => patchUser({ clearanceLevel: Number(e.target.value) })}
                   className="w-36"
@@ -160,8 +162,9 @@ export function UserAccessDialog({
                 </NativeSelect>
               </div>
               <div>
-                <Label>{ts("department")}</Label>
+                <Label htmlFor="user-access-department">{ts("department")}</Label>
                 <NativeSelect
+                  id="user-access-department"
                   value={data.user.departmentId ?? ""}
                   onChange={(e) => patchUser({ departmentId: e.target.value || null })}
                   className="w-52"
@@ -175,8 +178,9 @@ export function UserAccessDialog({
                 </NativeSelect>
               </div>
               <div>
-                <Label>{t("scope")}</Label>
+                <Label htmlFor="user-access-scope">{t("scope")}</Label>
                 <NativeSelect
+                  id="user-access-scope"
                   value={data.user.departmentScope}
                   onChange={(e) => patchUser({ departmentScope: e.target.value })}
                   className="w-36"
@@ -207,12 +211,12 @@ export function UserAccessDialog({
             {/* override context */}
             <div className="flex flex-wrap items-end gap-3 rounded-xl bg-sand-50 p-3">
               <div className="min-w-56 flex-1">
-                <Label>{t("reason")}</Label>
-                <Input value={reason} onChange={(e) => setReason(e.target.value)} placeholder={t("reasonPlaceholder")} />
+                <Label htmlFor="user-access-reason">{t("reason")}</Label>
+                <Input id="user-access-reason" value={reason} onChange={(e) => setReason(e.target.value)} placeholder={t("reasonPlaceholder")} />
               </div>
               <div>
-                <Label>{t("expiry")}</Label>
-                <Input type="date" value={expiry} onChange={(e) => setExpiry(e.target.value)} dir="ltr" className="w-40" />
+                <Label htmlFor="user-access-expiry">{t("expiry")}</Label>
+                <Input id="user-access-expiry" type="date" value={expiry} onChange={(e) => setExpiry(e.target.value)} dir="ltr" className="w-40" />
               </div>
               <p className="w-full text-[11px] text-ink-600">{t("cycleHint")}</p>
             </div>

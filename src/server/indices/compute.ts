@@ -18,7 +18,28 @@ import {
   type ForecastInputs,
   type ForecastResult,
   type SignalInput,
+  type TargetGapResult,
 } from "./forecast";
+
+/* CR08 4.1: the mode an index runs in. indices.forecast_mode wins when set
+   (rank | score | target_gap); otherwise the CR05 rule decides: scores when
+   Qatar has at least five scored years (or all its years are scored), ranks
+   in -rank units otherwise. target_gap needs indices.target_value and
+   target_year; without them the index falls back to score mode. */
+export type ForecastMode = "rank" | "score" | "target_gap";
+
+export function resolveForecastMode(
+  requested: string | null | undefined,
+  counts: { scored: number; ranked: number; total: number },
+  target: { value: number | null; year: number | null }
+): ForecastMode {
+  if (requested === "target_gap") {
+    return target.value != null && target.year != null && counts.scored > 0 ? "target_gap" : "score";
+  }
+  if (requested === "rank") return counts.ranked > 0 ? "rank" : "score";
+  if (requested === "score") return "score";
+  return counts.scored < Math.min(5, counts.total) ? "rank" : "score";
+}
 
 /* ------------------------------------------------------------------ */
 /* input assembly                                                       */
@@ -81,7 +102,20 @@ export async function assembleInputs(
     .sort((a, b) => a.year - b.year);
   if (!qat.length) return null;
   const scorePoints = qat.filter((o) => o.score != null);
-  const usingRankFallback = scorePoints.length < Math.min(5, qat.length);
+  const mode = resolveForecastMode(
+    index.forecastMode,
+    {
+      scored: scorePoints.length,
+      ranked: qat.filter((o) => o.rank != null).length,
+      total: qat.length,
+    },
+    { value: index.targetValue, year: index.targetYear }
+  );
+  const usingRankFallback = mode === "rank";
+  const gapTarget =
+    mode === "target_gap" && index.targetValue != null && index.targetYear != null
+      ? { value: index.targetValue, year: index.targetYear }
+      : null;
   const series = (usingRankFallback
     ? qat.filter((o) => o.rank != null).map((o) => ({ year: o.year, value: -(o.rank as number) }))
     : scorePoints.map((o) => ({ year: o.year, value: o.score as number }))
@@ -136,11 +170,13 @@ export async function assembleInputs(
       }));
   }
 
-  /* target pull from the first linked target that states a rank/score */
+  /* target pull from the first linked target that states a rank/score
+     (not in target_gap mode: the explicit national target is measured, not
+     pulled toward) */
   let target: ForecastInputs["target"] = null;
   let targetNodeId: string | null = null;
   let targetText: string | null = null;
-  if (linkedNodeIds.length) {
+  if (linkedNodeIds.length && !gapTarget) {
     const nodes = await db
       .select()
       .from(schema.strategyNodes)
@@ -230,6 +266,8 @@ export async function assembleInputs(
     runs,
     // deterministic per index and data day
     seed: hashSeed(`${index.code}:${latestYear}:${series.length}:${signals.length}`),
+    mode,
+    targetGap: gapTarget,
   };
   return { index, inputs, signalIds: signals.map((s) => s.id), targetNodeId, targetText };
 }
@@ -265,8 +303,10 @@ export function mockExplanation(
   index: { nameEn: string; nameAr: string; higherIsBetter: number },
   result: ForecastResult,
   usingRankFallback: boolean,
-  targetText: string | null
+  targetText: string | null,
+  targetGap?: TargetGapResult | null
 ): { en: string; ar: string } {
+  if (targetGap) return gapExplanation(result, targetGap);
   const h3raw = result.horizons[1];
   // rank-fallback engines work in -rank units; read everything back as ranks
   const disp = (v: number) => (usingRankFallback ? -v : v);
@@ -318,11 +358,67 @@ export function mockExplanation(
   return { en: `${evidenceEn}\n\n${assessEn}`, ar: `${evidenceAr}\n\n${assessAr}` };
 }
 
+/** CR08 4.1: the templated explanation of a target_gap forecast, from the
+    numbers only (the live model gets the same numbers). */
+export function gapExplanation(
+  result: ForecastResult,
+  gap: TargetGapResult
+): { en: string; ar: string } {
+  const fmt = (v: number) => (Math.abs(v) >= 100 ? v.toFixed(0) : Math.abs(v) >= 10 ? v.toFixed(1) : v.toFixed(2));
+  const pct = Math.round(gap.probability * 100);
+  const met = gap.gapNow <= 0;
+  const closesEn = met
+    ? `The target is already met on the latest reading.`
+    : gap.closingYear != null && gap.closingYear <= gap.targetYear
+      ? `On the current trend the central path reaches the target in ${gap.closingYear}, ahead of ${gap.targetYear}.`
+      : gap.closingYear != null
+        ? `On the current trend the central path reaches the target only in ${gap.closingYear}, after ${gap.targetYear}.`
+        : `On the current trend the central path does not reach the target within fifteen years.`;
+  const closesAr = met
+    ? `المستهدف متحقق بالفعل وفق آخر قراءة.`
+    : gap.closingYear != null && gap.closingYear <= gap.targetYear
+      ? `وفق الاتجاه الحالي يبلغ المسار المركزي المستهدف في ${gap.closingYear}، أي قبل ${gap.targetYear}.`
+      : gap.closingYear != null
+        ? `وفق الاتجاه الحالي لا يبلغ المسار المركزي المستهدف إلا في ${gap.closingYear}، أي بعد ${gap.targetYear}.`
+        : `وفق الاتجاه الحالي لا يبلغ المسار المركزي المستهدف خلال خمسة عشر عامًا.`;
+  const en = [
+    `Evidence: the national target is ${fmt(gap.targetValue)} by ${gap.targetYear}; the latest value leaves a gap of ${fmt(gap.gapNow)}.`,
+    `The fitted ${result.method === "holt" ? "Holt" : "damped-trend"} baseline moves ${fmt(gap.trendPerYear)} per year against the ${fmt(gap.requiredPacePerYear)} per year the target needs.`,
+    `The simulation puts the ${gap.targetYear} value between ${fmt(gap.low)} and ${fmt(gap.high)} (central ${fmt(gap.central)}), a remaining gap of ${fmt(gap.gapCentral)}; ${pct} percent of runs meet the target on time.`,
+    `Assessment: ${closesEn} The target pull is switched off in this mode so the gap reads the trajectory, not the aspiration. This is a SiaNexus forecast (method v1), not a published figure.`,
+  ].join(" ");
+  const ar = [
+    `الشواهد: المستهدف الوطني ${fmt(gap.targetValue)} بحلول ${gap.targetYear}، وتترك آخر قيمة فجوة قدرها ${fmt(gap.gapNow)}.`,
+    `يتحرك خط الأساس (${result.method === "holt" ? "تمهيد هولت" : "اتجاه مخمد"}) بمقدار ${fmt(gap.trendPerYear)} سنويًا مقابل ${fmt(gap.requiredPacePerYear)} سنويًا التي يتطلبها المستهدف.`,
+    `تحصر المحاكاة قيمة ${gap.targetYear} بين ${fmt(gap.low)} و${fmt(gap.high)} (القيمة المركزية ${fmt(gap.central)})، بفجوة متبقية قدرها ${fmt(gap.gapCentral)}؛ وتبلغ المستهدف في موعده ${pct} بالمئة من دورات المحاكاة.`,
+    `التقدير: ${closesAr} يُعطَّل الجذب نحو المستهدف في هذا النمط حتى تقرأ الفجوة المسار الفعلي لا الطموح. هذا تنبؤ من سيا نكسس (المنهجية v1) وليس رقمًا منشورًا.`,
+  ].join(" ");
+  return { en, ar };
+}
+
 /* ------------------------------------------------------------------ */
 /* compute and store                                                    */
 /* ------------------------------------------------------------------ */
 
 export async function computeForecast(indexId: string): Promise<boolean> {
+  /* CR08 4.1: forecast_enabled = 0 means nothing to forecast; any current
+     rows are retired so the board never shows a stale forecast */
+  const [row] = await db
+    .select({ id: schema.indices.id, forecastEnabled: schema.indices.forecastEnabled })
+    .from(schema.indices)
+    .where(eq(schema.indices.id, indexId))
+    .limit(1);
+  if (!row) return false;
+  if (row.forecastEnabled === 0) {
+    await db
+      .update(schema.indexForecasts)
+      .set({ status: "superseded" })
+      .where(
+        and(eq(schema.indexForecasts.indexId, indexId), eq(schema.indexForecasts.status, "current"))
+      );
+    return false;
+  }
+
   const assembled = await assembleInputs(indexId);
   if (!assembled) return false;
   const { index, inputs, signalIds, targetNodeId, targetText } = assembled;
@@ -330,13 +426,13 @@ export async function computeForecast(indexId: string): Promise<boolean> {
 
   /* explanation: live model from the stored inputs only, mock template otherwise */
   const settings = await getAiSettings();
-  let explanation = mockExplanation(index, result, inputs.usingRankFallback, targetText);
+  let explanation = mockExplanation(index, result, inputs.usingRankFallback, targetText, result.targetGap);
   if (!settings.mockMode) {
     const h3 = result.horizons[1];
     const live = await callJson<{ explanation_en: string; explanation_ar: string }>(
       "system_index_forecast",
       JSON.stringify({
-        index: { name_en: index.nameEn, name_ar: index.nameAr, higher_is_better: index.higherIsBetter === 1, rank_based: inputs.usingRankFallback },
+        index: { name_en: index.nameEn, name_ar: index.nameAr, higher_is_better: index.higherIsBetter === 1, rank_based: inputs.usingRankFallback, mode: result.mode },
         history: inputs.series,
         baseline: { method: result.method, alpha: result.alpha, beta: result.beta, residual_sd: result.residualSd },
         horizons: result.horizons,
@@ -345,6 +441,7 @@ export async function computeForecast(indexId: string): Promise<boolean> {
           .sort((a, b) => Math.abs(b.contribution) - Math.abs(a.contribution))
           .slice(0, 3),
         target: targetText ? { statement: targetText, pull: h3.targetPull } : null,
+        target_gap: result.targetGap ?? null,
         direction: result.direction,
       })
     );
@@ -390,6 +487,8 @@ export async function computeForecast(indexId: string): Promise<boolean> {
         latestYear: inputs.latestYear,
         seed: inputs.seed,
         runs: inputs.runs,
+        mode: result.mode,
+        targetGap: inputs.targetGap ?? null,
       }),
       simulationSummaryJson: JSON.stringify({
         method: result.method,
@@ -405,6 +504,9 @@ export async function computeForecast(indexId: string): Promise<boolean> {
         contributions: result.signalContributions,
         sensitivity: result.sensitivity,
         histogram: result.histograms.find((x) => x.horizon === h.horizon)?.bins ?? [],
+        mode: result.mode,
+        // CR08 4.1: the gap block (same on the three rows of a target_gap forecast)
+        targetGap: result.targetGap ?? null,
       }),
       explanationEn: explanation.en,
       explanationAr: explanation.ar,

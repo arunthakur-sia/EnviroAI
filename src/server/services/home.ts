@@ -736,6 +736,9 @@ export async function getHomeData(user: CurrentUser) {
       points,
       levelNameEn: level?.nameEn ?? "",
       levelNameAr: level?.nameAr ?? "",
+      // CR08 7.1: the descriptor rides along for the hover tip
+      levelDescriptorEn: level?.descriptorEn ?? "",
+      levelDescriptorAr: level?.descriptorAr ?? "",
       levelMinPoints: level?.minPoints ?? 0,
       nextLevelNameEn: nextLevel?.nameEn ?? null,
       nextLevelNameAr: nextLevel?.nameAr ?? null,

@@ -38,28 +38,56 @@ export const MODULES = [
   // editing rights can be granted without opening the whole strategy module
   "council",
   "organisation",
+  // CR08: the Reports module, messaging, the process architecture and the
+  // Operating Model carry their own editing rights
+  "reports",
+  "messaging",
+  "processes",
+  "operating_model",
 ] as const;
 
-/* CR05 6.1: portals are the top-level modules in the rail, in rail order. */
+/* CR05 6.1: portals are the top-level modules in the rail, in rail order.
+   CR08 2.2: the rail is grouped; RAIL_GROUPS below carries the order. */
 export const PORTALS = [
   "home",
-  "vault",
-  "strategy",
-  // CR07 2.1: the Council's own strategy sits directly under the Living Strategy
+  // Strategy Hub
   "council",
+  "strategy",
+  // Data and Insights
   "statistics",
   "indices",
   "trends",
-  "ask",
+  // Knowledge Hub
+  "vault",
+  "processes",
+  "studies",
   "lessons",
   "podcast",
+  "reports",
+  // People and Organisation
   "experts",
-  // CR07 3.1: the organisation structure sits under Experts
   "organisation",
+  "operating_model",
   "hr",
+  "leaderboard",
+  // reached from the bar, the launcher and the top bar, not the rail
+  "ask",
+  "handover",
+  "inbox",
   "settings",
 ] as const;
 export type Portal = (typeof PORTALS)[number];
+
+/* CR08 2.2: the rail groups, in order; Home and Settings stand alone. */
+export const RAIL_GROUPS: ReadonlyArray<{
+  key: "strategy_hub" | "data" | "knowledge" | "people";
+  portals: ReadonlyArray<Portal>;
+}> = [
+  { key: "strategy_hub", portals: ["council", "strategy"] },
+  { key: "data", portals: ["statistics", "indices", "trends"] },
+  { key: "knowledge", portals: ["vault", "processes", "studies", "lessons", "podcast", "reports"] },
+  { key: "people", portals: ["experts", "organisation", "operating_model", "hr", "leaderboard"] },
+];
 export const ACTIONS = [
   "read",
   "create",

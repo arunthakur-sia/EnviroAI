@@ -3,6 +3,7 @@ import { inArray } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import { getCurrentUser } from "@/server/auth/session";
 import { getNodeDetail } from "@/server/services/strategy";
+import { getOwnerRefs } from "@/server/services/people";
 import { listDeliverables } from "@/server/services/deliverables";
 import { toShelfDocs } from "@/server/services/documents";
 import { listSignals } from "@/server/services/signals";
@@ -41,6 +42,13 @@ export async function GET(req: NextRequest) {
   const deliverableShelf = await toShelfDocs(deliverableDocs);
   const signals = await listSignals(user, { nodeId: id, days: 365, limit: 5 });
   const editionById = new Map(editions.map((e) => [e.id, e]));
+  /* CR08 9.1: the drawer names the node's owner, the KPI custodians and the
+     stakeholders; one bulk resolve, no person query per row */
+  const ownerRefs = await getOwnerRefs([
+    node.ownerUserId,
+    ...kpis.map((k) => k.ownerUserId),
+    ...stakeholders.map((s) => s.userId),
+  ]);
 
   return NextResponse.json({
     data: {
@@ -59,6 +67,10 @@ export async function GET(req: NextRequest) {
       },
       /* CR05 2.2: lead chips in the header, supporting under them */
       leads,
+      /* CR08 9.1: the person who owns the node, and everyone the drawer
+         names below it, keyed by user id */
+      owner: node.ownerUserId ? ownerRefs[node.ownerUserId] ?? null : null,
+      owners: ownerRefs,
       /* CR05 3.2: the stakeholder section at the end of the drawer */
       stakeholders,
       kpis: kpis.map((k) => ({
@@ -72,6 +84,8 @@ export async function GET(req: NextRequest) {
         targetValue: k.targetValue,
         targetYear: k.targetYear,
         indicatorId: k.indicatorId,
+        /* CR08 9.1: the KPI custodian */
+        ownerUserId: k.ownerUserId,
       })),
       kpiValues: kpiValues.map((v) => ({
         kpiId: v.kpiId,

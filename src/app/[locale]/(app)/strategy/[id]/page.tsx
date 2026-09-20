@@ -4,6 +4,8 @@
 import { getEditionByCode } from "@/server/services/strategy";
 import { renderNavigator } from "../navigator-server";
 import { NodeDetail } from "../node-detail";
+import { AskContextItem } from "@/components/nexus/ask/AskContextItem";
+import { strategyNodeAskContext } from "@/components/nexus/ask/context-loaders";
 
 export const dynamic = "force-dynamic";
 
@@ -28,5 +30,12 @@ export default async function NodePage({
     });
   }
 
-  return <NodeDetail locale={locale} id={id} />;
+  // CR08 2.3: tell the Ask NPC launcher which node the reader is on
+  const askItem = await strategyNodeAskContext(id);
+  return (
+    <>
+      {askItem ? <AskContextItem item={askItem} /> : null}
+      <NodeDetail locale={locale} id={id} />
+    </>
+  );
 }

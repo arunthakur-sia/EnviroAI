@@ -38,6 +38,10 @@ export const users = sqliteTable(
     quietMode: integer("quiet_mode").notNull().default(0),
     onboardingJson: text("onboarding_json"),
     prefsJson: text("prefs_json"),
+    /* CR08 9.3: messages to this person also land with the delegate */
+    delegateUserId: text("delegate_user_id"),
+    delegateFrom: text("delegate_from"),
+    delegateTo: text("delegate_to"),
     positionEn: text("position_en"),
     positionAr: text("position_ar"),
     lastLoginAt: text("last_login_at"),
@@ -603,6 +607,15 @@ export const indices = sqliteTable(
     category: text("category").notNull().default("economy"),
     isActive: integer("is_active").notNull().default(1),
     sourceNotes: text("source_notes"),
+    /* CR08 4.1: an SDG goal record carries its number; a national indicator
+       reads its values from a Statistics Hub series and carries a target */
+    sdgGoal: integer("sdg_goal"),
+    linkedStatisticsIndicatorId: text("linked_statistics_indicator_id"),
+    targetValue: real("target_value"),
+    targetYear: integer("target_year"),
+    // rank | score | target_gap, decided per index when null
+    forecastMode: text("forecast_mode"),
+    forecastEnabled: integer("forecast_enabled").notNull().default(1),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -766,6 +779,24 @@ export const handovers = sqliteTable(
     status: text("status").notNull().default("open"), // open | in_progress | complete | overdue
     completionPct: integer("completion_pct").notNull().default(0),
     completedAt: text("completed_at"),
+    /* CR08 6.5: the rebuilt handover */
+    personKind: text("person_kind").notNull().default("employee"), // employee | external
+    expertId: text("expert_id"),
+    externalName: text("external_name"),
+    externalEmail: text("external_email"),
+    reason: text("reason"),
+    lastWorkingDay: text("last_working_day"),
+    notes: text("notes"),
+    accessTokenHash: text("access_token_hash"),
+    accessExpiresAt: text("access_expires_at"),
+    accessRevokedAt: text("access_revoked_at"),
+    cutOffAt: text("cut_off_at"),
+    cutOffBy: text("cut_off_by"),
+    reportDocumentId: text("report_document_id"),
+    overrideReason: text("override_reason"),
+    overrideBy: text("override_by"),
+    interviewRequired: integer("interview_required").notNull().default(1),
+    updatedAt: text("updated_at"),
   },
   (t) => [index("handovers_user_idx").on(t.userId)]
 );
@@ -785,8 +816,53 @@ export const handoverItems = sqliteTable(
     status: text("status").notNull().default("pending"), // pending | reassigned | captured | not_needed
     note: text("note"),
     doneAt: text("done_at"),
+    /* CR08 6.3: the recipient decision per item */
+    recipientKind: text("recipient_kind"), // person | system
+    recipientUserId: text("recipient_user_id"),
+    category: text("category"),
+    inScope: integer("in_scope").notNull().default(1),
+    filingProposalJson: text("filing_proposal_json"),
+    filingStatus: text("filing_status").notNull().default("none"), // none | proposed | approved | applied
+    understoodAt: text("understood_at"),
+    addedBy: text("added_by"),
+    createdAt: text("created_at"),
   },
   (t) => [index("handover_items_h_idx").on(t.handoverId)]
+);
+
+export const handoverInterviews = sqliteTable(
+  "handover_interviews",
+  {
+    id: id(),
+    handoverId: text("handover_id").notNull(),
+    topic: text("topic").notNull(),
+    topicRefType: text("topic_ref_type"),
+    topicRefId: text("topic_ref_id"),
+    // [{ role: "ai" | "person", text, at }]
+    transcriptJson: text("transcript_json"),
+    // { status, decisions, contacts, pitfalls, locations, summary_en, summary_ar }
+    structuredJson: text("structured_json"),
+    status: text("status").notNull().default("pending"), // pending | in_progress | complete
+    insightLessonId: text("insight_lesson_id"),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [index("handover_interviews_h_idx").on(t.handoverId)]
+);
+
+export const handoverLearningPaths = sqliteTable(
+  "handover_learning_paths",
+  {
+    id: id(),
+    handoverId: text("handover_id").notNull(),
+    recipientUserId: text("recipient_user_id").notNull(),
+    modulesJson: text("modules_json").notNull().default("[]"),
+    progressJson: text("progress_json").notNull().default("{}"),
+    signedOffAt: text("signed_off_at"),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [uniqueIndex("handover_paths_unique").on(t.handoverId, t.recipientUserId)]
 );
 
 export const knowledgeCaptures = sqliteTable(
@@ -978,6 +1054,9 @@ export const experts = sqliteTable(
     phone: text("phone"),
     contactProtocol: text("contact_protocol"),
     nationality: text("nationality"),
+    /* CR08 3: the country of an external expert's organisation (ISO 3166-1
+       alpha-2); null for NPC staff */
+    country: text("country"),
     languagesJson: text("languages_json"),
     yearsExperience: integer("years_experience"),
     educationJson: text("education_json"),
@@ -1476,8 +1555,86 @@ export const reports = sqliteTable(
     createdBy: text("created_by"),
     createdAt: createdAt(),
     finishedAt: text("finished_at"),
+    /* CR08 5.4: the Reports module. The CR02 extract reports keep the columns
+       above; module reports fill these and use the draft | in_review |
+       approved | published lifecycle in `status`. */
+    typeId: text("type_id"),
+    titleEn: text("title_en"),
+    titleAr: text("title_ar"),
+    periodJson: text("period_json"),
+    languageMode: text("language_mode"), // en | ar | both
+    sectionsJson: text("sections_json"),
+    requestedBy: text("requested_by"),
+    approvedBy: text("approved_by"),
+    approvedAt: text("approved_at"),
+    publishedDocumentId: text("published_document_id"),
+    publishedAt: text("published_at"),
+    docxPath: text("docx_path"),
+    previewImagesJson: text("preview_images_json"),
+    version: integer("version").notNull().default(1),
+    progressJson: text("progress_json"),
+    updatedAt: text("updated_at"),
   },
-  (t) => [index("reports_user_idx").on(t.createdBy)]
+  (t) => [
+    index("reports_user_idx").on(t.createdBy),
+    index("reports_type_idx").on(t.typeId),
+    index("reports_status_idx").on(t.status),
+  ]
+);
+
+export const reportTypes = sqliteTable(
+  "report_types",
+  {
+    id: id(),
+    code: text("code").notNull(),
+    family: text("family").notNull().default("internal"), // public | internal | custom
+    nameEn: text("name_en").notNull(),
+    nameAr: text("name_ar").notNull(),
+    descriptionEn: text("description_en"),
+    descriptionAr: text("description_ar"),
+    defaultSectionsJson: text("default_sections_json").notNull().default("[]"),
+    optionalSectionsJson: text("optional_sections_json").notNull().default("[]"),
+    scopeKind: text("scope_kind").notNull().default("npc"), // npc | outcome | department | project | period
+    classificationDefault: integer("classification_default").notNull().default(2),
+    audienceDefault: text("audience_default").notNull().default("working"),
+    cadence: text("cadence"),
+    sort: integer("sort").notNull().default(0),
+    isActive: integer("is_active").notNull().default(1),
+  },
+  (t) => [uniqueIndex("report_types_code").on(t.code)]
+);
+
+export const reportSections = sqliteTable(
+  "report_sections",
+  {
+    id: id(),
+    reportId: text("report_id").notNull(),
+    sectionCode: text("section_code").notNull(),
+    sort: integer("sort").notNull().default(0),
+    contentJson: text("content_json"),
+    status: text("status").notNull().default("pending"), // pending | generating | ready | edited | failed
+    commentsJson: text("comments_json"),
+    error: text("error"),
+    updatedAt: updatedAt(),
+  },
+  (t) => [
+    index("report_sections_report_idx").on(t.reportId),
+    uniqueIndex("report_sections_unique").on(t.reportId, t.sectionCode),
+  ]
+);
+
+export const reportVersions = sqliteTable(
+  "report_versions",
+  {
+    id: id(),
+    reportId: text("report_id").notNull(),
+    version: integer("version").notNull(),
+    docxPath: text("docx_path"),
+    snapshotJson: text("snapshot_json"),
+    createdBy: text("created_by"),
+    createdAt: createdAt(),
+  },
+  (t) => [index("report_versions_report_idx").on(t.reportId)]
 );
 
 /* ------------------------------------------------------------------ */
@@ -1524,7 +1681,41 @@ export const levels = sqliteTable("levels", {
   nameAr: text("name_ar").notNull(),
   minPoints: integer("min_points").notNull(),
   unlocksJson: text("unlocks_json"),
+  /* CR08 7.1: the numeric levels carry a short descriptor for hover and profile */
+  descriptorEn: text("descriptor_en"),
+  descriptorAr: text("descriptor_ar"),
 });
+
+/* CR08 7.2: the leaderboard is materialised every ten minutes, never
+   computed from the events ledger on page load */
+export const leaderboardPeriods = sqliteTable(
+  "leaderboard_periods",
+  {
+    id: id(),
+    board: text("board").notNull(), // people | departments
+    category: text("category").notNull(), // overall | contributors | guardians | learners
+    periodKind: text("period_kind").notNull(), // week | month | quarter | year | all
+    periodKey: text("period_key").notNull(),
+    subjectId: text("subject_id").notNull(),
+    points: integer("points").notNull().default(0),
+    rank: integer("rank").notNull().default(0),
+    previousPoints: integer("previous_points").notNull().default(0),
+    previousRank: integer("previous_rank"),
+    members: integer("members"),
+    activeMembers: integer("active_members"),
+    refreshedAt: text("refreshed_at").notNull(),
+  },
+  (t) => [
+    uniqueIndex("leaderboard_periods_unique").on(
+      t.board,
+      t.category,
+      t.periodKind,
+      t.periodKey,
+      t.subjectId
+    ),
+    index("leaderboard_periods_lookup").on(t.board, t.category, t.periodKind, t.periodKey, t.rank),
+  ]
+);
 
 export const badges = sqliteTable("badges", {
   id: id(),
@@ -1575,6 +1766,8 @@ export const gameRules = sqliteTable("game_rules", {
   points: integer("points").notNull(),
   multiplierRulesJson: text("multiplier_rules_json"),
   isActive: integer("is_active").notNull().default(1),
+  /* CR08 7.2: admin-duty actions count for the person but not the boards */
+  excludedFromBoards: integer("excluded_from_boards").notNull().default(0),
 });
 
 export const dailyCards = sqliteTable(
@@ -1965,6 +2158,335 @@ export const councilChangeLog = sqliteTable(
     createdAt: createdAt(),
   },
   (t) => [index("council_change_log_strategy_idx").on(t.strategyId)]
+);
+
+/* ------------------------------------------------------------------ */
+/* CR08 1.2: organisation levels, snapshots and change requests         */
+/* ------------------------------------------------------------------ */
+
+export const orgLevels = sqliteTable(
+  "org_levels",
+  {
+    id: id(),
+    code: text("code").notNull(),
+    nameEn: text("name_en").notNull(),
+    nameAr: text("name_ar").notNull(),
+    sort: integer("sort").notNull().default(0),
+  },
+  (t) => [uniqueIndex("org_levels_code").on(t.code)]
+);
+
+export const orgSnapshots = sqliteTable("org_snapshots", {
+  id: id(),
+  takenAt: text("taken_at").notNull(),
+  takenBy: text("taken_by"),
+  treeJson: text("tree_json").notNull(),
+  note: text("note"),
+});
+
+export const orgChangeRequests = sqliteTable(
+  "org_change_requests",
+  {
+    id: id(),
+    unitId: text("unit_id").notNull(),
+    requestedBy: text("requested_by").notNull(),
+    what: text("what").notNull(),
+    why: text("why"),
+    status: text("status").notNull().default("open"), // open | resolved | declined
+    resolvedBy: text("resolved_by"),
+    resolvedAt: text("resolved_at"),
+    createdAt: createdAt(),
+  },
+  (t) => [index("org_change_requests_unit_idx").on(t.unitId)]
+);
+
+/* ------------------------------------------------------------------ */
+/* CR08 4.1: index groups                                               */
+/* ------------------------------------------------------------------ */
+
+export const indexGroups = sqliteTable(
+  "index_groups",
+  {
+    id: id(),
+    code: text("code").notNull(),
+    nameEn: text("name_en").notNull(),
+    nameAr: text("name_ar").notNull(),
+    descriptionEn: text("description_en"),
+    descriptionAr: text("description_ar"),
+    colourToken: text("colour_token").notNull().default("maroon"),
+    sort: integer("sort").notNull().default(0),
+    isActive: integer("is_active").notNull().default(1),
+  },
+  (t) => [uniqueIndex("index_groups_code").on(t.code)]
+);
+
+export const indexGroupMembers = sqliteTable(
+  "index_group_members",
+  {
+    id: id(),
+    groupId: text("group_id").notNull(),
+    indexId: text("index_id").notNull(),
+    sort: integer("sort").notNull().default(0),
+  },
+  (t) => [
+    uniqueIndex("index_group_members_unique").on(t.groupId, t.indexId),
+    index("index_group_members_index_idx").on(t.indexId),
+  ]
+);
+
+/* ------------------------------------------------------------------ */
+/* CR08 8: Knowledge of the Week                                        */
+/* ------------------------------------------------------------------ */
+
+export const knowledgeOfWeek = sqliteTable(
+  "knowledge_of_week",
+  {
+    id: id(),
+    weekStart: text("week_start").notNull(),
+    resourceType: text("resource_type").notNull(), // document | lesson | study | report
+    resourceId: text("resource_id").notNull(),
+    contributorUserId: text("contributor_user_id"),
+    unitId: text("unit_id"),
+    noteEn: text("note_en"),
+    noteAr: text("note_ar"),
+    setBy: text("set_by"),
+    setAt: text("set_at").notNull(),
+    status: text("status").notNull().default("scheduled"), // scheduled | active | archived
+    readCount: integer("read_count").notNull().default(0),
+  },
+  (t) => [uniqueIndex("knowledge_of_week_week").on(t.weekStart)]
+);
+
+export const knowledgeOfWeekReads = sqliteTable(
+  "knowledge_of_week_reads",
+  {
+    id: id(),
+    kowId: text("kow_id").notNull(),
+    userId: text("user_id").notNull(),
+    readAt: text("read_at").notNull(),
+  },
+  (t) => [uniqueIndex("kow_reads_unique").on(t.kowId, t.userId)]
+);
+
+export const knowledgeOfWeekSeen = sqliteTable(
+  "knowledge_of_week_seen",
+  {
+    id: id(),
+    kowId: text("kow_id").notNull(),
+    userId: text("user_id").notNull(),
+    seenAt: text("seen_at").notNull(),
+  },
+  (t) => [uniqueIndex("kow_seen_unique").on(t.kowId, t.userId)]
+);
+
+/* ------------------------------------------------------------------ */
+/* CR08 9.2: in-app messaging                                           */
+/* ------------------------------------------------------------------ */
+
+export const messageThreads = sqliteTable(
+  "message_threads",
+  {
+    id: id(),
+    subject: text("subject").notNull(),
+    resourceType: text("resource_type"),
+    resourceId: text("resource_id"),
+    resourceTitle: text("resource_title"),
+    resourceLink: text("resource_link"),
+    createdBy: text("created_by").notNull(),
+    createdAt: createdAt(),
+    lastMessageAt: text("last_message_at").notNull(),
+    status: text("status").notNull().default("open"), // open | done
+    questionId: text("question_id"),
+  },
+  (t) => [index("message_threads_last_idx").on(t.lastMessageAt)]
+);
+
+export const threadParticipants = sqliteTable(
+  "thread_participants",
+  {
+    id: id(),
+    threadId: text("thread_id").notNull(),
+    userId: text("user_id").notNull(),
+    lastReadAt: text("last_read_at"),
+    isDelegateForUserId: text("is_delegate_for_user_id"),
+    doneAt: text("done_at"),
+  },
+  (t) => [
+    uniqueIndex("thread_participants_unique").on(t.threadId, t.userId),
+    index("thread_participants_user_idx").on(t.userId),
+  ]
+);
+
+export const messages = sqliteTable(
+  "messages",
+  {
+    id: id(),
+    threadId: text("thread_id").notNull(),
+    senderId: text("sender_id").notNull(),
+    body: text("body").notNull(),
+    attachmentsJson: text("attachments_json"),
+    createdAt: createdAt(),
+  },
+  (t) => [index("messages_thread_idx").on(t.threadId, t.createdAt)]
+);
+
+/* ------------------------------------------------------------------ */
+/* CR08 10: the process architecture and the Operating Model           */
+/* ------------------------------------------------------------------ */
+
+export const processes = sqliteTable(
+  "processes",
+  {
+    id: id(),
+    parentId: text("parent_id"),
+    level: integer("level").notNull().default(1), // 0 value chain, 1 process, 2 procedure or SOP
+    code: text("code").notNull(),
+    nameEn: text("name_en").notNull(),
+    nameAr: text("name_ar").notNull(),
+    purposeEn: text("purpose_en"),
+    purposeAr: text("purpose_ar"),
+    ownerUnitId: text("owner_unit_id"),
+    inputsJson: text("inputs_json"),
+    outputsJson: text("outputs_json"),
+    stepsJson: text("steps_json"),
+    systemsJson: text("systems_json"),
+    kpisJson: text("kpis_json"),
+    policyDocumentIdsJson: text("policy_document_ids_json"),
+    sopDocumentIdsJson: text("sop_document_ids_json"),
+    status: text("status").notNull().default("active"),
+    sort: integer("sort").notNull().default(0),
+    isIllustrative: integer("is_illustrative").notNull().default(1),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [
+    uniqueIndex("processes_code").on(t.code),
+    index("processes_parent_idx").on(t.parentId),
+    index("processes_owner_idx").on(t.ownerUnitId),
+  ]
+);
+
+export const processRaci = sqliteTable(
+  "process_raci",
+  {
+    id: id(),
+    processId: text("process_id").notNull(),
+    unitId: text("unit_id").notNull(),
+    role: text("role").notNull(), // R | A | C | I
+  },
+  (t) => [uniqueIndex("process_raci_unique").on(t.processId, t.unitId)]
+);
+
+export const operatingPrinciples = sqliteTable("operating_principles", {
+  id: id(),
+  sort: integer("sort").notNull().default(0),
+  titleEn: text("title_en").notNull(),
+  titleAr: text("title_ar").notNull(),
+  textEn: text("text_en"),
+  textAr: text("text_ar"),
+  isIllustrative: integer("is_illustrative").notNull().default(1),
+});
+
+export const calendarEvents = sqliteTable(
+  "calendar_events",
+  {
+    id: id(),
+    // strategy_review | budget | statistical_release | nds_review | council_meeting | report_deadline | forum | other
+    kind: text("kind").notNull(),
+    titleEn: text("title_en").notNull(),
+    titleAr: text("title_ar").notNull(),
+    dateFrom: text("date_from").notNull(),
+    dateTo: text("date_to"),
+    ownerUnitId: text("owner_unit_id"),
+    linkedResourceType: text("linked_resource_type"),
+    linkedResourceId: text("linked_resource_id"),
+    recurrence: text("recurrence").notNull().default("none"), // none | annual | quarterly | monthly
+    isIllustrative: integer("is_illustrative").notNull().default(1),
+  },
+  (t) => [index("calendar_events_date_idx").on(t.dateFrom)]
+);
+
+export const unitInterfaces = sqliteTable(
+  "unit_interfaces",
+  {
+    id: id(),
+    fromUnitId: text("from_unit_id").notNull(),
+    toUnitId: text("to_unit_id").notNull(),
+    flowKind: text("flow_kind").notNull().default("data"), // data | input | approval | review | deliverable
+    descriptionEn: text("description_en"),
+    descriptionAr: text("description_ar"),
+    triggerEn: text("trigger_en"),
+    triggerAr: text("trigger_ar"),
+    cadence: text("cadence"),
+    serviceLevel: text("service_level"),
+    processId: text("process_id"),
+    focalFromUserId: text("focal_from_user_id"),
+    focalToUserId: text("focal_to_user_id"),
+    status: text("status").notNull().default("active"),
+    isIllustrative: integer("is_illustrative").notNull().default(1),
+  },
+  (t) => [
+    index("unit_interfaces_from_idx").on(t.fromUnitId),
+    index("unit_interfaces_to_idx").on(t.toUnitId),
+  ]
+);
+
+export const entityInterfaces = sqliteTable("entity_interfaces", {
+  id: id(),
+  entityId: text("entity_id").notNull(),
+  providesEn: text("provides_en"),
+  providesAr: text("provides_ar"),
+  receivesEn: text("receives_en"),
+  receivesAr: text("receives_ar"),
+  focalNpcUserId: text("focal_npc_user_id"),
+  focalEntityName: text("focal_entity_name"),
+  legalBasisEn: text("legal_basis_en"),
+  legalBasisAr: text("legal_basis_ar"),
+  cadence: text("cadence"),
+  processIdsJson: text("process_ids_json"),
+  isIllustrative: integer("is_illustrative").notNull().default(1),
+});
+
+export const interfaceChangeRequests = sqliteTable("interface_change_requests", {
+  id: id(),
+  interfaceId: text("interface_id"),
+  fromUnitId: text("from_unit_id"),
+  toUnitId: text("to_unit_id"),
+  requestedBy: text("requested_by").notNull(),
+  text: text("text").notNull(),
+  status: text("status").notNull().default("open"), // open | approved | declined
+  resolvedBy: text("resolved_by"),
+  resolvedAt: text("resolved_at"),
+  createdAt: createdAt(),
+});
+
+export const opsKpis = sqliteTable(
+  "ops_kpis",
+  {
+    id: id(),
+    code: text("code").notNull(),
+    nameEn: text("name_en").notNull(),
+    nameAr: text("name_ar").notNull(),
+    unit: text("unit"),
+    direction: text("direction").notNull().default("up_good"),
+    sourceKind: text("source_kind").notNull().default("manual"), // auto | manual
+    targetValue: real("target_value"),
+    sort: integer("sort").notNull().default(0),
+  },
+  (t) => [uniqueIndex("ops_kpis_code").on(t.code)]
+);
+
+export const opsKpiValues = sqliteTable(
+  "ops_kpi_values",
+  {
+    id: id(),
+    kpiId: text("kpi_id").notNull(),
+    period: text("period").notNull(),
+    value: real("value"),
+    enteredBy: text("entered_by"),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex("ops_kpi_values_unique").on(t.kpiId, t.period)]
 );
 
 /* Embeddings for structured records (indicators, nodes, experts, lessons, answers) */

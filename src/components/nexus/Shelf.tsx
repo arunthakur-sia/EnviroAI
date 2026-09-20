@@ -16,6 +16,7 @@ import { cn, bi, initialsOf } from "@/lib/utils";
 import { formatDate } from "@/lib/format";
 import { Avatar, Button, ClassificationChip } from "@/components/ui/primitives";
 import { useToast } from "@/components/ui/toast";
+import { OwnerControlCompact } from "@/components/nexus/people/OwnerControl";
 
 export type ShelfDoc = {
   id: string;
@@ -28,6 +29,10 @@ export type ShelfDoc = {
   typeNameAr?: string | null;
   classification: number;
   status: string;
+  /** CR08 9.1: set when the owner still holds an account, so the preview card
+      can raise the person card. Name and colour stay on their own for the
+      shelves that build a ShelfDoc without a user behind it. */
+  ownerUserId?: string | null;
   ownerName?: string | null;
   ownerNameAr?: string | null;
   ownerColor?: string | null;
@@ -38,6 +43,8 @@ export type ShelfDoc = {
   viewCount?: number;
   processing?: boolean;
   deliverableCode?: string | null;
+  /** CR08 8: this week's Knowledge of the Week wears a gold ribbon */
+  kow?: boolean;
 };
 
 /* CR03 1.3: the Library palette. Cloth colours by knowledge type; the sand
@@ -225,7 +232,21 @@ function BookPreview({
         <p className="mt-2 line-clamp-5 text-xs leading-relaxed text-ink-600">{summary}</p>
       ) : null}
       <div className="mt-2.5 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[11px] text-ink-600">
-        {owner ? (
+        {/* CR08 9.1: a spine is 40 to 64px of cloth with the title running up
+            it, so the owner lives on the preview instead, where the name has
+            room and the person card can open from it */}
+        {doc.ownerUserId && doc.ownerName ? (
+          <OwnerControlCompact
+            owner={{
+              id: doc.ownerUserId,
+              nameEn: doc.ownerName,
+              nameAr: doc.ownerNameAr ?? doc.ownerName,
+              avatarColor: doc.ownerColor ?? "maroon",
+            }}
+            item={{ type: "document", id: doc.id, titleEn: doc.titleEn, titleAr: doc.titleAr, href: `/vault/${doc.id}` }}
+            className="min-w-0 max-w-[60%]"
+          />
+        ) : owner ? (
           <span className="flex min-w-0 items-center gap-1.5">
             <Avatar name={owner} color={doc.ownerColor ?? "maroon"} size={18} />
             <span className="truncate">{owner}</span>
@@ -306,6 +327,7 @@ export function Book({
   const locale = useLocale();
   const isRtl = locale === "ar";
   const t = useTranslations("vault");
+  const tk = useTranslations("kow");
   const router = useRouter();
   const title = bi(locale, doc.titleEn, doc.titleAr);
   const summary = bi(locale, doc.summaryEn ?? "", doc.summaryAr ?? "");
@@ -364,7 +386,13 @@ export function Book({
     function onDocDown(e: PointerEvent) {
       const target = e.target as Node;
       if (wrapRef.current?.contains(target)) return;
-      if ((target as HTMLElement).closest?.('[data-testid="book-preview"]')) return;
+      // CR08 9.1: the person card and its dialogs belong to this preview
+      if (
+        (target as HTMLElement).closest?.(
+          '[data-testid="book-preview"], [data-testid="person-card-popover"], [role="dialog"]'
+        )
+      )
+        return;
       release();
     }
     document.addEventListener("pointerdown", onDocDown);
@@ -379,7 +407,19 @@ export function Book({
   const scheduleLeave = React.useCallback(() => {
     if (intentRef.current) clearTimeout(intentRef.current);
     if (leaveRef.current) clearTimeout(leaveRef.current);
-    leaveRef.current = setTimeout(() => setPulled(false), 120);
+    /* CR08 9.1: the person card opened from the preview is portalled to the
+       body, and so are the message and question dialogs it opens, so the
+       pointer moving onto them reads as a leave here and would take the
+       preview, the card and the half-typed message down with it. Hold the
+       book out while any of them is open and look again once it closes. */
+    const tick = () => {
+      if (document.querySelector('[data-testid="person-card-popover"], [role="dialog"][data-state="open"]')) {
+        leaveRef.current = setTimeout(tick, 300);
+        return;
+      }
+      setPulled(false);
+    };
+    leaveRef.current = setTimeout(tick, 120);
   }, []);
 
   return (
@@ -407,7 +447,7 @@ export function Book({
 
       <Link
         href={`/vault/${doc.id}`}
-        aria-label={`${title}${doc.status === "verified" ? ` (${t("verifiedSeal")})` : ""}`}
+        aria-label={`${title}${doc.status === "verified" ? ` (${t("verifiedSeal")})` : ""}${doc.kow ? ` (${tk("ribbonAria")})` : ""}`}
         aria-expanded={pulled}
         className="book rounded-t-[3px] rounded-b-[2px] outline-none"
         style={{ width: w, height: h }}
@@ -502,6 +542,24 @@ export function Book({
             >
               <Check className="size-2.5 text-white" strokeWidth={3.5} />
             </span>
+          ) : null}
+
+          {/* CR08 8: a small gold ribbon hangs over the head of this week's pick */}
+          {doc.kow ? (
+            <span
+              aria-hidden
+              data-testid="book-kow-ribbon"
+              className="absolute"
+              style={{
+                top: -3,
+                insetInlineEnd: 5,
+                width: 9,
+                height: h >= 150 ? 28 : 20,
+                background: "var(--color-gold-500)",
+                clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 74%, 0 100%)",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.35)",
+              }}
+            />
           ) : null}
         </span>
 

@@ -1,0 +1,148 @@
+{
+  "askEverywhere": {
+    "barButton": "Ask NPC",
+    "barButtonAria": "Ask NPC. Opens the assistant panel (Ctrl+K)",
+    "launcher": "Ask NPC",
+    "launcherAria": "Open Ask NPC (Ctrl+K)",
+    "title": "Ask NPC",
+    "expand": "Expand",
+    "expandAria": "Open this conversation on the full page",
+    "newConversation": "New conversation",
+    "close": "Close the Ask NPC panel",
+    "askingAbout": "Asking about",
+    "removeContext": "Remove {title} from the question",
+    "startWith": "Start with",
+    "intro": "Ask anything about NPC knowledge: the strategy, the numbers, the documents, the people. Every answer cites its sources.",
+    "recent": "Recent conversations",
+    "recentEmpty": "No conversations yet",
+    "recentEmptyHint": "Your first question starts one. It stays here while you move around SiaNexus.",
+    "recentError": "Could not load your conversations.",
+    "retry": "Retry",
+    "loadError": "Could not open that conversation.",
+    "placeholder": "Ask about this page or anything in NPC knowledge…",
+    "followUp": "Ask a follow-up…",
+    "send": "Send",
+    "sending": "Gathering evidence…",
+    "answerReady": "Answer ready",
+    "error": "Something went wrong. Try again.",
+    "disclaimer": "Answers cite NPC sources. Verify against the citations; the AI can still misread them.",
+    "untitled": "Untitled conversation",
+    "byline": "SiaNexus Intelligence",
+    "kinds": {
+      "project": "Project",
+      "initiative": "Initiative",
+      "outcome": "Outcome",
+      "target": "Target",
+      "document": "Document",
+      "indicator": "Indicator",
+      "index": "Index",
+      "council_node": "Council node",
+      "unit": "Unit",
+      "lesson": "Lesson",
+      "expert": "Expert",
+      "process": "Process",
+      "report": "Report",
+      "study": "Study",
+      "policy": "Policy"
+    },
+    "nudge": {
+      "project": "Ask about this project",
+      "initiative": "Ask about this initiative",
+      "outcome": "Ask about this outcome",
+      "target": "Ask about this target",
+      "document": "Ask about this document",
+      "indicator": "Ask about this indicator",
+      "index": "Ask about this index",
+      "council_node": "Ask about this council node",
+      "unit": "Ask about this unit",
+      "lesson": "Ask about this lesson",
+      "expert": "Ask about this expert",
+      "process": "Ask about this process",
+      "report": "Ask about this report",
+      "study": "Ask about this study",
+      "policy": "Ask about this policy"
+    },
+    "suggestions": {
+      "project": {
+        "a": "What did {label} deliver?",
+        "b": "Who owns {label} and what is its status?",
+        "c": "What lessons were captured on {label}?"
+      },
+      "initiative": {
+        "a": "Which projects sit under {label}?",
+        "b": "How is {label} progressing against its KPIs?",
+        "c": "What lessons were captured on {label}?"
+      },
+      "outcome": {
+        "a": "How is {label} doing against its targets?",
+        "b": "Which targets under {label} are at risk?",
+        "c": "What changed on {label} this quarter?"
+      },
+      "target": {
+        "a": "Is {label} realistic by 2030?",
+        "b": "Which initiatives deliver {label}?",
+        "c": "What is the latest value behind {label}?"
+      },
+      "document": {
+        "a": "Summarise {label}",
+        "b": "What are the key facts in {label}?",
+        "c": "Which strategy items does {label} relate to?"
+      },
+      "indicator": {
+        "a": "What is the latest value of {label} and how did it change?",
+        "b": "Which targets depend on {label}?",
+        "c": "How is {label} measured?"
+      },
+      "index": {
+        "a": "Where does Qatar stand in {label}?",
+        "b": "What is the forecast for {label}?",
+        "c": "How does Qatar compare with the GCC in {label}?"
+      },
+      "council_node": {
+        "a": "What is the status of {label}?",
+        "b": "Which indicators track {label}?",
+        "c": "How does {label} align with NDS3?"
+      },
+      "unit": {
+        "a": "What is the mandate of {label}?",
+        "b": "What does {label} own across the strategy?",
+        "c": "Who leads {label}?"
+      },
+      "lesson": {
+        "a": "What does {label} recommend?",
+        "b": "Which projects does {label} apply to?",
+        "c": "Are there lessons related to {label}?"
+      },
+      "expert": {
+        "a": "What does {label} work on?",
+        "b": "Which documents did {label} author?",
+        "c": "Who else shares the expertise of {label}?"
+      },
+      "process": {
+        "a": "Summarise {label}",
+        "b": "Who does {label} apply to?",
+        "c": "When was {label} last reviewed?"
+      },
+      "report": {
+        "a": "What does {label} conclude?",
+        "b": "Which sources does {label} draw on?",
+        "c": "What changed since {label} was built?"
+      },
+      "study": {
+        "a": "What are the findings of {label}?",
+        "b": "Which outcomes does {label} inform?",
+        "c": "What method did {label} use?"
+      },
+      "policy": {
+        "a": "Summarise {label}",
+        "b": "Who does {label} apply to?",
+        "c": "When was {label} last reviewed?"
+      },
+      "handover": {
+        "a": "What is still open in this handover?",
+        "b": "Who receives each item?",
+        "c": "What did the capture interviews record?"
+      }
+    }
+  }
+}

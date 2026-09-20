@@ -1,0 +1,149 @@
+{
+  "leaderboard": {
+    "eyebrow": "People and Organisation",
+    "title": "Leaderboard",
+    "subtitle": "Who is building the Council's memory this period, by person and by unit. Refreshed every ten minutes from the points ledger.",
+    "boardSwitch": "Board",
+    "windowSwitch": "Period",
+    "categorySwitch": "Category",
+    "boards": {
+      "people": "People",
+      "departments": "Departments"
+    },
+    "windows": {
+      "week": "This week",
+      "month": "This month",
+      "quarter": "This quarter",
+      "year": "This year",
+      "all": "All time"
+    },
+    "categories": {
+      "overall": "Overall",
+      "contributors": "Contributors",
+      "guardians": "Guardians",
+      "learners": "Learners"
+    },
+    "categoryHints": {
+      "overall": "Every rule that counts for the boards.",
+      "contributors": "Uploads, answers, lessons, decisions, and work that was verified.",
+      "guardians": "Verification, translation review and signal triage.",
+      "learners": "Reading, listening, the daily quiz and guided learning."
+    },
+    "columns": {
+      "rank": "Rank",
+      "monogram": "Monogram",
+      "person": "Person",
+      "unit": "Unit",
+      "level": "Level",
+      "points": "Points",
+      "trend": "Trend",
+      "perMember": "Per member",
+      "total": "Total",
+      "active": "Active members"
+    },
+    "podium": {
+      "first": "First",
+      "second": "Second",
+      "third": "Third",
+      "empty": "No one yet"
+    },
+    "medal": {
+      "gold": "Gold",
+      "silver": "Silver",
+      "bronze": "Bronze"
+    },
+    "level": "Level {n}",
+    "points": "{count, plural, =0 {0 points} one {# point} two {# points} few {# points} many {# points} other {# points}}",
+    "perMemberShort": "points per member",
+    "membersShort": "{count, plural, =0 {no members} one {# member} two {# members} few {# members} many {# members} other {# members}}",
+    "activeOf": "{active} of {members}",
+    "trend": {
+      "up": "Up from rank {rank}",
+      "down": "Down from rank {rank}",
+      "same": "Unchanged from last period",
+      "new": "New this period"
+    },
+    "you": "You",
+    "yourUnit": "Your unit",
+    "noPointsYet": "No points in this period yet. Read, answer or upload something and you will appear here after the next refresh.",
+    "excludedViewer": "Administrator accounts are not ranked on the People board. Your points still count on your profile and for your unit.",
+    "noUnit": "You are not assigned to a unit, so there is no unit row to pin.",
+    "scope": {
+      "top10": "Top 10 shown; your own position is pinned below.",
+      "full": "Full list, {count, plural, one {# person} two {# people} few {# people} many {# people} other {# people}}.",
+      "unit": "Top 10 plus every member of your unit.",
+      "units": "{count, plural, one {# unit} two {# units} few {# units} many {# units} other {# units}} with members."
+    },
+    "refreshedAt": "Refreshed {time}",
+    "neverRefreshed": "Not refreshed yet",
+    "refreshEvery": "The boards refresh every ten minutes.",
+    "refreshNow": "Refresh now",
+    "refreshed": "Boards refreshed: {rows} rows.",
+    "notBuiltTitle": "The board has not been built yet",
+    "notBuiltHint": "The first refresh runs a minute after the server starts and every ten minutes after that.",
+    "emptyTitle": "Nobody has scored in this period yet",
+    "emptyUnitsTitle": "No unit has scored in this period yet",
+    "emptyHint": "Points arrive as colleagues read, answer, upload and verify. Try a wider period.",
+    "quietTitle": "The board is quiet for you",
+    "quietHint": "Quiet mode hides the leaderboard from your own view. Your points still count and colleagues still see the board. Switch it off on your profile whenever you like.",
+    "openProfile": "Open my profile",
+    "loadError": "The board could not be loaded.",
+    "retry": "Try again",
+    "backToBoard": "Back to the board",
+    "tableAria": "{board} leaderboard, {category}, {period}",
+    "home": {
+      "eyebrow": "Leaderboard",
+      "title": "Top 5 this month",
+      "open": "Open the board",
+      "yourRank": "You are ranked {rank}",
+      "unranked": "No points this month yet",
+      "excluded": "Administrator accounts are not ranked",
+      "notBuilt": "The board is being built; it refreshes every ten minutes.",
+      "empty": "Nobody has scored this month yet."
+    }
+  },
+  "settings": {
+    "gamificationTab": {
+      "boardsTitle": "Leaderboard",
+      "boardsHint": "Who appears on the People board and how the boards behave. The boards are materialised every ten minutes; Refresh now rebuilds them immediately.",
+      "excludeRolesTitle": "Roles excluded from the People board",
+      "excludeRolesHint": "Their points still count on their own profile and for their unit on the Departments board.",
+      "quietHides": "Quiet mode hides the board",
+      "quietHidesHint": "People in quiet mode do not see the leaderboard; colleagues still see them on it.",
+      "refreshBoards": "Refresh boards now",
+      "boardsRefreshed": "Boards refreshed: {rows} rows.",
+      "settingsSaved": "Leaderboard settings saved.",
+      "rulesTitle": "Point rules",
+      "rulesHint": "Points per action, whether the rule is active, and whether it counts for the boards. A rule switched off the boards still pays the person.",
+      "rulesCount": "{count, plural, one {# rule} two {# rules} few {# rules} many {# rules} other {# rules}}",
+      "colRule": "Rule",
+      "colCategory": "Category",
+      "colPoints": "Points",
+      "colActive": "Active",
+      "colBoards": "On boards",
+      "pointsAria": "Points for {rule}",
+      "activeAria": "{rule} active",
+      "boardsAria": "{rule} counts for the boards",
+      "boardsFootnote": "Contributors, Guardians and Learners are the category boards; rules marked Overall only count on the Overall board alone. Unit awards count for the Departments board only.",
+      "categories": {
+        "contributors": "Contributors",
+        "guardians": "Guardians",
+        "learners": "Learners",
+        "unit": "Unit award",
+        "none": "Overall only"
+      },
+      "loadError": "The gamification settings could not be loaded.",
+      "retry": "Try again"
+    }
+  },
+  "profile": {
+    "levelEyebrow": "Your level",
+    "levelTip": "{level}: {descriptor}",
+    "nextLevel": "{points} points to {level}",
+    "topLevel": "Highest level reached"
+  },
+  "home": {
+    "levelTip": "{level}: {descriptor}",
+    "nextUnlock": "{points} points to {level}"
+  }
+}

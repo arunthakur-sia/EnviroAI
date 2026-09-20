@@ -19,6 +19,16 @@ const Body = z.object({
     .object({ type: z.enum(["document", "signal", "node", "indicator"]), id: z.string() })
     .nullable()
     .optional(),
+  /* CR08 2.3: the item the reader is looking at when asking from the panel */
+  contextItem: z
+    .object({
+      kind: z.string().min(1).max(40),
+      id: z.string().min(1).max(64),
+      code: z.string().max(64).nullable().optional(),
+      title: z.string().min(1).max(300),
+    })
+    .nullable()
+    .optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -26,7 +36,7 @@ export async function POST(req: NextRequest) {
   if (!user) return new Response("unauthorized", { status: 401 });
   const parsed = Body.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return new Response("invalid body", { status: 400 });
-  const { message, locale, context } = parsed.data;
+  const { message, locale, context, contextItem } = parsed.data;
 
   let conversationId = parsed.data.conversationId;
   if (conversationId) {
@@ -59,6 +69,7 @@ export async function POST(req: NextRequest) {
   await audit(user.id, "ask", "ai_conversation", conversationId, {
     analyst: true,
     context: context?.type,
+    contextItem: contextItem ? `${contextItem.kind}:${contextItem.id}` : undefined,
   });
 
   const encoder = new TextEncoder();
@@ -76,6 +87,7 @@ export async function POST(req: NextRequest) {
           locale,
           conversationId: convId,
           context: context ?? null,
+          contextItem: contextItem ?? null,
         })) {
           send(ev.type, ev);
           if (ev.type === "final") {

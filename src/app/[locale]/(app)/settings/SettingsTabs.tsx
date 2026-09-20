@@ -4,6 +4,7 @@
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 import { Download, Plug, Plus, Copy } from "lucide-react";
 import { bi } from "@/lib/utils";
 import {
@@ -27,6 +28,7 @@ import { LessonsSettingsTab } from "./LessonsSettingsTab";
 import { EntitiesSettingsTab } from "./EntitiesSettingsTab";
 import { OrganisationSettingsTab } from "./OrganisationSettingsTab";
 import { IndicesSettingsTab } from "./IndicesSettingsTab";
+import { GamificationSettingsTab } from "./GamificationSettingsTab";
 
 type UserRow = {
   id: string;
@@ -77,11 +79,10 @@ export function SettingsTabs(props: {
 }) {
   const t = useTranslations("settings");
   const { canManage, canAnalytics } = props;
-  // CR05: deep-linkable tabs (?tab=entities and friends)
-  const [initialTab] = React.useState(() => {
-    if (typeof window === "undefined") return null;
-    return new URLSearchParams(window.location.search).get("tab");
-  });
+  // CR05: deep-linkable tabs (?tab=entities and friends). CR08: read through
+  // the router so the server and the client render the same initial tab.
+  const searchParams = useSearchParams();
+  const initialTab = searchParams.get("tab");
 
   return (
     <Tabs
@@ -122,7 +123,8 @@ export function SettingsTabs(props: {
             <TaxonomyTab taxonomy={props.taxonomy} classifications={props.classifications} departments={props.departments} />
           </TabsContent>
           <TabsContent value="gamification" className="mt-5">
-            <GamificationTab rules={props.rules} flags={props.flags} />
+            {/* CR08 7.2: self-loading; carries the board exclusions */}
+            <GamificationSettingsTab />
           </TabsContent>
           <TabsContent value="ai" className="mt-5">
             <AiTab settings={props.aiSettings} />
@@ -238,10 +240,12 @@ function UsersTab({
                   </span>
                 </td>
                 <td className="px-4 py-2">
+                  {/* one row per user, so each cell control is named in place */}
                   <NativeSelect
                     defaultValue={u.roleId}
                     onChange={(e) => patch(u.id, { roleId: e.target.value })}
                     className="h-8 w-auto text-xs"
+                    aria-label={`${t("role")}: ${u.nameEn}`}
                   >
                     {roles.map((r) => (
                       <option key={r.id} value={r.id}>
@@ -255,6 +259,7 @@ function UsersTab({
                     defaultValue={u.departmentId ?? ""}
                     onChange={(e) => patch(u.id, { departmentId: e.target.value || null })}
                     className="h-8 w-auto max-w-44 text-xs"
+                    aria-label={`${t("department")}: ${u.nameEn}`}
                   >
                     <option value="">-</option>
                     {departments.map((d) => (
@@ -269,6 +274,7 @@ function UsersTab({
                     defaultValue={String(u.clearanceLevel)}
                     onChange={(e) => patch(u.id, { clearanceLevel: Number(e.target.value) })}
                     className="h-8 w-auto text-xs"
+                    aria-label={`${t("clearance")}: ${u.nameEn}`}
                   >
                     {[1, 2, 3, 4].map((l) => (
                       <option key={l} value={l}>
@@ -478,12 +484,12 @@ function RolesTab({ roles }: { roles: RoleRow[] }) {
         <DialogContent title={editing ? t("editRole") : t("createRole")} className="max-h-[85vh] w-[min(760px,94vw)] overflow-y-auto">
           <div className="mb-4 grid grid-cols-2 gap-3">
             <div>
-              <Label>{t("roleNameEn")}</Label>
-              <Input value={nameEn} dir="ltr" onChange={(e) => setNameEn(e.target.value)} />
+              <Label htmlFor="role-name-en">{t("roleNameEn")}</Label>
+              <Input id="role-name-en" value={nameEn} dir="ltr" onChange={(e) => setNameEn(e.target.value)} />
             </div>
             <div>
-              <Label>{t("roleNameAr")}</Label>
-              <Input value={nameAr} dir="rtl" onChange={(e) => setNameAr(e.target.value)} />
+              <Label htmlFor="role-name-ar">{t("roleNameAr")}</Label>
+              <Input id="role-name-ar" value={nameAr} dir="rtl" onChange={(e) => setNameAr(e.target.value)} />
             </div>
           </div>
           <div className="overflow-x-auto rounded-xl border border-sand-200">
@@ -586,69 +592,6 @@ function TaxonomyTab({
   );
 }
 
-/* ---------------- Gamification ---------------- */
-
-function GamificationTab({
-  rules,
-  flags,
-}: {
-  rules: { id: string; eventType: string; points: number; isActive: boolean }[];
-  flags: { gamification: boolean };
-}) {
-  const t = useTranslations("settings");
-  const { toast } = useToast();
-  const [globalOn, setGlobalOn] = React.useState(flags.gamification);
-
-  async function patchRule(id: string, body: Record<string, unknown>) {
-    await fetch("/api/v1/gamification/rules", {
-      method: "PATCH",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ id, ...body }),
-    });
-    toast(t("ruleSaved"), "success");
-  }
-
-  async function toggleGlobal(v: boolean) {
-    setGlobalOn(v);
-    await fetch("/api/v1/settings", {
-      method: "PATCH",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ flags: { gamification: v } }),
-    });
-  }
-
-  return (
-    <div>
-      <label className="card mb-4 flex items-center justify-between gap-3 p-4">
-        <span>
-          <span className="block text-sm font-medium text-ink-900">{t("gamificationGlobal")}</span>
-          <span className="block text-xs text-ink-600">{t("gamificationGlobalHint")}</span>
-        </span>
-        <Switch checked={globalOn} onCheckedChange={toggleGlobal} />
-      </label>
-      <div className="card max-h-[480px] divide-y divide-sand-100 overflow-y-auto">
-        {rules.map((r) => (
-          <div key={r.id} className="flex items-center gap-3 px-4 py-2.5">
-            <span className="min-w-0 flex-1 truncate text-sm text-ink-900">{r.eventType}</span>
-            <Input
-              type="number"
-              defaultValue={r.points}
-              onBlur={(e) => patchRule(r.id, { points: Number(e.target.value) })}
-              className="h-8 w-20 text-end text-xs tnum"
-              dir="ltr"
-              aria-label={`${r.eventType} points`}
-            />
-            <Switch
-              defaultChecked={r.isActive}
-              onCheckedChange={(v) => patchRule(r.id, { isActive: v })}
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 /* ---------------- AI ---------------- */
 
 function AiTab({
@@ -692,28 +635,30 @@ function AiTab({
           <span className="block text-sm font-medium text-ink-900">{t("mockMode")}</span>
           <span className="block text-xs text-ink-600">{t("mockModeHint")}</span>
         </span>
-        <Switch checked={form.mockMode} onCheckedChange={(v) => setForm({ ...form, mockMode: v })} />
+        {/* a Radix switch is a button: the wrapping label does not name it */}
+        <Switch checked={form.mockMode} onCheckedChange={(v) => setForm({ ...form, mockMode: v })} aria-label={t("mockMode")} />
       </label>
       <div className="grid gap-4 sm:grid-cols-3">
         <div>
-          <Label>{t("modelDefault")}</Label>
-          <Input value={form.modelDefault} dir="ltr" onChange={(e) => setForm({ ...form, modelDefault: e.target.value })} />
+          <Label htmlFor="ai-model-default">{t("modelDefault")}</Label>
+          <Input id="ai-model-default" value={form.modelDefault} dir="ltr" onChange={(e) => setForm({ ...form, modelDefault: e.target.value })} />
         </div>
         <div>
-          <Label>{t("modelBrief")}</Label>
-          <Input value={form.modelBrief} dir="ltr" onChange={(e) => setForm({ ...form, modelBrief: e.target.value })} />
+          <Label htmlFor="ai-model-brief">{t("modelBrief")}</Label>
+          <Input id="ai-model-brief" value={form.modelBrief} dir="ltr" onChange={(e) => setForm({ ...form, modelBrief: e.target.value })} />
         </div>
         <div>
-          <Label>{t("modelFast")}</Label>
-          <Input value={form.modelFast} dir="ltr" onChange={(e) => setForm({ ...form, modelFast: e.target.value })} />
+          <Label htmlFor="ai-model-fast">{t("modelFast")}</Label>
+          <Input id="ai-model-fast" value={form.modelFast} dir="ltr" onChange={(e) => setForm({ ...form, modelFast: e.target.value })} />
         </div>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <Label>
+          <Label htmlFor="ai-temperature">
             {t("temperature")}: <span className="tnum">{form.temperature.toFixed(1)}</span>
           </Label>
           <input
+            id="ai-temperature"
             type="range"
             min={0}
             max={1}
@@ -725,8 +670,9 @@ function AiTab({
           />
         </div>
         <div>
-          <Label>{t("maxSources")}</Label>
+          <Label htmlFor="ai-max-sources">{t("maxSources")}</Label>
           <Input
+            id="ai-max-sources"
             type="number"
             dir="ltr"
             value={form.maxSources}
@@ -742,6 +688,7 @@ function AiTab({
         <Switch
           checked={form.allowSecretInAnswers}
           onCheckedChange={(v) => setForm({ ...form, allowSecretInAnswers: v })}
+          aria-label={t("allowSecret")}
         />
       </label>
       <div className="flex justify-end">
@@ -791,12 +738,13 @@ function BountiesTab({
     <div>
       <div className="card mb-4 flex flex-wrap items-end gap-3 p-4">
         <div className="min-w-64 flex-1">
-          <Label>{t("bountyTitle")}</Label>
-          <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+          <Label htmlFor="bounty-title">{t("bountyTitle")}</Label>
+          <Input id="bounty-title" value={title} onChange={(e) => setTitle(e.target.value)} />
         </div>
         <div>
-          <Label>{t("bountyPoints")}</Label>
+          <Label htmlFor="bounty-points">{t("bountyPoints")}</Label>
           <Input
+            id="bounty-points"
             type="number"
             dir="ltr"
             value={points}
@@ -878,7 +826,7 @@ function AuditTab() {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <NativeSelect value={action} onChange={(e) => setAction(e.target.value)} className="w-auto">
+        <NativeSelect value={action} onChange={(e) => setAction(e.target.value)} className="w-auto" aria-label={t("allActions")}>
           <option value="">{t("allActions")}</option>
           {["login", "view", "download", "create", "edit", "verify", "ask", "answer", "route", "brief"].map(
             (a) => (

@@ -8,6 +8,8 @@ import { BadgeCheck, Bot, ThumbsUp, ChevronDown } from "lucide-react";
 import { cn, bi } from "@/lib/utils";
 import { relativeTime } from "@/lib/format";
 import { Avatar, Button, Chip, Textarea } from "@/components/ui/primitives";
+import { OwnerControlCompact } from "@/components/nexus/people/OwnerControl";
+import type { ItemRef } from "@/components/nexus/people/types";
 import { useToast } from "@/components/ui/toast";
 import { AnswerMarkdown, type Citation } from "@/components/nexus/AnswerStream";
 
@@ -21,6 +23,8 @@ type AnswerData = {
   isVerified: boolean;
   helpfulCount: number;
   createdAt: string;
+  /** CR08 9.1: set for a human answer whose author still holds an account */
+  authorId: string | null;
   authorNameEn: string | null;
   authorNameAr: string | null;
   authorColor: string;
@@ -32,16 +36,18 @@ export function ThreadAnswers({
   canVerify,
   canAnswer,
   answers,
+  item,
 }: {
   questionId: string;
   verifiedAnswerId: string | null;
   canVerify: boolean;
   canAnswer: boolean;
   answers: AnswerData[];
+  /** the question, for the person card's Message and Ask actions */
+  item?: ItemRef;
 }) {
   const t = useTranslations("askPage");
   const tc = useTranslations("common");
-  const locale = useLocale();
   const router = useRouter();
   const { toast } = useToast();
   const [body, setBody] = React.useState("");
@@ -93,6 +99,7 @@ export function ThreadAnswers({
         <AnswerCard
           key={a.id}
           answer={a}
+          item={item}
           pinned={a.id === verifiedAnswerId}
           collapsedByDefault={a.isAi && humanAnswers.length > 0}
           canVerify={canVerify && !a.isVerified}
@@ -123,6 +130,7 @@ export function ThreadAnswers({
 
 function AnswerCard({
   answer,
+  item,
   pinned,
   collapsedByDefault,
   canVerify,
@@ -130,6 +138,7 @@ function AnswerCard({
   onHelpful,
 }: {
   answer: AnswerData;
+  item?: ItemRef;
   pinned: boolean;
   collapsedByDefault: boolean;
   canVerify: boolean;
@@ -158,6 +167,19 @@ function AnswerCard({
           <span className="flex items-center gap-1.5 text-sm font-medium text-ink-600">
             <Bot className="size-4 text-gold-500" /> {t("aiAnswer")}
           </span>
+        ) : answer.authorId && answer.authorNameEn ? (
+          /* CR08 9.1: the colleague who answered, with the person card */
+          <OwnerControlCompact
+            owner={{
+              id: answer.authorId,
+              nameEn: answer.authorNameEn,
+              nameAr: answer.authorNameAr ?? answer.authorNameEn,
+              avatarColor: answer.authorColor,
+            }}
+            item={item}
+            size="md"
+            className="max-w-[60%] font-medium"
+          />
         ) : (
           <span className="flex items-center gap-2 text-sm font-medium text-ink-900">
             <Avatar name={answer.authorNameEn ?? "?"} color={answer.authorColor} size={24} />

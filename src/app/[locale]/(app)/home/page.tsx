@@ -27,6 +27,9 @@ import { ChangedTimeline } from "./ChangedTimeline";
 import { PodcastCard } from "./PodcastCard";
 import { ProgressPanel } from "./ProgressPanel";
 import { SectionEyebrow } from "./SectionEyebrow";
+import { LeaderboardHomePanel } from "../leaderboard/HomePanel";
+import { KnowledgeOfWeekHome } from "./KnowledgeOfWeek";
+import { HandoverBanner } from "../handover/HandoverBanner";
 
 export const dynamic = "force-dynamic";
 
@@ -50,6 +53,17 @@ export default async function HomePage({
 
   return (
     <HomeBoard constellation={data.constellation}>
+      {/* CR08: the two banded blocks sit outside the Stagger. Stagger is a
+          client component that maps over its children to animate each one,
+          and an async server component passed through that map reaches the
+          server HTML only sometimes, so the block flickered between renders. */}
+      <div className="mb-6 flex flex-col gap-6">
+        {/* CR08 6.3: a recipient who has not signed off sees it on every login */}
+        <HandoverBanner />
+        {/* CR08 8: the week's pick, all week, with the first-open reveal */}
+        <KnowledgeOfWeekHome user={user} />
+      </div>
+
       <Stagger className="flex flex-col gap-6" step={0.04}>
         {/* Row A: greeting (4) + Ask hero (8) */}
         <section className="grid grid-cols-12 items-center gap-6">
@@ -169,9 +183,13 @@ export default async function HomePage({
               />
             )}
           </div>
-          <div className="col-span-12 lg:col-span-4">
-            <SectionEyebrow label={t("progressEyebrow")} />
-            <ProgressPanel progress={data.progress} quiet={data.quietMode} />
+          <div className="col-span-12 flex flex-col gap-4 lg:col-span-4">
+            <div>
+              <SectionEyebrow label={t("progressEyebrow")} />
+              <ProgressPanel progress={data.progress} quiet={data.quietMode} />
+            </div>
+            {/* CR08 7.2: the compact Top 5 this month with the reader's own rank */}
+            <LeaderboardHomePanel user={user} />
           </div>
         </section>
       </Stagger>

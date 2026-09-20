@@ -17,6 +17,9 @@ export type ProgressData = {
   points: number;
   levelNameEn: string;
   levelNameAr: string;
+  /* CR08 7.1: the descriptor shows only on hover */
+  levelDescriptorEn?: string;
+  levelDescriptorAr?: string;
   levelMinPoints: number;
   nextLevelNameEn: string | null;
   nextLevelNameAr: string | null;
@@ -189,9 +192,25 @@ export function ProgressPanel({
           <span className="font-[family-name:var(--font-display)] text-[26px] font-semibold leading-none text-maroon-900 tnum">
             {progress.points.toLocaleString(locale === "ar" ? "ar-QA-u-nu-latn" : "en-US")}
           </span>
-          <span className="mt-1 text-xs text-ink-600">
-            {bi(locale, progress.levelNameEn, progress.levelNameAr)}
-          </span>
+          {(() => {
+            const levelName = bi(locale, progress.levelNameEn, progress.levelNameAr);
+            const descriptor = bi(locale, progress.levelDescriptorEn, progress.levelDescriptorAr);
+            if (!descriptor) {
+              return <span className="mt-1 text-xs text-ink-600 tnum">{levelName}</span>;
+            }
+            return (
+              <Tip content={t("levelTip", { level: levelName, descriptor })}>
+                <span
+                  className="mt-1 cursor-default text-xs text-ink-600 tnum"
+                  tabIndex={0}
+                  aria-label={t("levelTip", { level: levelName, descriptor })}
+                  data-testid="progress-level"
+                >
+                  {levelName}
+                </span>
+              </Tip>
+            );
+          })()}
         </span>
       </div>
 

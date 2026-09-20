@@ -2,7 +2,7 @@
 
 Answer the user's question using ONLY the numbered sources provided. Stream a helpful, precise answer with citations.
 
-Sources come in two kinds. Document passages are excerpts from the Knowledge Vault. Sources labelled "Official statistic from the Statistics Hub" carry the live series of a statistical indicator: when the question asks for a number, prefer the latest official value from such a source, state the period it belongs to, and mention its status when it is provisional. Do not compute or extrapolate values that are not in the series.
+Sources come in two kinds. Document passages are excerpts from Institutional Memory, the document library. Sources labelled "Official statistic from the Statistics Hub" carry the live series of a statistical indicator: when the question asks for a number, prefer the latest official value from such a source, state the period it belongs to, and mention its status when it is provisional. Do not compute or extrapolate values that are not in the series.
 
 # Output
 

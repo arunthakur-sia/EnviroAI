@@ -9,6 +9,7 @@ import type { CurrentUser } from "@/server/auth/session";
 import { can } from "@/server/auth/permissions";
 import { getSetting } from "@/server/settings";
 import { loadStakeholdersFor, type StakeholderRow } from "@/server/services/strategy";
+import { getOwnerRefs, type OwnerRefData } from "@/server/services/people";
 
 /* ------------------------------------------------------------------ */
 /* the results chain                                                    */
@@ -83,7 +84,8 @@ export type CouncilIndicatorCard = {
   dataSourceAr: string | null;
   meansOfVerificationEn: string | null;
   meansOfVerificationAr: string | null;
-  responsible: { id: string; nameEn: string; nameAr: string } | null;
+  /* CR08 9.1: the custodian of the indicator, as a person chip */
+  responsible: { id: string; nameEn: string; nameAr: string; avatarColor: string } | null;
   linkedStatisticsIndicatorId: string | null;
   notesEn: string | null;
   notesAr: string | null;
@@ -329,7 +331,9 @@ export async function getCouncilPageData(
         responsible: i.responsibleUserId
           ? (() => {
               const u = userById.get(i.responsibleUserId);
-              return u ? { id: u.id, nameEn: u.nameEn, nameAr: u.nameAr } : null;
+              return u
+                ? { id: u.id, nameEn: u.nameEn, nameAr: u.nameAr, avatarColor: u.avatarColor }
+                : null;
             })()
           : null,
         linkedStatisticsIndicatorId: i.linkedStatisticsIndicatorId,
@@ -708,6 +712,8 @@ export type CouncilProjectDetail = {
   siblings: string[];
   /* CR07 2.5: council projects use the same six-role stakeholder section */
   stakeholders: StakeholderRow[];
+  /* CR08 9.1: user id -> person for the stakeholder rows the drawer names */
+  stakeholderOwners: Record<string, OwnerRefData>;
 };
 
 /**
@@ -828,6 +834,14 @@ export async function getCouncilProject(
           .where(inArray(schema.councilIndicatorValues.indicatorId, indicatorIds)),
       ])
     : [[], []];
+  /* CR08 9.1: the people the drawer names, resolved in one pass: the
+     stakeholder rows and the custodian of each of this project's indicators */
+  const stakeholderRows = stakeholderMap.get(nodeId) ?? [];
+  const peopleRefs = await getOwnerRefs([
+    ...stakeholderRows.map((s) => s.userId),
+    ...indicatorRows.map((i) => i.responsibleUserId),
+  ]);
+
   const indicators: CouncilIndicatorCard[] = indicatorRows.map((i) => {
     const periods = [
       ...new Set([
@@ -835,6 +849,7 @@ export async function getCouncilProject(
         ...values.filter((v) => v.indicatorId === i.id).map((v) => v.period),
       ]),
     ].sort();
+    const custodian = i.responsibleUserId ? peopleRefs[i.responsibleUserId] ?? null : null;
     const series: IndicatorPoint[] = periods.map((period) => ({
       period,
       target: targets.find((t) => t.indicatorId === i.id && t.period === period)?.targetValue ?? null,
@@ -861,7 +876,9 @@ export async function getCouncilProject(
       dataSourceAr: i.dataSourceAr,
       meansOfVerificationEn: i.meansOfVerificationEn,
       meansOfVerificationAr: i.meansOfVerificationAr,
-      responsible: null,
+      responsible: custodian
+        ? { id: custodian.id, nameEn: custodian.nameEn, nameAr: custodian.nameAr, avatarColor: custodian.avatarColor }
+        : null,
       linkedStatisticsIndicatorId: i.linkedStatisticsIndicatorId,
       notesEn: i.notesEn,
       notesAr: i.notesAr,
@@ -944,7 +961,8 @@ export async function getCouncilProject(
     inputs,
     risks,
     siblings,
-    stakeholders: stakeholderMap.get(nodeId) ?? [],
+    stakeholders: stakeholderRows,
+    stakeholderOwners: peopleRefs,
   };
 }
 

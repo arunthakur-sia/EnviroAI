@@ -25,6 +25,8 @@ import { formatDate, formatNumber, formatPeriod } from "@/lib/format";
 import { Button, Chip } from "@/components/ui/primitives";
 import { Dialog, DialogContent } from "@/components/ui/overlays";
 import { ReportButton } from "@/components/nexus/ReportButton";
+import { OwnerControlCompact } from "@/components/nexus/people/OwnerControl";
+import type { ItemRef } from "@/components/nexus/people/OwnerControl";
 import type {
   Cadence,
   CouncilIndicatorCard,
@@ -343,9 +345,13 @@ function Field({ label, value }: { label: string; value: React.ReactNode }) {
 function IndicatorCardDialog({
   indicator,
   onClose,
+  overDrawer = false,
 }: {
   indicator: CouncilIndicatorCard | null;
   onClose: () => void;
+  /** CR08 overlay layering: opened from inside the project drawer (z-60), the
+      card has to rise above it (DECISIONS 117) while the drawer dims itself */
+  overDrawer?: boolean;
 }) {
   const t = useTranslations("council");
   const locale = useLocale();
@@ -362,7 +368,7 @@ function IndicatorCardDialog({
     >
       <DialogContent
         title={t("levels.indicatorCard")}
-        className="max-h-[88vh] w-[min(700px,94vw)] overflow-y-auto"
+        className={cn("max-h-[88vh] w-[min(700px,94vw)] overflow-y-auto", overDrawer && "z-[75]")}
         data-testid="indicator-card"
       >
         <div className="flex flex-col gap-4">
@@ -429,12 +435,23 @@ function IndicatorCardDialog({
                 indicator.meansOfVerificationAr ?? ""
               )}
             />
+            {/* CR08 9.1: the custodian of the indicator opens their card */}
             <Field
               label={t("indicator.responsible")}
               value={
-                indicator.responsible
-                  ? bi(locale, indicator.responsible.nameEn, indicator.responsible.nameAr)
-                  : null
+                indicator.responsible ? (
+                  <OwnerControlCompact
+                    owner={indicator.responsible}
+                    size="md"
+                    item={{
+                      type: "indicator",
+                      id: indicator.id,
+                      titleEn: indicator.nameEn,
+                      titleAr: indicator.nameAr,
+                      href: "/council-strategy",
+                    }}
+                  />
+                ) : null
               }
             />
             <Field
@@ -589,38 +606,53 @@ function ProjectCard({
   const tc = useTranslations("common");
   const locale = useLocale();
   const title = bi(locale, node.titleEn, node.titleAr);
+  const item: ItemRef = {
+    type: "council_node",
+    id: node.id,
+    titleEn: node.titleEn,
+    titleAr: node.titleAr,
+    href: `/council-strategy?p=${encodeURIComponent(slugOf(node.code, node.id))}`,
+  };
+  /* CR08 9.1: the card is a button, so the owner's chip (a button too) sits
+     beside it inside the card frame rather than within it */
   return (
-    <button
-      onClick={onOpen}
-      data-chain-level="project"
-      data-testid="project-card"
-      aria-label={t("chain.openProject", { title })}
-      className="flex w-56 shrink-0 cursor-pointer flex-col gap-1.5 rounded-[var(--radius-card)] bg-white px-3.5 py-3 text-start shadow-[var(--shadow-paper)] transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700"
-    >
-      <span className="flex items-center gap-2">
-        <RagMark
-          rag={
-            node.status === "completed" || node.status === "on_track"
-              ? "on_target"
-              : node.status === "at_risk"
-                ? "at_risk"
-                : node.status === "delayed"
-                  ? "behind"
-                  : "no_data"
-          }
-        />
-        {node.code ? <span className="text-[10px] text-ink-600 tnum">{node.code}</span> : null}
-      </span>
-      <span className="line-clamp-3 min-h-12 text-sm font-medium leading-snug text-ink-900">
-        {title}
-      </span>
-      <span className="text-[10px] text-ink-600">{tc(`status.${node.status}` as never)}</span>
-      {node.endDate ? (
-        <span className="text-[10px] text-ink-400 tnum">
-          {formatDate(node.endDate, locale, { style: "short" })}
+    <div className="flex w-56 shrink-0 flex-col gap-1.5 rounded-[var(--radius-card)] bg-white px-3.5 py-3 shadow-[var(--shadow-paper)] transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]">
+      <button
+        onClick={onOpen}
+        data-chain-level="project"
+        data-testid="project-card"
+        aria-label={t("chain.openProject", { title })}
+        className="flex cursor-pointer flex-col gap-1.5 rounded-lg text-start focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700"
+      >
+        <span className="flex items-center gap-2">
+          <RagMark
+            rag={
+              node.status === "completed" || node.status === "on_track"
+                ? "on_target"
+                : node.status === "at_risk"
+                  ? "at_risk"
+                  : node.status === "delayed"
+                    ? "behind"
+                    : "no_data"
+            }
+          />
+          {node.code ? <span className="text-[10px] text-ink-600 tnum">{node.code}</span> : null}
         </span>
+        <span className="line-clamp-3 min-h-12 text-sm font-medium leading-snug text-ink-900">
+          {title}
+        </span>
+        <span className="text-[10px] text-ink-600">{tc(`status.${node.status}` as never)}</span>
+        {node.endDate ? (
+          <span className="text-[10px] text-ink-400 tnum">
+            {formatDate(node.endDate, locale, { style: "short" })}
+          </span>
+        ) : null}
+      </button>
+      {/* mt-auto keeps the chips of a row of cards on one line */}
+      {node.ownerUser ? (
+        <OwnerControlCompact owner={node.ownerUser} item={item} className="mt-auto max-w-full pt-1" />
       ) : null}
-    </button>
+    </div>
   );
 }
 
@@ -1615,7 +1647,11 @@ export function CouncilStrategy({
       </div>
 
       {/* 5. the indicator card */}
-      <IndicatorCardDialog indicator={indicator} onClose={() => setIndicator(null)} />
+      <IndicatorCardDialog
+        indicator={indicator}
+        onClose={() => setIndicator(null)}
+        overDrawer={Boolean(project)}
+      />
 
       {/* CR07 2.4.5: the project drawer */}
       <AnimatePresence>
@@ -1627,6 +1663,7 @@ export function CouncilStrategy({
             onClose={() => closeLevel({ ...state, p: null })}
             onCopyLink={copyLink}
             onOpenIndicator={setIndicator}
+            dimmed={Boolean(indicator)}
           />
         ) : null}
       </AnimatePresence>

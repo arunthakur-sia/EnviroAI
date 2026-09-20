@@ -1,0 +1,118 @@
+{
+  "experts": {
+    "types": {
+      "npc_employee": "NPC staff",
+      "government": "Government entity",
+      "academic": "Academia",
+      "consultant": "Consultant",
+      "international": "International advisor"
+    },
+    "kind": {
+      "internal": "Internal expert",
+      "external": "External expert"
+    },
+    "views": {
+      "internal": {
+        "title": "Internal Experts",
+        "description": "NPC staff by organisation unit, with their domains, badges and the projects they carry."
+      },
+      "external": {
+        "title": "External Experts",
+        "description": "Other government entities, academia, consultants and international advisors who work with NPC."
+      },
+      "count": "{count, plural, =0 {No experts shown} one {# expert shown} other {# experts shown}}"
+    },
+    "viewLabel": "Expert view",
+    "layout": {
+      "label": "Layout",
+      "grouped": "By unit",
+      "flat": "Flat grid"
+    },
+    "filterUnit": "Unit",
+    "filterLevel": "Level",
+    "filterProjects": "Involved in projects",
+    "filterOrganisation": "Organisation",
+    "filterCountry": "Country",
+    "filterWorkedWith": "Worked with NPC",
+    "clearFilters": "Clear filters",
+    "expandAll": "Expand all",
+    "collapseAll": "Collapse all",
+    "projectsCount": "{count, plural, =0 {No projects yet} one {Involved in # project} other {Involved in # projects}}",
+    "engagementsCount": "{count, plural, =0 {No engagements yet} one {# engagement} other {# engagements}}",
+    "lastEngagement": "Last engagement {year}",
+    "verified": "Verified",
+    "moreDomains": "+{count}",
+    "unassignedUnit": "No unit recorded",
+    "groups": {
+      "internal": "Internal experts",
+      "external": "External experts",
+      "internalHint": "NPC staff",
+      "externalHint": "Other entities, academia, consultants, international advisors"
+    },
+    "emptyInternal": "No internal experts match",
+    "emptyExternal": "No external experts match",
+    "countryLabel": "Country",
+    "countries": {
+      "QA": "Qatar",
+      "SA": "Saudi Arabia",
+      "AE": "United Arab Emirates",
+      "KW": "Kuwait",
+      "BH": "Bahrain",
+      "OM": "Oman",
+      "JO": "Jordan",
+      "LB": "Lebanon",
+      "EG": "Egypt",
+      "TN": "Tunisia",
+      "MA": "Morocco",
+      "US": "United States",
+      "GB": "United Kingdom",
+      "FR": "France",
+      "DE": "Germany",
+      "NL": "Netherlands",
+      "CH": "Switzerland",
+      "PT": "Portugal",
+      "IT": "Italy",
+      "ES": "Spain",
+      "SE": "Sweden",
+      "CA": "Canada",
+      "AU": "Australia",
+      "IN": "India",
+      "KR": "South Korea",
+      "JP": "Japan",
+      "SG": "Singapore",
+      "TR": "Turkey",
+      "CO": "Colombia",
+      "GH": "Ghana",
+      "NG": "Nigeria",
+      "KE": "Kenya",
+      "SN": "Senegal"
+    }
+  },
+  "studies": {
+    "title": "Studies",
+    "subtitle": "{count, plural, =0 {No studies yet} one {# study, research paper or evaluation from Institutional Memory} other {# studies, research papers and evaluations from Institutional Memory}}",
+    "addStudy": "Add study",
+    "featuredEyebrow": "Latest verified study",
+    "read": "Open the study",
+    "verified": "Verified",
+    "illustrative": "Illustrative",
+    "byType": "By type",
+    "byTopic": "By topic",
+    "byOutcome": "By outcome",
+    "byYear": "By year",
+    "all": "All",
+    "undated": "Undated",
+    "yearShelf": "Published in {year}",
+    "matching": "{count, plural, =0 {No studies match} one {# study matches} other {# studies match}}",
+    "clear": "Clear filters",
+    "empty": "No studies yet",
+    "emptyHint": "Upload a study, a research paper or an evaluation and it takes its place on these shelves.",
+    "noMatch": "No studies match these filters",
+    "noMatchHint": "Loosen a filter, or add the study you have in mind.",
+    "types": {
+      "study": "Study",
+      "research": "Research",
+      "evaluation": "Evaluation"
+    }
+  }
+}

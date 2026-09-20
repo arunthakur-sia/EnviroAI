@@ -56,7 +56,9 @@ export function NotificationsMenu({ unreadCount }: { unreadCount: number }) {
       <DropdownTrigger asChild>
         <button
           className="relative rounded-lg p-2 text-bar-ink hover:bg-white/15 cursor-pointer"
-          aria-label={t("notifications")}
+          // the count is drawn in the badge, so the name has to carry it too or
+          // the visible text and the accessible name disagree
+          aria-label={t("notificationsUnread", { count })}
         >
           <Bell className="size-5" />
           {count > 0 ? (

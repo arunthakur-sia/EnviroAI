@@ -9,13 +9,27 @@ const BASE = process.env.SMOKE_BASE ?? "http://localhost:3000";
 type Jar = Map<string, string>;
 function makeClient() {
   const jar: Jar = new Map();
-  return async function req(path: string, opts: RequestInit = {}) {
-    const cookie = [...jar.entries()].map(([k, v]) => `${k}=${v}`).join("; ");
-    const res = await fetch(BASE + path, {
-      ...opts,
-      headers: { ...(opts.headers as Record<string, string> ?? {}), cookie },
-      redirect: "manual",
-    });
+  const cookieString = () => [...jar.entries()].map(([k, v]) => `${k}=${v}`).join("; ");
+  const req = async function req(path: string, opts: RequestInit = {}): Promise<Response> {
+    const cookie = cookieString();
+    /* CR08: the suite is long and a dev server recompiling or restarting under
+       it drops the connection. A transport failure is retried twice; a status
+       is never retried, because a status is the thing being tested. */
+    let res: Response | null = null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        res = await fetch(BASE + path, {
+          ...opts,
+          headers: { ...(opts.headers as Record<string, string> ?? {}), cookie },
+          redirect: "manual",
+        });
+        break;
+      } catch (e) {
+        if (attempt === 2) throw e;
+        await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
+      }
+    }
+    if (!res) throw new Error(`no response for ${path}`);
     for (const sc of (res.headers as unknown as { getSetCookie?: () => string[] }).getSetCookie?.() ?? []) {
       const [pair] = sc.split(";");
       const [k, ...v] = pair.split("=");
@@ -23,6 +37,8 @@ function makeClient() {
     }
     return res;
   };
+  // CR08: the per-module smoke files receive the raw cookie header
+  return Object.assign(req, { cookieString });
 }
 
 let passed = 0;
@@ -87,8 +103,11 @@ async function main() {
   let docs: { id: string; titleEn: string; classification: number }[] = [];
   let cursor: number | null = 0;
   for (let page = 0; page < 5 && cursor !== null; page++) {
-    const pageRes = await admin(`/api/v1/documents?limit=120&cursor=${cursor}`);
-    const pageJson = await pageRes.json();
+    const pageRes: Response = await admin(`/api/v1/documents?limit=120&cursor=${cursor}`);
+    const pageJson: {
+      data?: { id: string; titleEn: string; classification: number }[];
+      meta?: { nextCursor?: number | null };
+    } = await pageRes.json();
     docs = docs.concat(pageJson.data ?? []);
     cursor = pageJson.meta?.nextCursor ?? null;
     if (docs.some((d) => d.classification >= 3)) break;
@@ -1667,11 +1686,28 @@ async function main() {
       Number(obsCount[0].c) >= 5000 && Number(obsCount[0].src) === Number(obsCount[0].c),
       `obs=${obsCount[0].c} sourced=${obsCount[0].src}`
     );
+    /* CR08 4.1: five of the fifty three indices genuinely do not cover Qatar.
+       Gallup has not listed Qatar in a public table since 2019 and its country
+       series is paid; the Climate Change Performance Index does not assess
+       Qatar at all. Recording that honestly is the decision (DECISIONS 93), so
+       the check is that every OTHER index carries Qatar, and that these five
+       carry no invented row. */
+    const NO_QATAR = ["gallup_law_order", "gallup_safe_night", "gallup_positive", "gallup_negative", "ccpi"];
     const qatPerIndex = await q(
       `select i.code from indices i where i.is_active=1 and not exists
        (select 1 from index_observations o where o.index_id=i.id and o.country_code='QAT')`
     );
-    check("Qatar has published values on every index", qatPerIndex.length === 0, qatPerIndex.map((r) => r.code).join(","));
+    const missing = qatPerIndex.map((r) => String(r.code)).filter((c) => !NO_QATAR.includes(c));
+    check("Qatar has published values on every index that covers Qatar", missing.length === 0, missing.join(","));
+    const invented = await q(
+      `select count(*) c from index_observations o join indices i on i.id = o.index_id
+       where o.country_code = 'QAT' and i.code in (${NO_QATAR.map((c) => `'${c}'`).join(",")})`
+    );
+    check(
+      "the five indices that do not cover Qatar carry no Qatar row",
+      Number(invented[0].c) === 0,
+      `rows=${invented[0].c}`
+    );
     check(
       "the coverage report and the raw manifest exist",
       fs.existsSync(path.join(process.cwd(), "data", "indices-report.md")) &&
@@ -1786,9 +1822,19 @@ async function main() {
     );
     const handoverStates = await q("select status, count(*) c from handovers group by status");
     check("three handovers in different states", handoverStates.length >= 2 && handoverStates.reduce((s, r) => s + Number(r.c), 0) >= 3);
-    const anyHandover = await q("select id, completion_pct from handovers where status != 'complete' limit 1");
+    /* CR08 6.4: completion counts IN-SCOPE items only, so this check needs a
+       handover that still has a pending in-scope item; picking any open one
+       could land on a handover whose only pending items are out of scope, and
+       the percentage would rightly not move. */
+    const anyHandover = await q(
+      `select h.id, h.completion_pct from handovers h
+       where h.status != 'complete'
+         and (select count(*) from handover_items i
+              where i.handover_id = h.id and i.status = 'pending' and coalesce(i.in_scope, 1) = 1) > 0
+       limit 1`
+    );
     const anyItem = await q(
-      "select id, status from handover_items where handover_id=? and status='pending' limit 1",
+      "select id, status from handover_items where handover_id=? and status='pending' and coalesce(in_scope,1)=1 limit 1",
       [anyHandover[0].id]
     );
     const itemPatch = await hrClient("/api/v1/hr/handovers", {
@@ -2623,6 +2669,75 @@ async function main() {
         fs.existsSync(file) && /no High or Critical HIG findings/.test(fs.readFileSync(file, "utf8"))
       );
     }
+    db.close();
+  }
+
+  /* 19. CR08 acceptance: one smoke module per section (scripts/smoke-cr08-*.ts) */
+  console.log("\n19. CR08 acceptance");
+  {
+    const { createClient } = await import("@libsql/client");
+    const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
+    const contributor = makeClient();
+    await login(contributor, "analyst@npc.qa");
+    const adminClient = makeClient();
+    await login(adminClient, "admin@npc.qa");
+    type SmokeCtx = {
+      base: string;
+      cookie: string;
+      adminCookie: string;
+      db: import("@libsql/client").Client;
+    };
+    const ctx: SmokeCtx = {
+      base: BASE,
+      cookie: contributor.cookieString(),
+      adminCookie: adminClient.cookieString(),
+      db,
+    };
+    const modules = fs
+      .readdirSync(path.join(process.cwd(), "scripts"))
+      .filter((f) => /^smoke-cr08-.*\.ts$/.test(f))
+      .sort();
+    for (const file of modules) {
+      console.log(`\n  -- ${file}`);
+      try {
+        const mod = (await import(`./${file.replace(/\.ts$/, "")}`)) as {
+          run?: (
+            check: (name: string, ok: boolean, detail?: string) => void,
+            ctx: SmokeCtx
+          ) => Promise<void>;
+        };
+        if (typeof mod.run !== "function") {
+          check(`${file} exports run()`, false);
+          continue;
+        }
+        await mod.run((name, ok, detail) => check(`[${file.replace(/^smoke-cr08-|\.ts$/g, "")}] ${name}`, ok, detail ?? ""), ctx);
+      } catch (e) {
+        check(`${file} ran without crashing`, false, String((e as Error)?.message ?? e).slice(0, 200));
+      }
+    }
+    // the rail: grouped, the library renamed, Ask NPC gone from the rail
+    const homeHtml = await (await adminClient("/en/home")).text();
+    check("the rail carries the four groups", ["strategy_hub", "data", "knowledge", "people"].every((g) => homeHtml.includes(`rail-group-${g}`)));
+    check("the library is Institutional Memory in the rail", homeHtml.includes("Institutional Memory") && !homeHtml.includes("Knowledge Vault"));
+    check("Ask NPC left the rail for the bar button", !homeHtml.includes('data-testid="rail-ask"') && homeHtml.includes('data-testid="ask-bar-button"'));
+    check("the inbox icon sits in the bar", homeHtml.includes('data-testid="bar-inbox"'));
+    const homeAr = await (await adminClient("/ar/home")).text();
+    check("the Arabic rail names the groups", homeAr.includes("بوابة المعرفة") && homeAr.includes("مكتبة المعرفة"));
+    const levels = (await db.execute("select name_en, min_points from levels order by order_no")).rows;
+    check(
+      "ten numeric levels with the CR08 thresholds",
+      levels.length === 10 &&
+        levels.every((l, i) => String(l.name_en) === `Level ${i + 1}`) &&
+        [0, 100, 300, 700, 1300, 2200, 3500, 5500, 8500, 13000].every((p, i) => Number(levels[i]?.min_points) === p)
+    );
+    const oldNames = (
+      await db.execute(
+        "select count(*) c from levels where name_en in ('Explorer','Contributor','Curator','Knowledge Keeper','NPC Sage')"
+      )
+    ).rows[0];
+    check("no old level names remain", Number(oldNames.c) === 0);
+    const groups = (await db.execute("select count(*) c from index_groups where is_active = 1")).rows[0];
+    check("the nine index groups are seeded", Number(groups.c) === 9);
     db.close();
   }
 

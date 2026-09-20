@@ -11,6 +11,12 @@ import { NativeSelect, Button, Input, Textarea, Label } from "@/components/ui/pr
 import { Dialog, DialogTrigger, DialogContent, DialogClose } from "@/components/ui/overlays";
 import { useToast } from "@/components/ui/toast";
 
+/** CR08 Phase A: the only place an unknown error is narrowed. */
+function errMessage(e: unknown): string {
+  return e instanceof Error ? e.message : String(e);
+}
+
+
 const OUTCOMES = [
   "eco_growth",
   "fiscal_sust",
@@ -106,8 +112,8 @@ export function TrendsToolbar({ canScan, canAdd }: { canScan: boolean; canAdd: b
         setScanning(false);
         router.refresh();
       }
-    } catch (e: any) {
-      toast(e?.message === "no_brief_for_filter" ? t("noBriefForFilter") : tc("error"), "error");
+    } catch (e: unknown) {
+      toast(errMessage(e) === "no_brief_for_filter" ? t("noBriefForFilter") : tc("error"), "error");
       setScanning(false);
     }
   }
@@ -131,8 +137,8 @@ export function TrendsToolbar({ canScan, canAdd }: { canScan: boolean; canAdd: b
       setText("");
       setDialogOpen(false);
       router.refresh();
-    } catch (e: any) {
-      toast(e?.message === "fetch_failed" ? t("fetchFailed") : tc("error"), "error");
+    } catch (e: unknown) {
+      toast(errMessage(e) === "fetch_failed" ? t("fetchFailed") : tc("error"), "error");
     } finally {
       setAdding(false);
     }
