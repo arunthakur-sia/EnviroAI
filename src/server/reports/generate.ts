@@ -4,6 +4,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { eq } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
+import { dataPath } from "@/server/paths";
 import { nowIso } from "@/lib/ids";
 import { record } from "@/server/gamification/engine";
 import { gatherReportItems, type ReportOptionsInput, type ReportScopeInput } from "./gather";
@@ -60,7 +61,7 @@ export async function generateReport(reportId: string): Promise<void> {
       classification,
       generatedAt,
     });
-    const dir = path.join(process.cwd(), "data", "reports");
+    const dir = dataPath("reports");
     await fs.mkdir(dir, { recursive: true });
     await fs.writeFile(path.join(dir, `${reportId}.docx`), buf);
 

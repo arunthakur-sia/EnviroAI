@@ -5,9 +5,16 @@ data/
 sources/
 public/fonts/*.woff2
 public/pdf.worker.min.mjs
+.env
 .env.local
 .env*.local
+!.env.example
 *.tsbuildinfo
 next-env.d.ts
 test-results/
 playwright-report/
+
+# the data bundle and the variables file are made for one deployment and carry
+# real values; neither belongs in the history
+*.tar.gz
+railway-variables.txt

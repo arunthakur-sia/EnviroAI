@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import path from "node:path";
 import fs from "node:fs/promises";
 import { getCurrentUser } from "@/server/auth/session";
+import { dataPath } from "@/server/paths";
 import { getDocument } from "@/server/services/documents";
 
 export async function GET(
@@ -17,7 +18,7 @@ export async function GET(
   if (!allowed) return NextResponse.json({ data: null, error: "forbidden" }, { status: 403 });
 
   const kind = req.nextUrl.searchParams.get("kind") ?? "text";
-  const dir = path.resolve(process.cwd(), "data", "uploads", id);
+  const dir = dataPath("uploads", id);
   try {
     if (kind === "html") {
       const html = await fs.readFile(path.join(dir, "extracted.html"), "utf8");

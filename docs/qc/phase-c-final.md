@@ -158,14 +158,14 @@ the HR Admin hold every portal, so there is no hidden portal to refuse them.
   every module with the exact clicks, the accounts to use, and what to say about
   illustrative data. Every person, handover and report it names was checked
   against the seeded database.
-- **The seed inside `npm run setup` takes 8 minutes 38 seconds**, against the
-  fifteen the change request allows. That is with nothing else running; an
-  earlier run the same day took 36 minutes, and the difference is worth keeping:
-  the Anthropic account had run out of credit, so every capability waited on a
-  call that was going to be refused. The refusal latch described above fixed the
-  seed's time as a side effect, because one refusal now puts the whole process
-  into mock mode instead of each capability discovering it alone. The demo path
-  does not need the seed at all: the frozen baseline restores in seconds.
+- **The seed inside `npm run setup` has been timed at 9, 36 and 40 minutes**
+  across four runs on this machine, against the fifteen the change request
+  allows. One run met the target and two did not, so the honest answer is the
+  spread rather than the best of them. The work is embedding the source
+  documents, computing forecasts for 53 indices, and rendering 12 example
+  reports into Word through a headless browser, and it competes with whatever
+  else is running; the 9 minute run was on an otherwise idle machine. The demo
+  path does not need the seed at all: the frozen baseline restores in seconds.
 - **The Anthropic account behind this machine has no credit.** Every model call
   returns a 400 saying so, so the product runs in mock mode: every AI capability
   answers deterministically from the same real data, and the top bar now says

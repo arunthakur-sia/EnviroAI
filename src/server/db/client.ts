@@ -1,11 +1,10 @@
 import { createClient, type Client } from "@libsql/client";
 import { drizzle } from "drizzle-orm/libsql";
-import path from "node:path";
 import fs from "node:fs";
 import * as schema from "./schema";
+import { DATA_DIR, DB_PATH } from "@/server/paths";
 
-const DB_DIR = path.resolve(process.cwd(), "data");
-const DB_PATH = path.join(DB_DIR, "nexus.db");
+const DB_DIR = DATA_DIR;
 
 declare global {
   // eslint-disable-next-line no-var

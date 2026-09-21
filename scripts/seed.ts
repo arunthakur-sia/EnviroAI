@@ -8,6 +8,7 @@ import { loadEnv } from "../src/lib/load-env";
 loadEnv();
 
 import { migrate } from "./migrate";
+import { DATA_DIR } from "./lib/paths.mjs";
 
 const ROOT = process.cwd();
 const CONTENT = path.join(ROOT, "scripts", "seed-content");
@@ -25,8 +26,8 @@ async function main() {
   console.log("== SiaNexus seed ==");
   const t0 = Date.now();
 
-  // 1. reset database
-  const dataDir = path.join(ROOT, "data");
+  // 1. reset database (in DATA_DIR, which the boot script may have moved)
+  const dataDir = DATA_DIR;
   fs.mkdirSync(dataDir, { recursive: true });
   for (const f of ["nexus.db", "nexus.db-wal", "nexus.db-shm"]) {
     try {

@@ -181,8 +181,18 @@ async function scheduleNextAt(
   await scheduleNextOf(type, payload, next.getTime() - Date.now());
 }
 
-/** Keeps exactly one future scheduled scan in the queue (interval from Settings). */
+/**
+ * Keeps exactly one future scheduled scan in the queue (interval from
+ * Settings). Scheduled scanning is off unless SCAN_SCHEDULE_ENABLED=true: a
+ * deployed demo should not reach out to the open web on a timer, and the scan
+ * costs model calls. "Refresh signals" in Trends is a different path and always
+ * works, whatever this is set to.
+ */
 async function scheduleNextScan(): Promise<void> {
+  if (process.env.SCAN_SCHEDULE_ENABLED !== "true") {
+    console.log("[jobs] scheduled scanning is off (set SCAN_SCHEDULE_ENABLED=true to turn it on)");
+    return;
+  }
   try {
     const { db, schema } = await import("@/server/db/client");
     const { and, eq } = await import("drizzle-orm");

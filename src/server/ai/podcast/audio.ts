@@ -10,6 +10,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { eq } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
+import { dataPath } from "@/server/paths";
 import { getSetting, setSetting } from "@/server/settings";
 import { nowIso } from "@/lib/ids";
 import type { PodcastSegment } from "./script";
@@ -232,7 +233,7 @@ export async function renderEpisodeAudio(
       audio = concatMp3(parts);
     }
     const durationSec = mp3DurationSeconds(stripId3(audio)) || episode.durationSec;
-    const dir = path.join(process.cwd(), "data", "podcasts");
+    const dir = dataPath("podcasts");
     await fs.mkdir(dir, { recursive: true });
     const filePath = path.join(dir, `${episodeId}.mp3`);
     await fs.writeFile(filePath, audio);

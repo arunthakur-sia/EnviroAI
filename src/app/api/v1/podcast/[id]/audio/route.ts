@@ -1,10 +1,10 @@
 // CR02 4.6: streams an episode's rendered audio within clearance.
 import { NextRequest, NextResponse } from "next/server";
 import fs from "node:fs/promises";
-import path from "node:path";
 import { eq } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import { getCurrentUser } from "@/server/auth/session";
+import { resolveDataPath } from "@/server/paths";
 
 export async function GET(
   _req: NextRequest,
@@ -21,7 +21,7 @@ export async function GET(
   if (!episode || episode.classificationLevel > user.clearanceLevel || !episode.audioPath) {
     return NextResponse.json({ data: null, error: "not_found" }, { status: 404 });
   }
-  const filePath = path.join(process.cwd(), "data", episode.audioPath);
+  const filePath = resolveDataPath(episode.audioPath);
   try {
     const buf = await fs.readFile(filePath);
     return new NextResponse(new Uint8Array(buf), {

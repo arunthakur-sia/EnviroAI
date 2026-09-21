@@ -29,6 +29,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { and, asc, desc, eq, inArray, isNull, ne } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
+import { dataPath } from "@/server/paths";
 import { getUserById, type CurrentUser } from "@/server/auth/session";
 import { newId, nowIso, todayIso } from "@/lib/ids";
 import { notify, record } from "@/server/gamification/engine";
@@ -2735,7 +2736,7 @@ export async function buildHandoverReportModel(detail: HandoverDetail, admin: Cu
   };
 }
 
-const REPORT_DIR = path.join(process.cwd(), "data", "reports", "handover");
+const REPORT_DIR = dataPath("reports", "handover");
 
 /** Renders the report in both languages and archives it into the Institutional Memory. */
 async function archiveReport(admin: CurrentUser, detail: HandoverDetail): Promise<{ documentId: string | null; paths: { en: string | null; ar: string | null }; error: string | null }> {

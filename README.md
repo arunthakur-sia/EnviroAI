@@ -29,13 +29,13 @@ npm run setup     # installs, fetches public NPC sources + fonts, migrates, seed
 npm run dev       # http://localhost:3000
 ```
 
-The seed inside `npm run setup` took **8 minutes 38 seconds** on this machine,
-measured on 2026-09-20 with nothing else running. An earlier run the same day
-took 36 minutes because the Anthropic account had run out of credit and every
-capability waited on a call that was going to be refused; a refused key now
-puts the process into mock mode after the first failure, so the seed no longer
-pays for an account it cannot use. To show the product to someone, build once
-and serve the production build instead:
+The seed inside `npm run setup` has been timed at **9, 36 and 40 minutes** on
+this machine across four runs. The spread is real and worth knowing before you
+wait on it: the work is embedding the source documents, computing forecasts for
+fifty three indices, and rendering twelve example reports into Word through a
+headless browser, and it competes with whatever else is running. To show the
+product to someone, do not seed at all: restore the frozen demo data, or build
+once and serve the production build.
 
 ```bash
 npm run start:demo   # builds if needed, then serves the production build with the job worker
@@ -109,6 +109,31 @@ Screenshots live in `data/screenshots/` (EN and AR; CR01 screens under `cr01/`, 
 - **HR** (`src/server/services/hr.ts`): the ownership inventory, readiness and continuity scoring, six risk rules, and the handover engine; risks recompute nightly.
 - **Auth**: bcrypt + iron-session; a single server-side `can()` gate now carrying per-user grant/deny overrides and portal visibility (CR05: invite-only on allowed domains, password policy, 5-attempt lockout, 12h-inactivity/7-day sessions, read-only Preview-as enforced in the middleware).
 
+### Deploying it (Railway, one service, one volume)
+
+The app keeps everything it writes in one place, so a deployment is one service
+with one volume and nothing else. `DATA_DIR` points at the volume; locally it is
+unset and everything lives in `./data`. `src/server/paths.ts` is the only module
+that decides where a runtime file goes, and `scripts/lib/paths.mjs` is the same
+rule in plain JavaScript for the scripts that run before the TypeScript build.
+
+1. Create the service from this repository, add a volume mounted at `/app/data`.
+2. `npm run railway:variables` writes `railway-variables.txt`: paste it into the
+   service variables and delete the file. It carries a fresh `SESSION_SECRET`,
+   the API keys from `.env.local`, `DATA_DIR=/app/data` and `TZ=Asia/Qatar`.
+3. `npm run data:export` writes `sianexus-data.tar.gz` (the database, the
+   uploads and the generated reports). Put it on the volume as
+   `data/import/sianexus-data.tar.gz`.
+4. Deploy. `railway.json` builds with `npm run build` and starts with
+   `npm run start:railway`, which runs `scripts/boot.mjs` first: it creates the
+   folders, restores the bundle once (renaming it `.done` so a restart does not
+   repeat it), applies any missing migrations, and sets the SQLite pragmas.
+   `/api/health` is the health check.
+
+Without a bundle the app starts empty. `SEED_ON_EMPTY=true` seeds from the
+committed `sources/` folder instead, but the seed is TypeScript and needs the
+development dependencies, so the bundle is the supported path.
+
 ### Migration path (Supabase / Vercel later)
 
 - Drizzle schema uses portable types; regenerate for Postgres by switching the dialect in `drizzle.config.ts`.
@@ -127,6 +152,9 @@ npm run smoke       # end-to-end acceptance checks against a running server (moc
 npm run start:demo  # the client path: builds once if needed, then serves the production build with the job worker
 npm run reset-demo  # restores the demo database and files from data/demo-snapshot (server stopped; under two minutes)
 npm run reset-demo:snapshot   # freeze the current state as that baseline
+npm run data:export # bundle the data directory into sianexus-data.tar.gz for a deployment
+npm run railway:variables      # write railway-variables.txt from .env.local (a fresh SESSION_SECRET)
+npm run start:railway          # the container's start command: boot (restore, migrate) then next start
 npm run qc:sweep    # no em dashes anywhere, no HTML tables in new UI
 npm run qc:permissions        # every route and API as every role, into docs/qc/permissions-matrix.md
 npm run qc:console  # every page in both locales in system Edge, into docs/qc/console-sweep.md

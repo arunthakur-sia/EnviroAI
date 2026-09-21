@@ -3,7 +3,8 @@
 // pages by the research pass under sources/indices/research/ (each value
 // carries the URL it was read from). Never invents a number: what cannot be
 // found stays missing and the coverage report says so. Raw files land under
-// sources/indices/raw/ with a manifest; the report at data/indices-report.md.
+// sources/indices/raw/; the manifest and the coverage report are output and go
+// in the data directory (indices-manifest.json, indices-report.md).
 // Runs from scripts/fetch-indices.ts, npm run setup, and the indices_fetch job
 // (Settings > Indices > Refresh data).
 import fs from "node:fs";
@@ -12,6 +13,7 @@ import { fetch as undiciFetch, Agent } from "undici";
 import * as XLSX from "xlsx";
 import { eq, sql } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
+import { DATA_DIR, dataPath } from "@/server/paths";
 import { newId, nowIso } from "@/lib/ids";
 import { CR08_INDEX_DEFS, type Cr08IndexDef } from "./defs-cr08";
 
@@ -1185,9 +1187,13 @@ export async function runIndicesFetch(
      and refresh stamp) */
   await writeCoverageReport();
   if (partial) return report;
-  fs.mkdirSync(path.join(process.cwd(), "sources", "indices"), { recursive: true });
+  /* The manifest is output, not a source: "Refresh data" in Settings can run
+     on a deployment, where `sources/` is part of the image and anything
+     written there is lost on the next deploy. It goes in the data directory
+     with the coverage report it belongs beside. */
+  fs.mkdirSync(DATA_DIR, { recursive: true });
   fs.writeFileSync(
-    path.join(process.cwd(), "sources", "indices", "manifest.json"),
+    dataPath("indices-manifest.json"),
     JSON.stringify({ generatedAt: nowIso(), files: manifest }, null, 2)
   );
   // stored as an object: getSetting merges objects over the fallback and
@@ -1237,6 +1243,6 @@ export async function writeCoverageReport(): Promise<void> {
     if (idx.sourceNotes) lines.push(`- Sources: ${idx.sourceNotes}`);
     lines.push("");
   }
-  fs.mkdirSync(path.join(process.cwd(), "data"), { recursive: true });
-  fs.writeFileSync(path.join(process.cwd(), "data", "indices-report.md"), lines.join("\n"));
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.writeFileSync(dataPath("indices-report.md"), lines.join("\n"));
 }

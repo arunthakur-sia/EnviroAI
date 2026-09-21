@@ -9,6 +9,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { and, eq } from "drizzle-orm";
 import { db, rawClient, schema } from "@/server/db/client";
+import { dataPath, resolveDataPath } from "@/server/paths";
 import { newId, nowIso } from "@/lib/ids";
 import { aiLive } from "@/server/ai/client";
 import { getUserById, type CurrentUser } from "@/server/auth/session";
@@ -62,7 +63,7 @@ export type BuildOptions = {
 type ReportRow = typeof schema.reports.$inferSelect;
 type TypeRow = typeof schema.reportTypes.$inferSelect;
 
-const MODULE_DIR = path.join(process.cwd(), "data", "reports", "module");
+const MODULE_DIR = dataPath("reports", "module");
 
 /* A build writes a section row every few seconds while the worker may be
    ingesting a freshly published report; SQLite allows one writer, so the
@@ -252,7 +253,7 @@ async function renderAll(
     progress.stage = "previews";
     await saveProgress(reportId, progress);
     try {
-      previews = await renderDocxPreviews(path.join(process.cwd(), "data", primary));
+      previews = await renderDocxPreviews(resolveDataPath(primary));
       if (previews.length) note(progress, `${previews.length} preview pages captured.`, `تم التقاط ${previews.length} صفحات معاينة.`);
       else note(progress, "No page previews: no converter is available on this machine.", "لا توجد معاينات للصفحات: لا يتوفر محول على هذا الجهاز.");
     } catch (e) {

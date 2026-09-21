@@ -3,6 +3,7 @@
 //   npm run smoke
 import { loadEnv } from "../src/lib/load-env";
 loadEnv();
+import { dataPath } from "./lib/paths.mjs";
 
 const BASE = process.env.SMOKE_BASE ?? "http://localhost:3000";
 
@@ -1710,8 +1711,7 @@ async function main() {
     );
     check(
       "the coverage report and the raw manifest exist",
-      fs.existsSync(path.join(process.cwd(), "data", "indices-report.md")) &&
-        fs.existsSync(path.join(process.cwd(), "sources", "indices", "manifest.json"))
+      fs.existsSync(dataPath("indices-report.md")) && fs.existsSync(dataPath("indices-manifest.json"))
     );
     const forecasts = await q(
       "select count(*) c from index_forecasts where status='current'"

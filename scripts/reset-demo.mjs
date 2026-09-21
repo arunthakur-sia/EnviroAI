@@ -11,10 +11,8 @@ import fs from "node:fs";
 import path from "node:path";
 import net from "node:net";
 
-const ROOT = process.cwd();
-const DATA = path.join(ROOT, "data");
+const { DATA_DIR: DATA, DB_PATH: DB } = await import("./lib/paths.mjs");
 const SNAP = path.join(DATA, "demo-snapshot");
-const DB = path.join(DATA, "nexus.db");
 const DIRS = ["uploads", "reports", "podcasts"];
 const mode = process.argv.includes("--snapshot") ? "snapshot" : "restore";
 const t0 = Date.now();

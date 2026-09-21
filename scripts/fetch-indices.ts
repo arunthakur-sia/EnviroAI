@@ -27,8 +27,8 @@ async function main() {
   }
   console.log(
     only
-      ? "wrote data/indices-report.md (partial run: manifest and refresh stamp untouched)"
-      : "wrote sources/indices/manifest.json and data/indices-report.md"
+      ? "wrote the coverage report (partial run: manifest and refresh stamp untouched)"
+      : "wrote indices-manifest.json and indices-report.md in the data directory"
   );
 }
 

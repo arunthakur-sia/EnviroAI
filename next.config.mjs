@@ -32,6 +32,11 @@ const nextConfig = {
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "X-DNS-Prefetch-Control", value: "off" },
+          /* Nothing in an internal knowledge base belongs in a search index,
+             and a public deployment is one crawl away from proving it. The
+             header covers every response; public/robots.txt covers the
+             crawlers that ask first. */
+          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive, nosnippet" },
           {
             key: "Permissions-Policy",
             value: "camera=(), geolocation=(), payment=(), usb=(), microphone=(self)",

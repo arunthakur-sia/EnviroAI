@@ -4,13 +4,18 @@
   "private": true,
   "description": "NEXUS, the knowledge memory of the National Planning Council of Qatar",
   "engines": {
-    "node": ">=20"
+    "node": "22.x"
   },
   "scripts": {
     "setup": "node scripts/setup.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "start:railway": "node scripts/boot.mjs && next start -H 0.0.0.0",
+    "boot": "node scripts/boot.mjs",
+    "data:export": "node scripts/data-export.mjs",
+    "data:prune": "node scripts/data-prune.mjs",
+    "railway:variables": "node scripts/railway-variables.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "next lint",
     "migrate": "tsx scripts/migrate.ts",
@@ -69,6 +74,7 @@
     "rss-parser": "^3.13.0",
     "server-only": "^0.0.1",
     "tailwind-merge": "^2.5.0",
+    "tar": "^7.5.22",
     "ulid": "3.0.2",
     "undici": "^8.10.2",
     "unpdf": "1.8.1",

@@ -6,6 +6,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { and, eq, gt } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
+import { SESSION_SECRET_FILE } from "@/server/paths";
 import { newId, nowIso } from "@/lib/ids";
 
 export type SessionData = {
@@ -20,7 +21,7 @@ export function sessionSecret(): string {
     secret = process.env.SESSION_SECRET;
     return secret;
   }
-  const file = path.resolve(process.cwd(), "data", "session-secret.txt");
+  const file = SESSION_SECRET_FILE;
   try {
     const existing = fs.readFileSync(file, "utf8").trim();
     if (existing.length >= 32) {
@@ -42,11 +43,14 @@ const SESSION_OPTIONS = () => ({
   cookieOptions: {
     httpOnly: true,
     sameSite: "lax" as const,
-    /* CR08 Phase A: the prototype is served over plain http on this machine,
-       including `npm run start:demo`, so a Secure cookie would never be sent
-       back and nobody could sign in. It is opt-in for a TLS deployment:
-       SESSION_COOKIE_SECURE=1. */
-    secure: process.env.SESSION_COOKIE_SECURE === "1",
+    /* Secure in production, where the platform terminates TLS and the app is
+       only ever reached over https. Locally the prototype is served over plain
+       http, including `npm run start:demo`, and a Secure cookie would never
+       come back, so nobody could sign in; SESSION_COOKIE_SECURE=0 forces it
+       off for a production build served over http, and =1 forces it on. */
+    secure:
+      process.env.SESSION_COOKIE_SECURE === "1" ||
+      (process.env.SESSION_COOKIE_SECURE !== "0" && process.env.NODE_ENV === "production"),
     maxAge: 60 * 60 * 24 * 14,
     path: "/",
   },

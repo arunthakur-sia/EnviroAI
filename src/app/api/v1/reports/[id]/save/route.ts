@@ -2,10 +2,10 @@
 // document of type report with the scope recorded in key_facts.
 import { NextRequest, NextResponse } from "next/server";
 import fs from "node:fs/promises";
-import path from "node:path";
 import { and, eq } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import { getCurrentUser } from "@/server/auth/session";
+import { resolveDataPath } from "@/server/paths";
 import { newId, nowIso } from "@/lib/ids";
 import { put } from "@/server/storage";
 import { enqueue } from "@/server/jobs/queue";
@@ -27,7 +27,7 @@ export async function POST(
   }
   let buf: Buffer;
   try {
-    buf = await fs.readFile(path.join(process.cwd(), "data", row.filePath));
+    buf = await fs.readFile(resolveDataPath(row.filePath));
   } catch {
     return NextResponse.json({ data: null, error: "file_missing" }, { status: 404 });
   }

@@ -21,6 +21,11 @@ const REDIRECTS: [RegExp, string][] = [
 
 export default function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  /* The platform's health check answers before anything else here: it has no
+     session, no locale and no preview to consider, and a middleware that grew
+     a bug would otherwise be able to report a healthy container as sick and
+     have it restarted. */
+  if (pathname === "/api/health") return NextResponse.next();
   for (const [pattern, to] of REDIRECTS) {
     const m = pattern.exec(pathname);
     if (m) {

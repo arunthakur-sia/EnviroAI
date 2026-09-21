@@ -4,7 +4,6 @@
 // request changes, approve) and publishing to Institutional Memory. The
 // CR02 "Extract report" rows (type_id null) are untouched by everything here.
 import fs from "node:fs/promises";
-import path from "node:path";
 import { and, desc, eq, inArray, isNotNull, isNull, or } from "drizzle-orm";
 import { z } from "zod";
 import { db, schema } from "@/server/db/client";
@@ -15,6 +14,7 @@ import { audit } from "@/server/auth/audit";
 import { enqueue } from "@/server/jobs/queue";
 import { notify, record } from "@/server/gamification/engine";
 import { put } from "@/server/storage";
+import { resolveDataPath } from "@/server/paths";
 import { termByCode } from "@/server/services/taxonomy";
 import { CUSTOM_TYPE_CODE } from "@/server/reports/types";
 import { composeTitle, RENDER_ONLY, type ProgressState } from "@/server/reports/build";
@@ -622,7 +622,7 @@ export async function publishReport(user: CurrentUser, reportId: string): Promis
   if (!row.docxPath) return { ok: false, error: "docx_pending", detail: "the document has not been rendered yet" };
   let buf: Buffer;
   try {
-    buf = await fs.readFile(path.join(process.cwd(), "data", row.docxPath));
+    buf = await fs.readFile(resolveDataPath(row.docxPath));
   } catch {
     return { ok: false, error: "file_missing" };
   }
@@ -700,7 +700,7 @@ export async function resolveDownload(user: CurrentUser, reportId: string, lang?
   const wanted: "en" | "ar" = lang === "ar" ? "ar" : lang === "en" ? "en" : mode === "ar" ? "ar" : "en";
   if (mode !== "both" && wanted !== mode) return { ok: false, error: "not_found", detail: `no ${wanted} edition` };
   const rel = mode === "both" ? `reports/module/${reportId}-${wanted}.docx` : row.docxPath;
-  const absPath = path.join(process.cwd(), "data", rel);
+  const absPath = resolveDataPath(rel);
   try {
     await fs.access(absPath);
   } catch {
@@ -743,11 +743,8 @@ export async function resolvePreview(
   return { ok: true, absPath, isThumb: false };
 }
 
-/** The template stores preview paths relative to the project root
-    (data/reports/previews/...); older rows may hold data-relative paths. */
+/** The template stores preview paths as `data/reports/previews/...`; older rows
+    may hold a path relative to the data directory instead. Both resolve. */
 export function previewAbsPath(rel: string): string {
-  if (path.isAbsolute(rel)) return rel;
-  const clean = rel.replace(/\\/g, "/");
-  if (clean.startsWith("data/")) return path.join(process.cwd(), clean);
-  return path.join(process.cwd(), "data", clean);
+  return resolveDataPath(rel);
 }

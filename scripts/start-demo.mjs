@@ -15,8 +15,9 @@ const port = process.env.DEMO_PORT || process.env.PORT || "3000";
 const forceBuild = process.argv.includes("--build");
 const buildId = path.join(ROOT, ".next", "BUILD_ID");
 
-if (!fs.existsSync(path.join(ROOT, "data", "nexus.db"))) {
-  console.error("data/nexus.db is missing. Run `npm run setup` first.");
+const { DB_PATH } = await import("./lib/paths.mjs");
+if (!fs.existsSync(DB_PATH)) {
+  console.error(`${path.relative(ROOT, DB_PATH) || DB_PATH} is missing. Run \`npm run setup\` first.`);
   process.exit(1);
 }
 
@@ -39,6 +40,9 @@ const child = spawn("npx", ["next", "start", "-p", port], {
   stdio: "inherit",
   shell: isWin,
   cwd: ROOT,
-  env: { ...process.env, NODE_ENV: "production" },
+  /* A production build served over plain http on this machine: the session
+     cookie must not be Secure or the browser never sends it back and nobody
+     can sign in. Railway sets no such override and gets the Secure cookie. */
+  env: { ...process.env, NODE_ENV: "production", SESSION_COOKIE_SECURE: "0" },
 });
 child.on("exit", (code) => process.exit(code ?? 0));

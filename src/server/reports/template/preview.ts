@@ -10,6 +10,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import JSZip from "jszip";
+import { dataPath, resolveDataPath, storedDataPath } from "@/server/paths";
 import { fontCss, getBrowser, pngSize, svgToPng } from "./png";
 
 function resolveModule(rel: string): string | null {
@@ -28,7 +29,7 @@ function resolveModule(rel: string): string | null {
     the file's basename when it lives elsewhere. */
 export function previewDir(docxPath: string): string {
   const abs = path.resolve(docxPath);
-  const base = path.join(process.cwd(), "data", "reports");
+  const base = dataPath("reports");
   const rel = path.relative(base, abs);
   const id = (rel.startsWith("..") || path.isAbsolute(rel) ? path.basename(abs) : rel).replace(/\.docx$/i, "");
   return path.join(base, "previews", id);
@@ -109,14 +110,14 @@ html,body{margin:0;background:#ffffff}
     for (let i = 0; i < count; i++) {
       const file = path.join(outDir, `page-${i + 1}.png`);
       await sections.nth(i).screenshot({ path: file, type: "png", timeout: opts.timeoutMs ?? 60000, animations: "disabled" });
-      files.push(path.relative(process.cwd(), file).replace(/\\/g, "/"));
+      files.push(storedDataPath(file));
     }
   } catch {
     // return what was captured
   } finally {
     await context.close().catch(() => undefined);
   }
-  if (files[0]) await renderThumb(path.join(process.cwd(), files[0])).catch(() => null);
+  if (files[0]) await renderThumb(resolveDataPath(files[0])).catch(() => null);
   return files;
 }
 
