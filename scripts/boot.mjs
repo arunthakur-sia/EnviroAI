@@ -42,8 +42,21 @@ ensureDataDirs();
 /* ------------------------------------------------------------------ */
 
 const bundle = dataPath("import", BUNDLE_NAME);
+/* An upload that was interrupted leaves a .part file and its sidecar. They are
+   worthless once a complete bundle has landed, and a stale pair would make the
+   restore page resume an upload of a file nobody is sending any more. */
+const stale = [dataPath("import", `${BUNDLE_NAME}.part`), dataPath("import", `${BUNDLE_NAME}.part.json`)];
+const leftover = stale.filter((f) => fs.existsSync(f));
+if (leftover.length && fs.existsSync(bundle)) {
+  for (const f of leftover) fs.rmSync(f, { force: true });
+  console.log(`[boot] cleared ${leftover.length} leftover part file(s) from an interrupted upload`);
+}
+
 if (!fs.existsSync(bundle)) {
   step(2, "no import bundle to restore");
+  if (leftover.length) {
+    console.log(`[boot] an upload is part-way through (${leftover.length} part file(s) kept so it can resume)`);
+  }
 } else {
   const size = fs.statSync(bundle).size;
   step(2, `restoring ${BUNDLE_NAME} (${human(size)})`);
@@ -57,6 +70,23 @@ if (!fs.existsSync(bundle)) {
     );
     process.exit(1);
   }
+  /* A write-ahead log describes one particular database file. If this
+     container has already run, `nexus.db-wal` belongs to the database that is
+     about to be replaced, and SQLite would try to apply it to the new file:
+     the first deploy of this product answered every query with
+     SQLITE_CORRUPT for exactly that reason. Fold the log into the current
+     file first, so nothing is lost if the bundle carries no database, then
+     drop the sidecars once the bundle has written one. */
+  if (fs.existsSync(DB_PATH)) {
+    try {
+      const pre = createClient({ url: dbUrl() });
+      await pre.execute("PRAGMA wal_checkpoint(TRUNCATE);");
+      pre.close();
+    } catch (e) {
+      console.log(`[boot] could not checkpoint before the restore: ${String(e?.message ?? e).slice(0, 90)}`);
+    }
+  }
+
   const entries = [];
   // tar.x overwrites by default, which is what "restore the bundle" means
   await tar.x({
@@ -64,6 +94,18 @@ if (!fs.existsSync(bundle)) {
     cwd: DATA_DIR,
     onentry: (entry) => entries.push(entry.path),
   });
+
+  if (entries.some((p) => String(p).replace(/\\/g, "/").split("/").pop() === "nexus.db")) {
+    let dropped = 0;
+    for (const suffix of ["-wal", "-shm"]) {
+      const sidecar = `${DB_PATH}${suffix}`;
+      if (fs.existsSync(sidecar)) {
+        fs.rmSync(sidecar, { force: true });
+        dropped++;
+      }
+    }
+    if (dropped) console.log(`[boot] dropped ${dropped} stale sidecar(s) of the replaced database`);
+  }
   const done = `${bundle}.done`;
   fs.rmSync(done, { force: true });
   fs.renameSync(bundle, done);

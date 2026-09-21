@@ -120,19 +120,31 @@ rule in plain JavaScript for the scripts that run before the TypeScript build.
 1. Create the service from this repository, add a volume mounted at `/app/data`.
 2. `npm run railway:variables` writes `railway-variables.txt`: paste it into the
    service variables and delete the file. It carries a fresh `SESSION_SECRET`,
-   the API keys from `.env.local`, `DATA_DIR=/app/data` and `TZ=Asia/Qatar`.
-3. `npm run data:export` writes `sianexus-data.tar.gz` (the database, the
-   uploads and the generated reports). Put it on the volume as
-   `data/import/sianexus-data.tar.gz`.
-4. Deploy. `railway.json` builds with `npm run build` and starts with
+   the API keys from `.env.local`, `DATA_DIR=/app/data`, `TZ=Asia/Qatar` and a
+   `SETUP_TOKEN` for step 4.
+3. Deploy. `railway.json` builds with `npm run build` and starts with
    `npm run start:railway`, which runs `scripts/boot.mjs` first: it creates the
-   folders, restores the bundle once (renaming it `.done` so a restart does not
-   repeat it), applies any missing migrations, and sets the SQLite pragmas.
-   `/api/health` is the health check.
+   folders, restores a bundle if one is waiting, applies any missing migrations
+   and sets the SQLite pragmas. `/api/health` is the health check. The volume
+   is empty at this point, so every page says the app is being set up.
+4. `npm run data:export` writes `sianexus-data.tar.gz` (the database, the
+   uploads and the generated reports). Open `https://<your domain>/setup/restore`,
+   type the `SETUP_TOKEN` and upload it. The page digests the file in the
+   browser, sends it in 8 MB chunks with retries and resume, and the server
+   verifies the whole thing before accepting it.
+5. Delete `SETUP_TOKEN` in Railway and deploy again. The boot step unpacks the
+   bundle and renames it `.done` so a restart never repeats it, and the restore
+   page stops existing.
 
-Without a bundle the app starts empty. `SEED_ON_EMPTY=true` seeds from the
-committed `sources/` folder instead, but the seed is TypeScript and needs the
-development dependencies, so the bundle is the supported path.
+**Why the upload page rather than the CLI.** `railway up` is the normal way to
+put a file on a volume, but the Railway CLI is a native binary and the machine
+this was built on refuses to run it. `/setup/restore` exists only while
+`SETUP_TOKEN` is set, is rate limited, and compares the token in constant time;
+see DECISIONS 136.
+
+Without a bundle the app stays on the waiting screen. `SEED_ON_EMPTY=true`
+seeds from the committed `sources/` folder instead, but the seed is TypeScript
+and needs the development dependencies, so the bundle is the supported path.
 
 ### Migration path (Supabase / Vercel later)
 

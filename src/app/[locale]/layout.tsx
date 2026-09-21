@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { awaitingSetup } from "@/server/setup-state";
+import { AwaitingSetup } from "@/components/nexus/AwaitingSetup";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -27,6 +29,11 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
   const messages = await getMessages();
   const dir = locale === "ar" ? "rtl" : "ltr";
+  /* A deployment whose volume is still empty shows one honest screen instead
+     of an error on every page. /api/health does not pass through here and
+     keeps answering 200, so the platform leaves the service alone while the
+     operator uploads the bundle at /setup/restore. */
+  const waiting = await awaitingSetup();
 
   return (
     <html lang={locale} dir={dir}>
@@ -50,9 +57,11 @@ export default async function LocaleLayout({
         />
       </head>
       <body>
-        <NextIntlClientProvider messages={messages}>
-          {children}
-        </NextIntlClientProvider>
+        {waiting ? (
+          <AwaitingSetup />
+        ) : (
+          <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+        )}
       </body>
     </html>
   );

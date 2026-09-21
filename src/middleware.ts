@@ -26,6 +26,12 @@ export default function middleware(req: NextRequest) {
      a bug would otherwise be able to report a healthy container as sick and
      have it restarted. */
   if (pathname === "/api/health") return NextResponse.next();
+  /* The one-time restore page and its routes live outside the locale tree:
+     they run before anyone can sign in and must not be rewritten to /en/... .
+     They gate themselves on SETUP_TOKEN and answer 404 without it. */
+  if (pathname === "/setup" || pathname.startsWith("/setup/") || pathname.startsWith("/api/setup/")) {
+    return NextResponse.next();
+  }
   for (const [pattern, to] of REDIRECTS) {
     const m = pattern.exec(pathname);
     if (m) {

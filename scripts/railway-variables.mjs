@@ -87,6 +87,10 @@ const vars = [
   ["SKIP_CR07_FETCH", "1"],
   ["PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD", "1"],
   ["NEXT_TELEMETRY_DISABLED", "1"],
+  /* The one-time door for the data bundle, last so it is easy to find and
+     delete. While it is set, /setup/restore exists and accepts the upload;
+     removing it in Railway takes the page away on the next deploy. */
+  ["SETUP_TOKEN", newSecret(40)],
 ];
 
 fs.writeFileSync(OUT, vars.map(([k, v]) => `${k}=${v}`).join("\n") + "\n", "utf8");
@@ -111,4 +115,14 @@ console.log(
   "\nThe file is in .gitignore and .railwayignore. Paste it into Railway's variables\n" +
     "(Raw Editor), then delete it. APP_URL uses Railway's own reference syntax, so it\n" +
     "resolves to whatever public domain the service is given."
+);
+
+/* The setup token is the one value the operator has to type by hand, into the
+   restore page, so it is the one value printed. It is not a credential to
+   anything else and it stops working the moment they delete the variable. */
+const setup = vars.find(([k]) => k === "SETUP_TOKEN")?.[1] ?? "";
+console.log(
+  `\nSETUP_TOKEN (type this into /setup/restore after the first deploy):\n\n  ${setup}\n\n` +
+    "Upload sianexus-data.tar.gz there, then delete SETUP_TOKEN in Railway and deploy\n" +
+    "again. That removes the restore page and starts SiaNexus with your data."
 );
