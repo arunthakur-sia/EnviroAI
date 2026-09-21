@@ -26,8 +26,17 @@ Prerequisites: **Node 20+** and npm. No Docker, no Python, no build tools.
 
 ```bash
 npm run setup     # installs, fetches public NPC sources + fonts, migrates, seeds
+npm run setup:win # Windows only, after npm install: the two WebAssembly shims (below)
 npm run dev       # http://localhost:3000
 ```
+
+**On Windows**, run `npm run setup:win` after any `npm install`. Application
+Control on this class of machine refuses unsigned native `.node` binaries, so
+Tailwind's scanner and the ESLint resolver run from their WebAssembly builds
+instead. Those builds declare `"cpu": "wasm32"`, which npm refuses to install
+on an x64 host, so they cannot live in `package.json`: `setup:win` installs
+them with `--no-save` and they stay out of the lockfile. On Linux and macOS the
+script does nothing, because the native binaries work there.
 
 The seed inside `npm run setup` has been timed at **9, 36 and 40 minutes** on
 this machine across four runs. The spread is real and worth knowing before you
