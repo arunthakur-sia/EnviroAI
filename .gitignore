@@ -1,20 +1,32 @@
 node_modules/
 .next/
 out/
-data/
-sources/
-public/fonts/*.woff2
-public/pdf.worker.min.mjs
+
+# Anchored with a leading slash on purpose. An unanchored `data/` matches a
+# folder of that name at ANY depth, which silently excluded scripts/data/ and
+# its hand-written CR07 and CR08 content from the repository; the deployment
+# build then failed on a module it could not find. Only the runtime data
+# directory at the root is meant to be ignored.
+/data/
+/sources/
+/railway-test-data/
+
+# Copied out of pdfjs-dist by `npm run prebuild`, so it is a build artefact
+# rather than source. The fonts beside it ARE committed: they come from the
+# network and a build should not depend on a third party being reachable.
+/public/pdf.worker.min.mjs
+
 .env
 .env.local
 .env*.local
 !.env.example
+
 *.tsbuildinfo
 next-env.d.ts
-test-results/
-playwright-report/
+/test-results/
+/playwright-report/
 
 # the data bundle and the variables file are made for one deployment and carry
 # real values; neither belongs in the history
 *.tar.gz
-railway-variables.txt
+/railway-variables.txt

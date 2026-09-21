@@ -1,24 +1,32 @@
 # What `railway up` must not upload.
 #
-# `sources/` is deliberately NOT here: it holds the public NPC and open-data
-# documents the seed ingests, and the Organisation re-sync diff reads one file
-# from it at runtime. It is about 250 MB, so a CLI deploy carries it and a
-# GitHub deploy does not (it is in .gitignore). Neither is fatal: the supported
-# way to put data in front of this app is the bundle restored by scripts/boot.mjs.
+# Every runtime path is anchored with a leading slash. An unanchored `data/`
+# matches a folder of that name at ANY depth, which excluded scripts/data/ and
+# broke the deployment build on a module it could not find.
+#
+# `/sources/` is ignored here as it is in git: about 250 MB of fetched public
+# documents. The app degrades gracefully without them (the Organisation
+# re-sync diff comes back empty) and the supported way to put data in front of
+# this app is the bundle restored by scripts/boot.mjs.
 
 node_modules/
 .next/
 out/
-data/
+
+/data/
+/sources/
+/railway-test-data/
+
 .env
 .env.local
 .env*.local
+!.env.example
 
 # QC artefacts from the machine that built this, never product data
-test-results/
-playwright-report/
+/test-results/
+/playwright-report/
 *.tsbuildinfo
 
 # made for one deployment, carrying real values
 *.tar.gz
-railway-variables.txt
+/railway-variables.txt
