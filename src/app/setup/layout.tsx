@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
-  title: "SiaNexus setup",
+  title: "EnviroAI setup",
   robots: { index: false, follow: false },
   icons: { icon: "/favicon.svg" },
 };

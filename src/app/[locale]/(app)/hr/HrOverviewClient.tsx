@@ -10,10 +10,10 @@ import { useToast } from "@/components/ui/toast";
 import { ReportButton } from "@/components/nexus/ReportButton";
 import type { HrOverview } from "@/server/services/hr";
 
-export const SEVERITY_TONE: Record<string, "danger" | "warn" | "sand" | "ghost"> = {
+export const SEVERITY_TONE: Record<string, "danger" | "warn" | "mist" | "ghost"> = {
   critical: "danger",
   high: "warn",
-  medium: "sand",
+  medium: "mist",
   low: "ghost",
 };
 
@@ -36,7 +36,7 @@ export function riskLink(r: { resourceType: string | null; resourceId: string | 
 
 function heatColor(score: number): string {
   if (score >= 85) return "bg-ok-light text-ok";
-  if (score >= 70) return "bg-gold-100 text-maroon-900";
+  if (score >= 70) return "bg-aqua-100 text-navy-900";
   if (score >= 50) return "bg-warn-light text-warn";
   return "bg-danger-light text-danger";
 }
@@ -96,7 +96,7 @@ export function HrOverviewClient({ data }: { data: HrOverview }) {
               value={value / 100}
               size={88}
               stroke={8}
-              color={value >= 80 ? "var(--color-ok)" : value >= 55 ? "var(--color-gold-500)" : "var(--color-danger)"}
+              color={value >= 80 ? "var(--color-ok)" : value >= 55 ? "var(--color-aqua-500)" : "var(--color-danger)"}
             >
               <span className="text-lg font-semibold text-ink-900 tnum">{value}</span>
             </ProgressRing>
@@ -109,14 +109,14 @@ export function HrOverviewClient({ data }: { data: HrOverview }) {
       </div>
 
       {/* risk counts */}
-      <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl bg-sand-100 px-4 py-2.5 text-sm" data-testid="hr-risk-counts">
+      <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl bg-mist-100 px-4 py-2.5 text-sm" data-testid="hr-risk-counts">
         {(["critical", "high", "medium", "low"] as const).map((sev) => (
           <span key={sev} className="flex items-center gap-1.5">
             <Chip tone={SEVERITY_TONE[sev]}>{t(`severity.${sev}`)}</Chip>
             <span className="tnum font-semibold">{data.riskCounts[sev]}</span>
           </span>
         ))}
-        <Link href="/hr/risks" className="link-draw ms-auto text-xs font-medium text-maroon-700">
+        <Link href="/hr/risks" className="link-draw ms-auto text-xs font-medium text-navy-700">
           {t("allRisks")}
         </Link>
       </div>
@@ -149,7 +149,7 @@ export function HrOverviewClient({ data }: { data: HrOverview }) {
       {/* top 10 risks */}
       <div className="mt-6" data-testid="hr-top-risks">
         <SectionTitle>{t("topRisks")}</SectionTitle>
-        <div className="card divide-y divide-sand-100">
+        <div className="card divide-y divide-mist-100">
           {data.topRisks.map((r) => (
             <div key={r.id} className="flex items-center gap-3 px-4 py-2.5">
               <Chip tone={SEVERITY_TONE[r.severity]} className="shrink-0">
@@ -166,7 +166,7 @@ export function HrOverviewClient({ data }: { data: HrOverview }) {
               </div>
               <Link
                 href={riskLink(r) as never}
-                className="flex shrink-0 items-center gap-1 rounded-lg border border-sand-300 px-2.5 py-1.5 text-xs font-medium text-ink-600 hover:border-maroon-300 hover:text-maroon-700"
+                className="flex shrink-0 items-center gap-1 rounded-lg border border-mist-300 px-2.5 py-1.5 text-xs font-medium text-ink-600 hover:border-navy-300 hover:text-navy-700"
               >
                 {t("actOn")} <ArrowUpRight className="size-3 flip-rtl" />
               </Link>

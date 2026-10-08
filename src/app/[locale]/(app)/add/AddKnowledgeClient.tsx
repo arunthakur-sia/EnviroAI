@@ -110,10 +110,10 @@ export function AddKnowledgeClient({
 
   // reader "draft a lesson from this" hand-off
   React.useEffect(() => {
-    const draft = sessionStorage.getItem("nexus-lesson-draft");
+    const draft = sessionStorage.getItem("enviroai-lesson-draft");
     if (draft) {
       setNotes(draft);
-      sessionStorage.removeItem("nexus-lesson-draft");
+      sessionStorage.removeItem("enviroai-lesson-draft");
     }
   }, []);
 
@@ -222,7 +222,7 @@ export function AddKnowledgeClient({
 
   const contextChip = nodeContext ? (
     <p className="mb-3">
-      <Chip tone="maroon">
+      <Chip tone="navy">
         {t("deliveryContext", {
           node: `${nodeContext.code ?? ""} ${bi(locale, nodeContext.titleEn, nodeContext.titleAr)}`.trim(),
         })}
@@ -237,7 +237,7 @@ export function AddKnowledgeClient({
         {contextChip}
         {/* CR02 5.2: Write | Upload | Speak */}
         <div
-          className="mb-4 inline-flex items-center gap-0.5 rounded-xl bg-sand-100 p-1"
+          className="mb-4 inline-flex items-center gap-0.5 rounded-xl bg-mist-100 p-1"
           role="tablist"
           data-testid="add-modes"
         >
@@ -256,7 +256,7 @@ export function AddKnowledgeClient({
               className={cn(
                 "flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-sm transition-colors cursor-pointer",
                 mode === m
-                  ? "bg-white font-medium text-maroon-900 shadow-sm"
+                  ? "bg-white font-medium text-navy-900 shadow-sm"
                   : "text-ink-600 hover:text-ink-900"
               )}
             >
@@ -282,18 +282,18 @@ export function AddKnowledgeClient({
               <div
                 {...getRootProps()}
                 className={cn(
-                  "flex cursor-pointer items-center justify-center gap-3 rounded-xl border-2 border-dashed border-sand-300 px-4 py-14 text-sm text-ink-600 transition-colors hover:border-maroon-300",
-                  isDragActive && "border-maroon-500 bg-maroon-50"
+                  "flex cursor-pointer items-center justify-center gap-3 rounded-xl border-2 border-dashed border-mist-300 px-4 py-14 text-sm text-ink-600 transition-colors hover:border-navy-300",
+                  isDragActive && "border-navy-500 bg-navy-50"
                 )}
               >
                 <input {...getInputProps()} />
-                <UploadCloud className="size-5 text-maroon-500" />
+                <UploadCloud className="size-5 text-navy-500" />
                 {t("dropHint")}
               </div>
               {files.length ? (
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {files.map((f, i) => (
-                    <Chip key={i} tone="sand">
+                    <Chip key={i} tone="mist">
                       {f.name}
                       <button
                         onClick={() => setFiles((prev) => prev.filter((_, j) => j !== i))}
@@ -371,7 +371,7 @@ export function AddKnowledgeClient({
           <Eye /> {showOriginal ? t("hideOriginal") : t("showOriginal")}
         </Button>
         {wasVoice ? (
-          <Chip tone="gold">
+          <Chip tone="aqua">
             <Mic className="size-3" /> {t("modes.speak")}
           </Chip>
         ) : null}
@@ -383,7 +383,7 @@ export function AddKnowledgeClient({
       </div>
 
       {showOriginal && effectiveNotes.trim() ? (
-        <div className="card mb-4 bg-sand-50 p-4">
+        <div className="card mb-4 bg-mist-50 p-4">
           <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-ink-600">
             {t("original")}
           </p>
@@ -421,7 +421,7 @@ export function AddKnowledgeClient({
           return (
             <div key={i} className="card p-5" data-testid="knowledge-item">
               <div className="mb-3 flex flex-wrap items-center gap-2">
-                <Icon className="size-4 text-gold-500" />
+                <Icon className="size-4 text-aqua-500" />
                 <NativeSelect
                   value={item.types[0]}
                   onChange={(e) => patchItem(i, { types: [e.target.value, ...item.types.slice(1)] })}
@@ -451,7 +451,7 @@ export function AddKnowledgeClient({
                   </NativeSelect>
                 ) : null}
                 {lessonish && item.node_link ? (
-                  <Chip tone="maroon">
+                  <Chip tone="navy">
                     {item.node_link.code ?? bi(locale, item.node_link.title_en, item.node_link.title_ar)}
                     <button
                       onClick={() => patchItem(i, { node_link: null })}
@@ -469,12 +469,12 @@ export function AddKnowledgeClient({
                   className="cursor-pointer"
                   aria-label={t("toggleClassification")}
                 >
-                  <Chip tone={item.classification_level === 1 ? "gulf" : "sand"}>
+                  <Chip tone={item.classification_level === 1 ? "teal" : "mist"}>
                     {tc(`classification.${item.classification_level}` as never)}
                   </Chip>
                 </button>
-                {item.machine ? <Chip tone="gold">{tc("aiTranslation")}</Chip> : null}
-                {item.file_ref ? <Chip tone="sand">{item.file_ref.filename}</Chip> : null}
+                {item.machine ? <Chip tone="aqua">{tc("aiTranslation")}</Chip> : null}
+                {item.file_ref ? <Chip tone="mist">{item.file_ref.filename}</Chip> : null}
                 <span className="ms-auto flex items-center gap-1">
                   <Button variant="ghost" size="sm" onClick={() => splitItem(i)} aria-label={t("split")}>
                     <Copy />
@@ -530,7 +530,7 @@ export function AddKnowledgeClient({
               {/* tags */}
               <div className="mt-3 flex flex-wrap items-center gap-1.5">
                 {item.topic_codes.map((code) => (
-                  <Chip key={code} tone="sand">
+                  <Chip key={code} tone="mist">
                     {topicName(code)}
                     <button
                       onClick={() =>
@@ -562,10 +562,10 @@ export function AddKnowledgeClient({
                 </NativeSelect>
               </div>
 
-              {/* NDS3 links with reasons */}
+              {/* NES links with reasons */}
               <div className="mt-2 flex flex-wrap items-center gap-1.5">
                 {item.outcome_links.map((link) => (
-                  <Chip key={link.code} tone="maroon">
+                  <Chip key={link.code} tone="navy">
                     {tt(`outcomes.${link.code}` as never)}
                     <span className="ms-1 text-[10px] opacity-70">
                       {bi(locale, link.reason_en, link.reason_ar)}
@@ -597,9 +597,9 @@ export function AddKnowledgeClient({
                     }
                   }}
                   className="h-7 w-auto text-xs"
-                  aria-label={t("addNdsLink")}
+                  aria-label={t("addNesLink")}
                 >
-                  <option value="">{t("addNdsLink")}</option>
+                  <option value="">{t("addNesLink")}</option>
                   {OUTCOME_CODES.map((code) => (
                     <option key={code} value={code}>
                       {tt(`outcomes.${code}` as never)}
@@ -609,7 +609,7 @@ export function AddKnowledgeClient({
               </div>
 
               {(item.next_step_en || item.next_step_ar) ? (
-                <p className="mt-3 rounded-lg bg-gulf-100/50 px-3 py-2 text-xs leading-relaxed text-gulf-600">
+                <p className="mt-3 rounded-lg bg-teal-100/50 px-3 py-2 text-xs leading-relaxed text-teal-600">
                   {bi(locale, item.next_step_en, item.next_step_ar)}
                 </p>
               ) : null}
@@ -654,7 +654,7 @@ function PublishedList({ links }: { links: { type: string; id: string }[] }) {
         <Link
           key={i}
           href={href(l) as never}
-          className="rounded-lg bg-maroon-100 px-2.5 py-1 text-xs font-medium text-maroon-900 hover:bg-maroon-700 hover:text-white"
+          className="rounded-lg bg-navy-100 px-2.5 py-1 text-xs font-medium text-navy-900 hover:bg-navy-700 hover:text-white"
         >
           {t(`types.${l.type}` as never)} ↗
         </Link>

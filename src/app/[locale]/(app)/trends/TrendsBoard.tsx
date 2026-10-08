@@ -48,7 +48,7 @@ const TYPE_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 const SENTIMENT_FILL: Record<string, string> = {
-  positive: "var(--color-gulf-600)",
+  positive: "var(--color-teal-600)",
   negative: "rgba(179, 38, 30, 0.8)",
   neutral: "var(--color-ink-400)",
   mixed: "var(--color-warn)",
@@ -66,7 +66,7 @@ function ImpactMeter({ impact }: { impact: string }) {
       {[1, 2, 3].map((i) => (
         <span
           key={i}
-          className={cn("w-1.5 rounded-sm", i <= level ? "bg-maroon-700" : "bg-sand-300")}
+          className={cn("w-1.5 rounded-sm", i <= level ? "bg-navy-700" : "bg-mist-300")}
           style={{ height: 4 + i * 4 }}
         />
       ))}
@@ -128,7 +128,7 @@ function TriageStrip({ signal }: { signal: BoardSignal }) {
   const [status, setStatus] = React.useState(signal.triageStatus);
   if (status !== "new") {
     return (
-      <Chip tone={status === "accepted" ? "ok" : status === "converted" ? "gulf" : "ghost"}>
+      <Chip tone={status === "accepted" ? "ok" : status === "converted" ? "teal" : "ghost"}>
         {t(`triage.${status}` as never)}
       </Chip>
     );
@@ -187,12 +187,12 @@ function FeatureSignalCard({
       onMouseLeave={() => onHover(null)}
       className={cn(
         "card relative flex h-full flex-col gap-2 overflow-hidden p-4 pt-5 transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]",
-        (hovered || highlighted) && "border-maroon-300 shadow-[var(--shadow-lift)]"
+        (hovered || highlighted) && "border-navy-300 shadow-[var(--shadow-lift)]"
       )}
       data-testid="feature-signal"
     >
       {primary ? (
-        <span aria-hidden className="absolute inset-x-0 top-0 h-1 bg-maroon-100" />
+        <span aria-hidden className="absolute inset-x-0 top-0 h-1 bg-navy-100" />
       ) : null}
       <p className="flex items-center gap-2 text-[11px] text-ink-600">
         <span className="truncate font-medium">
@@ -209,22 +209,22 @@ function FeatureSignalCard({
       </p>
       <Link
         href={`/trends/${signal.id}` as never}
-        className="line-clamp-3 font-semibold leading-snug text-ink-900 hover:text-maroon-900"
+        className="line-clamp-3 font-semibold leading-snug text-ink-900 hover:text-navy-900"
         style={{ fontFamily: locale === "ar" ? "var(--font-kufi)" : "var(--font-display)", fontSize: 20 }}
       >
         {bi(locale, signal.titleEn, signal.titleAr)}
       </Link>
       {(signal.whyEn || signal.whyAr) ? (
-        <p className="line-clamp-3 rounded-lg bg-gold-100/60 px-2.5 py-1.5 text-xs leading-relaxed text-maroon-900">
+        <p className="line-clamp-3 rounded-lg bg-aqua-100/60 px-2.5 py-1.5 text-xs leading-relaxed text-navy-900">
           {bi(locale, signal.whyEn ?? "", signal.whyAr ?? "")}
         </p>
       ) : null}
       <p className="mt-auto flex flex-wrap items-center gap-2 pt-1">
         <ImpactMeter impact={signal.impact} />
-        <Chip tone="sand">{t(`horizon.${signal.horizon}` as never)}</Chip>
+        <Chip tone="mist">{t(`horizon.${signal.horizon}` as never)}</Chip>
         {signal.outcomes.slice(0, 2).map((o) => (
           <Link key={o.nodeId} href={`/strategy/${o.nodeId}` as never}>
-            <Chip tone="maroon" className="hover:bg-maroon-700 hover:text-white">
+            <Chip tone="navy" className="hover:bg-navy-700 hover:text-white">
               {o.code}
             </Chip>
           </Link>
@@ -234,15 +234,15 @@ function FeatureSignalCard({
             href={signal.url}
             target="_blank"
             rel="noreferrer"
-            className="ms-auto inline-flex items-center gap-1 text-[11px] text-gulf-600 hover:underline"
+            className="ms-auto inline-flex items-center gap-1 text-[11px] text-teal-600 hover:underline"
           >
             <ExternalLink className="size-3" /> {t("source")}
           </a>
         ) : null}
       </p>
-      <div className="flex items-center gap-1.5 border-t border-sand-100 pt-2.5">
+      <div className="flex items-center gap-1.5 border-t border-mist-100 pt-2.5">
         {canTriage ? <TriageStrip signal={signal} /> : (
-          <Chip tone={signal.triageStatus === "accepted" ? "ok" : signal.triageStatus === "converted" ? "gulf" : "ghost"}>
+          <Chip tone={signal.triageStatus === "accepted" ? "ok" : signal.triageStatus === "converted" ? "teal" : "ghost"}>
             {t(`triage.${signal.triageStatus}` as never)}
           </Chip>
         )}
@@ -272,7 +272,7 @@ function MiniSignalCard({
       onMouseLeave={() => onHover(null)}
       className={cn(
         "card flex w-64 shrink-0 flex-col gap-1.5 p-3.5 transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]",
-        (hovered || highlighted) && "border-maroon-300 shadow-[var(--shadow-lift)]"
+        (hovered || highlighted) && "border-navy-300 shadow-[var(--shadow-lift)]"
       )}
       data-testid="mini-signal"
     >
@@ -296,7 +296,7 @@ function MiniSignalCard({
         <ImpactMeter impact={signal.impact} />
         <span className="text-[10px] text-ink-600">{t(`horizon.${signal.horizon}` as never)}</span>
         {signal.outcomes[0] ? (
-          <span className="ms-auto text-[10px] font-medium text-maroon-700 tnum">
+          <span className="ms-auto text-[10px] font-medium text-navy-700 tnum">
             {signal.outcomes[0].code}
           </span>
         ) : null}
@@ -453,12 +453,12 @@ export function TrendsBoard({
       <section className="mt-10" aria-label={t("briefing.title")} data-testid="signal-briefing">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-lg">{t("briefing.title")}</h2>
-          <span className="inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5">
+          <span className="inline-flex items-center gap-0.5 rounded-lg bg-mist-100 p-0.5">
             <button
               onClick={() => setGrouping("category")}
               className={cn(
                 "rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
-                grouping === "category" ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+                grouping === "category" ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
               )}
             >
               {t("briefing.byCategory")}
@@ -468,7 +468,7 @@ export function TrendsBoard({
               data-testid="by-outcome-toggle"
               className={cn(
                 "rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
-                grouping === "outcome" ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+                grouping === "outcome" ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
               )}
             >
               {t("briefing.byOutcome")}
@@ -485,14 +485,14 @@ export function TrendsBoard({
                 key={k}
                 onClick={() => setParam(k, null)}
                 aria-label={t("briefing.clearOne", { name: filterLabel(k) })}
-                className="inline-flex items-center gap-1 rounded-md bg-maroon-100 px-2 py-0.5 text-[11px] font-medium text-maroon-900 transition-colors hover:bg-maroon-700 hover:text-white cursor-pointer"
+                className="inline-flex items-center gap-1 rounded-md bg-navy-100 px-2 py-0.5 text-[11px] font-medium text-navy-900 transition-colors hover:bg-navy-700 hover:text-white cursor-pointer"
               >
                 {filterLabel(k)} <X className="size-3" />
               </button>
             ))}
             <button
               onClick={() => router.push(pathname as never, { scroll: false })}
-              className="text-[11px] font-medium text-ink-600 underline-offset-2 hover:text-maroon-700 hover:underline cursor-pointer"
+              className="text-[11px] font-medium text-ink-600 underline-offset-2 hover:text-navy-700 hover:underline cursor-pointer"
             >
               {t("clearFilters")}
             </button>
@@ -538,9 +538,9 @@ export function TrendsBoard({
                   onClick={() => toggleLane(lane.key, index)}
                   aria-expanded={open}
                   aria-label={open ? t("briefing.collapseLane", { name: lane.label }) : t("briefing.expandLane", { name: lane.label })}
-                  className="group/lane flex w-full items-center gap-2 rounded-lg px-1 py-1.5 text-start hover:bg-sand-100/70 cursor-pointer"
+                  className="group/lane flex w-full items-center gap-2 rounded-lg px-1 py-1.5 text-start hover:bg-mist-100/70 cursor-pointer"
                 >
-                  {Icon ? <Icon className="size-4 shrink-0 text-maroon-700" /> : null}
+                  {Icon ? <Icon className="size-4 shrink-0 text-navy-700" /> : null}
                   <span className="text-sm font-medium text-ink-900">{lane.label}</span>
                   <span className="text-xs text-ink-600 tnum">
                     {t("briefing.signalsCount", { count: lane.signals.length })}
@@ -548,7 +548,7 @@ export function TrendsBoard({
                   <span className="text-[11px] text-ink-600 tnum">
                     · {avg} {t("briefing.avgImpact")}
                   </span>
-                  <span className="mx-2 h-px flex-1 bg-sand-300/70" aria-hidden />
+                  <span className="mx-2 h-px flex-1 bg-mist-300/70" aria-hidden />
                   <ChevronDown
                     className={cn(
                       "size-4 shrink-0 text-ink-400 transition-transform duration-200",

@@ -14,7 +14,7 @@ import { chromium } from "playwright";
 
 const BASE = process.argv[2] ?? "http://localhost:4000";
 const TOKEN = process.argv[3] ?? "";
-const BUNDLE = path.resolve(process.argv[4] ?? "sianexus-data.tar.gz");
+const BUNDLE = path.resolve(process.argv[4] ?? "enviroai-data.tar.gz");
 
 let pass = 0;
 let fail = 0;

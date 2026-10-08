@@ -95,7 +95,7 @@ export function DeliverablesSection({
           <button
             onClick={() => inputRef.current?.click()}
             disabled={busy}
-            className="flex items-center gap-2 rounded-lg border border-dashed border-sand-300 bg-sand-50 px-3.5 py-2 text-sm text-ink-600 transition-colors hover:border-maroon-300 hover:text-maroon-700 cursor-pointer disabled:opacity-60"
+            className="flex items-center gap-2 rounded-lg border border-dashed border-mist-300 bg-mist-50 px-3.5 py-2 text-sm text-ink-600 transition-colors hover:border-navy-300 hover:text-navy-700 cursor-pointer disabled:opacity-60"
           >
             {busy ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
             {t("uploadDeliverables")}
@@ -103,14 +103,14 @@ export function DeliverablesSection({
         </div>
       ) : null}
       {rows.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-sand-300 bg-sand-50 px-4 py-6 text-center text-sm text-ink-600">
+        <p className="rounded-xl border border-dashed border-mist-300 bg-mist-50 px-4 py-6 text-center text-sm text-ink-600">
           {t("noDeliverables")}
         </p>
       ) : (
-        <div className="card divide-y divide-sand-100">
+        <div className="card divide-y divide-mist-100">
           {rows.map((d) => (
             <div key={d.id} className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-4 py-3">
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-maroon-100 text-[11px] font-semibold text-maroon-900 tnum">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-navy-100 text-[11px] font-semibold text-navy-900 tnum">
                 {d.deliverableCode}
               </span>
               <span className="min-w-0 flex-1">
@@ -119,7 +119,7 @@ export function DeliverablesSection({
                     {bi(locale, d.titleEn, d.titleAr)}
                   </span>
                   {d.status === "verified" ? (
-                    <BadgeCheck className="size-4 shrink-0 text-gulf-600" aria-label={tc("verified")} />
+                    <BadgeCheck className="size-4 shrink-0 text-teal-600" aria-label={tc("verified")} />
                   ) : null}
                 </span>
                 <span className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px] text-ink-600">
@@ -148,14 +148,14 @@ export function DeliverablesSection({
                 <ClassificationChip level={d.classificationLevel} labels={classificationLabels} />
                 <a
                   href={`/api/v1/documents/${d.documentId}/download`}
-                  className="rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 hover:text-maroon-700"
+                  className="rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 hover:text-navy-700"
                   aria-label={t("download")}
                 >
                   <Download className="size-4" />
                 </a>
                 <Link
                   href={`/vault/${d.documentId}` as never}
-                  className="rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 hover:text-maroon-700"
+                  className="rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 hover:text-navy-700"
                   aria-label={t("openInReader")}
                 >
                   <BookOpen className="size-4" />

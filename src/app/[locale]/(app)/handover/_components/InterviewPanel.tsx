@@ -116,8 +116,8 @@ export function InterviewPanel({
           <p className="mt-0.5 max-w-xl text-sm text-ink-600">{t("subtitle")}</p>
         </div>
         <div className="flex items-center gap-2">
-          <Chip tone={required ? "maroon" : "sand"}>{required ? t("mandatory") : t("optional")}</Chip>
-          <Chip tone={complete_ ? "ok" : "sand"} className="tnum">
+          <Chip tone={required ? "navy" : "mist"}>{required ? t("mandatory") : t("optional")}</Chip>
+          <Chip tone={complete_ ? "ok" : "mist"} className="tnum">
             {t("completeCount", { complete: complete_, total: topics.length })}
           </Chip>
         </div>
@@ -140,8 +140,8 @@ export function InterviewPanel({
                     type="button"
                     onClick={() => setActiveKey(topic.key)}
                     className={cn(
-                      "flex w-full cursor-pointer items-center gap-2.5 rounded-lg border px-3 py-2 text-start text-sm transition-colors focus-visible:outline-2 focus-visible:outline-gold-500",
-                      isActive ? "border-maroon-300 bg-maroon-50" : "border-sand-200 bg-white hover:border-maroon-300"
+                      "flex w-full cursor-pointer items-center gap-2.5 rounded-lg border px-3 py-2 text-start text-sm transition-colors focus-visible:outline-2 focus-visible:outline-aqua-500",
+                      isActive ? "border-navy-300 bg-navy-50" : "border-mist-200 bg-white hover:border-navy-300"
                     )}
                     aria-pressed={isActive}
                     data-testid="interview-topic"
@@ -149,7 +149,7 @@ export function InterviewPanel({
                     <span
                       className={cn(
                         "flex size-5 shrink-0 items-center justify-center rounded-full text-[10px]",
-                        status === "complete" ? "bg-ok text-white" : status === "in_progress" ? "bg-gulf-100 text-gulf-600" : "bg-sand-100 text-ink-400"
+                        status === "complete" ? "bg-ok text-white" : status === "in_progress" ? "bg-teal-100 text-teal-600" : "bg-mist-100 text-ink-400"
                       )}
                       aria-hidden
                     >
@@ -163,7 +163,7 @@ export function InterviewPanel({
             })}
           </ul>
 
-          <div className="min-h-64 rounded-xl border border-sand-200 bg-sand-50/60 p-4">
+          <div className="min-h-64 rounded-xl border border-mist-200 bg-mist-50/60 p-4">
             {!active ? (
               <p className="flex h-full items-center justify-center text-sm text-ink-600">{t("pickTopic")}</p>
             ) : (
@@ -239,7 +239,7 @@ function TopicView({
         <p className="font-medium text-ink-900">{bi(locale, topic.topic, topic.topicAr)}</p>
         <p className="max-w-md text-sm text-ink-600">{t("startHint")}</p>
         {readOnly ? (
-          <Chip tone="sand">{t("state.pending")}</Chip>
+          <Chip tone="mist">{t("state.pending")}</Chip>
         ) : (
           <Button onClick={onStart} loading={busy === topic.key} data-testid="interview-start">
             <Sparkles /> {t("start")}
@@ -259,7 +259,7 @@ function TopicView({
           </Chip>
           <span className="text-xs text-ink-600 tnum">{t("answersCount", { count: interview.answers })}</span>
           {interview.insightLessonId ? (
-            <Link href={`/lessons?lesson=${interview.insightLessonId}` as never} className="link-draw ms-auto text-xs font-medium text-maroon-700">
+            <Link href={`/lessons?lesson=${interview.insightLessonId}` as never} className="link-draw ms-auto text-xs font-medium text-navy-700">
               {t("openInsight")}
             </Link>
           ) : null}
@@ -297,14 +297,14 @@ function TopicView({
             animate={{ opacity: 1, y: 0 }}
             exit={reduced ? undefined : { opacity: 0 }}
             transition={{ duration: 0.24 }}
-            className="rounded-xl border border-maroon-100 bg-white p-4"
+            className="rounded-xl border border-navy-100 bg-white p-4"
           >
-            <p className="mb-1 flex items-center gap-1.5 text-[11px] font-semibold uppercase text-maroon-700">
+            <p className="mb-1 flex items-center gap-1.5 text-[11px] font-semibold uppercase text-navy-700">
               <Sparkles className="size-3.5" aria-hidden /> {t("aiAsks")}
               <button
                 type="button"
                 onClick={() => setShowOther(!showOther)}
-                className="ms-auto inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium normal-case text-ink-600 hover:bg-sand-100 focus-visible:outline-2 focus-visible:outline-gold-500"
+                className="ms-auto inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-medium normal-case text-ink-600 hover:bg-mist-100 focus-visible:outline-2 focus-visible:outline-aqua-500"
                 aria-pressed={showOther}
               >
                 <Languages className="size-3.5" aria-hidden /> {t("otherLanguage")}
@@ -314,7 +314,7 @@ function TopicView({
               {questionText(lastAi)}
             </p>
             {showOther ? (
-              <p className="mt-2 border-t border-sand-100 pt-2 text-sm leading-relaxed text-ink-600" dir="auto">
+              <p className="mt-2 border-t border-mist-100 pt-2 text-sm leading-relaxed text-ink-600" dir="auto">
                 {otherText(lastAi)}
               </p>
             ) : null}
@@ -339,8 +339,8 @@ function TopicView({
               type="button"
               onClick={() => setVoice(!voice)}
               className={cn(
-                "ms-auto inline-flex cursor-pointer items-center gap-1 rounded-md border px-2 py-0.5 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-gold-500",
-                voice ? "border-maroon-300 bg-maroon-50 text-maroon-900" : "border-sand-300 text-ink-600 hover:text-ink-900"
+                "ms-auto inline-flex cursor-pointer items-center gap-1 rounded-md border px-2 py-0.5 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-aqua-500",
+                voice ? "border-navy-300 bg-navy-50 text-navy-900" : "border-mist-300 text-ink-600 hover:text-ink-900"
               )}
               aria-pressed={voice}
               data-testid="interview-voice-toggle"
@@ -399,7 +399,7 @@ function TranscriptToggle({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="inline-flex cursor-pointer items-center gap-1 text-xs font-medium text-ink-600 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-gold-500"
+        className="inline-flex cursor-pointer items-center gap-1 text-xs font-medium text-ink-600 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-aqua-500"
         aria-expanded={open}
         aria-controls={id}
         data-testid="interview-transcript-toggle"
@@ -412,7 +412,7 @@ function TranscriptToggle({
           {transcript.map((e, i) => (
             <li
               key={i}
-              className={cn("max-w-[92%] rounded-lg px-3 py-2 text-sm leading-relaxed", e.role === "ai" ? "bg-white text-ink-900" : "ms-auto bg-maroon-100/60 text-maroon-900")}
+              className={cn("max-w-[92%] rounded-lg px-3 py-2 text-sm leading-relaxed", e.role === "ai" ? "bg-white text-ink-900" : "ms-auto bg-navy-100/60 text-navy-900")}
               dir="auto"
             >
               {e.role === "ai" ? questionText(e) : e.text}

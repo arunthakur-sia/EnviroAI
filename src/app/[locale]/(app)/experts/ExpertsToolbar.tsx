@@ -1,7 +1,7 @@
 "use client";
 // CR08 3: one toolbar, two filter sets. Internal: unit, domain, level and
 // "involved in projects". External: type, organisation, domain, availability,
-// "worked with NPC" and country. The search field runs the semantic matcher
+// "worked with the Office" and country. The search field runs the semantic matcher
 // on Enter and the cheap name match while typing; every filter lives in the
 // URL so a view is shareable.
 import * as React from "react";
@@ -72,7 +72,7 @@ export function ExpertsToolbar({
     }, 350);
   }
 
-  const selectClass = (key: string) => cn("w-auto max-w-56", sp.get(key) && "border-maroon-300");
+  const selectClass = (key: string) => cn("w-auto max-w-56", sp.get(key) && "border-navy-300");
   const layout = sp.get("layout") === "flat" ? "flat" : "grouped";
 
   return (
@@ -136,7 +136,7 @@ export function ExpertsToolbar({
             onChange={(on) => setParam("projects", on ? "1" : null)}
           />
           <div
-            className="ms-auto flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5"
+            className="ms-auto flex items-center gap-0.5 rounded-lg bg-mist-100 p-0.5"
             role="group"
             aria-label={t("layout.label")}
             data-testid="layout-toggle"
@@ -150,8 +150,8 @@ export function ExpertsToolbar({
                 data-testid={`layout-${v}`}
                 className={cn(
                   "flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors cursor-pointer",
-                  "focus-visible:outline-2 focus-visible:outline-gold-500",
-                  layout === v ? "bg-white text-maroon-900 shadow-sm" : "text-ink-600 hover:text-ink-900"
+                  "focus-visible:outline-2 focus-visible:outline-aqua-500",
+                  layout === v ? "bg-white text-navy-900 shadow-sm" : "text-ink-600 hover:text-ink-900"
                 )}
               >
                 {v === "grouped" ? <Rows3 className="size-3.5" aria-hidden /> : <LayoutGrid className="size-3.5" aria-hidden />}
@@ -232,7 +232,7 @@ export function ExpertsToolbar({
         <button
           type="button"
           onClick={clear}
-          className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-xs font-medium text-maroon-700 transition-colors hover:bg-maroon-50 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+          className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-xs font-medium text-navy-700 transition-colors hover:bg-navy-50 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
           data-testid="clear-filters"
         >
           <X className="size-3.5" aria-hidden /> {t("clearFilters")}
@@ -257,7 +257,7 @@ function DomainSelect({
     <NativeSelect
       value={value}
       onChange={(e) => onChange(e.target.value || null)}
-      className={cn("w-auto max-w-56", value && "border-maroon-300")}
+      className={cn("w-auto max-w-56", value && "border-navy-300")}
       aria-label={t("filterDomain")}
       data-testid="filter-domain"
     >
@@ -287,7 +287,7 @@ function Toggle({
       htmlFor={id}
       className={cn(
         "flex h-9.5 cursor-pointer items-center gap-2 rounded-lg border bg-white px-2.5 text-sm text-ink-900 transition-colors",
-        checked ? "border-maroon-300" : "border-sand-300"
+        checked ? "border-navy-300" : "border-mist-300"
       )}
     >
       <Switch id={id} checked={checked} onCheckedChange={onChange} data-testid={id} />

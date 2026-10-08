@@ -26,7 +26,7 @@ async function login(page: Page, email: string) {
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const res = await page.context().request.post(`${BASE}/api/v1/auth/login`, {
-        data: { email, password: "Nexus!2026" },
+        data: { email, password: "EnviroAI!2026" },
         timeout: 120000,
       });
       status = res.status();
@@ -345,7 +345,7 @@ async function main() {
   });
 
   if (wants("admin-en") || wants("admin-ar") || wants("m-en") || wants("m-ar")) {
-    await login(page, "admin@npc.qa");
+    await login(page, "admin@enviroai.demo");
     if (wants("admin-en")) await adminPass(page, "en", 1440);
     if (wants("admin-ar")) await adminPass(page, "ar", 1440);
     if (wants("m-en") || wants("m-ar")) {
@@ -358,16 +358,16 @@ async function main() {
 
   if (wants("head")) {
     await context.clearCookies();
-    await login(page, "head.stats@npc.qa");
+    await login(page, "head.stats@enviroai.demo");
     for (const locale of ["en", "ar"] as const) await headPass(page, locale);
 
     // a reader whose portal is hidden gets the 404 (per-user deny override, removed afterwards)
     const { rawClient } = await import("../../src/server/db/client");
-    const reader = await rawClient.execute("select id from users where email = 'reader@npc.qa'");
+    const reader = await rawClient.execute("select id from users where email = 'reader@enviroai.demo'");
     const readerId = String(reader.rows[0]?.id ?? "");
     if (readerId) {
       await context.clearCookies();
-      await login(page, "reader@npc.qa");
+      await login(page, "reader@enviroai.demo");
       const okRes = await page.context().request.get(`${BASE}/en/operating-model`, { timeout: 120000 });
       if (okRes.status() !== 200) problems.push(`reader with the portal gets ${okRes.status()}`);
       await rawClient.execute({

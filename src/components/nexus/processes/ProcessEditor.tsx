@@ -104,7 +104,7 @@ function suggestCode(level: ProcessLevel, parent: ProcessSummary | null, process
 }
 
 const FIELD = "h-9 text-sm";
-const SMALL_ICON = "flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-ink-600 hover:bg-sand-100 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500 disabled:cursor-not-allowed disabled:opacity-30";
+const SMALL_ICON = "flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-ink-600 hover:bg-mist-100 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500 disabled:cursor-not-allowed disabled:opacity-30";
 
 export function ProcessEditor({
   open,
@@ -359,9 +359,9 @@ export function ProcessEditor({
             {form.steps.length ? (
               <ol className="flex flex-col gap-2" data-testid="editor-steps">
                 {form.steps.map((s, i) => (
-                  <li key={s.key} className="rounded-xl border border-sand-200 bg-sand-50 p-2.5" data-testid="editor-step">
+                  <li key={s.key} className="rounded-xl border border-mist-200 bg-mist-50 p-2.5" data-testid="editor-step">
                     <div className="flex items-start gap-2">
-                      <span className="mt-1.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-maroon-700 text-[11px] font-semibold text-white tnum" aria-hidden>
+                      <span className="mt-1.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-navy-700 text-[11px] font-semibold text-white tnum" aria-hidden>
                         {i + 1}
                       </span>
                       <div className="grid min-w-0 flex-1 grid-cols-1 gap-2 sm:grid-cols-2">
@@ -386,7 +386,7 @@ export function ProcessEditor({
                 ))}
               </ol>
             ) : (
-              <p className="rounded-lg border border-dashed border-sand-300 bg-sand-50 px-3 py-3 text-center text-xs text-ink-600">{t("editor.noSteps")}</p>
+              <p className="rounded-lg border border-dashed border-mist-300 bg-mist-50 px-3 py-3 text-center text-xs text-ink-600">{t("editor.noSteps")}</p>
             )}
             <Button type="button" size="sm" variant="secondary" className="mt-2" onClick={() => set("steps", [...form.steps, { key: nextKey(), textEn: "", textAr: "", roleUnitCode: "", system: "" }])} data-testid="editor-add-step">
               <Plus /> {t("editor.addStep")}
@@ -398,7 +398,7 @@ export function ProcessEditor({
             <SubHeading>{t("editor.sections.io")}</SubHeading>
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
               {(["inputs", "outputs"] as const).map((kind) => (
-                <div key={kind} className="rounded-xl border border-sand-200 p-2.5">
+                <div key={kind} className="rounded-xl border border-mist-200 p-2.5">
                   <p className="mb-2 text-xs font-medium text-ink-900">{t(`panel.${kind}`)}</p>
                   <div className="flex flex-col gap-2">
                     {form[kind].map((row, i) => (
@@ -426,7 +426,7 @@ export function ProcessEditor({
           <section>
             <SubHeading>{t("editor.sections.systemsKpis")}</SubHeading>
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-              <div className="rounded-xl border border-sand-200 p-2.5">
+              <div className="rounded-xl border border-mist-200 p-2.5">
                 <p className="mb-2 text-xs font-medium text-ink-900">{t("panel.systems")}</p>
                 <div className="flex flex-col gap-1.5">
                   {form.systems.map((row, i) => (
@@ -443,7 +443,7 @@ export function ProcessEditor({
                   <Plus /> {t("editor.addSystem")}
                 </Button>
               </div>
-              <div className="rounded-xl border border-sand-200 p-2.5">
+              <div className="rounded-xl border border-mist-200 p-2.5">
                 <p className="mb-2 text-xs font-medium text-ink-900">{t("panel.kpis")}</p>
                 <div className="flex flex-col gap-2">
                   {form.kpis.map((row, i) => (
@@ -472,7 +472,7 @@ export function ProcessEditor({
             <SubHeading>{t("editor.sections.documents")}</SubHeading>
             <p className="mb-2 text-[11px] text-ink-600">{t("editor.docsHint")}</p>
             {!form.ownerUnitId ? (
-              <p className="rounded-lg border border-dashed border-sand-300 bg-sand-50 px-3 py-3 text-center text-xs text-ink-600">{t("editor.chooseOwnerFirst")}</p>
+              <p className="rounded-lg border border-dashed border-mist-300 bg-mist-50 px-3 py-3 text-center text-xs text-ink-600">{t("editor.chooseOwnerFirst")}</p>
             ) : (
               <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
                 {(
@@ -481,7 +481,7 @@ export function ProcessEditor({
                     ["sopDocumentIds", t("editor.sops"), sopChoices],
                   ] as const
                 ).map(([kind, label, choices]) => (
-                  <div key={kind} className="rounded-xl border border-sand-200 p-2.5" data-testid={`editor-${kind}`}>
+                  <div key={kind} className="rounded-xl border border-mist-200 p-2.5" data-testid={`editor-${kind}`}>
                     <p className="mb-2 text-xs font-medium text-ink-900">{label}</p>
                     {choices.length ? (
                       <ul className="flex flex-col gap-1">
@@ -490,8 +490,8 @@ export function ProcessEditor({
                           const foreign = d.unit && d.unit.id !== form.ownerUnitId;
                           return (
                             <li key={d.id}>
-                              <label className="flex cursor-pointer items-start gap-2 rounded-lg px-1.5 py-1 text-xs text-ink-900 hover:bg-sand-50">
-                                <input type="checkbox" checked={checked} onChange={() => toggleDoc(kind, d.id)} className="mt-0.5 size-3.5 shrink-0 cursor-pointer rounded border-sand-300" style={{ accentColor: "var(--color-maroon-700)" }} />
+                              <label className="flex cursor-pointer items-start gap-2 rounded-lg px-1.5 py-1 text-xs text-ink-900 hover:bg-mist-50">
+                                <input type="checkbox" checked={checked} onChange={() => toggleDoc(kind, d.id)} className="mt-0.5 size-3.5 shrink-0 cursor-pointer rounded border-mist-300" style={{ accentColor: "var(--color-navy-700)" }} />
                                 <span className="min-w-0">
                                   <span className="block leading-snug">{bi(locale, d.titleEn, d.titleAr)}</span>
                                   <span className="block text-[10px] text-ink-400">
@@ -516,7 +516,7 @@ export function ProcessEditor({
 
           {/* the form is long: the actions and any error stay at the foot of
               the dialog rather than at the end of a scroll */}
-          <div className="sticky bottom-0 -mx-6 flex flex-wrap items-center justify-end gap-2 border-t border-sand-100 bg-white px-6 pb-6 pt-3">
+          <div className="sticky bottom-0 -mx-6 flex flex-wrap items-center justify-end gap-2 border-t border-mist-100 bg-white px-6 pb-6 pt-3">
             {error ? (
               <p role="alert" className="me-auto rounded-lg bg-danger-light px-3 py-2 text-xs text-danger" data-testid="editor-error">
                 {error}

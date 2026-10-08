@@ -26,7 +26,7 @@ export function DialogContent({
       <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-ink-900/25 backdrop-blur-[2px] data-[state=open]:animate-in" />
       <DialogPrimitive.Content
         className={cn(
-          "fixed start-1/2 top-1/2 z-50 w-[min(560px,92vw)] -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2 rounded-2xl border border-sand-300 bg-white p-6 shadow-[var(--shadow-pop)] focus:outline-none",
+          "fixed start-1/2 top-1/2 z-50 w-[min(560px,92vw)] -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2 rounded-2xl border border-mist-300 bg-white p-6 shadow-[var(--shadow-pop)] focus:outline-none",
           className
         )}
         {...props}
@@ -35,7 +35,7 @@ export function DialogContent({
           <DialogPrimitive.Title className="font-display text-lg text-ink-900">
             {title}
           </DialogPrimitive.Title>
-          <DialogPrimitive.Close className="rounded-md p-1 text-ink-400 hover:bg-sand-100 hover:text-ink-900">
+          <DialogPrimitive.Close className="rounded-md p-1 text-ink-400 hover:bg-mist-100 hover:text-ink-900">
             <X className="size-4" />
           </DialogPrimitive.Close>
         </div>
@@ -59,7 +59,7 @@ export function DropdownContent({
       <DropdownPrimitive.Content
         sideOffset={6}
         className={cn(
-          "z-50 min-w-44 rounded-xl border border-sand-300 bg-white p-1.5 shadow-[var(--shadow-pop)]",
+          "z-50 min-w-44 rounded-xl border border-mist-300 bg-white p-1.5 shadow-[var(--shadow-pop)]",
           className
         )}
         {...props}
@@ -75,7 +75,7 @@ export function DropdownItem({
   return (
     <DropdownPrimitive.Item
       className={cn(
-        "flex cursor-pointer select-none items-center gap-2 rounded-lg px-2.5 py-2 text-sm text-ink-900 outline-none data-[highlighted]:bg-maroon-100/60 data-[highlighted]:text-maroon-900 [&_svg]:size-4 [&_svg]:text-ink-400",
+        "flex cursor-pointer select-none items-center gap-2 rounded-lg px-2.5 py-2 text-sm text-ink-900 outline-none data-[highlighted]:bg-navy-100/60 data-[highlighted]:text-navy-900 [&_svg]:size-4 [&_svg]:text-ink-400",
         className
       )}
       {...props}
@@ -84,7 +84,7 @@ export function DropdownItem({
 }
 
 export const DropdownSeparator = () => (
-  <DropdownPrimitive.Separator className="my-1 h-px bg-sand-200" />
+  <DropdownPrimitive.Separator className="my-1 h-px bg-mist-200" />
 );
 
 /* ---------------- Tabs ---------------- */
@@ -102,7 +102,7 @@ export function TabsList({
         /* CR08 Phase C: a strip of tabs wider than a phone scrolls inside
            itself rather than widening the page. `max-w-full` is what makes
            the inline-flex give way; the triggers keep their size. */
-        "inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-xl bg-sand-100 p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+        "inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-xl bg-mist-100 p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         className
       )}
       {...props}
@@ -117,7 +117,7 @@ export function TabsTrigger({
   return (
     <TabsPrimitive.Trigger
       className={cn(
-        "shrink-0 whitespace-nowrap rounded-lg px-3.5 py-1.5 text-sm text-ink-600 transition-colors data-[state=active]:bg-white data-[state=active]:text-maroon-900 data-[state=active]:shadow-sm hover:text-ink-900 cursor-pointer",
+        "shrink-0 whitespace-nowrap rounded-lg px-3.5 py-1.5 text-sm text-ink-600 transition-colors data-[state=active]:bg-white data-[state=active]:text-navy-900 data-[state=active]:shadow-sm hover:text-ink-900 cursor-pointer",
         className
       )}
       {...props}
@@ -147,7 +147,7 @@ export function Tip({
         <TooltipPrimitive.Content
           side={side}
           sideOffset={6}
-          className="z-50 max-w-72 rounded-lg border border-sand-300 bg-white px-3 py-1.5 text-xs text-ink-900 shadow-[var(--shadow-paper)]"
+          className="z-50 max-w-72 rounded-lg border border-mist-300 bg-white px-3 py-1.5 text-xs text-ink-900 shadow-[var(--shadow-paper)]"
         >
           {content}
         </TooltipPrimitive.Content>
@@ -165,7 +165,7 @@ export function Switch({
   return (
     <SwitchPrimitive.Root
       className={cn(
-        "relative h-5.5 w-10 shrink-0 cursor-pointer rounded-full bg-sand-300 transition-colors data-[state=checked]:bg-maroon-700",
+        "relative h-5.5 w-10 shrink-0 cursor-pointer rounded-full bg-mist-300 transition-colors data-[state=checked]:bg-navy-700",
         className
       )}
       {...props}

@@ -59,21 +59,21 @@ export function IndexCard({
       </span>
       <span className="flex items-end justify-between gap-3">
         <span>
-          <span className="block text-2xl font-semibold text-maroon-900 tnum" style={{ fontFamily: "var(--font-display)" }}>
-            {c.qatar?.rank != null ? c.qatar.rank : c.qatar?.score != null ? c.qatar.score.toFixed(c.qatar.score < 10 ? 2 : 1) : "-"}
+          <span className="block text-2xl font-semibold text-navy-900 tnum" style={{ fontFamily: "var(--font-display)" }}>
+            {c.home?.rank != null ? c.home.rank : c.home?.score != null ? c.home.score.toFixed(c.home.score < 10 ? 2 : 1) : "-"}
           </span>
           <span className="block text-[11px] text-ink-600 tnum">
-            {c.qatar?.rank != null && c.qatar?.total
-              ? t("rankOf", { total: c.qatar.total })
-              : c.qatar?.score != null
+            {c.home?.rank != null && c.home?.total
+              ? t("rankOf", { total: c.home.total })
+              : c.home?.score != null
                 ? c.statistics?.unit ?? t("scoreLabel")
                 : t("noData")}
             {" · "}
-            {c.qatar?.year ?? "-"}
+            {c.home?.year ?? "-"}
           </span>
-          {c.qatar?.score != null && c.qatar?.rank != null ? (
+          {c.home?.score != null && c.home?.rank != null ? (
             <span className="block text-[11px] text-ink-600 tnum">
-              {t("scoreShort")} {c.qatar.score.toFixed(c.qatar.score < 10 ? 2 : 1)}
+              {t("scoreShort")} {c.home.score.toFixed(c.home.score < 10 ? 2 : 1)}
             </span>
           ) : null}
         </span>
@@ -99,23 +99,23 @@ export function IndexCard({
           </span>
         ) : null}
         {c.gccPosition ? (
-          <Chip tone={c.gccPosition === 1 ? "gold" : "sand"}>
+          <Chip tone={c.gccPosition === 1 ? "aqua" : "mist"}>
             {t("gccPosition", { pos: c.gccPosition })}
           </Chip>
         ) : null}
         {c.statistics ? (
-          <Chip tone="gulf">
+          <Chip tone="teal">
             <BarChart3 className="size-3" aria-hidden /> {t("statisticsChip")}
           </Chip>
         ) : null}
-        {c.entity ? <Chip tone="gulf">{bi(locale, c.entity.shortEn, c.entity.shortAr)}</Chip> : null}
+        {c.entity ? <Chip tone="teal">{bi(locale, c.entity.shortEn, c.entity.shortAr)}</Chip> : null}
         {c.linkedTargets.slice(0, 1).map((tg) => (
-          <Chip key={tg.id} tone="maroon">{tg.code ?? bi(locale, tg.titleEn, tg.titleAr).slice(0, 18)}</Chip>
+          <Chip key={tg.id} tone="navy">{tg.code ?? bi(locale, tg.titleEn, tg.titleAr).slice(0, 18)}</Chip>
         ))}
         {!c.forecastEnabled ? <Chip tone="ghost">{t("forecastOff")}</Chip> : null}
       </span>
       {gccMode ? (
-        <span className="mt-1 border-t border-sand-100 pt-2" data-testid="gcc-scale">
+        <span className="mt-1 border-t border-mist-100 pt-2" data-testid="gcc-scale">
           <span className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-ink-600 rtl:tracking-normal">
             {t("gccScale")}
             {c.gccLeader ? (
@@ -130,7 +130,7 @@ export function IndexCard({
                 key={i}
                 className={cn(
                   "h-2 flex-1 rounded-full",
-                  i + 1 === c.gccPosition ? "bg-maroon-700" : "bg-sand-300"
+                  i + 1 === c.gccPosition ? "bg-navy-700" : "bg-mist-300"
                 )}
                 title={`${i + 1}`}
               />
@@ -147,7 +147,7 @@ export function IndexCard({
         onClick={() => router.push(`/indices/${c.code}` as never)}
         onMouseEnter={() => setHover(c.id)}
         onMouseLeave={() => setHover(null)}
-        className="card card-hover flex flex-col gap-2 p-4 text-start cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+        className="card card-hover flex flex-col gap-2 p-4 text-start cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
         data-testid="index-card"
         data-index-code={c.code}
       >
@@ -179,14 +179,14 @@ export function IndexCard({
       className={cn(
         "card relative flex flex-col gap-2 p-4 text-start transition-shadow",
         edit.dragging ? "opacity-40" : "",
-        edit.isDropBefore ? "ring-2 ring-gold-500" : ""
+        edit.isDropBefore ? "ring-2 ring-aqua-500" : ""
       )}
       data-testid="index-card"
       data-index-code={c.code}
       data-group-id={edit.groupId ?? ""}
       aria-grabbed={edit.dragging || undefined}
     >
-      <span className="flex items-center gap-1.5 border-b border-sand-100 pb-2">
+      <span className="flex items-center gap-1.5 border-b border-mist-100 pb-2">
         <span
           className="flex cursor-grab items-center text-ink-400 active:cursor-grabbing"
           aria-hidden
@@ -202,7 +202,7 @@ export function IndexCard({
             if (!kind) return;
             edit.onMove(c.id, edit.groupId, id || null, kind === "add");
           }}
-          className="h-7 min-w-0 flex-1 rounded-md border border-sand-300 bg-white px-1.5 text-[11px] text-ink-600 focus:border-maroon-500 focus:outline-none"
+          className="h-7 min-w-0 flex-1 rounded-md border border-mist-300 bg-white px-1.5 text-[11px] text-ink-600 focus:border-navy-500 focus:outline-none"
           data-testid="card-move-select"
         >
           <option value="">{t("moveTo")}</option>
@@ -225,7 +225,7 @@ export function IndexCard({
           <button
             type="button"
             onClick={() => edit.onRemove(c.id, edit.groupId!)}
-            className="rounded-md p-1 text-ink-400 hover:bg-danger-light hover:text-danger cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+            className="rounded-md p-1 text-ink-400 hover:bg-danger-light hover:text-danger cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
             aria-label={t("removeFromGroup")}
             data-testid="card-remove"
           >

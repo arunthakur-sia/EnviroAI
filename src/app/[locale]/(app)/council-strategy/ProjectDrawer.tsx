@@ -1,5 +1,5 @@
 "use client";
-// CR07 2.4.5: the project drawer of the Council Strategy. 520px from the end
+// CR07 2.4.5: the project drawer of the Programme Strategy. 520px from the end
 // side over a 20 percent scrim, the same motion as the Living Strategy node
 // drawer. It loads the project from GET /api/v1/council?view=project&id=, its
 // lessons from PUT /api/v1/lessons/links, and its deliverables from the shared
@@ -69,7 +69,7 @@ export function RagMark({ rag, className }: { rag: Rag; className?: string }) {
   );
 }
 
-/** The display face, Fraunces in English and Noto Kufi in Arabic. */
+/** The display face, Sora in English and Noto Kufi in Arabic. */
 export function displayFont(locale: string): string {
   return locale === "ar" ? "var(--font-kufi)" : "var(--font-display)";
 }
@@ -116,7 +116,7 @@ export function IndicatorChart({
 
   if (!series.length || !numbers.length) {
     return (
-      <p className="rounded-lg border border-dashed border-sand-300 bg-sand-50 px-3 py-4 text-center text-xs text-ink-600">
+      <p className="rounded-lg border border-dashed border-mist-300 bg-mist-50 px-3 py-4 text-center text-xs text-ink-600">
         {t("indicator.noSeries")}
       </p>
     );
@@ -173,7 +173,7 @@ export function IndicatorChart({
             x2={w - padEnd}
             y1={y(v)}
             y2={y(v)}
-            stroke="var(--color-sand-200)"
+            stroke="var(--color-mist-200)"
             strokeWidth={1}
           />
         ))}
@@ -182,7 +182,7 @@ export function IndicatorChart({
           x2={w - padEnd}
           y1={h - padBottom}
           y2={h - padBottom}
-          stroke="var(--color-sand-300)"
+          stroke="var(--color-mist-300)"
           strokeWidth={1}
         />
         {targetPoints ? (
@@ -196,7 +196,7 @@ export function IndicatorChart({
             strokeLinecap="round"
           />
         ) : null}
-        {/* gold ticks mark each recorded target */}
+        {/* aqua ticks mark each recorded target */}
         {series.map((p, i) =>
           p.target == null ? null : (
             <line
@@ -205,7 +205,7 @@ export function IndicatorChart({
               x2={x(i)}
               y1={y(p.target) - 5}
               y2={y(p.target) + 5}
-              stroke="var(--color-gold-500)"
+              stroke="var(--color-aqua-500)"
               strokeWidth={2.25}
               strokeLinecap="round"
             />
@@ -215,7 +215,7 @@ export function IndicatorChart({
           <polyline
             points={actualPoints}
             fill="none"
-            stroke="var(--color-maroon-700)"
+            stroke="var(--color-navy-700)"
             strokeWidth={2.25}
             strokeLinejoin="round"
             strokeLinecap="round"
@@ -228,7 +228,7 @@ export function IndicatorChart({
               cx={x(i)}
               cy={y(p.actual)}
               r={3.5}
-              fill="var(--color-maroon-700)"
+              fill="var(--color-navy-700)"
               stroke="#ffffff"
               strokeWidth={1.5}
             />
@@ -255,7 +255,7 @@ export function IndicatorChart({
       </svg>
       <p className="mt-1 flex flex-wrap items-center gap-3 text-[11px] text-ink-600">
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block h-0.5 w-5 rounded-full bg-maroon-700" aria-hidden />
+          <span className="inline-block h-0.5 w-5 rounded-full bg-navy-700" aria-hidden />
           {t("indicator.legendActual")}
         </span>
         <span className="inline-flex items-center gap-1.5">
@@ -500,12 +500,12 @@ export function ProjectDrawer({
         transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
       >
         {/* header bar: the Internal chip travels with the module */}
-        <div className="flex items-center gap-1.5 border-b border-sand-100 px-4 py-3">
+        <div className="flex items-center gap-1.5 border-b border-mist-100 px-4 py-3">
           <button
             onClick={() => prevId && onNavigate(prevId)}
             disabled={!prevId}
             aria-label={t("drawer.prev")}
-            className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 disabled:cursor-not-allowed disabled:opacity-30"
+            className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 disabled:cursor-not-allowed disabled:opacity-30"
           >
             <ChevronLeft className="size-4 flip-rtl" />
           </button>
@@ -513,11 +513,11 @@ export function ProjectDrawer({
             onClick={() => nextId && onNavigate(nextId)}
             disabled={!nextId}
             aria-label={t("drawer.next")}
-            className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 disabled:cursor-not-allowed disabled:opacity-30"
+            className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 disabled:cursor-not-allowed disabled:opacity-30"
           >
             <ChevronRight className="size-4 flip-rtl" />
           </button>
-          <Chip tone="maroon" title={t("header.internalTitle")} data-testid="internal-chip">
+          <Chip tone="navy" title={t("header.internalTitle")} data-testid="internal-chip">
             {t("header.internal")}
           </Chip>
           <span className="min-w-0 flex-1" />
@@ -527,14 +527,14 @@ export function ProjectDrawer({
               toast(t("drawer.linkCopied"), "success");
             }}
             aria-label={t("drawer.copyLink")}
-            className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-sand-100"
+            className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-mist-100"
           >
             <LinkIcon className="size-4" />
           </button>
           <button
             onClick={onClose}
             aria-label={tc("close")}
-            className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-sand-100"
+            className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-mist-100"
           >
             <X className="size-4" />
           </button>
@@ -553,17 +553,17 @@ export function ProjectDrawer({
               transition={{ duration: 0.16 }}
               className="flex flex-col gap-5 p-5"
             >
-              {/* CR08 2.3: the Ask NPC launcher knows this council node while the drawer is open */}
+              {/* CR08 2.3: the Ask EnviroAI launcher knows this council node while the drawer is open */}
               <AskContextItem item={{ kind: "council_node", id: node.id, code: node.code, titleEn: node.titleEn, titleAr: node.titleAr, href: `/council-strategy?p=${encodeURIComponent(node.code ? node.code.toLowerCase().replace(/\./g, "-") : node.id)}` }} />
               {/* identity */}
               <div>
                 <p className="flex flex-wrap items-center gap-2 text-xs text-ink-600">
-                  <Chip tone="sand">{t("levels.project")}</Chip>
+                  <Chip tone="mist">{t("levels.project")}</Chip>
                   {node.code ? <span className="tnum">{node.code}</span> : null}
                   <RagMark rag={node.status === "completed" || node.status === "on_track" ? "on_target" : node.status === "at_risk" ? "at_risk" : node.status === "delayed" ? "behind" : "no_data"} />
                   <span>{tc(`status.${node.status}` as never)}</span>
                   {node.isIllustrative ? (
-                    <Chip tone="gold" title={t("header.illustrativeTitle")}>
+                    <Chip tone="aqua" title={t("header.illustrativeTitle")}>
                       {t("header.illustrative")}
                     </Chip>
                   ) : null}
@@ -613,7 +613,7 @@ export function ProjectDrawer({
                       </span>
                       <Link
                         href={`/organisation?unit=${encodeURIComponent(node.ownerUnit.code)}` as never}
-                        className="link-draw font-medium text-maroon-700"
+                        className="link-draw font-medium text-navy-700"
                       >
                         {bi(locale, node.ownerUnit.nameEn, node.ownerUnit.nameAr)}
                       </Link>
@@ -626,14 +626,14 @@ export function ProjectDrawer({
               {todayPct !== null ? (
                 <div>
                   <SubHeading>{t("drawer.timeline")}</SubHeading>
-                  <div className="relative h-1.5 rounded-full bg-sand-300/80">
+                  <div className="relative h-1.5 rounded-full bg-mist-300/80">
                     <span
-                      className="absolute inset-y-0 start-0 rounded-full bg-gulf-400"
+                      className="absolute inset-y-0 start-0 rounded-full bg-teal-400"
                       style={{ width: `${Math.round(todayPct * 100)}%` }}
                       aria-hidden
                     />
                     <span
-                      className="absolute -top-1 h-3.5 w-0.5 rounded-full bg-maroon-700"
+                      className="absolute -top-1 h-3.5 w-0.5 rounded-full bg-navy-700"
                       style={{ insetInlineStart: `${Math.round(todayPct * 100)}%` }}
                       aria-hidden
                     />
@@ -642,7 +642,7 @@ export function ProjectDrawer({
                         key={m.id}
                         className={cn(
                           "absolute top-1/2 size-2.5 -translate-y-1/2 rounded-full border-2 border-white",
-                          m.doneDate ? "bg-ok" : "bg-sand-300"
+                          m.doneDate ? "bg-ok" : "bg-mist-300"
                         )}
                         style={{ insetInlineStart: `calc(${Math.round((m.pct ?? 0) * 100)}% - 5px)` }}
                         title={`${bi(locale, m.titleEn, m.titleAr)} · ${
@@ -668,7 +668,7 @@ export function ProjectDrawer({
                           <span
                             className={cn(
                               "inline-block size-2 shrink-0 rounded-full",
-                              m.doneDate ? "bg-ok" : "bg-sand-300"
+                              m.doneDate ? "bg-ok" : "bg-mist-300"
                             )}
                             aria-hidden
                           />
@@ -691,7 +691,7 @@ export function ProjectDrawer({
               systems.length ||
               detail.inputs.noteEn ||
               detail.inputs.noteAr ? (
-                <div className="rounded-xl bg-sand-50 px-4 py-3">
+                <div className="rounded-xl bg-mist-50 px-4 py-3">
                   <SubHeading>{t("levels.inputs")}</SubHeading>
                   <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-ink-900">
                     {node.budgetQar != null ? (
@@ -714,7 +714,7 @@ export function ProjectDrawer({
                     <p className="mt-2 flex flex-wrap items-center gap-1.5">
                       <Boxes className="size-3.5 text-ink-400" aria-hidden />
                       {systems.map((s) => (
-                        <Chip key={s} tone="sand">
+                        <Chip key={s} tone="mist">
                           {s}
                         </Chip>
                       ))}
@@ -736,7 +736,7 @@ export function ProjectDrawer({
                     {detail.indicators.map((indicator) => (
                       <div
                         key={indicator.id}
-                        className="rounded-xl border border-sand-200 bg-white p-3"
+                        className="rounded-xl border border-mist-200 bg-white p-3"
                       >
                         <div className="flex items-start gap-2">
                           <RagMark rag={indicator.rag} className="mt-1.5" />
@@ -759,7 +759,7 @@ export function ProjectDrawer({
                           {onOpenIndicator ? (
                             <button
                               onClick={() => onOpenIndicator(indicator)}
-                              className="link-draw shrink-0 cursor-pointer text-[11px] font-medium text-maroon-700"
+                              className="link-draw shrink-0 cursor-pointer text-[11px] font-medium text-navy-700"
                               aria-label={t("chain.openIndicator", {
                                 name: bi(locale, indicator.nameEn, indicator.nameAr),
                               })}
@@ -791,7 +791,7 @@ export function ProjectDrawer({
                       return (
                         <li
                           key={a.id}
-                          className="flex items-start gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-sand-50"
+                          className="flex items-start gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-mist-50"
                         >
                           {done ? (
                             <CircleCheck className="mt-0.5 size-4 shrink-0 text-ok" aria-hidden />
@@ -811,7 +811,7 @@ export function ProjectDrawer({
                     })}
                   </ul>
                 ) : (
-                  <p className="rounded-lg border border-dashed border-sand-300 bg-sand-50 px-3 py-3 text-center text-xs text-ink-600">
+                  <p className="rounded-lg border border-dashed border-mist-300 bg-mist-50 px-3 py-3 text-center text-xs text-ink-600">
                     {t("drawer.noActivities")}
                   </p>
                 )}
@@ -829,7 +829,7 @@ export function ProjectDrawer({
                         aria-label={t("drawer.openDependency", {
                           title: bi(locale, d.titleEn, d.titleAr),
                         })}
-                        className="flex cursor-pointer items-start gap-2 rounded-lg border border-sand-200 px-3 py-2 text-start text-sm transition-colors hover:border-maroon-300 hover:bg-maroon-50"
+                        className="flex cursor-pointer items-start gap-2 rounded-lg border border-mist-200 px-3 py-2 text-start text-sm transition-colors hover:border-navy-300 hover:bg-navy-50"
                       >
                         <GitBranch className="mt-0.5 size-3.5 shrink-0 text-ink-400 flip-rtl" aria-hidden />
                         <span className="min-w-0 flex-1">
@@ -859,9 +859,9 @@ export function ProjectDrawer({
                       <Link
                         key={d.id}
                         href={`/vault/${d.documentId}` as never}
-                        className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs hover:bg-maroon-50"
+                        className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs hover:bg-navy-50"
                       >
-                        <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-maroon-100 text-[10px] font-semibold text-maroon-900 tnum">
+                        <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-navy-100 text-[10px] font-semibold text-navy-900 tnum">
                           {d.deliverableCode}
                         </span>
                         <span className="min-w-0 flex-1 truncate text-ink-900">
@@ -898,7 +898,7 @@ export function ProjectDrawer({
                         <Link
                           key={l.lessonId}
                           href={`/lessons/${l.lessonId}` as never}
-                          className="rounded-lg border border-sand-200 px-3 py-2 text-sm hover:border-maroon-300 hover:bg-maroon-50"
+                          className="rounded-lg border border-mist-200 px-3 py-2 text-sm hover:border-navy-300 hover:bg-navy-50"
                         >
                           <span className="line-clamp-2 font-medium leading-snug text-ink-900">
                             {bi(locale, l.titleEn, l.titleAr)}
@@ -917,7 +917,7 @@ export function ProjectDrawer({
                         <Link
                           key={l.lessonId}
                           href={`/lessons/${l.lessonId}` as never}
-                          className="rounded-lg px-3 py-1.5 text-xs text-ink-900 hover:bg-maroon-50"
+                          className="rounded-lg px-3 py-1.5 text-xs text-ink-900 hover:bg-navy-50"
                         >
                           <span className="line-clamp-1">{bi(locale, l.titleEn, l.titleAr)}</span>
                           <span className="text-[11px] text-ink-600">
@@ -939,7 +939,7 @@ export function ProjectDrawer({
                     {detail.risks.map((r) => (
                       <div
                         key={r.id}
-                        className="rounded-lg border border-sand-200 px-3 py-2 text-sm"
+                        className="rounded-lg border border-mist-200 px-3 py-2 text-sm"
                       >
                         <p className="flex items-start gap-2">
                           <ShieldAlert
@@ -972,7 +972,7 @@ export function ProjectDrawer({
               ) : null}
 
               {/* the deep link back to this project on the page */}
-              <div className="flex items-center justify-end border-t border-sand-100 pt-4">
+              <div className="flex items-center justify-end border-t border-mist-100 pt-4">
                 <Link
                   href={
                     `/council-strategy?p=${encodeURIComponent(

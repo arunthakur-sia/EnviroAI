@@ -53,7 +53,7 @@ export default async function ReleasesPage({
             <div key={r.id} className="card p-4">
               <div className="flex flex-wrap items-center gap-2">
                 <p className="font-medium text-ink-900">{bi(locale, r.titleEn, r.titleAr)}</p>
-                {r.upcoming ? <Chip tone="gulf">{t("upcoming")}</Chip> : null}
+                {r.upcoming ? <Chip tone="teal">{t("upcoming")}</Chip> : null}
                 <span className="ms-auto text-xs text-ink-400 tnum">
                   {formatDate(r.releaseDate, locale)}
                 </span>
@@ -70,7 +70,7 @@ export default async function ReleasesPage({
                     if (!ind) return null;
                     return (
                       <Link key={id} href={`/statistics/${id}` as never}>
-                        <Chip tone="maroon" className="cursor-pointer hover:bg-maroon-700 hover:text-white">
+                        <Chip tone="navy" className="cursor-pointer hover:bg-navy-700 hover:text-white">
                           {bi(locale, ind.nameEn, ind.nameAr)}
                         </Chip>
                       </Link>
@@ -81,7 +81,7 @@ export default async function ReleasesPage({
               {r.documentId ? (
                 <Link
                   href={`/vault/${r.documentId}` as never}
-                  className="mt-2 inline-block text-xs font-medium text-maroon-700 hover:underline"
+                  className="mt-2 inline-block text-xs font-medium text-navy-700 hover:underline"
                 >
                   {t("openReleaseDoc")}
                 </Link>

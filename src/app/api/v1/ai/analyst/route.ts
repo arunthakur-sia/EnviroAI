@@ -1,4 +1,4 @@
-// Ask SiaNexus 2.0: the analyst loop as SSE.
+// Ask EnviroAI 2.0: the analyst loop as SSE.
 // Events: meta, chip, workspace, sources, delta, final, error.
 import { NextRequest } from "next/server";
 import { z } from "zod";

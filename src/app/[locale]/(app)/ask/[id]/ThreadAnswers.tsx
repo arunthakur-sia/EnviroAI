@@ -165,7 +165,7 @@ function AnswerCard({
       <div className="mb-2.5 flex flex-wrap items-center gap-2">
         {answer.isAi ? (
           <span className="flex items-center gap-1.5 text-sm font-medium text-ink-600">
-            <Bot className="size-4 text-gold-500" /> {t("aiAnswer")}
+            <Bot className="size-4 text-aqua-500" /> {t("aiAnswer")}
           </span>
         ) : answer.authorId && answer.authorNameEn ? (
           /* CR08 9.1: the colleague who answered, with the person card */
@@ -195,7 +195,7 @@ function AnswerCard({
         {collapsedByDefault ? (
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="rounded p-1 text-ink-400 hover:bg-sand-100 cursor-pointer"
+            className="rounded p-1 text-ink-400 hover:bg-mist-100 cursor-pointer"
             aria-label={collapsed ? tc("showMore") : tc("showLess")}
           >
             <ChevronDown className={cn("size-4 transition-transform", !collapsed && "rotate-180")} />
@@ -205,7 +205,7 @@ function AnswerCard({
       {!collapsed ? (
         <>
           <AnswerMarkdown text={body} citations={citations} className="text-sm" />
-          <div className="mt-3 flex items-center gap-2 border-t border-sand-100 pt-2.5">
+          <div className="mt-3 flex items-center gap-2 border-t border-mist-100 pt-2.5">
             <button
               onClick={onHelpful}
               className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs text-ink-600 hover:bg-ok-light hover:text-ok cursor-pointer"

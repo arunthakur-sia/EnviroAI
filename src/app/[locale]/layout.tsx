@@ -9,10 +9,10 @@ import "@/styles/globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "SiaNexus",
-    template: "%s · SiaNexus",
+    default: "EnviroAI",
+    template: "%s · EnviroAI",
   },
-  description: "The knowledge memory of the National Planning Council",
+  description: "The knowledge memory of the Programme Office",
   icons: {
     icon: "/favicon.svg",
   },
@@ -43,18 +43,20 @@ export default async function LocaleLayout({
             family loads on demand through font-display: swap. */}
         <link
           rel="preload"
-          href="/fonts/fraunces-var-latin.woff2"
+          href="/fonts/sora-var-latin.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        <link
-          rel="preload"
-          href={locale === "ar" ? "/fonts/plex-sans-arabic-400.woff2" : "/fonts/inter-var-latin.woff2"}
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
+        {locale === "ar" ? (
+          <link
+            rel="preload"
+            href="/fonts/plex-sans-arabic-400.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+        ) : null}
       </head>
       <body>
         {waiting ? (

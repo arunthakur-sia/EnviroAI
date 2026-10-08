@@ -216,7 +216,7 @@ function UsersTab({
       <div className="card overflow-x-auto">
         <table className="w-full min-w-[760px] text-sm">
           <thead>
-            <tr className="bg-sand-50">
+            <tr className="bg-mist-50">
               <th className="px-4 py-2.5 text-start text-xs font-semibold text-ink-600">{t("user")}</th>
               <th className="px-4 py-2.5 text-start text-xs font-semibold text-ink-600">{t("role")}</th>
               <th className="px-4 py-2.5 text-start text-xs font-semibold text-ink-600">{t("department")}</th>
@@ -227,7 +227,7 @@ function UsersTab({
           </thead>
           <tbody>
             {visible.map((u) => (
-              <tr key={u.id} className="border-t border-sand-100">
+              <tr key={u.id} className="border-t border-mist-100">
                 <td className="px-4 py-2">
                   <span className="flex items-center gap-2.5">
                     <Avatar name={u.nameEn} color={u.avatarColor} size={28} />
@@ -289,7 +289,7 @@ function UsersTab({
                 <td className="px-4 py-2">
                   <button
                     onClick={() => setAccessUser(u)}
-                    className="rounded-md border border-sand-300 px-2 py-1 text-[11px] font-medium text-ink-600 hover:border-maroon-300 hover:text-maroon-700 cursor-pointer"
+                    className="rounded-md border border-mist-300 px-2 py-1 text-[11px] font-medium text-ink-600 hover:border-navy-300 hover:text-navy-700 cursor-pointer"
                     data-testid="user-access-open"
                   >
                     {t("accessCol")}
@@ -385,7 +385,7 @@ function RolesTab({ roles }: { roles: RoleRow[] }) {
       <div className="card mb-5 overflow-x-auto" data-testid="role-portals">
         <table className="w-full min-w-[900px] text-xs">
           <thead>
-            <tr className="bg-sand-50">
+            <tr className="bg-mist-50">
               <th className="px-3 py-2 text-start font-semibold text-ink-600">{t("role")}</th>
               {PORTALS.map((p) => (
                 <th key={p} className="px-1.5 py-2 text-center font-semibold text-ink-600">
@@ -408,7 +408,7 @@ function RolesTab({ roles }: { roles: RoleRow[] }) {
                 })()
               );
               return (
-                <tr key={role.id} className="border-t border-sand-100">
+                <tr key={role.id} className="border-t border-mist-100">
                   <td className="px-3 py-1.5 font-medium text-ink-900">
                     {bi(locale, role.nameEn, role.nameAr)}
                   </td>
@@ -431,7 +431,7 @@ function RolesTab({ roles }: { roles: RoleRow[] }) {
                             router.refresh();
                           } else toast(tc("error"), "error");
                         }}
-                        className="size-3.5 accent-maroon-700"
+                        className="size-3.5 accent-navy-700"
                         aria-label={`${role.nameEn} ${p}`}
                       />
                     </td>
@@ -447,7 +447,7 @@ function RolesTab({ roles }: { roles: RoleRow[] }) {
                         if (res.ok) window.location.href = window.location.pathname.replace(/\/settings.*/, "/home");
                         else toast(tc("error"), "error");
                       }}
-                      className="rounded-md border border-sand-300 px-2 py-1 text-[11px] font-medium text-ink-600 hover:border-maroon-300 hover:text-maroon-700 cursor-pointer"
+                      className="rounded-md border border-mist-300 px-2 py-1 text-[11px] font-medium text-ink-600 hover:border-navy-300 hover:text-navy-700 cursor-pointer"
                       data-testid="preview-as-role"
                     >
                       {t("previewAs")}
@@ -460,7 +460,7 @@ function RolesTab({ roles }: { roles: RoleRow[] }) {
         </table>
       </div>
 
-      <div className="card divide-y divide-sand-100">
+      <div className="card divide-y divide-mist-100">
         {roles.map((role) => (
           <div key={role.id} className="flex items-center gap-3 px-4 py-3">
             <span className="min-w-0 flex-1">
@@ -469,7 +469,7 @@ function RolesTab({ roles }: { roles: RoleRow[] }) {
                 {t("memberCount", { count: role.memberCount })}
               </span>
             </span>
-            {role.isSystem ? <Chip tone="sand">{t("systemRole")}</Chip> : null}
+            {role.isSystem ? <Chip tone="mist">{t("systemRole")}</Chip> : null}
             <Button variant="ghost" size="sm" onClick={() => openRole(role, true)}>
               <Copy /> {t("duplicate")}
             </Button>
@@ -492,10 +492,10 @@ function RolesTab({ roles }: { roles: RoleRow[] }) {
               <Input id="role-name-ar" value={nameAr} dir="rtl" onChange={(e) => setNameAr(e.target.value)} />
             </div>
           </div>
-          <div className="overflow-x-auto rounded-xl border border-sand-200">
+          <div className="overflow-x-auto rounded-xl border border-mist-200">
             <table className="w-full min-w-[620px] text-xs">
               <thead>
-                <tr className="bg-sand-50">
+                <tr className="bg-mist-50">
                   <th className="px-3 py-2 text-start font-semibold text-ink-600">{t("module")}</th>
                   {ACTIONS.map((a) => (
                     <th key={a} className="px-2 py-2 text-center font-semibold text-ink-600">
@@ -506,7 +506,7 @@ function RolesTab({ roles }: { roles: RoleRow[] }) {
               </thead>
               <tbody>
                 {MODULES.map((m) => (
-                  <tr key={m} className="border-t border-sand-100">
+                  <tr key={m} className="border-t border-mist-100">
                     <td className="px-3 py-1.5 font-medium text-ink-900">{t(`modules.${m}` as never)}</td>
                     {ACTIONS.map((a) => (
                       <td key={a} className="px-2 py-1.5 text-center">
@@ -519,7 +519,7 @@ function RolesTab({ roles }: { roles: RoleRow[] }) {
                               [m]: { ...prev[m], [a]: e.target.checked },
                             }))
                           }
-                          className="size-3.5 accent-maroon-700"
+                          className="size-3.5 accent-navy-700"
                           aria-label={`${m} ${a}`}
                         />
                       </td>
@@ -665,7 +665,7 @@ function AiTab({
             step={0.1}
             value={form.temperature}
             onChange={(e) => setForm({ ...form, temperature: Number(e.target.value) })}
-            className="mt-2 w-full accent-maroon-700"
+            className="mt-2 w-full accent-navy-700"
             aria-label={t("temperature")}
           />
         </div>
@@ -756,12 +756,12 @@ function BountiesTab({
           <Plus /> {t("postBounty")}
         </Button>
       </div>
-      <div className="card divide-y divide-sand-100">
+      <div className="card divide-y divide-mist-100">
         {bounties.map((b) => (
           <div key={b.id} className="flex items-center gap-3 px-4 py-2.5 text-sm">
             <span className="min-w-0 flex-1 truncate text-ink-900">{bi(locale, b.titleEn, b.titleAr)}</span>
-            <Chip tone="gold" className="tnum">{b.points}</Chip>
-            <Chip tone={b.status === "open" ? "ok" : "sand"}>{b.status}</Chip>
+            <Chip tone="aqua" className="tnum">{b.points}</Chip>
+            <Chip tone={b.status === "open" ? "ok" : "mist"}>{b.status}</Chip>
           </div>
         ))}
       </div>
@@ -784,7 +784,7 @@ function IntegrationsTab({
           <div className="flex items-center gap-2.5">
             <Plug className="size-5 text-ink-400" />
             <p className="font-medium text-ink-900">{integration.name}</p>
-            <Chip tone="sand" className="ms-auto">{t("notConfigured")}</Chip>
+            <Chip tone="mist" className="ms-auto">{t("notConfigured")}</Chip>
           </div>
           <p className="text-sm leading-relaxed text-ink-600">{integration.description}</p>
           <div className="mt-2 grid grid-cols-2 gap-2">
@@ -851,7 +851,7 @@ function AuditTab() {
           </div>
         ) : (
           <table className="w-full min-w-[640px] text-sm">
-            <thead className="sticky top-0 bg-sand-50">
+            <thead className="sticky top-0 bg-mist-50">
               <tr>
                 <th className="px-4 py-2 text-start text-xs font-semibold text-ink-600">{t("timestamp")}</th>
                 <th className="px-4 py-2 text-start text-xs font-semibold text-ink-600">{t("user")}</th>
@@ -861,13 +861,13 @@ function AuditTab() {
             </thead>
             <tbody>
               {rows.map((r) => (
-                <tr key={r.id} className="border-t border-sand-100">
+                <tr key={r.id} className="border-t border-mist-100">
                   <td className="whitespace-nowrap px-4 py-1.5 text-xs text-ink-400 tnum" dir="ltr">
                     {r.createdAt.slice(0, 19).replace("T", " ")}
                   </td>
                   <td className="px-4 py-1.5 text-ink-900">{r.userNameEn ?? "-"}</td>
                   <td className="px-4 py-1.5">
-                    <Chip tone="sand">{r.action}</Chip>
+                    <Chip tone="mist">{r.action}</Chip>
                   </td>
                   <td className="px-4 py-1.5 text-xs text-ink-600">
                     {r.resourceType ?? ""}

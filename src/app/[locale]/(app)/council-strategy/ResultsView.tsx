@@ -61,11 +61,11 @@ const RAG_TOKEN: Record<Rag, string> = {
   no_data: "var(--color-ink-400)",
 };
 
-const RAG_CHIP: Record<Rag, "ok" | "warn" | "danger" | "sand"> = {
+const RAG_CHIP: Record<Rag, "ok" | "warn" | "danger" | "mist"> = {
   on_target: "ok",
   at_risk: "warn",
   behind: "danger",
-  no_data: "sand",
+  no_data: "mist",
 };
 
 /** Walks every node up to the goal that owns it. */
@@ -211,7 +211,7 @@ function IndicatorSpark({
             y1={PAD}
             x2={x(markIndex)}
             y2={H - PAD}
-            stroke="var(--color-gold-500)"
+            stroke="var(--color-aqua-500)"
             strokeWidth={1.5}
           />
         ) : null}
@@ -229,7 +229,7 @@ function IndicatorSpark({
           <polyline
             points={actual}
             fill="none"
-            stroke="var(--color-maroon-700)"
+            stroke="var(--color-navy-700)"
             strokeWidth={2}
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -471,7 +471,7 @@ export function ResultsView({ data, canEdit }: { data: CouncilPageData; canEdit:
                     role="columnheader"
                     className={cn(
                       "px-1 pb-2 text-center text-[11px] font-semibold tnum",
-                      p === activePeriod ? "text-maroon-900" : "text-ink-600"
+                      p === activePeriod ? "text-navy-900" : "text-ink-600"
                     )}
                   >
                     {formatPeriod(p, locale)}
@@ -492,7 +492,7 @@ export function ResultsView({ data, canEdit }: { data: CouncilPageData; canEdit:
                     style={{ direction: locale === "ar" ? "rtl" : "ltr", textAlign: "start" }}
                   >
                     {row.code ? (
-                      <span className="shrink-0 text-[11px] font-semibold text-maroon-700 tnum">
+                      <span className="shrink-0 text-[11px] font-semibold text-navy-700 tnum">
                         {row.code}
                       </span>
                     ) : null}
@@ -534,12 +534,12 @@ export function ResultsView({ data, canEdit }: { data: CouncilPageData; canEdit:
                           }}
                           className={cn(
                             "flex h-full w-full cursor-pointer flex-col items-center justify-center gap-0.5 rounded-lg px-1 py-2 transition-transform duration-150 hover:-translate-y-0.5",
-                            isActive && "ring-2 ring-gold-500"
+                            isActive && "ring-2 ring-aqua-500"
                           )}
                           style={{
                             backgroundColor:
                               cell.rag === "no_data"
-                                ? "var(--color-sand-100)"
+                                ? "var(--color-mist-100)"
                                 : `color-mix(in srgb, ${RAG_TOKEN[cell.rag]} ${tint}%, transparent)`,
                             color:
                               cell.rag === "no_data" ? "var(--color-ink-600)" : RAG_TOKEN[cell.rag],
@@ -570,7 +570,7 @@ export function ResultsView({ data, canEdit }: { data: CouncilPageData; canEdit:
                   style={{
                     backgroundColor:
                       rag === "no_data"
-                        ? "var(--color-sand-100)"
+                        ? "var(--color-mist-100)"
                         : `color-mix(in srgb, ${RAG_TOKEN[rag]} 22%, transparent)`,
                     color: rag === "no_data" ? "var(--color-ink-600)" : RAG_TOKEN[rag],
                   }}
@@ -589,7 +589,7 @@ export function ResultsView({ data, canEdit }: { data: CouncilPageData; canEdit:
 
           {/* the written summary of the chosen period */}
           <section className="mt-5" data-testid="results-narrative" aria-live="polite">
-            <div className="card border-s-2 border-s-maroon-700 p-5">
+            <div className="card border-s-2 border-s-navy-700 p-5">
               <h3 className="mb-2 text-base">{t("results.narrativeTitle")}</h3>
               <p className="measure text-sm leading-relaxed text-ink-900">{narrative.join(" ")}</p>
               <p className="mt-2 text-xs text-ink-400">{t("results.narrativeSource")}</p>
@@ -627,10 +627,10 @@ export function ResultsView({ data, canEdit }: { data: CouncilPageData; canEdit:
                   : "no_data";
                 const unit = indicator.unit ? ` ${indicator.unit}` : "";
                 return (
-                  <article key={indicator.id} className="rounded-xl border border-sand-200 p-4">
+                  <article key={indicator.id} className="rounded-xl border border-mist-200 p-4">
                     <div className="flex flex-wrap items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="text-[11px] font-semibold text-maroon-700 tnum">
+                        <p className="text-[11px] font-semibold text-navy-700 tnum">
                           {indicator.code}
                         </p>
                         <h4 className="text-sm leading-snug text-ink-900">

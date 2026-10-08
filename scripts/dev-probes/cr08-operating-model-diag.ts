@@ -23,7 +23,7 @@ async function hydrationOnly(paths: string[]) {
     if (m.type() === "error") seen.push(full ? m.text() : m.text().slice(0, 160));
   });
   page.on("pageerror", (e) => seen.push(`pageerror: ${String(e).slice(0, full ? 4000 : 160)}`));
-  await context.request.post(`${BASE}/api/v1/auth/login`, { data: { email: "admin@npc.qa", password: "Nexus!2026" }, timeout: 120000 });
+  await context.request.post(`${BASE}/api/v1/auth/login`, { data: { email: "admin@enviroai.demo", password: "EnviroAI!2026" }, timeout: 120000 });
   for (const p of paths) {
     seen.length = 0;
     await page.goto(`${BASE}${p}`, { waitUntil: "domcontentloaded", timeout: 180000 });
@@ -79,7 +79,7 @@ async function main() {
     if (m.type() === "error" || m.type() === "warning") console.log(`console ${m.type()}: ${m.text().slice(0, 3000)}`);
   });
   page.on("pageerror", (e) => console.log(`pageerror: ${String(e).slice(0, 1000)}`));
-  const login = await context.request.post(`${BASE}/api/v1/auth/login`, { data: { email: "admin@npc.qa", password: "Nexus!2026" }, timeout: 120000 });
+  const login = await context.request.post(`${BASE}/api/v1/auth/login`, { data: { email: "admin@enviroai.demo", password: "EnviroAI!2026" }, timeout: 120000 });
   console.log("login", login.status());
   await page.goto(`${BASE}/en/operating-model`, { waitUntil: "domcontentloaded", timeout: 120000 });
   await page.waitForSelector("[data-testid=operating-model-page]", { timeout: 120000 });

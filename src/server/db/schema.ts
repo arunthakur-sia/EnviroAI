@@ -1,4 +1,4 @@
-// SiaNexus data model. SQLite dialect, portable types only (text, integer, real, blob).
+// EnviroAI data model. SQLite dialect, portable types only (text, integer, real, blob).
 // Conventions: id = text ULID; timestamps = ISO strings; bilingual fields as _en/_ar pairs;
 // JSON columns stored as text and validated with Zod in src/server/db/json.ts.
 import {
@@ -28,7 +28,7 @@ export const users = sqliteTable(
     nameEn: text("name_en").notNull(),
     nameAr: text("name_ar").notNull(),
     avatarPath: text("avatar_path"),
-    avatarColor: text("avatar_color").notNull().default("maroon"),
+    avatarColor: text("avatar_color").notNull().default("navy"),
     departmentId: text("department_id"),
     roleId: text("role_id").notNull(),
     clearanceLevel: integer("clearance_level").notNull().default(2),
@@ -96,7 +96,7 @@ export const orgUnits = sqliteTable(
     mandateSourceUrl: text("mandate_source_url"),
     mandateSourceUrlAr: text("mandate_source_url_ar"),
     mandateFetchedAt: text("mandate_fetched_at"),
-    // heads who are not SiaNexus users are stored by name and title
+    // heads who are not EnviroAI users are stored by name and title
     headNameEn: text("head_name_en"),
     headNameAr: text("head_name_ar"),
     headTitleEn: text("head_title_en"),
@@ -248,7 +248,7 @@ export const documents = sqliteTable(
     reviewDueAt: text("review_due_at"),
     verifiedBy: text("verified_by"),
     verifiedAt: text("verified_at"),
-    sourceOrigin: text("source_origin").notNull().default("npc"),
+    sourceOrigin: text("source_origin").notNull().default("org"),
     publishYear: integer("publish_year"),
     originalFilename: text("original_filename"),
     mime: text("mime"),
@@ -325,7 +325,7 @@ export const collections = sqliteTable("collections", {
   nameAr: text("name_ar").notNull(),
   descriptionEn: text("description_en"),
   descriptionAr: text("description_ar"),
-  coverStyle: text("cover_style").notNull().default("maroon-weave"),
+  coverStyle: text("cover_style").notNull().default("navy-weave"),
   ownerUserId: text("owner_user_id"),
   departmentId: text("department_id"),
   visibility: text("visibility").notNull().default("all"),
@@ -534,8 +534,8 @@ export const nodeLeads = sqliteTable(
     role: text("role").notNull().default("lead"), // lead | supporting
     sort: integer("sort").notNull().default(0),
     verified: integer("verified").notNull().default(0),
-    // CR07 2.3: nds = strategy_nodes, council = council_nodes
-    nodeKind: text("node_kind").notNull().default("nds"),
+    // CR07 2.3: nes = strategy_nodes, council = council_nodes
+    nodeKind: text("node_kind").notNull().default("nes"),
     createdAt: createdAt(),
   },
   (t) => [
@@ -569,8 +569,8 @@ export const nodeStakeholders = sqliteTable(
     sinceDate: text("since_date"),
     untilDate: text("until_date"),
     sort: integer("sort").notNull().default(0),
-    // CR07 2.3: nds = strategy_nodes, council = council_nodes
-    nodeKind: text("node_kind").notNull().default("nds"),
+    // CR07 2.3: nes = strategy_nodes, council = council_nodes
+    nodeKind: text("node_kind").notNull().default("nes"),
     createdAt: createdAt(),
   },
   (t) => [
@@ -1039,11 +1039,11 @@ export const experts = sqliteTable(
   {
     id: id(),
     userId: text("user_id"),
-    type: text("type").notNull().default("npc_employee"),
+    type: text("type").notNull().default("org_employee"),
     nameEn: text("name_en").notNull(),
     nameAr: text("name_ar").notNull(),
     photoPath: text("photo_path"),
-    avatarColor: text("avatar_color").notNull().default("gulf"),
+    avatarColor: text("avatar_color").notNull().default("teal"),
     organisationEn: text("organisation_en"),
     organisationAr: text("organisation_ar"),
     positionEn: text("position_en"),
@@ -1055,7 +1055,7 @@ export const experts = sqliteTable(
     contactProtocol: text("contact_protocol"),
     nationality: text("nationality"),
     /* CR08 3: the country of an external expert's organisation (ISO 3166-1
-       alpha-2); null for NPC staff */
+       alpha-2); null for Programme Office staff */
     country: text("country"),
     languagesJson: text("languages_json"),
     yearsExperience: integer("years_experience"),
@@ -1137,7 +1137,7 @@ export const expertRequests = sqliteTable("expert_requests", {
 });
 
 /* ------------------------------------------------------------------ */
-/* 7.7 Ask NPC                                                         */
+/* 7.7 Ask EnviroAI                                                         */
 /* ------------------------------------------------------------------ */
 
 export const questions = sqliteTable(
@@ -1202,7 +1202,7 @@ export const communities = sqliteTable("communities", {
   descriptionAr: text("description_ar"),
   termId: text("term_id"),
   leadUserId: text("lead_user_id"),
-  coverStyle: text("cover_style").notNull().default("gulf-weave"),
+  coverStyle: text("cover_style").notNull().default("teal-weave"),
   createdAt: createdAt(),
 });
 
@@ -1435,8 +1435,8 @@ export const signalLinks = sqliteTable(
     resourceId: text("resource_id").notNull(),
     relation: text("relation").notNull().default("about"),
     source: text("source").notNull().default("ai"),
-    // CR07 2.3: nds = strategy_nodes, council = council_nodes
-    nodeKind: text("node_kind").notNull().default("nds"),
+    // CR07 2.3: nes = strategy_nodes, council = council_nodes
+    nodeKind: text("node_kind").notNull().default("nes"),
     createdAt: createdAt(),
   },
   (t) => [
@@ -1497,7 +1497,7 @@ export const deliverableMeta = sqliteTable(
   ]
 );
 
-/* CR02 4.6: NPC Knowledge Cast (renamed by CR04 4.1) */
+/* CR02 4.6: EnviroAI Briefing Cast (renamed by CR04 4.1) */
 export const podcastEpisodes = sqliteTable(
   "podcast_episodes",
   {
@@ -1594,7 +1594,7 @@ export const reportTypes = sqliteTable(
     descriptionAr: text("description_ar"),
     defaultSectionsJson: text("default_sections_json").notNull().default("[]"),
     optionalSectionsJson: text("optional_sections_json").notNull().default("[]"),
-    scopeKind: text("scope_kind").notNull().default("npc"), // npc | outcome | department | project | period
+    scopeKind: text("scope_kind").notNull().default("org"), // org | outcome | department | project | period
     classificationDefault: integer("classification_default").notNull().default(2),
     audienceDefault: text("audience_default").notNull().default("working"),
     cadence: text("cadence"),
@@ -1916,8 +1916,8 @@ export const lessonNodeLinks = sqliteTable(
     id: id(),
     lessonId: text("lesson_id").notNull(),
     nodeId: text("node_id").notNull(),
-    // nds = strategy_nodes, council = council_nodes
-    nodeKind: text("node_kind").notNull().default("nds"),
+    // nes = strategy_nodes, council = council_nodes
+    nodeKind: text("node_kind").notNull().default("nes"),
     isPrimary: integer("is_primary").notNull().default(0),
     linkedBy: text("linked_by"),
     linkedAt: text("linked_at").notNull(),
@@ -1930,7 +1930,7 @@ export const lessonNodeLinks = sqliteTable(
 );
 
 /* ------------------------------------------------------------------ */
-/* CR07 2.3: the Council Strategy (NPC's own institutional strategy)   */
+/* CR07 2.3: the Programme Strategy (Programme Office's own institutional strategy)   */
 /* ------------------------------------------------------------------ */
 
 export const councilStrategies = sqliteTable("council_strategies", {
@@ -2134,8 +2134,8 @@ export const councilAlignment = sqliteTable(
   {
     id: id(),
     councilNodeId: text("council_node_id").notNull(),
-    // nds_node | nds_kpi | data_strategy_initiative
-    targetKind: text("target_kind").notNull().default("nds_node"),
+    // nes_node | nes_kpi | data_strategy_initiative
+    targetKind: text("target_kind").notNull().default("nes_node"),
     targetId: text("target_id").notNull(),
     labelEn: text("label_en"),
     labelAr: text("label_ar"),
@@ -2213,7 +2213,7 @@ export const indexGroups = sqliteTable(
     nameAr: text("name_ar").notNull(),
     descriptionEn: text("description_en"),
     descriptionAr: text("description_ar"),
-    colourToken: text("colour_token").notNull().default("maroon"),
+    colourToken: text("colour_token").notNull().default("navy"),
     sort: integer("sort").notNull().default(0),
     isActive: integer("is_active").notNull().default(1),
   },
@@ -2391,7 +2391,7 @@ export const calendarEvents = sqliteTable(
   "calendar_events",
   {
     id: id(),
-    // strategy_review | budget | statistical_release | nds_review | council_meeting | report_deadline | forum | other
+    // strategy_review | budget | statistical_release | nes_review | council_meeting | report_deadline | forum | other
     kind: text("kind").notNull(),
     titleEn: text("title_en").notNull(),
     titleAr: text("title_ar").notNull(),
@@ -2438,7 +2438,7 @@ export const entityInterfaces = sqliteTable("entity_interfaces", {
   providesAr: text("provides_ar"),
   receivesEn: text("receives_en"),
   receivesAr: text("receives_ar"),
-  focalNpcUserId: text("focal_npc_user_id"),
+  focalOrgUserId: text("focal_org_user_id"),
   focalEntityName: text("focal_entity_name"),
   legalBasisEn: text("legal_basis_en"),
   legalBasisAr: text("legal_basis_ar"),
@@ -2498,7 +2498,7 @@ export const searchIndex = sqliteTable(
     resourceId: text("resource_id").notNull(),
     text: text("text").notNull(),
     lang: text("lang").notNull().default("en"),
-    // CR01 4.7: edition chip data for strategy rows (nds3|nds2|nds1, else null)
+    // CR01 4.7: edition chip data for strategy rows (nes3|nes2|nes1, else null)
     edition: text("edition"),
     embedding: blob("embedding", { mode: "buffer" }),
     embeddingModel: text("embedding_model"),
@@ -2508,3 +2508,6 @@ export const searchIndex = sqliteTable(
     uniqueIndex("search_index_unique").on(t.resourceType, t.resourceId),
   ]
 );
+
+/* EnviroAI KSA modules (Source Library, Regulatory Overview) */
+export * from "./schema-ksa";

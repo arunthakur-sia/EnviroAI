@@ -35,13 +35,13 @@ check("health names the data directory", Boolean(healthJson?.dataDir), String(he
 const login = await req("/api/v1/auth/login", {
   method: "POST",
   headers: { "content-type": "application/json" },
-  body: JSON.stringify({ email: "admin@npc.qa", password: "Nexus!2026" }),
+  body: JSON.stringify({ email: "admin@enviroai.demo", password: "EnviroAI!2026" }),
 });
-check("admin@npc.qa signs in", login.status === 200, `status ${login.status}`);
+check("admin@enviroai.demo signs in", login.status === 200, `status ${login.status}`);
 check("the session cookie came back", jar.has("nexus_session"));
 
 const pages = [
-  ["/en/home", ["data-testid=\"home", "SiaNexus"]],
+  ["/en/home", ["data-testid=\"home", "EnviroAI"]],
   ["/en/vault", ["Institutional Memory", "shelf"]],
   ["/en/ask", ["Ask"]],
   ["/ar/home", ["dir=\"rtl\""]],

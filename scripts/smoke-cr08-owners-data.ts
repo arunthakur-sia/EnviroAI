@@ -46,7 +46,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
     `select o.code from org_units o join users u on u.id = o.head_user_id
       where u.deleted_at is null and o.is_active = 1 order by o.sort limit 1`
   );
-  const unitCode = String(unitRow?.code ?? "SOA");
+  const unitCode = String(unitRow?.code ?? "DOP");
   const panel = await get(`${base}/en/organisation?unit=${encodeURIComponent(unitCode)}`, adminCookie);
   check(
     `owners/data: the ${unitCode} panel header carries the unit head chip`,

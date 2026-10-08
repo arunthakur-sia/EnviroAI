@@ -89,15 +89,15 @@ function PersonRow({ person, lead = false }: { person: OrgPerson; lead?: boolean
         {position ? <span className="block truncate text-xs text-ink-600">{position}</span> : null}
       </span>
       {person.roleInUnit === "head" ? (
-        <Chip tone="maroon">{t("people.roleHead")}</Chip>
+        <Chip tone="navy">{t("people.roleHead")}</Chip>
       ) : person.roleInUnit === "deputy" ? (
-        <Chip tone="sand">{t("people.roleDeputy")}</Chip>
+        <Chip tone="mist">{t("people.roleDeputy")}</Chip>
       ) : null}
       {person.email ? (
         <a
           href={`mailto:${person.email}`}
           aria-label={t("panel.email", { name })}
-          className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg text-ink-600 hover:bg-white hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+          className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg text-ink-600 hover:bg-white hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
         >
           <Mail className="size-3.5" />
         </a>
@@ -114,7 +114,7 @@ function OwnsCard({ icon, label, children }: { icon: React.ReactNode; label: str
   return (
     <div className="rounded-xl bg-white p-3.5 shadow-[var(--shadow-paper)]">
       <p className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-600 rtl:tracking-normal">
-        <span className="text-maroon-700 [&_svg]:size-3.5" aria-hidden>
+        <span className="text-navy-700 [&_svg]:size-3.5" aria-hidden>
           {icon}
         </span>
         {label}
@@ -170,7 +170,7 @@ function OverviewTab({ data }: UnitPanelTabProps) {
             href={(locale === "ar" ? data.mandateSourceUrlAr : data.mandateSourceUrl) ?? data.mandateSourceUrl ?? "#"}
             target="_blank"
             rel="noreferrer"
-            className="link-draw inline-flex cursor-pointer items-center gap-1 font-medium text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+            className="link-draw inline-flex cursor-pointer items-center gap-1 font-medium text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
           >
             <ExternalLink className="size-3.5" aria-hidden /> {t("mandate.source")}
           </a>
@@ -187,7 +187,7 @@ function OverviewTab({ data }: UnitPanelTabProps) {
         ) : null}
       </div>
       {data.responsibilitiesEn || data.responsibilitiesAr ? (
-        <div className="mt-3 rounded-xl border border-sand-300 bg-sand-50 p-4">
+        <div className="mt-3 rounded-xl border border-mist-300 bg-mist-50 p-4">
           <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-600 rtl:tracking-normal">{t("mandate.responsibilities")}</p>
           <p className="whitespace-pre-line text-sm leading-relaxed text-ink-900">
             {bi(locale, data.responsibilitiesEn ?? "", data.responsibilitiesAr ?? "")}
@@ -221,12 +221,12 @@ function PeopleTab({ data }: UnitPanelTabProps) {
                 </span>
               ) : null}
             </span>
-            <Chip tone="maroon">{t("people.roleHead")}</Chip>
+            <Chip tone="navy">{t("people.roleHead")}</Chip>
             {data.head.email ? (
               <a
                 href={`mailto:${data.head.email}`}
                 aria-label={t("panel.email", { name: bi(locale, data.head.nameEn, data.head.nameAr) })}
-                className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg text-ink-600 hover:bg-sand-50 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+                className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg text-ink-600 hover:bg-mist-50 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
               >
                 <Mail className="size-3.5" />
               </a>
@@ -265,7 +265,7 @@ function OwnsTab({ data }: UnitPanelTabProps) {
   const owns = data.owns;
   const hasOwns =
     owns.councilNodes.length > 0 ||
-    owns.ndsNodes.length > 0 ||
+    owns.nesNodes.length > 0 ||
     owns.documentsByType.length > 0 ||
     owns.indicators.length > 0 ||
     owns.experts.length > 0 ||
@@ -286,17 +286,17 @@ function OwnsTab({ data }: UnitPanelTabProps) {
                   </li>
                 ))}
               </ul>
-              <Link href="/council-strategy" className="link-draw mt-2 inline-block text-[11px] font-medium text-maroon-700">
+              <Link href="/council-strategy" className="link-draw mt-2 inline-block text-[11px] font-medium text-navy-700">
                 {t("owns.councilOpen")}
               </Link>
             </OwnsCard>
           ) : null}
-          {owns.ndsNodes.length ? (
-            <OwnsCard icon={<Target />} label={t("owns.nds")}>
+          {owns.nesNodes.length ? (
+            <OwnsCard icon={<Target />} label={t("owns.nes")}>
               <ul className="flex flex-col gap-1">
-                {owns.ndsNodes.slice(0, 6).map((node) => (
+                {owns.nesNodes.slice(0, 6).map((node) => (
                   <li key={node.id} className="truncate text-xs">
-                    <Link href={`/strategy/${node.id}`} className="link-draw text-ink-900 hover:text-maroon-700">
+                    <Link href={`/strategy/${node.id}`} className="link-draw text-ink-900 hover:text-navy-700">
                       {node.code ? <span className="me-1 text-ink-400 tnum">{node.code}</span> : null}
                       {bi(locale, node.titleEn, node.titleAr)}
                     </Link>
@@ -309,7 +309,7 @@ function OwnsTab({ data }: UnitPanelTabProps) {
             <OwnsCard icon={<FileText />} label={t("owns.documents")}>
               <div className="flex flex-wrap gap-1.5">
                 {owns.documentsByType.slice(0, 10).map((type) => (
-                  <Chip key={type.code} tone="sand">
+                  <Chip key={type.code} tone="mist">
                     {bi(locale, type.nameEn, type.nameAr)}
                     <span className="tnum font-semibold">{type.count}</span>
                   </Chip>
@@ -332,7 +332,7 @@ function OwnsTab({ data }: UnitPanelTabProps) {
           {owns.lessons > 0 ? (
             <OwnsCard icon={<GraduationCap />} label={t("owns.lessons")}>
               <p className="text-sm text-ink-900 tnum">{t("owns.lessonsCount", { count: owns.lessons })}</p>
-              <Link href="/lessons" className="link-draw mt-2 inline-block text-[11px] font-medium text-maroon-700">
+              <Link href="/lessons" className="link-draw mt-2 inline-block text-[11px] font-medium text-navy-700">
                 {t("owns.lessonsOpen")}
               </Link>
             </OwnsCard>
@@ -342,7 +342,7 @@ function OwnsTab({ data }: UnitPanelTabProps) {
               <ul className="flex flex-col gap-1">
                 {owns.experts.slice(0, 6).map((expert) => (
                   <li key={expert.id} className="truncate text-xs">
-                    <Link href={`/experts/${expert.id}`} className="link-draw text-ink-900 hover:text-maroon-700">
+                    <Link href={`/experts/${expert.id}`} className="link-draw text-ink-900 hover:text-navy-700">
                       {bi(locale, expert.nameEn, expert.nameAr)}
                     </Link>
                   </li>
@@ -395,7 +395,7 @@ function SubUnitsTab({ data, onSelectUnit }: UnitPanelTabProps) {
             key={sub.id}
             type="button"
             onClick={() => onSelectUnit(sub.code)}
-            className="card flex cursor-pointer items-center gap-2.5 px-3.5 py-3 text-start transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+            className="card flex cursor-pointer items-center gap-2.5 px-3.5 py-3 text-start transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
           >
             <span className="min-w-0 flex-1">
               <span className="block truncate text-sm font-medium text-ink-900">{bi(locale, sub.nameEn, sub.nameAr)}</span>
@@ -425,7 +425,7 @@ export const UNIT_PANEL_TABS: UnitPanelTabDef[] = [
     icon: <Landmark />,
     labelKey: "owns",
     count: (d) =>
-      d.owns.councilNodes.length + d.owns.ndsNodes.length + d.owns.indicators.length + d.owns.experts.length + d.owns.lessons + d.owns.openHandovers.length,
+      d.owns.councilNodes.length + d.owns.nesNodes.length + d.owns.indicators.length + d.owns.experts.length + d.owns.lessons + d.owns.openHandovers.length,
     render: (p) => <OwnsTab {...p} />,
   },
   {

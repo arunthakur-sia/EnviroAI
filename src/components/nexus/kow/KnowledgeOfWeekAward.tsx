@@ -21,12 +21,12 @@ export function KnowledgeOfWeekAward({
   const chip = (
     <span
       data-testid="kow-award"
-      className="inline-flex cursor-default items-center gap-1.5 rounded-lg border border-gold-300 bg-gold-100 px-2.5 py-1 text-xs font-medium text-maroon-900"
+      className="inline-flex cursor-default items-center gap-1.5 rounded-lg border border-aqua-300 bg-aqua-100 px-2.5 py-1 text-xs font-medium text-navy-900"
       tabIndex={0}
     >
-      <Crown className="size-3.5 text-gold-500" aria-hidden />
+      <Crown className="size-3.5 text-aqua-500" aria-hidden />
       {t("award.title")}
-      <span aria-hidden className="text-gold-500">·</span>
+      <span aria-hidden className="text-aqua-500">·</span>
       <span className="tnum text-ink-600">{t("award.weeks", { count: weeks })}</span>
     </span>
   );

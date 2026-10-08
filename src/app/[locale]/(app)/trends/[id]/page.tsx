@@ -76,7 +76,7 @@ export default async function SignalPage({
       <div className="mb-4">
         <Link
           href="/trends"
-          className="inline-flex items-center gap-1.5 text-sm text-ink-600 hover:text-maroon-900"
+          className="inline-flex items-center gap-1.5 text-sm text-ink-600 hover:text-navy-900"
         >
           <ArrowLeft className="size-4 flip-rtl" /> {t("backToStream")}
         </Link>
@@ -98,7 +98,7 @@ export default async function SignalPage({
                     href={signal.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="ms-2 inline-flex items-center gap-1 text-gulf-600 hover:underline"
+                    className="ms-2 inline-flex items-center gap-1 text-teal-600 hover:underline"
                   >
                     <ExternalLink className="size-3.5" /> {t("openSource")}
                   </a>
@@ -174,7 +174,7 @@ export default async function SignalPage({
                         ? "ok"
                         : signal.sentiment === "negative"
                           ? "danger"
-                          : "sand"
+                          : "mist"
                     }
                   >
                     {t(`sentiment.${signal.sentiment}` as never)}
@@ -186,7 +186,7 @@ export default async function SignalPage({
                   <dt className="text-ink-600">{t("convertedTo")}</dt>
                   <dd>
                     <Link
-                      className="text-gulf-600 hover:underline"
+                      className="text-teal-600 hover:underline"
                       href={
                         (signal.convertedResourceType === "lesson"
                           ? `/lessons/${signal.convertedResourceId}`

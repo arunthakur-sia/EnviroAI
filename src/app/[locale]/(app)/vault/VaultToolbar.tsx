@@ -37,7 +37,7 @@ export function VaultToolbar({
     <NativeSelect
       value={sp.get(key) ?? ""}
       onChange={(e) => setParam(key, e.target.value || null)}
-      className={cn("w-auto min-w-32 max-w-44", sp.get(key) && "border-maroon-300 text-maroon-900")}
+      className={cn("w-auto min-w-32 max-w-44", sp.get(key) && "border-navy-300 text-navy-900")}
       aria-label={placeholder}
     >
       <option value="">{placeholder}</option>
@@ -51,7 +51,7 @@ export function VaultToolbar({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <div className="inline-flex items-center gap-0.5 rounded-xl bg-sand-100 p-1" role="tablist" aria-label={t("viewToggle")}>
+      <div className="inline-flex items-center gap-0.5 rounded-xl bg-mist-100 p-1" role="tablist" aria-label={t("viewToggle")}>
         {(
           [
             ["shelves", BookCopy],
@@ -66,7 +66,7 @@ export function VaultToolbar({
             onClick={() => setParam("view", mode === "shelves" ? null : mode)}
             className={cn(
               "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors cursor-pointer",
-              view === mode ? "bg-white text-maroon-900 shadow-sm" : "text-ink-600 hover:text-ink-900"
+              view === mode ? "bg-white text-navy-900 shadow-sm" : "text-ink-600 hover:text-ink-900"
             )}
           >
             <Icon className="size-4" /> {t(`views.${mode}`)}
@@ -83,7 +83,7 @@ export function VaultToolbar({
       <NativeSelect
         value={sp.get("department") ?? ""}
         onChange={(e) => setParam("department", e.target.value || null)}
-        className={cn("w-auto min-w-32 max-w-44", sp.get("department") && "border-maroon-300")}
+        className={cn("w-auto min-w-32 max-w-44", sp.get("department") && "border-navy-300")}
         aria-label={t("filterDepartment")}
       >
         <option value="">{t("filterDepartment")}</option>
@@ -96,7 +96,7 @@ export function VaultToolbar({
       <NativeSelect
         value={sp.get("status") ?? ""}
         onChange={(e) => setParam("status", e.target.value || null)}
-        className={cn("w-auto", sp.get("status") && "border-maroon-300")}
+        className={cn("w-auto", sp.get("status") && "border-navy-300")}
         aria-label={t("filterStatus")}
       >
         <option value="">{t("filterStatus")}</option>

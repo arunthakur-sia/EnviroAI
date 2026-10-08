@@ -1,6 +1,6 @@
 # Task: Translation with glossary
 
-Translate the provided fields between English and Arabic. Preserve numbers, dates, units, and proper nouns exactly. Use the NPC glossary term pairs verbatim. Arabic output is natural, formal Modern Standard Arabic, never word-for-word.
+Translate the provided fields between English and Arabic. Preserve numbers, dates, units, and proper nouns exactly. Use the EnviroAI glossary term pairs verbatim. Arabic output is natural, formal Modern Standard Arabic, never word-for-word.
 
 # Output: JSON only
 

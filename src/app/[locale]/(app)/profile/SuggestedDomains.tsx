@@ -30,15 +30,15 @@ export function SuggestedDomains({
 
   if (!items.length) return null;
   return (
-    <div className="mb-6 rounded-xl border border-gold-300 bg-gold-100/40 p-4">
-      <p className="mb-2 flex items-center gap-1.5 text-sm font-medium text-maroon-900">
-        <Sparkles className="size-4 text-gold-500" /> {t("suggestedDomains")}
+    <div className="mb-6 rounded-xl border border-aqua-300 bg-aqua-100/40 p-4">
+      <p className="mb-2 flex items-center gap-1.5 text-sm font-medium text-navy-900">
+        <Sparkles className="size-4 text-aqua-500" /> {t("suggestedDomains")}
       </p>
       <div className="flex flex-wrap gap-2">
         {items.map((s) => (
           <span
             key={s.id}
-            className="flex items-center gap-1.5 rounded-lg border border-sand-300 bg-white px-2.5 py-1.5 text-sm text-ink-900"
+            className="flex items-center gap-1.5 rounded-lg border border-mist-300 bg-white px-2.5 py-1.5 text-sm text-ink-900"
           >
             {bi(locale, s.nameEn, s.nameAr)}
             <button

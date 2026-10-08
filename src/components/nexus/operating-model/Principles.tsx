@@ -176,7 +176,7 @@ export function Principles({
       testId="om-principles"
       aside={
         <>
-          <Chip tone="sand" className="tnum" data-testid="principles-count">
+          <Chip tone="mist" className="tnum" data-testid="principles-count">
             {t("principles.count", { count: principles.length })}
           </Chip>
           {canEdit ? (
@@ -207,7 +207,7 @@ export function Principles({
           }
         />
       ) : (
-        <div className="rounded-2xl bg-sand-100 px-5 py-6 sm:px-7 sm:py-8" data-testid="principles-band">
+        <div className="rounded-2xl bg-mist-100 px-5 py-6 sm:px-7 sm:py-8" data-testid="principles-band">
           <ol className="grid gap-x-10 gap-y-7 md:grid-cols-2 xl:grid-cols-3" data-testid="principles-list">
             {principles.map((p, i) => {
               const isEditing = editing === p.id;
@@ -225,7 +225,7 @@ export function Principles({
                         animate={{ opacity: 1 }}
                         exit={reduced ? undefined : { opacity: 0 }}
                         transition={{ duration: 0.2, ease: EASE }}
-                        className="rounded-xl border border-maroon-300 bg-white p-4"
+                        className="rounded-xl border border-navy-300 bg-white p-4"
                       >
                         <PrincipleForm
                           initial={draftOf(p)}
@@ -244,7 +244,7 @@ export function Principles({
                         className="group/principle flex gap-4"
                       >
                         <span
-                          className="mt-0.5 shrink-0 select-none text-[34px] font-semibold leading-none text-maroon-300 tnum"
+                          className="mt-0.5 shrink-0 select-none text-[34px] font-semibold leading-none text-navy-300 tnum"
                           style={{ fontFamily: displayFont(locale) }}
                           aria-hidden
                         >
@@ -267,7 +267,7 @@ export function Principles({
                                 type="button"
                                 onClick={() => setEditing(p.id)}
                                 aria-label={t("principles.editAria", { n: i + 1 })}
-                                className="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-medium text-ink-600 hover:bg-white hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500"
+                                className="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-medium text-ink-600 hover:bg-white hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500"
                                 data-testid="principle-edit"
                               >
                                 <Pencil className="size-3.5" aria-hidden /> {t("actions.edit")}
@@ -276,7 +276,7 @@ export function Principles({
                                 type="button"
                                 onClick={() => void remove(p)}
                                 aria-label={t("principles.deleteAria", { n: i + 1 })}
-                                className="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-medium text-ink-600 hover:bg-white hover:text-danger focus-visible:outline-2 focus-visible:outline-gold-500"
+                                className="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-medium text-ink-600 hover:bg-white hover:text-danger focus-visible:outline-2 focus-visible:outline-aqua-500"
                                 data-testid="principle-delete"
                               >
                                 <Trash2 className="size-3.5" aria-hidden /> {t("actions.delete")}
@@ -292,7 +292,7 @@ export function Principles({
             })}
             {editing === "new" ? (
               <li className="md:col-span-2 xl:col-span-3">
-                <div className="rounded-xl border border-maroon-300 bg-white p-4">
+                <div className="rounded-xl border border-navy-300 bg-white p-4">
                   <PrincipleForm
                     initial={draftOf(null)}
                     busy={busy}

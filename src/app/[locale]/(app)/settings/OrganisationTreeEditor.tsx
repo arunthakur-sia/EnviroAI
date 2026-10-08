@@ -618,7 +618,7 @@ export function OrganisationTreeEditor({
   const moveExcluded = React.useMemo(() => (move ? new Set([move.id, ...descendantIds(move.id, units)]) : new Set<string>()), [move, units]);
   const canSaveDialog = form.code.trim().length >= 1 && form.nameEn.trim().length >= 2 && form.nameAr.trim().length >= 2;
   const iconButton =
-    "flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg text-ink-400 transition-colors hover:bg-sand-100 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500 disabled:cursor-default disabled:opacity-40";
+    "flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg text-ink-400 transition-colors hover:bg-mist-100 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500 disabled:cursor-default disabled:opacity-40";
 
   return (
     <div data-testid="org-tree-editor">
@@ -648,7 +648,7 @@ export function OrganisationTreeEditor({
           <ChevronsDownUp className="size-3.5" /> {t("collapseAll")}
         </button>
         <label className="flex cursor-pointer items-center gap-1.5 text-xs text-ink-600">
-          <input type="checkbox" checked={showInactive} onChange={(e) => setShowInactive(e.target.checked)} className="size-3.5 cursor-pointer accent-maroon-700" />
+          <input type="checkbox" checked={showInactive} onChange={(e) => setShowInactive(e.target.checked)} className="size-3.5 cursor-pointer accent-navy-700" />
           {t("showInactive")}
         </label>
         <Button size="sm" className="ms-auto" onClick={() => openAdd(null)} disabled={!canEdit} data-testid="org-unit-add">
@@ -657,7 +657,7 @@ export function OrganisationTreeEditor({
       </div>
 
       {/* the rows */}
-      <div className="card divide-y divide-sand-100" role="tree" aria-label={t("editorTitle")}>
+      <div className="card divide-y divide-mist-100" role="tree" aria-label={t("editorTitle")}>
         {rows.length === 0 ? <p className="px-4 py-6 text-sm text-ink-600">{t("noUnits")}</p> : null}
         {rows.map(({ unit, depth, parentCode, hasChildren }) => {
           const label = unitLabel(unit);
@@ -680,8 +680,8 @@ export function OrganisationTreeEditor({
               className={cn(
                 "flex flex-wrap items-center gap-2 py-2 pe-3 transition-colors",
                 dragId && "select-none",
-                isOver && "bg-maroon-100/50 ring-2 ring-inset ring-maroon-500",
-                inDrag && dragId !== unit.id && "bg-gold-100/50",
+                isOver && "bg-navy-100/50 ring-2 ring-inset ring-navy-500",
+                inDrag && dragId !== unit.id && "bg-aqua-100/50",
                 dragId === unit.id && "opacity-60"
               )}
               style={{ paddingInlineStart: 8 + depth * 20 }}
@@ -695,7 +695,7 @@ export function OrganisationTreeEditor({
                 title={t("dragHandle", { unit: label })}
                 data-testid="org-editor-drag"
                 style={{ touchAction: "none" }}
-                className={cn("flex size-6 shrink-0 items-center justify-center rounded-md text-ink-400", canEdit ? "cursor-grab active:cursor-grabbing hover:text-maroon-700" : "opacity-40")}
+                className={cn("flex size-6 shrink-0 items-center justify-center rounded-md text-ink-400", canEdit ? "cursor-grab active:cursor-grabbing hover:text-navy-700" : "opacity-40")}
               >
                 <GripVertical className="size-4" aria-hidden />
               </span>
@@ -704,7 +704,7 @@ export function OrganisationTreeEditor({
                   type="button"
                   onClick={() => toggleOpen(unit.id)}
                   aria-label={isOpen ? t("collapseAll") : t("expandAll")}
-                  className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-ink-400 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+                  className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-ink-400 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
                 >
                   <ChevronDown className={cn("size-3.5 transition-transform", !isOpen && "-rotate-90 rtl:rotate-90")} aria-hidden />
                 </button>
@@ -756,14 +756,14 @@ export function OrganisationTreeEditor({
                       <button
                         type="button"
                         onClick={() => canEdit && setRename({ id: unit.id, nameEn: unit.nameEn, nameAr: unit.nameAr })}
-                        className={cn("cursor-text rounded text-start font-medium text-ink-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500", !unit.isActive && "text-ink-600", canEdit && "hover:text-maroon-700")}
+                        className={cn("cursor-text rounded text-start font-medium text-ink-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500", !unit.isActive && "text-ink-600", canEdit && "hover:text-navy-700")}
                         aria-label={t("renameAria", { unit: label })}
                         data-testid="org-editor-rename"
                         disabled={!canEdit}
                       >
                         {label}
                       </button>
-                      <Chip tone="sand">{levelLabel(unit.level)}</Chip>
+                      <Chip tone="mist">{levelLabel(unit.level)}</Chip>
                       {!unit.isActive ? <Chip tone="ghost">{t("inactive")}</Chip> : null}
                     </span>
                     <span className="block text-xs text-ink-400" dir="auto">
@@ -817,7 +817,7 @@ export function OrganisationTreeEditor({
         })}
       </div>
       {dragId && overId && canDropOn(overId) ? (
-        <p className="mt-2 text-xs text-maroon-700" role="status" data-testid="org-move-preview">
+        <p className="mt-2 text-xs text-navy-700" role="status" data-testid="org-move-preview">
           {t("movePreview", { unit: unitLabel(byId.get(dragId)!), target: unitLabel(byId.get(overId)!) })}
         </p>
       ) : null}
@@ -895,7 +895,7 @@ export function OrganisationTreeEditor({
             <ul className="mt-2 flex flex-wrap gap-1.5">
               {impact.subUnits.slice(0, 12).map((s) => (
                 <li key={s.id}>
-                  <Chip tone="sand">{bi(locale, s.nameEn, s.nameAr)}</Chip>
+                  <Chip tone="mist">{bi(locale, s.nameEn, s.nameAr)}</Chip>
                 </li>
               ))}
               {impact.subUnits.length > 12 ? <li className="text-xs text-ink-400 tnum">+{impact.subUnits.length - 12}</li> : null}

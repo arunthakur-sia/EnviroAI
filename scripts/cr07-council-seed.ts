@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-// CR07 2.6: seeds the illustrative Council Strategy.
+// CR07 2.6: seeds the illustrative Programme Strategy (the council_* tables keep their names).
 //
 // The words come from scripts/data/cr07-council-content-a.ts (direction,
 // situation analysis, governance, risks, goals, intermediate outcomes,
@@ -18,8 +18,10 @@ loadEnv();
 import { eq, inArray, isNull } from "drizzle-orm";
 import { ulid } from "ulid";
 import { STRATEGY_META, SWOT, STAKEHOLDERS, CHALLENGES, BASELINES, GOVERNANCE, RISKS, GOALS, INTERMEDIATE_OUTCOMES, OUTPUTS } from "./data/cr07-council-content-a";
-import { PROJECTS, INDICATORS } from "./data/cr07-council-content-b";
+import { PROJECTS } from "./data/cr07-council-content-b";
+import { INDICATORS } from "./data/cr07-council-content-c";
 import type { IndicatorSeed } from "./data/cr07-council-types";
+import { findHomeEdition } from "./data/edition";
 
 const now = () => new Date().toISOString();
 
@@ -70,7 +72,7 @@ function progressOf(period: string, all: string[]): number {
 function round(value: number, unit: string | null): number {
   if (unit === "percent" || unit === "score") return Math.round(value * 10) / 10;
   if (unit === "ratio") return Math.round(value * 100) / 100;
-  if (unit === "QAR million") return Math.round(value * 10) / 10;
+  if (unit === "SAR million") return Math.round(value * 10) / 10;
   return Math.round(value);
 }
 
@@ -207,7 +209,7 @@ export async function seedCr07Council(): Promise<void> {
   const personFor = (unitCode: string, salt: number) => {
     const unit = unitByCode.get(unitCode);
     const pool = (unit ? usersByUnit.get(unit.id) : undefined) ?? [];
-    const fallback = users.filter((u) => u.email !== "admin@npc.qa");
+    const fallback = users.filter((u) => u.email !== "admin@enviroai.demo");
     const chosen = pool.length ? pool : fallback;
     return chosen.length ? chosen[(hashOf(unitCode) + salt * 7919) % chosen.length] : null;
   };
@@ -329,7 +331,7 @@ export async function seedCr07Council(): Promise<void> {
       priorityImpact: input.priorityImpact ?? null,
       priorityFeasibility: input.priorityFeasibility ?? null,
       sort: input.order,
-      sourceRef: "SiaNexus Council Strategy, illustrative data",
+      sourceRef: "EnviroAI Programme Strategy, illustrative data",
       isIllustrative: 1,
       createdAt: now(),
       updatedAt: now(),
@@ -480,8 +482,8 @@ export async function seedCr07Council(): Promise<void> {
     dependencies++;
   }
 
-  /* 4. alignment to NDS3 */
-  const ndsNodes = await db
+  /* 4. alignment to the National Environment Strategy themes */
+  const nesNodes = await db
     .select({
       id: schema.strategyNodes.id,
       code: schema.strategyNodes.code,
@@ -490,13 +492,9 @@ export async function seedCr07Council(): Promise<void> {
     })
     .from(schema.strategyNodes)
     .where(eq(schema.strategyNodes.nodeType, "outcome"));
-  const [nds3] = await db
-    .select()
-    .from(schema.strategyEditions)
-    .where(eq(schema.strategyEditions.code, "nds3"))
-    .limit(1);
+  const homeEdition = await findHomeEdition(db, schema);
   const outcomeByCode = new Map(
-    ndsNodes.filter((n) => n.editionId === nds3?.id && n.code).map((n) => [n.code!, n.id])
+    nesNodes.filter((n) => n.editionId === homeEdition?.id && n.code).map((n) => [n.code!, n.id])
   );
   let alignments = 0;
   for (const g of GOALS) {
@@ -504,7 +502,7 @@ export async function seedCr07Council(): Promise<void> {
     if (!councilNodeId) continue;
     for (const a of g.alignment) {
       const targetId =
-        a.targetKind === "nds_node" ? outcomeByCode.get(a.targetCode) ?? null : a.targetCode;
+        a.targetKind === "nes_node" ? outcomeByCode.get(a.targetCode) ?? null : a.targetCode;
       if (!targetId) continue;
       await db.insert(schema.councilAlignment).values({
         id: ulid(),
@@ -539,9 +537,9 @@ export async function seedCr07Council(): Promise<void> {
       OUTPUTS.find((o) => o.code === ind.nodeCode)?.ownerUnitCode ??
       INTERMEDIATE_OUTCOMES.find((io) => io.code === ind.nodeCode)?.ownerUnitCode ??
       GOALS.find((g) => g.code === ind.nodeCode)?.ownerUnitCode ??
-      "IDP";
+      "SPD";
     const responsible = personFor(ownerCode, 11);
-    // CR07 2.5: about one in ten reads its actuals from the Statistics Hub
+    // CR07 2.5: about one in ten reads its actuals from the Data Hub
     const linked =
       statsIndicators.length && hashOf(ind.code) % 10 === 0
         ? statsIndicators[hashOf(ind.code) % statsIndicators.length].id
@@ -606,8 +604,8 @@ export async function seedCr07Council(): Promise<void> {
       r.nodeCode
         ? PROJECTS.find((p) => p.code === r.nodeCode)?.ownerUnitCode ??
             OUTPUTS.find((o) => o.code === r.nodeCode)?.ownerUnitCode ??
-            "IDP"
-        : "IDP",
+            "SPD"
+        : "SPD",
       hashOf(r.code) % 7
     );
     await db.insert(schema.councilRisks).values({
@@ -674,7 +672,7 @@ async function seedCouncilStakeholders(strategyId: string): Promise<void> {
   const domainOf = new Map<string, string>();
   for (const d of domains) if (!domainOf.has(d.expertId)) domainOf.set(d.expertId, d.termId);
   const expertPool = experts.filter((e) => domainOf.has(e.id));
-  const heads = users.filter((u) => u.email.startsWith("head.") || u.email === "admin@npc.qa");
+  const heads = users.filter((u) => u.email.startsWith("head.") || u.email === "admin@enviroai.demo");
 
   let rows = 0;
   for (const p of councilProjects) {
@@ -779,8 +777,8 @@ async function seedCouncilDeliverables(strategyId: string): Promise<void> {
         p.descriptionEn ?? "",
         p.descriptionAr ?? "",
         "",
-        "This deliverable belongs to the Council Strategy and carries the Internal classification.",
-        "هذا التسليم يخص الاستراتيجية المؤسسية للمجلس ويحمل تصنيف داخلي.",
+        "This deliverable belongs to the Programme Strategy and carries the Internal classification.",
+        "هذا التسليم يخص استراتيجية المكتب ويحمل تصنيف داخلي.",
       ].join("\n");
       const storagePath = await putText(documentId, `${p.code}-deliverable-${i + 1}.txt`, body);
       await db.insert(schema.documents).values({
@@ -788,8 +786,8 @@ async function seedCouncilDeliverables(strategyId: string): Promise<void> {
         titleEn: `${kind.en}: ${p.titleEn}`,
         titleAr: `${kind.ar}: ${p.titleAr}`,
         titleArMachine: 0,
-        summaryEn: `The ${kind.en.toLowerCase()} of the council project ${p.code}.`,
-        summaryAr: `${kind.ar} لمشروع المجلس ${p.code}.`,
+        summaryEn: `The ${kind.en.toLowerCase()} of the Programme Strategy project ${p.code}.`,
+        summaryAr: `${kind.ar} لمشروع استراتيجية المكتب ${p.code}.`,
         summaryMachine: 0,
         knowledgeTypeTermId: deliverableTermId,
         // CR07 2.1: council content defaults to Internal
@@ -798,7 +796,7 @@ async function seedCouncilDeliverables(strategyId: string): Promise<void> {
         ownerUserId: owner?.id ?? null,
         languageOriginal: "mixed",
         status: "verified",
-        sourceOrigin: "npc",
+        sourceOrigin: "org",
         publishYear: Number((p.startDate ?? "2025").slice(0, 4)),
         originalFilename: `${p.code}-deliverable-${i + 1}.txt`,
         mime: "text/plain",

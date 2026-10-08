@@ -91,7 +91,7 @@ export function SectionEditor({
         e.preventDefault();
         onSave({ lead: lead && (lead.en.trim() || lead.ar.trim()) ? lead : null, blocks });
       }}
-      className="mt-3 rounded-xl border border-gold-300 bg-gold-100/40 p-4"
+      className="mt-3 rounded-xl border border-aqua-300 bg-aqua-100/40 p-4"
       data-testid="section-editor"
     >
       <p className="text-sm text-ink-600">{t("report.editHint")}</p>
@@ -126,7 +126,7 @@ export function SectionEditor({
               );
             default:
               return (
-                <p key={i} className="rounded-lg border border-dashed border-sand-300 bg-white/60 px-3 py-2 text-xs text-ink-400">
+                <p key={i} className="rounded-lg border border-dashed border-mist-300 bg-white/60 px-3 py-2 text-xs text-ink-400">
                   {t("report.notEditable", { kind: b.kind })}
                 </p>
               );

@@ -1,6 +1,6 @@
 "use client";
 // CR08 10.1: the panel that opens beneath the chain for one Level 0 process,
-// in the language of the Council's goal panel: a sand surface, the big faint
+// in the language of the Office's goal panel: a sand surface, the big faint
 // number, the eyebrow, the purpose and the owner, then every Level 1 process
 // as a row with its Level 2 procedures nested. Any row opens the process
 // panel; arrow keys move within a level, Escape closes.
@@ -33,16 +33,16 @@ function Level2Row({ node, onOpen }: { node: ProcessSummary; onOpen: () => void 
         data-testid="process-l2-row"
         data-code={node.code}
         aria-label={t("l0.openRow", { code: node.code, title: name })}
-        className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-start transition-colors hover:bg-sand-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+        className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-start transition-colors hover:bg-mist-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
       >
-        <span className="shrink-0 rounded-md bg-gulf-100 px-1.5 py-0.5 text-[10px] font-semibold text-gulf-600 tnum">{node.code}</span>
+        <span className="shrink-0 rounded-md bg-teal-100 px-1.5 py-0.5 text-[10px] font-semibold text-teal-600 tnum">{node.code}</span>
         <span className="min-w-0 flex-1 truncate text-[13px] text-ink-900">{name}</span>
         {node.ownerUnit ? (
           <span className="hidden shrink-0 text-[10px] font-semibold uppercase tracking-[0.06em] text-ink-400 tnum sm:inline rtl:tracking-normal">
             {node.ownerUnit.code}
           </span>
         ) : null}
-        {docs > 0 ? <Chip tone="sand">{t("map.docCount", { count: docs })}</Chip> : null}
+        {docs > 0 ? <Chip tone="mist">{t("map.docCount", { count: docs })}</Chip> : null}
         <ChevronRight className="size-3.5 shrink-0 text-ink-400 flip-rtl" aria-hidden />
       </button>
     </li>
@@ -78,9 +78,9 @@ function Level1Row({
         data-testid="process-l1-row"
         data-code={node.code}
         aria-label={t("l0.openRow", { code: node.code, title: name })}
-        className="flex w-full cursor-pointer items-start gap-3 rounded-[var(--radius-card)] px-4 py-3 text-start outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+        className="flex w-full cursor-pointer items-start gap-3 rounded-[var(--radius-card)] px-4 py-3 text-start outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
       >
-        <span className="mt-0.5 flex h-6 shrink-0 items-center justify-center rounded-md bg-maroon-100 px-1.5 text-[11px] font-semibold text-maroon-900 tnum">
+        <span className="mt-0.5 flex h-6 shrink-0 items-center justify-center rounded-md bg-navy-100 px-1.5 text-[11px] font-semibold text-navy-900 tnum">
           {node.code}
         </span>
         <span className="min-w-0 flex-1">
@@ -92,7 +92,7 @@ function Level1Row({
             <span>{t("map.procedureCount", { count: node.counts.procedures })}</span>
             <span>{t("map.docCount", { count: docs })}</span>
             <span>{t("map.raciCount", { count: node.counts.raci })}</span>
-            {node.isIllustrative ? <Chip tone="gold">{t("illustrative")}</Chip> : null}
+            {node.isIllustrative ? <Chip tone="aqua">{t("illustrative")}</Chip> : null}
           </span>
         </span>
         <ChevronRight className="mt-1 size-4 shrink-0 text-ink-400 flip-rtl" aria-hidden />
@@ -100,12 +100,12 @@ function Level1Row({
       {/* CR08 9.1: the head of the owner unit, a sibling of the row button
           (a person card opens from a button and may never sit inside one) */}
       {head ? (
-        <div className="border-t border-sand-100 px-4 py-2" data-testid="process-l1-owner">
+        <div className="border-t border-mist-100 px-4 py-2" data-testid="process-l1-owner">
           <OwnerControl owner={head} role="unit_head" size="sm" align="start" item={processItem(node)} />
         </div>
       ) : null}
       {node.children.length ? (
-        <div className="border-t border-sand-100 px-2.5 py-2">
+        <div className="border-t border-mist-100 px-2.5 py-2">
           <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-ink-400 rtl:tracking-normal">{t("l0.procedures")}</p>
           <ul className="flex flex-col gap-0.5">
             {node.children.map((child) => (
@@ -169,13 +169,13 @@ export function Level1Panel({
     <div
       ref={panelRef}
       onKeyDown={onKeyDown}
-      className="relative overflow-hidden rounded-2xl bg-sand-100"
+      className="relative overflow-hidden rounded-2xl bg-mist-100"
       data-testid="level1-panel"
       data-code={node.code}
     >
       <span
         aria-hidden
-        className="pointer-events-none absolute top-1 start-4 select-none font-semibold text-maroon-100"
+        className="pointer-events-none absolute top-1 start-4 select-none font-semibold text-navy-100"
         style={{ fontFamily: "var(--font-display)", fontSize: 96, lineHeight: 1 }}
       >
         {levelNumber(node.code)}
@@ -184,7 +184,7 @@ export function Level1Panel({
       <div className="relative px-5 py-6 sm:px-7">
         <div className="flex flex-wrap items-start gap-4">
           <div className="min-w-0 max-w-2xl flex-1">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-maroon-700 tnum rtl:tracking-normal">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-navy-700 tnum rtl:tracking-normal">
               {t("l0.eyebrow", { code: node.code })}
             </p>
             <h2 className="mt-1 text-2xl leading-tight sm:text-[30px]" style={{ fontFamily: displayFont(locale) }}>
@@ -194,11 +194,11 @@ export function Level1Panel({
             <div className="mt-3 flex flex-wrap items-center gap-1.5">
               {node.ownerUnit ? <UnitChip unit={node.ownerUnit} /> : null}
               {node.isIllustrative ? (
-                <Chip tone="gold" title={t("illustrativeTitle")}>
+                <Chip tone="aqua" title={t("illustrativeTitle")}>
                   {t("illustrative")}
                 </Chip>
               ) : null}
-              <Chip tone="sand">{t("map.interfaceCount", { count: node.counts.interfaces })}</Chip>
+              <Chip tone="mist">{t("map.interfaceCount", { count: node.counts.interfaces })}</Chip>
             </div>
             {/* CR08 9.1: the head of the unit that owns this Level 0 process */}
             {headOf(node.ownerUnit?.id) ? (
@@ -221,7 +221,7 @@ export function Level1Panel({
               onClick={onClose}
               aria-label={t("l0.close")}
               data-testid="level1-close"
-              className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-white/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+              className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-white/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
             >
               <X className="size-4" />
             </button>
@@ -243,7 +243,7 @@ export function Level1Panel({
               ))}
             </div>
           ) : (
-            <p className="rounded-lg border border-dashed border-sand-300 bg-sand-50 px-3 py-6 text-center text-sm text-ink-600">
+            <p className="rounded-lg border border-dashed border-mist-300 bg-mist-50 px-3 py-6 text-center text-sm text-ink-600">
               {t("l0.noLevel1", { code: node.code })}
             </p>
           )}

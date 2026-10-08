@@ -55,7 +55,7 @@ export default async function CommunityPage({
         <div>
           <SectionTitle>{t("communityFeed")}</SectionTitle>
           {questions.length ? (
-            <div className="card divide-y divide-sand-100">
+            <div className="card divide-y divide-mist-100">
               {questions.map((q) => (
                 <QuestionRow key={q.id} q={q} />
               ))}
@@ -66,7 +66,7 @@ export default async function CommunityPage({
         </div>
         <aside>
           <SectionTitle>{t("members")}</SectionTitle>
-          <div className="card divide-y divide-sand-100">
+          <div className="card divide-y divide-mist-100">
             {members.map((m, i) => (
               <div key={i} className="flex items-center gap-2.5 px-4 py-2.5">
                 <Avatar name={m.nameEn} color={m.color} size={26} />
@@ -74,7 +74,7 @@ export default async function CommunityPage({
                   {bi(locale, m.nameEn, m.nameAr)}
                 </span>
                 {m.role === "lead" ? (
-                  <span className="text-[10px] font-semibold uppercase text-gold-500">
+                  <span className="text-[10px] font-semibold uppercase text-aqua-500">
                     {t("lead")}
                   </span>
                 ) : null}

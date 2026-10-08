@@ -43,7 +43,7 @@ import {
 import type { IndexPageData } from "@/server/services/indices";
 import { targetGap, targetIsRank } from "@/lib/index-targets";
 
-const GCC = ["QAT", "SAU", "ARE", "KWT", "BHR", "OMN"];
+const GCC = ["SAU", "ARE", "KWT", "BHR", "OMN"];
 const PEER_COLORS = ["#8a93a0", "#b0b7c1", "#9aa3ae", "#c3c9d1", "#a5adb8"];
 
 function fmt(v: number | null | undefined, d = 2): string {
@@ -74,25 +74,25 @@ export function IndexPage({
 
   const [methodOpen, setMethodOpen] = React.useState(false);
   // a score-only series (an SDG goal, a national indicator) opens on its scores
-  const hasRanks = data.focusObservations.some((o) => o.country === "QAT" && o.rank != null);
+  const hasRanks = data.focusObservations.some((o) => o.country === "SAU" && o.rank != null);
   const [historyView, setHistoryView] = React.useState<"rank" | "score">(hasRanks ? "rank" : "score");
   const [tableOpen, setTableOpen] = React.useState(false);
   const [forecastMethodOpen, setForecastMethodOpen] = React.useState(false);
 
-  const qat = React.useMemo(() => {
+  const homeObs = React.useMemo(() => {
     const published = data.focusObservations
-      .filter((o) => o.country === "QAT")
+      .filter((o) => o.country === "SAU")
       .sort((a, b) => a.year - b.year);
     if (published.length || !data.statistics) return published;
     // CR08 4.1: a national indicator reads its values from the Statistics Hub
     return data.statistics.series.map((p) => ({
-      country: "QAT",
+      country: "SAU",
       year: p.year,
       rank: null as number | null,
       score: p.value as number | null,
     }));
   }, [data.focusObservations, data.statistics]);
-  const latest = qat[qat.length - 1] ?? null;
+  const latest = homeObs[homeObs.length - 1] ?? null;
   /* CR08 4.1: the national target and the distance still to go */
   const nationalTarget = React.useMemo(() => {
     if (index.targetValue == null) return null;
@@ -112,7 +112,7 @@ export function IndexPage({
     const latestYear = latest?.year;
     if (!latestYear) return null;
     let best: { country: string; v: number } | null = null;
-    for (const c of GCC.filter((x) => x !== "QAT")) {
+    for (const c of GCC.filter((x) => x !== "SAU")) {
       const o = data.focusObservations
         .filter((x) => x.country === c && x.year <= latestYear && x.year >= latestYear - 2)
         .sort((a, b) => b.year - a.year)[0];
@@ -124,19 +124,19 @@ export function IndexPage({
   }, [data.focusObservations, latest, higherBetter]);
 
   const historyData = React.useMemo(() => {
-    const years = [...new Set(qat.map((o) => o.year))].sort();
+    const years = [...new Set(homeObs.map((o) => o.year))].sort();
     return years.map((year) => {
-      const mine = qat.find((o) => o.year === year);
+      const mine = homeObs.find((o) => o.year === year);
       const lead = leader
         ? data.focusObservations.find((o) => o.country === leader && o.year === year)
         : null;
       return {
         year,
-        qatar: historyView === "rank" ? mine?.rank ?? null : mine?.score ?? null,
+        home: historyView === "rank" ? mine?.rank ?? null : mine?.score ?? null,
         leader: lead ? (historyView === "rank" ? lead.rank ?? null : lead.score ?? null) : null,
       };
     });
-  }, [qat, leader, historyView, data.focusObservations]);
+  }, [homeObs, leader, historyView, data.focusObservations]);
 
   /* target marker (gold): from the current forecast inputs' target */
   const forecast3 = data.forecasts.find((f) => f.horizon === 3) ?? null;
@@ -156,8 +156,8 @@ export function IndexPage({
         const values = data.pillarValues.filter(
           (v) => v.pillar === p.code && v.year === latestYear
         );
-        const mine = values.find((v) => v.country === "QAT");
-        const gcc = values.filter((v) => v.country !== "QAT" && GCC.includes(v.country));
+        const mine = values.find((v) => v.country === "SAU");
+        const gcc = values.filter((v) => v.country !== "SAU" && GCC.includes(v.country));
         const metric = (x: { score: number | null; rank: number | null }) =>
           x.score ?? (x.rank != null ? -x.rank : null);
         const mineV = mine ? metric(mine) : null;
@@ -260,11 +260,11 @@ export function IndexPage({
         .map((o) => o.country);
     }
     const g = [...presetGroups, ...myGroups].find((x) => x.id === groupId);
-    return g?.countries ?? GCC.filter((c) => c !== "QAT");
+    return g?.countries ?? GCC.filter((c) => c !== "SAU");
   }, [customCountries, groupId, presetGroups, myGroups, data.observations]);
 
   const benchSet = React.useMemo(
-    () => [...new Set(["QAT", ...benchCountries])],
+    () => [...new Set(["SAU", ...benchCountries])],
     [benchCountries]
   );
 
@@ -301,8 +301,8 @@ export function IndexPage({
   const gap = React.useMemo(() => {
     if (!latestBench.length) return null;
     const leaderRow = latestBench[0];
-    const mine = latestBench.find((r) => r.country === "QAT");
-    if (!mine || leaderRow.country === "QAT") return { leader: leaderRow, value: 0, pillars: [] };
+    const mine = latestBench.find((r) => r.country === "SAU");
+    if (!mine || leaderRow.country === "SAU") return { leader: leaderRow, value: 0, pillars: [] };
     const value = Math.abs(leaderRow.score - mine.score);
     const pillarGaps = (pillarView?.rows ?? [])
       .map((r) => {
@@ -444,20 +444,20 @@ export function IndexPage({
                 </Link>
               );
             })}
-            <Chip tone="sand">{t(`categories.${index.category}` as never)}</Chip>
+            <Chip tone="mist">{t(`categories.${index.category}` as never)}</Chip>
             {data.statistics ? (
-              <Chip tone="gulf" data-testid="index-statistics-chip">
+              <Chip tone="teal" data-testid="index-statistics-chip">
                 {t("statisticsChip")} · {bi(locale, data.statistics.nameEn, data.statistics.nameAr)}
               </Chip>
             ) : null}
             {data.entity ? (
-              <Chip tone="gulf">
+              <Chip tone="teal">
                 {bi(locale, data.entity.shortNameEn ?? data.entity.nameEn, data.entity.shortNameAr ?? data.entity.nameAr)}
               </Chip>
             ) : null}
             {data.linkedTargets.map((tg) => (
               <Link key={tg.id} href={`/strategy/${tg.id}` as never}>
-                <Chip tone="maroon" className="hover:bg-maroon-300/40">
+                <Chip tone="navy" className="hover:bg-navy-300/40">
                   {tg.code ?? bi(locale, tg.titleEn, tg.titleAr).slice(0, 24)}
                 </Chip>
               </Link>
@@ -467,7 +467,7 @@ export function IndexPage({
                 href={index.publisherUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-1 text-xs text-ink-600 hover:text-maroon-700"
+                className="flex items-center gap-1 text-xs text-ink-600 hover:text-navy-700"
               >
                 <ExternalLink className="size-3" /> {t("publisherSite")}
               </a>
@@ -499,7 +499,7 @@ export function IndexPage({
           ) : null}
           <button
             onClick={() => setMethodOpen((v) => !v)}
-            className="mt-2 flex items-center gap-1 text-xs font-medium text-ink-600 hover:text-maroon-700 cursor-pointer"
+            className="mt-2 flex items-center gap-1 text-xs font-medium text-ink-600 hover:text-navy-700 cursor-pointer"
             aria-expanded={methodOpen}
           >
             <ChevronDown className={cn("size-3.5 transition-transform", methodOpen && "rotate-180")} />
@@ -515,14 +515,14 @@ export function IndexPage({
           <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-600">
             {t("latest")} · <span className="tnum">{latest?.year ?? "-"}</span>
           </p>
-          <p className="mt-1 text-3xl font-semibold text-maroon-900 tnum" style={{ fontFamily: "var(--font-display)" }}>
+          <p className="mt-1 text-3xl font-semibold text-navy-900 tnum" style={{ fontFamily: "var(--font-display)" }}>
             {latest?.rank != null ? latest.rank : fmt(latest?.score)}
           </p>
           <p className="text-xs text-ink-600 tnum">
             {latest?.rank != null
               ? (() => {
                   // manual rows may carry no field size: say "rank" rather than "of -"
-                  const total = data.observations.find((o) => o.country === "QAT" && o.year === latest.year)?.total;
+                  const total = data.observations.find((o) => o.country === "SAU" && o.year === latest.year)?.total;
                   return total ? t("rankOf", { total }) : t("colRank");
                 })()
               : data.statistics?.unit ?? t("scoreLabel")}
@@ -535,14 +535,14 @@ export function IndexPage({
       <section className="card p-5" data-testid="index-history">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <SectionTitle className="mb-0">{t("history")}</SectionTitle>
-          <span className="inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5">
+          <span className="inline-flex items-center gap-0.5 rounded-lg bg-mist-100 p-0.5">
             {(["rank", "score"] as const).map((v) => (
               <button
                 key={v}
                 onClick={() => setHistoryView(v)}
                 className={cn(
                   "rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
-                  historyView === v ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+                  historyView === v ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
                 )}
               >
                 {v === "rank" ? t("rankView") : t("scoreView")}
@@ -557,7 +557,7 @@ export function IndexPage({
                 dataKey="year"
                 tick={{ fontSize: 11, fill: "var(--color-ink-400)" }}
                 tickLine={false}
-                axisLine={{ stroke: "var(--color-sand-300)" }}
+                axisLine={{ stroke: "var(--color-mist-300)" }}
               />
               <YAxis
                 reversed={historyView === "rank"}
@@ -570,14 +570,14 @@ export function IndexPage({
               <Tooltip
                 formatter={(v: number, name: string) => [
                   historyView === "rank" ? `#${v}` : fmt(v),
-                  name === "qatar" ? "Qatar" : leader ?? "",
+                  name === "home" ? "Saudi Arabia" : leader ?? "",
                 ]}
                 labelFormatter={(l) => String(l)}
               />
               {targetRank != null && historyView === "rank" ? (
                 <Line
                   dataKey={() => targetRank}
-                  stroke="var(--color-gold-500)"
+                  stroke="var(--color-aqua-500)"
                   strokeDasharray="6 4"
                   dot={false}
                   isAnimationActive={false}
@@ -587,7 +587,7 @@ export function IndexPage({
               {leader ? (
                 <Line
                   dataKey="leader"
-                  stroke="var(--color-gulf-400)"
+                  stroke="var(--color-teal-400)"
                   strokeWidth={1.25}
                   strokeOpacity={0.55}
                   dot={false}
@@ -596,8 +596,8 @@ export function IndexPage({
                 />
               ) : null}
               <Line
-                dataKey="qatar"
-                stroke="var(--color-maroon-700)"
+                dataKey="home"
+                stroke="var(--color-navy-700)"
                 strokeWidth={2}
                 dot={{ r: 2.5 }}
                 connectNulls
@@ -611,7 +611,7 @@ export function IndexPage({
         ) : null}
         <button
           onClick={() => setTableOpen((v) => !v)}
-          className="mt-3 flex items-center gap-1 text-xs font-medium text-ink-600 hover:text-maroon-700 cursor-pointer"
+          className="mt-3 flex items-center gap-1 text-xs font-medium text-ink-600 hover:text-navy-700 cursor-pointer"
           aria-expanded={tableOpen}
           data-testid="history-table-toggle"
         >
@@ -622,7 +622,7 @@ export function IndexPage({
           <div className="mt-2 overflow-x-auto">
             <table className="w-full min-w-[520px] text-sm">
               <thead>
-                <tr className="border-b border-sand-100 text-[11px] uppercase tracking-wider text-ink-600">
+                <tr className="border-b border-mist-100 text-[11px] uppercase tracking-wider text-ink-600">
                   <th className="px-3 py-2 text-start">{t("colYear")}</th>
                   <th className="px-3 py-2 text-start">{t("colRank")}</th>
                   <th className="px-3 py-2 text-start">{t("colScore")}</th>
@@ -631,12 +631,12 @@ export function IndexPage({
                 </tr>
               </thead>
               <tbody>
-                {[...qat].reverse().map((o) => {
+                {[...homeObs].reverse().map((o) => {
                   const full = data.observations.find(
-                    (x) => x.country === "QAT" && x.year === o.year
+                    (x) => x.country === "SAU" && x.year === o.year
                   );
                   return (
-                    <tr key={o.year} className="border-b border-sand-100 last:border-0">
+                    <tr key={o.year} className="border-b border-mist-100 last:border-0">
                       <td className="px-3 py-1.5 tnum">{o.year}</td>
                       <td className="px-3 py-1.5 tnum">{o.rank ?? "-"}</td>
                       <td className="px-3 py-1.5 tnum">{fmt(o.score)}</td>
@@ -647,7 +647,7 @@ export function IndexPage({
                             href={full.sourceUrl}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-xs text-gulf-600 hover:underline"
+                            className="text-xs text-teal-600 hover:underline"
                           >
                             {t("source")}
                           </a>
@@ -693,14 +693,14 @@ export function IndexPage({
                         : ""}
                     </span>
                   </p>
-                  <div className="relative h-2.5 overflow-hidden rounded-full bg-sand-100">
+                  <div className="relative h-2.5 overflow-hidden rounded-full bg-mist-100">
                     <span
-                      className="absolute inset-y-0 start-0 rounded-full bg-maroon-500"
+                      className="absolute inset-y-0 start-0 rounded-full bg-navy-500"
                       style={{ width: `${w(r.mine)}%` }}
                     />
                     {r.gccAvg != null ? (
                       <span
-                        className="absolute top-0 h-full w-0.5 bg-gulf-600"
+                        className="absolute top-0 h-full w-0.5 bg-teal-600"
                         style={{ insetInlineStart: `${w(r.gccAvg)}%` }}
                         title={t("gccAvg")}
                       />
@@ -725,7 +725,7 @@ export function IndexPage({
                 className="card card-hover flex flex-col gap-1 px-3.5 py-3"
               >
                 <span className="flex items-center gap-1.5 text-[11px] text-ink-600">
-                  <Chip tone={s.sentiment === "positive" ? "ok" : s.sentiment === "negative" ? "danger" : "sand"}>
+                  <Chip tone={s.sentiment === "positive" ? "ok" : s.sentiment === "negative" ? "danger" : "mist"}>
                     {s.impact}
                   </Chip>
                   {s.publisher}
@@ -754,7 +754,7 @@ export function IndexPage({
           </span>
         </div>
         {whatIf ? (
-          <p className="mt-2 rounded-lg bg-gold-100 px-3 py-1.5 text-xs text-maroon-900" data-testid="whatif-banner">
+          <p className="mt-2 rounded-lg bg-aqua-100 px-3 py-1.5 text-xs text-navy-900" data-testid="whatif-banner">
             {t("forecast.whatIfBanner")}
           </p>
         ) : null}
@@ -762,12 +762,12 @@ export function IndexPage({
         {horizonsShown.length ? (
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {horizonsShown.map((h) => (
-              <div key={h.horizon} className="rounded-xl bg-sand-50 px-4 py-3" data-testid={`forecast-h${h.horizon}`}>
+              <div key={h.horizon} className="rounded-xl bg-mist-50 px-4 py-3" data-testid={`forecast-h${h.horizon}`}>
                 <p className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-ink-600">
                   +{h.horizon} {t("forecast.years")}
                   <DirIcon d={h.direction} />
                 </p>
-                <p className="mt-1 text-2xl font-semibold text-maroon-900 tnum" style={{ fontFamily: "var(--font-display)" }}>
+                <p className="mt-1 text-2xl font-semibold text-navy-900 tnum" style={{ fontFamily: "var(--font-display)" }}>
                   {h.rank != null ? `#${Math.round(h.rank)}` : fmt(h.score)}
                 </p>
                 <p className="text-[11px] text-ink-600 tnum">{rangeLabel(h)}</p>
@@ -787,7 +787,7 @@ export function IndexPage({
                   dataKey="year"
                   tick={{ fontSize: 11, fill: "var(--color-ink-400)" }}
                   tickLine={false}
-                  axisLine={{ stroke: "var(--color-sand-300)" }}
+                  axisLine={{ stroke: "var(--color-mist-300)" }}
                 />
                 <YAxis
                   reversed={!!whatIfInputs?.usingRankFallback}
@@ -800,14 +800,14 @@ export function IndexPage({
                 <Tooltip formatter={(v: number | number[]) => (Array.isArray(v) ? v.map((x) => fmt(x)).join(` ${t("forecast.to")} `) : fmt(v))} />
                 <Area
                   dataKey="band"
-                  fill="var(--color-maroon-100)"
+                  fill="var(--color-navy-100)"
                   stroke="none"
                   connectNulls
                   isAnimationActive={false}
                 />
                 <Line
                   dataKey="value"
-                  stroke="var(--color-maroon-700)"
+                  stroke="var(--color-navy-700)"
                   strokeWidth={2}
                   dot={{ r: 2 }}
                   connectNulls
@@ -815,7 +815,7 @@ export function IndexPage({
                 />
                 <Line
                   dataKey="central"
-                  stroke="var(--color-maroon-500)"
+                  stroke="var(--color-navy-500)"
                   strokeWidth={1.75}
                   strokeDasharray="5 4"
                   dot={{ r: 2.5 }}
@@ -858,7 +858,7 @@ export function IndexPage({
         {/* 4.6.9 method section */}
         <button
           onClick={() => setForecastMethodOpen((v) => !v)}
-          className="mt-4 flex items-center gap-1 text-xs font-medium text-ink-600 hover:text-maroon-700 cursor-pointer"
+          className="mt-4 flex items-center gap-1 text-xs font-medium text-ink-600 hover:text-navy-700 cursor-pointer"
           aria-expanded={forecastMethodOpen}
           data-testid="forecast-method-toggle"
         >
@@ -866,27 +866,27 @@ export function IndexPage({
           {t("forecast.methodToggle")}
         </button>
         {forecastMethodOpen ? (
-          <div className="mt-3 flex flex-col gap-4 border-t border-sand-100 pt-4" data-testid="forecast-method">
+          <div className="mt-3 flex flex-col gap-4 border-t border-mist-100 pt-4" data-testid="forecast-method">
             <p className="max-w-3xl text-sm leading-relaxed text-ink-600">{t("forecast.methodText")}</p>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <div className="rounded-lg bg-sand-50 px-3 py-2">
+              <div className="rounded-lg bg-mist-50 px-3 py-2">
                 <p className="text-[10px] uppercase tracking-wider text-ink-600">{t("forecast.baselineMethod")}</p>
                 <p className="text-sm font-medium tnum">
                   {sim3.method === "holt" ? "Holt" : t("forecast.damped")}
                   {sim3.method === "holt" ? ` (α ${fmt(sim3.alpha)}, β ${fmt(sim3.beta)})` : ""}
                 </p>
               </div>
-              <div className="rounded-lg bg-sand-50 px-3 py-2">
+              <div className="rounded-lg bg-mist-50 px-3 py-2">
                 <p className="text-[10px] uppercase tracking-wider text-ink-600">{t("forecast.residual")}</p>
                 <p className="text-sm font-medium tnum">{fmt(sim3.residualSd)}</p>
               </div>
-              <div className="rounded-lg bg-sand-50 px-3 py-2">
+              <div className="rounded-lg bg-mist-50 px-3 py-2">
                 <p className="text-[10px] uppercase tracking-wider text-ink-600">{t("forecast.baseline3")}</p>
                 <p className="text-sm font-medium tnum">
                   {fmt(fallbackMode && sim3.baseline != null ? -sim3.baseline : sim3.baseline)}
                 </p>
               </div>
-              <div className="rounded-lg bg-sand-50 px-3 py-2">
+              <div className="rounded-lg bg-mist-50 px-3 py-2">
                 <p className="text-[10px] uppercase tracking-wider text-ink-600">{t("forecast.pull")}</p>
                 <p className="text-sm font-medium tnum">
                   {fmt(fallbackMode && sim3.signalAdjustment != null ? -sim3.signalAdjustment : sim3.signalAdjustment)}
@@ -923,7 +923,7 @@ export function IndexPage({
                   {histogram.map((b, i) => (
                     <span
                       key={i}
-                      className="flex-1 rounded-t bg-maroon-300/60"
+                      className="flex-1 rounded-t bg-navy-300/60"
                       style={{ height: `${(b.n / maxBin) * 100}%` }}
                       title={
                         fallbackMode
@@ -941,7 +941,7 @@ export function IndexPage({
                 <ul className="flex flex-wrap gap-2">
                   {(whatIf?.sensitivity ?? sim3.sensitivity ?? []).map((s) => (
                     <li key={s.key}>
-                      <Chip tone="sand">
+                      <Chip tone="mist">
                         {t(`forecast.inputs.${s.key}` as never)} · {fmt(s.impact)}
                       </Chip>
                     </li>
@@ -954,14 +954,14 @@ export function IndexPage({
 
         {/* 4.6.10 what-if simulator */}
         {whatIfInputs ? (
-          <div className="mt-5 rounded-xl border border-sand-300 bg-sand-50 p-4" data-testid="whatif">
+          <div className="mt-5 rounded-xl border border-mist-300 bg-mist-50 p-4" data-testid="whatif">
             <div className="mb-3 flex items-center justify-between gap-2">
               <p className="text-sm font-semibold text-ink-900">{t("forecast.whatIf")}</p>
               <button
                 onClick={() => setAssump({ ...official })}
                 className={cn(
                   "flex items-center gap-1 text-xs font-medium cursor-pointer",
-                  isOfficial ? "text-ink-400" : "text-maroon-700 hover:underline"
+                  isOfficial ? "text-ink-400" : "text-navy-700 hover:underline"
                 )}
                 disabled={isOfficial}
                 data-testid="whatif-reset"
@@ -992,7 +992,7 @@ export function IndexPage({
                     onChange={(e) =>
                       setAssump((a) => ({ ...a, [s.key]: Number(e.target.value) }))
                     }
-                    className="mt-1.5 w-full accent-maroon-700"
+                    className="mt-1.5 w-full accent-navy-700"
                     data-testid={`whatif-${s.key}`}
                   />
                 </label>
@@ -1007,14 +1007,14 @@ export function IndexPage({
       <section className="card mt-5 p-5" data-testid="index-benchmark">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <SectionTitle className="mb-0">{t("benchmark.title")}</SectionTitle>
-          <span className="inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5">
+          <span className="inline-flex items-center gap-0.5 rounded-lg bg-mist-100 p-0.5">
             {(["rank", "score", "gap"] as const).map((v) => (
               <button
                 key={v}
                 onClick={() => setBenchView(v)}
                 className={cn(
                   "rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
-                  benchView === v ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+                  benchView === v ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
                 )}
               >
                 {t(`benchmark.views.${v}` as never)}
@@ -1034,8 +1034,8 @@ export function IndexPage({
               className={cn(
                 "rounded-lg px-2.5 py-1 text-xs transition-colors cursor-pointer",
                 groupId === g.id && !customCountries
-                  ? "bg-maroon-100 font-medium text-maroon-700"
-                  : "bg-sand-100 text-ink-600 hover:text-ink-900"
+                  ? "bg-navy-100 font-medium text-navy-700"
+                  : "bg-mist-100 text-ink-600 hover:text-ink-900"
               )}
             >
               {bi(locale, g.nameEn, g.nameAr)}
@@ -1049,8 +1049,8 @@ export function IndexPage({
             className={cn(
               "rounded-lg px-2.5 py-1 text-xs transition-colors cursor-pointer",
               groupId === "top10" && !customCountries
-                ? "bg-maroon-100 font-medium text-maroon-700"
-                : "bg-sand-100 text-ink-600 hover:text-ink-900"
+                ? "bg-navy-100 font-medium text-navy-700"
+                : "bg-mist-100 text-ink-600 hover:text-ink-900"
             )}
           >
             {t("benchmark.top10")}
@@ -1061,8 +1061,8 @@ export function IndexPage({
               setCustomCountries((c) => c ?? benchCountries);
             }}
             className={cn(
-              "rounded-lg border border-dashed border-sand-300 px-2.5 py-1 text-xs cursor-pointer",
-              customCountries ? "border-maroon-300 text-maroon-700" : "text-ink-600"
+              "rounded-lg border border-dashed border-mist-300 px-2.5 py-1 text-xs cursor-pointer",
+              customCountries ? "border-navy-300 text-navy-700" : "text-ink-600"
             )}
             data-testid="custom-group-toggle"
           >
@@ -1075,17 +1075,17 @@ export function IndexPage({
           ) : null}
         </div>
         {pickerOpen && customCountries ? (
-          <div className="mb-4 rounded-xl border border-sand-300 bg-sand-50 p-3" data-testid="country-picker">
+          <div className="mb-4 rounded-xl border border-mist-300 bg-mist-50 p-3" data-testid="country-picker">
             <input
               value={pickerQuery}
               onChange={(e) => setPickerQuery(e.target.value)}
               placeholder={t("benchmark.searchCountry")}
-              className="mb-2 h-9 w-full max-w-72 rounded-lg border border-sand-300 bg-white px-3 text-sm focus:border-maroon-500 focus:outline-none"
+              className="mb-2 h-9 w-full max-w-72 rounded-lg border border-mist-300 bg-white px-3 text-sm focus:border-navy-500 focus:outline-none"
               aria-label={t("benchmark.searchCountry")}
             />
             <div className="flex flex-wrap gap-1.5">
               {data.countries
-                .filter((c) => c.iso3 !== "QAT")
+                .filter((c) => c.iso3 !== "SAU")
                 .filter(
                   (c) =>
                     !pickerQuery.trim() ||
@@ -1104,7 +1104,7 @@ export function IndexPage({
                       }
                       className={cn(
                         "rounded-lg px-2 py-1 text-xs cursor-pointer",
-                        on ? "bg-maroon-100 font-medium text-maroon-700" : "bg-white text-ink-600 border border-sand-300"
+                        on ? "bg-navy-100 font-medium text-navy-700" : "bg-white text-ink-600 border border-mist-300"
                       )}
                     >
                       {bi(locale, c.nameEn, c.nameAr)}
@@ -1123,7 +1123,7 @@ export function IndexPage({
                   dataKey="year"
                   tick={{ fontSize: 11, fill: "var(--color-ink-400)" }}
                   tickLine={false}
-                  axisLine={{ stroke: "var(--color-sand-300)" }}
+                  axisLine={{ stroke: "var(--color-mist-300)" }}
                 />
                 <YAxis
                   reversed={benchView === "rank"}
@@ -1135,14 +1135,14 @@ export function IndexPage({
                 />
                 <Tooltip formatter={(v: number, name: string) => [benchView === "rank" ? `#${v}` : fmt(v), name]} />
                 {benchSet
-                  .filter((c) => c !== "QAT")
+                  .filter((c) => c !== "SAU")
                   .map((c, i) => (
                     <Line
                       key={c}
                       dataKey={c}
                       stroke={
                         latestBench[0]?.country === c
-                          ? "var(--color-gulf-600)"
+                          ? "var(--color-teal-600)"
                           : PEER_COLORS[i % PEER_COLORS.length]
                       }
                       strokeWidth={latestBench[0]?.country === c ? 1.75 : 1.25}
@@ -1153,8 +1153,8 @@ export function IndexPage({
                     />
                   ))}
                 <Line
-                  dataKey="QAT"
-                  stroke="var(--color-maroon-700)"
+                  dataKey="SAU"
+                  stroke="var(--color-navy-700)"
                   strokeWidth={2.25}
                   dot={{ r: 2 }}
                   connectNulls
@@ -1171,14 +1171,14 @@ export function IndexPage({
               const max = Math.max(...latestBench.map((x) => Math.abs(x.score))) || 1;
               return (
                 <div key={r.country} className="flex items-center gap-2 text-xs">
-                  <span className={cn("w-10 shrink-0 tnum", r.country === "QAT" ? "font-semibold text-maroon-900" : "text-ink-600")}>
+                  <span className={cn("w-10 shrink-0 tnum", r.country === "SAU" ? "font-semibold text-navy-900" : "text-ink-600")}>
                     {r.country}
                   </span>
-                  <span className="relative h-3 flex-1 overflow-hidden rounded-full bg-sand-100">
+                  <span className="relative h-3 flex-1 overflow-hidden rounded-full bg-mist-100">
                     <span
                       className={cn(
                         "absolute inset-y-0 start-0 rounded-full",
-                        r.country === "QAT" ? "bg-maroon-700" : "bg-ink-200"
+                        r.country === "SAU" ? "bg-navy-700" : "bg-ink-200"
                       )}
                       style={{ width: `${(Math.abs(r.score) / max) * 100}%` }}
                     />
@@ -1196,7 +1196,7 @@ export function IndexPage({
               <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-600">
                 {t("benchmark.gapTo", { country: gap.leader.country })}
               </p>
-              <p className="mt-1 text-4xl font-semibold text-maroon-900 tnum" style={{ fontFamily: "var(--font-display)" }}>
+              <p className="mt-1 text-4xl font-semibold text-navy-900 tnum" style={{ fontFamily: "var(--font-display)" }}>
                 {fmt(gap.value)}
               </p>
               <p className="text-xs text-ink-600">{t("benchmark.gapUnit")}</p>
@@ -1220,7 +1220,7 @@ export function IndexPage({
         ) : null}
 
         {/* narrative */}
-        <div className="mt-4 border-t border-sand-100 pt-3">
+        <div className="mt-4 border-t border-mist-100 pt-3">
           {narrative ? (
             <p className="max-w-3xl whitespace-pre-line text-sm leading-relaxed text-ink-600" data-testid="benchmark-narrative">
               {bi(locale, narrative.en, narrative.ar)}
@@ -1237,8 +1237,8 @@ export function IndexPage({
       <div className="mt-6 flex flex-wrap items-center gap-2">
         <BriefDialog resourceType="index" resourceId={index.id} />
         <Link
-          href={`/ask/c/new?q=${encodeURIComponent(`Tell me about Qatar's standing in the ${index.nameEn}`)}` as never}
-          className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-sand-300 bg-white px-4 text-sm font-medium text-ink-900 hover:border-maroon-300 hover:text-maroon-700"
+          href={`/ask/c/new?q=${encodeURIComponent(`Tell me about Saudi Arabia's standing in the ${index.nameEn}`)}` as never}
+          className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-mist-300 bg-white px-4 text-sm font-medium text-ink-900 hover:border-navy-300 hover:text-navy-700"
         >
           <MessageCircleQuestion className="size-4" /> {t("askAbout")}
         </Link>

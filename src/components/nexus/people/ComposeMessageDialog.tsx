@@ -101,7 +101,7 @@ export function ComposeMessageDialog({
             <Link
               href={`/inbox?thread=${sentId}` as never}
               onClick={() => onOpenChange(false)}
-              className="inline-flex h-9.5 items-center rounded-lg border border-sand-300 bg-white px-4 text-sm font-medium text-ink-900 transition-colors hover:border-maroon-300 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500"
+              className="inline-flex h-9.5 items-center rounded-lg border border-mist-300 bg-white px-4 text-sm font-medium text-ink-900 transition-colors hover:border-navy-300 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500"
               data-testid="compose-open-inbox"
             >
               {t("openInbox")}
@@ -118,7 +118,7 @@ export function ComposeMessageDialog({
             <div>
               <Label htmlFor="compose-to">{t("to")}</Label>
               {to ? (
-                <div className="flex h-9.5 items-center gap-2 rounded-lg border border-sand-300 bg-sand-50 px-2" data-testid="compose-to-fixed">
+                <div className="flex h-9.5 items-center gap-2 rounded-lg border border-mist-300 bg-mist-50 px-2" data-testid="compose-to-fixed">
                   <Avatar name={to.nameEn} color={to.avatarColor} size={22} />
                   <span className="truncate text-sm text-ink-900">{bi(locale, to.nameEn, to.nameAr)}</span>
                   {to.unitEn || to.unitAr ? (
@@ -161,7 +161,7 @@ export function ComposeMessageDialog({
             </div>
             <AttachmentPicker value={attachments} onChange={setAttachments} testId="compose-attach" />
             {!recipient ? <p className="text-xs text-ink-400">{t("recipientRequired")}</p> : null}
-            <div className="flex justify-end gap-2 border-t border-sand-100 pt-4">
+            <div className="flex justify-end gap-2 border-t border-mist-100 pt-4">
               <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
                 {t("cancel")}
               </Button>

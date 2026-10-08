@@ -14,7 +14,7 @@ const mod: ToolModule = {
     {
       name: "get_org_levels",
       description:
-        "The levels of the National Planning Council's organisational structure in order from the top (for example Secretary General, Sector, Office, Department, Section), as the Super Admin has defined them, with their bilingual names and codes.",
+        "The levels of the Programme Office's organisational structure in order from the top (for example Secretary General, Sector, Office, Department, Section), as the Super Admin has defined them, with their bilingual names and codes.",
       input_schema: { type: "object", properties: {} },
     },
     {

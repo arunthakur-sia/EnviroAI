@@ -143,7 +143,7 @@ export function ForesightForms() {
                   max={5}
                   value={risk.likelihood}
                   onChange={(e) => setRisk({ ...risk, likelihood: Number(e.target.value) })}
-                  className="w-full accent-maroon-700"
+                  className="w-full accent-navy-700"
                   aria-label={t("likelihoodAxis")}
                 />
               </div>
@@ -158,7 +158,7 @@ export function ForesightForms() {
                   max={5}
                   value={risk.impact}
                   onChange={(e) => setRisk({ ...risk, impact: Number(e.target.value) })}
-                  className="w-full accent-maroon-700"
+                  className="w-full accent-navy-700"
                   aria-label={t("impactAxis")}
                 />
               </div>

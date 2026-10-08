@@ -13,7 +13,7 @@ async function loginCookie(email: string): Promise<string> {
   const res = await fetch(BASE + "/api/v1/auth/login", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email, password: "EnviroAI!2026" }),
     redirect: "manual",
   });
   const jar = new Map<string, string>();
@@ -27,7 +27,7 @@ async function loginCookie(email: string): Promise<string> {
 }
 
 async function main() {
-  const who = process.env.WARM_EMAIL ?? "analyst@npc.qa";
+  const who = process.env.WARM_EMAIL ?? "analyst@enviroai.demo";
   const cookie = await loginCookie(who);
   const paths = [
     "/en/home",

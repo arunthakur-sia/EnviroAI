@@ -1,6 +1,6 @@
-// Probe: can the NDS3 outcome chapters be located in document chunks?
+// Probe: can the NES3 outcome chapters be located in document chunks?
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const q = async (sql, args = []) => (await db.execute({ sql, args })).rows;
 
 const docs = await q(
@@ -9,7 +9,7 @@ const docs = await q(
 for (const d of docs) console.log(d.id, "|", d.title_en, "|", d.language_original, "| pages", d.page_count);
 
 const outcomes = await q(
-  "select code, title_en, title_ar from strategy_nodes where node_type='outcome' and edition_id=(select id from strategy_editions where code='nds3') order by sort"
+  "select code, title_en, title_ar from strategy_nodes where node_type='outcome' and edition_id=(select id from strategy_editions where code='nes3') order by sort"
 );
 
 for (const d of docs) {

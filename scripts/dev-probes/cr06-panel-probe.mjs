@@ -1,6 +1,6 @@
 ﻿const base = "http://localhost:3000";
 async function main() {
-  const login = await fetch(base + "/api/v1/auth/login", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email: "admin@npc.qa", password: "Nexus!2026" }) });
+  const login = await fetch(base + "/api/v1/auth/login", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email: "admin@enviroai.demo", password: "EnviroAI!2026" }) });
   const cookies = login.headers.getSetCookie().map(c => c.split(";")[0]).join("; ");
   const res = await fetch(base + "/en/strategy?o=o1", { headers: { cookie: cookies } });
   const html = await res.text();

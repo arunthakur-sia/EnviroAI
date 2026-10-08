@@ -11,14 +11,14 @@ export function medalOf(rank: number | null | undefined): Medal | null {
 
 /* tokens only: gold for first, ink-400 reads as silver, warn as bronze */
 export const MEDAL_RING: Record<Medal, string> = {
-  1: "ring-gold-500",
+  1: "ring-aqua-500",
   2: "ring-ink-400",
   3: "ring-warn",
 };
 /* Each ground carries the ink that reads on it: white on gold measures 2.4 to 1
    and white on the silver grey 2.8, so those two take dark numerals instead. */
 export const MEDAL_BG: Record<Medal, string> = {
-  1: "bg-gold-500 text-ink-900",
+  1: "bg-aqua-500 text-ink-900",
   2: "bg-ink-400 text-ink-900",
   3: "bg-warn text-white",
 };

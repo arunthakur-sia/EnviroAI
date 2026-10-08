@@ -12,20 +12,20 @@ type Row = { code: string; nameEn: string; nameAr: string; latestYear: number | 
 type ForecastData = { rows: Row[]; directions: { up: number; down: number; stable: number } };
 
 export const METHOD_NOTE = bi(
-  "Method note. SiaNexus forecasts (method v1) are produced by a seeded Monte Carlo simulation of 5,000 runs over each index's own published history for Qatar: a baseline drift from the history window, adjusted by the accepted signals linked to the index (sentiment, impact, horizon and age weighted) and by the pull of any NDS3 target that names a rank or score. Ranks are derived against the stored peer pool; where the pool is a sample of the field, the movement of Qatar's position within the pool is applied to the latest published rank rather than pretending the pool is the whole field. Central values are medians; the range is the 10th to 90th percentile. A forecast is an estimate generated on the date shown, never a published value, and it is recomputed nightly and whenever its inputs change.",
-  "ملاحظة المنهجية. تُنتج تنبؤات سيا نكسس (المنهجية v1) بمحاكاة مونت كارلو ذات بذرة ثابتة من 5,000 دورة على التاريخ المنشور لكل مؤشر عن قطر: انحراف أساسي مستمد من نافذة التاريخ، يُعدل بالإشارات المقبولة المرتبطة بالمؤشر (موزونة بالاتجاه والأثر والأفق والعمر) وبجاذبية أي مستهدف في الاستراتيجية الوطنية يذكر مرتبة أو درجة. وتُشتق المراتب قياساً بمجموعة النظراء المحفوظة؛ وحيث تكون المجموعة عينة من الميدان، يُطبق تحرك موقع قطر داخل المجموعة على أحدث مرتبة منشورة بدلاً من افتراض أن المجموعة هي الميدان كله. والقيم المركزية أوساط، والنطاق من المئين العاشر إلى التسعين. والتنبؤ تقدير أُنتج بالتاريخ المبين، وليس قيمة منشورة أبداً، ويُعاد حسابه ليلياً وكلما تغيرت مدخلاته."
+  "Method note. EnviroAI forecasts (method v1) are produced by a seeded Monte Carlo simulation of 5,000 runs over each index's own published history for Saudi Arabia: a baseline drift from the history window, adjusted by the accepted signals linked to the index (sentiment, impact, horizon and age weighted) and by the pull of any NES target that names a rank or score. Ranks are derived against the stored peer pool; where the pool is a sample of the field, the movement of Saudi Arabia's position within the pool is applied to the latest published rank rather than pretending the pool is the whole field. Central values are medians; the range is the 10th to 90th percentile. A forecast is an estimate generated on the date shown, never a published value, and it is recomputed nightly and whenever its inputs change.",
+  "ملاحظة المنهجية. تُنتج تنبؤات EnviroAI (المنهجية v1) بمحاكاة مونت كارلو ذات بذرة ثابتة من 5,000 دورة على التاريخ المنشور لكل مؤشر عن السعودية: انحراف أساسي مستمد من نافذة التاريخ، يُعدل بالإشارات المقبولة المرتبطة بالمؤشر (موزونة بالاتجاه والأثر والأفق والعمر) وبجاذبية أي مستهدف في الاستراتيجية الوطنية يذكر مرتبة أو درجة. وتُشتق المراتب قياساً بمجموعة النظراء المحفوظة؛ وحيث تكون المجموعة عينة من الميدان، يُطبق تحرك موقع السعودية داخل المجموعة على أحدث مرتبة منشورة بدلاً من افتراض أن المجموعة هي الميدان كله. والقيم المركزية أوساط، والنطاق من المئين العاشر إلى التسعين. والتنبؤ تقدير أُنتج بالتاريخ المبين، وليس قيمة منشورة أبداً، ويُعاد حسابه ليلياً وكلما تغيرت مدخلاته."
 );
 
 const def: SectionDefinition<ForecastData> = {
   code: "index_forecasts",
   name: bi("Index forecasts", "تنبؤات المؤشرات"),
   description: bi(
-    "The SiaNexus forecasts at one, three and five years for every tracked index, with ranges, confidence and the method note.",
-    "تنبؤات سيا نكسس على آفاق سنة وثلاث وخمس سنوات لكل مؤشر متابع، مع النطاقات ودرجة الثقة وملاحظة المنهجية."
+    "The EnviroAI forecasts at one, three and five years for every tracked index, with ranges, confidence and the method note.",
+    "تنبؤات EnviroAI على آفاق سنة وثلاث وخمس سنوات لكل مؤشر متابع، مع النطاقات ودرجة الثقة وملاحظة المنهجية."
   ),
   layout: "body",
   estimatedPages: 2,
-  appliesTo: ["npc", "period"],
+  appliesTo: ["org", "period"],
   async load(ctx) {
     const board = await memo(ctx, "indices-board", () => getIndicesBoard(ctx.user).catch(() => null));
     if (!board) return { rows: [], directions: { up: 0, down: 0, stable: 0 } };
@@ -86,8 +86,8 @@ const def: SectionDefinition<ForecastData> = {
       paragraphs: data.rows.length
         ? [
             bi(
-              `As at ${period.en}, the current SiaNexus forecasts cover ${fmt(data.rows.length)} indices: ${fmt(data.directions.up)} point upward over three years, ${fmt(data.directions.down)} downward and ${fmt(data.directions.stable)} sideways. Assessment: these are model estimates generated from published history, accepted signals and target pull, not forecasts endorsed by any publisher.`,
-              `حتى ${period.ar}، تغطي تنبؤات سيا نكسس الحالية ${fmt(data.rows.length)} مؤشراً: يشير ${fmt(data.directions.up)} منها إلى الصعود على أفق ثلاث سنوات، و${fmt(data.directions.down)} إلى الهبوط، و${fmt(data.directions.stable)} إلى الاستقرار. تقدير: هذه تقديرات نموذجية مستمدة من التاريخ المنشور والإشارات المقبولة وجاذبية المستهدفات، لا تنبؤات معتمدة من أي ناشر.`
+              `As at ${period.en}, the current EnviroAI forecasts cover ${fmt(data.rows.length)} indices: ${fmt(data.directions.up)} point upward over three years, ${fmt(data.directions.down)} downward and ${fmt(data.directions.stable)} sideways. Assessment: these are model estimates generated from published history, accepted signals and target pull, not forecasts endorsed by any publisher.`,
+              `حتى ${period.ar}، تغطي تنبؤات EnviroAI الحالية ${fmt(data.rows.length)} مؤشراً: يشير ${fmt(data.directions.up)} منها إلى الصعود على أفق ثلاث سنوات، و${fmt(data.directions.down)} إلى الهبوط، و${fmt(data.directions.stable)} إلى الاستقرار. تقدير: هذه تقديرات نموذجية مستمدة من التاريخ المنشور والإشارات المقبولة وجاذبية المستهدفات، لا تنبؤات معتمدة من أي ناشر.`
             ),
             ...(upward.length
               ? [
@@ -117,7 +117,7 @@ const def: SectionDefinition<ForecastData> = {
     } else {
       blocks.push({
         kind: "table",
-        caption: bi("SiaNexus forecasts by horizon (central values; three-year range)", "تنبؤات سيا نكسس بحسب الأفق (القيم المركزية؛ نطاق الثلاث سنوات)"),
+        caption: bi("EnviroAI forecasts by horizon (central values; three-year range)", "تنبؤات EnviroAI بحسب الأفق (القيم المركزية؛ نطاق الثلاث سنوات)"),
         columns: [bi("Index", "المؤشر"), bi("Latest", "الأحدث"), bi("1 year", "سنة"), bi("3 years", "ثلاث سنوات"), bi("3-year range", "نطاق الثلاث سنوات"), bi("5 years", "خمس سنوات"), T.direction, T.confidence],
         rows: data.rows.map((r) => [
           bi(r.nameEn, r.nameAr),
@@ -130,7 +130,7 @@ const def: SectionDefinition<ForecastData> = {
           bi(r.confidence ?? "", r.confidence === "narrow" ? "ضيق" : r.confidence === "medium" ? "متوسط" : r.confidence === "wide" ? "واسع" : ""),
         ]),
         align: ["start", "end", "end", "end", "end", "end", "start", "start"],
-        source: bi("SiaNexus index forecasts, method v1", "تنبؤات المؤشرات في سيا نكسس، المنهجية v1"),
+        source: bi("EnviroAI index forecasts, method v1", "تنبؤات المؤشرات في EnviroAI، المنهجية v1"),
       });
       const explained = data.rows.filter((r) => r.explanationEn && r.explanationAr).slice(0, 4);
       if (explained.length) {

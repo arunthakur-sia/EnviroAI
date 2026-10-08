@@ -10,6 +10,7 @@ import { audit } from "@/server/auth/audit";
 import { newId, nowIso } from "@/lib/ids";
 import { parseCsv } from "@/server/indices/fetcher";
 import { computeForecast } from "@/server/indices/compute";
+import { HOME_ISO3 } from "@/server/indices/home";
 
 /* CR08 4.3: the three-step Add index. GET returns the wizard's option lists.
    POST with step "preview" parses the data (a CSV paste, an uploaded CSV or
@@ -70,8 +71,8 @@ export async function GET() {
     db.select().from(schema.strategyEditions),
     db.select({ code: schema.indices.code }).from(schema.indices),
   ]);
-  const nds3 = editions.find((e) => e.code === "nds3") ?? editions.find((e) => e.isDefault === 1);
-  const targets = nds3
+  const strategyEdition = editions.find((e) => e.isDefault === 1) ?? editions[0];
+  const targets = strategyEdition
     ? await db
         .select({
           id: schema.strategyNodes.id,
@@ -81,7 +82,7 @@ export async function GET() {
         })
         .from(schema.strategyNodes)
         .where(
-          and(eq(schema.strategyNodes.editionId, nds3.id), eq(schema.strategyNodes.nodeType, "target"))
+          and(eq(schema.strategyNodes.editionId, strategyEdition.id), eq(schema.strategyNodes.nodeType, "target"))
         )
         .orderBy(asc(schema.strategyNodes.code))
     : [];
@@ -271,7 +272,7 @@ async function normalise(
     seen.set(key, { country, year, rank, score, total: total != null ? Math.round(total) : null });
   }
   const rows = [...seen.values()].sort((a, b) => a.country.localeCompare(b.country) || a.year - b.year);
-  if (!rows.some((r) => r.country === "QAT")) bag.add("no_qatar");
+  if (!rows.some((r) => r.country === HOME_ISO3)) bag.add("no_home");
   return rows;
 }
 
@@ -303,7 +304,7 @@ async function fetchPublisher(url: string, bag: WarningBag): Promise<unknown[][]
   try {
     const res = await undiciFetch(target.toString(), {
       dispatcher: insecureDispatcher,
-      headers: { "user-agent": "SiaNexus-indices/1.0 (research prototype)" },
+      headers: { "user-agent": "EnviroAI-indices/1.0 (research prototype)" },
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
       redirect: "follow",
     });
@@ -385,12 +386,12 @@ export async function POST(req: NextRequest) {
   if (dupe) return NextResponse.json({ data: null, error: "code_exists" }, { status: 409 });
 
   const { rows, warnings, sourceUrl } = await parseData(b.data);
-  const qatarRows = rows.filter((r) => r.country === "QAT");
+  const homeRows = rows.filter((r) => r.country === HOME_ISO3);
   const years = rows.map((r) => r.year);
   const summary = {
     rows: rows.length,
     countries: new Set(rows.map((r) => r.country)).size,
-    qatarYears: qatarRows.length,
+    homeYears: homeRows.length,
     yearFrom: years.length ? Math.min(...years) : null,
     yearTo: years.length ? Math.max(...years) : null,
     withRank: rows.filter((r) => r.rank != null).length,
@@ -414,7 +415,7 @@ export async function POST(req: NextRequest) {
 
   const id = newId();
   const now = nowIso();
-  const latestYear = qatarRows.length ? Math.max(...qatarRows.map((r) => r.year)) : summary.yearTo;
+  const latestYear = homeRows.length ? Math.max(...homeRows.map((r) => r.year)) : summary.yearTo;
   await db.insert(schema.indices).values({
     id,
     code: b.basics.code,
@@ -473,7 +474,7 @@ export async function POST(req: NextRequest) {
   });
 
   let forecast = false;
-  if (b.forecasting.enabled && qatarRows.length >= 2) {
+  if (b.forecasting.enabled && homeRows.length >= 2) {
     try {
       forecast = await computeForecast(id);
     } catch (e) {

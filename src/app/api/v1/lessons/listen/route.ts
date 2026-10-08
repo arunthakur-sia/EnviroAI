@@ -4,7 +4,7 @@ import { getCurrentUser } from "@/server/auth/session";
 import { findOrCreateLessonEpisode } from "@/server/services/lessons";
 
 /* CR04 3.6: Listen on a lesson or a theme. The episode is generated through
-   the NPC Knowledge Cast pipeline on the first play and reused afterwards. */
+   the EnviroAI Briefing Cast pipeline on the first play and reused afterwards. */
 const Body = z.object({
   lessonId: z.string().optional(),
   themeId: z.string().optional(),

@@ -62,8 +62,8 @@ export function PolicyTabStrip({
             data-testid="policy-type-tab"
             data-tab={key}
             className={cn(
-              "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500",
-              active ? "bg-maroon-100 font-medium text-maroon-900" : "text-ink-600 hover:text-maroon-900"
+              "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500",
+              active ? "bg-navy-100 font-medium text-navy-900" : "text-ink-600 hover:text-navy-900"
             )}
           >
             {labels[key]}
@@ -108,7 +108,7 @@ function UnitSection({
 
   return (
     <div
-      className={cn("overflow-hidden rounded-[var(--radius-card)] bg-white shadow-[var(--shadow-paper)] transition-colors", open && "ring-1 ring-maroon-300")}
+      className={cn("overflow-hidden rounded-[var(--radius-card)] bg-white shadow-[var(--shadow-paper)] transition-colors", open && "ring-1 ring-navy-300")}
       data-testid="by-unit-section"
       data-unit={entry.unit.code}
       data-expanded={open ? "true" : "false"}
@@ -120,9 +120,9 @@ function UnitSection({
         aria-controls={`${idBase}-body`}
         aria-label={open ? t("byUnit.collapse", { unit: name }) : t("byUnit.expand", { unit: name })}
         data-testid="by-unit-toggle"
-        className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-start outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+        className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-start outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
       >
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-maroon-100 text-maroon-900" aria-hidden>
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-navy-100 text-navy-900" aria-hidden>
           <Building2 className="size-4" />
         </span>
         <span className="min-w-0 flex-1">
@@ -144,18 +144,18 @@ function UnitSection({
             transition={{ duration: 0.26, ease: EASE }}
             className="overflow-hidden"
           >
-            <div className="border-t border-sand-100 bg-sand-50 px-4 py-4">
+            <div className="border-t border-mist-100 bg-mist-50 px-4 py-4">
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
                 <section>
                   <SubHeading>{t("byUnit.processes")}</SubHeading>
                   {entry.processes.length ? (
                     <ProcessList processes={entry.processes} onOpen={onOpenProcess} />
                   ) : (
-                    <p className="rounded-lg border border-dashed border-sand-300 bg-white px-3 py-4 text-center text-xs text-ink-600">{t("byUnit.noProcesses")}</p>
+                    <p className="rounded-lg border border-dashed border-mist-300 bg-white px-3 py-4 text-center text-xs text-ink-600">{t("byUnit.noProcesses")}</p>
                   )}
                   <Link
                     href={unitHref(entry.unit.code)}
-                    className="link-draw mt-2.5 inline-flex items-center gap-1 text-[11px] font-medium text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+                    className="link-draw mt-2.5 inline-flex items-center gap-1 text-[11px] font-medium text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
                   >
                     <ExternalLink className="size-3" aria-hidden /> {t("byUnit.openUnit")}
                   </Link>
@@ -171,7 +171,7 @@ function UnitSection({
                         ))}
                       </div>
                     ) : (
-                      <p className="rounded-lg border border-dashed border-sand-300 bg-white px-3 py-4 text-center text-xs text-ink-600">{emptyLabel[tab]}</p>
+                      <p className="rounded-lg border border-dashed border-mist-300 bg-white px-3 py-4 text-center text-xs text-ink-600">{emptyLabel[tab]}</p>
                     )}
                   </div>
                 </section>
@@ -234,7 +234,7 @@ export function ByUnitView({
   return (
     <section aria-label={t("byUnit.aria")} data-testid="by-unit-view" ref={anchorRef} className="scroll-mt-24">
       <div className="mb-3 flex items-center justify-end gap-2">
-        <Chip tone="sand">{t("byPolicy.unitsCount", { count: byUnit.length })}</Chip>
+        <Chip tone="mist">{t("byPolicy.unitsCount", { count: byUnit.length })}</Chip>
         <Button
           size="sm"
           variant="ghost"

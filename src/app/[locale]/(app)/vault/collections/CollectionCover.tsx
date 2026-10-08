@@ -1,11 +1,12 @@
 "use client";
-// Six generated "book cover" patterns in maroon, gulf, and gold.
+// Six generated "book cover" patterns in navy, teal, and aqua.
+import { colourKey } from "@/lib/colour-keys";
 import { useTranslations } from "next-intl";
 
 const PALETTES: Record<string, { bg: string; fg: string; accent: string }> = {
-  maroon: { bg: "#8A1538", fg: "#F6E7EC", accent: "#C9A24D" },
-  gulf: { bg: "#0F6E76", fg: "#DFF1F2", accent: "#C9A24D" },
-  gold: { bg: "#C9A24D", fg: "#5A0E24", accent: "#8A1538" },
+  navy: { bg: "#173044", fg: "#E6ECF4", accent: "#00DECC" },
+  teal: { bg: "#077C84", fg: "#DCF4F4", accent: "#00DECC" },
+  aqua: { bg: "#00DECC", fg: "#0A151E", accent: "#173044" },
 };
 
 export function CollectionCover({
@@ -19,7 +20,7 @@ export function CollectionCover({
 }) {
   const t = useTranslations("collections");
   const [tone, pattern] = style.split("-");
-  const p = PALETTES[tone] ?? PALETTES.maroon;
+  const p = PALETTES[colourKey(tone)] ?? PALETTES.navy;
 
   return (
     <div

@@ -26,15 +26,15 @@ export function GroupTable({ cards, testId }: { cards: Card[]; testId?: string }
       case "name":
         return bi(locale, a.nameEn, a.nameAr).localeCompare(bi(locale, b.nameEn, b.nameAr), locale) * dir;
       case "year":
-        return ((a.qatar?.year ?? 0) - (b.qatar?.year ?? 0)) * dir;
+        return ((a.home?.year ?? 0) - (b.home?.year ?? 0)) * dir;
       case "score":
-        return ((a.qatar?.score ?? -Infinity) - (b.qatar?.score ?? -Infinity)) * dir;
+        return ((a.home?.score ?? -Infinity) - (b.home?.score ?? -Infinity)) * dir;
       case "change":
         return ((a.change ?? -999) - (b.change ?? -999)) * dir;
       case "forecast":
         return ((DIR_ORDER[a.forecastDirection ?? "stable"] ?? 1) - (DIR_ORDER[b.forecastDirection ?? "stable"] ?? 1)) * dir;
       default:
-        return ((a.qatar?.rank ?? 9999) - (b.qatar?.rank ?? 9999)) * dir;
+        return ((a.home?.rank ?? 9999) - (b.home?.rank ?? 9999)) * dir;
     }
   });
 
@@ -47,8 +47,8 @@ export function GroupTable({ cards, testId }: { cards: Card[]; testId?: string }
         aria-sort={active ? (sort.dir === 1 ? "ascending" : "descending") : "none"}
         onClick={() => setSort((s) => ({ key, dir: s.key === key ? ((s.dir * -1) as 1 | -1) : 1 }))}
         className={cn(
-          "flex items-center gap-1 px-3 py-2.5 text-start text-[11px] font-semibold uppercase tracking-wider rtl:tracking-normal cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-gold-500",
-          active ? "text-maroon-700" : "text-ink-600 hover:text-maroon-700"
+          "flex items-center gap-1 px-3 py-2.5 text-start text-[11px] font-semibold uppercase tracking-wider rtl:tracking-normal cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-aqua-500",
+          active ? "text-navy-700" : "text-ink-600 hover:text-navy-700"
         )}
       >
         {label}
@@ -63,7 +63,7 @@ export function GroupTable({ cards, testId }: { cards: Card[]; testId?: string }
     <div className="card overflow-x-auto" data-testid={testId ?? "indices-table"}>
       <div role="table" aria-label={t("table")} className="min-w-[640px] text-sm">
         <div role="rowgroup">
-          <div role="row" className={cn("grid border-b border-sand-100", COLS)}>
+          <div role="row" className={cn("grid border-b border-mist-100", COLS)}>
             {header("name", t("colIndex"))}
             {header("year", t("colYear"))}
             {header("rank", t("colRank"))}
@@ -86,7 +86,7 @@ export function GroupTable({ cards, testId }: { cards: Card[]; testId?: string }
                 }
               }}
               className={cn(
-                "grid cursor-pointer items-center border-b border-sand-100 last:border-0 hover:bg-maroon-50/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-gold-500",
+                "grid cursor-pointer items-center border-b border-mist-100 last:border-0 hover:bg-navy-50/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-aqua-500",
                 COLS
               )}
               data-testid="indices-table-row"
@@ -100,19 +100,19 @@ export function GroupTable({ cards, testId }: { cards: Card[]; testId?: string }
                   {c.statistics ? t("statisticsSource") : c.publisher}
                 </span>
               </div>
-              <div role="cell" className="px-3 py-2.5 tnum">{c.qatar?.year ?? "-"}</div>
-              <div role="cell" className="px-3 py-2.5 tnum font-semibold text-maroon-900">
+              <div role="cell" className="px-3 py-2.5 tnum">{c.home?.year ?? "-"}</div>
+              <div role="cell" className="px-3 py-2.5 tnum font-semibold text-navy-900">
                 {/* an LTR isolate keeps "38 / 213" in that order inside Arabic text */}
                 <span dir="ltr" className="inline-block">
-                  {c.qatar?.rank ?? "-"}
-                  {c.qatar?.rank != null && c.qatar?.total ? (
-                    <span className="font-normal text-ink-400"> / {c.qatar.total}</span>
+                  {c.home?.rank ?? "-"}
+                  {c.home?.rank != null && c.home?.total ? (
+                    <span className="font-normal text-ink-400"> / {c.home.total}</span>
                   ) : null}
                 </span>
               </div>
               <div role="cell" className="px-3 py-2.5 tnum">
-                {fmtValue(c.qatar?.score)}
-                {c.statistics?.unit && c.qatar?.score != null ? (
+                {fmtValue(c.home?.score)}
+                {c.statistics?.unit && c.home?.score != null ? (
                   <span className="text-xs text-ink-400"> {c.statistics.unit}</span>
                 ) : null}
               </div>

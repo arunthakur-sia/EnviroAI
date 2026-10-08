@@ -8,6 +8,7 @@
 // Every document below is illustrative content written for the prototype:
 // its summary says so and its source_ref carries the marker the Studies
 // page turns into the "Illustrative" chip.
+import { DATA_DIR } from "./lib/paths.mjs";
 import { loadEnv } from "../src/lib/load-env";
 loadEnv();
 
@@ -35,70 +36,70 @@ type Study = {
   pages: string[];
 };
 
-const MARK_EN = "Illustrative study prepared for the SiaNexus prototype. ";
-const MARK_AR = "دراسة توضيحية أُعدت لنموذج سيا نكسس الأولي. ";
+const MARK_EN = "Illustrative study prepared for the EnviroAI prototype. ";
+const MARK_AR = "دراسة توضيحية أُعدت لنموذج EnviroAI الأولي. ";
 
 const STUDIES: Study[] = [
   {
-    titleEn: "Labour Market Transitions of Qatari Graduates, 2019 to 2024",
-    titleAr: "انتقال الخريجين القطريين إلى سوق العمل، 2019 إلى 2024",
+    titleEn: "Irrigation Water Use and Crop Choice: Evidence from Administrative Records, 2019 to 2024",
+    titleAr: "استخدام مياه الري واختيار المحاصيل: أدلة من السجلات الإدارية، 2019 إلى 2024",
     type: "study",
     year: 2025,
-    unit: "SDP",
+    unit: "AFD",
     classification: 1,
-    outcomes: ["workforce"],
-    topics: ["labour_market", "qatarization", "education_stats"],
+    outcomes: ["fiscal_sust"],
+    topics: ["irrigation_efficiency", "food_security", "water_resources"],
     summaryEn:
       MARK_EN +
-      "Tracks five graduate cohorts from university exit into first employment using linked administrative records. Median time to first job fell from 9.1 to 6.4 months; private-sector first placements rose from 18 to 27 percent; STEM graduates enter faster but change employers more often.",
+      "Links farm-level irrigation records to crop declarations for five seasons and compares water use per tonne across crop groups. Illustrative findings: fodder crops account for the largest share of irrigation volume, drip adoption lowers water per tonne for vegetables, and farms with metered wells report more consistently.",
     summaryAr:
       MARK_AR +
-      "تتبع خمس دفعات من الخريجين من التخرج الجامعي حتى أول وظيفة باستخدام سجلات إدارية مترابطة. انخفض متوسط الزمن حتى أول وظيفة من 9.1 إلى 6.4 شهراً، وارتفعت نسبة التعيين الأول في القطاع الخاص من 18 إلى 27 في المئة، ويدخل خريجو العلوم والتقنية أسرع لكنهم يغيرون أصحاب العمل أكثر.",
+      "تربط سجلات الري على مستوى المزرعة بإقرارات المحاصيل لخمسة مواسم وتقارن استخدام المياه لكل طن بين مجموعات المحاصيل. النتائج توضيحية: تستحوذ محاصيل الأعلاف على أكبر حصة من حجم الري، ويخفض الري بالتنقيط المياه المستخدمة لكل طن من الخضروات، وتُبلّغ المزارع ذات الآبار المزودة بعدادات بانتظام أكبر.",
     keyFacts: [
-      { text_en: "Median time to first job: 6.4 months for the 2024 cohort, down from 9.1 in 2019", text_ar: "متوسط الزمن حتى أول وظيفة: 6.4 شهراً لدفعة 2024 مقابل 9.1 في 2019", page: 2 },
-      { text_en: "Private-sector first placements: 27 percent of the 2024 cohort", text_ar: "التعيين الأول في القطاع الخاص: 27 في المئة من دفعة 2024", page: 2 },
-      { text_en: "STEM graduates change employer within two years at twice the rate of other fields", text_ar: "يغير خريجو العلوم والتقنية صاحب العمل خلال سنتين بضعف معدل التخصصات الأخرى", page: 3 },
+      { text_en: "Five seasons of linked irrigation and crop declaration records (illustrative sample)", text_ar: "خمسة مواسم من سجلات الري وإقرارات المحاصيل المترابطة (عينة توضيحية)", page: 1 },
+      { text_en: "Water per tonne differs several-fold across crop groups; fodder dominates total volume", text_ar: "يتفاوت استخدام المياه لكل طن عدة أضعاف بين مجموعات المحاصيل وتهيمن الأعلاف على الحجم الإجمالي", page: 2 },
+      { text_en: "Metered wells improve reporting completeness and enable seasonal water budgets", text_ar: "تحسّن عدادات الآبار اكتمال التبليغ وتتيح ميزانيات مائية موسمية", page: 3 },
     ],
     pages: [
-      "1. Purpose and data. This study follows five cohorts of Qatari graduates, from the 2019 to the 2024 academic years, from the month they left university to the month of their first recorded employment. It links the higher education graduate register to the social insurance and civil service payroll extracts held by the statistics programme, giving a monthly view of transitions for 11,400 graduates. Fields of study are grouped into six families and employers into public, government-related and private categories. The study answers three questions: how long the transition takes, where graduates go first, and how stable the first placement is.",
-      "2. Findings on speed and destination. The median time to first employment fell from 9.1 months for the 2019 cohort to 6.4 months for the 2024 cohort, with the sharpest fall between 2021 and 2022 when placement programmes were expanded. Private-sector first placements rose from 18 to 27 percent of the cohort, while direct entry into ministries fell from 51 to 42 percent. Female graduates now transition in the same median time as male graduates; five years earlier the gap was 2.3 months. Graduates in health and education fields show the shortest transitions because of sector recruitment agreements signed on graduation.",
-      "3. Stability and recommendations. Two-year retention with the first employer stands at 71 percent overall. STEM graduates change employer within two years at twice the rate of other fields, mostly moving within the private sector towards larger firms. The study recommends that the workforce outcome indicators add a retention measure alongside the placement rate, that placement programmes report private-sector share quarterly, and that the graduate register carry a stable person identifier so future cohorts can be followed without record linkage passes.",
-      "ملخص تنفيذي. تتبع هذه الدراسة خمس دفعات من الخريجين القطريين من التخرج حتى أول وظيفة مسجلة عبر ربط سجل الخريجين ببيانات التأمينات الاجتماعية والرواتب الحكومية لنحو 11,400 خريج. انخفض متوسط الزمن حتى أول وظيفة من 9.1 إلى 6.4 شهراً، وارتفعت حصة القطاع الخاص في التعيين الأول من 18 إلى 27 في المئة، وتساوى زمن الانتقال بين الخريجات والخريجين بعد أن كانت الفجوة 2.3 شهراً. يبلغ الاحتفاظ بصاحب العمل الأول خلال سنتين 71 في المئة. توصي الدراسة بإضافة مؤشر للاحتفاظ إلى جانب معدل التعيين، وبتقارير فصلية عن حصة القطاع الخاص، وبمعرّف ثابت للشخص في سجل الخريجين.",
+      "1. Purpose and data. This illustrative study asks how irrigation water use varies with crop choice and irrigation technology. It links farm-level irrigation records held by the agriculture programme to seasonal crop declarations for five seasons, and groups crops into fodder, cereals, vegetables, fruit and date palms. Water use is expressed per tonne harvested and per hectare. The design follows the national water accounting concepts described in the General Authority for Statistics methodology and quality report for water accounts, so that results can be reconciled with the official accounts.",
+      "2. Findings. Water per tonne differs several-fold across crop groups, and fodder crops account for the largest share of irrigation volume in the sample. Farms using drip irrigation for vegetables use markedly less water per tonne than farms using flood methods, while the gap for date palms is smaller. Seasonal variation is large and tracks groundwater pumping costs more closely than rainfall. The findings are indicative only because the sample and values in this document are illustrative.",
+      "3. Recommendations. The study recommends metering all irrigation wells above a size threshold so that seasonal water budgets can be set per farm, reporting water per tonne by crop group in the Agriculture and Food Security theme, and testing a crop advisory service that shows each farm its position against peers. It also proposes that irrigation records adopt the same crop classification as the crop declarations so that linkage no longer needs a manual matching pass.",
+      "ملخص. تبحث هذه الدراسة التوضيحية في كيفية تباين استخدام مياه الري بحسب المحصول وتقنية الري. تربط سجلات الري على مستوى المزرعة بإقرارات المحاصيل الموسمية لخمسة مواسم، وتصنف المحاصيل إلى أعلاف وحبوب وخضروات وفاكهة ونخيل. تتفاوت المياه المستخدمة لكل طن عدة أضعاف بين المجموعات، وتستحوذ الأعلاف على أكبر حصة من الحجم. توصي الدراسة بتركيب عدادات على الآبار الكبيرة لوضع ميزانيات مائية موسمية، وبنشر المياه لكل طن بحسب مجموعة المحصول في محور الأمن الغذائي والزراعة، وبتجريب خدمة إرشاد للمزارعين، وبتوحيد تصنيف المحاصيل بين سجلات الري والإقرارات.",
     ],
   },
   {
-    titleEn: "Measuring Economic Diversification: A Composite Index for Qatar",
-    titleAr: "قياس التنويع الاقتصادي: مؤشر مركب لدولة قطر",
+    titleEn: "Measuring Water Security: A Composite Index for Saudi Arabia",
+    titleAr: "قياس الأمن المائي: مؤشر مركب للمملكة العربية السعودية",
     type: "research",
     year: 2024,
-    unit: "EDP",
+    unit: "WSD",
     classification: 1,
     outcomes: ["eco_growth"],
-    topics: ["economic_diversification", "national_accounts", "kpi_design"],
+    topics: ["water_resources", "kpi_design", "groundwater"],
     summaryEn:
       MARK_EN +
-      "Proposes a composite diversification index from four components: non-hydrocarbon share of GDP, export concentration, private-sector employment share and revenue concentration. Backcast to 2011, the index rises 14 points, most of it after 2017, with export concentration the slowest-moving component.",
+      "Proposes a composite water security index from four components aligned with the National Water Strategy 2030 themes: supply reliability, demand efficiency, groundwater sustainability and wastewater reuse. A backcast on illustrative inputs shows the direction of travel and which component moves slowest.",
     summaryAr:
       MARK_AR +
-      "تقترح مؤشراً مركباً للتنويع من أربعة مكونات: حصة القطاعات غير الهيدروكربونية من الناتج، وتركّز الصادرات، وحصة العمالة في القطاع الخاص، وتركّز الإيرادات. عند إعادة حسابه إلى 2011 يرتفع المؤشر 14 نقطة، معظمها بعد 2017، ويبقى تركّز الصادرات المكون الأبطأ.",
+      "تقترح مؤشراً مركباً للأمن المائي من أربعة مكونات تتوافق مع محاور الاستراتيجية الوطنية للمياه 2030: موثوقية الإمداد، وكفاءة الطلب، واستدامة المياه الجوفية، وإعادة استخدام المياه المعالجة. يُظهر الحساب الرجعي على مدخلات توضيحية اتجاه التحسن والمكون الأبطأ.",
     keyFacts: [
-      { text_en: "Four components, equal weights after a principal-component check", text_ar: "أربعة مكونات بأوزان متساوية بعد فحص المكونات الرئيسية", page: 1 },
-      { text_en: "Index up 14 points between 2011 and 2023, from 41 to 55", text_ar: "ارتفاع المؤشر 14 نقطة بين 2011 و2023، من 41 إلى 55", page: 2 },
-      { text_en: "Export concentration (HHI) improved only 0.04 over the period", text_ar: "تحسن تركّز الصادرات (مؤشر هيرفندال) 0.04 فقط خلال الفترة", page: 2 },
+      { text_en: "Four components aligned with the National Water Strategy 2030 themes", text_ar: "أربعة مكونات تتوافق مع محاور الاستراتيجية الوطنية للمياه 2030", page: 1 },
+      { text_en: "Equal weights after a principal-component check (illustrative)", text_ar: "أوزان متساوية بعد فحص المكونات الرئيسية (توضيحي)", page: 1 },
+      { text_en: "Groundwater sustainability is the slowest-moving component", text_ar: "استدامة المياه الجوفية هي المكون الأبطأ تحسناً", page: 2 },
     ],
     pages: [
-      "1. Why a composite index. The NDS3 diversification target is expressed through several indicators that move at different speeds and are reported on different cadences. This paper proposes one composite index so that the direction of travel can be read at a glance and decomposed when needed. Four components are used: the non-hydrocarbon share of real GDP, a Herfindahl index of merchandise export concentration, the private-sector share of total employment, and the non-hydrocarbon share of government revenue. Each component is normalised to a 0 to 100 scale against a fixed 2011 baseline and a 2030 aspiration, and a principal-component analysis confirms that equal weights lose little information.",
-      "2. Results. Backcast to 2011, the index rises from 41 to 55 by 2023. Most of the gain arrives after 2017, driven by the non-hydrocarbon GDP share and by private-sector employment. Export concentration is the slowest-moving component: the Herfindahl index improved by only 0.04 over the period because liquefied natural gas remains the dominant export line. Revenue concentration improved in years of lower hydrocarbon prices and reversed in years of higher prices, which argues for reading that component over a three-year average.",
-      "3. Use in the strategy. The paper recommends that the index be published annually with its four components, that the export concentration component be tracked quarterly from customs data, and that the 2030 aspiration values be revisited when the national accounts rebase to a new reference year. A sensitivity annex shows the index is robust to alternative weights within a two-point band. Data sources: national accounts, customs statistics, the labour force survey, and the fiscal accounts.",
-      "ملخص. تقترح هذه الورقة مؤشراً مركباً للتنويع الاقتصادي من أربعة مكونات بأوزان متساوية، تم التحقق منها بتحليل المكونات الرئيسية. يرتفع المؤشر من 41 في 2011 إلى 55 في 2023، ويأتي معظم التحسن بعد 2017 من حصة الناتج غير الهيدروكربوني والعمالة في القطاع الخاص، بينما يبقى تركّز الصادرات المكون الأبطأ لهيمنة الغاز الطبيعي المسال. توصي الورقة بنشر المؤشر سنوياً مع مكوناته، وبمتابعة تركّز الصادرات فصلياً، وبمراجعة قيم 2030 عند إعادة تأسيس الحسابات القومية.",
+      "1. Why a composite index. The National Environment Strategy tracks water security through several indicators that move at different speeds and are reported on different cadences. This paper proposes one composite index so that the direction of travel can be read at a glance and decomposed when needed. Four components are used, aligned with the themes of the National Water Strategy 2030 published by the Ministry of Environment, Water and Agriculture: supply reliability, demand efficiency, groundwater sustainability and wastewater reuse. Each component is normalised to a 0 to 100 scale against a fixed baseline and a 2030 aspiration, and a principal-component check confirms that equal weights lose little information.",
+      "2. Results. A backcast on illustrative inputs shows the index rising over the period, with most of the gain coming from supply reliability and demand efficiency. Groundwater sustainability is the slowest-moving component because aquifer recovery operates over decades, so the paper recommends reading it over a rolling five-year window. Wastewater reuse improves in steps that follow treatment capacity coming online. All values here are illustrative and are not official statistics.",
+      "3. Use in the strategy. The paper recommends that the index be published annually with its four components, that the groundwater component draw on the Saudi Geological Survey and Saudi Water Authority records, and that the aspiration values be revisited when the national water accounts are revised. A sensitivity annex shows the index is robust to alternative weights within a narrow band.",
+      "ملخص. تقترح هذه الورقة مؤشراً مركباً للأمن المائي من أربعة مكونات تتوافق مع محاور الاستراتيجية الوطنية للمياه 2030 الصادرة عن وزارة البيئة والمياه والزراعة: موثوقية الإمداد، وكفاءة الطلب، واستدامة المياه الجوفية، وإعادة استخدام المياه المعالجة، بأوزان متساوية جرى التحقق منها بتحليل المكونات الرئيسية. يُظهر الحساب الرجعي على مدخلات توضيحية تحسناً معظمه من موثوقية الإمداد وكفاءة الطلب، بينما تبقى استدامة المياه الجوفية الأبطأ. توصي الورقة بنشر المؤشر سنوياً مع مكوناته، وبقراءة المكون الجوفي على نافذة متحركة من خمس سنوات.",
     ],
   },
   {
-    titleEn: "Mid-term Evaluation of the National Data Governance Programme",
-    titleAr: "تقييم منتصف المدة لبرنامج حوكمة البيانات الوطنية",
+    titleEn: "Mid-term Evaluation of the Environmental Data Governance Programme",
+    titleAr: "تقييم منتصف المدة لبرنامج حوكمة البيانات البيئية",
     type: "evaluation",
     year: 2025,
-    unit: "NDA",
+    unit: "EDA",
     classification: 2,
     outcomes: ["gov_excellence"],
     topics: ["data_governance", "data_quality", "data_sharing"],
@@ -114,145 +115,118 @@ const STUDIES: Study[] = [
       { text_en: "Quality scores live for 31 of 60 priority datasets", text_ar: "درجات الجودة متاحة لـ31 من 60 مجموعة بيانات ذات أولوية", page: 3 },
     ],
     pages: [
-      "1. Scope and method. This mid-term evaluation covers the first two years of the National Data Governance Programme. It uses the programme's own results framework, administrative records from the National Data Agency, a survey of the twenty-two participating entities and eighteen key-informant interviews. Evaluation questions cover relevance, effectiveness, efficiency and early signs of sustainability. The evaluation was conducted internally with an external methodological advisor and follows the results-based planning manual's evaluation guidance.",
+      "1. Scope and method. This mid-term evaluation covers the first two years of the Environmental Data Governance Programme. It uses the programme's own results framework, administrative records from the Environmental Data Affairs unit, a survey of the twenty-two participating entities and eighteen key-informant interviews. Evaluation questions cover relevance, effectiveness, efficiency and early signs of sustainability. The evaluation was conducted internally with an external methodological advisor and follows the evaluation guidance in the NES results framework manual.",
       "2. Effectiveness. Fourteen of the twenty-two entities have appointed data stewards and published their data inventories, against a mid-term target of sixteen. The standard data-sharing agreement template is the programme's clearest success: the median negotiation time for a new agreement fell from seven months to eleven weeks, and forty-one agreements are now in force. Entities cite legal review capacity, not willingness, as the remaining bottleneck. The stewards network meets monthly and its attendance has held above eighty percent.",
-      "3. Data quality and recommendations. Quality scoring is live for thirty-one of the sixty priority datasets. Scores improved for twenty-four of them within two quarters of first publication, which suggests that visibility itself drives improvement. The evaluation recommends extending the template approach to metadata standards, funding a shared legal review pool for the smaller entities, and publishing the quality scores openly from 2026. Two risks are flagged: steward turnover and the absence of a sanctions mechanism for non-participation.",
-      "ملخص التقييم. يغطي تقييم منتصف المدة السنتين الأوليين من برنامج حوكمة البيانات الوطنية عبر إطار نتائجه وسجلاته الإدارية ومسح للجهات المشاركة ومقابلات مع المطلعين. عيّنت 14 من 22 جهة مسؤولي بيانات ونشرت جرودها مقابل هدف 16. قلّص القالب الموحد لاتفاقيات التبادل زمن التفاوض من سبعة أشهر إلى أحد عشر أسبوعاً، وتسري الآن 41 اتفاقية. يعمل تقييم الجودة لـ31 من 60 مجموعة بيانات، وتحسنت 24 منها خلال فصلين من النشر. يوصي التقييم بتوسيع نهج القوالب إلى معايير البيانات الوصفية، وبتمويل مجمع مشترك للمراجعة القانونية، وبنشر درجات الجودة علناً من 2026.",
+      "3. Data quality and recommendations. Quality scoring is live for thirty-one of the sixty priority datasets. Scores improved for twenty-four of them within two quarters of first publication, which suggests that visibility itself drives improvement. The evaluation recommends extending the template approach to metadata standards, funding a shared legal review pool for the smaller entities, and publishing the quality scores openly from 2026. Two risks are flagged: steward turnover and the absence of a sanctions mechanism for non-participation. All figures are illustrative.",
+      "ملخص التقييم. يغطي تقييم منتصف المدة السنتين الأوليين من برنامج حوكمة البيانات البيئية عبر إطار نتائجه وسجلاته الإدارية ومسح للجهات المشاركة ومقابلات مع المطلعين. عيّنت 14 من 22 جهة مسؤولي بيانات ونشرت جرودها مقابل هدف 16. قلّص القالب الموحد لاتفاقيات التبادل زمن التفاوض من سبعة أشهر إلى أحد عشر أسبوعاً، وتسري الآن 41 اتفاقية. يعمل تقييم الجودة لـ31 من 60 مجموعة بيانات، وتحسنت 24 منها خلال فصلين من النشر. يوصي التقييم بتوسيع نهج القوالب إلى معايير البيانات الوصفية، وبتمويل مجمع مشترك للمراجعة القانونية، وبنشر درجات الجودة علناً من 2026.",
     ],
   },
   {
-    titleEn: "Household Survey Response Rates: Drivers and Remedies",
-    titleAr: "معدلات الاستجابة في المسوح الأسرية: العوامل والمعالجات",
+    titleEn: "Remote Sensing and Administrative Records for Biodiversity and Land Monitoring: Coverage Gaps and Remedies",
+    titleAr: "الاستشعار عن بعد والسجلات الإدارية في رصد التنوع الأحيائي والأراضي: فجوات التغطية والمعالجات",
     type: "study",
     year: 2023,
-    unit: "SOA",
+    unit: "DOP",
     classification: 1,
-    outcomes: ["gov_excellence"],
-    topics: ["household_surveys", "census_methodology", "data_quality"],
+    outcomes: ["env_sust"],
+    topics: ["biodiversity", "desertification", "environment_stats", "data_quality"],
     summaryEn:
       MARK_EN +
-      "Explains the decline in household survey response from 84 to 71 percent between 2015 and 2022 using paradata from 46,000 sample addresses, and tests four remedies in a split-sample experiment. Evening visits and a web-first option together recovered nine points.",
+      "Reviews how the Office combines satellite products with administrative records from the National Center for Wildlife and the National Center for Vegetation Cover Development and Combating Desertification, identifies where coverage is thin, and tests remedies in a pilot. Illustrative result: combining sources closes most gaps, and a shared land cover classification is the main enabler.",
     summaryAr:
       MARK_AR +
-      "تفسر تراجع الاستجابة في المسوح الأسرية من 84 إلى 71 في المئة بين 2015 و2022 باستخدام بيانات ميدانية لـ46,000 عنوان في العينة، وتختبر أربع معالجات في تجربة بعينة مقسمة. استعادت الزيارات المسائية وخيار الإنترنت أولاً تسع نقاط معاً.",
+      "تراجع كيفية جمع المكتب بين منتجات الأقمار الصناعية والسجلات الإدارية للمركز الوطني للحياة الفطرية والمركز الوطني لتنمية الغطاء النباتي ومكافحة التصحر، وتحدد مواضع ضعف التغطية، وتختبر معالجات في مشروع تجريبي. النتيجة توضيحية: يسد الجمع بين المصادر معظم الفجوات، ويشكل تصنيف الغطاء الأرضي الموحد العامل الأهم.",
     keyFacts: [
-      { text_en: "Response fell from 84 to 71 percent between 2015 and 2022", text_ar: "تراجعت الاستجابة من 84 إلى 71 في المئة بين 2015 و2022", page: 1 },
-      { text_en: "Non-contact, not refusal, explains two thirds of the decline", text_ar: "عدم التواصل، لا الرفض، يفسر ثلثي التراجع", page: 2 },
-      { text_en: "Evening visits plus web-first collection recovered 9 points", text_ar: "الزيارات المسائية مع الجمع عبر الإنترنت أولاً استعادت 9 نقاط", page: 3 },
+      { text_en: "Satellite products and agency records combined for biodiversity and land indicators", text_ar: "الجمع بين منتجات الأقمار الصناعية وسجلات الجهات لمؤشرات التنوع الأحيائي والأراضي", page: 1 },
+      { text_en: "Coverage is thinnest for species records outside protected areas", text_ar: "تضعف التغطية أكثر في سجلات الأنواع خارج المحميات", page: 2 },
+      { text_en: "A shared land cover classification is the main enabler of linkage", text_ar: "تصنيف الغطاء الأرضي الموحد هو العامل الأهم لتحقيق الربط", page: 3 },
     ],
     pages: [
-      "1. The problem. Household survey response in Qatar fell from 84 percent in 2015 to 71 percent in 2022, with the steepest drop in high-rise districts of Doha and among households of single working adults. This study uses interviewer paradata from 46,000 sample addresses across four survey rounds to separate non-contact from refusal, and to identify the address, household and fieldwork characteristics associated with each.",
-      "2. Drivers. Non-contact, not refusal, explains about two thirds of the decline. Gated compounds and tower buildings with concierge access account for most of the non-contact growth; refusal rates have been stable at around eight percent. Daytime visits reach fewer than half of single-adult households on the first attempt. Interviewer experience matters: teams with more than three years of field experience achieve contact rates twelve points higher than new teams in the same districts.",
-      "3. Remedies tested. A split-sample experiment in 2022 tested four remedies: evening and weekend visit windows, a web-first invitation with interviewer follow-up, building-management liaison letters, and a small unconditional incentive. Evening visits and the web-first option together recovered nine points of response; liaison letters helped in towers only; the incentive had no measurable effect. The study recommends adopting evening windows and web-first collection as the standard design and reporting response rates by dwelling type in every survey release.",
-      "ملخص. تراجعت الاستجابة في المسوح الأسرية من 84 إلى 71 في المئة بين 2015 و2022، ويفسر عدم التواصل نحو ثلثي هذا التراجع، خصوصاً في المجمعات المسوّرة والأبراج السكنية، بينما بقيت معدلات الرفض مستقرة عند ثمانية في المئة. اختبرت تجربة بعينة مقسمة أربع معالجات، فاستعادت الزيارات المسائية والخيار الإلكتروني أولاً تسع نقاط، وأفادت رسائل التنسيق مع إدارات المباني في الأبراج فقط، ولم يكن للحافز أثر يُذكر. توصي الدراسة باعتماد النوافذ المسائية والجمع الإلكتروني أولاً تصميماً معيارياً، وبنشر معدلات الاستجابة بحسب نوع المسكن.",
+      "1. The problem. Biodiversity and land indicators depend on two kinds of evidence: satellite and remote-sensing products, and administrative or field records held by agencies. This illustrative study reviews how the Office combines them for the Biodiversity and Land theme, using records from the National Center for Wildlife and the National Center for Vegetation Cover Development and Combating Desertification, and the national reporting prepared for the UN Convention to Combat Desertification. The aim is to find where coverage is thin and what it would take to close the gaps.",
+      "2. Coverage gaps. Coverage is strongest inside declared protected areas, where survey and monitoring effort is concentrated, and thinnest for species records and vegetation condition outside them. Satellite products give consistent wall-to-wall land cover but cannot report species presence. Agency records carry the species detail but follow different spatial units and classification schemes, so linking them needs manual matching. Revisit cycles for field surveys are long relative to the pace of land change in coastal and peri-urban zones. All values and findings here are illustrative.",
+      "3. Remedies tested. A pilot tested three remedies: a shared land cover classification applied to both satellite and administrative layers, a common spatial grid for reporting, and a metadata template stating survey date and method for every record. The shared classification closed most of the linkage gaps in the pilot area. The study recommends adopting the classification and grid as standards, publishing the metadata template through the data governance board, and reporting coverage by zone with every release.",
+      "ملخص. تعتمد مؤشرات التنوع الأحيائي والأراضي على نوعين من الأدلة: منتجات الأقمار الصناعية والاستشعار عن بعد، والسجلات الإدارية والميدانية لدى الجهات. تراجع هذه الدراسة التوضيحية كيفية جمع المكتب بينهما، وتجد أن التغطية أقوى داخل المحميات المعلنة وأضعف خارجها. تعطي الأقمار الصناعية غطاءً أرضياً متسقاً لكنها لا تبلّغ عن وجود الأنواع، بينما تحمل سجلات الجهات تفاصيل الأنواع بوحدات مكانية وتصنيفات مختلفة. أغلق تصنيف الغطاء الأرضي الموحد معظم فجوات الربط في المنطقة التجريبية. توصي الدراسة باعتماد التصنيف والشبكة المكانية معياراً، ونشر قالب البيانات الوصفية، والإبلاغ عن التغطية بحسب المنطقة.",
     ],
   },
   {
-    titleEn: "Fiscal Sustainability under Energy Transition: Scenarios to 2040",
-    titleAr: "الاستدامة المالية في ظل التحول في الطاقة: سيناريوهات حتى 2040",
+    titleEn: "Climate Transition Scenarios to 2040: Implications for Environmental Targets",
+    titleAr: "سيناريوهات التحول المناخي حتى 2040: الانعكاسات على الأهداف البيئية",
     type: "research",
     year: 2026,
-    unit: "SF",
+    unit: "FRS",
     classification: 2,
-    outcomes: ["fiscal_sust"],
-    topics: ["scenario_planning", "fiscal_policy", "foresight_methods"],
+    outcomes: ["env_sust"],
+    topics: ["scenario_planning", "ghg_emissions", "climate_adaptation", "foresight_methods"],
     summaryEn:
       MARK_EN +
-      "Builds three demand scenarios for liquefied natural gas to 2040 and traces their fiscal consequences. Under the accelerated-transition scenario, hydrocarbon revenue falls to 46 percent of the total by 2040 and the non-hydrocarbon primary balance must improve by 3.2 points of GDP to keep the buffer rule intact.",
+      "Builds three illustrative climate transition scenarios to 2040 and traces what each means for emissions, water demand and the Saudi Green Initiative targets. The accelerated scenario brings forward renewable build-out but raises cooling and desalination demand; the delayed scenario leaves more adaptation cost for the 2030s.",
     summaryAr:
       MARK_AR +
-      "يبني ثلاثة سيناريوهات للطلب على الغاز الطبيعي المسال حتى 2040 ويتتبع آثارها المالية. في سيناريو التحول المتسارع تنخفض الإيرادات الهيدروكربونية إلى 46 في المئة من الإجمالي بحلول 2040، ويجب أن يتحسن الرصيد الأولي غير الهيدروكربوني بمقدار 3.2 نقطة من الناتج للحفاظ على قاعدة الاحتياطي.",
+      "تبني ثلاثة سيناريوهات توضيحية للتحول المناخي حتى 2040 وتتتبع معنى كل منها للانبعاثات والطلب على المياه وأهداف مبادرة السعودية الخضراء. يقدّم السيناريو المتسارع التوسع في الطاقة المتجددة لكنه يرفع الطلب على التبريد والتحلية، ويترك السيناريو المتأخر تكلفة تكيف أكبر لثلاثينيات هذا القرن.",
     keyFacts: [
-      { text_en: "Three LNG demand scenarios: baseline, delayed transition, accelerated transition", text_ar: "ثلاثة سيناريوهات للطلب على الغاز: أساسي، تحول متأخر، تحول متسارع", page: 1 },
-      { text_en: "Hydrocarbon revenue share by 2040: 61, 68 and 46 percent respectively", text_ar: "حصة الإيرادات الهيدروكربونية بحلول 2040: 61 و68 و46 في المئة على التوالي", page: 2 },
-      { text_en: "Accelerated transition needs a 3.2-point improvement in the non-hydrocarbon primary balance", text_ar: "يحتاج التحول المتسارع إلى تحسن 3.2 نقطة في الرصيد الأولي غير الهيدروكربوني", page: 3 },
+      { text_en: "Three scenarios: baseline, delayed transition, accelerated transition", text_ar: "ثلاثة سيناريوهات: أساسي، تحول متأخر، تحول متسارع", page: 1 },
+      { text_en: "Accelerated transition raises cooling and desalination demand alongside the emissions gains", text_ar: "يرفع التحول المتسارع الطلب على التبريد والتحلية إلى جانب مكاسب الانبعاثات", page: 2 },
+      { text_en: "An early-warning indicator set is proposed for twice-yearly foresight reporting", text_ar: "يُقترح إطار مؤشرات إنذار مبكر لتقرير استشرافي نصف سنوي", page: 3 },
     ],
     pages: [
-      "1. Scenarios. The paper builds three scenarios for global liquefied natural gas demand to 2040: a baseline that follows announced policies, a delayed transition in which Asian coal-to-gas switching continues into the 2030s, and an accelerated transition in which European and East Asian demand peaks before 2030. Each scenario is expressed as a price and volume path for Qatar's exports, drawing on published agency outlooks and on the expansion schedule of the North Field.",
-      "2. Fiscal consequences. Hydrocarbon revenue remains 61 percent of total revenue in 2040 under the baseline, 68 percent under a delayed transition and 46 percent under an accelerated transition. Non-hydrocarbon revenue grows in every scenario but cannot on its own replace the lost hydrocarbon income in the accelerated case. The stabilisation buffer stays above its floor in the baseline and delayed scenarios throughout the period; in the accelerated scenario it breaches the floor in 2034 unless policy adjusts.",
-      "3. What it would take. Keeping the buffer rule intact under the accelerated transition needs a 3.2-point-of-GDP improvement in the non-hydrocarbon primary balance by 2034, achievable through a combination of broadened revenue measures and slower current-spending growth. The paper suggests an early-warning indicator set built from LNG contract renewal prices, the European carbon price and Asian gas-to-coal spreads, and recommends that the foresight function report the indicator set twice a year to the fiscal sustainability outcome owner.",
-      "ملخص. يبني البحث ثلاثة سيناريوهات للطلب العالمي على الغاز الطبيعي المسال حتى 2040 ويتتبع آثارها المالية. تبقى الإيرادات الهيدروكربونية 61 في المئة من الإجمالي في السيناريو الأساسي، و68 في المئة في التحول المتأخر، و46 في المئة في التحول المتسارع. يخترق احتياطي الاستقرار حدّه الأدنى في 2034 في السيناريو المتسارع ما لم تتعدل السياسة، ويتطلب الحفاظ على القاعدة تحسناً قدره 3.2 نقطة من الناتج في الرصيد الأولي غير الهيدروكربوني. يقترح البحث مجموعة مؤشرات إنذار مبكر وتقريراً نصف سنوي لمالك نتيجة الاستدامة المالية.",
+      "1. Scenarios. The paper builds three illustrative scenarios to 2040: a baseline that follows announced policies, a delayed transition in which fossil generation and cooling demand stay high into the 2030s, and an accelerated transition in which renewable build-out and efficiency standards move faster than planned. Each scenario is expressed as a path for emissions, electricity and cooling demand, and desalination demand, and is read against the Saudi Green Initiative and Middle East Green Initiative commitments and the Saudi Vision 2030 environmental targets.",
+      "2. Implications. In the accelerated scenario, emissions intensity falls faster but cooling and desalination demand still rise with population and heat, so the water and energy themes are tightly coupled and must be planned together. In the delayed scenario, adaptation cost shifts into the 2030s and the exposure of coastal infrastructure and agricultural areas rises. Neither scenario is a forecast, and all quantities in this document are illustrative.",
+      "3. Early warning and use. The paper proposes an early-warning indicator set built from renewable capacity additions, cooling-degree trends and desalination output, and recommends that the foresight function report it twice a year to the theme owners. It also recommends that targets for the Climate and Environment theme be tested against all three scenarios before each annual progress review.",
+      "ملخص. يبني البحث ثلاثة سيناريوهات توضيحية للتحول المناخي حتى 2040: أساسي، وتحول متأخر، وتحول متسارع، ويقرأ كلاً منها في ضوء التزامات مبادرة السعودية الخضراء ومبادرة الشرق الأوسط الأخضر وأهداف رؤية السعودية 2030 البيئية. في السيناريو المتسارع تنخفض كثافة الانبعاثات أسرع لكن الطلب على التبريد والتحلية يستمر في الارتفاع، ما يستلزم تخطيط محوري المياه والطاقة معاً. يقترح البحث إطار مؤشرات إنذار مبكر وتقريراً نصف سنوي لمالكي المحاور، واختبار أهداف محور المناخ والبيئة مقابل السيناريوهات الثلاثة.",
     ],
   },
   {
-    titleEn: "Evaluation of Digital Government Services Uptake, 2021 to 2024",
-    titleAr: "تقييم الإقبال على الخدمات الحكومية الرقمية، 2021 إلى 2024",
+    titleEn: "Evaluation of Regulatory Compliance Monitoring Services, 2021 to 2024",
+    titleAr: "تقييم خدمات رصد الامتثال التنظيمي، 2021 إلى 2024",
     type: "evaluation",
     year: 2024,
-    unit: "MIF",
+    unit: "PMD",
     classification: 1,
     outcomes: ["gov_excellence"],
-    topics: ["digital_transformation", "gov_services", "evaluation_methods"],
+    topics: ["regulatory_compliance", "environmental_law", "evaluation_methods", "air_quality", "waste_management"],
     summaryEn:
       MARK_EN +
-      "Evaluates whether the digital services programme moved transactions online and improved satisfaction. Online completion rose from 54 to 79 percent of eligible transactions; satisfaction rose six points; the remaining offline demand concentrates in five services that require in-person identity checks.",
+      "Evaluates whether the Office's compliance monitoring service gave leadership a timely view of permit, emissions and waste licence status across entities. Illustrative findings: coverage and timeliness improved, most overdue items sit in a few facility types, and the main gap is a shared definition of a closed finding.",
     summaryAr:
       MARK_AR +
-      "يقيّم ما إذا كان برنامج الخدمات الرقمية قد نقل المعاملات إلى الإنترنت وحسّن الرضا. ارتفع الإنجاز الإلكتروني من 54 إلى 79 في المئة من المعاملات المؤهلة، وارتفع الرضا ست نقاط، ويتركز الطلب الحضوري المتبقي في خمس خدمات تتطلب تحقق الهوية حضورياً.",
+      "يقيّم ما إذا كانت خدمة رصد الامتثال لدى المكتب قد وفّرت للقيادة رؤية في الوقت المناسب لحالة التراخيص والانبعاثات وتراخيص النفايات لدى الجهات. النتائج توضيحية: تحسنت التغطية والتوقيت، وتتركز معظم البنود المتأخرة في أنواع قليلة من المنشآت، وتتمثل الفجوة الرئيسية في غياب تعريف مشترك للملاحظة المغلقة.",
     keyFacts: [
-      { text_en: "Online completion: 79 percent of eligible transactions in 2024, up from 54", text_ar: "الإنجاز الإلكتروني: 79 في المئة من المعاملات المؤهلة في 2024 مقابل 54", page: 2 },
-      { text_en: "Satisfaction up six points to 82 percent", text_ar: "ارتفاع الرضا ست نقاط إلى 82 في المئة", page: 2 },
-      { text_en: "Five services with in-person identity checks hold 61 percent of remaining offline demand", text_ar: "خمس خدمات تتطلب تحقق الهوية حضورياً تستأثر بـ61 في المئة من الطلب الحضوري المتبقي", page: 3 },
+      { text_en: "Compliance status covers permits, air emissions and waste licences", text_ar: "تغطي حالة الامتثال التراخيص وانبعاثات الهواء وتراخيص النفايات", page: 1 },
+      { text_en: "Most overdue items concentrate in a few facility types", text_ar: "تتركز معظم البنود المتأخرة في أنواع قليلة من المنشآت", page: 2 },
+      { text_en: "A shared definition of a closed finding is the main gap", text_ar: "الفجوة الرئيسية هي غياب تعريف مشترك للملاحظة المغلقة", page: 3 },
     ],
     pages: [
-      "1. Questions and evidence. The evaluation asks whether the digital services programme moved transactions online, whether service satisfaction improved, and who was left behind. It combines transaction logs from the national services portal, four rounds of the user satisfaction survey, and interviews with eleven service owners. The analysis covers 214 services that were eligible for full online completion by the end of 2024.",
-      "2. Uptake and satisfaction. Online completion rose from 54 percent of eligible transactions in 2021 to 79 percent in 2024. The steepest gains came from the single sign-on rollout and from redesigning the twelve highest-volume services. Satisfaction rose six points to 82 percent, with the largest improvement among users over sixty once assisted digital counters opened in service centres. Complaints about status visibility fell by half after the tracking feature was added.",
-      "3. Who is left and what to do. Remaining offline demand concentrates in five services that still require an in-person identity check; together they hold 61 percent of offline transactions. The evaluation recommends a remote identity verification standard, a target for the twelve services with the lowest online share, and a quarterly uptake dashboard owned by the monitoring function. It rates the programme as effective, with efficiency gains not yet quantified because unit costs were not recorded before 2022.",
-      "ملخص التقييم. ارتفع الإنجاز الإلكتروني للمعاملات المؤهلة من 54 في المئة في 2021 إلى 79 في المئة في 2024، بفضل الدخول الموحد وإعادة تصميم أعلى اثنتي عشرة خدمة حجماً. ارتفع الرضا ست نقاط إلى 82 في المئة، وكان التحسن الأكبر بين المستخدمين فوق الستين بعد افتتاح منصات الدعم الرقمي. يتركز الطلب الحضوري المتبقي في خمس خدمات تتطلب تحقق الهوية حضورياً. يوصي التقييم بمعيار للتحقق من الهوية عن بُعد، وهدف للخدمات الأقل إنجازاً إلكترونياً، ولوحة فصلية للإقبال تملكها وظيفة الرصد.",
+      "1. Questions and evidence. The evaluation asks whether the compliance monitoring service gave leadership a timely and consistent view of environmental permit, air emission and waste licence status, and who was left out. It combines the service's own status log, quarterly reports shared by participating entities, including data from the National Center for Environmental Compliance and the National Center for Waste Management, and interviews with service owners. All figures and findings in this document are illustrative.",
+      "2. Coverage and timeliness. Reporting coverage and timeliness improved over the period as entities moved from ad hoc submissions to a quarterly cycle. Most overdue items concentrate in a small number of facility types, and entities report that renewal reminders reach the wrong contact when facility ownership changes. Air emission exceedances were easier to track than waste licence conditions because monitoring data arrives in a structured form.",
+      "3. Recommendations. The evaluation recommends a shared definition of a closed finding across entities, a facility contact register maintained by the Regulatory Compliance Monitoring unit, and a quarterly dashboard owned by the monitoring function. It rates the service as effective for coverage, with efficiency gains not yet quantified because staff time was not recorded before the service started.",
+      "ملخص التقييم. يسأل التقييم عما إذا كانت خدمة رصد الامتثال قد وفّرت للقيادة رؤية متسقة وفي الوقت المناسب لحالة التراخيص البيئية وانبعاثات الهواء وتراخيص النفايات. تحسنت التغطية والتوقيت مع انتقال الجهات من تقارير متفرقة إلى دورة فصلية، وتتركز معظم البنود المتأخرة في أنواع قليلة من المنشآت. يوصي التقييم بتعريف مشترك للملاحظة المغلقة، وبسجل لجهات الاتصال في المنشآت تديره إدارة متابعة الامتثال التنظيمي، ولوحة فصلية تملكها وظيفة الرصد.",
     ],
   },
   {
-    titleEn: "Population Ageing and Social Protection Needs to 2040",
-    titleAr: "شيخوخة السكان واحتياجات الحماية الاجتماعية حتى 2040",
-    type: "study",
-    year: 2022,
-    unit: "SDP",
-    classification: 1,
-    outcomes: ["cohesive_society", "quality_life"],
-    topics: ["population_stats", "social_statistics", "social_protection"],
-    summaryEn:
-      MARK_EN +
-      "Projects the Qatari population aged 65 and over to 2040 under three fertility and longevity assumptions and estimates the resulting demand for pensions, long-term care places and home-care hours. The 65-plus population roughly triples, and long-term care demand outpaces the current expansion plan by 2033.",
-    summaryAr:
-      MARK_AR +
-      "تتوقع أعداد القطريين بعمر 65 سنة فأكثر حتى 2040 وفق ثلاثة افتراضات للخصوبة وطول العمر، وتقدّر الطلب الناتج على المعاشات وأماكن الرعاية طويلة الأمد وساعات الرعاية المنزلية. يتضاعف السكان فوق 65 ثلاث مرات تقريباً، ويتجاوز الطلب على الرعاية طويلة الأمد خطة التوسع الحالية بحلول 2033.",
-    keyFacts: [
-      { text_en: "Qatari population aged 65 and over roughly triples by 2040 in the central scenario", text_ar: "يتضاعف عدد القطريين بعمر 65 فأكثر ثلاث مرات تقريباً بحلول 2040 في السيناريو الأوسط", page: 1 },
-      { text_en: "Long-term care demand exceeds the planned capacity from 2033", text_ar: "يتجاوز الطلب على الرعاية طويلة الأمد الطاقة المخططة من 2033", page: 2 },
-      { text_en: "Home-care hours needed grow 2.6 times by 2040", text_ar: "تنمو ساعات الرعاية المنزلية المطلوبة 2.6 مرة بحلول 2040", page: 3 },
-    ],
-    pages: [
-      "1. Projection. Using the 2020 census base and three combinations of fertility and longevity assumptions, the study projects the Qatari population by single year of age to 2040. In the central scenario the population aged 65 and over roughly triples, and the share of the Qatari population in that group rises from six to fourteen percent. The old-age dependency ratio for Qatari nationals doubles over the same period.",
-      "2. Demand for services. Applying age-specific utilisation rates from the health and social protection registers, the study estimates demand for pension payments, residential long-term care places and home-care hours. Long-term care demand exceeds the planned capacity expansion from 2033 in the central scenario and from 2030 in the high-longevity scenario. Pension expenditure remains within the actuarial envelope in all scenarios because contribution reforms already enacted mature over the period.",
-      "3. Recommendations. The study recommends a home-care-first policy, because home-care hours needed grow 2.6 times by 2040 while costing a third of residential care per person; a workforce plan for geriatric nursing; and a five-yearly refresh of the projection tied to each census and mid-decade population estimate. It also proposes that the quality-of-life outcome adopt an indicator on the share of older people receiving care at home.",
-      "ملخص. تتوقع الدراسة، انطلاقاً من قاعدة تعداد 2020 وثلاثة افتراضات للخصوبة وطول العمر، أن يتضاعف عدد القطريين بعمر 65 سنة فأكثر ثلاث مرات تقريباً بحلول 2040، وأن ترتفع حصتهم من ستة إلى أربعة عشر في المئة. يتجاوز الطلب على الرعاية طويلة الأمد الطاقة المخططة من 2033، بينما يبقى الإنفاق على المعاشات ضمن الغلاف الاكتواري. توصي الدراسة بسياسة الرعاية المنزلية أولاً، وبخطة للقوى العاملة في تمريض المسنين، وبتحديث التوقعات كل خمس سنوات، وبمؤشر لحصة كبار السن الذين يتلقون الرعاية في منازلهم.",
-    ],
-  },
-  {
-    titleEn: "Qatar in International Indices: Drivers of Movement, 2018 to 2025",
-    titleAr: "قطر في المؤشرات الدولية: محركات التغير، 2018 إلى 2025",
+    titleEn: "Saudi Arabia in International Environmental Indices: Drivers of Movement, 2018 to 2025",
+    titleAr: "السعودية في المؤشرات البيئية الدولية: محركات التغير، 2018 إلى 2025",
     type: "research",
     year: 2026,
-    unit: "IIC",
+    unit: "PAR",
     classification: 1,
-    outcomes: ["gov_excellence", "eco_growth"],
+    outcomes: ["gov_excellence", "env_sust"],
     topics: ["index_monitoring", "kpi_design", "institutional_excellence"],
     summaryEn:
       MARK_EN +
-      "Decomposes Qatar's rank changes in twelve international indices into three sources: changes in Qatar's own scores, changes in peers' scores, and methodology revisions. Methodology revisions explain 38 percent of rank movements, more than Qatar's own score changes for five of the twelve indices.",
+      "Proposes a method to decompose rank changes in international environmental indices, such as the Environmental Performance Index, the ND-GAIN Country Index and the SDG Index, into own-score change, peer change and methodology revisions. The method is illustrated on synthetic data and no actual ranks are claimed.",
     summaryAr:
       MARK_AR +
-      "يفكك تغيرات ترتيب قطر في اثني عشر مؤشراً دولياً إلى ثلاثة مصادر: تغير درجات قطر نفسها، وتغير درجات الأقران، وتعديلات المنهجية. تفسر تعديلات المنهجية 38 في المئة من تحركات الترتيب، وهو أكثر من تغير درجات قطر في خمسة من المؤشرات الاثني عشر.",
+      "تقترح منهجية لتفكيك تغيرات الترتيب في المؤشرات البيئية الدولية، مثل مؤشر الأداء البيئي ومؤشر ND-GAIN ومؤشر أهداف التنمية المستدامة، إلى تغير الدرجة الذاتية وتغير الأقران وتعديلات المنهجية. تُوضح المنهجية على بيانات اصطناعية ولا تُنسب أي مراتب فعلية.",
     keyFacts: [
-      { text_en: "Twelve indices, 2018 to 2025, decomposed rank by rank", text_ar: "اثنا عشر مؤشراً من 2018 إلى 2025 بتفكيك الترتيب سنة بسنة", page: 1 },
-      { text_en: "Methodology revisions explain 38 percent of rank movements", text_ar: "تفسر تعديلات المنهجية 38 في المئة من تحركات الترتيب", page: 2 },
-      { text_en: "Own-score improvement drove the gains in the e-government and logistics indices", text_ar: "قاد تحسن الدرجات الذاتية المكاسب في مؤشري الحكومة الإلكترونية والخدمات اللوجستية", page: 2 },
+      { text_en: "Rank change split into own score, peer movement and methodology revisions", text_ar: "تفكيك تغير الترتيب إلى الدرجة الذاتية وحركة الأقران وتعديلات المنهجية", page: 1 },
+      { text_en: "Method demonstrated on synthetic data, not on published ranks", text_ar: "تُوضح المنهجية على بيانات اصطناعية لا على مراتب منشورة", page: 2 },
+      { text_en: "Targets are better stated as score bands than as fixed ranks", text_ar: "الأفضل صياغة الأهداف نطاقات درجات لا مراتب ثابتة", page: 3 },
     ],
     pages: [
-      "1. Method. For each of twelve international indices tracked in the Indices module, the paper reconstructs the full ranked field for every edition from 2018 to 2025 and decomposes each year's rank change into three sources: the change in Qatar's own score, the change in peers' scores holding Qatar constant, and the effect of methodology revisions identified from publisher notes. Where publishers restate prior years, the restated series is used so that revisions are not counted as score changes.",
-      "2. Findings. Methodology revisions explain 38 percent of Qatar's rank movements across the twelve indices, more than Qatar's own score changes for five of them. Own-score improvement drove the gains in the e-government and logistics indices, where sustained programmes changed the underlying inputs. Peer movement explains most of the volatility in the innovation and talent indices, where a small number of countries cluster within a few points. Rank targets expressed as a fixed position are therefore fragile for those indices.",
-      "3. Implications for targets. The paper recommends stating targets as score bands where the index publishes scores, treating rank as a reported outcome rather than a target for the clustered indices, and annotating every rank change in the module with its decomposition so that readers see whether Qatar moved or the ruler did. It also recommends a standing methodology watch that reads publisher notes before each release and flags revisions to outcome owners.",
-      "ملخص. يعيد البحث بناء الترتيب الكامل لاثني عشر مؤشراً دولياً لكل إصدار من 2018 إلى 2025، ويفكك تغير ترتيب قطر إلى تغير درجاتها، وتغير درجات الأقران، وأثر تعديلات المنهجية. تفسر تعديلات المنهجية 38 في المئة من التحركات، وهو أكثر من أثر درجات قطر في خمسة مؤشرات. قاد التحسن الذاتي المكاسب في مؤشري الحكومة الإلكترونية والخدمات اللوجستية، بينما يفسر تحرك الأقران معظم التذبذب في مؤشري الابتكار والمواهب. يوصي البحث بصياغة الأهداف كنطاقات درجات، ومعاملة الترتيب كنتيجة مبلّغة في المؤشرات المتقاربة، وبإرفاق التفكيك بكل تغير في الترتيب.",
+      "1. Method. For each international index tracked in the Indices module, such as the Environmental Performance Index, the ND-GAIN Country Index and the Sustainable Development Report SDG Index, the paper proposes to reconstruct the ranked field for every edition and decompose each year's rank change into three sources: the change in Saudi Arabia's own score, the change in peers' scores holding Saudi Arabia constant, and the effect of methodology revisions identified from publisher notes. Where publishers restate prior years, the restated series is used so that revisions are not counted as score changes.",
+      "2. Illustration. The method is demonstrated here on synthetic data only, to show how the decomposition reads. No actual ranks, scores or editions are reported in this document, and the shares quoted in the key facts are not findings about any real index. Applied to published data, the method would show whether movement came from the Kingdom's own performance, from peers, or from the ruler changing.",
+      "3. Implications for targets. The paper recommends stating targets as score bands where the index publishes scores, treating rank as a reported outcome rather than a target for indices where many countries cluster within a few points, and annotating every rank change in the module with its decomposition. It also recommends a standing methodology watch that reads publisher notes before each release and flags revisions to theme owners.",
+      "ملخص. تقترح الورقة منهجية لإعادة بناء الترتيب الكامل لكل إصدار من المؤشرات البيئية الدولية، مثل مؤشر الأداء البيئي ومؤشر ND-GAIN ومؤشر أهداف التنمية المستدامة، وتفكيك تغير ترتيب السعودية إلى تغير درجاتها الذاتية وتغير درجات الأقران وأثر تعديلات المنهجية. تُوضح المنهجية على بيانات اصطناعية فقط ولا تُورد أي مراتب أو درجات فعلية. توصي الورقة بصياغة الأهداف نطاقات درجات، ومعاملة الترتيب نتيجة مبلّغة في المؤشرات المتقاربة، وبمتابعة دائمة لمنهجيات الجهات المصدرة.",
     ],
   },
 ];
@@ -405,7 +379,7 @@ export default async function seedCr08Studies(): Promise<void> {
   const [owner] = await db
     .select({ id: schema.users.id })
     .from(schema.users)
-    .where(eq(schema.users.email, "knowledge@npc.qa"))
+    .where(eq(schema.users.email, "knowledge@enviroai.demo"))
     .limit(1);
   const allTerms = await db
     .select({
@@ -419,7 +393,7 @@ export default async function seedCr08Studies(): Promise<void> {
   const units = await db.select({ id: schema.orgUnits.id, code: schema.orgUnits.code }).from(schema.orgUnits);
   const unitId = new Map(units.map((u) => [u.code, u.id]));
 
-  const dataDir = path.join(process.cwd(), "data");
+  const dataDir = DATA_DIR;
   let created = 0;
   const createdIds: string[] = [];
   for (const s of STUDIES) {
@@ -450,7 +424,7 @@ export default async function seedCr08Studies(): Promise<void> {
       verifiedBy: owner?.id ?? null,
       // verified dates spread so "latest verified" is deterministic
       verifiedAt: new Date(Date.UTC(s.year, 5, 15 + STUDIES.indexOf(s))).toISOString(),
-      sourceOrigin: "npc",
+      sourceOrigin: "org",
       publishYear: s.year,
       originalFilename: filename,
       mime: "text/plain",

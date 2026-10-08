@@ -78,7 +78,7 @@ function KpiTile({ kpi, canEdit, onEnter }: { kpi: OpsKpiCard; canEdit: boolean;
         <div className="min-w-0 flex-1">
           <h4 className="line-clamp-2 min-h-10 text-sm font-medium leading-snug text-ink-900">{name}</h4>
           <p className="mt-1 flex flex-wrap items-center gap-1.5">
-            <Chip tone={kpi.sourceKind === "auto" ? "gulf" : "sand"} title={t(`kpis.sourceTitle.${kpi.sourceKind}` as never)}>
+            <Chip tone={kpi.sourceKind === "auto" ? "teal" : "mist"} title={t(`kpis.sourceTitle.${kpi.sourceKind}` as never)}>
               {t(`kpis.source.${kpi.sourceKind}` as never)}
             </Chip>
             <Chip tone={RAG_CHIP[kpi.rag]}>{t(`kpis.rag.${kpi.rag}` as never)}</Chip>
@@ -86,19 +86,19 @@ function KpiTile({ kpi, canEdit, onEnter }: { kpi: OpsKpiCard; canEdit: boolean;
         </div>
         {definition ? (
           <Tip content={<span className="block max-w-64 leading-relaxed">{definition}</span>}>
-            <button type="button" aria-label={`${t("kpis.definition")}: ${name}`} className="cursor-help rounded-md p-1 text-ink-400 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500">
+            <button type="button" aria-label={`${t("kpis.definition")}: ${name}`} className="cursor-help rounded-md p-1 text-ink-400 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500">
               <Info className="size-4" aria-hidden />
             </button>
           </Tip>
         ) : null}
       </header>
       <div className="flex items-center gap-3">
-        <ProgressRing value={attainment} size={56} stroke={5} color={colour} track="var(--color-sand-200)">
+        <ProgressRing value={attainment} size={56} stroke={5} color={colour} track="var(--color-mist-200)">
           <span className="text-[10px] font-semibold text-ink-600 tnum">{kpi.attainment == null ? "" : `${Math.round(kpi.attainment * 100)}%`}</span>
         </ProgressRing>
         <div className="min-w-0 flex-1">
           <p className="flex items-baseline gap-1">
-            <span className="text-[30px] font-semibold leading-none text-maroon-900 tnum" style={{ fontFamily: displayFont(locale) }} data-testid="kpi-value">
+            <span className="text-[30px] font-semibold leading-none text-navy-900 tnum" style={{ fontFamily: displayFont(locale) }} data-testid="kpi-value">
               {value == null ? t("kpis.noValue") : fmt.n(value)}
             </span>
             {value != null && unitShort ? <span className="text-sm text-ink-600">{unitShort}</span> : null}
@@ -120,7 +120,7 @@ function KpiTile({ kpi, canEdit, onEnter }: { kpi: OpsKpiCard; canEdit: boolean;
             type="button"
             onClick={onEnter}
             aria-label={t("kpis.enterAria", { name })}
-            className="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 font-medium text-maroon-700 hover:bg-maroon-100/60 focus-visible:outline-2 focus-visible:outline-gold-500"
+            className="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 font-medium text-navy-700 hover:bg-navy-100/60 focus-visible:outline-2 focus-visible:outline-aqua-500"
             data-testid="kpi-enter"
           >
             <Plus className="size-3" aria-hidden /> {t("kpis.enter")}

@@ -133,7 +133,7 @@ export const CONTRIBUTOR_BOARD_TYPES = new Set([
   "report_extracted",
   "knowledge_by_voice",
   "knowledge_from_event",
-  "knowledge_linked_to_nds",
+  "knowledge_linked_to_nes",
   "expert_profile_completed",
   "expert_profile_domain_accepted",
   "kow_contributor", // CR08 8: the Knowledge of the Week award
@@ -480,7 +480,7 @@ async function evaluateBadges(
   const connectorCount = await countEvents(userId, [
     "external_expert_added",
     "expert_request_answered",
-    "knowledge_linked_to_nds", // CR01 5.5
+    "knowledge_linked_to_nes", // CR01 5.5
   ]);
   const uploads = await countEvents(userId, ["document_uploaded"]);
   const translations = await countEvents(userId, ["translation_reviewed"]);

@@ -1,5 +1,5 @@
 "use client";
-// A scanned signal in the stream: publisher, bilingual card, NDS3 links,
+// A scanned signal in the stream: publisher, bilingual card, NES links,
 // impact/horizon marks, confidence, and the triage strip. Styled like
 // KnowledgeCard/LessonCard so it is indistinguishable from the existing system.
 import * as React from "react";
@@ -36,21 +36,21 @@ function errMessage(e: unknown): string {
 
 export type { SignalCardData, SignalLinkChip } from "./signal-card-data";
 
-const IMPACT_TONE: Record<string, "danger" | "warn" | "sand"> = {
+const IMPACT_TONE: Record<string, "danger" | "warn" | "mist"> = {
   high: "danger",
   medium: "warn",
-  low: "sand",
+  low: "mist",
 };
 
-const TYPE_TONE: Record<string, "maroon" | "gulf" | "info" | "gold" | "ok" | "sand" | "warn" | "danger"> = {
-  policy: "maroon",
-  market: "gulf",
+const TYPE_TONE: Record<string, "navy" | "teal" | "info" | "aqua" | "ok" | "mist" | "warn" | "danger"> = {
+  policy: "navy",
+  market: "teal",
   technology: "info",
-  social: "gold",
+  social: "aqua",
   environment: "ok",
   geopolitical: "danger",
   index: "warn",
-  research: "sand",
+  research: "mist",
 };
 
 export function SignalCard({
@@ -111,7 +111,7 @@ export function SignalCard({
   return (
     <div className="card card-hover flex h-full flex-col gap-2 p-4">
       <div className="flex items-center gap-2 text-[11px] text-ink-400">
-        <Radar className="size-3.5 shrink-0 text-gulf-600" aria-hidden />
+        <Radar className="size-3.5 shrink-0 text-teal-600" aria-hidden />
         <span className="truncate font-medium text-ink-600">
           {signal.publisher ?? t(`sourceKinds.${signal.sourceKind}` as never)}
         </span>
@@ -119,11 +119,11 @@ export function SignalCard({
           <span className="tnum shrink-0">{formatDate(signal.publishedAt, locale)}</span>
         ) : null}
         <span className="ms-auto flex shrink-0 items-center gap-1.5">
-          <Chip tone={TYPE_TONE[signal.signalType] ?? "sand"}>
+          <Chip tone={TYPE_TONE[signal.signalType] ?? "mist"}>
             {t(`types.${signal.signalType}` as never)}
           </Chip>
           {localStatus !== "new" ? (
-            <Chip tone={localStatus === "accepted" ? "ok" : localStatus === "converted" ? "gulf" : "ghost"}>
+            <Chip tone={localStatus === "accepted" ? "ok" : localStatus === "converted" ? "teal" : "ghost"}>
               {t(`triage.${localStatus}` as never)}
             </Chip>
           ) : null}
@@ -134,7 +134,7 @@ export function SignalCard({
         <Tip content={<span className="block max-w-72 break-all text-xs">{signal.url}</span>}>
           <Link
             href={`/trends/${signal.id}` as never}
-            className="line-clamp-2 font-medium leading-snug text-ink-900 hover:text-maroon-900"
+            className="line-clamp-2 font-medium leading-snug text-ink-900 hover:text-navy-900"
           >
             {title}
           </Link>
@@ -142,7 +142,7 @@ export function SignalCard({
       ) : (
         <Link
           href={`/trends/${signal.id}` as never}
-          className="line-clamp-2 font-medium leading-snug text-ink-900 hover:text-maroon-900"
+          className="line-clamp-2 font-medium leading-snug text-ink-900 hover:text-navy-900"
         >
           {title}
         </Link>
@@ -152,7 +152,7 @@ export function SignalCard({
         <p className="line-clamp-2 text-sm leading-relaxed text-ink-600">{summary}</p>
       ) : null}
       {why ? (
-        <p className="line-clamp-2 rounded-lg bg-gold-100/60 px-2.5 py-1.5 text-xs leading-relaxed text-maroon-900">
+        <p className="line-clamp-2 rounded-lg bg-aqua-100/60 px-2.5 py-1.5 text-xs leading-relaxed text-navy-900">
           {why}
         </p>
       ) : null}
@@ -170,7 +170,7 @@ export function SignalCard({
                     ? `/strategy/${l.resourceId}`
                     : `/statistics/${l.resourceId}`) as never
                 }
-                className="inline-flex items-center gap-1 rounded-md bg-maroon-100 px-2 py-0.5 text-[11px] font-medium text-maroon-900 hover:bg-maroon-700 hover:text-white"
+                className="inline-flex items-center gap-1 rounded-md bg-navy-100 px-2 py-0.5 text-[11px] font-medium text-navy-900 hover:bg-navy-700 hover:text-white"
               >
                 {l.resourceType === "node" ? (
                   <Compass className="size-3" />
@@ -184,8 +184,8 @@ export function SignalCard({
       ) : null}
 
       <div className="mt-auto flex items-center gap-2 pt-1 text-[11px] text-ink-400">
-        <Chip tone={IMPACT_TONE[signal.impact] ?? "sand"}>{t(`impact.${signal.impact}` as never)}</Chip>
-        <Chip tone="sand">{t(`horizon.${signal.horizon}` as never)}</Chip>
+        <Chip tone={IMPACT_TONE[signal.impact] ?? "mist"}>{t(`impact.${signal.impact}` as never)}</Chip>
+        <Chip tone="mist">{t(`horizon.${signal.horizon}` as never)}</Chip>
         {signal.confidence !== null ? (
           <span className="tnum">
             {t("confidence")} {Math.round((signal.confidence ?? 0) * 100)}%
@@ -196,7 +196,7 @@ export function SignalCard({
             href={signal.url}
             target="_blank"
             rel="noreferrer"
-            className="ms-auto inline-flex items-center gap-1 text-gulf-600 hover:underline"
+            className="ms-auto inline-flex items-center gap-1 text-teal-600 hover:underline"
           >
             <ExternalLink className="size-3" /> {t("source")}
           </a>
@@ -204,7 +204,7 @@ export function SignalCard({
       </div>
 
       {canTriage && localStatus === "new" ? (
-        <div className="flex items-center gap-1.5 border-t border-sand-100 pt-2.5">
+        <div className="flex items-center gap-1.5 border-t border-mist-100 pt-2.5">
           <Button size="sm" variant="secondary" disabled={busy} onClick={() => triage("accept")}>
             <Check className="text-ok" /> {t("accept")}
           </Button>

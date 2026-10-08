@@ -9,8 +9,8 @@ async function main() {
   });
   page.on("pageerror", (e) => console.log("PAGEERROR:", String(e).slice(0, 1200)));
   await page.goto("http://localhost:3000/en/login");
-  await page.fill("#email", "admin@npc.qa");
-  await page.fill("#password", "Nexus!2026");
+  await page.fill("#email", "admin@enviroai.demo");
+  await page.fill("#password", "EnviroAI!2026");
   await page.click("button[type=submit]");
   await page.waitForURL("**/home", { timeout: 60000 });
   await page.goto("http://localhost:3000/en/indices", { waitUntil: "networkidle" }).catch(() => {});

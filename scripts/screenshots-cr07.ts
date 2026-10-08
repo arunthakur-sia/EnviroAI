@@ -17,7 +17,7 @@ const want = (s: string) => only.length === 0 || only.includes(s);
 async function login(page: Page, email: string) {
   await page.goto(`${BASE}/en/login`);
   await page.fill("#email", email);
-  await page.fill("#password", "Nexus!2026");
+  await page.fill("#password", "EnviroAI!2026");
   await page.click("button[type=submit]");
   await page.waitForURL("**/home", { timeout: 60000 });
 }
@@ -52,10 +52,10 @@ async function main() {
   const browser = await chromium.launch({ channel: "msedge" }).catch(() => chromium.launch());
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await ctx.newPage();
-  await login(page, "admin@npc.qa");
+  await login(page, "admin@enviroai.demo");
 
   if (want("council")) {
-    console.log("Council Strategy:");
+    console.log("Programme Strategy:");
     await go(page, "/en/council-strategy", 3200);
     await shot(page, "council-en");
     await go(page, "/ar/council-strategy", 3200);

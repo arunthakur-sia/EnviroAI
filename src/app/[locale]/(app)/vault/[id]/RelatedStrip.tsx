@@ -50,7 +50,7 @@ export function RelatedStrip({
             <Link
               key={i}
               href={(HREFS[r.type]?.(r.id) ?? "#") as never}
-              className="flex items-center gap-2 rounded-xl border border-sand-300 bg-white px-3 py-2 text-sm text-ink-900 transition-colors hover:border-maroon-300 hover:text-maroon-900"
+              className="flex items-center gap-2 rounded-xl border border-mist-300 bg-white px-3 py-2 text-sm text-ink-900 transition-colors hover:border-navy-300 hover:text-navy-900"
             >
               <Icon className="size-4 shrink-0 text-ink-400" />
               <span>{truncate(bi(locale, r.titleEn, r.titleAr), 48)}</span>

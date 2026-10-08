@@ -2,7 +2,7 @@
 // the API, the RACI invariant (one A and at least one R per Level 1 process),
 // permission refusals for a Contributor and acceptance for the Super Admin,
 // the interface change request lifecycle, document visibility on a process's
-// SOPs, and the three Ask NPC tools called directly. Wired into
+// SOPs, and the three Ask EnviroAI tools called directly. Wired into
 // scripts/smoke.ts by the coordinator.
 type Check = (name: string, ok: boolean, detail?: string) => void;
 type Ctx = { base: string; cookie: string; adminCookie: string; db: import("@libsql/client").Client };
@@ -59,20 +59,20 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   check("opmodel: GET /processes answers the chain in order", map.status === 200 && map.body.data?.chain.map((c) => c.code).join(",") === "P1,P2,P3,P4,P5,P6,P7,P8");
   check("opmodel: every Level 0 process has two or three Level 1 children", Boolean(map.body.data?.chain.every((c) => c.children.length >= 2 && c.children.length <= 3)));
   const byUnit = await api<{ byUnit: { unit: { code: string }; processes: unknown[] }[] }>(ctx, ctx.cookie, "/api/v1/processes?view=unit");
-  check("opmodel: ?view=unit lists the owning units", byUnit.status === 200 && (byUnit.body.data?.byUnit.length ?? 0) >= 10 && Boolean(byUnit.body.data?.byUnit.some((u) => u.unit.code === "SOA" && u.processes.length >= 2)));
+  check("opmodel: ?view=unit lists the owning units", byUnit.status === 200 && (byUnit.body.data?.byUnit.length ?? 0) >= 10 && Boolean(byUnit.body.data?.byUnit.some((u) => u.unit.code === "DOP" && u.processes.length >= 2)));
   const byPolicy = await api<{ byPolicyType: { tab: string; documents: unknown[] }[] }>(ctx, ctx.cookie, "/api/v1/processes?view=policy");
   check("opmodel: ?view=policy answers the four tabs", byPolicy.status === 200 && byPolicy.body.data?.byPolicyType.map((t) => t.tab).join(",") === "policy_internal,procedure,form_template,service");
 
   /* 4. one process */
   const p41 = await api<{ code: string; ownerUnit: { code: string } | null; steps: unknown[]; raci: { role: string }[]; parent: { code: string } | null; kpis: unknown[] }>(ctx, ctx.cookie, "/api/v1/processes/P4.1");
   check(
-    "opmodel: GET /processes/P4.1 carries owner SOA, steps, KPIs, RACI and its parent",
-    p41.status === 200 && p41.body.data?.ownerUnit?.code === "SOA" && (p41.body.data?.steps.length ?? 0) >= 4 && (p41.body.data?.kpis.length ?? 0) >= 1 && Boolean(p41.body.data?.raci.some((r) => r.role === "A")) && p41.body.data?.parent?.code === "P4"
+    "opmodel: GET /processes/P4.1 carries owner DOP, steps, KPIs, RACI and its parent",
+    p41.status === 200 && p41.body.data?.ownerUnit?.code === "DOP" && (p41.body.data?.steps.length ?? 0) >= 4 && (p41.body.data?.kpis.length ?? 0) >= 1 && Boolean(p41.body.data?.raci.some((r) => r.role === "A")) && p41.body.data?.parent?.code === "P4"
   );
   const missing = await api(ctx, ctx.cookie, "/api/v1/processes/P99.9");
   check("opmodel: an unknown code is a 404", missing.status === 404 && missing.body.error === "not_found");
 
-  /* 5. document visibility on a procedure's SOPs: IFS's unit-only procedure hides from the Contributor */
+  /* 5. document visibility on a procedure's SOPs: DGS unit-only procedure hides from the Contributor */
   const asContributor = await api<{ sops: unknown[] }>(ctx, ctx.cookie, "/api/v1/processes/P8.3.1");
   const asAdmin = await api<{ sops: unknown[] }>(ctx, ctx.adminCookie, "/api/v1/processes/P8.3.1");
   check("opmodel: a unit-only SOP shows to the Super Admin and not to a Contributor of another unit", asAdmin.body.data?.sops.length === 1 && asContributor.body.data?.sops.length === 0);
@@ -91,10 +91,10 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   }>(ctx, ctx.cookie, "/api/v1/operating-model");
   const m = model.body.data;
   check("opmodel: GET /operating-model answers every section", model.status === 200 && Boolean(m) && m.principles.length >= 6 && m.chain.length === 8 && m.kpis.length === 5 && m.isIllustrative && m.canEdit === false);
-  check("opmodel: governance merges the Council Strategy bodies with the added bodies", Boolean(m) && m.governance.bodies.filter((b) => b.source === "council").length >= 3 && m.governance.bodies.filter((b) => b.source === "operating_model").length === 5 && m.governance.connectors.length >= 8);
+  check("opmodel: governance merges the Programme Strategy bodies with the added bodies", Boolean(m) && m.governance.bodies.filter((b) => b.source === "council").length >= 3 && m.governance.bodies.filter((b) => b.source === "operating_model").length === 5 && m.governance.connectors.length >= 8);
   check("opmodel: the RACI matrix covers every Level 1 process", Boolean(m) && m.raci.processes.length === l1 && m.raci.units.length >= 15 && m.raci.cells.length >= 100);
   const kinds = new Set(m?.calendar.events.map((e) => e.kind));
-  check("opmodel: the calendar expands recurrences and carries every kind", Boolean(m) && m.calendar.year >= 2026 && m.calendar.events.length >= 60 && ["strategy_review", "budget", "statistical_release", "nds_review", "council_meeting", "report_deadline", "forum"].every((k) => kinds.has(k)));
+  check("opmodel: the calendar expands recurrences and carries every kind", Boolean(m) && m.calendar.year >= 2026 && m.calendar.events.length >= 60 && ["strategy_review", "budget", "statistical_release", "nes_review", "council_meeting", "report_deadline", "forum"].every((k) => kinds.has(k)));
   check("opmodel: interfaces carry the matrix aggregate", Boolean(m) && m.interfaces.internal.length >= 20 && m.interfaces.external.length === 10 && m.interfaces.chord.length >= 15 && m.interfaces.units.length >= 12);
   check("opmodel: every KPI has a latest value and a RAG", Boolean(m) && m.kpis.every((k) => k.latest?.value != null && k.rag !== "no_data"));
   const section = await api<unknown[]>(ctx, ctx.cookie, "/api/v1/operating-model?section=kpis");
@@ -105,7 +105,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   /* 7. writes: a Contributor is refused, the Super Admin is allowed */
   const p11 = await ctx.db.execute("select id from processes where code = 'P1.1'");
   const processId = String(p11.rows[0]?.id ?? "");
-  const pr = await ctx.db.execute("select id from org_units where code = 'PR'");
+  const pr = await ctx.db.execute("select id from org_units where code = 'COM'");
   const prUnitId = String(pr.rows[0]?.id ?? "");
   const refused = await api(ctx, ctx.cookie, "/api/v1/operating-model/raci", { method: "PUT", body: { processId, unitId: prUnitId, role: "I" } });
   check("opmodel: a Contributor outside the Strategy Office cannot edit the RACI", refused.status === 403);
@@ -132,28 +132,28 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   check("opmodel: the editor resolves the request once", resolved.status === 200 && again.status === 409 && String(status.rows[0]?.status) === "approved");
   if (requestId) await ctx.db.execute(`delete from interface_change_requests where id = '${requestId.replace(/'/g, "")}'`);
 
-  /* 9. the Ask NPC tools, called directly */
+  /* 9. the Ask EnviroAI tools, called directly */
   try {
     const mod = (await import("../src/server/ai/analyst/cr08/operating-model")).default;
     const { AnalystState } = await import("../src/server/ai/analyst/tools");
     const { getUserById } = await import("../src/server/auth/session");
-    const adminRow = await ctx.db.execute("select id from users where email = 'admin@npc.qa'");
+    const adminRow = await ctx.db.execute("select id from users where email = 'admin@enviroai.demo'");
     const user = await getUserById(String(adminRow.rows[0]?.id ?? ""));
     check("opmodel tools: three definitions registered with their portals", mod.definitions.map((d) => d.name).join(",") === "get_operating_model,get_process,get_interfaces" && mod.portal.get_process === "processes" && mod.portal.get_operating_model === "operating_model");
     if (user) {
       const state = new AnalystState();
       const toolCtx = { user, state };
       const proc = (await mod.run(toolCtx, "get_process", { code: "P4.1" })) ?? "";
-      check("opmodel tools: get_process(P4.1) names the process, its owner and its steps", /Census and survey operations/.test(proc) && /Owner unit: SOA/.test(proc) && /Step 1:/.test(proc) && /illustrative data/.test(proc), proc.slice(0, 120));
+      check("opmodel tools: get_process(P4.1) names the process, its owner and its steps", /Environmental monitoring and field data operations/.test(proc) && /Owner unit: DOP/.test(proc) && /Step 1:/.test(proc) && /illustrative data/.test(proc), proc.slice(0, 120));
       check("opmodel tools: get_process registers a process source", state.sources.some((s) => s.resource_type === "process"));
       const l0 = (await mod.run(toolCtx, "get_process", { code: "p4" })) ?? "";
       check("opmodel tools: a Level 0 code resolves case-insensitively with its children", /Level 0 process P4/.test(l0) && /Beneath it: P4\.1/.test(l0));
-      const ifaces = (await mod.run(toolCtx, "get_interfaces", { unit: "SOA" })) ?? "";
-      check("opmodel tools: get_interfaces(SOA) lists what the unit gives and receives", /Gives \(\d+\)/.test(ifaces) && /Receives \(\d+\)/.test(ifaces), ifaces.slice(0, 120));
+      const ifaces = (await mod.run(toolCtx, "get_interfaces", { unit: "DOP" })) ?? "";
+      check("opmodel tools: get_interfaces(DOP) lists what the unit gives and receives", /Gives \(\d+\)/.test(ifaces) && /Receives \(\d+\)/.test(ifaces), ifaces.slice(0, 120));
       const raci = (await mod.run(toolCtx, "get_operating_model", { section: "raci" })) ?? "";
-      check("opmodel tools: get_operating_model(raci) lists every Level 1 process with its A", /P4\.1 Census and survey operations: A=NSC/.test(raci));
+      check("opmodel tools: get_operating_model(raci) lists every Level 1 process with its A", /P4\.1 Environmental monitoring and field data operations: A=DKS/.test(raci));
       const gov = (await mod.run(toolCtx, "get_operating_model", { section: "governance" })) ?? "";
-      check("opmodel tools: governance names the Council bodies and the added bodies", /Executive Committee/.test(gov) && /Strategy Steering Committee/.test(gov) && /Council Strategy body/.test(gov));
+      check("opmodel tools: governance names the Programme Strategy bodies and the added bodies", /Executive Committee/.test(gov) && /Strategy Steering Committee/.test(gov) && /Programme Strategy body/.test(gov));
       const overview = (await mod.run(toolCtx, "get_operating_model", {})) ?? "";
       check("opmodel tools: the overview counts every section", /8 Level 0 processes/.test(overview) && /Operational KPIs/.test(overview));
       check("opmodel tools: sources say the content is illustrative", state.sources.some((s) => s.resource_type === "operating_model" && /illustrative/.test(s.title)));

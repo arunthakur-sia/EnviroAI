@@ -74,7 +74,7 @@ export function LaneCard({
     >
       <button
         onClick={() => (onOpen ? onOpen(item) : router.push(`/strategy/${item.id}` as never))}
-        className="flex flex-col gap-1.5 rounded-lg text-start cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+        className="flex flex-col gap-1.5 rounded-lg text-start cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
         data-testid="lane-card"
       >
         <span className="flex items-center gap-2">
@@ -87,17 +87,17 @@ export function LaneCard({
         <LeadChips leads={item.leads} />
         {pct != null ? (
           <span
-            className="relative mt-0.5 block h-1 overflow-visible rounded-full bg-sand-200"
+            className="relative mt-0.5 block h-1 overflow-visible rounded-full bg-mist-200"
             role="img"
             aria-label={`${t("timeline")}: ${Math.round(pct * 100)}%`}
           >
             <span
-              className="absolute inset-y-0 start-0 rounded-full bg-gulf-400"
+              className="absolute inset-y-0 start-0 rounded-full bg-teal-400"
               style={{ width: `${Math.round(pct * 100)}%` }}
             />
             {/* today's mark */}
             <span
-              className="absolute -top-0.5 h-2 w-0.5 rounded-full bg-maroon-700"
+              className="absolute -top-0.5 h-2 w-0.5 rounded-full bg-navy-700"
               style={{ insetInlineStart: `${Math.round(pct * 100)}%` }}
               title={today}
             />
@@ -153,7 +153,7 @@ export function Lane({
           ))}
         </div>
       ) : (
-        <p className="rounded-lg border border-dashed border-sand-300 bg-sand-50 px-3 py-4 text-center text-xs text-ink-600">
+        <p className="rounded-lg border border-dashed border-mist-300 bg-mist-50 px-3 py-4 text-center text-xs text-ink-600">
           {t("lanes.empty")}
         </p>
       )}
@@ -214,7 +214,7 @@ function TargetLessons({ nodeId, locale }: { nodeId: string; locale: string }) {
   }
 
   return (
-    <div className="mt-4 border-t border-sand-100 pt-3" data-testid="target-lessons">
+    <div className="mt-4 border-t border-mist-100 pt-3" data-testid="target-lessons">
       <p
         className="mb-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-600"
         style={{ fontFamily: "inherit" }}
@@ -230,9 +230,9 @@ function TargetLessons({ nodeId, locale }: { nodeId: string; locale: string }) {
                 <li key={row.lessonId}>
                   <Link
                     href={`/lessons?lesson=${row.lessonId}` as never}
-                    className="flex items-center gap-1.5 truncate text-xs text-ink-900 hover:text-maroon-700"
+                    className="flex items-center gap-1.5 truncate text-xs text-ink-900 hover:text-navy-700"
                   >
-                    <Lightbulb className="size-3 shrink-0 text-gold-500" aria-hidden />
+                    <Lightbulb className="size-3 shrink-0 text-aqua-500" aria-hidden />
                     <span className="truncate">{bi(locale, row.titleEn, row.titleAr)}</span>
                   </Link>
                 </li>
@@ -293,7 +293,7 @@ export function TargetCard({
       className={cn(
         "rounded-[var(--radius-card)] bg-white shadow-[var(--shadow-paper)] transition-shadow duration-200",
         "hover:shadow-[var(--shadow-lift)]",
-        expanded && "col-span-full border-s-2 border-maroon-100"
+        expanded && "col-span-full border-s-2 border-navy-100"
       )}
       data-testid="target-card"
       data-expanded={expanded}
@@ -322,11 +322,11 @@ export function TargetCard({
           </span>
           <RagDot status={target.status} />
           <span className="ms-auto flex items-center gap-1.5">
-            <Chip tone="sand">{t("hero.initiatives", { count: initiatives.length })}</Chip>
-            <Chip tone="sand">{t("hero.projects", { count: projects.length })}</Chip>
+            <Chip tone="mist">{t("hero.initiatives", { count: initiatives.length })}</Chip>
+            <Chip tone="mist">{t("hero.projects", { count: projects.length })}</Chip>
             {/* CR07 1.3: the lessons of this target and everything beneath it */}
             {lessonCount?.total ? (
-              <Chip tone="gold" data-testid="target-lessons-chip">
+              <Chip tone="aqua" data-testid="target-lessons-chip">
                 {t("lessonsRollup", { count: lessonCount.total })}
               </Chip>
             ) : null}
@@ -340,7 +340,7 @@ export function TargetCard({
         {kpi && ratio != null ? (
           <span className="mt-3 block">
             <span className="flex items-baseline gap-2">
-              <span className="text-[32px] font-semibold leading-none text-maroon-900 tnum">
+              <span className="text-[32px] font-semibold leading-none text-navy-900 tnum">
                 {formatNumber(kpi.latest ?? 0, locale, { compact: true })}
               </span>
               <span className="text-sm text-ink-400 tnum">
@@ -352,17 +352,17 @@ export function TargetCard({
               ) : null}
             </span>
             <span
-              className="relative mt-2 block h-1.5 rounded-full bg-sand-200"
+              className="relative mt-2 block h-1.5 rounded-full bg-mist-200"
               role="img"
               aria-label={`${kpi.nameEn}: ${kpi.latest} / ${kpi.target} ${kpi.unit ?? ""}`}
             >
               <span
-                className="absolute inset-y-0 start-0 rounded-full bg-maroon-700"
+                className="absolute inset-y-0 start-0 rounded-full bg-navy-700"
                 style={{ width: `${Math.round(ratio * 100)}%` }}
               />
-              {/* gold tick at the target */}
+              {/* aqua tick at the target */}
               <span
-                className="absolute -top-[3px] h-3 w-[3px] rounded-full bg-gold-500"
+                className="absolute -top-[3px] h-3 w-[3px] rounded-full bg-aqua-500"
                 style={{ insetInlineStart: "calc(100% - 2px)" }}
                 aria-hidden
               />
@@ -395,7 +395,7 @@ export function TargetCard({
             transition={{ duration: 0.26, ease: EASE }}
             className="overflow-hidden"
           >
-            <div className="border-t border-sand-100 px-5 py-4">
+            <div className="border-t border-mist-100 px-5 py-4">
               <div className="flex flex-col gap-5 lg:flex-row lg:gap-8">
                 <Lane label={t("lanes.initiatives")} items={initiatives} locale={locale} today={today} onOpen={onOpenItem} owners={owners} />
                 <Lane label={t("lanes.projects")} items={projects} locale={locale} today={today} onOpen={onOpenItem} owners={owners} />
@@ -414,7 +414,7 @@ export function TargetCard({
                 ) : null}
                 <Link
                   href={`/strategy/${editionCode}/${outcomeSlug}/${target.slug}` as never}
-                  className="link-draw inline-flex items-center gap-1 text-sm font-medium text-maroon-700"
+                  className="link-draw inline-flex items-center gap-1 text-sm font-medium text-navy-700"
                   data-testid="open-target"
                 >
                   {t("targetCard.open")} <ArrowRight className="size-3.5 flip-rtl" />
@@ -482,12 +482,12 @@ export function OutcomeTargets({
       <nav className="mb-3 flex flex-wrap items-center gap-1.5 text-sm" aria-label={t("title")}>
         <Link
           href={`/strategy/${data.edition.code}` as never}
-          className="link-draw flex items-center gap-1 font-medium text-maroon-700"
+          className="link-draw flex items-center gap-1 font-medium text-navy-700"
         >
           <ArrowLeft className="size-3.5 flip-rtl" /> {t("hero.back")}
         </Link>
         <span className="text-ink-400">/</span>
-        <Chip tone="sand">{data.edition.code.toUpperCase()}</Chip>
+        <Chip tone="mist">{data.edition.code.toUpperCase()}</Chip>
         <span className="max-w-72 truncate text-ink-600">
           {outcome.code} · {bi(locale, outcome.titleEn, outcome.titleAr)}
         </span>
@@ -495,12 +495,12 @@ export function OutcomeTargets({
 
       {/* the outcome hero (CR03 2.3) */}
       <header
-        className="relative overflow-hidden rounded-2xl bg-sand-100 px-7 py-6"
+        className="relative overflow-hidden rounded-2xl bg-mist-100 px-7 py-6"
         data-testid="outcome-hero"
       >
         <span
           aria-hidden
-          className="pointer-events-none absolute top-1 start-4 select-none font-semibold text-maroon-100"
+          className="pointer-events-none absolute top-1 start-4 select-none font-semibold text-navy-100"
           style={{ fontFamily: "var(--font-display)", fontSize: 96, lineHeight: 1 }}
         >
           {outcomeNumber(outcome.code)}
@@ -515,9 +515,9 @@ export function OutcomeTargets({
             ) : null}
             <div className="mt-3 flex flex-wrap items-center gap-1.5">
               <LeadChips leads={outcome.leads} max={3} />
-              <Chip tone="maroon">{t("hero.targets", { count: outcome.targetCount })}</Chip>
-              <Chip tone="sand">{t("hero.initiatives", { count: outcome.initiativeCount })}</Chip>
-              <Chip tone="sand">{t("hero.projects", { count: outcome.projectCount })}</Chip>
+              <Chip tone="navy">{t("hero.targets", { count: outcome.targetCount })}</Chip>
+              <Chip tone="mist">{t("hero.initiatives", { count: outcome.initiativeCount })}</Chip>
+              <Chip tone="mist">{t("hero.projects", { count: outcome.projectCount })}</Chip>
             </div>
           </div>
           {/* CR08 9.1: the owner sits at the end side of the header */}
@@ -543,7 +543,7 @@ export function OutcomeTargets({
             aria-label={t("hero.progressAria", { pct })}
           >
             <span className="text-center">
-              <span className="block text-xl font-semibold text-maroon-900 tnum">{pct}%</span>
+              <span className="block text-xl font-semibold text-navy-900 tnum">{pct}%</span>
             </span>
           </ProgressRing>
         </div>

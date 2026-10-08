@@ -5,7 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const BASE = "https://raw.githubusercontent.com/dickwu/apple-design-skill/main/";
-const DEST = "C:/npckms/.claude/skills/apple-design-skill/";
+const DEST = "C:/enviroai/.claude/skills/apple-design-skill/";
 const FILES = [
   "SKILL.md",
   "README.md",

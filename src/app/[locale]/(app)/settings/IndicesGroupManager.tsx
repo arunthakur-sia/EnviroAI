@@ -34,7 +34,7 @@ type Form = {
   colourToken: GroupColourToken;
 };
 
-const EMPTY: Form = { code: "", nameEn: "", nameAr: "", descriptionEn: "", descriptionAr: "", colourToken: "maroon" };
+const EMPTY: Form = { code: "", nameEn: "", nameAr: "", descriptionEn: "", descriptionAr: "", colourToken: "navy" };
 
 export function IndicesGroupManager({ onChanged }: { onChanged?: () => void }) {
   const t = useTranslations("settings.indicesTab.groups");
@@ -93,7 +93,7 @@ export function IndicesGroupManager({ onChanged }: { onChanged?: () => void }) {
       descriptionAr: g.descriptionAr ?? "",
       colourToken: (GROUP_COLOUR_TOKENS.includes(g.colourToken as GroupColourToken)
         ? g.colourToken
-        : "maroon") as GroupColourToken,
+        : "navy") as GroupColourToken,
     });
     setDialog({ mode: "edit", id: g.id });
   }
@@ -195,7 +195,7 @@ export function IndicesGroupManager({ onChanged }: { onChanged?: () => void }) {
           <button
             type="button"
             onClick={() => setShowArchived((v) => !v)}
-            className="text-xs font-medium text-ink-600 hover:text-maroon-700 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+            className="text-xs font-medium text-ink-600 hover:text-navy-700 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
             aria-pressed={showArchived}
             data-testid="group-show-archived"
           >
@@ -244,9 +244,9 @@ export function IndicesGroupManager({ onChanged }: { onChanged?: () => void }) {
                 }}
                 className={cn(
                   "flex items-center gap-3 rounded-xl border px-3 py-2 transition-colors",
-                  over === g.id && drag && drag !== g.id ? "border-gold-500 bg-gold-100/50" : "border-sand-200 bg-white",
+                  over === g.id && drag && drag !== g.id ? "border-aqua-500 bg-aqua-100/50" : "border-mist-200 bg-white",
                   drag === g.id && "opacity-50",
-                  !g.isActive && "bg-sand-50"
+                  !g.isActive && "bg-mist-50"
                 )}
                 data-testid="group-row"
                 data-group-code={g.code}
@@ -272,7 +272,7 @@ export function IndicesGroupManager({ onChanged }: { onChanged?: () => void }) {
                     type="button"
                     onClick={() => moveBy(g.id, -1)}
                     disabled={i === 0}
-                    className="rounded-md p-1 text-ink-600 hover:bg-sand-100 hover:text-maroon-700 disabled:opacity-30 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+                    className="rounded-md p-1 text-ink-600 hover:bg-mist-100 hover:text-navy-700 disabled:opacity-30 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
                     aria-label={t("moveUp")}
                     data-testid="group-move-up"
                   >
@@ -282,7 +282,7 @@ export function IndicesGroupManager({ onChanged }: { onChanged?: () => void }) {
                     type="button"
                     onClick={() => moveBy(g.id, 1)}
                     disabled={i === visible.length - 1}
-                    className="rounded-md p-1 text-ink-600 hover:bg-sand-100 hover:text-maroon-700 disabled:opacity-30 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+                    className="rounded-md p-1 text-ink-600 hover:bg-mist-100 hover:text-navy-700 disabled:opacity-30 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
                     aria-label={t("moveDown")}
                     data-testid="group-move-down"
                   >
@@ -291,7 +291,7 @@ export function IndicesGroupManager({ onChanged }: { onChanged?: () => void }) {
                   <button
                     type="button"
                     onClick={() => openEdit(g)}
-                    className="rounded-md p-1 text-ink-600 hover:bg-sand-100 hover:text-maroon-700 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+                    className="rounded-md p-1 text-ink-600 hover:bg-mist-100 hover:text-navy-700 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
                     aria-label={t("edit")}
                     data-testid="group-edit"
                   >
@@ -301,7 +301,7 @@ export function IndicesGroupManager({ onChanged }: { onChanged?: () => void }) {
                     type="button"
                     onClick={() => archive(g, !g.isActive)}
                     disabled={busy}
-                    className="rounded-md p-1 text-ink-600 hover:bg-sand-100 hover:text-maroon-700 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+                    className="rounded-md p-1 text-ink-600 hover:bg-mist-100 hover:text-navy-700 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
                     aria-label={g.isActive ? t("archive") : t("restore")}
                     data-testid={g.isActive ? "group-archive" : "group-restore"}
                   >
@@ -358,8 +358,8 @@ export function IndicesGroupManager({ onChanged }: { onChanged?: () => void }) {
                       title={t(`colours.${token}` as never)}
                       onClick={() => setForm((f) => ({ ...f, colourToken: token }))}
                       className={cn(
-                        "flex items-center gap-1.5 rounded-lg border px-2 py-1 text-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500",
-                        on ? "border-maroon-500 bg-maroon-50 text-maroon-900" : "border-sand-300 text-ink-600"
+                        "flex items-center gap-1.5 rounded-lg border px-2 py-1 text-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500",
+                        on ? "border-navy-500 bg-navy-50 text-navy-900" : "border-mist-300 text-ink-600"
                       )}
                       data-testid={`group-colour-${token}`}
                     >

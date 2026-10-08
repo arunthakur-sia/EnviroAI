@@ -14,7 +14,7 @@ async function main() {
   const { getUserById } = await import("../../src/server/auth/session");
   const svc = await import("../../src/server/services/operating-model");
 
-  for (const email of ["admin@npc.qa", "reader@npc.qa"]) {
+  for (const email of ["admin@enviroai.demo", "reader@enviroai.demo"]) {
     const [row] = await db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.email, email)).limit(1);
     const user = row ? await getUserById(row.id) : null;
     if (!user) {
@@ -55,7 +55,7 @@ async function main() {
     console.log(`    first: ${model.calendar.events.slice(0, 4).map((e) => `${e.dateFrom} ${e.titleEn}${e.linked ? ` -> ${e.linked.type}:${e.linked.code ?? e.linked.titleEn}` : ""}`).join(" | ")}`);
     console.log(`  interfaces: ${model.interfaces.internal.length} internal across ${model.interfaces.units.length} units (${model.interfaces.matrix.length} matrix cells), ${model.interfaces.external.length} external, ${model.interfaces.changeRequests.length} change requests visible`);
     console.log(`    internal focal coverage: ${model.interfaces.internal.filter((i) => i.focalFrom && i.focalTo).length} with both focals, canPropose on ${model.interfaces.internal.filter((i) => i.canPropose).length}`);
-    console.log(`    external: ${model.interfaces.external.map((e) => `${e.entity.shortNameEn}(${e.processes.map((x) => x.code).join("/")}, focal ${e.focalNpc?.nameEn ?? "-"})`).join(" ")}`);
+    console.log(`    external: ${model.interfaces.external.map((e) => `${e.entity.shortNameEn}(${e.processes.map((x) => x.code).join("/")}, focal ${e.focalOrg?.nameEn ?? "-"})`).join(" ")}`);
     console.log(`  kpis: ${model.kpis.map((k) => `${k.code}=${k.latest?.value ?? "-"}${k.unit === "percent" ? "%" : ""} (target ${k.target}, ${k.rag}, trend ${k.trend}, ${k.sourceKind}, ${k.series.length} points)`).join(" | ")}`);
 
     const ifaces = await svc.getUnitInterfaces(user, model.interfaces.units.find((u) => u.code === "SOA")?.id ?? "");
@@ -66,7 +66,7 @@ async function main() {
   const login = await fetch(`${BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email: "admin@npc.qa", password: "Nexus!2026" }),
+    body: JSON.stringify({ email: "admin@enviroai.demo", password: "EnviroAI!2026" }),
   });
   const cookie = (login.headers.get("set-cookie") ?? "").split(";")[0];
   console.log(`\n==== API as admin (login ${login.status})`);

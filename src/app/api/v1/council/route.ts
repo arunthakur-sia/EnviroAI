@@ -1,4 +1,4 @@
-// CR07 2.4.8: editing the Council Strategy. Every level, the indicator cards,
+// CR07 2.4.8: editing the Programme Strategy. Every level, the indicator cards,
 // target and actual entry per period, the prioritisation matrix, and the
 // change log behind them. The Strategy Office, Knowledge Admins and Super
 // Admins may write; everyone else reads.

@@ -1,8 +1,8 @@
-// CR08 5.3: events and partnerships. SiaNexus has no events register and
+// CR08 5.3: events and partnerships. EnviroAI has no events register and
 // no partners table, so this section uses two honest proxies and says so:
 // partners are the publishers of the accepted policy and market signals
-// of the period (the organisations whose work the Council acted on), and
-// events are the NPC Knowledge Cast episodes published in the period. The
+// of the period (the organisations whose work the Office acted on), and
+// events are the EnviroAI Briefing Cast episodes published in the period. The
 // proxy is recorded in meta.proxy and in a note on the page.
 import { listSignals, type SignalListItem } from "@/server/services/signals";
 import { listEpisodes } from "@/server/services/podcast";
@@ -18,8 +18,8 @@ const def: SectionDefinition<EventsData> = {
   code: "events_partnerships",
   name: bi("Events and partnerships", "الفعاليات والشراكات"),
   description: bi(
-    "The organisations whose policy and market signals the Council acted on, and the Knowledge Cast episodes of the period (proxies, stated as such).",
-    "الجهات التي تصرف المجلس بناءً على إشاراتها السياساتية والسوقية، وحلقات بث المعرفة في الفترة (بدائل تقريبية، مصرح بها)."
+    "The organisations whose policy and market signals the Office acted on, and the Knowledge Cast episodes of the period (proxies, stated as such).",
+    "الجهات التي تصرف المكتب بناءً على إشاراتها السياساتية والسوقية، وحلقات بث المعرفة في الفترة (بدائل تقريبية، مصرح بها)."
   ),
   layout: "body",
   estimatedPages: 1,
@@ -69,12 +69,12 @@ const def: SectionDefinition<EventsData> = {
       paragraphs: [
         data.partners.length
           ? bi(
-              `${fmt(data.partners.length)} organisations published the ${fmt(data.signalCount)} policy and market signals the Council accepted ${data.widened ? `in the twelve months to ${period.en}` : `in ${period.en}`}, led by ${data.partners[0].name} with ${fmt(data.partners[0].signals)}. SiaNexus keeps no partnership register, so these publishers stand in for the partners whose work shaped the period.`,
-              `نشرت ${fmt(data.partners.length)} جهة الإشارات السياساتية والسوقية الـ${fmt(data.signalCount)} التي قبلها المجلس ${data.widened ? `في الأشهر الاثني عشر حتى ${period.ar}` : `في ${period.ar}`}، تتصدرها ${data.partners[0].name} بـ${fmt(data.partners[0].signals)}. ولا يحتفظ سيا نكسس بسجل للشراكات، ولذلك تحل هذه الجهات الناشرة محل الشركاء الذين شكل عملهم الفترة.`
+              `${fmt(data.partners.length)} organisations published the ${fmt(data.signalCount)} policy and market signals the Office accepted ${data.widened ? `in the twelve months to ${period.en}` : `in ${period.en}`}, led by ${data.partners[0].name} with ${fmt(data.partners[0].signals)}. EnviroAI keeps no partnership register, so these publishers stand in for the partners whose work shaped the period.`,
+              `نشرت ${fmt(data.partners.length)} جهة الإشارات السياساتية والسوقية الـ${fmt(data.signalCount)} التي قبلها المكتب ${data.widened ? `في الأشهر الاثني عشر حتى ${period.ar}` : `في ${period.ar}`}، تتصدرها ${data.partners[0].name} بـ${fmt(data.partners[0].signals)}. ولا يحتفظ EnviroAI بسجل للشراكات، ولذلك تحل هذه الجهات الناشرة محل الشركاء الذين شكل عملهم الفترة.`
             )
           : bi(`No accepted policy or market signal names a publisher for this scope in ${period.en}.`, `لا تذكر أي إشارة سياساتية أو سوقية مقبولة جهة ناشرة لهذا النطاق في ${period.ar}.`),
         data.events.length
-          ? bi(`${fmt(data.events.length)} NPC Knowledge Cast episodes were published ${data.widened ? "over the same twelve months" : `in ${period.en}`}, the Council's own knowledge events for the period.`, `ونُشرت ${fmt(data.events.length)} حلقات من بث المعرفة ${data.widened ? "خلال الأشهر الاثني عشر نفسها" : `في ${period.ar}`}، وهي فعاليات المعرفة الخاصة بالمجلس في الفترة.`)
+          ? bi(`${fmt(data.events.length)} EnviroAI Briefing Cast episodes were published ${data.widened ? "over the same twelve months" : `in ${period.en}`}, the Office's own knowledge events for the period.`, `ونُشرت ${fmt(data.events.length)} حلقات من بث المعرفة ${data.widened ? "خلال الأشهر الاثني عشر نفسها" : `في ${period.ar}`}، وهي فعاليات المعرفة الخاصة بالمكتب في الفترة.`)
           : bi(`No Knowledge Cast episode was published in ${period.en}.`, `لم تُنشر أي حلقة من بث المعرفة في ${period.ar}.`),
       ],
     });
@@ -82,7 +82,7 @@ const def: SectionDefinition<EventsData> = {
       ctx,
       "events_partnerships",
       {
-        purpose: "Describe the organisations whose signals the Council acted on and the knowledge events of the period, stating plainly that both are proxies from the SiaNexus record.",
+        purpose: "Describe the organisations whose signals the Office acted on and the knowledge events of the period, stating plainly that both are proxies from the EnviroAI record.",
         structure: "Two short paragraphs: the publishers as partners; the episodes as events.",
         paragraphs: 2,
       },
@@ -92,8 +92,8 @@ const def: SectionDefinition<EventsData> = {
     const blocks: Block[] = [
       ...proseBlocks(prose),
       noteBlock(
-        "Proxy note: SiaNexus holds no events register and no partnership table. Partners here are the publishers of accepted policy and market signals; events are the published Knowledge Cast episodes.",
-        "ملاحظة بديل: لا يحتفظ سيا نكسس بسجل للفعاليات ولا بجدول للشراكات. الشركاء هنا هم ناشرو الإشارات السياساتية والسوقية المقبولة؛ والفعاليات هي حلقات بث المعرفة المنشورة."
+        "Proxy note: EnviroAI holds no events register and no partnership table. Partners here are the publishers of accepted policy and market signals; events are the published Knowledge Cast episodes.",
+        "ملاحظة بديل: لا يحتفظ EnviroAI بسجل للفعاليات ولا بجدول للشراكات. الشركاء هنا هم ناشرو الإشارات السياساتية والسوقية المقبولة؛ والفعاليات هي حلقات بث المعرفة المنشورة."
       ),
     ];
     if (data.partners.length) {
@@ -108,7 +108,7 @@ const def: SectionDefinition<EventsData> = {
     if (data.events.length) {
       blocks.push({
         kind: "table",
-        caption: bi("NPC Knowledge Cast episodes", "حلقات بث المعرفة"),
+        caption: bi("EnviroAI Briefing Cast episodes", "حلقات بث المعرفة"),
         columns: [T.title, T.focus, bi("Language", "اللغة"), T.duration, T.date],
         rows: data.events.map((e) => [bi(e.titleEn, e.titleAr), bi(e.focus, e.focus), bi(e.language, e.language), bi(`${fmt(e.minutes)} min`, `${fmt(e.minutes)} د`), bi(e.date, e.date)]),
         align: ["start", "start", "start", "end", "end"],

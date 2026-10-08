@@ -24,8 +24,32 @@ function flatten(obj: Record<string, unknown>, prefix = ""): Map<string, string>
   return out;
 }
 
-const en = flatten(readJson("en.json"));
-const ar = flatten(readJson("ar.json"));
+/* The app deep-merges every messages/ksa-<name>.<locale>.json into the locale
+   messages at load (src/i18n/request.ts); the parity checks see the same merge. */
+function mergeDeep(a: Record<string, unknown>, b: Record<string, unknown>): Record<string, unknown> {
+  const out: Record<string, unknown> = { ...a };
+  for (const [k, v] of Object.entries(b)) {
+    const cur = out[k];
+    out[k] =
+      v && typeof v === "object" && !Array.isArray(v) && cur && typeof cur === "object" && !Array.isArray(cur)
+        ? mergeDeep(cur as Record<string, unknown>, v as Record<string, unknown>)
+        : v;
+  }
+  return out;
+}
+
+function readLocale(locale: "en" | "ar"): Record<string, unknown> {
+  let merged = readJson(`${locale}.json`);
+  const extras = fs
+    .readdirSync(MESSAGES)
+    .filter((f) => f.startsWith("ksa-") && f.endsWith(`.${locale}.json`))
+    .sort();
+  for (const f of extras) merged = mergeDeep(merged, readJson(f));
+  return merged;
+}
+
+const en = flatten(readLocale("en"));
+const ar = flatten(readLocale("ar"));
 
 describe("i18n parity", () => {
   it("en and ar carry the same keys", () => {

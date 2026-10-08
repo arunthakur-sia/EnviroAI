@@ -50,7 +50,10 @@ export const MODULES = [
    CR08 2.2: the rail is grouped; RAIL_GROUPS below carries the order. */
 export const PORTALS = [
   "home",
-  // Strategy Hub
+  // primary rail (EnviroAI): regulatory overview and the source library
+  "regulatory",
+  "sources",
+  // More: Strategy Hub
   "council",
   "strategy",
   // Data and Insights
@@ -78,15 +81,49 @@ export const PORTALS = [
 ] as const;
 export type Portal = (typeof PORTALS)[number];
 
-/* CR08 2.2: the rail groups, in order; Home and Settings stand alone. */
+/* EnviroAI rail. PRIMARY_RAIL is the top of the sidebar in order; the three
+   theme entries are deep links into the strategy module and are visible with
+   the "strategy" portal. RAIL_GROUPS holds the collapsible "More" group; Settings
+   stands alone at the bottom. */
+export const PRIMARY_RAIL: ReadonlyArray<{
+  key: string;
+  portal: Portal;
+  /* optional ?o= outcome slug for the strategy deep links */
+  theme?: "water-security" | "agriculture-food-security" | "climate-environment";
+}> = [
+  { key: "home", portal: "home" },
+  { key: "indices", portal: "indices" },
+  { key: "water", portal: "strategy", theme: "water-security" },
+  { key: "agriculture", portal: "strategy", theme: "agriculture-food-security" },
+  { key: "climate", portal: "strategy", theme: "climate-environment" },
+  { key: "regulatory", portal: "regulatory" },
+  { key: "sources", portal: "sources" },
+  { key: "trends", portal: "trends" },
+  { key: "vault", portal: "vault" },
+];
+
 export const RAIL_GROUPS: ReadonlyArray<{
-  key: "strategy_hub" | "data" | "knowledge" | "people";
+  key: "more";
   portals: ReadonlyArray<Portal>;
 }> = [
-  { key: "strategy_hub", portals: ["council", "strategy"] },
-  { key: "data", portals: ["statistics", "indices", "trends"] },
-  { key: "knowledge", portals: ["vault", "processes", "studies", "lessons", "podcast", "reports"] },
-  { key: "people", portals: ["experts", "organisation", "operating_model", "hr", "leaderboard"] },
+  {
+    key: "more",
+    portals: [
+      "strategy",
+      "council",
+      "statistics",
+      "processes",
+      "studies",
+      "lessons",
+      "podcast",
+      "reports",
+      "experts",
+      "organisation",
+      "operating_model",
+      "hr",
+      "leaderboard",
+    ],
+  },
 ];
 export const ACTIONS = [
   "read",

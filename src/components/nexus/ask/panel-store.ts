@@ -1,5 +1,5 @@
 "use client";
-// CR08 2.3: the Ask NPC panel state lives outside React so the thread survives
+// CR08 2.3: the Ask EnviroAI panel state lives outside React so the thread survives
 // client navigation, a remount of the shell, and Escape. One module store,
 // read with useSyncExternalStore; the panel and the launcher subscribe here.
 import { useSyncExternalStore } from "react";

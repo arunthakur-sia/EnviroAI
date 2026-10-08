@@ -44,7 +44,7 @@ export default async function OpenBoardPage({
         </TabsList>
         <TabsContent value="questions" className="mt-4">
           {openQuestions.length ? (
-            <div className="card divide-y divide-sand-100">
+            <div className="card divide-y divide-mist-100">
               {openQuestions.map((q) => (
                 <QuestionRow key={q.id} q={q} />
               ))}
@@ -61,9 +61,9 @@ export default async function OpenBoardPage({
                 .map((b) => (
                   <div key={b.id} className="card flex flex-col gap-2 p-4">
                     <div className="flex items-center gap-2">
-                      <Award className="size-4 text-gold-500" />
-                      <Chip tone="gold" className="tnum">{t("bountyPoints", { points: b.points })}</Chip>
-                      <Chip tone={b.source === "gap_radar" ? "gulf" : "sand"}>
+                      <Award className="size-4 text-aqua-500" />
+                      <Chip tone="aqua" className="tnum">{t("bountyPoints", { points: b.points })}</Chip>
+                      <Chip tone={b.source === "gap_radar" ? "teal" : "mist"}>
                         {t(`bountySource.${b.source}` as never)}
                       </Chip>
                     </div>

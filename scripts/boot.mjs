@@ -20,7 +20,7 @@ import { createClient } from "@libsql/client";
 import { DATA_DIR, DB_PATH, dataPath, dbUrl, ensureDataDirs } from "./lib/paths.mjs";
 import { applyMigrations } from "./lib/migrate-core.mjs";
 
-const BUNDLE_NAME = "sianexus-data.tar.gz";
+const BUNDLE_NAME = "enviroai-data.tar.gz";
 const t0 = Date.now();
 const step = (n, text) => console.log(`[boot ${n}/5] ${text}`);
 

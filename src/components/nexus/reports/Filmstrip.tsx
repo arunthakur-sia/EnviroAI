@@ -32,13 +32,13 @@ export function Filmstrip({ reportId, count, version }: { reportId: string; coun
             role="listitem"
             onClick={() => setOpen(n)}
             className={cn(
-              "group/page flex w-[88px] shrink-0 cursor-pointer flex-col gap-1 rounded-lg p-1 text-center transition-transform duration-200 ease-[var(--ease-paper)] hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500",
+              "group/page flex w-[88px] shrink-0 cursor-pointer flex-col gap-1 rounded-lg p-1 text-center transition-transform duration-200 ease-[var(--ease-paper)] hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500",
               n === 0 && "ms-0"
             )}
             aria-label={t("report.pagePreview", { n: n + 1 })}
             data-testid="filmstrip-page"
           >
-            <span className="block aspect-[5/7] w-full overflow-hidden rounded-md border border-sand-300 bg-white shadow-[var(--shadow-paper)] group-hover/page:border-maroon-300">
+            <span className="block aspect-[5/7] w-full overflow-hidden rounded-md border border-mist-300 bg-white shadow-[var(--shadow-paper)] group-hover/page:border-navy-300">
               {/* private PNG served by the module API */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={src(n)} alt="" loading={n > 5 ? "lazy" : "eager"} decoding="async" className="h-full w-full object-cover object-top" />
@@ -76,7 +76,7 @@ export function Filmstrip({ reportId, count, version }: { reportId: string; coun
                   key={open}
                   src={src(open)}
                   alt={t("report.pagePreview", { n: open + 1 })}
-                  className="max-h-[78vh] w-auto max-w-full rounded-lg border border-sand-300 bg-white object-contain shadow-[var(--shadow-paper)]"
+                  className="max-h-[78vh] w-auto max-w-full rounded-lg border border-mist-300 bg-white object-contain shadow-[var(--shadow-paper)]"
                 />
               </div>
               <Button

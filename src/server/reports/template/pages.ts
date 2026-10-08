@@ -1,7 +1,7 @@
 // CR08 5.5: the page types. Each function takes the section and the render
 // context and returns the docx children for that page design; docSection()
 // wraps them in a docx section with the running header (report title, section
-// name) and footer (classification, page number, SiaNexus). Cover and closing
+// name) and footer (classification, page number, EnviroAI). Cover and closing
 // are full-bleed sections without chrome. Consecutive sections alternate the
 // page height by one twip: docx-preview only starts a new page element when
 // the page size changes, and one twip is invisible in Word.
@@ -60,7 +60,7 @@ function chrome(ctx: Ctx, model: ReportDocumentModel, sectionTitle: string): { h
   const size = SIZE.chrome[ctx.lang];
   const half = Math.floor(TEXT_W / 2);
   const third = Math.floor(TEXT_W / 3);
-  const hairline = { style: BorderStyle.SINGLE, size: 4, color: C.sandLine };
+  const hairline = { style: BorderStyle.SINGLE, size: 4, color: C.mistLine };
   const header = new Header({
     children: [
       table(
@@ -69,7 +69,7 @@ function chrome(ctx: Ctx, model: ReportDocumentModel, sectionTitle: string): { h
           new TableRow({
             children: [
               cell([text(ctx, pick(model.title, ctx.lang), { size, color: C.ink400 }, { after: 0, line: 240 })], { width: half, margins: { top: 0, bottom: 80, left: 0, right: 0 } }),
-              cell([text(ctx, sectionTitle, { size, color: C.maroon, bold: true }, { align: "end", after: 0, line: 240 })], { width: half, margins: { top: 0, bottom: 80, left: 0, right: 0 } }),
+              cell([text(ctx, sectionTitle, { size, color: C.navy, bold: true }, { align: "end", after: 0, line: 240 })], { width: half, margins: { top: 0, bottom: 80, left: 0, right: 0 } }),
             ],
           }),
         ],
@@ -88,7 +88,7 @@ function chrome(ctx: Ctx, model: ReportDocumentModel, sectionTitle: string): { h
             children: [
               cell([text(ctx, classificationLabel(model.classification, ctx.lang), { size, color: C.ink600, bold: true }, { after: 0, line: 240 })], { width: third, margins: { top: 80, bottom: 0, left: 0, right: 0 } }),
               cell([para(ctx, [pageRun], { align: "center", after: 0, line: 240 })], { width: third, margins: { top: 80, bottom: 0, left: 0, right: 0 } }),
-              cell([text(ctx, "SiaNexus", { size, color: C.ink400, font: FONT.enBody }, { align: "end", after: 0, line: 240 })], { width: TEXT_W - third * 2, margins: { top: 80, bottom: 0, left: 0, right: 0 } }),
+              cell([text(ctx, "EnviroAI", { size, color: C.ink400, font: FONT.enBody }, { align: "end", after: 0, line: 240 })], { width: TEXT_W - third * 2, margins: { top: 80, bottom: 0, left: 0, right: 0 } }),
             ],
           }),
         ],
@@ -144,22 +144,22 @@ export async function coverPage(ctx: Ctx, model: ReportDocumentModel): Promise<F
   } else {
     // native fallback: a shaded band with the title in Calibri
     const children: Paragraph[] = [];
-    if (ctx.assets.npcWhite) {
-      children.push(new Paragraph({ children: [image(ctx.assets.npcWhite, 190, Math.round(190 / aspect(ctx.assets.npcWhite)), "National Planning Council")], spacing: { before: 0, after: 900 } }));
+    if (ctx.assets.siaWhite) {
+      children.push(new Paragraph({ children: [image(ctx.assets.siaWhite, 190, Math.round(190 / aspect(ctx.assets.siaWhite)), "Programme Office")], spacing: { before: 0, after: 900 } }));
     }
     children.push(text(ctx, title, { bold: true, size: 64, color: C.white, font: "head" }, { after: 200, line: 240 }));
-    if (subtitle) children.push(text(ctx, subtitle, { size: 28, color: C.maroon100 }, { after: 120 }));
-    children.push(text(ctx, period, { size: 22, color: C.maroon100, caps: true, spacing: 30 }, { after: 1400 }));
-    children.push(text(ctx, model.yearMark, { bold: true, size: 200, color: C.gold, font: "head" }, { align: "end", after: 0, line: 240 }));
+    if (subtitle) children.push(text(ctx, subtitle, { size: 28, color: C.navy100 }, { after: 120 }));
+    children.push(text(ctx, period, { size: 22, color: C.navy100, caps: true, spacing: 30 }, { after: 1400 }));
+    children.push(text(ctx, model.yearMark, { bold: true, size: 200, color: C.aqua, font: "head" }, { align: "end", after: 0, line: 240 }));
     const row = new TableRow({
-      children: [cell(children, { fill: C.maroon, width: PAGE.w, margins: { top: 800, bottom: 300, left: 900, right: 900 } })],
+      children: [cell(children, { fill: C.navy, width: PAGE.w, margins: { top: 800, bottom: 300, left: 900, right: 900 } })],
     });
     out.push(table(ctx, [row], [PAGE.w]));
   }
 
   // lower 45 percent: classification chip, type, optional key figure, wordmark, generated line
   const side = PAGE.marginSide;
-  const chip = runs(ctx, `  ${classificationLabel(model.classification, lang)}  `, { bold: true, size: SIZE.small[lang], color: C.white, shading: C.maroon });
+  const chip = runs(ctx, `  ${classificationLabel(model.classification, lang)}  `, { bold: true, size: SIZE.small[lang], color: C.white, shading: C.navy });
   const typeName = pick(model.typeName, lang);
   const chipLine = para(ctx, [...chip, new TextRun({ text: "    " }), ...runs(ctx, typeName, { size: SIZE.small[lang], color: C.ink600, bold: true })], {
     before: 560,
@@ -181,7 +181,7 @@ export async function coverPage(ctx: Ctx, model: ReportDocumentModel): Promise<F
     if (fig) {
       out.push(para(ctx, [image(fig, PX.colW, 96, `${value} ${label}`)], { before: 400, after: 0, indentStart: side, indentEnd: side, line: 240 }));
     } else {
-      out.push(text(ctx, value, { bold: true, color: C.maroon, size: 56, font: "head" }, { before: 400, after: 20, line: 240, indentStart: side, indentEnd: side }));
+      out.push(text(ctx, value, { bold: true, color: C.navy, size: 56, font: "head" }, { before: 400, after: 20, line: 240, indentStart: side, indentEnd: side }));
       out.push(text(ctx, label, { size: SIZE.small[lang], color: C.ink600 }, { after: 0, indentStart: side, indentEnd: side }));
     }
     figureHeight = 1900;
@@ -190,9 +190,9 @@ export async function coverPage(ctx: Ctx, model: ReportDocumentModel): Promise<F
   const wm = ctx.assets.wordmark;
   if (wm) {
     const w = 120;
-    out.push(para(ctx, [image(wm, w, Math.round(w / aspect(wm, 6.63)), "SiaNexus")], { before: bottomBefore, after: 100, indentStart: side, indentEnd: side, line: 240 }));
+    out.push(para(ctx, [image(wm, w, Math.round(w / aspect(wm, 6.63)), "EnviroAI")], { before: bottomBefore, after: 100, indentStart: side, indentEnd: side, line: 240 }));
   } else {
-    out.push(text(ctx, "SiaNexus", { bold: true, size: 26, color: C.ink }, { before: bottomBefore, after: 100, indentStart: side, indentEnd: side }));
+    out.push(text(ctx, "EnviroAI", { bold: true, size: 26, color: C.ink }, { before: bottomBefore, after: 100, indentStart: side, indentEnd: side }));
   }
   out.push(text(ctx, `${t(lang, "generatedBy")}, ${fmtDate(model.generatedAt, lang)}`, { size: SIZE.small[lang], color: C.ink400 }, { after: 40, indentStart: side, indentEnd: side }));
   if (model.preparedBy) {
@@ -247,10 +247,10 @@ export function contentsPage(ctx: Ctx, model: ReportDocumentModel, estimates: Pa
   const lang = ctx.lang;
   const out: FileChild[] = [];
   out.push(
-    text(ctx, t(lang, "contents"), { bold: true, size: SIZE.h1[lang], color: C.maroon, font: "head" }, {
+    text(ctx, t(lang, "contents"), { bold: true, size: SIZE.h1[lang], color: C.navy, font: "head" }, {
       after: 360,
       line: 240,
-      border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: C.gold, space: 8 } },
+      border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: C.aqua, space: 8 } },
     })
   );
   for (const s of model.sections) {
@@ -262,7 +262,7 @@ export function contentsPage(ctx: Ctx, model: ReportDocumentModel, estimates: Pa
       para(
         ctx,
         [
-          ...runs(ctx, numeral, { bold: true, color: C.maroon, size: SIZE.body[lang] + 2, font: "head" }),
+          ...runs(ctx, numeral, { bold: true, color: C.navy, size: SIZE.body[lang] + 2, font: "head" }),
           new TextRun({ children: [new Tab()] }),
           ...runs(ctx, pick(s.title, lang), { size: SIZE.body[lang] + 2, color: isClosing ? C.ink600 : C.ink, bold: !isClosing }),
           new TextRun({ children: [new Tab()] }),
@@ -307,8 +307,8 @@ function sectionHead(ctx: Ctx, s: SectionContent): FileChild[] {
   const lang = ctx.lang;
   const out: FileChild[] = [];
   const children = [
-    ...(s.numeral ? runs(ctx, `${s.numeral}  `, { bold: true, color: C.maroon300, size: SIZE.h1[lang], font: "head" }) : []),
-    ...runs(ctx, pick(s.title, lang), { bold: true, color: C.maroon, size: SIZE.h1[lang], font: "head" }),
+    ...(s.numeral ? runs(ctx, `${s.numeral}  `, { bold: true, color: C.navy300, size: SIZE.h1[lang], font: "head" }) : []),
+    ...runs(ctx, pick(s.title, lang), { bold: true, color: C.navy, size: SIZE.h1[lang], font: "head" }),
   ];
   out.push(
     para(ctx, children, {
@@ -316,7 +316,7 @@ function sectionHead(ctx: Ctx, s: SectionContent): FileChild[] {
       after: 200,
       line: 240,
       keepNext: true,
-      border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: C.gold, space: 10 } },
+      border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: C.aqua, space: 10 } },
     })
   );
   if (s.needsEditing) {
@@ -347,9 +347,9 @@ export async function openerPage(ctx: Ctx, s: SectionContent): Promise<FileChild
   const numeralCell = numeralPng
     ? [para(ctx, [image(numeralPng, NUMERAL_IMG.w, NUMERAL_IMG.h, numeral)], { after: 0, line: 240 })]
     : numeral
-      ? [text(ctx, numeral, { bold: true, size: 220, color: C.maroon100, font: "head" }, { after: 0, line: 240 })]
+      ? [text(ctx, numeral, { bold: true, size: 220, color: C.navy100, font: "head" }, { after: 0, line: 240 })]
       : [];
-  const titlePara = para(ctx, runs(ctx, pick(s.title, lang), { bold: true, color: C.maroon, size: SIZE.h1[lang] + 8, font: "head" }), {
+  const titlePara = para(ctx, runs(ctx, pick(s.title, lang), { bold: true, color: C.navy, size: SIZE.h1[lang] + 8, font: "head" }), {
     heading: HeadingLevel.HEADING_1,
     after: 0,
     line: 240,
@@ -373,7 +373,7 @@ export async function openerPage(ctx: Ctx, s: SectionContent): Promise<FileChild
     new Paragraph({
       children: [],
       spacing: { before: 0, after: 360 },
-      border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: C.gold, space: 1 } },
+      border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: C.aqua, space: 1 } },
     })
   );
   if (s.lead) {
@@ -382,7 +382,7 @@ export async function openerPage(ctx: Ctx, s: SectionContent): Promise<FileChild
         after: 300,
         line: isAr(lang) ? 360 : 340,
         indentStart: 0,
-        border: { start: { style: BorderStyle.SINGLE, size: 24, color: C.maroon, space: 14 } },
+        border: { start: { style: BorderStyle.SINGLE, size: 24, color: C.navy, space: 14 } },
       })
     );
   }
@@ -476,17 +476,17 @@ export async function closingPage(ctx: Ctx, model: ReportDocumentModel): Promise
     );
   }
   if (png) {
-    return [new Paragraph({ children: [image(png, CLOSING.w - 1, CLOSING.h, "SiaNexus")], spacing: { before: 0, after: 0, line: 240 } })];
+    return [new Paragraph({ children: [image(png, CLOSING.w - 1, CLOSING.h, "EnviroAI")], spacing: { before: 0, after: 0, line: 240 } })];
   }
   const children: Paragraph[] = [];
-  if (ctx.assets.npcWhite) {
-    children.push(new Paragraph({ children: [image(ctx.assets.npcWhite, 190, Math.round(190 / aspect(ctx.assets.npcWhite)), "National Planning Council")], spacing: { before: 0, after: 3000 } }));
+  if (ctx.assets.siaWhite) {
+    children.push(new Paragraph({ children: [image(ctx.assets.siaWhite, 190, Math.round(190 / aspect(ctx.assets.siaWhite)), "Programme Office")], spacing: { before: 0, after: 3000 } }));
   }
-  children.push(text(ctx, "SiaNexus", { bold: true, size: 48, color: C.white, font: "head" }, { align: "center", after: 200 }));
-  children.push(text(ctx, t(lang, "closingLine"), { size: SIZE.body[lang], color: C.maroon100 }, { align: "center", after: 3000 }));
-  children.push(text(ctx, t(lang, "contact"), { size: SIZE.small[lang], color: C.maroon100 }, { after: 120 }));
+  children.push(text(ctx, "EnviroAI", { bold: true, size: 48, color: C.white, font: "head" }, { align: "center", after: 200 }));
+  children.push(text(ctx, t(lang, "closingLine"), { size: SIZE.body[lang], color: C.navy100 }, { align: "center", after: 3000 }));
+  children.push(text(ctx, t(lang, "contact"), { size: SIZE.small[lang], color: C.navy100 }, { after: 120 }));
   children.push(text(ctx, classificationLabel(model.classification, lang), { size: SIZE.small[lang], color: C.white, bold: true, caps: true }, { after: 0 }));
-  const row = new TableRow({ children: [cell(children, { fill: C.maroon, width: PAGE.w, margins: { top: 800, bottom: 800, left: 900, right: 900 } })] });
+  const row = new TableRow({ children: [cell(children, { fill: C.navy, width: PAGE.w, margins: { top: 800, bottom: 800, left: 900, right: 900 } })] });
   return [table(ctx, [row], [PAGE.w])];
 }
 

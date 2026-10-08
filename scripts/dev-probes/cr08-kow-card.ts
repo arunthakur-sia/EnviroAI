@@ -9,7 +9,7 @@ async function main() {
   const { getUserById } = await import("../../src/server/auth/session");
   const { getActiveKnowledgeOfWeek } = await import("../../src/server/services/knowledge-of-week");
 
-  for (const email of ["admin@npc.qa", "reader@npc.qa"]) {
+  for (const email of ["admin@enviroai.demo", "reader@enviroai.demo"]) {
     const [row] = await db
       .select({ id: schema.users.id })
       .from(schema.users)

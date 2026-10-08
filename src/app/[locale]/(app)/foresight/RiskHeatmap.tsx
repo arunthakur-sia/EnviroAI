@@ -22,8 +22,8 @@ function cellColor(likelihood: number, impact: number): string {
   const score = likelihood * impact;
   if (score >= 16) return "#B3261E22";
   if (score >= 10) return "#B7791F22";
-  if (score >= 5) return "#C9A24D1e";
-  return "#EEF0F3";
+  if (score >= 5) return "#00DECC26";
+  return "#EBEFF7";
 }
 
 export function RiskHeatmap({
@@ -59,20 +59,20 @@ export function RiskHeatmap({
                 return (
                   <div
                     key={`${likelihood}:${impact}`}
-                    className="flex min-h-[72px] flex-wrap content-start gap-1 rounded-lg border border-sand-200 p-1.5"
+                    className="flex min-h-[72px] flex-wrap content-start gap-1 rounded-lg border border-mist-200 p-1.5"
                     style={{ background: cellColor(likelihood, impact) }}
                   >
                     {cellRisks.map((r) => {
                       const related = signalCounts?.[r.id] ?? 0;
                       const dot = (
-                        <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-full bg-maroon-700 text-[10px] font-semibold text-white shadow-sm">
+                        <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-full bg-navy-700 text-[10px] font-semibold text-white shadow-sm">
                           {bi(locale, r.titleEn, r.titleAr)
                             .split(/\s+/)
                             .slice(0, 2)
                             .map((w) => w[0])
                             .join("")}
                           {related > 0 ? (
-                            <span className="absolute -end-1 -top-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-gulf-600 px-0.5 text-[8px] font-bold text-white tnum">
+                            <span className="absolute -end-1 -top-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-teal-600 px-0.5 text-[8px] font-bold text-white tnum">
                               {related}
                             </span>
                           ) : null}
@@ -90,7 +90,7 @@ export function RiskHeatmap({
                                 </span>
                               ) : null}
                               {related > 0 ? (
-                                <span className="mt-1 block text-gulf-600">
+                                <span className="mt-1 block text-teal-600">
                                   {t("relatedSignals", { count: related })}
                                 </span>
                               ) : null}

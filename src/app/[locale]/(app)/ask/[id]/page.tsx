@@ -61,11 +61,11 @@ export default async function QuestionThreadPage({
       <div className="mx-auto max-w-3xl">
         <div className="mb-6">
           <div className="flex flex-wrap items-center gap-2">
-            <Chip tone={q.status === "verified" ? "ok" : q.status === "open" ? "warn" : "gulf"}>
+            <Chip tone={q.status === "verified" ? "ok" : q.status === "open" ? "warn" : "teal"}>
               {tc(`status.${q.status}` as never)}
             </Chip>
             {bounty ? (
-              <Chip tone="gold">
+              <Chip tone="aqua">
                 {t("bountyChip", { points: bounty.points })}
               </Chip>
             ) : null}
@@ -106,7 +106,7 @@ export default async function QuestionThreadPage({
               authorId: authorMeta?.id ?? null,
               authorNameEn: authorMeta?.nameEn ?? null,
               authorNameAr: authorMeta?.nameAr ?? null,
-              authorColor: authorMeta?.avatarColor ?? "maroon",
+              authorColor: authorMeta?.avatarColor ?? "navy",
             };
           })}
         />

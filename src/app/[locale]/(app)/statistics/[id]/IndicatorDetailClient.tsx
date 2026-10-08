@@ -140,14 +140,14 @@ export function IndicatorDetailClient({
   return (
     <div className="card p-5">
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <div className="inline-flex items-center gap-0.5 rounded-xl bg-sand-100 p-1">
+        <div className="inline-flex items-center gap-0.5 rounded-xl bg-mist-100 p-1">
           {(["12", "24", "all"] as const).map((r) => (
             <button
               key={r}
               onClick={() => setRange(r)}
               className={cn(
                 "rounded-lg px-3 py-1 text-xs transition-colors cursor-pointer tnum",
-                range === r ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+                range === r ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
               )}
             >
               {r === "all" ? t("rangeAll") : t("rangeN", { count: Number(r) })}
@@ -183,7 +183,7 @@ export function IndicatorDetailClient({
       </div>
 
       {showEntry ? (
-        <div className="mb-4 flex flex-wrap items-end gap-2 rounded-xl bg-sand-50 p-3">
+        <div className="mb-4 flex flex-wrap items-end gap-2 rounded-xl bg-mist-50 p-3">
           <div>
             <label className="mb-1 block text-xs text-ink-600">{t("period")}</label>
             <Input
@@ -221,18 +221,18 @@ export function IndicatorDetailClient({
       {dimension !== "total" && dimensionKeys.length ? (
         <p className="mt-1 text-center text-[11px] text-ink-400">
           <span className="me-3 inline-flex items-center gap-1">
-            <span className="inline-block h-0.5 w-4 bg-maroon-700" /> {dimensionKeys[0]?.split("=").pop()}
+            <span className="inline-block h-0.5 w-4 bg-navy-700" /> {dimensionKeys[0]?.split("=").pop()}
           </span>
           {dimensionKeys[1] ? (
             <span className="inline-flex items-center gap-1">
-              <span className="inline-block h-0.5 w-4 bg-gulf-600" /> {dimensionKeys[1]?.split("=").pop()}
+              <span className="inline-block h-0.5 w-4 bg-teal-600" /> {dimensionKeys[1]?.split("=").pop()}
             </span>
           ) : null}
         </p>
       ) : null}
 
       {/* Narration */}
-      <div className="mt-4 rounded-xl bg-sand-50 p-4">
+      <div className="mt-4 rounded-xl bg-mist-50 p-4">
         {narration ? (
           <p className="text-sm leading-relaxed text-ink-900">{narration}</p>
         ) : narrating ? (
@@ -242,19 +242,19 @@ export function IndicatorDetailClient({
           </div>
         ) : (
           <Button variant="ghost" size="sm" onClick={narrate}>
-            <Sparkles className="text-gold-500" /> {t("explainIndicator")}
+            <Sparkles className="text-aqua-500" /> {t("explainIndicator")}
           </Button>
         )}
       </div>
 
       {/* Data table */}
       <details className="mt-4">
-        <summary className="cursor-pointer text-sm font-medium text-maroon-700">
+        <summary className="cursor-pointer text-sm font-medium text-navy-700">
           {t("dataTable")}
         </summary>
-        <div className="mt-2 max-h-80 overflow-auto rounded-xl border border-sand-200">
+        <div className="mt-2 max-h-80 overflow-auto rounded-xl border border-mist-200">
           <table className="w-full text-sm">
-            <thead className="sticky top-0 bg-sand-50">
+            <thead className="sticky top-0 bg-mist-50">
               <tr>
                 <th className="px-3 py-2 text-start text-xs font-semibold text-ink-600">{t("period")}</th>
                 <th className="px-3 py-2 text-start text-xs font-semibold text-ink-600">{t("breakdown")}</th>
@@ -264,7 +264,7 @@ export function IndicatorDetailClient({
             </thead>
             <tbody>
               {[...values].reverse().map((v, i) => (
-                <tr key={i} className="border-t border-sand-100">
+                <tr key={i} className="border-t border-mist-100">
                   <td className="px-3 py-1.5 tnum">{formatPeriod(v.period, locale)}</td>
                   <td className="px-3 py-1.5 text-xs text-ink-600">{v.dimensionKey}</td>
                   <td className="px-3 py-1.5 text-end tnum">
@@ -284,7 +284,7 @@ export function IndicatorDetailClient({
 
       {(indicator.methodologyEn || indicator.methodologyAr) ? (
         <details className="mt-3">
-          <summary className="cursor-pointer text-sm font-medium text-maroon-700">
+          <summary className="cursor-pointer text-sm font-medium text-navy-700">
             {t("methodology")}
           </summary>
           <p className="mt-2 text-sm leading-relaxed text-ink-600">

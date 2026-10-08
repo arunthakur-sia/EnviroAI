@@ -2,10 +2,11 @@
 // CR02 3.1: assign categories to existing lessons. The CR rule: linked to a
 // node -> delivery; otherwise -> institutional. Idempotent by nature (it only
 // rewrites the same values), safe to run repeatedly.
+import { DATA_DIR } from "./lib/paths.mjs";
 import { createClient } from "@libsql/client";
 import path from "node:path";
 
-const dbPath = path.join(process.cwd(), "data", "nexus.db").replace(/\\/g, "/");
+const dbPath = path.join(DATA_DIR, "nexus.db").replace(/\\/g, "/");
 
 export async function migrateLessonCategoriesCr02() {
   const db = createClient({ url: `file:${dbPath}` });

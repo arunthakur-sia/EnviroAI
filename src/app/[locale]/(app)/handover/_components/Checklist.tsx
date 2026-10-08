@@ -49,7 +49,7 @@ export function Checklist({
               </h3>
               <span className="text-xs text-ink-600 tnum">{t("checklist.doneOf", { done, total: inScope.length })}</span>
             </div>
-            <div className="card divide-y divide-sand-100" role="table" aria-label={t(`categories.${cat.code}`)}>
+            <div className="card divide-y divide-mist-100" role="table" aria-label={t(`categories.${cat.code}`)}>
               <div role="row" className="sr-only">
                 <span role="columnheader">{t("checklist.item")}</span>
                 <span role="columnheader">{t("checklist.recipient")}</span>
@@ -140,7 +140,7 @@ function ChecklistRow({
         {showRecipient ? (
           <div role="cell" className="flex items-center gap-1.5 text-xs text-ink-600">
             {item.recipientKind === "system" ? (
-              <Chip tone="gulf">
+              <Chip tone="teal">
                 <Database className="size-3" aria-hidden /> {t("recipientKinds.system")}
               </Chip>
             ) : item.recipient ? (
@@ -159,15 +159,15 @@ function ChecklistRow({
               <Check className="size-3" aria-hidden /> {t("checklist.understood")}
             </Chip>
           ) : null}
-          {showFiling && item.filingStatus !== "none" ? <Chip tone={item.filingStatus === "applied" ? "ok" : "gold"}>{t(`filingStatus.${item.filingStatus}`)}</Chip> : null}
+          {showFiling && item.filingStatus !== "none" ? <Chip tone={item.filingStatus === "applied" ? "ok" : "aqua"}>{t(`filingStatus.${item.filingStatus}`)}</Chip> : null}
           <ItemStatusChip status={item.status} inScope={item.inScope} />
           {canEditNotes && !editing ? (
             <button
               type="button"
               onClick={() => setEditing(true)}
               className={cn(
-                "inline-flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-gold-500",
-                needsNote ? "bg-gold-100 text-maroon-900 hover:bg-gold-300/40" : "text-ink-600 hover:bg-sand-100 hover:text-ink-900"
+                "inline-flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-aqua-500",
+                needsNote ? "bg-aqua-100 text-navy-900 hover:bg-aqua-300/40" : "text-ink-600 hover:bg-mist-100 hover:text-ink-900"
               )}
               aria-label={t("checklist.editNoteFor", { title: item.title })}
               data-testid="note-edit"
@@ -178,7 +178,7 @@ function ChecklistRow({
         </div>
       </div>
       {editing ? (
-        <div className="rounded-lg bg-sand-50 p-3" data-testid="note-editor">
+        <div className="rounded-lg bg-mist-50 p-3" data-testid="note-editor">
           <Textarea rows={3} dir="auto" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder={t("checklist.notePlaceholder")} className="bg-white" data-testid="note-input" />
           <div className="mt-2 flex items-center gap-2">
             <Button size="sm" onClick={save} loading={saving} data-testid="note-save">

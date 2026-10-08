@@ -34,10 +34,10 @@ async function ask(query, locale) {
 await req("/api/v1/auth/login", {
   method: "POST",
   headers: { "content-type": "application/json" },
-  body: JSON.stringify({ email: "analyst@npc.qa", password: "Nexus!2026" }),
+  body: JSON.stringify({ email: "analyst@enviroai.demo", password: "EnviroAI!2026" }),
 });
 
-await ask("What is the current population of Qatar?", "en");
-await ask("What is the unemployment rate in Qatar right now?", "en");
-await ask("كم بلغ معدل التضخم في قطر مؤخراً؟", "ar");
-await ask("What are the seven national outcomes of NDS3?", "en");
+await ask("What is the current per capita water consumption in Saudi Arabia?", "en");
+await ask("What is the current air quality index in Riyadh?", "en");
+await ask("كم بلغ معدل استهلاك المياه للفرد في المملكة مؤخراً؟", "ar");
+await ask("What are the seven national outcomes of NES3?", "en");

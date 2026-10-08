@@ -139,11 +139,11 @@ export function OperatingModelPage({
                 {t("title")}
               </h1>
               <span className="flex items-center gap-1.5">
-                <Chip tone="maroon" title={t("internalTitle")} data-testid="internal-chip">
+                <Chip tone="navy" title={t("internalTitle")} data-testid="internal-chip">
                   {t("internal")}
                 </Chip>
                 {model.isIllustrative ? (
-                  <Chip tone="sand" title={t("illustrativeTitle")} data-testid="illustrative-chip">
+                  <Chip tone="mist" title={t("illustrativeTitle")} data-testid="illustrative-chip">
                     {t("illustrative")}
                   </Chip>
                 ) : null}
@@ -156,7 +156,7 @@ export function OperatingModelPage({
           </div>
           <Link
             href={`/ask?q=${encodeURIComponent(t("askAbout"))}` as never}
-            className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-sand-300 bg-white px-4 text-sm font-medium text-ink-900 transition-colors hover:border-maroon-300 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+            className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-mist-300 bg-white px-4 text-sm font-medium text-ink-900 transition-colors hover:border-navy-300 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
             data-testid="om-ask"
           >
             <MessageCircleQuestion className="size-4" aria-hidden /> {t("askAbout")}
@@ -167,7 +167,7 @@ export function OperatingModelPage({
       {/* the in-page section nav, sticky under the top bar */}
       <nav
         aria-label={t("nav.aria")}
-        className="sticky top-16 z-30 -mx-6 mb-8 border-b border-sand-200 bg-sand-50/95 px-6 py-2 backdrop-blur"
+        className="sticky top-16 z-30 -mx-6 mb-8 border-b border-mist-200 bg-mist-50/95 px-6 py-2 backdrop-blur"
         data-testid="om-nav"
       >
         <ol className="flex gap-1 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
@@ -180,12 +180,12 @@ export function OperatingModelPage({
                   onClick={jump(s.id)}
                   aria-current={isActive ? "location" : undefined}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-gold-500",
-                    isActive ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600 hover:bg-white/70 hover:text-ink-900"
+                    "flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-aqua-500",
+                    isActive ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600 hover:bg-white/70 hover:text-ink-900"
                   )}
                   data-testid={`om-nav-${s.key}`}
                 >
-                  <span className={cn("tnum", isActive ? "text-maroon-700" : "text-ink-400")}>{i + 1}</span>
+                  <span className={cn("tnum", isActive ? "text-navy-700" : "text-ink-400")}>{i + 1}</span>
                   {t(`nav.${s.key}` as never)}
                 </a>
               </li>

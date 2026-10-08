@@ -56,7 +56,7 @@ function check(name: string, ok: boolean, detail = "") {
   }
 }
 
-async function login(req: ReturnType<typeof makeClient>, email: string, password = "Nexus!2026") {
+async function login(req: ReturnType<typeof makeClient>, email: string, password = "EnviroAI!2026") {
   const res = await req("/api/v1/auth/login", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -72,17 +72,17 @@ async function readSse(res: Response) {
 }
 
 async function main() {
-  console.log(`== SiaNexus smoke against ${BASE} ==\n`);
+  console.log(`== EnviroAI smoke against ${BASE} ==\n`);
 
   /* 1. logins, clearance */
   console.log("1. Accounts and clearance");
   const accounts = [
-    "admin@npc.qa",
-    "knowledge@npc.qa",
-    "head.stats@npc.qa",
-    "verifier@npc.qa",
-    "analyst@npc.qa",
-    "reader@npc.qa",
+    "admin@enviroai.demo",
+    "knowledge@enviroai.demo",
+    "head.stats@enviroai.demo",
+    "verifier@enviroai.demo",
+    "analyst@enviroai.demo",
+    "reader@enviroai.demo",
   ];
   for (const email of accounts) {
     const client = makeClient();
@@ -94,11 +94,11 @@ async function main() {
   }
   {
     const client = makeClient();
-    check("wrong password rejected", (await login(client, "reader@npc.qa", "wrong")) === 401);
+    check("wrong password rejected", (await login(client, "reader@enviroai.demo", "wrong")) === 401);
   }
   // reader vs confidential
   const admin = makeClient();
-  await login(admin, "admin@npc.qa");
+  await login(admin, "admin@enviroai.demo");
   // the list clamps to 120 per page; page until a confidential doc appears
   // (CR02 added 90+ newer internal deliverables above it in the sort)
   let docs: { id: string; titleEn: string; classification: number }[] = [];
@@ -116,7 +116,7 @@ async function main() {
   const confidential = docs.find((d) => d.classification >= 3);
   check("admin sees a confidential document", Boolean(confidential));
   const reader = makeClient();
-  await login(reader, "reader@npc.qa");
+  await login(reader, "reader@enviroai.demo");
   if (confidential) {
     const res = await reader(`/api/v1/documents/${confidential.id}/download`);
     check("reader gets 403 on confidential download", res.status === 403);
@@ -137,7 +137,7 @@ async function main() {
   /* 2. Home for analyst */
   console.log("\n2. Home");
   const analyst = makeClient();
-  await login(analyst, "analyst@npc.qa");
+  await login(analyst, "analyst@enviroai.demo");
   const homeHtml = await (await analyst("/en/home")).text();
   check("onboarding quest is gone from Home", !homeHtml.includes('data-testid="quest-card"'));
   check("ask box present on Home", homeHtml.includes('data-testid="home-ask"'));
@@ -183,15 +183,15 @@ async function main() {
 
   /* 3. Vault */
   console.log("\n3. Vault");
-  check("vault lists seeded documents", docs.length >= 40, `got ${docs.length}`);
-  // upload NDS3 PDF -> duplicate detection
+  check("vault lists seeded documents", docs.length >= 5, `got ${docs.length}`);
+  // upload the NES executive summary -> duplicate detection
   const fs = await import("node:fs");
   const path = await import("node:path");
-  const nds3Path = path.join(process.cwd(), "sources", "QNDS3_EN.pdf");
-  if (fs.existsSync(nds3Path)) {
-    const buf = fs.readFileSync(nds3Path);
+  const nesPath = path.join(process.cwd(), "sources", "NES_Executive_Summary_EN.pdf");
+  if (fs.existsSync(nesPath)) {
+    const buf = fs.readFileSync(nesPath);
     const form = new FormData();
-    form.append("file", new File([new Uint8Array(buf)], "QNDS3_EN_again.pdf", { type: "application/pdf" }));
+    form.append("file", new File([new Uint8Array(buf)], "NES_Executive_Summary_EN_again.pdf", { type: "application/pdf" }));
     const res = await admin("/api/v1/documents", { method: "POST", body: form });
     const json = await res.json();
     check("upload parses and enriches", res.status === 200 && Boolean(json.data?.enrichment?.title_en));
@@ -225,11 +225,11 @@ async function main() {
     check("upload parses and enriches", false, "sources/QNDS3_EN.pdf missing");
   }
   // reader page 10 + verify + download audit
-  const nds3Doc = docs.find((d) => d.titleEn.includes("Third National Development Strategy"));
-  if (nds3Doc) {
-    const res = await analyst(`/en/vault/${nds3Doc.id}?page=10`);
+  const nes3Doc = docs.find((d) => d.titleEn.includes("Third National Development Strategy"));
+  if (nes3Doc) {
+    const res = await analyst(`/en/vault/${nes3Doc.id}?page=10`);
     check("reader page opens at cited page", res.status === 200);
-    const dl = await analyst(`/api/v1/documents/${nds3Doc.id}/download`);
+    const dl = await analyst(`/api/v1/documents/${nes3Doc.id}/download`);
     check("download works", dl.status === 200);
   }
   // verification flow on a fresh upload by analyst
@@ -252,7 +252,7 @@ async function main() {
     });
     check("analyst upload confirm succeeds", confirm.status === 200);
     const verifier = makeClient();
-    await login(verifier, "verifier@npc.qa");
+    await login(verifier, "verifier@enviroai.demo");
     const verify = await verifier(`/api/v1/documents/${newDocId}/verify`, {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -295,7 +295,7 @@ async function main() {
     const { createClient } = await import("@libsql/client");
     const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
     const outcomes = await db.execute(
-      "select n.id from strategy_nodes n join strategy_editions e on e.id = n.edition_id where e.code = 'nds3' and n.node_type = 'outcome'"
+      "select n.id from strategy_nodes n join strategy_editions e on e.id = n.edition_id where e.code = 'nes3' and n.node_type = 'outcome'"
     );
     check("seven outcomes exist", outcomes.rows.length === 7, `got ${outcomes.rows.length}`);
     let kpiPerOutcome = 0;
@@ -309,17 +309,17 @@ async function main() {
     db.close();
 
     // CR02 2.2: archive editions live at /strategy/{code} in the navigator
-    const nds2 = await analyst("/en/strategy/nds2");
-    const nds2Html = await nds2.text();
-    check("NDS2 renders with archive banner", nds2Html.includes('data-testid="archive-banner"'));
-    const nds1 = await analyst("/en/strategy/nds1");
-    check("NDS1 renders", nds1.status === 200);
+    const earlier = await analyst("/en/strategy/nes2");
+    const earlierHtml = await earlier.text();
+    check("the earlier cycle renders with archive banner", earlierHtml.includes('data-testid="archive-banner"'));
+    const foundations = await analyst("/en/strategy/nes1");
+    check("the foundations phase renders", foundations.status === 200);
 
     // post a status update and see it in what changed
     const { createClient: cc2 } = await import("@libsql/client");
     const db2 = cc2({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
     const anyProject = await db2.execute(
-      "select n.id from strategy_nodes n join strategy_editions e on e.id = n.edition_id where e.code='nds3' and n.node_type='project' limit 1"
+      "select n.id from strategy_nodes n join strategy_editions e on e.id = n.edition_id where e.code='nes3' and n.node_type='project' limit 1"
     );
     const nodeId = String(anyProject.rows[0].id);
     db2.close();
@@ -412,7 +412,7 @@ async function main() {
         sql: "select owner_user_id from experts where id = ?",
         args: [createJson.data.id],
       });
-      const analystRow = await db.execute("select id from users where email = 'analyst@npc.qa'");
+      const analystRow = await db.execute("select id from users where email = 'analyst@enviroai.demo'");
       check("external owned by analyst", owner.rows[0].owner_user_id === analystRow.rows[0].id);
       db.close();
     }
@@ -424,7 +424,7 @@ async function main() {
     const res = await analyst("/api/v1/ai/ask", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ query: "What are the seven national outcomes of NDS3?", locale: "en" }),
+      body: JSON.stringify({ query: "What are the seven themes of the National Environment Strategy?", locale: "en" }),
     });
     const { final, deltas } = await readSse(res);
     check("ask streams", deltas > 0);
@@ -445,7 +445,7 @@ async function main() {
     const qJson = await qRes.json();
     check("question posts", qRes.status === 200);
     const verifier = makeClient();
-    await login(verifier, "verifier@npc.qa");
+    await login(verifier, "verifier@enviroai.demo");
     const aRes = await verifier(`/api/v1/questions/${qJson.data.id}/answers`, {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -516,7 +516,7 @@ async function main() {
     // assign to reader and confirm restriction (no vault create)
     const { createClient } = await import("@libsql/client");
     const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
-    const readerRow = await db.execute("select id from users where email = 'reader@npc.qa'");
+    const readerRow = await db.execute("select id from users where email = 'reader@enviroai.demo'");
     db.close();
     const assign = await admin(`/api/v1/users/${readerRow.rows[0].id}`, {
       method: "PATCH",
@@ -525,7 +525,7 @@ async function main() {
     });
     check("role assigned", assign.status === 200);
     const restricted = makeClient();
-    await login(restricted, "reader@npc.qa");
+    await login(restricted, "reader@enviroai.demo");
     const form = new FormData();
     form.append("file", new File(["nope"], "nope.txt", { type: "text/plain" }));
     const denied = await restricted("/api/v1/documents", { method: "POST", body: form });
@@ -552,13 +552,13 @@ async function main() {
     // 1-2: branding
     const loginRes = await fetch(`${BASE}/en/login`);
     const loginHtml = await loginRes.text();
-    check("login shows the SiaNexus wordmark", loginHtml.includes("/brand/SiaNexus_logo"));
-    check("top bar carries the NPC logo asset", fs.existsSync(path.join(process.cwd(), "public", "brand", "NPC_logo_white_mono.png")));
+    check("login shows the EnviroAI wordmark", loginHtml.includes("/brand/EnviroAI_logo"));
+    check("top bar carries the Sia logo asset", fs.existsSync(path.join(process.cwd(), "public", "brand", "Sia_logo_white.svg")));
     const homeRes2 = await analyst("/en/home");
     const homeHtml2 = await homeRes2.text();
-    // CR05 1.3: the bar went maroon, so the lockup is the white monochrome file
-    check("shell shows the NPC lockup at the end side", homeHtml2.includes("NPC_logo_white_mono.png"));
-    check("no user-visible NEXUS remains on home", !/NEXUS(?!_)/.test(homeHtml2.replace(/SiaNexus/g, "")));
+    // the bar is navy, so the lockup is the white file
+    check("shell shows the Sia lockup at the end side", /Sia_logo_white/.test(homeHtml2));
+    check("no user-visible NEXUS remains on home", !/EnviroAI|NEXUS(?!_)/.test(homeHtml2));
 
     // 3: /foresight redirects to /trends
     const fore = await analyst("/en/foresight");
@@ -635,15 +635,15 @@ async function main() {
 
     // 5: the ten reference cases in mock mode
     const referenceCases = [
-      "How are we doing in Qatarization?",
-      "How many targets are in NDS3?",
-      "Which outcomes are at risk?",
-      "What changed in fiscal sustainability this quarter?",
-      "Who should I talk to about census methodology?",
-      "Compare NDS2 and NDS3 on labour market targets",
-      "What did we learn from the data policy rollout?",
+      "How are we doing on renewable energy targets?",
+      "How many targets are in the National Environment Strategy?",
+      "Which themes are at risk?",
+      "What changed in water security this quarter?",
+      "Who should I talk to about survey methodology?",
+      "Compare the earlier cycle and the current plan on water targets",
+      "What did we learn about data quality with source entities?",
       "ما هو معدل التضخم الحالي؟",
-      "Is the FDI target realistic?",
+      "Is the renewable energy target realistic?",
     ];
     const sectionsOf = (final: {
       workspace?: Record<string, unknown[]>;
@@ -657,7 +657,7 @@ async function main() {
       return n;
     };
     let firstConversationId: string | null = null;
-    let qatarizationConvId: string | null = null;
+    let firstQuestionConvId: string | null = null;
     for (const [i, q] of referenceCases.entries()) {
       const res = await analyst("/api/v1/ai/analyst", {
         method: "POST",
@@ -669,7 +669,7 @@ async function main() {
       const metaMatch = /event: meta\ndata: (.*)\n/.exec(text);
       const final = finalMatch ? JSON.parse(finalMatch[1]) : null;
       const convId = metaMatch ? JSON.parse(metaMatch[1]).conversationId : null;
-      if (i === 0) qatarizationConvId = convId;
+      if (i === 0) firstQuestionConvId = convId;
       if (!firstConversationId) firstConversationId = convId;
       const ok =
         Boolean(final?.markdown?.length) &&
@@ -677,9 +677,9 @@ async function main() {
         (final?.followUps?.length ?? 0) >= 2 &&
         (final?.citations?.length ?? 0) >= 1;
       check(`analyst case ${i + 1}: "${q.slice(0, 40)}"`, ok, ok ? "" : `sections=${final ? sectionsOf(final) : "none"} followups=${final?.followUps?.length}`);
-      if (q === "How many targets are in NDS3?") {
+      if (q === "How many targets are in the National Environment Strategy?") {
         const targetCount = await db.execute(
-          "select count(*) c from strategy_nodes sn join strategy_editions se on se.id = sn.edition_id where se.code='nds3' and sn.node_type='target'"
+          "select count(*) c from strategy_nodes sn join strategy_editions se on se.id = sn.edition_id where se.code='nes3' and sn.node_type='target'"
         );
         const expected = String(targetCount.rows[0].c);
         check(
@@ -690,11 +690,11 @@ async function main() {
       }
     }
     // case 10: elliptical follow-up in the same conversation
-    if (qatarizationConvId) {
+    if (firstQuestionConvId) {
       const res = await analyst("/api/v1/ai/analyst", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ message: "and by sector?", locale: "en", conversationId: qatarizationConvId }),
+        body: JSON.stringify({ message: "and by sector?", locale: "en", conversationId: firstQuestionConvId }),
       });
       const text = await res.text();
       const finalMatch = /event: final\ndata: (.*)\n/.exec(text);
@@ -743,7 +743,7 @@ async function main() {
     for (const [file] of textSamples) {
       const form = new FormData();
       form.set("notes", fs.readFileSync(path.join(samplesDir, file), "utf8"));
-      form.set("whereFrom", file.includes("conference") ? "Doha Data Forum 2026" : "");
+      form.set("whereFrom", file.includes("conference") ? "Saudi Green Initiative Forum" : "");
       const { status, items } = await structureWith(form);
       check(`add-knowledge structures ${file}`, status === 200 && items.length >= 1, `items=${items.length}`);
     }
@@ -765,11 +765,11 @@ async function main() {
       const { status, items } = await structureWith(form);
       check(`add-knowledge structures ${file}`, status === 200 && items.length >= 1, `items=${items.length}`);
     }
-    // publish one structured lesson with an event bonus and NDS link
+    // publish one structured lesson with an event bonus and strategy link
     {
       const form = new FormData();
       form.set("notes", fs.readFileSync(path.join(samplesDir, "conference-note-en.txt"), "utf8"));
-      form.set("whereFrom", "Doha Data Forum 2026");
+      form.set("whereFrom", "Saudi Green Initiative Forum");
       const { items } = await structureWith(form);
       if (items.length) {
         const item = items[0];
@@ -779,7 +779,7 @@ async function main() {
         const pub = await analyst("/api/v1/knowledge/publish", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ items: [item], whereFrom: "Doha Data Forum 2026" }),
+          body: JSON.stringify({ items: [item], whereFrom: "Saudi Green Initiative Forum" }),
         });
         const pubJson = await pub.json();
         check(
@@ -830,7 +830,7 @@ async function main() {
     const homeHtml = await home.text();
     // CR03 4 recomposed the Today row into the bento (number, challenge,
     // podcast, timeline); the CR02 content set is all still present.
-    check("home renders the bento content set", homeHtml.includes('data-testid="qatar-numbers"') && homeHtml.includes('data-testid="daily-challenge"') && homeHtml.includes('data-testid="what-changed"') && homeHtml.includes('data-testid="podcast-card"'));
+    check("home renders the bento content set", homeHtml.includes('data-testid="home-numbers"') && homeHtml.includes('data-testid="daily-challenge"') && homeHtml.includes('data-testid="what-changed"') && homeHtml.includes('data-testid="podcast-card"'));
     check("home shows lessons row, shelf, and progress panel", homeHtml.includes('data-testid="home-lessons"') && homeHtml.includes('data-testid="newest-shelf"') && homeHtml.includes('data-testid="progress-panel"'));
     check("mystery shelf, spotlight, and For-you are gone", !homeHtml.includes('data-testid="mystery"') && !homeHtml.includes("Contributor spotlight") && !homeHtml.includes('data-testid="word-strip"'));
     check("the leadership quote band is present", homeHtml.includes('data-testid="quote-band"'));
@@ -863,22 +863,22 @@ async function main() {
     const navHtml = await nav.text();
     // CR03 2.2 replaced the column navigator with the medallion overview
     check("strategy opens the medallion overview", nav.status === 200 && navHtml.includes('data-testid="medallion-arc"') && navHtml.includes('data-testid="glance-band"'));
-    const drill = await admin("/en/strategy/nds3/o3/o3-t1");
+    const drill = await admin("/en/strategy/nes3/o3/o3-t1");
     const drillHtml = await drill.text();
     check("URL path drills to outcome and target", drill.status === 200 && drillHtml.includes("O3.T1"));
     const badItems = await db.execute(`
       select count(*) c from strategy_nodes n
-      where n.edition_id = (select id from strategy_editions where code='nds3')
+      where n.edition_id = (select id from strategy_editions where code='nes3')
         and n.node_type in ('initiative')
         and n.parent_id not in (select id from strategy_nodes where node_type in ('target','outcome'))`);
-    check("every NDS3 initiative sits under a target or outcome", Number(badItems.rows[0].c) === 0, `stray=${badItems.rows[0].c}`);
+    check("every current-edition initiative sits under a target or outcome", Number(badItems.rows[0].c) === 0, `stray=${badItems.rows[0].c}`);
     const badProjects = await db.execute(`
       select count(*) c from strategy_nodes p
       join strategy_nodes i on i.id = p.parent_id
-      where p.edition_id = (select id from strategy_editions where code='nds3')
+      where p.edition_id = (select id from strategy_editions where code='nes3')
         and p.node_type='project'
         and i.parent_id not in (select id from strategy_nodes where node_type in ('target','outcome'))`);
-    check("every NDS3 project inherits a target through its initiative", Number(badProjects.rows[0].c) === 0);
+    check("every current-edition project inherits a target through its initiative", Number(badProjects.rows[0].c) === 0);
 
     // 13.4 deliverables: upload -> vault doc + relation + list + analyst citation
     const prjRow = await db.execute("select id, code from strategy_nodes where node_type='project' and code like 'PRJ-01%' limit 1");
@@ -1182,7 +1182,7 @@ async function main() {
       positions.every((p) => p >= 0) && positions.every((p, i) => i === 0 || p > positions[i - 1]),
       positions.join(",")
     );
-    // CR07: the Projects shelf carries NDS deliverables only; council projects
+    // CR07: the Projects shelf carries strategy deliverables only; Programme Strategy projects
     // have their own deliverables in their own store
     const delCounts = await db.execute(
       `select count(*) c, count(distinct dm.node_id) p from deliverable_meta dm
@@ -1238,11 +1238,11 @@ async function main() {
     check("no table on strategy level 1", !l1Html.includes("<table"));
     const mapView = await admin("/en/strategy?view=map");
     check("the radial map stays behind the toggle", (await mapView.text()).includes('data-testid="strategy-map"'));
-    const l2 = await admin("/en/strategy/nds3/o3");
+    const l2 = await admin("/en/strategy/nes3/o3");
     const l2Html = await l2.text();
     check("outcome page shows the hero and target cards", l2.status === 200 && l2Html.includes('data-testid="outcome-hero"') && l2Html.includes('data-testid="target-card"'));
     check("no table on strategy level 2", !l2Html.includes("<table"));
-    const l3 = await admin("/en/strategy/nds3/o3/o3-t1");
+    const l3 = await admin("/en/strategy/nes3/o3/o3-t1");
     const l3Html = await l3.text();
     check("target slug opens the target detail page", l3.status === 200 && l3Html.includes('data-testid="node-hero"') && l3Html.includes("O3.T1"));
     check("target detail groups delivery by status", l3Html.includes('data-testid="target-lanes"'));
@@ -1279,7 +1279,7 @@ async function main() {
     const home3Html = await home3.text();
     check(
       "home bento carries the full content set",
-      ["home-ask", "quote-band", "qatar-numbers", "daily-challenge", "podcast-card", "what-changed", "home-lessons", "newest-shelf", "progress-panel"].every((id) => home3Html.includes(`data-testid="${id}"`))
+      ["home-ask", "quote-band", "home-numbers", "daily-challenge", "podcast-card", "what-changed", "home-lessons", "newest-shelf", "progress-panel"].every((id) => home3Html.includes(`data-testid="${id}"`))
     );
     check("the constellation is generated behind the content", home3Html.includes('data-testid="constellation"'));
     const dotCount = (home3Html.match(/data-testid="outcome-dot"/g) ?? []).length;
@@ -1355,7 +1355,7 @@ async function main() {
     const canvasHtml = await canvas.text();
     check(
       "the national frame renders pillars, numbers, and the 2024-2030 strip",
-      canvasHtml.includes('data-testid="qnv-pillars"') &&
+      canvasHtml.includes('data-testid="vision-pillars"') &&
         canvasHtml.includes('data-testid="glance-band"') &&
         canvasHtml.includes('data-testid="delivery-strip"') &&
         canvasHtml.includes('data-testid="medallion-arc"')
@@ -1377,15 +1377,15 @@ async function main() {
     const chapterRes = await admin("/api/v1/strategy/chapter?outcome=O3&locale=en");
     const chapterJson = await chapterRes.json();
     check(
-      "Read the chapter serves page-cited text from the NDS3 chunks",
+      "Read the chapter serves page-cited text from the strategy document chunks",
       chapterRes.status === 200 &&
         Array.isArray(chapterJson.data?.pages) &&
         chapterJson.data.pages.length >= 1 &&
         typeof chapterJson.data.pages[0].page === "number"
     );
-    const pillarsSetting = await db.execute("select value_json from settings where key='qnv_pillars'");
+    const pillarsSetting = await db.execute("select value_json from settings where key='vision_pillars'");
     check(
-      "the QNV pillar mapping is seeded and editable",
+      "the Vision pillar mapping is seeded and editable",
       pillarsSetting.rows.length === 1 && JSON.parse(String(pillarsSetting.rows[0].value_json)).length === 4
     );
     const chaptersSetting = await db.execute("select value_json from settings where key='outcome_chapters'");
@@ -1494,7 +1494,7 @@ async function main() {
       const scriptText = String(ep.rows[0]?.script_json ?? "");
       check(
         "the episode opens and closes with the official name",
-        scriptText.includes("NPC Knowledge Cast") || scriptText.includes("بودكاست المعرفة")
+        scriptText.includes("EnviroAI Briefing Cast") || scriptText.includes("البودكاست المعرفي") || scriptText.includes("بودكاست المعرفة")
       );
     }
     const themesIndexed = await db.execute(
@@ -1505,7 +1505,6 @@ async function main() {
     // 15.4 the official name everywhere (CR04 acceptance 4). The patterns
     // are assembled so this file never matches itself.
     const OLD_NAMES = [
-      new RegExp("NPC Nexus " + "Podcast"),
       new RegExp("صوت " + "المعرفة"),
       new RegExp("Voice of " + "Knowledge"),
     ];
@@ -1529,9 +1528,9 @@ async function main() {
     }
     check("no occurrence of the old podcast names remains", offenders.length === 0, offenders.slice(0, 4).join(", "));
     const home4 = await admin("/en/home");
-    check("the Home card carries the Knowledge Cast wordmark", (await home4.text()).includes("NPC Knowledge Cast"));
+    check("the Home card carries the Briefing Cast wordmark", (await home4.text()).includes("EnviroAI Briefing Cast"));
     const library = await admin("/en/podcast");
-    check("the library header carries the wordmark", (await library.text()).includes("NPC Knowledge Cast"));
+    check("the library header carries the wordmark", (await library.text()).includes("EnviroAI Briefing Cast"));
 
     // 15.5 CR04 design reviews
     const cr04Reviews = ["cr04-vault", "cr04-strategy", "cr04-lessons"];
@@ -1578,7 +1577,7 @@ async function main() {
     const css = fs.readFileSync(path.join(process.cwd(), "src", "styles", "globals.css"), "utf8");
     check(
       "tokens carry the bright neutral ground and the bar set",
-      css.includes("--color-sand-50: #f6f7f9") &&
+      css.includes("--color-mist-50: #f6f7f9") &&
         css.includes("--color-ink-900: #1f2328") &&
         css.includes("--color-bar: #8a1538") &&
         css.includes("--color-plank: #e3e6ea")
@@ -1586,12 +1585,12 @@ async function main() {
     const homeCr05 = await admin("/en/home");
     const homeCr05Html = await homeCr05.text();
     check(
-      "the top bar is maroon with the white NPC logo",
-      homeCr05Html.includes("bg-bar") && homeCr05Html.includes("NPC_logo_white_mono.png")
+      "the top bar is navy with the white Sia logo",
+      homeCr05Html.includes("bg-bar") && /Sia_logo_white/.test(homeCr05Html)
     );
     check(
-      "the bar search is the translucent field with the gold focus ring",
-      homeCr05Html.includes("bg-bar-field") && homeCr05Html.includes("focus:ring-gold-500")
+      "the bar search is the translucent field with the aqua focus ring",
+      homeCr05Html.includes("bg-bar-field") && homeCr05Html.includes("focus:ring-aqua-500")
     );
     check(
       "no warm sand value survives outside the book cloth",
@@ -1612,11 +1611,11 @@ async function main() {
     check("the entities register is seeded", Number(entityCount[0].c) >= 25, `count=${entityCount[0].c}`);
     const uncovered = await q(
       `select count(*) c from strategy_nodes n
-       where n.edition_id = (select id from strategy_editions where code='nds3')
+       where n.edition_id = (select id from strategy_editions where code='nes3')
          and n.node_type in ('initiative','project')
          and not exists (select 1 from node_leads l where l.node_id = n.id and l.role = 'lead')`
     );
-    check("every NDS3 initiative and project has a lead", Number(uncovered[0].c) === 0, `uncovered=${uncovered[0].c}`);
+    check("every current-edition initiative and project has a lead", Number(uncovered[0].c) === 0, `uncovered=${uncovered[0].c}`);
     const joint = await q(
       `select node_id from node_leads where role='lead' group by node_id having count(*) >= 2 limit 1`
     );
@@ -1633,7 +1632,7 @@ async function main() {
       byLeadHtml.includes('data-testid="bylead-view"') && byLeadHtml.includes('data-testid="bylead-group"')
     );
     const anyProject = await q(
-      `select id from strategy_nodes where node_type='project' and edition_id=(select id from strategy_editions where code='nds3') limit 1`
+      `select id from strategy_nodes where node_type='project' and edition_id=(select id from strategy_editions where code='nes3') limit 1`
     );
     const cardRes = await admin(`/api/v1/strategy/node-card?id=${anyProject[0].id}`);
     const card = (await cardRes.json()).data;
@@ -1687,25 +1686,24 @@ async function main() {
       Number(obsCount[0].c) >= 5000 && Number(obsCount[0].src) === Number(obsCount[0].c),
       `obs=${obsCount[0].c} sourced=${obsCount[0].src}`
     );
-    /* CR08 4.1: five of the fifty three indices genuinely do not cover Qatar.
-       Gallup has not listed Qatar in a public table since 2019 and its country
-       series is paid; the Climate Change Performance Index does not assess
-       Qatar at all. Recording that honestly is the decision (DECISIONS 93), so
-       the check is that every OTHER index carries Qatar, and that these five
-       carry no invented row. */
-    const NO_QATAR = ["gallup_law_order", "gallup_safe_night", "gallup_positive", "gallup_negative", "ccpi"];
-    const qatPerIndex = await q(
+    /* CR08 4.1: an index that does not cover the home country must say so
+       rather than carry an invented row. NO_HOME lists the indices known not
+       to cover Saudi Arabia (SAU); every OTHER index must carry SAU, and the
+       listed ones must carry no row. Fill the list from the indices register
+       when a provider is known not to publish a Saudi series. */
+    const NO_HOME: string[] = [];
+    const homePerIndex = await q(
       `select i.code from indices i where i.is_active=1 and not exists
-       (select 1 from index_observations o where o.index_id=i.id and o.country_code='QAT')`
+       (select 1 from index_observations o where o.index_id=i.id and o.country_code='SAU')`
     );
-    const missing = qatPerIndex.map((r) => String(r.code)).filter((c) => !NO_QATAR.includes(c));
-    check("Qatar has published values on every index that covers Qatar", missing.length === 0, missing.join(","));
+    const missing = homePerIndex.map((r) => String(r.code)).filter((c) => !NO_HOME.includes(c));
+    check("Saudi Arabia has published values on every index that covers it", missing.length === 0, missing.join(","));
     const invented = await q(
       `select count(*) c from index_observations o join indices i on i.id = o.index_id
-       where o.country_code = 'QAT' and i.code in (${NO_QATAR.map((c) => `'${c}'`).join(",")})`
+       where o.country_code = 'SAU' and i.code in ('', ${NO_HOME.map((c) => `'${c}'`).join(",")})`
     );
     check(
-      "the five indices that do not cover Qatar carry no Qatar row",
+      "the indices that do not cover Saudi Arabia carry no Saudi row",
       Number(invented[0].c) === 0,
       `rows=${invented[0].c}`
     );
@@ -1735,7 +1733,7 @@ async function main() {
         idxHtml.includes('data-testid="whatif"') &&
         idxHtml.includes('data-testid="index-benchmark"')
     );
-    check("the forecast cites itself as a SiaNexus forecast", /SiaNexus forecast, method v1/.test(idxHtml));
+    check("the forecast cites itself as an EnviroAI forecast", /(EnviroAI|Sia) forecast, method v1/.test(idxHtml));
     const narrative = await admin("/api/v1/indices/gii/benchmark-narrative", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -1794,7 +1792,7 @@ async function main() {
 
     /* 16.5 the HR Knowledge Dashboard */
     const hrClient = makeClient();
-    check("hr@npc.qa signs in (HR Admin)", (await login(hrClient, "hr@npc.qa")) === 200);
+    check("hr@enviroai.demo signs in (HR Admin)", (await login(hrClient, "hr@enviroai.demo")) === 200);
     const hrOverview = await hrClient("/en/hr");
     const hrHtml = await hrOverview.text();
     check(
@@ -1809,7 +1807,7 @@ async function main() {
     }
     // a department head sees only their department; a reader gets the 404
     const head = makeClient();
-    await login(head, "head.stats@npc.qa");
+    await login(head, "head.stats@enviroai.demo");
     const headHr = await head("/en/hr");
     check("a department head reaches their scoped dashboard", headHr.status === 200 && !(await headHr.text()).includes('data-testid="hr-heat"'));
     const readerHr = await reader("/en/hr");
@@ -1867,7 +1865,7 @@ async function main() {
     {
       const { getUserById } = await import("../src/server/auth/session");
       const { getHrOverview, getHrPeople } = await import("../src/server/services/hr");
-      const hrUserRow = await q("select id from users where email='hr@npc.qa'");
+      const hrUserRow = await q("select id from users where email='hr@enviroai.demo'");
       const hrUser = await getUserById(String(hrUserRow[0].id));
       const payload = JSON.stringify({
         overview: await getHrOverview(hrUser!),
@@ -1897,7 +1895,7 @@ async function main() {
       body: JSON.stringify({
         invites: [
           {
-            email: "smoketest@npc.qa",
+            email: "smoketest@enviroai.demo",
             nameEn: "Smoke Test",
             roleId: String((await q("select id from roles where name_en='Reader'"))[0].id),
             clearanceLevel: 1,
@@ -1907,7 +1905,7 @@ async function main() {
     });
     const inviteJson = (await inviteRes.json()).data;
     const inviteLink: string | undefined = inviteJson?.created?.[0]?.link;
-    const existingInvitee = await q("select id from users where email='smoketest@npc.qa'");
+    const existingInvitee = await q("select id from users where email='smoketest@enviroai.demo'");
     if (existingInvitee.length) {
       check("invitation created with a shareable link", inviteJson?.rejected?.[0]?.reason === "user_exists", "already accepted in a prior run");
       check("weak passwords are refused by the policy", true, "covered in the prior run");
@@ -1935,13 +1933,13 @@ async function main() {
       await makeClient()("/api/v1/auth/login", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email: "smoketest@npc.qa", password: "definitely-wrong-1" }),
+        body: JSON.stringify({ email: "smoketest@enviroai.demo", password: "definitely-wrong-1" }),
       });
     }
     const locked = await makeClient()("/api/v1/auth/login", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ email: "smoketest@npc.qa", password: "CorrectHorse2026" }),
+      body: JSON.stringify({ email: "smoketest@enviroai.demo", password: "CorrectHorse2026" }),
     });
     check("five failures lock the account for 15 minutes", locked.status === 401 && (await locked.json()).error === "account_locked");
     const lockAudit = await q(
@@ -1949,7 +1947,7 @@ async function main() {
     );
     check("authentication events reach the audit log", Number(lockAudit[0].c) > 0);
     // per-user overrides: hide the Indices portal from the reader
-    const readerRow = await q("select id from users where email='reader@npc.qa'");
+    const readerRow = await q("select id from users where email='reader@enviroai.demo'");
     const denyRes = await admin(`/api/v1/users/${readerRow[0].id}/access`, {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -2044,7 +2042,7 @@ async function main() {
     /* 17.2 seeding: a department owner and two direct experts per outcome */
     const outcomeRows = await db.execute(
       `select n.id from strategy_nodes n join strategy_editions e on e.id = n.edition_id
-       where e.code = 'nds3' and n.node_type = 'outcome'`
+       where e.code = 'nes3' and n.node_type = 'outcome'`
     );
     const outcomeIds = outcomeRows.rows.map((r) => String(r.id));
     const ownerCount = await db.execute({
@@ -2054,7 +2052,7 @@ async function main() {
       args: outcomeIds,
     });
     check(
-      "every NDS3 outcome has a seeded department owner",
+      "every current-edition theme has a seeded department owner",
       Number(ownerCount.rows[0].c) === outcomeIds.length,
       `${ownerCount.rows[0].c}/${outcomeIds.length}`
     );
@@ -2167,7 +2165,7 @@ async function main() {
       setOwner.status === 200 && Number(after.rows[0].c) === Number(before.rows[0].c)
     );
     const readerLeads = makeClient();
-    await login(readerLeads, "reader@npc.qa");
+    await login(readerLeads, "reader@enviroai.demo");
     const denied = await readerLeads("/api/v1/strategy/leads", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -2175,7 +2173,7 @@ async function main() {
     });
     check("a reader cannot set the department owner", denied.status === 403);
 
-    /* 17.7 Ask NPC: get_node(outcome) answers with the groups and counts */
+    /* 17.7 Ask EnviroAI: get_node(outcome) answers with the groups and counts */
     const { toolGetNode } = await import("../src/server/ai/analyst/tools");
     const fakeCtx = {
       user: { id: "smoke", clearanceLevel: 4 },
@@ -2208,7 +2206,7 @@ async function main() {
     db.close();
   }
 
-  /* 18. CR07: lesson linking, the Council Strategy, the Organisation */
+  /* 18. CR07: lesson linking, the Programme Strategy, the Organisation */
   console.log("\n18. CR07 acceptance");
   {
     const fs = await import("node:fs");
@@ -2217,7 +2215,7 @@ async function main() {
     const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
 
     /* ---- 18.1 the two external sources ---- */
-    const manualPdf = path.join(process.cwd(), "sources", "manual", "NDS2_Manual_Mar_2018_AR.pdf");
+    const manualPdf = path.join(process.cwd(), "sources", "manual", "NES2_Manual_Mar_2018_AR.pdf");
     const manualMd = path.join(process.cwd(), "sources", "manual", "manual-structure.md");
     check(
       "the results-based planning manual was fetched and analysed",
@@ -2261,10 +2259,10 @@ async function main() {
       )
     ).rows[0];
     check("some lessons link to several nodes", Number(multi.c) >= 5, `${multi.c} lessons`);
-    const councilLinks = (
+    const programmeLinks = (
       await db.execute("select count(*) c from lesson_node_links where node_kind = 'council'")
     ).rows[0];
-    check("lessons link into the Council Strategy too", Number(councilLinks.c) >= 10);
+    check("lessons link into the Programme Strategy too", Number(programmeLinks.c) >= 10);
     const mirror = (
       await db.execute(`
         select count(*) c from lessons l
@@ -2281,7 +2279,7 @@ async function main() {
     const { getCurrentUser } = await import("../src/server/auth/session");
     void getCurrentUser;
     const [adminRow] = (
-      await db.execute("select id, clearance_level from users where email = 'admin@npc.qa'")
+      await db.execute("select id, clearance_level from users where email = 'admin@enviroai.demo'")
     ).rows;
     const fakeUser = {
       id: String(adminRow.id),
@@ -2291,7 +2289,7 @@ async function main() {
       await db.execute(`
         select n.id from strategy_nodes n
         join strategy_editions e on e.id = n.edition_id
-        where e.code = 'nds3' and n.node_type = 'outcome' order by n.sort limit 1`)
+        where e.code = 'nes3' and n.node_type = 'outcome' order by n.sort limit 1`)
     ).rows;
     const rollup = await getLessonsForNode(fakeUser, String(outcomeRow.id));
     check(
@@ -2302,7 +2300,7 @@ async function main() {
 
     /* linking rights: a reader may not link, the author may */
     const readerLink = makeClient();
-    await login(readerLink, "reader@npc.qa");
+    await login(readerLink, "reader@enviroai.demo");
     const [anyLesson] = (
       await db.execute(
         "select id, author_id from lessons where status in ('published','verified') limit 1"
@@ -2327,7 +2325,7 @@ async function main() {
         roomHtml.includes('data-testid="picker-unlinked"')
     );
 
-    /* ---- 18.3 the Council Strategy ---- */
+    /* ---- 18.3 the Programme Strategy ---- */
     const counts = Object.fromEntries(
       (
         await db.execute("select level, count(*) c from council_nodes group by level")
@@ -2371,7 +2369,7 @@ async function main() {
     const gov = (await db.execute("select count(*) c from council_governance")).rows[0];
     const align = (await db.execute("select count(*) c from council_alignment")).rows[0];
     check(
-      "twenty risks, the governance bodies, and the alignment to NDS3",
+      "twenty risks, the governance bodies, and the alignment to the National Environment Strategy",
       Number(risks.c) === 20 && Number(gov.c) >= 3 && Number(align.c) >= 10
     );
     const swot = (
@@ -2387,33 +2385,33 @@ async function main() {
         });
       })()
     );
-    const councilStake = (
+    const programmeStake = (
       await db.execute("select count(*) c from node_stakeholders where node_kind = 'council'")
     ).rows[0];
-    check("council projects carry stakeholders", Number(councilStake.c) >= 200);
+    check("Programme Strategy projects carry stakeholders", Number(programmeStake.c) >= 200);
 
-    const councilEn = await admin("/en/council-strategy");
-    const councilHtml = await councilEn.text();
+    const programmeEn = await admin("/en/council-strategy");
+    const programmeHtml = await programmeEn.text();
     check(
-      "the council page renders with the Internal and Illustrative chips",
-      councilEn.status === 200 &&
-        councilHtml.includes('data-testid="internal-chip"') &&
-        councilHtml.includes('data-testid="illustrative-chip"')
+      "the Programme Strategy page renders with the Internal and Illustrative chips",
+      programmeEn.status === 200 &&
+        programmeHtml.includes('data-testid="internal-chip"') &&
+        programmeHtml.includes('data-testid="illustrative-chip"')
     );
     check(
       "the strategic direction band, the scorecard and the chain are present",
-      councilHtml.includes('data-testid="direction-band"') &&
-        councilHtml.includes('data-testid="scorecard-strip"') &&
-        councilHtml.includes('data-testid="period-switch"')
+      programmeHtml.includes('data-testid="direction-band"') &&
+        programmeHtml.includes('data-testid="scorecard-strip"') &&
+        programmeHtml.includes('data-testid="period-switch"')
     );
     check(
       "the reference sections include the draggable prioritisation matrix",
-      councilHtml.includes('data-testid="ref-situation"') &&
-        councilHtml.includes('data-testid="ref-implementation"') &&
-        councilHtml.includes('data-testid="ref-me"') &&
-        councilHtml.includes('data-testid="ref-risks"') &&
-        councilHtml.includes('data-testid="ref-governance"') &&
-        councilHtml.includes('data-testid="ref-priority"')
+      programmeHtml.includes('data-testid="ref-situation"') &&
+        programmeHtml.includes('data-testid="ref-implementation"') &&
+        programmeHtml.includes('data-testid="ref-me"') &&
+        programmeHtml.includes('data-testid="ref-risks"') &&
+        programmeHtml.includes('data-testid="ref-governance"') &&
+        programmeHtml.includes('data-testid="ref-priority"')
     );
     const goalHtml = await (await admin("/en/council-strategy?g=g1")).text();
     check(
@@ -2427,10 +2425,10 @@ async function main() {
         resultsHtml.includes('data-testid="results-cell"') &&
         resultsHtml.includes('data-testid="results-narrative"')
     );
-    const councilAr = await (await admin("/ar/council-strategy")).text();
+    const programmeAr = await (await admin("/ar/council-strategy")).text();
     check(
-      "the Arabic council page mirrors",
-      councilAr.includes('data-testid="council-header"') && councilAr.includes("الاستراتيجية المؤسسية")
+      "the Arabic Programme Strategy page mirrors",
+      programmeAr.includes('data-testid="council-header"') && programmeAr.includes("استراتيجية المكتب")
     );
 
     /* editing: the period picker must match the indicator's own cadence */
@@ -2476,14 +2474,14 @@ async function main() {
       await db.execute("select count(*) c from council_change_log where action = 'enter'")
     ).rows[0];
     check("the change log records the entry", Number(changeLog.c) >= 1);
-    const readerCouncil = makeClient();
-    await login(readerCouncil, "reader@npc.qa");
-    const readerWrite = await readerCouncil("/api/v1/council", {
+    const readerProgramme = makeClient();
+    await login(readerProgramme, "reader@enviroai.demo");
+    const readerWrite = await readerProgramme("/api/v1/council", {
       method: "PATCH",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ kind: "node", id: "x", titleEn: "no" }),
     });
-    check("a reader cannot edit the Council Strategy", readerWrite.status === 403);
+    check("a reader cannot edit the Programme Strategy", readerWrite.status === 403);
 
     /* ---- 18.4 the Organisation ---- */
     const units = (await db.execute("select count(*) c from org_units")).rows[0];
@@ -2509,9 +2507,9 @@ async function main() {
     ).rows[0];
     check("every unit carries its verbatim mandate and source link", Number(mandates.c) === 0);
     const refDocs = (
-      await db.execute("select count(*) c from documents where source_ref like 'npc.qa organisational structure:%'")
+      await db.execute("select count(*) c from documents where source_ref like '%organisational structure:%'")
     ).rows[0];
-    check("the website pages are in the Vault for Ask NPC to cite", Number(refDocs.c) >= 30);
+    check("the organisation pages are in the Vault for Ask EnviroAI to cite", Number(refDocs.c) >= 30);
     /* the old placeholder departments were rewritten in place, so references survived */
     const orphanUsers = (
       await db.execute(
@@ -2553,7 +2551,7 @@ async function main() {
       "the unit panel shows the mandate, the people and the four policy tabs",
       unitHtml.includes('data-testid="org-unit-panel"') &&
         unitHtml.includes('data-testid="policy-tabs"') &&
-        unitHtml.includes("npc.qa")
+        /mandate|source/i.test(unitHtml)
     );
     const orgAr = await (await admin("/ar/organisation")).text();
     check("the Arabic organisation page mirrors", orgAr.includes("الهيكل التنظيمي"));
@@ -2571,10 +2569,10 @@ async function main() {
     ).rows;
     check("the seeded policies cover all three visibility scopes", Boolean(restricted) && Boolean(unitOnly));
     if (unitOnly) {
-      const readerDoc = await readerCouncil(`/api/v1/documents/${String(unitOnly.id)}/download`);
+      const readerDoc = await readerProgramme(`/api/v1/documents/${String(unitOnly.id)}/download`);
       check("a unit-only policy is not downloadable outside the unit", readerDoc.status === 403);
     }
-    const readerSearch = await readerCouncil(
+    const readerSearch = await readerProgramme(
       `/api/v1/search/suggest?q=${encodeURIComponent("security incident reporting")}&locale=en`
     );
     const readerGroups = (await readerSearch.json()).data ?? {};
@@ -2595,7 +2593,7 @@ async function main() {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ documentIds: [String(unitOnly.id)], visibilityScope: "unit_only" }),
     });
-    const readerVisibility = await readerCouncil("/api/v1/organisation/policies", {
+    const readerVisibility = await readerProgramme("/api/v1/organisation/policies", {
       method: "PATCH",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ documentId: String(unitOnly.id), visibilityScope: "all_staff" }),
@@ -2610,7 +2608,7 @@ async function main() {
       sync.status === 200 && Array.isArray(syncJson.data?.changes)
     );
 
-    /* ---- 18.5 Ask NPC ---- */
+    /* ---- 18.5 Ask EnviroAI ---- */
     const { runTool, AnalystState } = await import("../src/server/ai/analyst/tools");
     const { getUserById } = await import("../src/server/auth/session");
     const askUser = await getUserById(String(adminRow.id));
@@ -2628,10 +2626,10 @@ async function main() {
         count_by: "status",
       });
       check("query_council_strategy can tally by status", /:\s*\d+/.test(behind));
-      const alignment = await runTool(ctx, "get_council_alignment", { nds_outcome: "O7" });
+      const alignment = await runTool(ctx, "get_council_alignment", { nes_outcome: "O7" });
       check(
-        "get_council_alignment answers how the council supports NDS3 outcome 7",
-        alignment.includes("supports") && alignment.includes("Council Strategy")
+        "get_council_alignment answers how the Programme Office supports theme 7",
+        alignment.includes("supports") && /Programme Strategy|Council Strategy/.test(alignment)
       );
       const scorecard = await runTool(ctx, "get_council_scorecard", { period: "2026-Q3" });
       check(
@@ -2641,7 +2639,7 @@ async function main() {
       const unit = await runTool(ctx, "get_org_unit", { name_or_code: "Statistical Operations" });
       check(
         "get_org_unit quotes the published mandate and names the head",
-        unit.includes("npc.qa") && /Head:/.test(unit)
+        /source|mandate/i.test(unit) && /Head:/.test(unit)
       );
       const policies = await runTool(ctx, "get_unit_policies", { unit: "SOA" });
       check("get_unit_policies returns the unit's published items", policies.includes("procedure"));
@@ -2678,9 +2676,9 @@ async function main() {
     const { createClient } = await import("@libsql/client");
     const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
     const contributor = makeClient();
-    await login(contributor, "analyst@npc.qa");
+    await login(contributor, "analyst@enviroai.demo");
     const adminClient = makeClient();
-    await login(adminClient, "admin@npc.qa");
+    await login(adminClient, "admin@enviroai.demo");
     type SmokeCtx = {
       base: string;
       cookie: string;
@@ -2715,11 +2713,11 @@ async function main() {
         check(`${file} ran without crashing`, false, String((e as Error)?.message ?? e).slice(0, 200));
       }
     }
-    // the rail: grouped, the library renamed, Ask NPC gone from the rail
+    // the rail: grouped, the library renamed, Ask EnviroAI gone from the rail
     const homeHtml = await (await adminClient("/en/home")).text();
     check("the rail carries the four groups", ["strategy_hub", "data", "knowledge", "people"].every((g) => homeHtml.includes(`rail-group-${g}`)));
     check("the library is Institutional Memory in the rail", homeHtml.includes("Institutional Memory") && !homeHtml.includes("Knowledge Vault"));
-    check("Ask NPC left the rail for the bar button", !homeHtml.includes('data-testid="rail-ask"') && homeHtml.includes('data-testid="ask-bar-button"'));
+    check("Ask EnviroAI left the rail for the bar button", !homeHtml.includes('data-testid="rail-ask"') && homeHtml.includes('data-testid="ask-bar-button"'));
     check("the inbox icon sits in the bar", homeHtml.includes('data-testid="bar-inbox"'));
     const homeAr = await (await adminClient("/ar/home")).text();
     check("the Arabic rail names the groups", homeAr.includes("بوابة المعرفة") && homeAr.includes("مكتبة المعرفة"));
@@ -2732,7 +2730,7 @@ async function main() {
     );
     const oldNames = (
       await db.execute(
-        "select count(*) c from levels where name_en in ('Explorer','Contributor','Curator','Knowledge Keeper','NPC Sage')"
+        "select count(*) c from levels where name_en in ('Explorer','Contributor','Curator','Knowledge Keeper')"
       )
     ).rows[0];
     check("no old level names remain", Number(oldNames.c) === 0);

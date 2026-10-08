@@ -1,6 +1,6 @@
 "use client";
 // CR08 9.1 "Ask a question": the existing route-question flow (POST
-// /api/v1/routes creates the Ask NPC question and routes it to the person's
+// /api/v1/routes creates the Ask EnviroAI question and routes it to the person's
 // expert profile with a notification). People without an expert profile fall
 // back to /ask/c/new?q= from the card itself.
 import * as React from "react";
@@ -81,7 +81,7 @@ export function AskQuestionDialog({
             <Link
               href={`/ask/${questionId}` as never}
               onClick={() => onOpenChange(false)}
-              className="inline-flex h-9.5 items-center rounded-lg border border-sand-300 bg-white px-4 text-sm font-medium text-ink-900 transition-colors hover:border-maroon-300 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500"
+              className="inline-flex h-9.5 items-center rounded-lg border border-mist-300 bg-white px-4 text-sm font-medium text-ink-900 transition-colors hover:border-navy-300 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500"
               data-testid="ask-open"
             >
               {t("open")}

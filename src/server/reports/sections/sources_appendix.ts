@@ -18,8 +18,8 @@ export function aggregateSources(sections: SectionContent[]): SectionContent {
           kind: "paragraph",
           style: "note",
           text: bi(
-            "Every figure in this report is drawn from the sources below as held in SiaNexus on the generation date. Forecasts are SiaNexus estimates and are labelled as such where they appear.",
-            "كل رقم في هذا التقرير مأخوذ من المصادر أدناه كما هي محفوظة في سيا نكسس بتاريخ الإعداد. التنبؤات تقديرات من سيا نكسس، وهي موسومة بذلك حيثما وردت."
+            "Every figure in this report is drawn from the sources below as held in EnviroAI on the generation date. Forecasts are EnviroAI estimates and are labelled as such where they appear.",
+            "كل رقم في هذا التقرير مأخوذ من المصادر أدناه كما هي محفوظة في EnviroAI بتاريخ الإعداد. التنبؤات تقديرات من EnviroAI، وهي موسومة بذلك حيثما وردت."
           ),
         },
         { kind: "sources", items: merged },

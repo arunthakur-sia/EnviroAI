@@ -157,16 +157,16 @@ export function ComposerClient({
                 className={cn(
                   "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm transition-colors",
                   active
-                    ? "bg-maroon-100 font-medium text-maroon-900"
+                    ? "bg-navy-100 font-medium text-navy-900"
                     : stateDone
-                      ? "text-maroon-700 cursor-pointer hover:bg-maroon-100/60"
+                      ? "text-navy-700 cursor-pointer hover:bg-navy-100/60"
                       : "text-ink-600"
                 )}
               >
                 <span
                   className={cn(
                     "flex size-5 items-center justify-center rounded-full text-[11px] font-semibold tnum",
-                    active || stateDone ? "bg-maroon-700 text-white" : "bg-sand-200 text-ink-600"
+                    active || stateDone ? "bg-navy-700 text-white" : "bg-mist-200 text-ink-600"
                   )}
                 >
                   {stateDone ? <Check className="size-3" /> : n}
@@ -201,7 +201,7 @@ export function ComposerClient({
             </p>
           ) : null}
           {results.length ? (
-            <div className="mt-3 flex flex-col divide-y divide-sand-100 overflow-hidden rounded-xl border border-sand-200">
+            <div className="mt-3 flex flex-col divide-y divide-mist-100 overflow-hidden rounded-xl border border-mist-200">
               {results.map((r) => (
                 <button
                   key={`${r.kind}-${r.id}`}
@@ -215,7 +215,7 @@ export function ComposerClient({
                     });
                     setStep(2);
                   }}
-                  className="flex items-center gap-3 px-3.5 py-2.5 text-start text-sm hover:bg-maroon-50 cursor-pointer"
+                  className="flex items-center gap-3 px-3.5 py-2.5 text-start text-sm hover:bg-navy-50 cursor-pointer"
                 >
                   <span className="min-w-0 flex-1 truncate text-ink-900">
                     {bi(locale, r.labelEn, r.labelAr)}
@@ -302,7 +302,7 @@ export function ComposerClient({
           <div className="flex flex-col gap-2.5" data-testid="script-review">
             {script.segments.map((s, i) => (
               <div key={i} className="card flex items-start gap-3 p-3.5">
-                <Chip tone={s.speaker === "mariam" ? "maroon" : "gulf"} className="mt-1 shrink-0">
+                <Chip tone={s.speaker === "mariam" ? "navy" : "teal"} className="mt-1 shrink-0">
                   {s.speaker === "mariam" ? t("mariam") : t("hamad")}
                 </Chip>
                 <Textarea

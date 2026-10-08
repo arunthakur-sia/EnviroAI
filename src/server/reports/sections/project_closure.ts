@@ -111,7 +111,7 @@ const def: SectionDefinition<ClosureData> = {
         paragraphs: [
           bi(
             `${p.code ?? ""} ${p.titleEn}${p.parentEn ? `, under ${p.parentEn}` : ""}${p.outcomeEn ? ` within ${p.outcomeEn}` : ""}, ${p.descriptionEn ? `set out to ${p.descriptionEn.charAt(0).toLowerCase()}${p.descriptionEn.slice(1).split(/(?<=[.!?])\s/)[0]}` : "was delivered by its lead"}. It ran ${p.startDate ? `from ${p.startDate}` : ""}${p.endDate ? ` to ${p.endDate}` : ""}${p.budgetQar ? ` with a budget of QAR ${fmt(p.budgetQar)}` : ""} under ${p.leadEn}, and closes ${statusText(p.status).en}${p.lastUpdate ? ` at ${fmt(p.lastUpdate.progressPct)}% progress as last reported on ${p.lastUpdate.date}` : ""}.`.trim(),
-            `${p.code ?? ""} ${p.titleAr}${p.parentAr ? `، ضمن ${p.parentAr}` : ""}${p.outcomeAr ? ` في إطار ${p.outcomeAr}` : ""}، ${p.descriptionAr ? `سعى إلى: ${p.descriptionAr.split(/(?<=[.!?؟])\s/)[0]}` : "نُفذ تحت إشراف جهته المسؤولة"}. وامتد ${p.startDate ? `من ${p.startDate}` : ""}${p.endDate ? ` إلى ${p.endDate}` : ""}${p.budgetQar ? ` بميزانية قدرها ${fmt(p.budgetQar)} ريالاً قطرياً` : ""} تحت إشراف ${p.leadAr}، ويُقفل بحالة ${statusText(p.status).ar}${p.lastUpdate ? ` عند ${fmt(p.lastUpdate.progressPct)}% من التقدم وفق آخر تقرير في ${p.lastUpdate.date}` : ""}.`.trim()
+            `${p.code ?? ""} ${p.titleAr}${p.parentAr ? `، ضمن ${p.parentAr}` : ""}${p.outcomeAr ? ` في إطار ${p.outcomeAr}` : ""}، ${p.descriptionAr ? `سعى إلى: ${p.descriptionAr.split(/(?<=[.!?؟])\s/)[0]}` : "نُفذ تحت إشراف جهته المسؤولة"}. وامتد ${p.startDate ? `من ${p.startDate}` : ""}${p.endDate ? ` إلى ${p.endDate}` : ""}${p.budgetQar ? ` بميزانية قدرها ${fmt(p.budgetQar)} ريالاً السعوديةياً` : ""} تحت إشراف ${p.leadAr}، ويُقفل بحالة ${statusText(p.status).ar}${p.lastUpdate ? ` عند ${fmt(p.lastUpdate.progressPct)}% من التقدم وفق آخر تقرير في ${p.lastUpdate.date}` : ""}.`.trim()
           ),
           bi(
             `${fmt(p.deliverables.length)} deliverables were received, ${fmt(accepted)} accepted; ${fmt(p.kpis.length)} KPIs were tracked and ${fmt(p.stakeholders.length)} stakeholders are on record. ${p.lessons.length ? `The project leaves ${fmt(p.lessons.length)} lessons for the ones that follow.` : "No lesson has been documented for it yet."}`,
@@ -154,7 +154,7 @@ const def: SectionDefinition<ClosureData> = {
           [T.status, statusText(p.status)],
           [bi("Start", "البداية"), bi(p.startDate ?? "", p.startDate ?? "")],
           [bi("End", "النهاية"), bi(p.endDate ?? "", p.endDate ?? "")],
-          [bi("Budget (QAR)", "الميزانية (ريال)"), bi(p.budgetQar ? fmt(p.budgetQar) : "", p.budgetQar ? fmt(p.budgetQar) : "")],
+          [bi("Budget (SAR)", "الميزانية (ريال سعودي)"), bi(p.budgetQar ? fmt(p.budgetQar) : "", p.budgetQar ? fmt(p.budgetQar) : "")],
           [T.lead, bi(p.leadEn, p.leadAr)],
           [bi("Parent", "الأصل"), bi(p.parentEn ?? "", p.parentAr ?? "")],
           [T.outcome, bi(p.outcomeEn ?? "", p.outcomeAr ?? "")],
@@ -198,7 +198,7 @@ const def: SectionDefinition<ClosureData> = {
       lead: prose.lead ?? bi(`Closure record, ${period.en}.`, `سجل الإقفال، ${period.ar}.`),
       keyFigure: p ? { value: `${p.deliverables.filter((d) => d.acceptance === "accepted").length}/${p.deliverables.length}`, label: bi("deliverables accepted", "مخرجات مقبولة") } : undefined,
       blocks,
-      sources: makeSources([SRC.strategy("nds3"), SRC.vault(), SRC.lessons()]),
+      sources: makeSources([SRC.strategy("nes3"), SRC.vault(), SRC.lessons()]),
       meta: { live, project: p?.code ?? null, completed: data.completed.length },
     });
   },

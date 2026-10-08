@@ -50,8 +50,8 @@ async function main() {
   page.on("pageerror", (e) => problems.push(`pageerror: ${String(e).slice(0, 300)}`));
 
   await page.goto(BASE + "/en/login");
-  await page.fill("#email", "admin@npc.qa");
-  await page.fill("#password", "Nexus!2026");
+  await page.fill("#email", "admin@enviroai.demo");
+  await page.fill("#password", "EnviroAI!2026");
   await page.click("button[type=submit]");
   await page.waitForURL("**/home", { timeout: 60000 });
 

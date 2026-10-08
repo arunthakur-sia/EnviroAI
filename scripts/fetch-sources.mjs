@@ -1,18 +1,23 @@
-// Downloads public NPC material into /sources per NPC_KMS_BLUEPRINT.md section 12.1.
+// Downloads public Saudi environment, water and agriculture reference material
+// into /sources. The list below is derived from the public URLs recorded in the
+// KSA Environmental, Water and Agriculture Data Source Databank (the Source
+// Library seed carries the full register; this script only fetches the few
+// documents that the knowledge library ingests as full text).
 // Zero dependencies. Never throws: every failure is recorded in the manifest and skipped.
 // Idempotent: files already present (>1KB) are not re-downloaded.
 import { mkdir, writeFile, stat, readFile, unlink } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
 
-// This machine sits behind a TLS-intercepting corporate proxy whose CA Node does
-// not trust (UNABLE_TO_VERIFY_LEAF_SIGNATURE on every public site). These are all
-// public documents fetched read-only, so verification is disabled for this script only.
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+// Behind a TLS-intercepting corporate proxy whose CA Node does not trust,
+// every public site fails verification (UNABLE_TO_VERIFY_LEAF_SIGNATURE).
+// Prefer NODE_EXTRA_CA_CERTS. As a last resort, set FETCH_INSECURE_TLS=1 to
+// disable verification for this script only (public documents, read-only).
+if (process.env.FETCH_INSECURE_TLS === "1") process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const OUT = path.resolve(process.cwd(), "sources");
 const UA =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 SiaNexus-prototype-fetcher";
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 EnviroAI-source-fetcher";
 const RATE_MS = 500;
 const manifest = [];
 let lastRequest = 0;
@@ -152,206 +157,68 @@ function extractLinks(html, baseUrl) {
   return [...links];
 }
 
+/* Fixed file names: scripts/seed.ts keys its authored metadata on them. */
+const DOCUMENTS = [
+  {
+    url: "https://www.mewa.gov.sa/en/Ministry/initiatives/SectorStratigy/Documents/6.%20BAH-MEWA-KSA%20NES-CEDA%20Executive%20Summary%20v3%2020180221%20ENG.pdf",
+    saveAs: "NES_Executive_Summary_EN.pdf",
+    note: "MEWA National Environment Strategy executive summary",
+  },
+  {
+    url: "https://www.jetro.go.jp/ext_images/world/middle_east/sa/law/pdf/National_Environmental_Strategy_ENG.pdf",
+    saveAs: "NES_Environmental_Strategy_Mirror_EN.pdf",
+    note: "National Environment Strategy, third-party mirror copy",
+  },
+  {
+    url: "https://sgi.gov.sa/media/v4pllu0w/about_saudi_green_initiative_factsheet_en.pdf",
+    saveAs: "SGI_Factsheet_EN.pdf",
+    note: "Saudi Green Initiative factsheet",
+  },
+  {
+    url: "https://unfccc.int/sites/default/files/2026-01/2nd%20KSA%20NDC%20Document%20Final%20Document%20%2828122025%29_DNA.pdf",
+    saveAs: "Saudi_NDC_2025.pdf",
+    note: "Saudi Arabia second NDC (UNFCCC)",
+  },
+  {
+    url: "https://ncw.gov.sa/assets/img/open-data/NCW_Annual_Report_2023.pdf",
+    saveAs: "NCW_Annual_Report_2023.pdf",
+    note: "National Center for Wildlife annual report 2023",
+  },
+  {
+    url: "https://www.mewa.gov.sa/en/Ministry/Agencies/AgencyForInnovation/Topics/Documents/SlmReport-En.pdf",
+    saveAs: "Sustainable_Land_Management_Report_EN.pdf",
+    note: "MEWA sustainable land management report",
+  },
+  {
+    url: "https://www.irena.org/-/media/Files/IRENA/Agency/Statistics/Statistical_Profiles/Middle%20East/Saudi%20Arabia_Middle%20East_RE_SP.pdf",
+    saveAs: "IRENA_Saudi_Arabia_Statistical_Profile.pdf",
+    note: "IRENA statistical profile, Saudi Arabia",
+  },
+  {
+    url: "https://enowa.neom.com/ENOWA_Water_Inaugural_ESG_Report.pdf",
+    saveAs: "ENOWA_Water_ESG_Report.pdf",
+    note: "ENOWA water inaugural ESG report",
+  },
+  {
+    url: "https://sirc.sa/SIRC_2024_Sustainability_Report_English.pdf",
+    saveAs: "SIRC_Sustainability_Report_2024.pdf",
+    note: "SIRC 2024 sustainability report",
+  },
+];
+
+/* Public pages from the same databank, kept as text captures. */
+const PAGES = [
+  { url: "https://sgi.gov.sa/sgi-initiatives/", saveAs: "page_sgi_initiatives.html", note: "Saudi Green Initiative tracker" },
+  { url: "https://www.vision2030.gov.sa/en/projects/middle-east-green-initiative/", saveAs: "page_middle_east_green_initiative.html", note: "Middle East Green Initiative" },
+  { url: "https://www.mewa.gov.sa/en/Ministry/Agencies/TheWaterAgency/Topics/Pages/Strategy.aspx", saveAs: "page_national_water_strategy_2030.html", note: "National Water Strategy 2030 page" },
+  { url: "https://www.mewa.gov.sa/en/Ministry/initiatives/SectorStratigy/Pages/default.aspx", saveAs: "page_mewa_sector_strategy.html", note: "MEWA sector strategy page" },
+];
+
 async function run() {
   await mkdir(OUT, { recursive: true });
 
-  // 1 + 2: NDS3 PDFs
-  await grab("https://www.npc.qa/en/planning/nds3/Documents/QNDS3_EN.pdf", {
-    note: "NDS3 English PDF",
-    saveAs: "QNDS3_EN.pdf",
-  });
-  const ndsAr = await grab("https://www.npc.qa/ar/planning/nds3/Documents/QNDS3_AR.pdf", {
-    note: "NDS3 Arabic PDF",
-    saveAs: "QNDS3_AR.pdf",
-  });
-  if (!ndsAr.ok) {
-    const arPage = await grabPage(
-      "https://www.npc.qa/ar/planning/nds3/Pages/default.aspx",
-      "NDS3 Arabic overview page (looking for AR PDF link)",
-      "npc_nds3_overview_ar.html"
-    );
-    if (arPage) {
-      const pdfLink = extractLinks(arPage, "https://www.npc.qa").find((l) =>
-        /nds3.*\.pdf$/i.test(l)
-      );
-      if (pdfLink) await grab(pdfLink, { note: "NDS3 Arabic PDF via page", saveAs: "QNDS3_AR.pdf" });
-    }
-  }
-
-  // 3 + 4: about + overview pages
-  await grabPage("https://www.npc.qa/en/aboutus/pages/default.aspx", "NPC about EN", "npc_about_en.html");
-  await grabPage("https://www.npc.qa/ar/aboutus/pages/default.aspx", "NPC about AR", "npc_about_ar.html");
-  await grabPage("https://www.npc.qa/en/planning/nds3/Pages/default.aspx", "NDS3 overview EN", "npc_nds3_overview_en.html");
-
-  // 5: news crawl
-  for (const [locale, listUrl] of [
-    ["en", "https://www.npc.qa/en/media/pages/news/"],
-    ["ar", "https://www.npc.qa/ar/media/pages/news/"],
-  ]) {
-    const listing = await grabPage(listUrl, `news listing ${locale}`, `npc_news_listing_${locale}.html`);
-    const newsLinks = new Set([
-      `https://www.npc.qa/${locale}/media/pages/news/27042025.aspx`,
-    ]);
-    if (listing) {
-      for (const l of extractLinks(listing, listUrl)) {
-        if (new RegExp(`/${locale}/media/pages/news/[^/]+\\.aspx$`, "i").test(l)) newsLinks.add(l);
-        if (newsLinks.size >= 40) break;
-      }
-    }
-    for (const l of newsLinks) {
-      await grabPage(l, `news item ${locale}`, `npc_news_${locale}_` + sanitize(l).slice(-60));
-    }
-  }
-
-  // 6: GCO articles
-  const gco = [
-    "https://www.gco.gov.qa/en/media-centre/top-news/the-general-secretariat-of-the-council-of-ministers-highlights-the-objectives-and-competencies-of-the-national-planning-council/",
-    "https://www.gco.gov.qa/en/media-centre/top-news/national-planning-council-launches-national-data-and-statistics-strategy/",
-    "https://www.gco.gov.qa/ar/media-centre/top-news/the-general-secretariat-of-the-council-of-ministers-highlights-the-objectives-and-competencies-of-the-national-planning-council/",
-    "https://www.gco.gov.qa/ar/media-centre/top-news/national-planning-council-launches-national-data-and-statistics-strategy/",
-  ];
-  for (const u of gco) await grabPage(u, "GCO article");
-
-  // 7: statistics section crawl for downloadable releases
-  const statPages = [
-    "https://www.npc.qa/en/statistics/pages/default.aspx",
-    "https://www.npc.qa/en/statistics/pages/subjectdetails.aspx",
-    "https://www.npc.qa/en/statistics1/pages/default.aspx",
-  ];
-  const fileLinks = new Set();
-  for (const p of statPages) {
-    const html = await grabPage(p, "statistics page");
-    if (!html) continue;
-    for (const l of extractLinks(html, p)) {
-      if (/\.(pdf|xlsx?|csv)(\?|$)/i.test(l) && /npc\.qa/i.test(l)) fileLinks.add(l);
-      // follow one level of statistics subject pages
-      if (/statistics.*\.aspx$/i.test(l) && fileLinks.size < 5 && /npc\.qa/i.test(l)) {
-        const sub = await grabPage(l, "statistics subject page");
-        if (sub) for (const l2 of extractLinks(sub, l)) {
-          if (/\.(pdf|xlsx?|csv)(\?|$)/i.test(l2) && /npc\.qa/i.test(l2)) fileLinks.add(l2);
-        }
-      }
-      if (fileLinks.size >= 40) break;
-    }
-  }
-  let statCount = 0;
-  for (const l of fileLinks) {
-    if (statCount++ >= 40) break;
-    await grab(l, { note: "statistics release file" });
-  }
-
-  // 8: Open Data Portal. Paginate the whole catalog, then export the most
-  // statistically relevant datasets (population, prices, GDP, trade, labour, permits).
-  try {
-    const all = [];
-    for (let offset = 0; offset <= 1000; offset += 100) {
-      const r = await grab(
-        `https://www.data.gov.qa/api/explore/v2.1/catalog/datasets?limit=100&offset=${offset}`,
-        { note: "open data catalog page", saveAs: `opendata_catalog_${offset}.json`, wantText: true }
-      );
-      if (!r.ok) break;
-      const raw = (r.buf ?? (await readFile(path.join(OUT, `opendata_catalog_${offset}.json`)))).toString("utf8");
-      const json = JSON.parse(raw);
-      const results = json.results || [];
-      all.push(...results);
-      if (results.length < 100) break;
-    }
-    await writeFile(
-      path.join(OUT, "opendata_catalog.json"),
-      JSON.stringify({ total: all.length, results: all })
-    );
-    const priority = [
-      /monthly.*population|population.*month|total population/i,
-      /consumer price|cpi/i,
-      /gross domestic|gdp|national accounts/i,
-      /foreign trade|exports|imports|trade balance/i,
-      /labou?r force|employment|unemployment/i,
-      /building permit/i,
-      /education|students|schools/i,
-      /health|hospital/i,
-    ];
-    const scored = all
-      .map((d) => {
-        const id = d.dataset_id || d.datasetid || d.dataset?.dataset_id;
-        const title = String(d.metas?.default?.title || d.metas?.title || d.title || id || "");
-        const idx = priority.findIndex((re) => re.test(title));
-        const records = d.metas?.default?.records_count || 0;
-        return { id, title, idx: idx === -1 ? 99 : idx, records };
-      })
-      .filter((d) => d.id && d.idx < 99 && !/sdg/i.test(d.title))
-      .sort((a, b) => a.idx - b.idx || b.records - a.records)
-      .slice(0, 25);
-    for (const d of scored) {
-      await grab(
-        `https://www.data.gov.qa/api/explore/v2.1/catalog/datasets/${d.id}/exports/csv?limit=-1`,
-        { note: `open data csv: ${d.title.slice(0, 80)}`, saveAs: `opendata_${d.id}.csv` }
-      );
-    }
-  } catch (e) {
-    manifest.push({ url: "opendata", filename: "-", status: "error:" + String(e).slice(0, 80) });
-  }
-
-  // 9: QNV 2030 candidates
-  for (const u of [
-    "https://www.npc.qa/en/qnv/Documents/QNV2030_English_v2.pdf",
-    "https://www.psa.gov.qa/en/qnv1/Documents/QNV2030_English_v2.pdf",
-    "https://www.gco.gov.qa/wp-content/uploads/2016/09/GCO-QNV-English.pdf",
-  ]) {
-    const r = await grab(u, { note: "QNV 2030 candidate", saveAs: "QNV2030_EN.pdf" });
-    if (r.ok) break;
-  }
-  for (const u of [
-    "https://www.npc.qa/ar/qnv/Documents/QNV2030_Arabic_v2.pdf",
-    "https://www.psa.gov.qa/ar/qnv1/Documents/QNV2030_Arabic_v2.pdf",
-  ]) {
-    const r = await grab(u, { note: "QNV 2030 Arabic candidate", saveAs: "QNV2030_AR.pdf" });
-    if (r.ok) break;
-  }
-
-  // 10: NDS2 candidates
-  for (const u of [
-    "https://www.npc.qa/en/planning/Documents/NDS2Final.pdf",
-    "https://www.psa.gov.qa/en/knowledge/Documents/NDS2Final.pdf",
-    "https://www.psa.gov.qa/en/knowledge/Doc/NDS2Final.pdf",
-    "https://www.mdps.gov.qa/en/knowledge/Documents/NDS2Final.pdf",
-    "https://www.psa.gov.qa/en/nds/Documents/NDS2Final.pdf",
-  ]) {
-    const r = await grab(u, { note: "NDS2 English candidate", saveAs: "NDS2_EN.pdf" });
-    if (r.ok) break;
-  }
-  for (const u of [
-    "https://www.psa.gov.qa/ar/knowledge/Documents/NDS2Final_AR.pdf",
-    "https://www.psa.gov.qa/ar/nds/Documents/NDS2Final_AR.pdf",
-  ]) {
-    const r = await grab(u, { note: "NDS2 Arabic candidate", saveAs: "NDS2_AR.pdf" });
-    if (r.ok) break;
-  }
-
-  // 11: NDS1 candidates (official publication mirrored on UN/planning sites is acceptable)
-  for (const u of [
-    "https://www.psa.gov.qa/en/knowledge/Documents/NDS_EN.pdf",
-    "https://www.psa.gov.qa/en/nds1/Documents/NDS_EN.pdf",
-    "https://www.mdps.gov.qa/en/knowledge/HomePagePublications/Qatar_NDS_reprint_complete_lowres_16May.pdf",
-    "https://planipolis.iiep.unesco.org/sites/default/files/ressources/qatar_national_development_strategy.pdf",
-    "https://www.ilo.org/dyn/natlex/docs/ELECTRONIC/97619/115906/F-1541514465/QAT97619.pdf",
-  ]) {
-    const r = await grab(u, { note: "NDS1 English candidate", saveAs: "NDS1_EN.pdf" });
-    if (r.ok) break;
-  }
-
-  // 12: other NPC documents linked from crawled pages (data policy, standards, guidebook)
-  const interesting = /data[-_ ]?polic|data[-_ ]?standard|enablement|guidebook|trust[-_ ]?index/i;
-  const crawled = manifest.filter((m) => m.status === "ok" && m.filename.endsWith(".html"));
-  for (const c of crawled.slice(0, 10)) {
-    try {
-      const html = (await readFile(path.join(OUT, c.filename))).toString("utf8");
-      for (const l of extractLinks(html, c.url)) {
-        if (/\.pdf(\?|$)/i.test(l) && interesting.test(l)) {
-          await grab(l, { note: "linked NPC document" });
-        }
-      }
-    } catch { /* skip */ }
-  }
+  for (const d of DOCUMENTS) await grab(d.url, { note: d.note, saveAs: d.saveAs });
+  for (const p of PAGES) await grabPage(p.url, p.note, p.saveAs);
 
   // write manifest + SOURCES.md
   await writeFile(path.join(OUT, "manifest.json"), JSON.stringify(manifest, null, 2));

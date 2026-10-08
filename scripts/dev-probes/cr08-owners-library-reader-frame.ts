@@ -14,7 +14,7 @@ fs.mkdirSync(OUT, { recursive: true });
 
 async function login(page: Page, email: string) {
   const res = await page.context().request.post(`${BASE}/api/v1/auth/login`, {
-    data: { email, password: "Nexus!2026" },
+    data: { email, password: "EnviroAI!2026" },
     timeout: 120000,
   });
   if (res.status() !== 200) throw new Error(`login ${email} -> ${res.status()}`);
@@ -24,7 +24,7 @@ async function main() {
   const browser = await chromium.launch({ channel: "msedge" });
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
-  await login(page, "admin@npc.qa");
+  await login(page, "admin@enviroai.demo");
   for (const locale of ["en", "ar"] as const) {
     await page.goto(`${BASE}/${locale}/lessons`, { waitUntil: "domcontentloaded", timeout: 120000 });
     await page.waitForSelector("[data-testid=room-lesson-open]", { timeout: 120000 });

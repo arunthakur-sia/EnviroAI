@@ -19,7 +19,7 @@ export default async function NodePage({
   const { locale, id } = await params;
   const sp = await searchParams;
 
-  // /strategy/nds3 and friends: the canvas, not a node
+  // an edition code in the path: the canvas, not a node
   const asEdition = await getEditionByCode(id);
   if (asEdition) {
     return renderNavigator({
@@ -30,7 +30,7 @@ export default async function NodePage({
     });
   }
 
-  // CR08 2.3: tell the Ask NPC launcher which node the reader is on
+  // CR08 2.3: tell the Ask EnviroAI launcher which node the reader is on
   const askItem = await strategyNodeAskContext(id);
   return (
     <>

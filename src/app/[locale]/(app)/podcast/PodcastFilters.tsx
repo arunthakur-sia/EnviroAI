@@ -29,7 +29,7 @@ export function PodcastFilters({
       <NativeSelect
         value={sp.get("outcome") ?? ""}
         onChange={(e) => setParam("outcome", e.target.value || null)}
-        className={cn("w-auto max-w-52", sp.get("outcome") && "border-maroon-300")}
+        className={cn("w-auto max-w-52", sp.get("outcome") && "border-navy-300")}
         aria-label={t("filterOutcome")}
       >
         <option value="">{t("filterOutcome")}</option>
@@ -42,7 +42,7 @@ export function PodcastFilters({
       <NativeSelect
         value={sp.get("focus") ?? ""}
         onChange={(e) => setParam("focus", e.target.value || null)}
-        className={cn("w-auto", sp.get("focus") && "border-maroon-300")}
+        className={cn("w-auto", sp.get("focus") && "border-navy-300")}
         aria-label={t("filterFocus")}
       >
         <option value="">{t("filterFocus")}</option>
@@ -55,7 +55,7 @@ export function PodcastFilters({
       <NativeSelect
         value={sp.get("language") ?? ""}
         onChange={(e) => setParam("language", e.target.value || null)}
-        className={cn("w-auto", sp.get("language") && "border-maroon-300")}
+        className={cn("w-auto", sp.get("language") && "border-navy-300")}
         aria-label={t("filterLanguage")}
       >
         <option value="">{t("filterLanguage")}</option>

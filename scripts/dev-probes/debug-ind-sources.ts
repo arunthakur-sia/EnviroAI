@@ -8,7 +8,7 @@ async function main() {
   const { db, schema, rawClient } = await import("../../src/server/db/client");
   const { inArray } = await import("drizzle-orm");
 
-  const query = "كم بلغ معدل التضخم في قطر مؤخراً؟";
+  const query = "كم بلغ معدل استهلاك المياه للفرد في المملكة مؤخراً؟";
   const { vector } = await embedQuery(query);
   const keywordQuery = query
     .split(/\s+/)

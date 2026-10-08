@@ -17,10 +17,10 @@ import { callApi } from "./shared";
 const ROLES: readonly RaciRole[] = ["R", "A", "C", "I"];
 
 const ROLE_CLASS: Record<RaciRole, string> = {
-  A: "bg-maroon-700 text-white",
-  R: "bg-gulf-600 text-white",
-  C: "bg-gold-300 text-maroon-900",
-  I: "bg-sand-200 text-ink-600",
+  A: "bg-navy-700 text-white",
+  R: "bg-teal-600 text-white",
+  C: "bg-aqua-300 text-navy-900",
+  I: "bg-mist-200 text-ink-600",
 };
 
 export function RoleBadge({ role, className }: { role: RaciRole; className?: string }) {
@@ -85,7 +85,7 @@ export function RaciRow({
           sorted.map((r) => (
             <span
               key={r.unit.id}
-              className="inline-flex max-w-full items-center gap-1.5 rounded-lg border border-sand-200 bg-white px-2 py-1 text-xs text-ink-900"
+              className="inline-flex max-w-full items-center gap-1.5 rounded-lg border border-mist-200 bg-white px-2 py-1 text-xs text-ink-900"
               data-testid="raci-cell"
               data-role={r.role}
               data-unit={r.unit.code}

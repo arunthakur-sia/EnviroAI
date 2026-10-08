@@ -1,4 +1,4 @@
-// CR08 2.3: the turns of one analyst conversation (GET), so the Ask NPC panel
+// CR08 2.3: the turns of one analyst conversation (GET), so the Ask EnviroAI panel
 // can continue a recent conversation in place. Same rules as /ask/c/[id]: the
 // owner sees everything, a shared conversation is filtered to the viewer's
 // clearance, anything else is not found.

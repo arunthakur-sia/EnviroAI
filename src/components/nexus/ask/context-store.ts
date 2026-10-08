@@ -1,5 +1,5 @@
 "use client";
-// CR08 2.3: the item the reader is looking at, so the Ask NPC panel can open
+// CR08 2.3: the item the reader is looking at, so the Ask EnviroAI panel can open
 // context-aware ("Ask about this project"). A tiny module store: pages mount
 // <AskContextItem item={...} /> and the launcher/panel subscribe here.
 import { useSyncExternalStore } from "react";

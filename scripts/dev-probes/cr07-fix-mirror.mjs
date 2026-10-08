@@ -31,7 +31,7 @@ for (const r of rows) {
     });
   } else {
     await db.execute({
-      sql: "insert into lesson_node_links (id, lesson_id, node_id, node_kind, is_primary, linked_by, linked_at) values (?, ?, ?, 'nds', 1, ?, ?)",
+      sql: "insert into lesson_node_links (id, lesson_id, node_id, node_kind, is_primary, linked_by, linked_at) values (?, ?, ?, 'nes', 1, ?, ?)",
       args: [ulid(), r.id, r.node_id, r.author_id, r.created_at ?? new Date().toISOString()],
     });
   }

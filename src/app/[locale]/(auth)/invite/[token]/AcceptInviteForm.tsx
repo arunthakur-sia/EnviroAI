@@ -76,7 +76,7 @@ export function AcceptInviteForm({ token }: { token: string }) {
           type="checkbox"
           checked={accept}
           onChange={(e) => setAccept(e.target.checked)}
-          className="mt-0.5 accent-maroon-700"
+          className="mt-0.5 accent-navy-700"
           data-testid="accept-use"
         />
         {t("acceptableUse")}

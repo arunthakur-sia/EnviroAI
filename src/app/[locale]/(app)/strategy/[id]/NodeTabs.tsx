@@ -12,7 +12,7 @@ export function NodeTabs({
   const [active, setActive] = React.useState(tabs[0]?.key ?? "");
   return (
     <div data-testid="node-tabs">
-      <div role="tablist" className="mb-4 flex items-center gap-1 border-b border-sand-300">
+      <div role="tablist" className="mb-4 flex items-center gap-1 border-b border-mist-300">
         {tabs.map((tab) => (
           <button
             key={tab.key}
@@ -22,13 +22,13 @@ export function NodeTabs({
             className={cn(
               "-mb-px flex items-center gap-1.5 border-b-2 px-3.5 py-2 text-sm transition-colors cursor-pointer",
               active === tab.key
-                ? "border-maroon-700 font-medium text-maroon-900"
+                ? "border-navy-700 font-medium text-navy-900"
                 : "border-transparent text-ink-600 hover:text-ink-900"
             )}
           >
             {tab.label}
             {tab.badge ? (
-              <span className="rounded-full bg-sand-100 px-1.5 py-0.5 text-[10px] font-semibold text-ink-600 tnum">
+              <span className="rounded-full bg-mist-100 px-1.5 py-0.5 text-[10px] font-semibold text-ink-600 tnum">
                 {tab.badge}
               </span>
             ) : null}

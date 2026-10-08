@@ -104,7 +104,7 @@ export function StartHandoverDialog({ open, onOpenChange, presetUserId }: { open
             {/* a caption over the person-mode tabs and whatever picker they
                 reveal, not the label of one control */}
             <span className="mb-1.5 block text-xs font-medium text-ink-600">{t("person")}</span>
-            <div className="mb-2 inline-flex items-center gap-1 rounded-xl bg-sand-100 p-1" role="tablist" aria-label={t("person")}>
+            <div className="mb-2 inline-flex items-center gap-1 rounded-xl bg-mist-100 p-1" role="tablist" aria-label={t("person")}>
               {(["employee", "external", "spot"] as PersonMode[]).map((m) => (
                 <button
                   key={m}
@@ -112,7 +112,7 @@ export function StartHandoverDialog({ open, onOpenChange, presetUserId }: { open
                   role="tab"
                   aria-selected={personMode === m}
                   onClick={() => setPersonMode(m)}
-                  className={cn("cursor-pointer rounded-lg px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-gold-500", personMode === m ? "bg-white text-maroon-900 shadow-sm" : "text-ink-600 hover:text-ink-900")}
+                  className={cn("cursor-pointer rounded-lg px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-aqua-500", personMode === m ? "bg-white text-navy-900 shadow-sm" : "text-ink-600 hover:text-ink-900")}
                   data-testid={`person-mode-${m}`}
                 >
                   {t(`personMode.${m}`)}
@@ -128,11 +128,11 @@ export function StartHandoverDialog({ open, onOpenChange, presetUserId }: { open
             ) : personMode === "external" ? (
               <div>
                 {external ? (
-                  <div className="flex items-center gap-2 rounded-lg border border-sand-300 bg-sand-50 px-3 py-2 text-sm" data-testid="start-external-selected">
+                  <div className="flex items-center gap-2 rounded-lg border border-mist-300 bg-mist-50 px-3 py-2 text-sm" data-testid="start-external-selected">
                     <span className="min-w-0 flex-1 truncate">
                       {bi(locale, external.nameEn, external.nameAr)} <span className="text-ink-400">{external.organisationEn ?? ""}</span>
                     </span>
-                    <button type="button" onClick={() => setExternal(null)} className="cursor-pointer text-xs text-maroon-700 hover:underline">
+                    <button type="button" onClick={() => setExternal(null)} className="cursor-pointer text-xs text-navy-700 hover:underline">
                       {tc("remove")}
                     </button>
                   </div>
@@ -144,7 +144,7 @@ export function StartHandoverDialog({ open, onOpenChange, presetUserId }: { open
                       <Search className="pointer-events-none absolute start-2.5 top-1/2 size-4 -translate-y-1/2 text-ink-400" aria-hidden />
                       <Input value={externalQuery} onChange={(e) => setExternalQuery(e.target.value)} placeholder={t("externalPlaceholder")} className="ps-8" data-testid="start-external-input" aria-label={t("personMode.external")} />
                     </div>
-                    <ul className="mt-1 max-h-48 overflow-y-auto rounded-xl border border-sand-300 bg-white p-1" role="listbox" aria-busy={externals === null}>
+                    <ul className="mt-1 max-h-48 overflow-y-auto rounded-xl border border-mist-300 bg-white p-1" role="listbox" aria-busy={externals === null}>
                       {externals === null ? (
                         [0, 1, 2].map((k) => (
                           <li key={k} className="px-2.5 py-1.5" aria-hidden>
@@ -154,7 +154,7 @@ export function StartHandoverDialog({ open, onOpenChange, presetUserId }: { open
                       ) : externals.length ? (
                         externals.map((e) => (
                           <li key={e.id} role="option" aria-selected={false}>
-                            <button type="button" onClick={() => setExternal(e)} className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-2.5 py-1.5 text-start text-sm hover:bg-maroon-100/60 focus-visible:outline-2 focus-visible:outline-gold-500" data-testid="start-external-option">
+                            <button type="button" onClick={() => setExternal(e)} className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-2.5 py-1.5 text-start text-sm hover:bg-navy-100/60 focus-visible:outline-2 focus-visible:outline-aqua-500" data-testid="start-external-option">
                               <span className="min-w-0 flex-1 truncate">{bi(locale, e.nameEn, e.nameAr)}</span>
                               <span className="truncate text-xs text-ink-400">{e.organisationEn ?? e.type}</span>
                             </button>
@@ -226,7 +226,7 @@ export function StartHandoverDialog({ open, onOpenChange, presetUserId }: { open
                   role="radio"
                   aria-checked={mode === m}
                   onClick={() => setMode(m)}
-                  className={cn("cursor-pointer rounded-lg border px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-gold-500", mode === m ? "border-maroon-700 bg-maroon-50 text-maroon-900" : "border-sand-300 text-ink-600 hover:border-maroon-300")}
+                  className={cn("cursor-pointer rounded-lg border px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-aqua-500", mode === m ? "border-navy-700 bg-navy-50 text-navy-900" : "border-mist-300 text-ink-600 hover:border-navy-300")}
                   data-testid={`recipient-mode-${m}`}
                 >
                   {t(`modes.${m}`)}
@@ -262,7 +262,7 @@ export function StartHandoverDialog({ open, onOpenChange, presetUserId }: { open
 
           {/* the form is taller than the dialog on a 900px screen, so the
               actions stay on the sticky footer instead of below the fold */}
-          <div className="sticky bottom-0 -mx-6 -mb-6 flex items-center justify-end gap-2 border-t border-sand-100 bg-white px-6 py-4">
+          <div className="sticky bottom-0 -mx-6 -mb-6 flex items-center justify-end gap-2 border-t border-mist-100 bg-white px-6 py-4">
             <Button variant="ghost" onClick={() => onOpenChange(false)}>
               {tc("cancel")}
             </Button>

@@ -61,7 +61,7 @@ export function IndicesSettingsTab() {
   const [busy, setBusy] = React.useState<string | null>(null);
   const [obsForm, setObsForm] = React.useState({
     indexCode: "",
-    country: "QAT",
+    country: "SAU",
     year: String(new Date().getFullYear()),
     rank: "",
     score: "",
@@ -152,7 +152,7 @@ export function IndicesSettingsTab() {
       <div className="card overflow-x-auto" data-testid="indices-register">
         <div role="table" aria-label={t("register")} className="min-w-[760px] text-sm">
           <div role="rowgroup">
-            <div role="row" className={cn("grid border-b border-sand-100", REGISTER_COLS)}>
+            <div role="row" className={cn("grid border-b border-mist-100", REGISTER_COLS)}>
               {head(t("colIndex"))}
               {head(t("colPublisher"))}
               {head(t("colCategory"))}
@@ -163,7 +163,7 @@ export function IndicesSettingsTab() {
           </div>
           <div role="rowgroup">
             {rows.map((r) => (
-              <div key={r.id} role="row" className={cn("grid items-center border-b border-sand-100 last:border-0", REGISTER_COLS)} data-testid="settings-index-row">
+              <div key={r.id} role="row" className={cn("grid items-center border-b border-mist-100 last:border-0", REGISTER_COLS)} data-testid="settings-index-row">
                 <div role="cell" className="min-w-0 px-4 py-2.5">
                   <span className="block truncate font-medium text-ink-900">
                     {r.sdgGoal != null ? <span className="me-1.5 tnum text-ink-400">SDG {r.sdgGoal}</span> : null}
@@ -172,7 +172,7 @@ export function IndicesSettingsTab() {
                   <span className="block text-xs text-ink-400 tnum" dir="ltr">{r.code}</span>
                 </div>
                 <div role="cell" className="truncate px-4 py-2.5 text-xs text-ink-600">{r.publisher ?? "-"}</div>
-                <div role="cell" className="px-4 py-2.5"><Chip tone="sand">{r.category}</Chip></div>
+                <div role="cell" className="px-4 py-2.5"><Chip tone="mist">{r.category}</Chip></div>
                 <div role="cell" className="px-4 py-2.5 text-xs text-ink-600">
                   {r.higherIsBetter ? t("higherBetter") : t("lowerBetter")}
                 </div>
@@ -188,7 +188,7 @@ export function IndicesSettingsTab() {
                       });
                       void load();
                     }}
-                    className="cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+                    className="cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
                     aria-label={r.isActive ? t("deactivate", { name: r.nameEn }) : t("activate", { name: r.nameEn })}
                     data-testid="settings-index-toggle"
                   >
@@ -328,7 +328,7 @@ export function IndicesSettingsTab() {
                       toast(t("assumptionSaved"), "points");
                       void load();
                     }}
-                    className="mt-1.5 w-full accent-maroon-700"
+                    className="mt-1.5 w-full accent-navy-700"
                   />
                 </label>
               ))}

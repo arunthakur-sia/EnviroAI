@@ -187,7 +187,7 @@ describe("rank derivation", () => {
   });
 
   it("anchors to the published rank when the pool is only a sample", () => {
-    // 18 peers of a 130-country field; Qatar published rank 49
+    // 18 peers of a 130-country field; Saudi Arabia published rank 49
     const peers = Array.from({ length: 18 }, (_, i) => 45 + i * 3);
     const r = runForecast(
       baseInputs({
@@ -245,7 +245,7 @@ describe("direction", () => {
   });
 });
 
-/* CR08 4.1: target_gap mode (national indicators against their NDS3 target) */
+/* CR08 4.1: target_gap mode (national indicators against their NES target) */
 describe("target gap mode", () => {
   // an LFPR-like series: 52.2 to 55.3 over 2019-2026, target 75 by 2030
   const lfpr = baseInputs({

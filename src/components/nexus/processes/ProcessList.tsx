@@ -31,20 +31,20 @@ export function ProcessList({
         const body = (
           <>
             <LevelChip level={p.level} />
-            <span className="shrink-0 text-[11px] font-semibold text-maroon-700 tnum">{p.code}</span>
+            <span className="shrink-0 text-[11px] font-semibold text-navy-700 tnum">{p.code}</span>
             <span className="min-w-0 flex-1 truncate text-sm text-ink-900">{name}</span>
             {/* the name carries the row: only the document count travels with
                 it, since these lists sit in narrow columns and panels */}
             {docs > 0 ? (
               <span className="hidden shrink-0 items-center text-[11px] text-ink-600 tnum sm:flex">
-                <Chip tone="sand">{t("map.docCount", { count: docs })}</Chip>
+                <Chip tone="mist">{t("map.docCount", { count: docs })}</Chip>
               </span>
             ) : null}
             <ChevronRight className="size-4 shrink-0 text-ink-400 flip-rtl" aria-hidden />
           </>
         );
         const classes =
-          "flex w-full cursor-pointer items-center gap-2.5 rounded-xl bg-white px-3 py-2 text-start shadow-[var(--shadow-paper)] transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500";
+          "flex w-full cursor-pointer items-center gap-2.5 rounded-xl bg-white px-3 py-2 text-start shadow-[var(--shadow-paper)] transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500";
         return (
           <li key={p.id} data-testid="process-list-row" data-code={p.code}>
             {onOpen ? (

@@ -11,7 +11,7 @@ async function login(email: string): Promise<string> {
   const res = await fetch(`${BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email, password: "EnviroAI!2026" }),
   });
   const cookie = (res.headers.get("set-cookie") ?? "").split(";")[0];
   console.log(`login ${email} -> ${res.status} cookie ${cookie ? "set" : "missing"}`);
@@ -26,7 +26,7 @@ async function call(cookie: string, path: string, init: RequestInit = {}) {
 }
 
 async function main() {
-  const admin = await login("admin@npc.qa");
+  const admin = await login("admin@enviroai.demo");
   const active = await call(admin, "/api/v1/knowledge-of-week?view=active");
   const card = JSON.parse(active.text).data as { resourceType: string; resourceId: string; weekStart: string } | null;
   if (card) {
@@ -34,7 +34,7 @@ async function main() {
   }
   await call(admin, "/api/v1/knowledge-of-week?view=ids");
   await call(admin, "/api/v1/knowledge-of-week?view=schedule");
-  const contributor = await login("analyst@npc.qa");
+  const contributor = await login("analyst@enviroai.demo");
   await call(contributor, "/api/v1/knowledge-of-week?view=schedule");
   await call(contributor, "/api/v1/knowledge-of-week", {
     method: "POST",

@@ -16,10 +16,10 @@ function sampleModel(): ReportDocumentModel {
   return {
     request: {
       reportId: "smoke-template",
-      typeCode: "npc_annual",
+      typeCode: "org_annual_report",
       family: "internal",
       period: { kind: "year", year: 2026, label: bi("Year 2026", "سنة 2026") },
-      scope: { kind: "npc", label: bi("National Planning Council", "المجلس الوطني للتخطيط") },
+      scope: { kind: "org", label: bi("Programme Office", "مكتب البرنامج") },
       audience: "leadership",
       languageMode: "both",
       sectionCodes: ["cover", "contents", "foreword", "statistics_highlights", "targets_scorecard", "sources_appendix", "closing"],
@@ -64,7 +64,7 @@ function sampleModel(): ReportDocumentModel {
               type: "line",
               title: bi("Growth", "النمو"),
               series: [
-                { name: bi("Qatar", "قطر"), role: "primary", points: years.map((x, i) => ({ x, y: [1, 2, 3, 2.5, 3.2][i] })) },
+                { name: bi("Saudi Arabia", "السعودية"), role: "primary", points: years.map((x, i) => ({ x, y: [1, 2, 3, 2.5, 3.2][i] })) },
                 { name: bi("Target", "المستهدف"), role: "target", points: years.map((x) => ({ x, y: 4 })) },
               ],
               source: bi("Smoke", "فحص"),
@@ -88,7 +88,7 @@ function sampleModel(): ReportDocumentModel {
           },
         ],
       },
-      { code: "sources_appendix", numeral: "04", title: bi("Sources", "المصادر"), layout: "sources", blocks: [{ kind: "sources", items: [{ n: 1, title: "Smoke source", url: "https://www.npc.qa" }] }] },
+      { code: "sources_appendix", numeral: "04", title: bi("Sources", "المصادر"), layout: "sources", blocks: [{ kind: "sources", items: [{ n: 1, title: "Smoke source", url: "https://www.mewa.gov.sa" }] }] },
       { code: "closing", title: bi("Closing", "الخاتمة"), layout: "closing", blocks: [] },
     ],
   };
@@ -124,7 +124,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
     check(`template ${lang}: image parts (${media})`, media >= (raster ? 8 : 1));
     check(`template ${lang}: one docx section per report section`, (doc.match(/<w:sectPr/g) ?? []).length === model.sections.length);
     check(`template ${lang}: TOC field and heading styles`, /TOC \\/.test(doc) && doc.includes('w:val="Heading1"'));
-    check(`template ${lang}: palette (maroon, sand, gold, RAG tints)`, doc.includes("8A1538") && doc.includes("F4F0E8") && doc.includes("C9A24D") && doc.includes("E3F1EA") && doc.includes("F9E5E4"));
+    check(`template ${lang}: palette (navy, mist, aqua, RAG tints)`, doc.includes("173044") && doc.includes("F4F6FC") && doc.includes("00DECC") && doc.includes("E3F1EA") && doc.includes("F9E5E4"));
     if (lang === "ar") {
       check("template ar: bidi paragraphs, rtl runs, bidiVisual tables", bidiOn.test(doc) && rtlOn.test(doc) && bidiVisualOn.test(doc));
       check("template ar: Sakkal Majalla in the cs font slot", /w:cs="Sakkal Majalla"/.test(doc));
@@ -149,5 +149,5 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
     },
     "en"
   );
-  check("template: chart SVG carries maroon and gulf marks and a legend", svg.includes("#8A1538") && svg.includes("#0F6E76") && svg.includes(">A<") && svg.includes(">B<"));
+  check("template: chart SVG carries navy and teal marks and a legend", svg.includes("#8A1538") && svg.includes("#0F6E76") && svg.includes(">A<") && svg.includes(">B<"));
 }

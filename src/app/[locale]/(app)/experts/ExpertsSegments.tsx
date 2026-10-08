@@ -1,7 +1,7 @@
 "use client";
 // CR08 3: the segmented control at the top of the Expert Network. Two
 // segments, each with its title, its count and a one-line description; the
-// active one carries the register's accent (maroon for internal, gulf for
+// active one carries the register's accent (navy for internal, teal for
 // external). Deep links through ?view=, the last view remembered per user.
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
@@ -59,12 +59,12 @@ export function ExpertsSegments({
     <div
       role="tablist"
       aria-label={t("viewLabel")}
-      className="grid grid-cols-1 gap-2 rounded-2xl bg-sand-100 p-1.5 sm:grid-cols-2"
+      className="grid grid-cols-1 gap-2 rounded-2xl bg-mist-100 p-1.5 sm:grid-cols-2"
       data-testid="experts-segments"
     >
       {segments.map((s) => {
         const active = s.key === view;
-        const accent = s.key === "internal" ? "bg-maroon-700" : "bg-gulf-600";
+        const accent = s.key === "internal" ? "bg-navy-700" : "bg-teal-600";
         return (
           <button
             key={s.key}
@@ -80,12 +80,12 @@ export function ExpertsSegments({
             data-testid={`segment-${s.key}`}
             className={cn(
               "relative flex flex-col gap-1 overflow-hidden rounded-xl px-4 py-3 text-start transition-colors cursor-pointer",
-              "focus-visible:outline-2 focus-visible:outline-gold-500",
+              "focus-visible:outline-2 focus-visible:outline-aqua-500",
               active ? "bg-white shadow-sm" : "hover:bg-white/60"
             )}
           >
             <span className="flex items-center gap-2">
-              <span className={cn(active ? (s.key === "internal" ? "text-maroon-700" : "text-gulf-600") : "text-ink-400")}>
+              <span className={cn(active ? (s.key === "internal" ? "text-navy-700" : "text-teal-600") : "text-ink-400")}>
                 {s.icon}
               </span>
               <span className={cn("font-display text-lg font-semibold", active ? "text-ink-900" : "text-ink-600")}>
@@ -96,9 +96,9 @@ export function ExpertsSegments({
                   "ms-auto rounded-full px-2 py-0.5 text-xs font-semibold tnum",
                   active
                     ? s.key === "internal"
-                      ? "bg-maroon-100 text-maroon-900"
-                      : "bg-gulf-100 text-gulf-600"
-                    : "bg-sand-200 text-ink-600"
+                      ? "bg-navy-100 text-navy-900"
+                      : "bg-teal-100 text-teal-600"
+                    : "bg-mist-200 text-ink-600"
                 )}
                 data-testid={`segment-count-${s.key}`}
               >

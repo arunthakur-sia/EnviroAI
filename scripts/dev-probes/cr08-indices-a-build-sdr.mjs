@@ -7,7 +7,7 @@
 // the edition headline (the backdated series' last year is the edition).
 // SDSN publishes no goal-level ranks: goal ranks are derived by sorting the
 // official goal scores (ties share a rank), the HDI precedent of DECISIONS 67.
-import { dl, readGrid, headerIndex, num, deriveRanks, round, writeResearch } from "./cr08-indices-a-lib.mjs";
+import { dl, readGrid, headerIndex, num, deriveRanks, round, writeResearch, HOME_ISO3 } from "./cr08-indices-a-lib.mjs";
 
 const EDITIONS = [
   { year: 2026, file: "sdr-database_2026.xlsx", sheet: "SDR2026 Data", url: "https://dashboards.sdgindex.org/static/downloads/database_2026.xlsx" },
@@ -120,8 +120,8 @@ for (const ed of EDITIONS) {
     }
   }
   editionNotes.push(`${ed.year}: ${total} ranked countries; goals from ${goalSource}`);
-  const qat = ranked.find((r) => r.iso === "QAT");
-  console.log(`SDR ${ed.year}: ${total} ranked; Qatar ${qat ? `${round(qat.score, 2)} rank ${qat.rank}` : "absent"}; goals: ${goalSource}`);
+  const home = ranked.find((r) => r.iso === HOME_ISO3);
+  console.log(`SDR ${ed.year}: ${total} ranked; ${HOME_ISO3} ${home ? `${round(home.score, 2)} rank ${home.rank}` : "absent"}; goals: ${goalSource}`);
 
   for (let g = 0; g < 17; g++) {
     const list = [];

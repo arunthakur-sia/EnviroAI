@@ -229,12 +229,12 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
       label: t("children"),
       badge: children.length,
       content: (
-        <div className="card divide-y divide-sand-100">
+        <div className="card divide-y divide-mist-100">
           {children.map((c) => (
             <Link
               key={c.id}
               href={`/strategy/${c.id}` as never}
-              className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-maroon-50"
+              className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-navy-50"
             >
               <RagDot status={c.status} />
               {c.code ? <span className="text-[10px] text-ink-600 tnum">{c.code}</span> : null}
@@ -309,7 +309,7 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
             ))}
           </div>
         ) : (
-          <p className="rounded-xl border border-dashed border-sand-300 bg-sand-50 px-4 py-6 text-center text-sm text-ink-600">
+          <p className="rounded-xl border border-dashed border-mist-300 bg-mist-50 px-4 py-6 text-center text-sm text-ink-600">
             {t("noLessonsHere")}
           </p>
         )}
@@ -323,7 +323,7 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
     content: shelfDocs.length ? (
       <Shelf docs={shelfDocs} height={184} />
     ) : (
-      <p className="rounded-xl border border-dashed border-sand-300 bg-sand-50 px-4 py-6 text-center text-sm text-ink-600">
+      <p className="rounded-xl border border-dashed border-mist-300 bg-mist-50 px-4 py-6 text-center text-sm text-ink-600">
         {tc("nothingHere")}
       </p>
     ),
@@ -363,7 +363,7 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
       <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-ink-600">
         <Link
           href={(edition?.isDefault ? "/strategy" : `/strategy/${edition?.code}`) as never}
-          className="hover:text-maroon-700"
+          className="hover:text-navy-700"
         >
           {edition ? bi(locale, edition.nameEn, edition.nameAr) : ""}
         </Link>
@@ -372,7 +372,7 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
             <span>/</span>
             <Link
               href={`/strategy/${edition.code}/${slugOfCode(outcomeAncestor.code, outcomeAncestor.id)}` as never}
-              className="hover:text-maroon-700"
+              className="hover:text-navy-700"
             >
               {outcomeAncestor.code ?? bi(locale, outcomeAncestor.titleEn, outcomeAncestor.titleAr)}
             </Link>
@@ -381,7 +381,7 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
         {parent && parent.id !== outcomeAncestor?.id ? (
           <>
             <span>/</span>
-            <Link href={`/strategy/${parent.id}` as never} className="hover:text-maroon-700">
+            <Link href={`/strategy/${parent.id}` as never} className="hover:text-navy-700">
               {bi(locale, parent.titleEn, parent.titleAr)}
             </Link>
           </>
@@ -390,13 +390,13 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
 
       {/* CR03 2.4: hero band */}
       <header
-        className="relative mb-6 overflow-hidden rounded-2xl bg-sand-100 px-7 py-6"
+        className="relative mb-6 overflow-hidden rounded-2xl bg-mist-100 px-7 py-6"
         data-testid="node-hero"
       >
         {isHeroNode ? (
           <span
             aria-hidden
-            className="pointer-events-none absolute top-1 start-4 select-none font-semibold text-maroon-100"
+            className="pointer-events-none absolute top-1 start-4 select-none font-semibold text-navy-100"
             style={{
               fontFamily: "var(--font-display)",
               fontSize: node.nodeType === "outcome" ? 96 : 72,
@@ -424,10 +424,10 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
               </p>
             ) : null}
             <div className="mt-3 flex flex-wrap items-center gap-2">
-              <Chip tone="maroon">{t(`nodeType.${node.nodeType}` as never)}</Chip>
-              <Chip tone="sand">{tc(`status.${node.status}` as never)}</Chip>
+              <Chip tone="navy">{t(`nodeType.${node.nodeType}` as never)}</Chip>
+              <Chip tone="mist">{tc(`status.${node.status}` as never)}</Chip>
               {isArchived ? (
-                <Chip tone="sand">
+                <Chip tone="mist">
                   <Archive className="size-3" /> {t("archiveChip")}
                 </Chip>
               ) : null}
@@ -449,13 +449,13 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
             {/* CR03 2.4: delivery timeline bar with milestone dots */}
             {isDeliveryNode && todayPct !== null ? (
               <div className="mt-4 max-w-xl" data-testid="delivery-timeline">
-                <div className="relative h-1.5 rounded-full bg-sand-300/80">
+                <div className="relative h-1.5 rounded-full bg-mist-300/80">
                   <span
-                    className="absolute inset-y-0 start-0 rounded-full bg-gulf-400"
+                    className="absolute inset-y-0 start-0 rounded-full bg-teal-400"
                     style={{ width: `${Math.round(todayPct * 100)}%` }}
                   />
                   <span
-                    className="absolute -top-1 h-3.5 w-0.5 rounded-full bg-maroon-700"
+                    className="absolute -top-1 h-3.5 w-0.5 rounded-full bg-navy-700"
                     style={{ insetInlineStart: `${Math.round(todayPct * 100)}%` }}
                     title={t("lanes.today")}
                   />
@@ -464,7 +464,7 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
                       key={m.code}
                       className={cn(
                         "absolute top-1/2 size-2.5 -translate-y-1/2 rounded-full border-2 border-white",
-                        m.done ? "bg-ok" : "bg-sand-300"
+                        m.done ? "bg-ok" : "bg-mist-300"
                       )}
                       style={{ insetInlineStart: `calc(${Math.round((m.pct ?? 0) * 100)}% - 5px)` }}
                       title={`${m.code} · ${formatDate(m.date, locale, { style: "short" })}`}
@@ -500,7 +500,7 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
                 stroke={8}
                 aria-label={t("hero.progressAria", { pct: heroPct })}
               >
-                <span className="text-lg font-semibold text-maroon-900 tnum">{heroPct}%</span>
+                <span className="text-lg font-semibold text-navy-900 tnum">{heroPct}%</span>
               </ProgressRing>
             ) : null}
           </div>
@@ -514,8 +514,8 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
 
       {/* What changed */}
       {(changed.highlights.length || updates.length) ? (
-        <div className="mb-6 rounded-xl border border-gold-300 bg-gold-100/40 px-5 py-4">
-          <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-maroon-900">
+        <div className="mb-6 rounded-xl border border-aqua-300 bg-aqua-100/40 px-5 py-4">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-navy-900">
             {t("whatChanged")}
           </p>
           <p className="text-sm leading-relaxed text-ink-900">
@@ -618,8 +618,8 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
           />
 
           {lineage.length ? (
-            <div className="mt-8 flex flex-wrap items-center gap-2 rounded-xl border border-gulf-100 bg-gulf-100/40 px-4 py-3">
-              <p className="text-xs font-semibold uppercase tracking-wider text-gulf-600">
+            <div className="mt-8 flex flex-wrap items-center gap-2 rounded-xl border border-teal-100 bg-teal-100/40 px-4 py-3">
+              <p className="text-xs font-semibold uppercase tracking-wider text-teal-600">
                 {t("lineage")}
               </p>
               {lineage.map((l) => {
@@ -632,9 +632,9 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
                   <Link
                     key={l.id}
                     href={`/strategy/${otherId}` as never}
-                    className="flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 text-xs text-ink-900 shadow-sm hover:text-gulf-600"
+                    className="flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 text-xs text-ink-900 shadow-sm hover:text-teal-600"
                   >
-                    <Chip tone="gulf">{otherEdition?.code.toUpperCase()}</Chip>
+                    <Chip tone="teal">{otherEdition?.code.toUpperCase()}</Chip>
                     {!forward ? <ArrowRight className="size-3 flip-rtl text-ink-600" /> : null}
                     <span className="max-w-52 truncate">{bi(locale, other.titleEn, other.titleAr)}</span>
                     {forward ? <ArrowRight className="size-3 flip-rtl text-ink-600" /> : null}
@@ -666,12 +666,12 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
           {linkedExperts.length ? (
             <div>
               <SectionTitle>{t("linkedExperts")}</SectionTitle>
-              <div className="card divide-y divide-sand-100">
+              <div className="card divide-y divide-mist-100">
                 {linkedExperts.slice(0, 5).map((e) => (
                   <Link
                     key={e.id}
                     href={`/experts/${e.id}` as never}
-                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-maroon-50"
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-navy-50"
                   >
                     <Avatar name={e.nameEn} color={e.avatarColor} size={30} />
                     <span className="min-w-0">
@@ -707,7 +707,7 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
           {deps.length ? (
             <div>
               <SectionTitle>{t("dependencies")}</SectionTitle>
-              <div className="card divide-y divide-sand-100">
+              <div className="card divide-y divide-mist-100">
                 {deps.map((d) => {
                   const otherId = d.nodeId === id ? d.dependsOnNodeId : d.nodeId;
                   const other = depNodes.find((n) => n.id === otherId);
@@ -717,7 +717,7 @@ export async function NodeDetail({ locale, id }: { locale: string; id: string })
                     <Link
                       key={d.id}
                       href={`/strategy/${otherId}` as never}
-                      className="block px-4 py-2.5 text-sm hover:bg-maroon-50"
+                      className="block px-4 py-2.5 text-sm hover:bg-navy-50"
                     >
                       <span className="block text-[11px] text-ink-600">
                         {dependsOn ? t("dependsOn") : t("neededBy")}

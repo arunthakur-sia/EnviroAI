@@ -28,15 +28,15 @@ const SLOTS: Slot[] = [
   {
     offsetWeeks: 0,
     pick: "study",
-    noteEn: "A study the whole Council can lean on: the method is transparent, the data are Qatari, and the recommendations name who should act. Read the summary first, then chapter three.",
-    noteAr: "دراسة يمكن للمجلس كله أن يستند إليها: منهجها واضح، وبياناتها قطرية، وتوصياتها تسمّي من عليه أن يتصرف. اقرأ الملخص أولًا ثم الفصل الثالث.",
+    noteEn: "A study the whole Office can lean on: the method is transparent, the data are Saudi, and the recommendations name who should act. Read the summary first, then chapter three.",
+    noteAr: "دراسة يمكن للمكتب كله أن يستند إليها: منهجها واضح، وبياناتها سعودية، وتوصياتها تسمّي من عليه أن يتصرف. اقرأ الملخص أولًا ثم الفصل الثالث.",
     reads: 0,
   },
   {
     offsetWeeks: 1,
     pick: "lesson",
     noteEn: "A lesson we keep relearning. Two minutes to read, and it will change how you plan your next handover.",
-    noteAr: "درس نعود إلى تعلّمه كل مرة. قراءته دقيقتان، وسيغيّر طريقتك في التخطيط للتسليم القادم.",
+    noteAr: "درس نعود إلى تعلّمه كل مرة. قراءته دقيقتان، وسيغيّر طريقتك في الاستعداد للتسليم القادم.",
     reads: 0,
   },
   {
@@ -63,8 +63,8 @@ const SLOTS: Slot[] = [
   {
     offsetWeeks: -4,
     pick: "module_report",
-    noteEn: "Our first report generated inside SiaNexus and published to Institutional Memory. Read it for the content, and for what the tool can now do.",
-    noteAr: "أول تقرير أُنشئ داخل سيا نكسس ونُشر في مكتبة المعرفة. اقرأه لمحتواه، ولما صار بمقدور الأداة أن تفعله.",
+    noteEn: "Our first report generated inside EnviroAI and published to Institutional Memory. Read it for the content, and for what the tool can now do.",
+    noteAr: "أول تقرير أُنشئ داخل EnviroAI ونُشر في الذاكرة المؤسسية. اقرأه لمحتواه، ولما صار بمقدور الأداة أن تفعله.",
     reads: 8,
   },
 ];
@@ -100,13 +100,13 @@ export default async function seedCr08Kow(): Promise<void> {
   console.log(`cr08 kow: ${rulesAdded} rules added, badge knowledge_of_week present`);
 
   /* ---- 2. who sets, who reads ---- */
-  const [setter] = await db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.email, "knowledge@npc.qa")).limit(1);
-  const [admin] = await db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.email, "admin@npc.qa")).limit(1);
+  const [setter] = await db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.email, "knowledge@enviroai.demo")).limit(1);
+  const [admin] = await db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.email, "admin@enviroai.demo")).limit(1);
   const setBy = setter?.id ?? admin?.id ?? null;
   const readers = await db
     .select({ id: schema.users.id, email: schema.users.email })
     .from(schema.users)
-    .where(and(isNull(schema.users.deletedAt), sql`${schema.users.email} not in ('admin@npc.qa', 'knowledge@npc.qa')`))
+    .where(and(isNull(schema.users.deletedAt), sql`${schema.users.email} not in ('admin@enviroai.demo', 'knowledge@enviroai.demo')`))
     .orderBy(asc(schema.users.email))
     .limit(40);
 

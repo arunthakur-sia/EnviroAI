@@ -20,7 +20,7 @@ function Connector() {
   return (
     <span className="flex w-7 shrink-0 items-center justify-center xl:w-8" role="presentation" data-testid="process-connector">
       <span className="sr-only">{t("map.connector")}</span>
-      <svg width="30" height="12" viewBox="0 0 30 12" aria-hidden className="flip-rtl block text-maroon-300">
+      <svg width="30" height="12" viewBox="0 0 30 12" aria-hidden className="flip-rtl block text-navy-300">
         <line x1="1" y1="6" x2="21" y2="6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
         <path d="M20 1.5 L28 6 L20 10.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
@@ -57,16 +57,16 @@ function Level0Card({
       className={cn(
         /* eight cards share the row at xl: the padding tightens so a long word
            still fits a line */
-        "flex h-full w-full cursor-pointer flex-col rounded-[var(--radius-card)] border px-3.5 py-3 text-start shadow-[var(--shadow-paper)] outline-none transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500 xl:px-2.5",
-        selected ? "border-maroon-500 bg-maroon-50" : "border-transparent bg-white"
+        "flex h-full w-full cursor-pointer flex-col rounded-[var(--radius-card)] border px-3.5 py-3 text-start shadow-[var(--shadow-paper)] outline-none transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500 xl:px-2.5",
+        selected ? "border-navy-500 bg-navy-50" : "border-transparent bg-white"
       )}
     >
       <span className="flex items-center justify-between gap-2">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-maroon-700 tnum rtl:tracking-normal">{node.code}</span>
+        <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-navy-700 tnum rtl:tracking-normal">{node.code}</span>
         <span
           className={cn(
             "flex size-6 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold tnum",
-            selected ? "bg-maroon-700 text-white" : "bg-maroon-100 text-maroon-900"
+            selected ? "bg-navy-700 text-white" : "bg-navy-100 text-navy-900"
           )}
           style={{ fontFamily: "var(--font-display)" }}
           aria-hidden
@@ -237,7 +237,7 @@ export function ProcessMap({
             type="button"
             onClick={() => scrollBy(-1)}
             aria-label={t("map.scrollBack")}
-            className="absolute start-1 top-1/2 z-20 -translate-y-1/2 cursor-pointer rounded-full border border-sand-300 bg-white/95 p-1.5 text-ink-600 shadow-sm transition-opacity hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500"
+            className="absolute start-1 top-1/2 z-20 -translate-y-1/2 cursor-pointer rounded-full border border-mist-300 bg-white/95 p-1.5 text-ink-600 shadow-sm transition-opacity hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500"
           >
             <ChevronLeft className="size-4 flip-rtl" />
           </button>
@@ -247,7 +247,7 @@ export function ProcessMap({
             type="button"
             onClick={() => scrollBy(1)}
             aria-label={t("map.scrollForward")}
-            className="absolute end-1 top-1/2 z-20 -translate-y-1/2 cursor-pointer rounded-full border border-sand-300 bg-white/95 p-1.5 text-ink-600 shadow-sm transition-opacity hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500"
+            className="absolute end-1 top-1/2 z-20 -translate-y-1/2 cursor-pointer rounded-full border border-mist-300 bg-white/95 p-1.5 text-ink-600 shadow-sm transition-opacity hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500"
           >
             <ChevronRight className="size-4 flip-rtl" />
           </button>
@@ -255,14 +255,14 @@ export function ProcessMap({
         <span
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-y-0 start-0 z-10 w-12 bg-gradient-to-r from-sand-50 to-transparent transition-opacity rtl:bg-gradient-to-l",
+            "pointer-events-none absolute inset-y-0 start-0 z-10 w-12 bg-gradient-to-r from-mist-50 to-transparent transition-opacity rtl:bg-gradient-to-l",
             overflow.start ? "opacity-100" : "opacity-0"
           )}
         />
         <span
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-y-0 end-0 z-10 w-12 bg-gradient-to-l from-sand-50 to-transparent transition-opacity rtl:bg-gradient-to-r",
+            "pointer-events-none absolute inset-y-0 end-0 z-10 w-12 bg-gradient-to-l from-mist-50 to-transparent transition-opacity rtl:bg-gradient-to-r",
             overflow.end ? "opacity-100" : "opacity-0"
           )}
         />
@@ -310,8 +310,8 @@ export function ProcessMap({
             style={{ left: pointerX - 12, transition: reduced ? undefined : "left 300ms var(--ease-paper)" }}
           >
             <span
-              className="block size-6 rotate-45 rounded-[3px] bg-sand-100"
-              style={{ borderTop: "1px solid var(--color-sand-300)", borderLeft: "1px solid var(--color-sand-300)" }}
+              className="block size-6 rotate-45 rounded-[3px] bg-mist-100"
+              style={{ borderTop: "1px solid var(--color-mist-300)", borderLeft: "1px solid var(--color-mist-300)" }}
             />
           </span>
         ) : null}
@@ -322,7 +322,7 @@ export function ProcessMap({
             icon={<MousePointerClick />}
             title={t("map.restTitle")}
             hint={t("map.restHint")}
-            className="bg-sand-100/70 py-14"
+            className="bg-mist-100/70 py-14"
           />
         ) : null}
         <AnimatePresence initial={false}>

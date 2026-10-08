@@ -47,7 +47,7 @@ type Preview = {
   rows: { country: string; year: number; rank: number | null; score: number | null; total: number | null }[];
   truncated: boolean;
   warnings: { code: string; count: number; examples: string[] }[];
-  summary: { rows: number; countries: number; qatarYears: number; yearFrom: number | null; yearTo: number | null; withRank: number; withScore: number };
+  summary: { rows: number; countries: number; homeYears: number; yearFrom: number | null; yearTo: number | null; withRank: number; withScore: number };
   sourceUrl: string | null;
 };
 
@@ -96,7 +96,7 @@ export function IndicesAddWizard({
   const [csv, setCsv] = React.useState("");
   const [file, setFile] = React.useState<{ name: string; base64: string } | null>(null);
   const [url, setUrl] = React.useState("");
-  const [manual, setManual] = React.useState<ManualRow[]>([{ country: "QAT", year: YEAR, rank: "", score: "" }]);
+  const [manual, setManual] = React.useState<ManualRow[]>([{ country: "SAU", year: YEAR, rank: "", score: "" }]);
   const [sourceUrl, setSourceUrl] = React.useState("");
   const [preview, setPreview] = React.useState<Preview | null>(null);
   const [forecast, setForecast] = React.useState({ enabled: true, mode: "auto", targetValue: "", targetYear: "" });
@@ -132,7 +132,7 @@ export function IndicesAddWizard({
     setCsv("");
     setFile(null);
     setUrl("");
-    setManual([{ country: "QAT", year: YEAR, rank: "", score: "" }]);
+    setManual([{ country: "SAU", year: YEAR, rank: "", score: "" }]);
     setSourceUrl("");
     setPreview(null);
     setForecast({ enabled: true, mode: "auto", targetValue: "", targetYear: "" });
@@ -291,7 +291,7 @@ export function IndicesAddWizard({
               aria-current={step === s.n ? "step" : undefined}
               className={cn(
                 "flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs",
-                step === s.n ? "bg-maroon-100 font-medium text-maroon-900" : step > s.n ? "text-ok" : "text-ink-400"
+                step === s.n ? "bg-navy-100 font-medium text-navy-900" : step > s.n ? "text-ok" : "text-ink-400"
               )}
               data-testid={`wizard-step-${s.n}`}
             >
@@ -417,8 +417,8 @@ export function IndicesAddWizard({
                       aria-pressed={on}
                       onClick={() => setGroupIds((cur) => (on ? cur.filter((x) => x !== g.id) : [...cur, g.id]))}
                       className={cn(
-                        "flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500",
-                        on ? "border-maroon-500 bg-maroon-50 font-medium text-maroon-900" : "border-sand-300 text-ink-600 hover:text-ink-900"
+                        "flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500",
+                        on ? "border-navy-500 bg-navy-50 font-medium text-navy-900" : "border-mist-300 text-ink-600 hover:text-ink-900"
                       )}
                       data-testid={`wizard-group-${g.code}`}
                     >
@@ -432,14 +432,14 @@ export function IndicesAddWizard({
             <div className="sm:col-span-2">
               <Label htmlFor="wizard-targets-search">{t("targets")}</Label>
               <Input id="wizard-targets-search" value={targetQuery} onChange={(e) => setTargetQuery(e.target.value)} placeholder={t("targetsSearch")} className="mb-2 max-w-xs" />
-              <div className="max-h-36 overflow-y-auto rounded-lg border border-sand-200 p-2" role="group" aria-label={t("targets")}>
+              <div className="max-h-36 overflow-y-auto rounded-lg border border-mist-200 p-2" role="group" aria-label={t("targets")}>
                 {filteredTargets.length === 0 ? (
                   <p className="px-1 py-2 text-xs text-ink-400">{t("noTargets")}</p>
                 ) : (
                   filteredTargets.map((n) => {
                     const on = basics.linkedNodeIds.includes(n.id);
                     return (
-                      <label key={n.id} className="flex cursor-pointer items-center gap-2 rounded-md px-1.5 py-1 text-xs hover:bg-sand-50">
+                      <label key={n.id} className="flex cursor-pointer items-center gap-2 rounded-md px-1.5 py-1 text-xs hover:bg-mist-50">
                         <input
                           type="checkbox"
                           checked={on}
@@ -449,7 +449,7 @@ export function IndicesAddWizard({
                               linkedNodeIds: on ? b.linkedNodeIds.filter((x) => x !== n.id) : [...b.linkedNodeIds, n.id],
                             }))
                           }
-                          className="size-3.5 accent-maroon-700"
+                          className="size-3.5 accent-navy-700"
                         />
                         <span className="tnum text-ink-400">{n.code}</span>
                         <span className="truncate text-ink-900">{bi(locale, n.titleEn, n.titleAr)}</span>
@@ -475,8 +475,8 @@ export function IndicesAddWizard({
                   aria-checked={mode === m}
                   onClick={() => setMode(m)}
                   className={cn(
-                    "rounded-lg px-3 py-1.5 text-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500",
-                    mode === m ? "bg-maroon-100 font-medium text-maroon-900" : "bg-sand-100 text-ink-600 hover:text-ink-900"
+                    "rounded-lg px-3 py-1.5 text-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500",
+                    mode === m ? "bg-navy-100 font-medium text-navy-900" : "bg-mist-100 text-ink-600 hover:text-ink-900"
                   )}
                   data-testid={`wizard-mode-${m}`}
                 >
@@ -494,7 +494,7 @@ export function IndicesAddWizard({
                   onChange={(e) => setCsv(e.target.value)}
                   dir="ltr"
                   rows={8}
-                  placeholder={"country,year,rank,score\nQAT,2024,12,71.3\nARE,2024,9,74.0"}
+                  placeholder={"country,year,rank,score\nSAU,2024,12,71.3\nARE,2024,9,74.0"}
                   className="font-mono text-xs"
                   data-testid="wizard-csv"
                 />
@@ -507,7 +507,7 @@ export function IndicesAddWizard({
                 {/* the file input is already named by the label that wraps it,
                     so this stays a caption rather than a second label */}
                 <span className="mb-1.5 block text-xs font-medium text-ink-600">{t("uploadLabel")}</span>
-                <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-dashed border-sand-300 px-4 py-5 text-sm text-ink-600 hover:border-maroon-300">
+                <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-dashed border-mist-300 px-4 py-5 text-sm text-ink-600 hover:border-navy-300">
                   <Upload className="size-5 text-ink-400" aria-hidden />
                   <span>{file ? file.name : t("chooseFile")}</span>
                   <input
@@ -556,7 +556,7 @@ export function IndicesAddWizard({
                         type="button"
                         role="cell"
                         onClick={() => setManual((m) => (m.length > 1 ? m.filter((_, k) => k !== i) : m))}
-                        className="rounded-md p-1 text-ink-400 hover:text-danger cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+                        className="rounded-md p-1 text-ink-400 hover:text-danger cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
                         aria-label={t("removeRow")}
                       >
                         <Trash2 className="size-3.5" />
@@ -597,13 +597,13 @@ export function IndicesAddWizard({
             </div>
 
             {preview ? (
-              <div className="rounded-xl border border-sand-200 bg-sand-50 p-3" data-testid="wizard-preview-panel">
+              <div className="rounded-xl border border-mist-200 bg-mist-50 p-3" data-testid="wizard-preview-panel">
                 <div className="grid grid-cols-2 gap-2 text-xs sm:grid-cols-3 lg:grid-cols-6" data-testid="wizard-preview-summary">
                   {(
                     [
                       ["rows", preview.summary.rows],
                       ["countries", preview.summary.countries],
-                      ["qatarYears", preview.summary.qatarYears],
+                      ["homeYears", preview.summary.homeYears],
                       ["years", preview.summary.yearFrom != null ? `${preview.summary.yearFrom} to ${preview.summary.yearTo}` : "-"],
                       ["withRank", preview.summary.withRank],
                       ["withScore", preview.summary.withScore],
@@ -631,7 +631,7 @@ export function IndicesAddWizard({
                 {preview.rows.length ? (
                   <div className="mt-3 overflow-x-auto rounded-lg bg-white">
                     <div role="table" aria-label={t("rowsTitle")} className="min-w-[420px] text-xs">
-                      <div role="row" className="grid grid-cols-[90px_70px_70px_90px_70px] border-b border-sand-100 px-2 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-ink-600 rtl:tracking-normal">
+                      <div role="row" className="grid grid-cols-[90px_70px_70px_90px_70px] border-b border-mist-100 px-2 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-ink-600 rtl:tracking-normal">
                         <span role="columnheader">{t("country")}</span>
                         <span role="columnheader">{t("year")}</span>
                         <span role="columnheader">{t("rank")}</span>
@@ -639,7 +639,7 @@ export function IndicesAddWizard({
                         <span role="columnheader">{t("total")}</span>
                       </div>
                       {preview.rows.slice(0, 12).map((r) => (
-                        <div key={`${r.country}-${r.year}`} role="row" className="grid grid-cols-[90px_70px_70px_90px_70px] border-b border-sand-100 px-2 py-1 tnum last:border-0" data-testid="wizard-preview-row">
+                        <div key={`${r.country}-${r.year}`} role="row" className="grid grid-cols-[90px_70px_70px_90px_70px] border-b border-mist-100 px-2 py-1 tnum last:border-0" data-testid="wizard-preview-row">
                           <span role="cell" dir="ltr">{r.country}</span>
                           <span role="cell">{r.year}</span>
                           <span role="cell">{r.rank ?? "-"}</span>
@@ -661,7 +661,7 @@ export function IndicesAddWizard({
         {/* step 3: forecasting */}
         {options && step === 3 ? (
           <div className="flex flex-col gap-4" data-testid="wizard-forecast">
-            <label className="flex items-center justify-between gap-3 rounded-xl border border-sand-200 px-4 py-3">
+            <label className="flex items-center justify-between gap-3 rounded-xl border border-mist-200 px-4 py-3">
               <span>
                 <span className="block text-sm font-medium text-ink-900">{t("forecastEnabled")}</span>
                 <span className="block text-xs text-ink-600">{t("forecastEnabledHint")}</span>
@@ -697,7 +697,7 @@ export function IndicesAddWizard({
               </p>
             ) : null}
             <p className="text-[11px] text-ink-400">{t("forecastHint")}</p>
-            <div className="rounded-xl bg-sand-50 px-4 py-3 text-sm text-ink-900" data-testid="wizard-summary">
+            <div className="rounded-xl bg-mist-50 px-4 py-3 text-sm text-ink-900" data-testid="wizard-summary">
               {t("willCreate", {
                 code: basics.code,
                 name: bi(locale, basics.nameEn, basics.nameAr),

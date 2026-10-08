@@ -64,7 +64,7 @@ export function UnitProcessesTab({
           <Skeleton className="h-11 w-2/3 rounded-xl" />
         </div>
       ) : failed ? (
-        <div className="rounded-xl border border-dashed border-sand-300 bg-sand-50 px-3 py-5 text-center">
+        <div className="rounded-xl border border-dashed border-mist-300 bg-mist-50 px-3 py-5 text-center">
           <p className="text-sm text-ink-600">{t("unitTab.failed")}</p>
           <Button size="sm" variant="secondary" className="mt-2" onClick={() => setAttempt((a) => a + 1)} data-testid="unit-processes-retry">
             {t("panel.retry")}
@@ -77,7 +77,7 @@ export function UnitProcessesTab({
       )}
       <Link
         href={`/processes?view=unit&unit=${encodeURIComponent(unitCode)}`}
-        className="link-draw mt-3 inline-block text-[11px] font-medium text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+        className="link-draw mt-3 inline-block text-[11px] font-medium text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
       >
         {t("unitTab.openAll")}
       </Link>

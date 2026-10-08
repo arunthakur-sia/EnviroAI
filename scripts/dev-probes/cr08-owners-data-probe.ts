@@ -21,7 +21,7 @@ loadEnv();
 const BASE = "http://localhost:3000";
 const OUT = path.join(process.cwd(), "data", "screenshots", "cr08");
 const ONLY = process.argv[2] ?? "all";
-const PASSWORD = "Nexus!2026";
+const PASSWORD = "EnviroAI!2026";
 const NAV = { waitUntil: "networkidle" as const, timeout: 120000 };
 const WAIT = { timeout: 120000 };
 
@@ -118,7 +118,7 @@ const NO_H_SCROLL = "document.documentElement.scrollWidth <= window.innerWidth +
 async function runLocale(browser: Browser, locale: "en" | "ar", askConversationId: string | null) {
   console.log(`\n=== ${locale} ===`);
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-  await login(ctx, "admin@npc.qa");
+  await login(ctx, "admin@enviroai.demo");
   const page = await ctx.newPage();
   const errors: string[] = [];
   watch(page, errors);
@@ -236,7 +236,7 @@ async function runLocale(browser: Browser, locale: "en" | "ar", askConversationI
   /* 6. an Ask conversation and its citation cards */
   if (askConversationId) {
     const ctx2 = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-    await login(ctx2, "analyst@npc.qa");
+    await login(ctx2, "analyst@enviroai.demo");
     const askPage = await ctx2.newPage();
     watch(askPage, errors);
     if (await goto(askPage, `${BASE}/${locale}/ask/c/${askConversationId}`, '[data-testid="citation-row"]')) {
@@ -275,7 +275,7 @@ async function runLocale(browser: Browser, locale: "en" | "ar", askConversationI
     citations that carry their owner; returns the conversation id. */
 async function askOnce(browser: Browser): Promise<string | null> {
   const ctx = await browser.newContext();
-  await login(ctx, "analyst@npc.qa");
+  await login(ctx, "analyst@enviroai.demo");
   const page = await ctx.newPage();
   try {
     const res = await page.request.post(`${BASE}/api/v1/ai/ask`, {

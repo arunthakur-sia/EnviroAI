@@ -13,7 +13,7 @@ async function main() {
   // the shared dev server rebuilds constantly while other agents edit, so the
   // login form resets under Playwright's fingers; the API sets the same cookie
   const login = await page.context().request.post(`${BASE}/api/v1/auth/login`, {
-    data: { email: "reader@npc.qa", password: "Nexus!2026" },
+    data: { email: "reader@enviroai.demo", password: "EnviroAI!2026" },
   });
   if (login.status() !== 200) throw new Error(`login -> ${login.status()}`);
   await page.goto(`${BASE}/en/leaderboard`, { waitUntil: "domcontentloaded", timeout: 120000 });

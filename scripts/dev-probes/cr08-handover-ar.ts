@@ -13,7 +13,7 @@ const NAV = 120000;
 async function login(page: Page, email: string) {
   for (let attempt = 0; attempt < 4; attempt++) {
     try {
-      const res = await page.request.post(`${BASE}/api/v1/auth/login`, { data: { email, password: "Nexus!2026" }, timeout: NAV });
+      const res = await page.request.post(`${BASE}/api/v1/auth/login`, { data: { email, password: "EnviroAI!2026" }, timeout: NAV });
       if (res.ok()) return;
     } catch {
       /* the shared dev server resets connections under load */
@@ -85,7 +85,7 @@ async function main() {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: reduce });
   const page = await ctx.newPage();
 
-  await login(page, "hr@npc.qa");
+  await login(page, "hr@enviroai.demo");
   // control pages nobody on this task owns, to tell a shell-wide warning from one of mine
   await inspect(page, `${BASE}/en/lessons`, "main");
   await inspect(page, `${BASE}/ar/lessons`, "main");
@@ -95,11 +95,11 @@ async function main() {
   await inspect(page, `${BASE}/ar/hr/handovers/${seedA.id}`, '[data-testid="handover-admin"]');
   await logout(page);
 
-  await login(page, "ahmed.fathy@npc.qa");
+  await login(page, "abdulrahman.albalawi@enviroai.demo");
   await inspect(page, `${BASE}/ar/handover/mine`, '[data-testid="my-handover"]');
   await logout(page);
 
-  await login(page, "mohammed.alsulaiti@npc.qa");
+  await login(page, "mohammed.alqarni@enviroai.demo");
   await inspect(page, `${BASE}/ar/handover/${seedA.id}`, '[data-testid="recipient-handover"]');
   await logout(page);
 

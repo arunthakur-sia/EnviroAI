@@ -23,7 +23,7 @@ export async function fetchPageText(url: string): Promise<{ text: string; title:
   const res = await undiciFetch(url, {
     headers: {
       "user-agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) SiaNexus-scan/1.0 (+local prototype)",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) EnviroAI-scan/1.0 (+local prototype)",
       accept: "text/html,application/xhtml+xml,*/*",
     },
     redirect: "follow",

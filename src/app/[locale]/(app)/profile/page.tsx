@@ -39,14 +39,14 @@ export default async function ProfilePage({
     await db.insert(schema.experts).values({
       id,
       userId: user.id,
-      type: "npc_employee",
+      type: "org_employee",
       nameEn: user.nameEn,
       nameAr: user.nameAr,
       avatarColor: user.avatarColor,
       positionEn: user.positionEn,
       positionAr: user.positionAr,
-      organisationEn: "National Planning Council",
-      organisationAr: "المجلس الوطني للتخطيط",
+      organisationEn: "Programme Office",
+      organisationAr: "مكتب البرنامج",
       availability: "available",
       clearanceLevel: user.clearanceLevel,
       ownerUserId: user.id,
@@ -92,7 +92,7 @@ export default async function ProfilePage({
   return (
     <Reveal>
       <div className="mb-6 flex flex-wrap items-center gap-5">
-        <ProgressRing value={completion} size={90} stroke={5} color="var(--color-gold-500)">
+        <ProgressRing value={completion} size={90} stroke={5} color="var(--color-aqua-500)">
           <Avatar name={user.nameEn} color={user.avatarColor} size={72} />
         </ProgressRing>
         <div>
@@ -104,7 +104,7 @@ export default async function ProfilePage({
             ) : null}
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
-            <Chip tone="gold">{t("completion", { pct: Math.round(completion * 100) })}</Chip>
+            <Chip tone="aqua">{t("completion", { pct: Math.round(completion * 100) })}</Chip>
             {showLevel && level ? (
               descriptor ? (
                 <Tip content={t("levelTip", { level: bi(locale, level.nameEn, level.nameAr), descriptor })}>
@@ -114,13 +114,13 @@ export default async function ProfilePage({
                     aria-label={t("levelTip", { level: bi(locale, level.nameEn, level.nameAr), descriptor })}
                     data-testid="profile-level-chip"
                   >
-                    <Chip tone="maroon" className="tnum">
+                    <Chip tone="navy" className="tnum">
                       {bi(locale, level.nameEn, level.nameAr)}
                     </Chip>
                   </span>
                 </Tip>
               ) : (
-                <Chip tone="maroon" className="tnum" data-testid="profile-level-chip">
+                <Chip tone="navy" className="tnum" data-testid="profile-level-chip">
                   {bi(locale, level.nameEn, level.nameAr)}
                 </Chip>
               )
@@ -173,7 +173,7 @@ export default async function ProfilePage({
               <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal">
                 {t("levelEyebrow")}
               </p>
-              <p className="mt-1 font-display text-2xl font-semibold text-maroon-900 tnum">
+              <p className="mt-1 font-display text-2xl font-semibold text-navy-900 tnum">
                 {bi(locale, level.nameEn, level.nameAr)}
               </p>
               {descriptor ? (
@@ -199,7 +199,7 @@ export default async function ProfilePage({
               <SectionTitle>{t("myDomains")}</SectionTitle>
               <div className="flex flex-wrap gap-1.5">
                 {accepted.map((d) => (
-                  <Chip key={d.id} tone="maroon">
+                  <Chip key={d.id} tone="navy">
                     {bi(locale, d.nameEn, d.nameAr)}
                   </Chip>
                 ))}
@@ -221,7 +221,7 @@ export default async function ProfilePage({
               <SectionTitle>{t("myBadges")}</SectionTitle>
               <div className="flex flex-wrap gap-1.5">
                 {badges.map((b) => (
-                  <Chip key={b.code} tone="gold">
+                  <Chip key={b.code} tone="aqua">
                     <Medal className="size-3" /> {bi(locale, b.nameEn, b.nameAr)}
                   </Chip>
                 ))}

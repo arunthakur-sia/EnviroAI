@@ -1,6 +1,6 @@
 "use client";
 // CR08 2.3: mount on any item page (project, document, indicator, council
-// node, unit, index, lesson, process, report) to tell the Ask NPC launcher
+// node, unit, index, lesson, process, report) to tell the Ask EnviroAI launcher
 // what the reader is looking at. Renders nothing.
 import * as React from "react";
 import { clearAskContext, setAskContext, type AskContextItem as Item } from "./context-store";

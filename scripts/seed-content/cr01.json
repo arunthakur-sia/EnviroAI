@@ -1,1006 +1,1256 @@
 {
-  "scan_briefs": [
-    {
-      "code": "brief_eco_growth",
-      "name_en": "Sustainable Economic Growth Outlook",
-      "name_ar": "آفاق النمو الاقتصادي المستدام",
-      "query_en": "Qatar non-hydrocarbon GDP growth diversification 2026",
-      "query_ar": "نمو الناتج المحلي غير النفطي في قطر والتنويع الاقتصادي 2026",
-      "outcome_codes": ["eco_growth"],
-      "indicator_codes": ["gdp_real_growth", "gdp_nonhydro_share"]
-    },
-    {
-      "code": "brief_fiscal_sust",
-      "name_en": "Fiscal Sustainability Outlook",
-      "name_ar": "آفاق الاستدامة المالية",
-      "query_en": "Qatar government budget fiscal balance non-hydrocarbon revenue 2026",
-      "query_ar": "الميزانية العامة لدولة قطر والتوازن المالي والإيرادات غير النفطية 2026",
-      "outcome_codes": ["fiscal_sust"],
-      "indicator_codes": ["trade_balance"]
-    },
-    {
-      "code": "brief_workforce",
-      "name_en": "Future-Ready Workforce Outlook",
-      "name_ar": "آفاق القوى العاملة المستعدة للمستقبل",
-      "query_en": "Qatar labour market skills workforce development 2026",
-      "query_ar": "سوق العمل القطري وتنمية المهارات والقوى العاملة 2026",
-      "outcome_codes": ["workforce"],
-      "indicator_codes": ["lfpr_qatari", "unemployment_rate"]
-    },
-    {
-      "code": "brief_cohesive_society",
-      "name_en": "Cohesive Society Outlook",
-      "name_ar": "آفاق التماسك المجتمعي",
-      "query_en": "Qatar social cohesion national identity family policy 2026",
-      "query_ar": "التماسك المجتمعي والهوية الوطنية وسياسة الأسرة في قطر 2026",
-      "outcome_codes": ["cohesive_society"],
-      "indicator_codes": []
-    },
-    {
-      "code": "brief_quality_life",
-      "name_en": "Quality of Life Outlook",
-      "name_ar": "آفاق جودة الحياة",
-      "query_en": "Qatar quality of life healthcare housing wellbeing index 2026",
-      "query_ar": "جودة الحياة والرعاية الصحية والإسكان في قطر 2026",
-      "outcome_codes": ["quality_life"],
-      "indicator_codes": ["building_permits"]
-    },
-    {
-      "code": "brief_env_sust",
-      "name_en": "Environmental Sustainability Outlook",
-      "name_ar": "آفاق الاستدامة البيئية",
-      "query_en": "Qatar emissions climate environmental sustainability policy 2026",
-      "query_ar": "الانبعاثات والمناخ والاستدامة البيئية في قطر 2026",
-      "outcome_codes": ["env_sust"],
-      "indicator_codes": ["ghg_per_capita", "solar_capacity"]
-    },
-    {
-      "code": "brief_gov_excellence",
-      "name_en": "Government Excellence Outlook",
-      "name_ar": "آفاق التميز الحكومي",
-      "query_en": "Qatar government excellence digital transformation public sector reform 2026",
-      "query_ar": "التميز الحكومي والتحول الرقمي وإصلاح القطاع العام في قطر 2026",
-      "outcome_codes": ["gov_excellence"],
-      "indicator_codes": ["digital_services_share"]
-    },
-    {
-      "code": "brief_cluster_manufacturing",
-      "name_en": "Manufacturing Sector Watch",
-      "name_ar": "رصد قطاع الصناعة التحويلية",
-      "query_en": "Qatar manufacturing sector industrial diversification investment 2026",
-      "query_ar": "قطاع الصناعة التحويلية والتنويع الصناعي والاستثمار في قطر 2026",
-      "outcome_codes": ["eco_growth"],
-      "indicator_codes": ["gdp_nonhydro_share"]
-    },
-    {
-      "code": "brief_cluster_logistics",
-      "name_en": "Logistics and Transport Cluster Watch",
-      "name_ar": "رصد قطاع الخدمات اللوجستية والنقل",
-      "query_en": "Qatar logistics transport Hamad Port free zones supply chain 2026",
-      "query_ar": "الخدمات اللوجستية والنقل وميناء حمد والمناطق الحرة في قطر 2026",
-      "outcome_codes": ["eco_growth"],
-      "indicator_codes": ["trade_balance"]
-    },
-    {
-      "code": "brief_cluster_tourism",
-      "name_en": "Tourism Sector Watch",
-      "name_ar": "رصد قطاع السياحة",
-      "query_en": "Qatar tourism visitor arrivals hospitality sector growth 2026",
-      "query_ar": "قطاع السياحة وأعداد الزوار والقطاع الفندقي في قطر 2026",
-      "outcome_codes": ["eco_growth"],
-      "indicator_codes": []
-    },
-    {
-      "code": "brief_cluster_financial_services",
-      "name_en": "Financial Services Cluster Watch",
-      "name_ar": "رصد قطاع الخدمات المالية",
-      "query_en": "Qatar financial services QFC banking sector growth 2026",
-      "query_ar": "قطاع الخدمات المالية ومركز قطر للمال والقطاع المصرفي 2026",
-      "outcome_codes": ["eco_growth", "fiscal_sust"],
-      "indicator_codes": ["fdi_inflows"]
-    },
-    {
-      "code": "brief_cluster_digital_ict",
-      "name_en": "Digital and ICT Cluster Watch",
-      "name_ar": "رصد قطاع تكنولوجيا المعلومات والاتصالات",
-      "query_en": "Qatar ICT sector digital economy technology startups 2026",
-      "query_ar": "قطاع تكنولوجيا المعلومات والاتصالات والاقتصاد الرقمي في قطر 2026",
-      "outcome_codes": ["eco_growth", "gov_excellence"],
-      "indicator_codes": ["digital_services_share"]
-    },
-    {
-      "code": "brief_qatarization",
-      "name_en": "Qatarization and Labour Market",
-      "name_ar": "التقطير وسوق العمل",
-      "query_en": "Qatar Qatarization private sector employment policy 2026",
-      "query_ar": "سياسة التقطير وتوظيف المواطنين في القطاع الخاص بقطر 2026",
-      "outcome_codes": ["workforce"],
-      "indicator_codes": ["lfpr_qatari"]
-    },
-    {
-      "code": "brief_fdi",
-      "name_en": "Foreign Direct Investment in Qatar",
-      "name_ar": "الاستثمار الأجنبي المباشر في قطر",
-      "query_en": "Qatar foreign direct investment inflows Invest Qatar 2026",
-      "query_ar": "الاستثمار الأجنبي المباشر وتدفقاته إلى قطر وجهاز استثمر قطر 2026",
-      "outcome_codes": ["eco_growth"],
-      "indicator_codes": ["fdi_inflows"]
-    },
-    {
-      "code": "brief_fiscal",
-      "name_en": "Qatar Fiscal Policy and Non-Hydrocarbon Revenue",
-      "name_ar": "السياسة المالية القطرية والإيرادات غير النفطية",
-      "query_en": "Qatar fiscal policy non-hydrocarbon revenue diversification budget 2026",
-      "query_ar": "السياسة المالية وتنويع الإيرادات غير النفطية والميزانية في قطر 2026",
-      "outcome_codes": ["fiscal_sust"],
-      "indicator_codes": ["gdp_nonhydro_share"]
-    },
-    {
-      "code": "brief_renewables",
-      "name_en": "Qatar Renewable Energy and Emissions",
-      "name_ar": "الطاقة المتجددة والانبعاثات في قطر",
-      "query_en": "Qatar renewable energy solar power emissions reduction 2026",
-      "query_ar": "الطاقة المتجددة والطاقة الشمسية وخفض الانبعاثات في قطر 2026",
-      "outcome_codes": ["env_sust"],
-      "indicator_codes": ["solar_capacity", "ghg_per_capita"]
-    },
-    {
-      "code": "brief_digital_ai",
-      "name_en": "Qatar Digital Government and AI",
-      "name_ar": "الحكومة الرقمية والذكاء الاصطناعي في قطر",
-      "query_en": "Qatar digital government artificial intelligence strategy 2026",
-      "query_ar": "الحكومة الرقمية واستراتيجية الذكاء الاصطناعي في قطر 2026",
-      "outcome_codes": ["gov_excellence"],
-      "indicator_codes": ["digital_services_share"]
-    },
-    {
-      "code": "brief_indices",
-      "name_en": "Qatar International Index Rankings",
-      "name_ar": "تصنيفات قطر في المؤشرات الدولية",
-      "query_en": "Qatar global competitiveness index rankings international benchmarks 2026",
-      "query_ar": "تصنيف قطر في مؤشرات التنافسية العالمية والمؤشرات الدولية 2026",
-      "outcome_codes": ["gov_excellence", "eco_growth"],
-      "indicator_codes": []
-    },
-    {
-      "code": "brief_education_skills",
-      "name_en": "Qatar Education and Skills",
-      "name_ar": "التعليم والمهارات في قطر",
-      "query_en": "Qatar education reform skills development higher education 2026",
-      "query_ar": "إصلاح التعليم وتنمية المهارات والتعليم العالي في قطر 2026",
-      "outcome_codes": ["workforce", "quality_life"],
-      "indicator_codes": []
-    },
-    {
-      "code": "brief_census",
-      "name_en": "Qatar Population and Census",
-      "name_ar": "السكان والتعداد في قطر",
-      "query_en": "Qatar population census 2025 results demographics",
-      "query_ar": "التعداد السكاني لقطر 2025 والنتائج الديموغرافية",
-      "outcome_codes": ["quality_life"],
-      "indicator_codes": ["pop_total"]
-    }
-  ],
-  "signals": [
-    {
-      "title_en": "QatarEnergy Reports Steady Ramp-Up at North Field Expansion Trains",
-      "title_ar": "قطر للطاقة تعلن عن استمرار زيادة الإنتاج في خطوط توسعة حقل الشمال",
-      "summary_en": "QatarEnergy confirmed that new LNG production trains under the North Field expansion are approaching design capacity ahead of schedule. Officials said the ramp-up supports the state's plan to lift total LNG output well above current levels by the end of the decade.",
-      "summary_ar": "أكدت قطر للطاقة أن خطوط إنتاج الغاز الطبيعي المسال الجديدة ضمن مشروع توسعة حقل الشمال تقترب من طاقتها التصميمية قبل الموعد المحدد. وأوضح مسؤولون أن هذه الزيادة تدعم خطة الدولة لرفع إجمالي إنتاج الغاز المسال بشكل ملحوظ بحلول نهاية العقد.",
-      "why_en": "LNG export capacity underpins non-hydrocarbon diversification financing and fiscal buffers central to NDS3.",
-      "why_ar": "تشكل طاقة تصدير الغاز المسال ركيزة لتمويل التنويع غير النفطي والاحتياطيات المالية التي تقوم عليها الاستراتيجية الوطنية الثالثة للتنمية.",
-      "publisher": "Qatar News Agency",
-      "url": "",
-      "days_ago": 2,
-      "signal_type": "market",
-      "sentiment": "positive",
-      "impact": "high",
-      "horizon": "mid",
-      "confidence": 0.85,
-      "outcome_codes": ["eco_growth", "fiscal_sust"],
-      "indicator_codes": ["gdp_real_growth", "trade_balance"]
-    },
-    {
-      "title_en": "GCC Railway Network Talks Resume with Focus on Qatar Segment",
-      "title_ar": "استئناف مباحثات شبكة سكك حديد دول مجلس التعاون مع التركيز على القطاع القطري",
-      "summary_en": "Transport officials from GCC states met to revive coordination on the long-delayed regional railway network, with Qatar's segment featuring on the agenda. No firm construction timeline was announced, but a joint technical committee was formed to review updated cost estimates.",
-      "summary_ar": "اجتمع مسؤولو النقل في دول مجلس التعاون الخليجي لإحياء التنسيق بشأن شبكة السكك الحديدية الإقليمية التي طال تأخرها، وكان القطاع القطري من بين بنود جدول الأعمال. ولم يعلن عن جدول زمني نهائي للتنفيذ، غير أنه تم تشكيل لجنة فنية مشتركة لمراجعة التقديرات المحدثة للتكلفة.",
-      "why_en": "Regional connectivity infrastructure is a long-standing enabler of trade and logistics competitiveness under NDS3.",
-      "why_ar": "تمثل البنية التحتية للربط الإقليمي عاملا مساعدا راسخا لتعزيز تنافسية التجارة والخدمات اللوجستية في إطار الاستراتيجية الوطنية الثالثة للتنمية.",
-      "publisher": "Gulf Times",
-      "url": "",
-      "days_ago": 5,
-      "signal_type": "policy",
-      "sentiment": "neutral",
-      "impact": "medium",
-      "horizon": "long",
-      "confidence": 0.6,
-      "outcome_codes": ["eco_growth"],
-      "indicator_codes": []
-    },
-    {
-      "title_en": "IMF Concludes Article IV Mission, Commends Buffers but Urges Faster Diversification",
-      "title_ar": "صندوق النقد الدولي يختتم بعثة المادة الرابعة ويشيد بالاحتياطيات المالية ويحث على تسريع التنويع",
-      "summary_en": "An IMF staff mission concluded its annual consultation with Qatari authorities, commending healthy fiscal and external buffers built up in recent years. The mission's statement also urged continued reform momentum to widen the non-hydrocarbon revenue base and deepen private sector job creation.",
-      "summary_ar": "اختتمت بعثة من صندوق النقد الدولي مشاوراتها السنوية مع السلطات القطرية، مشيدة بمتانة الاحتياطيات المالية والخارجية التي تراكمت خلال السنوات الأخيرة. ودعا بيان البعثة إلى مواصلة زخم الإصلاح لتوسيع قاعدة الإيرادات غير النفطية وتعميق خلق فرص العمل في القطاع الخاص.",
-      "why_en": "External assessments of fiscal buffers and diversification progress directly track NDS3's fiscal sustainability and growth outcomes.",
-      "why_ar": "تعكس التقييمات الخارجية للاحتياطيات المالية وتقدم التنويع الاقتصادي بشكل مباشر مخرجي الاستدامة المالية والنمو الاقتصادي في الاستراتيجية الوطنية الثالثة للتنمية.",
-      "publisher": "IMF",
-      "url": "",
-      "days_ago": 7,
-      "signal_type": "research",
-      "sentiment": "mixed",
-      "impact": "high",
-      "horizon": "near",
-      "confidence": 0.9,
-      "outcome_codes": ["fiscal_sust", "eco_growth"],
-      "indicator_codes": ["gdp_nonhydro_share"]
-    },
-    {
-      "title_en": "Qatar Climbs Several Places in Latest WEF Global Competitiveness Assessment",
-      "title_ar": "قطر تتقدم عدة مراكز في أحدث تقييم للمنتدى الاقتصادي العالمي للتنافسية",
-      "summary_en": "The World Economic Forum's latest competitiveness assessment placed Qatar higher than the previous cycle, citing improvements in infrastructure quality and macroeconomic stability sub-indices. Analysts noted institutional strength and ICT adoption as continuing relative advantages.",
-      "summary_ar": "أظهر أحدث تقييم للتنافسية الصادر عن المنتدى الاقتصادي العالمي تقدم قطر مقارنة بالدورة السابقة، مشيرا إلى تحسن مؤشرات جودة البنية التحتية والاستقرار الاقتصادي الكلي. ولاحظ محللون أن متانة المؤسسات واعتماد تقنيات المعلومات والاتصال لا تزالان من نقاط القوة النسبية.",
-      "why_en": "International index movements are a direct benchmark NPC tracks for government excellence and overall competitiveness.",
-      "why_ar": "تعد تحركات المؤشرات الدولية مقياسا مباشرا يرصده المجلس الأعلى للتخطيط لمتابعة التميز الحكومي والتنافسية الشاملة.",
-      "publisher": "WEF",
-      "url": "",
-      "days_ago": 9,
-      "signal_type": "index",
-      "sentiment": "positive",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.8,
-      "outcome_codes": ["gov_excellence"],
-      "indicator_codes": []
-    },
-    {
-      "title_en": "Ministry of Communications Opens Public Consultation on Draft AI Governance Framework",
-      "title_ar": "وزارة الاتصالات تطلق استشارة عامة حول مسودة إطار حوكمة الذكاء الاصطناعي",
-      "summary_en": "Qatar's communications ministry released a draft framework governing the use of artificial intelligence in government and select private sectors, opening it for public comment. The draft addresses data protection, algorithmic accountability, and sector-specific pilot exemptions.",
-      "summary_ar": "أصدرت وزارة الاتصالات وتكنولوجيا المعلومات في قطر مسودة إطار لحوكمة استخدام الذكاء الاصطناعي في الجهات الحكومية وبعض القطاعات الخاصة، وفتحت باب الاستشارة العامة بشأنها. وتتناول المسودة حماية البيانات والمساءلة الخوارزمية واستثناءات تجريبية لقطاعات محددة.",
-      "why_en": "AI governance rules shape the pace and safety of digital transformation central to the government excellence outcome.",
-      "why_ar": "تحدد قواعد حوكمة الذكاء الاصطناعي وتيرة التحول الرقمي وسلامته وهو أمر محوري لمخرج التميز الحكومي.",
-      "publisher": "The Peninsula",
-      "url": "",
-      "days_ago": 12,
-      "signal_type": "policy",
-      "sentiment": "neutral",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.65,
-      "outcome_codes": ["gov_excellence"],
-      "indicator_codes": []
-    },
-    {
-      "title_en": "Labour Ministry Extends Summer Midday Work Ban Hours for 2026 Season",
-      "title_ar": "وزارة العمل تمدد ساعات حظر العمل الصيفي في منتصف النهار لموسم 2026",
-      "summary_en": "The Ministry of Labour announced an extension of the daily midday outdoor work ban during the summer heat season, citing updated heat-stress research. The measure applies to construction and other outdoor sectors and includes stricter enforcement penalties.",
-      "summary_ar": "أعلنت وزارة العمل عن تمديد ساعات حظر العمل في الهواء الطلق خلال منتصف النهار في موسم الحر الصيفي، استنادا إلى دراسات محدثة حول الإجهاد الحراري. ويشمل الإجراء قطاع الإنشاءات وقطاعات أخرى تعمل في الهواء الطلق ويتضمن عقوبات أشد صرامة عند المخالفة.",
-      "why_en": "Worker protection measures affect both workforce wellbeing and the quality of life outcome for the resident population.",
-      "why_ar": "تؤثر إجراءات حماية العمال على رفاهية القوى العاملة وعلى مخرج جودة الحياة للسكان المقيمين.",
-      "publisher": "Qatar News Agency",
-      "url": "",
-      "days_ago": 14,
-      "signal_type": "policy",
-      "sentiment": "positive",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.85,
-      "outcome_codes": ["workforce", "quality_life"],
-      "indicator_codes": []
-    },
-    {
-      "title_en": "Ministry of Education Expands AI-Assisted Learning Platforms Across Public Schools",
-      "title_ar": "وزارة التربية والتعليم توسع نطاق منصات التعلم المدعومة بالذكاء الاصطناعي في المدارس الحكومية",
-      "summary_en": "Qatar's education ministry announced a wider rollout of AI-assisted learning tools in public schools following a successful pilot phase. The program aims to personalize instruction in mathematics and Arabic literacy for students needing additional support.",
-      "summary_ar": "أعلنت وزارة التربية والتعليم عن توسيع نطاق أدوات التعلم المدعومة بالذكاء الاصطناعي في المدارس الحكومية بعد نجاح المرحلة التجريبية. ويهدف البرنامج إلى تخصيص أساليب التدريس في مادتي الرياضيات واللغة العربية للطلبة الذين يحتاجون دعما إضافيا.",
-      "why_en": "Education technology adoption feeds directly into future workforce readiness and human capital targets.",
-      "why_ar": "يسهم تبني تقنيات التعليم بشكل مباشر في تهيئة القوى العاملة المستقبلية وتحقيق أهداف رأس المال البشري.",
-      "publisher": "Gulf Times",
-      "url": "",
-      "days_ago": 17,
-      "signal_type": "technology",
-      "sentiment": "positive",
-      "impact": "medium",
-      "horizon": "mid",
-      "confidence": 0.7,
-      "outcome_codes": ["workforce"],
-      "indicator_codes": ["digital_services_share"]
-    },
-    {
-      "title_en": "Qatar's Hukoomi Portal Recognised in UN Public Service Awards Shortlist",
-      "title_ar": "بوابة حكومي القطرية ضمن القائمة المختصرة لجوائز الأمم المتحدة للخدمة العامة",
-      "summary_en": "Qatar's national e-government portal Hukoomi was named among finalists for a UN public service recognition, highlighting improvements in single sign-on access and integrated service delivery. Officials said the recognition reflects steady investment in digital service consolidation.",
-      "summary_ar": "أدرجت بوابة حكومي، البوابة الوطنية للخدمات الحكومية الإلكترونية في قطر، ضمن القائمة المختصرة النهائية لجائزة الأمم المتحدة للخدمة العامة، وذلك تقديرا لتحسينات في تسجيل الدخول الموحد وتكامل تقديم الخدمات. وقال مسؤولون إن هذا التقدير يعكس الاستثمار المستمر في توحيد الخدمات الرقمية.",
-      "why_en": "Recognition of e-government platforms is a visible marker of progress on the government excellence outcome.",
-      "why_ar": "يمثل التقدير الدولي لمنصات الحكومة الإلكترونية مؤشرا ملموسا على التقدم في مخرج التميز الحكومي.",
-      "publisher": "Qatar News Agency",
-      "url": "",
-      "days_ago": 19,
-      "signal_type": "index",
-      "sentiment": "positive",
-      "impact": "low",
-      "horizon": "near",
-      "confidence": 0.75,
-      "outcome_codes": ["gov_excellence"],
-      "indicator_codes": ["digital_services_share"]
-    },
-    {
-      "title_en": "European Renewable Energy Firm Signs Agreement to Expand Solar Capacity in Qatar",
-      "title_ar": "شركة أوروبية للطاقة المتجددة توقع اتفاقية لتوسيع الطاقة الشمسية في قطر",
-      "summary_en": "A European renewable energy developer signed an agreement with Qatari partners to expand utility-scale solar capacity beyond existing installations. The deal is described as one of the larger recent foreign direct investment commitments in the clean energy space.",
-      "summary_ar": "وقعت شركة أوروبية متخصصة في تطوير الطاقة المتجددة اتفاقية مع شركاء قطريين لتوسيع سعة محطات الطاقة الشمسية بما يتجاوز المنشآت القائمة حاليا. ويوصف الاتفاق بأنه أحد أبرز التزامات الاستثمار الأجنبي المباشر الأخيرة في مجال الطاقة النظيفة.",
-      "why_en": "The deal advances both FDI diversification and renewable capacity targets tracked under NDS3.",
-      "why_ar": "يدعم هذا الاتفاق تنويع مصادر الاستثمار الأجنبي المباشر وأهداف الطاقة المتجددة التي تتابعها الاستراتيجية الوطنية الثالثة للتنمية.",
-      "publisher": "Reuters",
-      "url": "",
-      "days_ago": 22,
-      "signal_type": "market",
-      "sentiment": "positive",
-      "impact": "high",
-      "horizon": "mid",
-      "confidence": 0.8,
-      "outcome_codes": ["eco_growth", "env_sust"],
-      "indicator_codes": ["fdi_inflows", "solar_capacity"]
-    },
-    {
-      "title_en": "National Statistics Center Updates Consumer Price Index Basket Weights",
-      "title_ar": "المركز الوطني للإحصاء يحدث أوزان سلة الرقم القياسي لأسعار المستهلك",
-      "summary_en": "The National Statistics Center published an updated CPI basket reflecting revised household consumption patterns from a recent expenditure survey. Officials said the rebasing improves the accuracy of inflation tracking but does not itself signal a change in underlying price trends.",
-      "summary_ar": "نشر المركز الوطني للإحصاء سلة محدثة للرقم القياسي لأسعار المستهلك تعكس أنماط الإنفاق الأسري المنقحة المستمدة من مسح حديث للإنفاق. وأوضح المسؤولون أن إعادة تحديد الأوزان تحسن دقة رصد التضخم ولا تعني بحد ذاتها تغيرا في اتجاهات الأسعار الأساسية.",
-      "why_en": "Accurate price measurement underpins reliable monitoring of the fiscal sustainability outcome's inflation targets.",
-      "why_ar": "يدعم القياس الدقيق للأسعار الرصد الموثوق لأهداف التضخم ضمن مخرج الاستدامة المالية.",
-      "publisher": "National Statistics Center",
-      "url": "",
-      "days_ago": 25,
-      "signal_type": "research",
-      "sentiment": "neutral",
-      "impact": "low",
-      "horizon": "near",
-      "confidence": 0.7,
-      "outcome_codes": ["fiscal_sust"],
-      "indicator_codes": ["cpi_inflation"]
-    },
-    {
-      "title_en": "QatarEnergy and International Partner Launch Low-Carbon Hydrogen Pilot",
-      "title_ar": "قطر للطاقة وشريك دولي يطلقان مشروعا تجريبيا للهيدروجين منخفض الكربون",
-      "summary_en": "QatarEnergy and an international industrial partner began operating a pilot facility to produce low-carbon hydrogen using existing gas infrastructure. The project will assess commercial viability ahead of any decision on a larger-scale plant.",
-      "summary_ar": "بدأت قطر للطاقة بالشراكة مع جهة صناعية دولية تشغيل منشأة تجريبية لإنتاج الهيدروجين منخفض الكربون باستخدام البنية التحتية الحالية للغاز. وسيقيم المشروع الجدوى التجارية قبل اتخاذ أي قرار بشأن إنشاء محطة أكبر حجما.",
-      "why_en": "Low-carbon hydrogen exploration supports long-term emissions goals while preserving hydrocarbon-linked growth.",
-      "why_ar": "يدعم استكشاف الهيدروجين منخفض الكربون أهداف خفض الانبعاثات على المدى الطويل مع الحفاظ على النمو المرتبط بقطاع الطاقة.",
-      "publisher": "The Peninsula",
-      "url": "",
-      "days_ago": 28,
-      "signal_type": "technology",
-      "sentiment": "positive",
-      "impact": "medium",
-      "horizon": "long",
-      "confidence": 0.6,
-      "outcome_codes": ["env_sust", "eco_growth"],
-      "indicator_codes": []
-    },
-    {
-      "title_en": "Qatar Tourism Reports Strong Summer Visitor Numbers on Festival Calendar",
-      "title_ar": "قطر للسياحة تسجل أعدادا قوية من الزوار خلال الصيف بفضل التقويم المهرجاني",
-      "summary_en": "Qatar Tourism reported robust visitor numbers over the summer months, attributing the momentum to an expanded calendar of cultural festivals and events. Hotel occupancy in Doha reportedly held above seasonal averages despite regional heat.",
-      "summary_ar": "أعلنت قطر للسياحة عن أعداد قوية من الزوار خلال أشهر الصيف، وعزت هذا الزخم إلى توسع التقويم الثقافي والفعاليات المهرجانية. وحافظ معدل إشغال الفنادق في الدوحة على مستويات أعلى من المتوسط الموسمي رغم الحرارة الإقليمية.",
-      "why_en": "Tourism performance is a key lever for non-hydrocarbon growth and contributes to quality of life through cultural offerings.",
-      "why_ar": "يشكل أداء قطاع السياحة رافعة أساسية للنمو غير النفطي ويسهم في جودة الحياة من خلال العروض الثقافية.",
-      "publisher": "Doha News",
-      "url": "",
-      "days_ago": 31,
-      "signal_type": "market",
-      "sentiment": "positive",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.75,
-      "outcome_codes": ["eco_growth", "quality_life"],
-      "indicator_codes": []
-    },
-    {
-      "title_en": "Quarterly Labour Force Survey Shows Slight Uptick in Qatari Youth Unemployment",
-      "title_ar": "مسح القوى العاملة الفصلي يظهر ارتفاعا طفيفا في معدل بطالة الشباب القطري",
-      "summary_en": "The latest quarterly labour force bulletin recorded a modest rise in unemployment among Qatari nationals aged 20 to 29, though the overall national unemployment rate remained low by international standards. Analysts attributed part of the shift to a growing pool of new graduates entering the job market.",
-      "summary_ar": "سجلت النشرة الفصلية لمسح القوى العاملة ارتفاعا طفيفا في معدل البطالة بين المواطنين القطريين في الفئة العمرية من 20 إلى 29 عاما، رغم بقاء المعدل الوطني العام منخفضا وفق المعايير الدولية. وعزا محللون جزءا من هذا التغير إلى تزايد أعداد الخريجين الجدد الداخلين إلى سوق العمل.",
-      "why_en": "Youth unemployment trends are an early warning indicator for the future-ready workforce outcome.",
-      "why_ar": "تعد اتجاهات بطالة الشباب مؤشر إنذار مبكر لمخرج القوى العاملة المستعدة للمستقبل.",
-      "publisher": "National Statistics Center",
-      "url": "",
-      "days_ago": 34,
-      "signal_type": "research",
-      "sentiment": "negative",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.7,
-      "outcome_codes": ["workforce"],
-      "indicator_codes": ["unemployment_rate"]
-    },
-    {
-      "title_en": "Doha Hosts UN ESCWA Regional Meeting on Statistical Capacity Building",
-      "title_ar": "الدوحة تستضيف اجتماعا إقليميا للإسكوا حول بناء القدرات الإحصائية",
-      "summary_en": "UN ESCWA convened a regional meeting in Doha bringing together national statistics offices to discuss administrative data integration and census methodology exchange. Qatari officials presented lessons from the recent population census as a regional case study.",
-      "summary_ar": "عقدت الإسكوا اجتماعا إقليميا في الدوحة جمع مكاتب الإحصاء الوطنية لمناقشة تكامل البيانات الإدارية وتبادل منهجيات التعداد السكاني. وقدم مسؤولون قطريون الدروس المستفادة من التعداد السكاني الأخير كدراسة حالة إقليمية.",
-      "why_en": "Regional statistical cooperation strengthens the data foundations NPC relies on across all NDS3 outcomes.",
-      "why_ar": "يعزز التعاون الإحصائي الإقليمي الأسس البيانية التي يعتمد عليها المجلس الأعلى للتخطيط في جميع مخرجات الاستراتيجية الوطنية الثالثة للتنمية.",
-      "publisher": "UN ESCWA",
-      "url": "",
-      "days_ago": 37,
-      "signal_type": "social",
-      "sentiment": "positive",
-      "impact": "low",
-      "horizon": "near",
-      "confidence": 0.8,
-      "outcome_codes": ["gov_excellence", "cohesive_society"],
-      "indicator_codes": []
-    },
-    {
-      "title_en": "Preliminary Census 2025 Figures Point to Shifting Population Composition",
-      "title_ar": "النتائج الأولية لتعداد 2025 تشير إلى تحول في التركيبة السكانية",
-      "summary_en": "Preliminary results from the 2025 population and housing census indicate a shift in the age and nationality composition of Qatar's resident population compared with the prior census round. The National Statistics Center said full disaggregated tables will follow in subsequent releases.",
-      "summary_ar": "تشير النتائج الأولية لتعداد السكان والمساكن لعام 2025 إلى تحول في التركيبة العمرية والجنسية للسكان المقيمين في قطر مقارنة بدورة التعداد السابقة. وأفاد المركز الوطني للإحصاء بأن الجداول التفصيلية الكاملة ستصدر في إصدارات لاحقة.",
-      "why_en": "Census data is the backbone for planning quality of life services and infrastructure across NDS3.",
-      "why_ar": "تشكل بيانات التعداد الركيزة الأساسية للتخطيط لخدمات جودة الحياة والبنية التحتية عبر الاستراتيجية الوطنية الثالثة للتنمية.",
-      "publisher": "National Statistics Center",
-      "url": "",
-      "days_ago": 40,
-      "signal_type": "research",
-      "sentiment": "neutral",
-      "impact": "high",
-      "horizon": "near",
-      "confidence": 0.9,
-      "outcome_codes": ["quality_life"],
-      "indicator_codes": ["pop_total"]
-    },
-    {
-      "title_en": "Qatar Financial Centre Reports Record Quarter for New Firm Registrations",
-      "title_ar": "مركز قطر للمال يسجل ربعا قياسيا في عدد الشركات المسجلة الجديدة",
-      "summary_en": "The Qatar Financial Centre reported its highest quarterly total of new firm registrations, driven largely by asset management and fintech entrants. Officials linked the momentum to recent licensing simplification and expanded double taxation treaties.",
-      "summary_ar": "أعلن مركز قطر للمال عن تسجيله أعلى حصيلة فصلية للشركات الجديدة المسجلة، مدفوعة إلى حد كبير بدخول شركات إدارة الأصول والتقنية المالية. وربط مسؤولون هذا الزخم بتبسيط إجراءات الترخيص مؤخرا وتوسيع اتفاقيات تجنب الازدواج الضريبي.",
-      "why_en": "Financial services expansion is a priority cluster contributing to non-hydrocarbon growth and fiscal diversification.",
-      "why_ar": "يشكل توسع قطاع الخدمات المالية أحد القطاعات ذات الأولوية المساهمة في النمو غير النفطي وتنويع الإيرادات المالية.",
-      "publisher": "Gulf Times",
-      "url": "",
-      "days_ago": 43,
-      "signal_type": "market",
-      "sentiment": "positive",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.75,
-      "outcome_codes": ["eco_growth", "fiscal_sust"],
-      "indicator_codes": ["fdi_inflows"]
-    },
-    {
-      "title_en": "Shipping Insurers Flag Elevated Risk Premiums Near Strait of Hormuz",
-      "title_ar": "شركات التأمين البحري ترصد ارتفاعا في أقساط المخاطر قرب مضيق هرمز",
-      "summary_en": "Maritime insurers reported a modest rise in war-risk premiums for vessels transiting near the Strait of Hormuz amid regional security tensions. Qatari trade officials said LNG shipments have not been disrupted but are being monitored closely.",
-      "summary_ar": "أفادت شركات التأمين البحري بارتفاع طفيف في أقساط مخاطر الحرب للسفن العابرة قرب مضيق هرمز في ظل التوترات الأمنية الإقليمية. وقال مسؤولون تجاريون قطريون إن شحنات الغاز المسال لم تتأثر حتى الآن لكن يجري رصدها عن كثب.",
-      "why_en": "Shipping route stability directly affects trade balance and export reliability under the economic growth outcome.",
-      "why_ar": "يؤثر استقرار طرق الشحن البحري بشكل مباشر على الميزان التجاري وموثوقية الصادرات ضمن مخرج النمو الاقتصادي.",
-      "publisher": "Reuters",
-      "url": "",
-      "days_ago": 46,
-      "signal_type": "geopolitical",
-      "sentiment": "negative",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.6,
-      "outcome_codes": ["eco_growth"],
-      "indicator_codes": ["trade_balance"]
-    },
-    {
-      "title_en": "GCC Committee Reviews Progress on Unified Customs Tariff Implementation",
-      "title_ar": "لجنة خليجية تراجع التقدم في تطبيق التعرفة الجمركية الموحدة",
-      "summary_en": "A GCC technical committee reviewed implementation gaps in the long-standing unified customs tariff framework, noting uneven progress across member states on electronic clearance integration. Qatari customs representatives presented updates on single-window trade facilitation.",
-      "summary_ar": "راجعت لجنة فنية خليجية الفجوات القائمة في تنفيذ إطار التعرفة الجمركية الموحدة القائم منذ سنوات، مشيرة إلى تفاوت التقدم بين الدول الأعضاء في تكامل التخليص الإلكتروني. وقدم ممثلو الجمارك القطرية مستجدات حول تسهيل التجارة عبر النافذة الواحدة.",
-      "why_en": "Trade facilitation reforms support the logistics cluster and broader non-hydrocarbon export growth.",
-      "why_ar": "تدعم إصلاحات تسهيل التجارة قطاع الخدمات اللوجستية ونمو الصادرات غير النفطية بشكل أوسع.",
-      "publisher": "Gulf Times",
-      "url": "",
-      "days_ago": 49,
-      "signal_type": "policy",
-      "sentiment": "neutral",
-      "impact": "medium",
-      "horizon": "mid",
-      "confidence": 0.6,
-      "outcome_codes": ["eco_growth"],
-      "indicator_codes": []
-    },
-    {
-      "title_en": "World Bank Report Cites Qatar Among Gulf States Making Qatarization Gains",
-      "title_ar": "تقرير للبنك الدولي يشير إلى قطر ضمن دول خليجية حققت مكاسب في التقطير",
-      "summary_en": "A World Bank regional labour market report noted measurable increases in the share of Qatari nationals employed in select private sector roles, particularly in finance and technology. The report cautioned that gains remain concentrated in a narrow set of occupations.",
-      "summary_ar": "أشار تقرير إقليمي لسوق العمل صادر عن البنك الدولي إلى زيادة ملموسة في نسبة المواطنين القطريين العاملين في وظائف مختارة بالقطاع الخاص، لا سيما في قطاعي المال والتكنولوجيا. وحذر التقرير من أن هذه المكاسب لا تزال مركزة في نطاق ضيق من المهن.",
-      "why_en": "External validation of Qatarization progress informs the future-ready workforce outcome's private-sector employment targets.",
-      "why_ar": "يوفر التحقق الخارجي من تقدم التقطير معلومات مفيدة لأهداف التوظيف في القطاع الخاص ضمن مخرج القوى العاملة المستعدة للمستقبل.",
-      "publisher": "World Bank",
-      "url": "",
-      "days_ago": 52,
-      "signal_type": "research",
-      "sentiment": "positive",
-      "impact": "medium",
-      "horizon": "mid",
-      "confidence": 0.75,
-      "outcome_codes": ["workforce"],
-      "indicator_codes": ["lfpr_qatari"]
-    },
-    {
-      "title_en": "Groundbreaking Held for Second Phase of Al Kharsaah Solar Plant",
-      "title_ar": "وضع حجر الأساس للمرحلة الثانية من محطة الخرسعة للطاقة الشمسية",
-      "summary_en": "Authorities broke ground on a second phase of the Al Kharsaah solar facility, aiming to roughly double the site's generation capacity once complete. The expansion is positioned as a key step toward Qatar's renewable energy share targets for the power mix.",
-      "summary_ar": "شرعت الجهات المعنية في وضع حجر الأساس للمرحلة الثانية من محطة الخرسعة للطاقة الشمسية، بهدف مضاعفة الطاقة الإنتاجية للموقع تقريبا عند اكتمالها. وتأتي هذه التوسعة كخطوة أساسية نحو تحقيق أهداف قطر لرفع حصة الطاقة المتجددة في مزيج الكهرباء.",
-      "why_en": "Solar capacity expansion is a headline indicator for the environmental sustainability outcome.",
-      "why_ar": "يمثل توسع سعة الطاقة الشمسية مؤشرا رئيسيا لمخرج الاستدامة البيئية.",
-      "publisher": "Qatar News Agency",
-      "url": "",
-      "days_ago": 55,
-      "signal_type": "environment",
-      "sentiment": "positive",
-      "impact": "high",
-      "horizon": "mid",
-      "confidence": 0.85,
-      "outcome_codes": ["env_sust"],
-      "indicator_codes": ["solar_capacity"]
-    },
-    {
-      "title_en": "Youth Council Debate Highlights Concerns Over Online Content and Cultural Values",
-      "title_ar": "نقاش في مجلس الشباب يبرز مخاوف بشأن المحتوى الرقمي والقيم المجتمعية",
-      "summary_en": "A session convened by a national youth council raised concerns about the influence of unmoderated social media content on cultural values among younger Qataris. Participants offered mixed views, with some calling for stronger guidance and others cautioning against overly restrictive approaches.",
-      "summary_ar": "أثارت جلسة عقدها مجلس شبابي وطني مخاوف بشأن تأثير المحتوى غير المنظم على منصات التواصل الاجتماعي في القيم الثقافية لدى فئة الشباب القطري. وتباينت آراء المشاركين، إذ دعا بعضهم إلى توجيه أقوى فيما حذر آخرون من نهج مفرط في التقييد.",
-      "why_en": "Debates over cultural values and digital content bear on the cohesive society outcome's identity and belonging goals.",
-      "why_ar": "تمس النقاشات حول القيم الثقافية والمحتوى الرقمي أهداف الهوية والانتماء ضمن مخرج التماسك المجتمعي.",
-      "publisher": "Doha News",
-      "url": "",
-      "days_ago": 58,
-      "signal_type": "social",
-      "sentiment": "mixed",
-      "impact": "low",
-      "horizon": "near",
-      "confidence": 0.55,
-      "outcome_codes": ["cohesive_society"],
-      "indicator_codes": []
-    },
-    {
-      "title_en": "Ministry of Social Development Holds National Dialogue Sessions on Family Cohesion",
-      "title_ar": "وزارة التنمية الاجتماعية والأسرة تعقد جلسات حوار وطني حول تماسك الأسرة",
-      "summary_en": "The Ministry of Social Development and Family convened a series of community dialogue sessions focused on strengthening family cohesion amid rapid social change. Outcomes from the sessions are expected to feed into a forthcoming family policy update.",
-      "summary_ar": "عقدت وزارة التنمية الاجتماعية والأسرة سلسلة من جلسات الحوار المجتمعي التي ركزت على تعزيز تماسك الأسرة في ظل التحولات الاجتماعية المتسارعة. ومن المتوقع أن تصب مخرجات هذه الجلسات في تحديث مرتقب لسياسة الأسرة.",
-      "why_en": "Family policy dialogue directly supports the social pillars underpinning the cohesive society outcome.",
-      "why_ar": "يدعم الحوار المتعلق بسياسة الأسرة بشكل مباشر الركائز الاجتماعية التي يقوم عليها مخرج التماسك المجتمعي.",
-      "publisher": "The Peninsula",
-      "url": "",
-      "days_ago": 61,
-      "signal_type": "social",
-      "sentiment": "positive",
-      "impact": "low",
-      "horizon": "near",
-      "confidence": 0.65,
-      "outcome_codes": ["cohesive_society"],
-      "indicator_codes": []
-    },
-    {
-      "title_en": "National Health Record System Completes Integration Across Public Facilities",
-      "title_ar": "منظومة السجل الصحي الوطني تكمل التكامل بين المرافق الصحية الحكومية",
-      "summary_en": "The Ministry of Public Health announced completion of a project linking electronic health records across all public hospitals and primary health centres. Officials said the integration is expected to reduce duplicate testing and improve continuity of care for patients moving between facilities.",
-      "summary_ar": "أعلنت وزارة الصحة العامة عن استكمال مشروع ربط السجلات الصحية الإلكترونية بين جميع المستشفيات الحكومية ومراكز الرعاية الصحية الأولية. وقال مسؤولون إن من المتوقع أن يقلل هذا التكامل من الفحوصات المكررة ويحسن استمرارية الرعاية للمرضى المنتقلين بين المرافق.",
-      "why_en": "Digital health integration advances both quality of life outcomes and broader digital government service goals.",
-      "why_ar": "يعزز التكامل الصحي الرقمي مخرج جودة الحياة وأهداف الخدمات الحكومية الرقمية الأوسع.",
-      "publisher": "Qatar News Agency",
-      "url": "",
-      "days_ago": 64,
-      "signal_type": "technology",
-      "sentiment": "positive",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.8,
-      "outcome_codes": ["quality_life", "gov_excellence"],
-      "indicator_codes": ["digital_services_share"]
-    },
-    {
-      "title_en": "Building Permits Data Shows Second-Quarter Slowdown Amid Construction Cost Pressures",
-      "title_ar": "بيانات رخص البناء تظهر تباطؤا في الربع الثاني وسط ضغوط تكاليف الإنشاء",
-      "summary_en": "Newly released statistics showed a quarter-on-quarter decline in the number of building permits issued, which officials attributed partly to rising construction material costs. The dip was concentrated in residential projects, while commercial permits held steadier.",
-      "summary_ar": "أظهرت بيانات إحصائية حديثة تراجعا في عدد رخص البناء الصادرة مقارنة بالربع السابق، وعزاه المسؤولون جزئيا إلى ارتفاع تكاليف مواد البناء. وتركز هذا التراجع في المشاريع السكنية، في حين حافظت الرخص التجارية على استقرار نسبي.",
-      "why_en": "Building activity is a leading indicator for both housing-related quality of life and construction-sector growth.",
-      "why_ar": "يعد نشاط البناء مؤشرا استباقيا لجودة الحياة المرتبطة بالإسكان ونمو قطاع الإنشاءات على حد سواء.",
-      "publisher": "Gulf Times",
-      "url": "",
-      "days_ago": 67,
-      "signal_type": "market",
-      "sentiment": "negative",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.7,
-      "outcome_codes": ["quality_life", "eco_growth"],
-      "indicator_codes": ["building_permits"]
-    },
-    {
-      "title_en": "Environmental Bulletin Notes Slight Decline in Per Capita Emissions",
-      "title_ar": "نشرة بيئية ترصد انخفاضا طفيفا في نصيب الفرد من الانبعاثات",
-      "summary_en": "A statistics bulletin on environmental indicators recorded a small year-on-year decline in greenhouse gas emissions per capita, attributed to efficiency gains in the power and industrial sectors. Officials cautioned that sustained reductions will require continued investment in renewables and demand management.",
-      "summary_ar": "سجلت نشرة إحصائية للمؤشرات البيئية انخفاضا طفيفا في نصيب الفرد من انبعاثات غازات الاحتباس الحراري على أساس سنوي، ويعزى ذلك إلى مكاسب في كفاءة قطاعي الطاقة والصناعة. وحذر مسؤولون من أن استمرار خفض الانبعاثات يتطلب استثمارا متواصلا في الطاقة المتجددة وإدارة الطلب.",
-      "why_en": "Per capita emissions trends are a core metric for the environmental sustainability outcome's climate commitments.",
-      "why_ar": "تعد اتجاهات نصيب الفرد من الانبعاثات مقياسا أساسيا لالتزامات مخرج الاستدامة البيئية المناخية.",
-      "publisher": "National Statistics Center",
-      "url": "",
-      "days_ago": 70,
-      "signal_type": "environment",
-      "sentiment": "positive",
-      "impact": "medium",
-      "horizon": "mid",
-      "confidence": 0.65,
-      "outcome_codes": ["env_sust"],
-      "indicator_codes": ["ghg_per_capita"]
-    },
-    {
-      "title_en": "International NGO Report Notes Modest Dip in Governance Sub-Index Score",
-      "title_ar": "تقرير لمنظمة دولية غير حكومية يرصد تراجعا طفيفا في مؤشر فرعي للحوكمة",
-      "summary_en": "A Western advocacy organisation's annual governance-adjacent report placed Qatar slightly lower on one sub-index compared with the previous edition, while other components remained stable. Qatari officials have not yet issued a formal response to the methodology used.",
-      "summary_ar": "أظهر تقرير سنوي صادر عن منظمة غربية غير حكومية معنية بالحوكمة تراجعا طفيفا لقطر في أحد المؤشرات الفرعية مقارنة بالنسخة السابقة، بينما ظلت مكونات أخرى مستقرة. ولم تصدر الجهات القطرية المعنية بعد ردا رسميا على المنهجية المستخدمة في التقرير.",
-      "why_en": "Index movements, even minor ones, warrant monitoring given their weight in international perceptions of government excellence.",
-      "why_ar": "تستدعي تحركات المؤشرات الدولية، حتى الطفيفة منها، المتابعة نظرا لوزنها في التصورات الدولية عن التميز الحكومي.",
-      "publisher": "Reuters",
-      "url": "",
-      "days_ago": 73,
-      "signal_type": "index",
-      "sentiment": "negative",
-      "impact": "low",
-      "horizon": "near",
-      "confidence": 0.6,
-      "outcome_codes": ["gov_excellence"],
-      "indicator_codes": []
-    },
-    {
-      "title_en": "GCC States Sign Cooperation Agreement on Regional Water Security",
-      "title_ar": "دول مجلس التعاون الخليجي توقع اتفاقية تعاون بشأن الأمن المائي الإقليمي",
-      "summary_en": "GCC water and energy ministers signed a cooperation agreement aimed at strengthening emergency water-sharing arrangements and joint desalination research. The agreement also establishes a shared early-warning mechanism for supply disruptions.",
-      "summary_ar": "وقع وزراء المياه والطاقة في دول مجلس التعاون الخليجي اتفاقية تعاون تهدف إلى تعزيز ترتيبات تبادل المياه في حالات الطوارئ والبحث المشترك في مجال تحلية المياه. وتنشئ الاتفاقية أيضا آلية مشتركة للإنذار المبكر بشأن انقطاعات الإمداد.",
-      "why_en": "Water security cooperation strengthens resilience underpinning both environmental sustainability and regional cohesion goals.",
-      "why_ar": "يعزز التعاون في مجال الأمن المائي القدرة على الصمود التي تقوم عليها أهداف الاستدامة البيئية والتماسك الإقليمي.",
-      "publisher": "Qatar News Agency",
-      "url": "",
-      "days_ago": 76,
-      "signal_type": "geopolitical",
-      "sentiment": "positive",
-      "impact": "medium",
-      "horizon": "long",
-      "confidence": 0.65,
-      "outcome_codes": ["env_sust", "cohesive_society"],
-      "indicator_codes": []
-    },
-    {
-      "title_en": "Productivity Note Finds Non-Oil Labour Productivity Growth Stalled",
-      "title_ar": "مذكرة إنتاجية ترصد ركودا في نمو إنتاجية العمل في القطاعات غير النفطية",
-      "summary_en": "An internal productivity tracking note found that labour productivity growth in non-oil sectors was essentially flat over the past year despite continued employment expansion. Analysts pointed to skills mismatches and slow technology adoption in some services sub-sectors as contributing factors.",
-      "summary_ar": "خلصت مذكرة داخلية لرصد الإنتاجية إلى أن نمو إنتاجية العمل في القطاعات غير النفطية كان شبه راكد خلال العام الماضي رغم استمرار توسع التوظيف. وأشار محللون إلى عدم توافق المهارات وبطء تبني التكنولوجيا في بعض القطاعات الفرعية للخدمات كعوامل مساهمة.",
-      "why_en": "Flat productivity growth signals a structural challenge for both workforce quality and broader economic growth outcomes.",
-      "why_ar": "يشير ركود نمو الإنتاجية إلى تحد هيكلي يمس جودة القوى العاملة ومخرج النمو الاقتصادي الأوسع.",
-      "publisher": "OECD",
-      "url": "",
-      "days_ago": 79,
-      "signal_type": "research",
-      "sentiment": "mixed",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.7,
-      "outcome_codes": ["workforce", "eco_growth"],
-      "indicator_codes": ["labour_productivity_growth"]
-    },
-    {
-      "title_en": "Trade Statistics Show Narrower Surplus as Import Bill Rises",
-      "title_ar": "الإحصاءات التجارية تظهر تراجع الفائض مع ارتفاع فاتورة الواردات",
-      "summary_en": "Merchandise trade statistics showed a narrower monthly trade surplus, driven by higher imports of capital goods and construction materials linked to ongoing infrastructure projects. Exports remained broadly stable, supported by steady LNG shipment volumes.",
-      "summary_ar": "أظهرت إحصاءات التجارة السلعية تراجعا في الفائض التجاري الشهري، مدفوعا بارتفاع واردات السلع الرأسمالية ومواد البناء المرتبطة بمشاريع البنية التحتية الجارية. وظلت الصادرات مستقرة نسبيا، مدعومة بثبات أحجام شحنات الغاز المسال.",
-      "why_en": "Trade balance movements feed directly into fiscal sustainability monitoring and external account resilience.",
-      "why_ar": "تنعكس تحركات الميزان التجاري بشكل مباشر على رصد الاستدامة المالية ومرونة الحساب الخارجي.",
-      "publisher": "National Statistics Center",
-      "url": "",
-      "days_ago": 82,
-      "signal_type": "market",
-      "sentiment": "negative",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.75,
-      "outcome_codes": ["fiscal_sust"],
-      "indicator_codes": ["trade_balance"]
-    },
-    {
-      "title_en": "OECD Economic Outlook Sees Qatar Growth Resilient Despite Softer Oil Prices",
-      "title_ar": "توقعات المنظمة الاقتصادية OECD ترى نمو قطر مرنا رغم تراجع أسعار النفط",
-      "summary_en": "The OECD's regional economic outlook chapter projected continued positive growth for Qatar despite softer global oil prices, citing LNG expansion and non-hydrocarbon momentum as offsetting factors. The report flagged global demand uncertainty as the main downside risk to the forecast.",
-      "summary_ar": "توقع فصل التوقعات الاقتصادية الإقليمية الصادر عن منظمة التعاون الاقتصادي والتنمية استمرار النمو الإيجابي لقطر رغم تراجع أسعار النفط العالمية، مشيرا إلى توسعة الغاز المسال وزخم القطاعات غير النفطية كعوامل موازنة. وحذر التقرير من أن عدم اليقين بشأن الطلب العالمي يمثل أبرز المخاطر السلبية على هذا التوقع.",
-      "why_en": "External growth forecasts provide an independent check on NDS3's economic growth and fiscal sustainability trajectories.",
-      "why_ar": "توفر توقعات النمو الخارجية تحققا مستقلا من مسارات النمو الاقتصادي والاستدامة المالية ضمن الاستراتيجية الوطنية الثالثة للتنمية.",
-      "publisher": "OECD",
-      "url": "",
-      "days_ago": 85,
-      "signal_type": "research",
-      "sentiment": "mixed",
-      "impact": "high",
-      "horizon": "near",
-      "confidence": 0.8,
-      "outcome_codes": ["eco_growth", "fiscal_sust"],
-      "indicator_codes": ["gdp_real_growth"]
-    }
-  ],
-  "mock_scan_fixture": [
-    {
-      "title_en": "Ooredoo Qatar Launches 5G-Advanced Network Trial in Doha",
-      "title_ar": "أوريدو قطر تطلق تجربة شبكة الجيل الخامس المتقدم في الدوحة",
-      "summary_en": "Ooredoo Qatar announced a trial rollout of 5G-Advanced network technology in parts of Doha, promising higher data speeds and lower latency for enterprise customers. The operator said a phased national rollout would follow depending on trial results.",
-      "summary_ar": "أعلنت أوريدو قطر عن إطلاق تجربة لشبكة الجيل الخامس المتقدم في أجزاء من الدوحة، واعدة بسرعات بيانات أعلى وزمن استجابة أقل لعملاء الشركات. وقالت الشركة المشغلة إن طرحا وطنيا تدريجيا سيتبع ذلك بحسب نتائج التجربة.",
-      "why_en": "Advanced telecom infrastructure supports both digital economy growth and government excellence digital service goals.",
-      "why_ar": "تدعم البنية التحتية المتقدمة للاتصالات نمو الاقتصاد الرقمي وأهداف الخدمات الرقمية الحكومية ضمن مخرج التميز الحكومي.",
-      "publisher": "Gulf Times",
-      "url": "",
-      "days_ago": 0,
-      "signal_type": "technology",
-      "sentiment": "positive",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.75,
-      "outcome_codes": ["eco_growth", "gov_excellence"],
-      "indicator_codes": ["digital_services_share"]
-    },
-    {
-      "title_en": "National Data Program Launches Updated Open Data Portal",
-      "title_ar": "برنامج البيانات الوطني يطلق نسخة محدثة من بوابة البيانات المفتوحة",
-      "summary_en": "The National Data Program unveiled an updated version of Qatar's open data portal, adding new datasets on housing, transport, and environmental indicators. Officials said the update also improves API access for researchers and government analysts.",
-      "summary_ar": "كشف برنامج البيانات الوطني عن نسخة محدثة من بوابة البيانات المفتوحة في قطر، مضيفا مجموعات بيانات جديدة حول الإسكان والنقل والمؤشرات البيئية. وقال مسؤولون إن التحديث يحسن أيضا الوصول عبر واجهات البرمجة للباحثين والمحللين الحكوميين.",
-      "why_en": "Open data access strengthens evidence-based policymaking across all NDS3 outcomes.",
-      "why_ar": "يعزز الوصول إلى البيانات المفتوحة صنع السياسات القائم على الأدلة عبر جميع مخرجات الاستراتيجية الوطنية الثالثة للتنمية.",
-      "publisher": "Qatar News Agency",
-      "url": "",
-      "days_ago": 1,
-      "signal_type": "policy",
-      "sentiment": "positive",
-      "impact": "low",
-      "horizon": "near",
-      "confidence": 0.7,
-      "outcome_codes": ["gov_excellence"],
-      "indicator_codes": ["digital_services_share"]
-    },
-    {
-      "title_en": "Qatar Selected to Host International Sustainability Summit in 2027",
-      "title_ar": "قطر تفوز باستضافة القمة الدولية للاستدامة عام 2027",
-      "summary_en": "Qatar was selected to host a major international sustainability summit in 2027, beating out two other regional bids. Organisers said the choice reflects Qatar's growing profile in renewable energy investment and climate diplomacy.",
-      "summary_ar": "فازت قطر باستضافة قمة دولية كبرى للاستدامة في عام 2027، متفوقة على عرضين إقليميين آخرين. وقال المنظمون إن هذا الاختيار يعكس المكانة المتنامية لقطر في استثمارات الطاقة المتجددة والدبلوماسية المناخية.",
-      "why_en": "Hosting a global sustainability event elevates Qatar's environmental profile and cross-outcome international standing.",
-      "why_ar": "تعزز استضافة حدث عالمي للاستدامة المكانة البيئية لقطر ومكانتها الدولية عبر مختلف المخرجات.",
-      "publisher": "The Peninsula",
-      "url": "",
-      "days_ago": 1,
-      "signal_type": "social",
-      "sentiment": "positive",
-      "impact": "medium",
-      "horizon": "mid",
-      "confidence": 0.65,
-      "outcome_codes": ["env_sust", "cohesive_society"],
-      "indicator_codes": []
-    },
-    {
-      "title_en": "Central Bank Inflation Report Shows Headline CPI Easing Slightly",
-      "title_ar": "تقرير التضخم لمصرف قطر المركزي يظهر تراجعا طفيفا في الرقم القياسي العام",
-      "summary_en": "Qatar Central Bank's latest inflation report showed headline consumer price growth easing slightly from the prior month, helped by softer housing rent components. Food and transport prices showed more mixed movements across the basket.",
-      "summary_ar": "أظهر أحدث تقرير للتضخم الصادر عن مصرف قطر المركزي تراجعا طفيفا في نمو الرقم القياسي العام لأسعار المستهلك مقارنة بالشهر السابق، بدعم من تراجع مكون إيجارات المساكن. وشهدت أسعار المواد الغذائية والنقل تحركات متباينة أكثر ضمن السلة.",
-      "why_en": "Inflation trends are directly monitored under the fiscal sustainability outcome's price stability goals.",
-      "why_ar": "تخضع اتجاهات التضخم للرصد المباشر ضمن أهداف استقرار الأسعار في مخرج الاستدامة المالية.",
-      "publisher": "Reuters",
-      "url": "",
-      "days_ago": 2,
-      "signal_type": "market",
-      "sentiment": "positive",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.8,
-      "outcome_codes": ["fiscal_sust"],
-      "indicator_codes": ["cpi_inflation"]
-    },
-    {
-      "title_en": "Msheireb Downtown Doha Announces New Mixed-Use Expansion Phase",
-      "title_ar": "مشيرب قلب الدوحة تعلن عن مرحلة توسع جديدة متعددة الاستخدامات",
-      "summary_en": "Msheireb Properties announced a new mixed-use development phase adding residential, retail, and office space to the downtown Doha district. The developer said the phase incorporates additional green building certifications beyond the original masterplan.",
-      "summary_ar": "أعلنت شركة مشيرب العقارية عن مرحلة تطوير جديدة متعددة الاستخدامات تضيف مساحات سكنية وتجارية ومكتبية إلى منطقة وسط الدوحة. وقالت الشركة المطورة إن هذه المرحلة تتضمن شهادات إضافية للمباني الخضراء تتجاوز المخطط الرئيسي الأصلي.",
-      "why_en": "Urban development that integrates green standards supports both quality of life and non-hydrocarbon growth outcomes.",
-      "why_ar": "يدعم التطوير العمراني الذي يدمج معايير البناء الأخضر مخرجي جودة الحياة والنمو غير النفطي.",
-      "publisher": "Qatar News Agency",
-      "url": "",
-      "days_ago": 2,
-      "signal_type": "policy",
-      "sentiment": "positive",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.75,
-      "outcome_codes": ["quality_life", "eco_growth"],
-      "indicator_codes": ["building_permits"]
-    },
-    {
-      "title_en": "Cabinet Approves Labour Law Amendment on Flexible Work Arrangements",
-      "title_ar": "مجلس الوزراء يقر تعديلا على قانون العمل بشأن أنظمة العمل المرنة",
-      "summary_en": "Qatar's Cabinet approved amendments to the labour law formally recognising flexible and remote work arrangements for eligible private sector roles. Business groups offered mixed reactions, welcoming flexibility while raising questions about implementation guidance.",
-      "summary_ar": "أقر مجلس الوزراء القطري تعديلات على قانون العمل تعترف رسميا بأنظمة العمل المرنة والعمل عن بعد للوظائف المؤهلة في القطاع الخاص. وأبدت جهات الأعمال ردود فعل متباينة، إذ رحبت بالمرونة فيما أثارت تساؤلات حول التوجيهات التنفيذية.",
-      "why_en": "Modernising labour regulations supports workforce participation goals under NDS3.",
-      "why_ar": "يدعم تحديث تشريعات العمل أهداف المشاركة في القوى العاملة ضمن الاستراتيجية الوطنية الثالثة للتنمية.",
-      "publisher": "Gulf Times",
-      "url": "",
-      "days_ago": 3,
-      "signal_type": "policy",
-      "sentiment": "mixed",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.65,
-      "outcome_codes": ["workforce"],
-      "indicator_codes": []
-    },
-    {
-      "title_en": "Qatar Leads Arab Region in UN E-Participation Sub-Index Component",
-      "title_ar": "قطر تتصدر المنطقة العربية في المؤشر الفرعي للمشاركة الإلكترونية للأمم المتحدة",
-      "summary_en": "A sub-component of the UN's e-government survey placed Qatar first among Arab states on e-participation, citing responsive citizen feedback channels. The full survey results are due for release later in the year.",
-      "summary_ar": "وضع مكون فرعي من مسح الأمم المتحدة للحكومة الإلكترونية قطر في المرتبة الأولى بين الدول العربية في مجال المشاركة الإلكترونية، مشيرا إلى قنوات استجابة فعالة لملاحظات المواطنين. ومن المقرر صدور نتائج المسح الكاملة لاحقا هذا العام.",
-      "why_en": "Leading regional digital participation rankings reinforce progress on the government excellence outcome.",
-      "why_ar": "يعزز تصدر التصنيفات الإقليمية للمشاركة الرقمية التقدم المحرز في مخرج التميز الحكومي.",
-      "publisher": "UN ESCWA",
-      "url": "",
-      "days_ago": 3,
-      "signal_type": "index",
-      "sentiment": "positive",
-      "impact": "low",
-      "horizon": "near",
-      "confidence": 0.7,
-      "outcome_codes": ["gov_excellence"],
-      "indicator_codes": ["digital_services_share"]
-    },
-    {
-      "title_en": "Qatar Investment Authority Announces New Technology Investment Fund",
-      "title_ar": "جهاز قطر للاستثمار يعلن عن صندوق استثماري جديد في قطاع التكنولوجيا",
-      "summary_en": "The Qatar Investment Authority announced a new fund dedicated to technology and artificial intelligence investments, partly aimed at attracting co-investment partners to establish operations locally. The fund will target both global technology firms and early-stage companies with a Qatar presence requirement.",
-      "summary_ar": "أعلن جهاز قطر للاستثمار عن صندوق جديد مخصص للاستثمار في التكنولوجيا والذكاء الاصطناعي، يهدف جزئيا إلى جذب شركاء للاستثمار المشترك لإقامة عمليات محلية. وسيستهدف الصندوق شركات التكنولوجيا العالمية والشركات الناشئة مع اشتراط وجود لها في قطر.",
-      "why_en": "Sovereign wealth technology investment supports FDI diversification and non-hydrocarbon economic growth.",
-      "why_ar": "يدعم الاستثمار السيادي في التكنولوجيا تنويع الاستثمار الأجنبي المباشر والنمو الاقتصادي غير النفطي.",
-      "publisher": "Reuters",
-      "url": "",
-      "days_ago": 4,
-      "signal_type": "market",
-      "sentiment": "positive",
-      "impact": "high",
-      "horizon": "mid",
-      "confidence": 0.8,
-      "outcome_codes": ["eco_growth", "fiscal_sust"],
-      "indicator_codes": ["fdi_inflows"]
-    },
-    {
-      "title_en": "University Study Highlights Continued Heat Stress Risk for Outdoor Workers",
-      "title_ar": "دراسة جامعية تسلط الضوء على استمرار مخاطر الإجهاد الحراري للعاملين في الهواء الطلق",
-      "summary_en": "A university-led research study found that outdoor workers in certain occupations continue to face elevated heat stress risk despite existing seasonal work restrictions. The researchers recommended additional cooling infrastructure and expanded health monitoring at worksites.",
-      "summary_ar": "خلصت دراسة بحثية بقيادة جامعية إلى أن العاملين في الهواء الطلق في مهن معينة لا يزالون يواجهون مخاطر مرتفعة للإجهاد الحراري رغم القيود الموسمية القائمة على العمل. وأوصى الباحثون بتوفير بنية تحتية إضافية للتبريد وتوسيع المراقبة الصحية في مواقع العمل.",
-      "why_en": "Occupational heat risk findings inform both environmental adaptation and workforce protection policy.",
-      "why_ar": "تسهم نتائج الإجهاد الحراري المهني في توجيه سياسات التكيف البيئي وحماية القوى العاملة.",
-      "publisher": "Doha News",
-      "url": "",
-      "days_ago": 4,
-      "signal_type": "research",
-      "sentiment": "negative",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.6,
-      "outcome_codes": ["env_sust", "workforce"],
-      "indicator_codes": []
-    },
-    {
-      "title_en": "National Statistics Center Sets Release Date for Final Census 2025 Report",
-      "title_ar": "المركز الوطني للإحصاء يحدد موعد إصدار التقرير النهائي لتعداد 2025",
-      "summary_en": "The National Statistics Center announced the confirmed release date for the final, fully disaggregated report of the 2025 population and housing census. The report will include detailed breakdowns by municipality, age, and household composition.",
-      "summary_ar": "أعلن المركز الوطني للإحصاء عن الموعد المؤكد لإصدار التقرير النهائي المفصل بالكامل لتعداد السكان والمساكن لعام 2025. وسيتضمن التقرير تصنيفات تفصيلية حسب البلدية والفئة العمرية وتكوين الأسرة.",
-      "why_en": "The final census report will anchor detailed quality of life and population planning analysis for years ahead.",
-      "why_ar": "سيشكل التقرير النهائي للتعداد ركيزة لتحليلات مفصلة لجودة الحياة وتخطيط السكان للسنوات المقبلة.",
-      "publisher": "National Statistics Center",
-      "url": "",
-      "days_ago": 5,
-      "signal_type": "policy",
-      "sentiment": "neutral",
-      "impact": "medium",
-      "horizon": "near",
-      "confidence": 0.85,
-      "outcome_codes": ["quality_life"],
-      "indicator_codes": ["pop_total"]
-    },
-    {
-      "title_en": "Qatar Joins GCC Partners in Regional Cybersecurity Response Drill",
-      "title_ar": "قطر تشارك مع شركاء خليجيين في تدريب إقليمي للاستجابة للأمن السيبراني",
-      "summary_en": "Qatar's national cybersecurity agency joined counterparts from GCC states in a joint simulation exercise testing coordinated response to a cross-border cyber incident. Officials described the drill as part of ongoing efforts to harden critical infrastructure resilience.",
-      "summary_ar": "شاركت الجهة الوطنية المعنية بالأمن السيبراني في قطر مع نظيراتها في دول مجلس التعاون الخليجي في تمرين محاكاة مشترك لاختبار الاستجابة المنسقة لحادث سيبراني عابر للحدود. ووصف مسؤولون التمرين بأنه جزء من الجهود المستمرة لتعزيز صمود البنية التحتية الحيوية.",
-      "why_en": "Cybersecurity resilience underpins trust in digital government services and regional institutional cooperation.",
-      "why_ar": "تعزز مرونة الأمن السيبراني الثقة في الخدمات الحكومية الرقمية والتعاون المؤسسي الإقليمي.",
-      "publisher": "Qatar News Agency",
-      "url": "",
-      "days_ago": 5,
-      "signal_type": "geopolitical",
-      "sentiment": "neutral",
-      "impact": "low",
-      "horizon": "near",
-      "confidence": 0.6,
-      "outcome_codes": ["gov_excellence", "cohesive_society"],
-      "indicator_codes": []
-    },
-    {
-      "title_en": "Fitch Affirms Qatar's Credit Rating with Stable Outlook",
-      "title_ar": "فيتش تؤكد التصنيف الائتماني لقطر مع نظرة مستقبلية مستقرة",
-      "summary_en": "Fitch Ratings affirmed Qatar's sovereign credit rating, citing strong fiscal and external buffers alongside high per capita income. The agency flagged hydrocarbon price volatility as the main risk factor to watch going forward.",
-      "summary_ar": "أكدت وكالة فيتش للتصنيف الائتماني التصنيف السيادي لقطر، مشيرة إلى متانة الاحتياطيات المالية والخارجية إلى جانب ارتفاع نصيب الفرد من الدخل. وأشارت الوكالة إلى تقلب أسعار الهيدروكربونات كأبرز عامل خطر ينبغي مراقبته مستقبلا.",
-      "why_en": "Credit rating affirmations are a direct external signal of progress on the fiscal sustainability outcome.",
-      "why_ar": "يمثل تثبيت التصنيف الائتماني إشارة خارجية مباشرة على التقدم المحرز في مخرج الاستدامة المالية.",
-      "publisher": "Fitch Ratings",
-      "url": "",
-      "days_ago": 6,
-      "signal_type": "index",
-      "sentiment": "positive",
-      "impact": "high",
-      "horizon": "near",
-      "confidence": 0.85,
-      "outcome_codes": ["fiscal_sust"],
-      "indicator_codes": []
-    }
-  ],
-  "example_questions": [
-    {
-      "en": "How are we doing on Qatarization targets this year?",
-      "ar": "كيف يسير أداؤنا في تحقيق أهداف التقطير هذا العام؟"
-    },
-    {
-      "en": "Which NDS3 outcomes are currently at risk?",
-      "ar": "ما هي مخرجات الاستراتيجية الوطنية الثالثة للتنمية المعرضة للخطر حاليا؟"
-    },
-    {
-      "en": "How many targets are there in NDS3?",
-      "ar": "كم عدد الأهداف الواردة في الاستراتيجية الوطنية الثالثة للتنمية؟"
-    },
-    {
-      "en": "What changed in fiscal sustainability this quarter?",
-      "ar": "ما الذي تغير في مؤشر الاستدامة المالية خلال هذا الربع؟"
-    },
-    {
-      "en": "What is the current inflation rate in Qatar?",
-      "ar": "ما هو معدل التضخم الحالي في قطر؟"
-    },
-    {
-      "en": "What were the key findings of the 2025 census?",
-      "ar": "ما هي أبرز نتائج التعداد السكاني لعام 2025؟"
-    },
-    {
-      "en": "How has foreign direct investment trended over the past year?",
-      "ar": "كيف تطور الاستثمار الأجنبي المباشر خلال العام الماضي؟"
-    },
-    {
-      "en": "What is Qatar's real GDP growth forecast for this year?",
-      "ar": "ما هو التوقع الحالي لنمو الناتج المحلي الإجمالي الحقيقي لقطر هذا العام؟"
-    },
-    {
-      "en": "How is progress on renewable energy and solar capacity targets?",
-      "ar": "ما مدى التقدم المحرز في أهداف الطاقة المتجددة والطاقة الشمسية؟"
-    },
-    {
-      "en": "What is the status of digital government services adoption?",
-      "ar": "ما هو وضع اعتماد خدمات الحكومة الرقمية حاليا؟"
-    },
-    {
-      "en": "Where does Qatar rank in the latest global competitiveness index?",
-      "ar": "ما هو ترتيب قطر في أحدث مؤشر للتنافسية العالمية؟"
-    },
-    {
-      "en": "What is the current labour force participation rate among Qatari nationals?",
-      "ar": "ما هو معدل المشاركة الحالي للمواطنين القطريين في القوى العاملة؟"
-    },
-    {
-      "en": "What signals have come in recently about the tourism sector?",
-      "ar": "ما هي الإشارات الواردة مؤخرا بشأن قطاع السياحة؟"
-    },
-    {
-      "en": "Are we on track to meet our greenhouse gas emissions targets?",
-      "ar": "هل نحن في المسار الصحيح لتحقيق أهدافنا المتعلقة بانبعاثات غازات الاحتباس الحراري؟"
-    },
-    {
-      "en": "What are the top priorities for government excellence this quarter?",
-      "ar": "ما هي أبرز أولويات التميز الحكومي خلال هذا الربع؟"
-    }
-  ]
+ "scan_briefs": [
+  {
+   "code": "brief_eco_growth",
+   "name_en": "Water Security Outlook",
+   "name_ar": "آفاق الأمن المائي",
+   "query_en": "Saudi Arabia water supply desalination demand management wastewater reuse 2026",
+   "query_ar": "الأمن المائي في المملكة العربية السعودية التحلية وإدارة الطلب وإعادة استخدام مياه الصرف 2026",
+   "outcome_codes": [
+    "eco_growth"
+   ],
+   "indicator_codes": [
+    "water_consumption_pc",
+    "desal_capacity"
+   ]
+  },
+  {
+   "code": "brief_fiscal_sust",
+   "name_en": "Agriculture and Food Security Outlook",
+   "name_ar": "آفاق الأمن الغذائي والزراعة",
+   "query_en": "Saudi Arabia agriculture food security irrigation efficiency food imports 2026",
+   "query_ar": "الزراعة والأمن الغذائي في المملكة العربية السعودية وكفاءة الري وواردات الغذاء 2026",
+   "outcome_codes": [
+    "fiscal_sust"
+   ],
+   "indicator_codes": [
+    "food_self_sufficiency",
+    "efficient_irrigation_share"
+   ]
+  },
+  {
+   "code": "brief_workforce",
+   "name_en": "Biodiversity and Land Outlook",
+   "name_ar": "آفاق التنوع الأحيائي والأراضي",
+   "query_en": "Saudi Arabia protected areas biodiversity afforestation desertification land restoration 2026",
+   "query_ar": "المحميات والتنوع الأحيائي والتشجير والتصحر وإعادة تأهيل الأراضي في المملكة العربية السعودية 2026",
+   "outcome_codes": [
+    "workforce"
+   ],
+   "indicator_codes": [
+    "protected_areas_share",
+    "land_restored"
+   ]
+  },
+  {
+   "code": "brief_cohesive_society",
+   "name_en": "Waste and Circular Economy Outlook",
+   "name_ar": "آفاق النفايات والاقتصاد الدائري",
+   "query_en": "Saudi Arabia waste management recycling circular economy landfill diversion 2026",
+   "query_ar": "إدارة النفايات وإعادة التدوير والاقتصاد الدائري وتحويل النفايات عن المرادم في المملكة العربية السعودية 2026",
+   "outcome_codes": [
+    "cohesive_society"
+   ],
+   "indicator_codes": [
+    "waste_diversion_rate",
+    "recycling_rate"
+   ]
+  },
+  {
+   "code": "brief_quality_life",
+   "name_en": "Air Quality Outlook",
+   "name_ar": "آفاق جودة الهواء",
+   "query_en": "Saudi Arabia air quality monitoring PM10 dust emissions 2026",
+   "query_ar": "جودة الهواء في المملكة العربية السعودية ورصد الجسيمات PM10 والغبار والانبعاثات 2026",
+   "outcome_codes": [
+    "quality_life"
+   ],
+   "indicator_codes": [
+    "air_quality_index_avg",
+    "pm10_exceedance_days"
+   ]
+  },
+  {
+   "code": "brief_env_sust",
+   "name_en": "Climate and Environment Outlook",
+   "name_ar": "آفاق المناخ والبيئة",
+   "query_en": "Saudi Arabia climate emissions renewable energy Saudi Green Initiative Middle East Green Initiative 2026",
+   "query_ar": "المناخ والانبعاثات والطاقة المتجددة ومبادرة السعودية الخضراء ومبادرة الشرق الأوسط الأخضر 2026",
+   "outcome_codes": [
+    "env_sust"
+   ],
+   "indicator_codes": [
+    "ghg_total",
+    "solar_capacity"
+   ]
+  },
+  {
+   "code": "brief_gov_excellence",
+   "name_en": "Regulatory Compliance and Enforcement Outlook",
+   "name_ar": "آفاق الامتثال التنظيمي والإنفاذ",
+   "query_en": "Saudi Arabia Environmental Law NCEC permits inspection enforcement compliance 2026",
+   "query_ar": "نظام البيئة والمركز الوطني للرقابة على الالتزام البيئي والتراخيص والتفتيش والإنفاذ 2026",
+   "outcome_codes": [
+    "gov_excellence"
+   ],
+   "indicator_codes": [
+    "compliance_rate",
+    "permits_issued"
+   ]
+  },
+  {
+   "code": "brief_desalination",
+   "name_en": "Desalination and Water Supply Resilience",
+   "name_ar": "التحلية ومرونة إمدادات المياه",
+   "query_en": "Saudi Arabia desalination capacity energy efficiency brine management private participation",
+   "query_ar": "طاقة التحلية في المملكة العربية السعودية وكفاءة الطاقة وإدارة المحلول الملحي والمشاركة الخاصة",
+   "outcome_codes": [
+    "eco_growth"
+   ],
+   "indicator_codes": [
+    "desal_capacity",
+    "desal_energy_intensity"
+   ]
+  },
+  {
+   "code": "brief_wastewater_reuse",
+   "name_en": "Wastewater Reuse",
+   "name_ar": "إعادة استخدام مياه الصرف",
+   "query_en": "Saudi Arabia treated wastewater reuse irrigation industry National Water Strategy 2030",
+   "query_ar": "إعادة استخدام مياه الصرف المعالجة في الري والصناعة في المملكة العربية السعودية والاستراتيجية الوطنية للمياه 2030",
+   "outcome_codes": [
+    "eco_growth",
+    "fiscal_sust"
+   ],
+   "indicator_codes": [
+    "treated_wastewater_reuse"
+   ]
+  },
+  {
+   "code": "brief_groundwater",
+   "name_en": "Groundwater Protection",
+   "name_ar": "حماية المياه الجوفية",
+   "query_en": "Saudi Arabia groundwater abstraction aquifer monitoring non-renewable",
+   "query_ar": "السحب من المياه الجوفية ورصد الخزانات الجوفية غير المتجددة في المملكة العربية السعودية",
+   "outcome_codes": [
+    "eco_growth"
+   ],
+   "indicator_codes": [
+    "groundwater_abstraction"
+   ]
+  },
+  {
+   "code": "brief_agritech",
+   "name_en": "Sustainable Agritech",
+   "name_ar": "التقنيات الزراعية المستدامة",
+   "query_en": "Saudi Arabia controlled environment agriculture agritech water efficient farming",
+   "query_ar": "الزراعة المحمية والتقنيات الزراعية والزراعة الكفؤة في استخدام المياه في المملكة العربية السعودية",
+   "outcome_codes": [
+    "fiscal_sust"
+   ],
+   "indicator_codes": [
+    "agri_value_added"
+   ]
+  },
+  {
+   "code": "brief_food_trade",
+   "name_en": "Food Trade and Reserves",
+   "name_ar": "التجارة الغذائية والمخزون",
+   "query_en": "Saudi Arabia food imports strategic reserves General Food Security Authority prices",
+   "query_ar": "واردات الغذاء والمخزون الاستراتيجي والهيئة العامة للأمن الغذائي والأسعار في المملكة العربية السعودية",
+   "outcome_codes": [
+    "fiscal_sust"
+   ],
+   "indicator_codes": [
+    "agri_food_imports",
+    "cpi_food"
+   ]
+  },
+  {
+   "code": "brief_greening",
+   "name_en": "Greening and Land Restoration",
+   "name_ar": "التشجير وإعادة تأهيل الأراضي",
+   "query_en": "Saudi Green Initiative tree planting afforestation NCVC rehabilitation degraded land",
+   "query_ar": "مبادرة السعودية الخضراء وزراعة الأشجار والتشجير والمركز الوطني لتنمية الغطاء النباتي وإعادة تأهيل الأراضي المتدهورة",
+   "outcome_codes": [
+    "workforce"
+   ],
+   "indicator_codes": [
+    "trees_planted",
+    "land_restored"
+   ]
+  },
+  {
+   "code": "brief_wildlife",
+   "name_en": "Wildlife and Protected Areas",
+   "name_ar": "الحياة الفطرية والمحميات",
+   "query_en": "Saudi Arabia National Center for Wildlife species reintroduction protected areas",
+   "query_ar": "المركز الوطني للحياة الفطرية وإعادة توطين الأنواع والمحميات في المملكة العربية السعودية",
+   "outcome_codes": [
+    "workforce"
+   ],
+   "indicator_codes": [
+    "species_reintroduced",
+    "protected_areas_share"
+   ]
+  },
+  {
+   "code": "brief_renewables",
+   "name_en": "Renewable Energy and Emissions",
+   "name_ar": "الطاقة المتجددة والانبعاثات",
+   "query_en": "Saudi Arabia renewable energy solar wind 50 percent target emissions",
+   "query_ar": "الطاقة المتجددة والطاقة الشمسية وطاقة الرياح ومستهدف 50 بالمئة والانبعاثات في المملكة العربية السعودية",
+   "outcome_codes": [
+    "env_sust"
+   ],
+   "indicator_codes": [
+    "solar_capacity",
+    "renewable_energy_share"
+   ]
+  },
+  {
+   "code": "brief_green_finance",
+   "name_en": "Green Finance",
+   "name_ar": "التمويل الأخضر",
+   "query_en": "Saudi Arabia Environment Fund green finance green bonds environmental investment",
+   "query_ar": "صندوق البيئة والتمويل الأخضر والسندات الخضراء والاستثمار البيئي في المملكة العربية السعودية",
+   "outcome_codes": [
+    "env_sust"
+   ],
+   "indicator_codes": [
+    "env_fund_financing"
+   ]
+  },
+  {
+   "code": "brief_digital_ai",
+   "name_en": "Digital Services and AI in Regulation",
+   "name_ar": "الخدمات الرقمية والذكاء الاصطناعي في التنظيم",
+   "query_en": "Saudi Arabia SDAIA AI regulation digital government environmental services",
+   "query_ar": "هيئة سدايا والذكاء الاصطناعي في التنظيم والحكومة الرقمية والخدمات البيئية في المملكة العربية السعودية",
+   "outcome_codes": [
+    "gov_excellence"
+   ],
+   "indicator_codes": [
+    "digital_services_share"
+   ]
+  },
+  {
+   "code": "brief_indices",
+   "name_en": "International Environmental Indices",
+   "name_ar": "المؤشرات البيئية الدولية",
+   "query_en": "Saudi Arabia Environmental Performance Index ND-GAIN SDG Index climate risk",
+   "query_ar": "مؤشر الأداء البيئي ومؤشر نوتردام للتكيف ومؤشر أهداف التنمية المستدامة والمخاطر المناخية للمملكة العربية السعودية",
+   "outcome_codes": [
+    "gov_excellence",
+    "eco_growth"
+   ],
+   "indicator_codes": []
+  },
+  {
+   "code": "brief_demand_drivers",
+   "name_en": "Population and Demand Drivers",
+   "name_ar": "محركات السكان والطلب",
+   "query_en": "Saudi Arabia population growth urbanisation water food waste demand",
+   "query_ar": "نمو السكان والتحضر والطلب على المياه والغذاء والنفايات في المملكة العربية السعودية",
+   "outcome_codes": [
+    "quality_life"
+   ],
+   "indicator_codes": [
+    "pop_total"
+   ]
+  }
+ ],
+ "signals": [
+  {
+   "title_en": "Desalination operators test energy recovery upgrades",
+   "title_ar": "مشغلو التحلية يجربون تحديثات استرداد الطاقة",
+   "summary_en": "Illustrative signal. Operators across the region are trialling energy recovery and membrane upgrades to cut the electricity used per cubic metre of desalinated water.",
+   "summary_ar": "إشارة توضيحية. يجرب المشغلون في المنطقة تحديثات استرداد الطاقة والأغشية لخفض الكهرباء المستهلكة لكل متر مكعب من المياه المحلاة.",
+   "why_en": "Lower energy intensity directly supports the Water Security theme and the cost of supply.",
+   "why_ar": "خفض كثافة الطاقة يدعم محور الأمن المائي مباشرة ويقلل كلفة الإمداد.",
+   "publisher": "Demo scan: regional press",
+   "url": "",
+   "days_ago": 2,
+   "signal_type": "technology",
+   "sentiment": "positive",
+   "impact": "high",
+   "horizon": "mid",
+   "confidence": 0.82,
+   "outcome_codes": [
+    "eco_growth",
+    "env_sust"
+   ],
+   "indicator_codes": [
+    "desal_capacity"
+   ]
+  },
+  {
+   "title_en": "Studies point to rising reuse of treated wastewater in irrigation",
+   "title_ar": "دراسات تشير إلى ارتفاع إعادة استخدام مياه الصرف المعالجة في الري",
+   "summary_en": "Illustrative signal. Research on arid-region farming shows growing interest in treated wastewater for non-food crops and landscaping, with water quality monitoring as the main condition.",
+   "summary_ar": "إشارة توضيحية. تُظهر دراسات في الزراعة بالمناطق الجافة اهتماماً متزايداً بالمياه المعالجة للمحاصيل غير الغذائية والمسطحات الخضراء، مع اشتراط رصد جودة المياه.",
+   "why_en": "Reuse expands supply without new abstraction.",
+   "why_ar": "إعادة الاستخدام توسع الإمداد دون سحب جديد.",
+   "publisher": "Demo scan: research and think tanks",
+   "url": "",
+   "days_ago": 5,
+   "signal_type": "research",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "mid",
+   "confidence": 0.78,
+   "outcome_codes": [
+    "eco_growth",
+    "fiscal_sust"
+   ],
+   "indicator_codes": [
+    "treated_wastewater_reuse"
+   ]
+  },
+  {
+   "title_en": "International review flags groundwater depletion in arid basins",
+   "title_ar": "مراجعة دولية تنبه إلى استنزاف المياه الجوفية في الأحواض الجافة",
+   "summary_en": "Illustrative signal. A multi-country review highlights that abstraction from non-renewable aquifers continues to exceed recharge in several arid basins.",
+   "summary_ar": "إشارة توضيحية. تبرز مراجعة متعددة الدول أن السحب من الخزانات غير المتجددة لا يزال يفوق التغذية في عدة أحواض جافة.",
+   "why_en": "Groundwater protection is a core Water Security initiative.",
+   "why_ar": "حماية المياه الجوفية مبادرة أساسية في محور الأمن المائي.",
+   "publisher": "Demo scan: international organisations",
+   "url": "",
+   "days_ago": 7,
+   "signal_type": "research",
+   "sentiment": "negative",
+   "impact": "high",
+   "horizon": "long",
+   "confidence": 0.8,
+   "outcome_codes": [
+    "eco_growth"
+   ],
+   "indicator_codes": [
+    "groundwater_abstraction"
+   ]
+  },
+  {
+   "title_en": "Environmental indices updated with new methodology notes",
+   "title_ar": "تحديث المؤشرات البيئية العالمية مع ملاحظات منهجية جديدة",
+   "summary_en": "Illustrative signal. Providers of international environmental indices published updated methodology notes that may affect country comparisons.",
+   "summary_ar": "إشارة توضيحية. نشر مزودو المؤشرات البيئية الدولية ملاحظات منهجية محدثة قد تؤثر في المقارنات بين الدول.",
+   "why_en": "Methodology changes can move rankings without any change in performance.",
+   "why_ar": "قد تغيّر التعديلات المنهجية الترتيب دون تغير في الأداء.",
+   "publisher": "Demo scan: international organisations",
+   "url": "",
+   "days_ago": 9,
+   "signal_type": "index",
+   "sentiment": "neutral",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.7,
+   "outcome_codes": [
+    "gov_excellence"
+   ],
+   "indicator_codes": []
+  },
+  {
+   "title_en": "Public consultation opens on environmental permitting guidance",
+   "title_ar": "فتح باب الاستشارة العامة بشأن إرشادات التراخيص البيئية",
+   "summary_en": "Illustrative signal. A regulator notice invites comments on clearer guidance for permit applications and risk tiers.",
+   "summary_ar": "إشارة توضيحية. تدعو إشعارات تنظيمية إلى إبداء الملاحظات على إرشادات أوضح لطلبات التراخيص ومستويات المخاطر.",
+   "why_en": "Clear guidance supports the Regulatory Compliance and Enforcement theme.",
+   "why_ar": "الإرشادات الواضحة تدعم محور الامتثال التنظيمي والإنفاذ.",
+   "publisher": "Demo scan: regulator notices",
+   "url": "",
+   "days_ago": 12,
+   "signal_type": "policy",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.72,
+   "outcome_codes": [
+    "gov_excellence"
+   ],
+   "indicator_codes": [
+    "permits_issued"
+   ]
+  },
+  {
+   "title_en": "Solar and storage procurement draws strong developer interest",
+   "title_ar": "اهتمام قوي من المطورين بمشتريات الطاقة الشمسية والتخزين",
+   "summary_en": "Illustrative signal. Market commentary notes strong developer interest in utility-scale solar paired with storage in the region.",
+   "summary_ar": "إشارة توضيحية. تشير تعليقات السوق إلى اهتمام قوي من المطورين بالطاقة الشمسية واسعة النطاق المقترنة بالتخزين في المنطقة.",
+   "why_en": "Supports the renewable share target of the Climate and Environment theme.",
+   "why_ar": "يدعم مستهدف حصة الطاقة المتجددة في محور المناخ والبيئة.",
+   "publisher": "Demo scan: market watch",
+   "url": "",
+   "days_ago": 14,
+   "signal_type": "market",
+   "sentiment": "positive",
+   "impact": "high",
+   "horizon": "mid",
+   "confidence": 0.8,
+   "outcome_codes": [
+    "env_sust"
+   ],
+   "indicator_codes": [
+    "solar_capacity",
+    "renewable_energy_share"
+   ]
+  },
+  {
+   "title_en": "Satellite-based vegetation monitoring becomes more accessible",
+   "title_ar": "رصد الغطاء النباتي بالأقمار الصناعية يصبح أيسر",
+   "summary_en": "Illustrative signal. Open satellite programmes now provide frequent, free imagery that makes vegetation and water monitoring more affordable for national agencies.",
+   "summary_ar": "إشارة توضيحية. توفر برامج الأقمار الصناعية المفتوحة صوراً متكررة ومجانية تجعل رصد الغطاء النباتي والمياه أقل كلفة على الجهات الوطنية.",
+   "why_en": "Enables operational monitoring for land restoration programmes.",
+   "why_ar": "يتيح رصداً تشغيلياً لبرامج إعادة تأهيل الأراضي.",
+   "publisher": "Demo scan: technology watch",
+   "url": "",
+   "days_ago": 17,
+   "signal_type": "technology",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.77,
+   "outcome_codes": [
+    "workforce"
+   ],
+   "indicator_codes": [
+    "land_restored"
+   ]
+  },
+  {
+   "title_en": "Regional commitments on tree planting gain attention",
+   "title_ar": "التزامات التشجير الإقليمية تحظى باهتمام متزايد",
+   "summary_en": "Illustrative signal. Commentary on regional greening commitments stresses survival rates and water sourcing as the main delivery risks.",
+   "summary_ar": "إشارة توضيحية. تؤكد التعليقات على التزامات التشجير الإقليمية أن معدلات بقاء الأشجار ومصادر المياه هما أبرز مخاطر التنفيذ.",
+   "why_en": "Survival and water sourcing shape the national greening plan.",
+   "why_ar": "معدلات البقاء ومصادر المياه تشكل خطة التشجير الوطنية.",
+   "publisher": "Demo scan: regional press",
+   "url": "",
+   "days_ago": 19,
+   "signal_type": "environment",
+   "sentiment": "mixed",
+   "impact": "medium",
+   "horizon": "mid",
+   "confidence": 0.74,
+   "outcome_codes": [
+    "workforce",
+    "env_sust"
+   ],
+   "indicator_codes": [
+    "trees_planted"
+   ]
+  },
+  {
+   "title_en": "Food import prices ease in global markets",
+   "title_ar": "تراجع أسعار واردات الغذاء في الأسواق العالمية",
+   "summary_en": "Illustrative signal. Market data show easing prices for some staple commodities, though shipping costs remain volatile.",
+   "summary_ar": "إشارة توضيحية. تُظهر بيانات السوق تراجع أسعار بعض السلع الأساسية، مع بقاء تكاليف الشحن متقلبة.",
+   "why_en": "Food price movements affect the food security theme and household budgets.",
+   "why_ar": "تحركات أسعار الغذاء تؤثر في محور الأمن الغذائي وميزانيات الأسر.",
+   "publisher": "Demo scan: market watch",
+   "url": "",
+   "days_ago": 22,
+   "signal_type": "market",
+   "sentiment": "positive",
+   "impact": "high",
+   "horizon": "mid",
+   "confidence": 0.75,
+   "outcome_codes": [
+    "fiscal_sust"
+   ],
+   "indicator_codes": [
+    "cpi_food",
+    "agri_food_imports"
+   ]
+  },
+  {
+   "title_en": "Agricultural water productivity pilots report savings",
+   "title_ar": "تجارب إنتاجية المياه الزراعية تسجل وفورات",
+   "summary_en": "Illustrative signal. Pilot farms using sensors and drip irrigation report notable water savings without yield loss.",
+   "summary_ar": "إشارة توضيحية. تسجل مزارع تجريبية تستخدم المستشعرات والري بالتنقيط وفورات ملحوظة في المياه دون خسارة في الإنتاج.",
+   "why_en": "Supports the efficient irrigation target.",
+   "why_ar": "يدعم مستهدف الري الكفؤ.",
+   "publisher": "Demo scan: research and think tanks",
+   "url": "",
+   "days_ago": 25,
+   "signal_type": "research",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.8,
+   "outcome_codes": [
+    "fiscal_sust"
+   ],
+   "indicator_codes": [
+    "efficient_irrigation_share"
+   ]
+  },
+  {
+   "title_en": "Waste sector reports growth in material recovery capacity",
+   "title_ar": "قطاع النفايات يسجل نمواً في طاقة استرداد المواد",
+   "summary_en": "Illustrative signal. Industry commentary notes new material recovery capacity coming online across several regions.",
+   "summary_ar": "إشارة توضيحية. تشير تعليقات القطاع إلى دخول طاقة جديدة لاسترداد المواد الخدمة في عدة مناطق.",
+   "why_en": "Capacity growth supports diversion and recycling targets.",
+   "why_ar": "نمو الطاقة يدعم مستهدفات التحويل وإعادة التدوير.",
+   "publisher": "Demo scan: market watch",
+   "url": "",
+   "days_ago": 28,
+   "signal_type": "market",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.76,
+   "outcome_codes": [
+    "cohesive_society"
+   ],
+   "indicator_codes": [
+    "waste_diversion_rate",
+    "recycling_rate"
+   ]
+  },
+  {
+   "title_en": "Producer responsibility rules spread in packaging",
+   "title_ar": "انتشار قواعد مسؤولية المنتج في التغليف",
+   "summary_en": "Illustrative signal. More jurisdictions are adopting producer responsibility for packaging, shifting recycling costs to producers.",
+   "summary_ar": "إشارة توضيحية. تعتمد ولايات قضائية أكثر مسؤولية المنتج في التغليف، مما ينقل كلفة إعادة التدوير إلى المنتجين.",
+   "why_en": "Relevant to the producer responsibility scheme design under the Waste theme.",
+   "why_ar": "وثيق الصلة بتصميم نظام مسؤولية المنتج ضمن محور النفايات.",
+   "publisher": "Demo scan: international organisations",
+   "url": "",
+   "days_ago": 31,
+   "signal_type": "policy",
+   "sentiment": "neutral",
+   "impact": "medium",
+   "horizon": "mid",
+   "confidence": 0.73,
+   "outcome_codes": [
+    "cohesive_society"
+   ],
+   "indicator_codes": [
+    "municipal_waste"
+   ]
+  },
+  {
+   "title_en": "Dust events raise short-term particulate readings",
+   "title_ar": "أحداث الغبار ترفع قراءات الجسيمات قصيرة المدى",
+   "summary_en": "Illustrative signal. Monitoring commentary links recent dust events to short-term spikes in particulate readings.",
+   "summary_ar": "إشارة توضيحية. تربط تعليقات الرصد أحداث الغبار الأخيرة بارتفاعات قصيرة المدى في قراءات الجسيمات.",
+   "why_en": "Dust resilience is a priority initiative under Air Quality.",
+   "why_ar": "مواجهة الغبار مبادرة ذات أولوية في محور جودة الهواء.",
+   "publisher": "Demo scan: regulator notices",
+   "url": "",
+   "days_ago": 34,
+   "signal_type": "environment",
+   "sentiment": "negative",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.79,
+   "outcome_codes": [
+    "quality_life"
+   ],
+   "indicator_codes": [
+    "pm10_exceedance_days",
+    "air_quality_index_avg"
+   ]
+  },
+  {
+   "title_en": "Study links poor air quality days to respiratory visits",
+   "title_ar": "دراسة تربط أيام تردي جودة الهواء بزيارات الجهاز التنفسي",
+   "summary_en": "Illustrative signal. A health study associates days of poor air quality with higher respiratory clinic visits in large cities.",
+   "summary_ar": "إشارة توضيحية. تربط دراسة صحية أيام تردي جودة الهواء بارتفاع زيارات عيادات الجهاز التنفسي في المدن الكبرى.",
+   "why_en": "Links air monitoring to public health outcomes.",
+   "why_ar": "تربط رصد الهواء بالنتائج الصحية العامة.",
+   "publisher": "Demo scan: research and think tanks",
+   "url": "",
+   "days_ago": 37,
+   "signal_type": "research",
+   "sentiment": "negative",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.74,
+   "outcome_codes": [
+    "quality_life"
+   ],
+   "indicator_codes": [
+    "respiratory_admissions"
+   ]
+  },
+  {
+   "title_en": "Carbon market integrity standards tighten",
+   "title_ar": "تشدد معايير نزاهة أسواق الكربون",
+   "summary_en": "Illustrative signal. Standard setters tighten integrity expectations for carbon credits, affecting how removals and offsets are valued.",
+   "summary_ar": "إشارة توضيحية. تشدد الجهات المعيارية توقعات النزاهة لأرصدة الكربون، مما يؤثر في تقييم الإزالات والمقاصات.",
+   "why_en": "Shapes the mitigation financing options.",
+   "why_ar": "يشكل خيارات تمويل خفض الانبعاثات.",
+   "publisher": "Demo scan: international organisations",
+   "url": "",
+   "days_ago": 40,
+   "signal_type": "policy",
+   "sentiment": "neutral",
+   "impact": "high",
+   "horizon": "mid",
+   "confidence": 0.77,
+   "outcome_codes": [
+    "env_sust"
+   ],
+   "indicator_codes": [
+    "ghg_total"
+   ]
+  },
+  {
+   "title_en": "Heat stress projections raise adaptation planning needs",
+   "title_ar": "إسقاطات الإجهاد الحراري ترفع الحاجة إلى وضع خطط للتكيف",
+   "summary_en": "Illustrative signal. New projections for the Gulf point to more frequent extreme heat days, raising the need for regional adaptation plans.",
+   "summary_ar": "إشارة توضيحية. تشير إسقاطات جديدة للخليج إلى زيادة أيام الحرارة الشديدة، مما يرفع الحاجة إلى خطط تكيف إقليمية.",
+   "why_en": "Supports the regional adaptation plan target.",
+   "why_ar": "يدعم مستهدف خطط التكيف الإقليمية.",
+   "publisher": "Demo scan: research and think tanks",
+   "url": "",
+   "days_ago": 43,
+   "signal_type": "environment",
+   "sentiment": "negative",
+   "impact": "high",
+   "horizon": "long",
+   "confidence": 0.81,
+   "outcome_codes": [
+    "env_sust",
+    "quality_life"
+   ],
+   "indicator_codes": [
+    "climate_adaptation_plans"
+   ]
+  },
+  {
+   "title_en": "Generative AI assistants enter regulatory guidance services",
+   "title_ar": "مساعدو الذكاء الاصطناعي التوليدي يدخلون خدمات الإرشاد التنظيمي",
+   "summary_en": "Illustrative signal. Regulators in several countries pilot AI assistants to answer questions on rules and permits, raising accuracy and oversight questions.",
+   "summary_ar": "إشارة توضيحية. تجرب جهات تنظيمية في عدة دول مساعدين بالذكاء الاصطناعي للإجابة عن أسئلة الأنظمة والتراخيص، مع ما يثيره ذلك من أسئلة الدقة والرقابة.",
+   "why_en": "Relevant to the knowledge platform and regulatory overview.",
+   "why_ar": "وثيق الصلة بمنصة المعرفة ونظام البيئة.",
+   "publisher": "Demo scan: technology watch",
+   "url": "",
+   "days_ago": 46,
+   "signal_type": "technology",
+   "sentiment": "mixed",
+   "impact": "high",
+   "horizon": "near",
+   "confidence": 0.78,
+   "outcome_codes": [
+    "gov_excellence"
+   ],
+   "indicator_codes": [
+    "digital_services_share"
+   ]
+  },
+  {
+   "title_en": "Cyber attacks on utility infrastructure rise",
+   "title_ar": "تصاعد الهجمات السيبرانية على بنية المرافق",
+   "summary_en": "Illustrative signal. Security reports note an increase in attacks on water and power utilities, underscoring the need for resilient monitoring systems.",
+   "summary_ar": "إشارة توضيحية. تشير تقارير الأمن إلى زيادة الهجمات على مرافق المياه والكهرباء، مما يؤكد الحاجة إلى نظم رصد مرنة.",
+   "why_en": "Resilience of monitoring systems protects data integrity.",
+   "why_ar": "مرونة نظم الرصد تحمي سلامة البيانات.",
+   "publisher": "Demo scan: technology watch",
+   "url": "",
+   "days_ago": 49,
+   "signal_type": "geopolitical",
+   "sentiment": "negative",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.72,
+   "outcome_codes": [
+    "gov_excellence"
+   ],
+   "indicator_codes": []
+  },
+  {
+   "title_en": "Environmental disclosure expectations grow among investors",
+   "title_ar": "تنامي توقعات الإفصاح البيئي لدى المستثمرين",
+   "summary_en": "Illustrative signal. Investors increasingly request structured environmental disclosure, including water and emissions data.",
+   "summary_ar": "إشارة توضيحية. يطلب المستثمرون بصورة متزايدة إفصاحاً بيئياً منظماً يشمل بيانات المياه والانبعاثات.",
+   "why_en": "Raises demand for reliable sector data.",
+   "why_ar": "يرفع الطلب على بيانات قطاعية موثوقة.",
+   "publisher": "Demo scan: market watch",
+   "url": "",
+   "days_ago": 52,
+   "signal_type": "market",
+   "sentiment": "neutral",
+   "impact": "medium",
+   "horizon": "mid",
+   "confidence": 0.75,
+   "outcome_codes": [
+    "gov_excellence",
+    "env_sust"
+   ],
+   "indicator_codes": [
+    "ghg_total"
+   ]
+  },
+  {
+   "title_en": "Regional water ministers discuss shared monitoring standards",
+   "title_ar": "وزراء المياه في المنطقة يناقشون معايير رصد مشتركة",
+   "summary_en": "Illustrative signal. A regional meeting discusses harmonising water monitoring and reporting standards.",
+   "summary_ar": "إشارة توضيحية. يناقش اجتماع إقليمي مواءمة معايير رصد المياه والإبلاغ عنها.",
+   "why_en": "Harmonised standards ease regional comparison.",
+   "why_ar": "المعايير المتواءمة تسهل المقارنة الإقليمية.",
+   "publisher": "Demo scan: international organisations",
+   "url": "",
+   "days_ago": 55,
+   "signal_type": "policy",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "mid",
+   "confidence": 0.7,
+   "outcome_codes": [
+    "eco_growth"
+   ],
+   "indicator_codes": [
+    "water_consumption_pc"
+   ]
+  },
+  {
+   "title_en": "Nature-based tourism guidelines under discussion",
+   "title_ar": "نقاش بشأن إرشادات السياحة الطبيعية",
+   "summary_en": "Illustrative signal. Stakeholders discuss visitor guidelines that balance access with habitat protection in protected areas.",
+   "summary_ar": "إشارة توضيحية. يناقش أصحاب المصلحة إرشادات للزوار توازن بين الوصول وحماية الموائل في المحميات.",
+   "why_en": "Relevant to the future nature-based tourism cluster.",
+   "why_ar": "وثيق الصلة بعنقود السياحة الطبيعية المستقبلي.",
+   "publisher": "Demo scan: regional press",
+   "url": "",
+   "days_ago": 58,
+   "signal_type": "social",
+   "sentiment": "mixed",
+   "impact": "low",
+   "horizon": "mid",
+   "confidence": 0.68,
+   "outcome_codes": [
+    "workforce"
+   ],
+   "indicator_codes": [
+    "protected_areas_share"
+   ]
+  },
+  {
+   "title_en": "Public awareness of water saving rises in surveys",
+   "title_ar": "ارتفاع الوعي العام بترشيد المياه في المسوح",
+   "summary_en": "Illustrative signal. Opinion surveys indicate growing awareness of water saving, though behaviour change lags.",
+   "summary_ar": "إشارة توضيحية. تشير مسوح الرأي إلى تنامي الوعي بترشيد المياه مع تأخر تغير السلوك.",
+   "why_en": "Supports the awareness programme design.",
+   "why_ar": "يدعم تصميم برنامج التوعية.",
+   "publisher": "Demo scan: regional press",
+   "url": "",
+   "days_ago": 61,
+   "signal_type": "social",
+   "sentiment": "positive",
+   "impact": "low",
+   "horizon": "near",
+   "confidence": 0.7,
+   "outcome_codes": [
+    "eco_growth"
+   ],
+   "indicator_codes": [
+    "water_consumption_pc"
+   ]
+  },
+  {
+   "title_en": "Smart metering shows consistent demand reduction",
+   "title_ar": "العدادات الذكية تُظهر خفضاً متسقاً في الطلب",
+   "summary_en": "Illustrative signal. Utility pilots report that smart metering with feedback to customers reduces household demand.",
+   "summary_ar": "إشارة توضيحية. تفيد تجارب المرافق بأن العدادات الذكية مع تغذية راجعة للعملاء تخفض الطلب المنزلي.",
+   "why_en": "Supports the demand management initiative.",
+   "why_ar": "يدعم مبادرة إدارة الطلب.",
+   "publisher": "Demo scan: market watch",
+   "url": "",
+   "days_ago": 64,
+   "signal_type": "technology",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.79,
+   "outcome_codes": [
+    "eco_growth"
+   ],
+   "indicator_codes": [
+    "water_consumption_pc",
+    "water_network_loss"
+   ]
+  },
+  {
+   "title_en": "Leak detection analytics cut network losses",
+   "title_ar": "تحليلات كشف التسربات تخفض فاقد الشبكات",
+   "summary_en": "Illustrative signal. Network operators using pressure analytics report a measurable reduction in non-revenue water.",
+   "summary_ar": "إشارة توضيحية. يفيد مشغلو الشبكات الذين يستخدمون تحليلات الضغط بانخفاض ملموس في المياه غير المحتسبة.",
+   "why_en": "Supports the network efficiency initiative.",
+   "why_ar": "يدعم مبادرة كفاءة الشبكات.",
+   "publisher": "Demo scan: technology watch",
+   "url": "",
+   "days_ago": 67,
+   "signal_type": "technology",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "mid",
+   "confidence": 0.8,
+   "outcome_codes": [
+    "eco_growth"
+   ],
+   "indicator_codes": [
+    "water_network_loss"
+   ]
+  },
+  {
+   "title_en": "Wildlife recovery programmes report breeding successes",
+   "title_ar": "برامج استعادة الحياة الفطرية تسجل نجاحاً في التكاثر",
+   "summary_en": "Illustrative signal. Conservation updates highlight breeding successes in regional species recovery programmes.",
+   "summary_ar": "إشارة توضيحية. تبرز مستجدات الحفاظ على الطبيعة نجاحات في التكاثر ضمن برامج استعادة الأنواع الإقليمية.",
+   "why_en": "Shows the long-term value of species recovery work.",
+   "why_ar": "يظهر القيمة بعيدة المدى لجهود استعادة الأنواع.",
+   "publisher": "Demo scan: research and think tanks",
+   "url": "",
+   "days_ago": 70,
+   "signal_type": "environment",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "long",
+   "confidence": 0.73,
+   "outcome_codes": [
+    "workforce"
+   ],
+   "indicator_codes": [
+    "species_reintroduced"
+   ]
+  },
+  {
+   "title_en": "Methane monitoring from space expands",
+   "title_ar": "توسع رصد الميثان من الفضاء",
+   "summary_en": "Illustrative signal. New satellite instruments improve the detection of large methane emission sources.",
+   "summary_ar": "إشارة توضيحية. تحسن أجهزة فضائية جديدة كشف مصادر انبعاثات الميثان الكبيرة.",
+   "why_en": "Supports methane leak detection work.",
+   "why_ar": "يدعم أعمال كشف تسربات الميثان.",
+   "publisher": "Demo scan: technology watch",
+   "url": "",
+   "days_ago": 73,
+   "signal_type": "technology",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.76,
+   "outcome_codes": [
+    "env_sust"
+   ],
+   "indicator_codes": [
+    "ghg_total"
+   ]
+  },
+  {
+   "title_en": "Green finance products broaden for environmental projects",
+   "title_ar": "اتساع منتجات التمويل الأخضر للمشاريع البيئية",
+   "summary_en": "Illustrative signal. Financial institutions expand green loans and bonds for water, waste and renewable projects.",
+   "summary_ar": "إشارة توضيحية. توسع المؤسسات المالية القروض والسندات الخضراء لمشاريع المياه والنفايات والطاقة المتجددة.",
+   "why_en": "Relevant to environmental project financing.",
+   "why_ar": "وثيق الصلة بتمويل المشاريع البيئية.",
+   "publisher": "Demo scan: market watch",
+   "url": "",
+   "days_ago": 76,
+   "signal_type": "market",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "mid",
+   "confidence": 0.77,
+   "outcome_codes": [
+    "env_sust"
+   ],
+   "indicator_codes": [
+    "env_fund_financing"
+   ]
+  },
+  {
+   "title_en": "Risk-based inspection shows higher compliance gains",
+   "title_ar": "التفتيش القائم على المخاطر يحقق مكاسب امتثال أعلى",
+   "summary_en": "Illustrative signal. Regulators using risk-based inspection report higher compliance per inspection hour than uniform schedules.",
+   "summary_ar": "إشارة توضيحية. تفيد جهات تنظيمية تعتمد التفتيش القائم على المخاطر بامتثال أعلى لكل ساعة تفتيش مقارنة بالجداول الموحدة.",
+   "why_en": "Supports the risk-based inspection initiative.",
+   "why_ar": "يدعم مبادرة التفتيش القائم على المخاطر.",
+   "publisher": "Demo scan: regulator notices",
+   "url": "",
+   "days_ago": 79,
+   "signal_type": "research",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.78,
+   "outcome_codes": [
+    "gov_excellence"
+   ],
+   "indicator_codes": [
+    "compliance_rate",
+    "inspections_total"
+   ]
+  },
+  {
+   "title_en": "Open data portals add machine-readable environmental datasets",
+   "title_ar": "بوابات البيانات المفتوحة تضيف مجموعات بيانات بيئية قابلة للقراءة آلياً",
+   "summary_en": "Illustrative signal. Open data portals in the region are adding machine-readable environmental datasets with standard metadata.",
+   "summary_ar": "إشارة توضيحية. تضيف بوابات البيانات المفتوحة في المنطقة مجموعات بيانات بيئية قابلة للقراءة آلياً مع بيانات وصفية معيارية.",
+   "why_en": "Relevant to the open environmental data portal.",
+   "why_ar": "وثيق الصلة ببوابة البيانات البيئية المفتوحة.",
+   "publisher": "Demo scan: regulator notices",
+   "url": "",
+   "days_ago": 82,
+   "signal_type": "technology",
+   "sentiment": "positive",
+   "impact": "low",
+   "horizon": "near",
+   "confidence": 0.72,
+   "outcome_codes": [
+    "gov_excellence"
+   ],
+   "indicator_codes": [
+    "digital_services_share"
+   ]
+  },
+  {
+   "title_en": "Population growth projections update demand outlook",
+   "title_ar": "تحديث إسقاطات نمو السكان لتوقعات الطلب",
+   "summary_en": "Illustrative signal. Updated projections of population growth change the outlook for water and waste service demand.",
+   "summary_ar": "إشارة توضيحية. تغيّر إسقاطات نمو السكان المحدثة توقعات الطلب على خدمات المياه والنفايات.",
+   "why_en": "Demand drivers shape programme capacity planning.",
+   "why_ar": "محركات الطلب تشكل تخطيط طاقة البرنامج.",
+   "publisher": "Demo scan: international organisations",
+   "url": "",
+   "days_ago": 85,
+   "signal_type": "research",
+   "sentiment": "mixed",
+   "impact": "high",
+   "horizon": "near",
+   "confidence": 0.75,
+   "outcome_codes": [
+    "quality_life"
+   ],
+   "indicator_codes": [
+    "pop_total"
+   ]
+  }
+ ],
+ "mock_scan_fixture": [
+  {
+   "title_en": "Desalination operator announces pilot for energy recovery retrofit",
+   "title_ar": "مشغل تحلية يعلن تجربة لتحديث استرداد الطاقة",
+   "summary_en": "Illustrative fixture. A desalination operator describes a pilot retrofit aimed at cutting electricity use per cubic metre.",
+   "summary_ar": "نموذج توضيحي. يصف مشغل تحلية تجربة تحديث تهدف إلى خفض الكهرباء المستهلكة لكل متر مكعب.",
+   "why_en": "Energy efficiency supports water security and emissions targets.",
+   "why_ar": "كفاءة الطاقة تدعم الأمن المائي ومستهدفات الانبعاثات.",
+   "publisher": "Demo scan: regional press",
+   "url": "",
+   "days_ago": 0,
+   "signal_type": "technology",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.75,
+   "outcome_codes": [
+    "eco_growth",
+    "env_sust"
+   ],
+   "indicator_codes": [
+    "desal_energy_intensity"
+   ]
+  },
+  {
+   "title_en": "Open data portal adds environmental datasets",
+   "title_ar": "بوابة البيانات المفتوحة تضيف مجموعات بيانات بيئية",
+   "summary_en": "Illustrative fixture. A national open data portal lists additional environmental datasets with metadata.",
+   "summary_ar": "نموذج توضيحي. تعرض بوابة بيانات مفتوحة وطنية مجموعات بيانات بيئية إضافية مع بيانات وصفية.",
+   "why_en": "Open data supports transparency and reuse.",
+   "why_ar": "البيانات المفتوحة تدعم الشفافية وإعادة الاستخدام.",
+   "publisher": "Demo scan: regulator notices",
+   "url": "",
+   "days_ago": 1,
+   "signal_type": "technology",
+   "sentiment": "positive",
+   "impact": "low",
+   "horizon": "near",
+   "confidence": 0.7,
+   "outcome_codes": [
+    "gov_excellence"
+   ],
+   "indicator_codes": [
+    "digital_services_share"
+   ]
+  },
+  {
+   "title_en": "International sustainability conference announces agenda",
+   "title_ar": "مؤتمر دولي للاستدامة يعلن جدول أعماله",
+   "summary_en": "Illustrative fixture. Organisers publish themes for an international sustainability conference.",
+   "summary_ar": "نموذج توضيحي. ينشر المنظمون محاور مؤتمر دولي للاستدامة.",
+   "why_en": "Forums are a venue for sharing programme results.",
+   "why_ar": "المنتديات منصة لعرض نتائج البرنامج.",
+   "publisher": "Demo scan: international organisations",
+   "url": "",
+   "days_ago": 2,
+   "signal_type": "policy",
+   "sentiment": "neutral",
+   "impact": "low",
+   "horizon": "mid",
+   "confidence": 0.65,
+   "outcome_codes": [
+    "gov_excellence"
+   ],
+   "indicator_codes": []
+  },
+  {
+   "title_en": "Inflation report shows easing food prices",
+   "title_ar": "تقرير التضخم يظهر تراجع أسعار الغذاء",
+   "summary_en": "Illustrative fixture. A price report notes slightly easing food price inflation.",
+   "summary_ar": "نموذج توضيحي. يشير تقرير أسعار إلى تراجع طفيف في تضخم أسعار الغذاء.",
+   "why_en": "Food prices matter for household budgets and food security.",
+   "why_ar": "أسعار الغذاء مهمة لميزانيات الأسر والأمن الغذائي.",
+   "publisher": "Demo scan: market watch",
+   "url": "",
+   "days_ago": 3,
+   "signal_type": "market",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.72,
+   "outcome_codes": [
+    "fiscal_sust"
+   ],
+   "indicator_codes": [
+    "cpi_food",
+    "cpi_inflation"
+   ]
+  },
+  {
+   "title_en": "Utility reports progress on network leak reduction",
+   "title_ar": "مرفق يعلن تقدماً في خفض تسربات الشبكة",
+   "summary_en": "Illustrative fixture. A utility reports progress on lowering losses in a city network.",
+   "summary_ar": "نموذج توضيحي. يعلن مرفق تقدماً في خفض الفاقد في شبكة مدينة.",
+   "why_en": "Supports the network efficiency initiative.",
+   "why_ar": "يدعم مبادرة كفاءة الشبكات.",
+   "publisher": "Demo scan: market watch",
+   "url": "",
+   "days_ago": 4,
+   "signal_type": "market",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.74,
+   "outcome_codes": [
+    "eco_growth"
+   ],
+   "indicator_codes": [
+    "water_network_loss"
+   ]
+  },
+  {
+   "title_en": "Labour regulation update on seasonal outdoor work",
+   "title_ar": "تحديث تنظيمي بشأن العمل الخارجي الموسمي",
+   "summary_en": "Illustrative fixture. A regulator update refers to protections for outdoor work during extreme heat.",
+   "summary_ar": "نموذج توضيحي. يشير تحديث تنظيمي إلى إجراءات حماية للعمل الخارجي خلال الحرارة الشديدة.",
+   "why_en": "Links climate adaptation to occupational health.",
+   "why_ar": "يربط التكيف المناخي بالصحة المهنية.",
+   "publisher": "Demo scan: regulator notices",
+   "url": "",
+   "days_ago": 5,
+   "signal_type": "policy",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.7,
+   "outcome_codes": [
+    "env_sust",
+    "quality_life"
+   ],
+   "indicator_codes": []
+  },
+  {
+   "title_en": "Regional data exchange drill on cyber incidents",
+   "title_ar": "تمرين إقليمي لتبادل البيانات حول الحوادث السيبرانية",
+   "summary_en": "Illustrative fixture. Partners run a drill on responding to cyber incidents affecting monitoring systems.",
+   "summary_ar": "نموذج توضيحي. ينفذ الشركاء تمريناً على الاستجابة للحوادث السيبرانية التي تؤثر في نظم الرصد.",
+   "why_en": "Resilience protects data integrity.",
+   "why_ar": "المرونة تحمي سلامة البيانات.",
+   "publisher": "Demo scan: technology watch",
+   "url": "",
+   "days_ago": 6,
+   "signal_type": "geopolitical",
+   "sentiment": "neutral",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.68,
+   "outcome_codes": [
+    "gov_excellence"
+   ],
+   "indicator_codes": []
+  },
+  {
+   "title_en": "Investor group announces water technology fund",
+   "title_ar": "مجموعة مستثمرين تعلن صندوقاً لتقنيات المياه",
+   "summary_en": "Illustrative fixture. An investor group announces a fund for water efficiency technology firms.",
+   "summary_ar": "نموذج توضيحي. تعلن مجموعة مستثمرين صندوقاً لشركات تقنيات كفاءة المياه.",
+   "why_en": "Supports the environmental technology cluster.",
+   "why_ar": "يدعم عنقود التقنيات البيئية.",
+   "publisher": "Demo scan: market watch",
+   "url": "",
+   "days_ago": 7,
+   "signal_type": "market",
+   "sentiment": "positive",
+   "impact": "medium",
+   "horizon": "mid",
+   "confidence": 0.7,
+   "outcome_codes": [
+    "env_sust"
+   ],
+   "indicator_codes": [
+    "env_fund_financing"
+   ]
+  },
+  {
+   "title_en": "University study highlights heat stress risks for outdoor workers",
+   "title_ar": "دراسة جامعية تبرز مخاطر الإجهاد الحراري على العاملين في الخارج",
+   "summary_en": "Illustrative fixture. A university study highlights continued heat stress risk for outdoor workers.",
+   "summary_ar": "نموذج توضيحي. تبرز دراسة جامعية استمرار مخاطر الإجهاد الحراري على العاملين في الخارج.",
+   "why_en": "Relevant to climate adaptation planning.",
+   "why_ar": "وثيق الصلة بتخطيط التكيف المناخي.",
+   "publisher": "Demo scan: research and think tanks",
+   "url": "",
+   "days_ago": 8,
+   "signal_type": "research",
+   "sentiment": "negative",
+   "impact": "medium",
+   "horizon": "near",
+   "confidence": 0.75,
+   "outcome_codes": [
+    "env_sust",
+    "quality_life"
+   ],
+   "indicator_codes": [
+    "climate_adaptation_plans"
+   ]
+  },
+  {
+   "title_en": "Statistics office sets release date for water accounts",
+   "title_ar": "هيئة الإحصاء تحدد موعد إصدار الحسابات المائية",
+   "summary_en": "Illustrative fixture. A statistics release calendar lists a date for water accounts.",
+   "summary_ar": "نموذج توضيحي. يدرج تقويم إصدار الإحصاءات موعداً للحسابات المائية.",
+   "why_en": "Supports water indicator planning.",
+   "why_ar": "يدعم تخطيط مؤشرات المياه.",
+   "publisher": "Demo scan: regulator notices",
+   "url": "",
+   "days_ago": 9,
+   "signal_type": "research",
+   "sentiment": "neutral",
+   "impact": "low",
+   "horizon": "near",
+   "confidence": 0.7,
+   "outcome_codes": [
+    "eco_growth"
+   ],
+   "indicator_codes": [
+    "water_consumption"
+   ]
+  },
+  {
+   "title_en": "Regional alliance reviews air quality data sharing",
+   "title_ar": "تحالف إقليمي يراجع تبادل بيانات جودة الهواء",
+   "summary_en": "Illustrative fixture. Partners review ways to share air quality monitoring data.",
+   "summary_ar": "نموذج توضيحي. يراجع الشركاء سبل تبادل بيانات رصد جودة الهواء.",
+   "why_en": "Supports the air quality data platform.",
+   "why_ar": "يدعم منصة بيانات جودة الهواء.",
+   "publisher": "Demo scan: international organisations",
+   "url": "",
+   "days_ago": 10,
+   "signal_type": "policy",
+   "sentiment": "positive",
+   "impact": "low",
+   "horizon": "near",
+   "confidence": 0.68,
+   "outcome_codes": [
+    "quality_life"
+   ],
+   "indicator_codes": [
+    "aq_stations"
+   ]
+  },
+  {
+   "title_en": "Rating agency comments on sovereign sustainability policy",
+   "title_ar": "وكالة تصنيف تعلق على سياسة الاستدامة السيادية",
+   "summary_en": "Illustrative fixture. A rating commentary mentions sustainability policy among credit considerations.",
+   "summary_ar": "نموذج توضيحي. يشير تعليق وكالة تصنيف إلى سياسة الاستدامة ضمن اعتبارات الجدارة الائتمانية.",
+   "why_en": "Green policy can affect financing conditions.",
+   "why_ar": "قد تؤثر السياسات الخضراء في شروط التمويل.",
+   "publisher": "Demo scan: market watch",
+   "url": "",
+   "days_ago": 11,
+   "signal_type": "index",
+   "sentiment": "neutral",
+   "impact": "medium",
+   "horizon": "mid",
+   "confidence": 0.68,
+   "outcome_codes": [
+    "env_sust"
+   ],
+   "indicator_codes": []
+  }
+ ],
+ "example_questions": [
+  {
+   "en": "How are we doing on water consumption targets this year?",
+   "ar": "كيف يسير أداؤنا في مستهدفات استهلاك المياه هذا العام؟"
+  },
+  {
+   "en": "Which themes are currently at risk?",
+   "ar": "ما المحاور المعرضة للخطر حالياً؟"
+  },
+  {
+   "en": "How many targets are there in the National Environment Strategy?",
+   "ar": "كم عدد المستهدفات في الاستراتيجية الوطنية للبيئة؟"
+  },
+  {
+   "en": "What changed in Water Security this quarter?",
+   "ar": "ما الذي تغير في الأمن المائي هذا الربع؟"
+  },
+  {
+   "en": "What is the current inflation rate?",
+   "ar": "ما معدل التضخم الحالي؟"
+  },
+  {
+   "en": "What are the key facts on the Saudi Green Initiative targets?",
+   "ar": "ما الحقائق الرئيسية عن مستهدفات مبادرة السعودية الخضراء؟"
+  },
+  {
+   "en": "How has treated wastewater reuse trended over the past years?",
+   "ar": "كيف تطور معدل إعادة استخدام مياه الصرف المعالجة خلال السنوات الماضية؟"
+  },
+  {
+   "en": "What does the Environmental Law say about permitting?",
+   "ar": "ماذا يقول نظام البيئة عن التراخيص؟"
+  },
+  {
+   "en": "How is progress on renewable energy and solar capacity targets?",
+   "ar": "كيف يسير التقدم في مستهدفات الطاقة المتجددة والقدرة الشمسية؟"
+  },
+  {
+   "en": "Which regulator owns waste management?",
+   "ar": "أي جهة تنظيمية تتولى إدارة النفايات؟"
+  },
+  {
+   "en": "Where does Saudi Arabia stand in the latest environmental performance index?",
+   "ar": "أين تقف المملكة العربية السعودية في أحدث مؤشر للأداء البيئي؟"
+  },
+  {
+   "en": "What is the protected area share of land and sea?",
+   "ar": "ما حصة المساحات البرية والبحرية المحمية؟"
+  },
+  {
+   "en": "What signals have come in recently about water technology?",
+   "ar": "ما الإشارات الواردة مؤخراً عن تقنيات المياه؟"
+  },
+  {
+   "en": "Are we on track to meet our emissions targets?",
+   "ar": "هل نحن على المسار الصحيح لتحقيق مستهدفات الانبعاثات؟"
+  },
+  {
+   "en": "What are the top priorities for regulatory compliance this quarter?",
+   "ar": "ما أبرز أولويات الامتثال التنظيمي هذا الربع؟"
+  }
+ ]
 }

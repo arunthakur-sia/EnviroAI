@@ -1,16 +1,16 @@
 // CR08 4.2 (Indices UI agent): lists every index that carries a target with
-// its forecast mode and its latest Qatar rank/score, so the rule in
+// its forecast mode and its latest home-country rank/score, so the rule in
 // src/lib/index-targets.ts can be checked against real seeded rows rather
 // than against the wizard's synthetic probe index.
 //   node scripts/dev-probes/cr08-indices-ui-targets.mjs
 import { createClient } from "@libsql/client";
 
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const rows = (
   await db.execute(`
     select i.code, i.forecast_mode, i.higher_is_better, i.target_value, i.target_year,
-           (select rank from index_observations o where o.index_id = i.id and o.country_code = 'QAT' order by o.year desc limit 1) rank,
-           (select score from index_observations o where o.index_id = i.id and o.country_code = 'QAT' order by o.year desc limit 1) score
+           (select rank from index_observations o where o.index_id = i.id and o.country_code = 'SAU' order by o.year desc limit 1) rank,
+           (select score from index_observations o where o.index_id = i.id and o.country_code = 'SAU' order by o.year desc limit 1) score
     from indices i
     where i.target_value is not null and i.is_active = 1
     order by i.forecast_mode, i.code
@@ -50,7 +50,7 @@ const fc = (
   await db.execute(`
     select i.code, f.horizon_years h, f.central_rank, f.central_score, f.low, f.high, f.rank_low, f.rank_high
     from index_forecasts f join indices i on i.id = f.index_id
-    where i.code in ('egdi', 'cpi', 'sdg_03', 'nat_lfpr_qatari')
+    where i.code in ('epi', 'cpi', 'sdg_03', 'nat_ghg_per_capita')
     order by i.code, f.horizon_years
   `)
 ).rows;

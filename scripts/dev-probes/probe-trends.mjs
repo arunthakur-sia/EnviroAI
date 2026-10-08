@@ -17,7 +17,7 @@ async function req(path, opts = {}) {
 await req("/api/v1/auth/login", {
   method: "POST",
   headers: { "content-type": "application/json" },
-  body: JSON.stringify({ email: "analyst@npc.qa", password: "Nexus!2026" }),
+  body: JSON.stringify({ email: "analyst@enviroai.demo", password: "EnviroAI!2026" }),
 });
 const res = await req("/en/trends");
 const html = await res.text();

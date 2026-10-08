@@ -1,4 +1,4 @@
-// CR08 3: the Expert Network in two registers. Internal experts (NPC staff)
+// CR08 3: the Expert Network in two registers. Internal experts (Office staff)
 // grouped by organisation unit with a flat toggle; external experts (other
 // entities, academia, consultants, international advisors) with their own
 // filters and "Request this expert" on every card. The view comes from the
@@ -22,9 +22,9 @@ export const dynamic = "force-dynamic";
 
 /* a link that reads as the primary button, without nesting a button in it */
 const LINK_BUTTON =
-  "inline-flex h-9.5 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 text-sm font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700 [&_svg]:size-4 [&_svg]:shrink-0";
-const LINK_PRIMARY = `${LINK_BUTTON} bg-maroon-700 text-white shadow-sm hover:bg-maroon-900`;
-const LINK_SECONDARY = `${LINK_BUTTON} border border-sand-300 bg-white text-ink-900 hover:border-maroon-300 hover:text-maroon-700`;
+  "inline-flex h-9.5 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 text-sm font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700 [&_svg]:size-4 [&_svg]:shrink-0";
+const LINK_PRIMARY = `${LINK_BUTTON} bg-navy-700 text-white shadow-sm hover:bg-navy-900`;
+const LINK_SECONDARY = `${LINK_BUTTON} border border-mist-300 bg-white text-ink-900 hover:border-navy-300 hover:text-navy-700`;
 
 function readPrefs(raw: string | null): Record<string, unknown> {
   try {

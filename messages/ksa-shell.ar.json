@@ -1,0 +1,63 @@
+{
+  "shell": {
+    "nav": {
+      "regulatory": "نظام البيئة",
+      "sources": "مكتبة المصادر"
+    },
+    "groups": {
+      "more": "المزيد"
+    },
+    "primary": {
+      "home": {
+        "en": "Scorecard",
+        "ar": "بطاقة المؤشرات"
+      },
+      "indices": {
+        "en": "SDG Performance",
+        "ar": "أداء أهداف التنمية المستدامة"
+      },
+      "water": {
+        "en": "Water Security",
+        "ar": "الأمن المائي"
+      },
+      "agriculture": {
+        "en": "Agriculture & Food Security",
+        "ar": "الأمن الغذائي والزراعة"
+      },
+      "climate": {
+        "en": "Climate & Environment",
+        "ar": "المناخ والبيئة"
+      },
+      "regulatory": {
+        "en": "Regulatory Overview",
+        "ar": "نظام البيئة"
+      },
+      "sources": {
+        "en": "Source Library",
+        "ar": "مكتبة المصادر"
+      },
+      "trends": {
+        "en": "Insights & Trends",
+        "ar": "الرؤى والاتجاهات"
+      },
+      "vault": {
+        "en": "Institutional Memory",
+        "ar": "الذاكرة المؤسسية"
+      }
+    },
+    "languageToggle": "اللغة",
+    "poweredBy": "بدعم من Sia",
+    "searchPlaceholder": "ابحث في المصادر والمؤشرات والأنظمة..."
+  },
+  "settings": {
+    "portals": {
+      "regulatory": "نظام البيئة",
+      "sources": "المصادر"
+    }
+  },
+  "login": {
+    "heroTitle": "معلومات البيئة والمياه والزراعة في المملكة",
+    "heroSubtitle": "الأنظمة والمؤشرات والمصادر والذاكرة المؤسسية في مكان واحد، بحث واحد وإجابات موثقة بالمصادر.",
+    "descriptor": "منصة المعرفة والأنظمة والبيانات لقطاع البيئة في المملكة"
+  }
+}

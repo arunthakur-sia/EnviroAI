@@ -55,7 +55,7 @@ const External = z.object({
   providesAr: z.string().max(1000).nullable().optional(),
   receivesEn: z.string().max(1000).nullable().optional(),
   receivesAr: z.string().max(1000).nullable().optional(),
-  focalNpcUserId: z.string().nullable().optional(),
+  focalOrgUserId: z.string().nullable().optional(),
   focalEntityName: z.string().max(200).nullable().optional(),
   legalBasisEn: z.string().max(500).nullable().optional(),
   legalBasisAr: z.string().max(500).nullable().optional(),

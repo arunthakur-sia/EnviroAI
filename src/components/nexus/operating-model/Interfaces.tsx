@@ -1,5 +1,5 @@
 "use client";
-// CR08 10.2 section 6: interfaces. External: entity cards (what NPC provides
+// CR08 10.2 section 6: interfaces. External: entity cards (what the Office provides
 // and receives, focal points on both sides, legal basis, cadence, linked
 // processes). Internal: the unit-to-unit matrix (CSS grid with ARIA table
 // roles, counts in the cells, flow kinds on hover) beside the chord diagram,
@@ -75,7 +75,7 @@ function EntityCard({ item }: { item: EntityInterfaceView }) {
   return (
     <article className="card card-hover flex flex-col gap-3 p-4" data-testid="entity-card">
       <header className="flex items-start gap-3">
-        <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-gulf-100 text-gulf-600" aria-hidden>
+        <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-teal-100 text-teal-600" aria-hidden>
           {kind === "international" ? <Globe2 className="size-4.5" /> : <Building2 className="size-4.5" />}
         </span>
         <div className="min-w-0 flex-1">
@@ -83,28 +83,28 @@ function EntityCard({ item }: { item: EntityInterfaceView }) {
             {name}
           </h4>
           <p className="mt-1 flex flex-wrap items-center gap-1.5">
-            {short && short !== name ? <Chip tone="sand" className="tnum">{short}</Chip> : null}
+            {short && short !== name ? <Chip tone="mist" className="tnum">{short}</Chip> : null}
             <Chip tone="ghost" className="px-0 text-[10px]">{t(`interfaces.external.kind.${kind}` as never)}</Chip>
-            {item.cadence ? <Chip tone="gulf">{cadenceWord(item.cadence)}</Chip> : null}
+            {item.cadence ? <Chip tone="teal">{cadenceWord(item.cadence)}</Chip> : null}
           </p>
         </div>
       </header>
       <div className="grid gap-3 sm:grid-cols-2">
-        <div className="rounded-lg bg-sand-50 px-3 py-2.5">
-          <SubLabel className="mb-1 flex items-center gap-1 text-maroon-700">
+        <div className="rounded-lg bg-mist-50 px-3 py-2.5">
+          <SubLabel className="mb-1 flex items-center gap-1 text-navy-700">
             <ArrowRight className="size-3 flip-rtl" aria-hidden /> {t("interfaces.external.provides")}
           </SubLabel>
           <p className="text-xs leading-relaxed text-ink-900">{provides || <span className="text-ink-400">{t("interfaces.external.noFocal")}</span>}</p>
         </div>
-        <div className="rounded-lg bg-sand-50 px-3 py-2.5">
-          <SubLabel className="mb-1 flex items-center gap-1 text-gulf-600">
+        <div className="rounded-lg bg-mist-50 px-3 py-2.5">
+          <SubLabel className="mb-1 flex items-center gap-1 text-teal-600">
             <ArrowRight className="size-3 rotate-180 flip-rtl" aria-hidden /> {t("interfaces.external.receives")}
           </SubLabel>
           <p className="text-xs leading-relaxed text-ink-900">{receives || <span className="text-ink-400">{t("interfaces.external.noFocal")}</span>}</p>
         </div>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
-        <Focal person={item.focalNpc} label={t("interfaces.external.focalNpc")} item={ref} />
+        <Focal person={item.focalOrg} label={t("interfaces.external.focalOrg")} item={ref} />
         <div className="min-w-0">
           <SubLabel className="mb-1">{t("interfaces.external.focalEntity")}</SubLabel>
           {item.focalEntityName ? <NamePlaceholder name={item.focalEntityName} /> : <span className="text-xs text-ink-400">{t("interfaces.external.noFocal")}</span>}
@@ -124,7 +124,7 @@ function EntityCard({ item }: { item: EntityInterfaceView }) {
               <Link
                 key={p.id}
                 href={processHref(p.code) as never}
-                className="inline-flex items-center gap-1 rounded-md bg-maroon-100 px-2 py-0.5 text-[11px] font-medium leading-4 text-maroon-900 transition-colors hover:bg-maroon-700 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+                className="inline-flex items-center gap-1 rounded-md bg-navy-100 px-2 py-0.5 text-[11px] font-medium leading-4 text-navy-900 transition-colors hover:bg-navy-700 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
                 title={bi(locale, p.nameEn, p.nameAr)}
               >
                 <span className="tnum">{p.code}</span>
@@ -170,11 +170,11 @@ function Matrix({
   const focus = hovered ?? selected;
   const template = `112px repeat(${units.length}, 34px)`;
   return (
-    <div className="overflow-auto rounded-xl border border-sand-300 bg-white" style={{ overscrollBehaviorX: "contain" }} data-testid="interface-matrix-scroll">
+    <div className="overflow-auto rounded-xl border border-mist-300 bg-white" style={{ overscrollBehaviorX: "contain" }} data-testid="interface-matrix-scroll">
       <div role="table" aria-label={t("interfaces.internal.matrixAria")} className="min-w-max text-xs" data-testid="interface-matrix">
         <div role="rowgroup">
           <div role="row" className="grid" style={{ gridTemplateColumns: template }}>
-            <div role="columnheader" className="sticky start-0 top-0 z-30 flex items-end border-b border-e border-sand-300 bg-sand-50 px-2 pb-1.5 pt-2 text-[10px] font-semibold uppercase tracking-[0.06em] text-ink-600 rtl:tracking-normal">
+            <div role="columnheader" className="sticky start-0 top-0 z-30 flex items-end border-b border-e border-mist-300 bg-mist-50 px-2 pb-1.5 pt-2 text-[10px] font-semibold uppercase tracking-[0.06em] text-ink-600 rtl:tracking-normal">
               {t("interfaces.internal.matrixCorner")}
             </div>
             {units.map((u) => (
@@ -182,7 +182,7 @@ function Matrix({
                 key={u.id}
                 role="columnheader"
                 aria-label={bi(locale, u.nameEn, u.nameAr)}
-                className={cn("sticky top-0 z-20 flex h-14 items-end justify-center border-b border-sand-300 bg-sand-50 pb-1.5", focus === u.id && "bg-maroon-50")}
+                className={cn("sticky top-0 z-20 flex h-14 items-end justify-center border-b border-mist-300 bg-mist-50 pb-1.5", focus === u.id && "bg-navy-50")}
               >
                 <button
                   type="button"
@@ -192,8 +192,8 @@ function Matrix({
                   title={bi(locale, u.nameEn, u.nameAr)}
                   aria-pressed={selected === u.id}
                   className={cn(
-                    "cursor-pointer rounded px-0.5 text-[10px] font-semibold tnum focus-visible:outline-2 focus-visible:outline-gold-500",
-                    focus === u.id ? "text-maroon-900" : "text-ink-600 hover:text-maroon-700"
+                    "cursor-pointer rounded px-0.5 text-[10px] font-semibold tnum focus-visible:outline-2 focus-visible:outline-aqua-500",
+                    focus === u.id ? "text-navy-900" : "text-ink-600 hover:text-navy-700"
                   )}
                   style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
                 >
@@ -208,7 +208,7 @@ function Matrix({
             <div key={from.id} role="row" className="grid" style={{ gridTemplateColumns: template }}>
               <div
                 role="rowheader"
-                className={cn("sticky start-0 z-10 flex items-center border-b border-e border-sand-200 bg-white px-2 py-1", focus === from.id && "bg-maroon-50")}
+                className={cn("sticky start-0 z-10 flex items-center border-b border-e border-mist-200 bg-white px-2 py-1", focus === from.id && "bg-navy-50")}
               >
                 <button
                   type="button"
@@ -218,8 +218,8 @@ function Matrix({
                   title={bi(locale, from.nameEn, from.nameAr)}
                   aria-pressed={selected === from.id}
                   className={cn(
-                    "cursor-pointer truncate rounded px-0.5 text-start text-[11px] font-semibold tnum focus-visible:outline-2 focus-visible:outline-gold-500",
-                    focus === from.id ? "text-maroon-900" : "text-ink-900 hover:text-maroon-700"
+                    "cursor-pointer truncate rounded px-0.5 text-start text-[11px] font-semibold tnum focus-visible:outline-2 focus-visible:outline-aqua-500",
+                    focus === from.id ? "text-navy-900" : "text-ink-900 hover:text-navy-700"
                   )}
                 >
                   {from.code}
@@ -240,15 +240,15 @@ function Matrix({
                     disabled={!count}
                     onClick={() => onPair(isPair ? null : { from: from.id, to: to.id })}
                     className={cn(
-                      "flex h-7 w-full items-center justify-center text-[11px] font-semibold tnum transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-gold-500",
-                      count ? "cursor-pointer text-maroon-900" : "cursor-default text-ink-200",
-                      isPair && "ring-2 ring-inset ring-gold-500"
+                      "flex h-7 w-full items-center justify-center text-[11px] font-semibold tnum transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-aqua-500",
+                      count ? "cursor-pointer text-navy-900" : "cursor-default text-ink-200",
+                      isPair && "ring-2 ring-inset ring-aqua-500"
                     )}
                     style={{
                       backgroundColor: count
-                        ? `color-mix(in srgb, var(--color-maroon-700) ${Math.min(60, 12 + count * 14)}%, white)`
+                        ? `color-mix(in srgb, var(--color-navy-700) ${Math.min(60, 12 + count * 14)}%, white)`
                         : from.id === to.id
-                          ? "var(--color-sand-100)"
+                          ? "var(--color-mist-100)"
                           : "transparent",
                       color: count >= 3 ? "#ffffff" : undefined,
                     }}
@@ -259,7 +259,7 @@ function Matrix({
                   </button>
                 );
                 return (
-                  <div key={to.id} role="cell" className={cn("border-b border-sand-200", lit && "bg-maroon-50/60")}>
+                  <div key={to.id} role="cell" className={cn("border-b border-mist-200", lit && "bg-navy-50/60")}>
                     {count ? (
                       <Tip
                         content={
@@ -314,7 +314,7 @@ function ProposeDialog({ iface, onClose, onSent }: { iface: UnitInterfaceView; o
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
       <DialogContent title={t("interfaces.propose.title")} data-testid="propose-dialog">
-        <p className="mb-1 text-xs font-semibold text-maroon-700">
+        <p className="mb-1 text-xs font-semibold text-navy-700">
           {t("interfaces.propose.on", { from: bi(locale, iface.fromUnit.nameEn, iface.fromUnit.nameAr), to: bi(locale, iface.toUnit.nameEn, iface.toUnit.nameAr) })}
         </p>
         <p className="mb-3 text-xs text-ink-600">{t("interfaces.propose.hint")}</p>
@@ -564,14 +564,14 @@ function InterfaceCard({
           <span title={from}>
             <span className="text-[10px] font-semibold text-ink-400 tnum">{item.fromUnit.code}</span> {from}
           </span>
-          <ArrowRight className="size-4 shrink-0 text-maroon-700 flip-rtl" aria-hidden />
+          <ArrowRight className="size-4 shrink-0 text-navy-700 flip-rtl" aria-hidden />
           <span title={to}>
             <span className="text-[10px] font-semibold text-ink-400 tnum">{item.toUnit.code}</span> {to}
           </span>
         </span>
         <span className="ms-auto flex flex-wrap items-center gap-1.5">
           <Chip tone={FLOW_TONE[item.flowKind]} data-testid="flow-chip">{t(`interfaces.internal.flow.${item.flowKind}` as never)}</Chip>
-          <Chip tone={status === "active" ? "ok" : status === "draft" ? "warn" : "sand"}>{t(`interfaces.internal.status.${status}` as never)}</Chip>
+          <Chip tone={status === "active" ? "ok" : status === "draft" ? "warn" : "mist"}>{t(`interfaces.internal.status.${status}` as never)}</Chip>
         </span>
       </header>
       {description ? <p className="text-sm leading-relaxed text-ink-900">{description}</p> : null}
@@ -598,7 +598,7 @@ function InterfaceCard({
           <dt className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-400 rtl:tracking-normal">{t("interfaces.internal.process")}</dt>
           <dd className="mt-0.5">
             {item.process ? (
-              <Link href={processHref(item.process.code) as never} className="link-draw font-medium text-maroon-700" title={bi(locale, item.process.nameEn, item.process.nameAr)}>
+              <Link href={processHref(item.process.code) as never} className="link-draw font-medium text-navy-700" title={bi(locale, item.process.nameEn, item.process.nameAr)}>
                 <span className="tnum">{item.process.code}</span> {bi(locale, item.process.nameEn, item.process.nameAr)}
               </Link>
             ) : (
@@ -607,7 +607,7 @@ function InterfaceCard({
           </dd>
         </div>
       </dl>
-      <div className="flex flex-wrap items-end gap-x-6 gap-y-3 border-t border-sand-100 pt-3">
+      <div className="flex flex-wrap items-end gap-x-6 gap-y-3 border-t border-mist-100 pt-3">
         <Focal person={item.focalFrom} label={t("interfaces.internal.focalFrom")} item={ref} />
         <Focal person={item.focalTo} label={t("interfaces.internal.focalTo")} item={ref} />
         <span className="ms-auto flex items-center gap-1.5">
@@ -657,16 +657,16 @@ function ChangeRequests({ requests, canEdit, onChanged }: { requests: InterfaceC
           </h4>
           <p className="text-xs text-ink-600">{canEdit ? t("interfaces.requests.hint") : t("interfaces.requests.mineHint")}</p>
         </div>
-        <Chip tone="sand" className="tnum">{t("interfaces.requests.count", { count: requests.length })}</Chip>
+        <Chip tone="mist" className="tnum">{t("interfaces.requests.count", { count: requests.length })}</Chip>
       </div>
       {requests.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-sand-300 bg-sand-50 px-3 py-4 text-center text-xs text-ink-600">{t("interfaces.requests.emptyHint")}</p>
+        <p className="rounded-lg border border-dashed border-mist-300 bg-mist-50 px-3 py-4 text-center text-xs text-ink-600">{t("interfaces.requests.emptyHint")}</p>
       ) : (
         <ol className="space-y-2">
           {requests.map((r) => {
             const status = r.status === "approved" ? "approved" : r.status === "declined" ? "declined" : "open";
             return (
-              <li key={r.id} className="rounded-lg border border-sand-200 px-3 py-2.5" data-testid="change-request" data-status={status}>
+              <li key={r.id} className="rounded-lg border border-mist-200 px-3 py-2.5" data-testid="change-request" data-status={status}>
                 <div className="flex flex-wrap items-start gap-2">
                   <p className="min-w-0 flex-1 text-sm leading-relaxed text-ink-900">{r.text}</p>
                   <Chip tone={status === "approved" ? "ok" : status === "declined" ? "danger" : "warn"}>{t(`interfaces.requests.status.${status}` as never)}</Chip>
@@ -759,7 +759,7 @@ export function Interfaces({
             </h3>
             <p className="text-xs text-ink-600">{t("interfaces.external.hint")}</p>
           </div>
-          <Chip tone="sand" className="tnum">{t("interfaces.external.count", { count: interfaces.external.length })}</Chip>
+          <Chip tone="mist" className="tnum">{t("interfaces.external.count", { count: interfaces.external.length })}</Chip>
         </div>
         {interfaces.external.length === 0 ? (
           <EmptyState icon={<Globe2 />} title={t("interfaces.external.empty")} hint={t("interfaces.external.emptyHint")} />
@@ -782,7 +782,7 @@ export function Interfaces({
             <p className="max-w-3xl text-xs text-ink-600">{t("interfaces.internal.hint")}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <Chip tone="sand" className="tnum">{t("interfaces.internal.count", { count: interfaces.internal.length })}</Chip>
+            <Chip tone="mist" className="tnum">{t("interfaces.internal.count", { count: interfaces.internal.length })}</Chip>
             {canEdit ? (
               <Button size="sm" variant="secondary" onClick={() => setEditing(draftOf(null, allUnits))} data-testid="interface-add">
                 <Plus /> {t("interfaces.internal.add")}
@@ -841,13 +841,13 @@ export function Interfaces({
                 </label>
                 {filterLabel ? (
                   <span className="flex items-center gap-2 text-xs text-ink-600" role="status" aria-live="polite">
-                    <span className="font-medium text-maroon-900">{filterLabel}</span>
-                    <button type="button" onClick={() => select(null)} className="cursor-pointer font-medium text-maroon-700 underline-offset-4 hover:underline">
+                    <span className="font-medium text-navy-900">{filterLabel}</span>
+                    <button type="button" onClick={() => select(null)} className="cursor-pointer font-medium text-navy-700 underline-offset-4 hover:underline">
                       {t("interfaces.internal.clear")}
                     </button>
                   </span>
                 ) : null}
-                <Chip tone="sand" className="ms-auto tnum">{t("interfaces.internal.count", { count: shown.length })}</Chip>
+                <Chip tone="mist" className="ms-auto tnum">{t("interfaces.internal.count", { count: shown.length })}</Chip>
               </div>
               {shown.length === 0 ? (
                 <EmptyState title={t("interfaces.internal.empty")} hint={t("interfaces.internal.emptyHint")} />

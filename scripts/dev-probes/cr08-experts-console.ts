@@ -44,7 +44,7 @@ async function main() {
   // log in through the API on the context's request client (it shares the
   // cookie jar), so a slow-to-hydrate login form cannot post natively
   const login = await ctx.request.post(BASE + "/api/v1/auth/login", {
-    data: { email: "admin@npc.qa", password: "Nexus!2026" },
+    data: { email: "admin@enviroai.demo", password: "EnviroAI!2026" },
     timeout: 180000,
   });
   if (login.status() !== 200) throw new Error(`login -> ${login.status()}`);

@@ -1,5 +1,5 @@
 // CR08 5.5: SVG chart builders in the app's chart style (IndicatorChart.tsx):
-// maroon primary, gulf comparison, gold dashed target, maroon dashed forecast,
+// navy primary, teal comparison, aqua dashed target, navy dashed forecast,
 // hairline solid gridlines, recessive axes, a legend for two or more series,
 // one direct end label on the primary series. The plot stays left-to-right in
 // both languages (time runs the same way); labels take the language's face.
@@ -13,7 +13,7 @@ type Role = NonNullable<ChartSeries["role"]>;
 
 const SANS = (lang: Lang) => (isAr(lang) ? "'IBM Plex Sans Arabic', 'Inter', sans-serif" : "'Inter', 'Segoe UI', sans-serif");
 
-const EXTRA = [C.maroon300, C.gulf400, C.ink400, C.gold];
+const EXTRA = [C.navy300, C.teal400, C.ink400, C.aqua];
 
 function roleOf(s: ChartSeries, i: number): Role {
   if (s.role) return s.role;
@@ -21,16 +21,16 @@ function roleOf(s: ChartSeries, i: number): Role {
 }
 
 function colourOf(role: Role, i: number, stacked: boolean): string {
-  if (stacked) return [C.maroon, C.gulf, C.gold, C.maroon300, C.gulf400, C.ink400][i % 6];
+  if (stacked) return [C.navy, C.teal, C.aqua, C.navy300, C.teal400, C.ink400][i % 6];
   switch (role) {
     case "comparison":
-      return C.gulf;
+      return C.teal;
     case "target":
-      return C.gold;
+      return C.aqua;
     case "forecast":
-      return C.maroon;
+      return C.navy;
     default:
-      return i <= 1 ? C.maroon : EXTRA[(i - 2) % EXTRA.length];
+      return i <= 1 ? C.navy : EXTRA[(i - 2) % EXTRA.length];
   }
 }
 
@@ -158,7 +158,7 @@ export function chartSvg(spec: ChartSpec, lang: Lang, width = CHART.w, height = 
   for (const t of ticks) {
     if (t < yLo - 1e-9 || t > yHi + 1e-9) continue;
     const y = sy(t);
-    out.push(`<line x1="${left}" x2="${left + plotW}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${hex(C.sandLine)}" stroke-width="1"/>`);
+    out.push(`<line x1="${left}" x2="${left + plotW}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${hex(C.mistLine)}" stroke-width="1"/>`);
     out.push(`<text x="${left - 8}" y="${(y + 3.5).toFixed(1)}" text-anchor="end" font-size="10" fill="${hex(C.ink400)}">${fmtNum(t)}</text>`);
   }
   // baseline
@@ -255,7 +255,7 @@ export function chartSvg(spec: ChartSpec, lang: Lang, width = CHART.w, height = 
     });
   }
 
-  // overlays: target (gold dashed) and forecast (maroon dashed)
+  // overlays: target (aqua dashed) and forecast (navy dashed)
   series.forEach((s, i) => {
     if (!isOverlay(roles[i])) return;
     const col = hex(colours[i]);

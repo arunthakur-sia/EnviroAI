@@ -16,8 +16,8 @@ import {
 } from "@/server/services/lesson-links";
 
 /** GET ?lessonId= returns the lesson's links.
-    GET ?q=&store=nds|council searches nodes for the picker.
-    GET ?tree=nds|council returns the drill-down tree. */
+    GET ?q=&store=nes|council searches nodes for the picker.
+    GET ?tree=nes|council returns the drill-down tree. */
 export async function GET(req: NextRequest) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ data: null, error: "unauthorized" }, { status: 401 });
@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ data: { links, canEdit }, error: null });
   }
 
-  const store = sp.get("store") === "council" ? "council" : "nds";
+  const store = sp.get("store") === "council" ? "council" : "nes";
   const tree = sp.get("tree");
   if (tree) {
     if (store === "council") {
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
     const editions = await db.select().from(schema.strategyEditions);
     const codeOf = new Map(editions.map((e) => [e.id, e.code]));
     return NextResponse.json({
-      data: rows.map((r) => ({ ...r, kind: "nds", edition: codeOf.get(r.editionId) ?? null })),
+      data: rows.map((r) => ({ ...r, kind: "nes", edition: codeOf.get(r.editionId) ?? null })),
       error: null,
     });
   }
@@ -120,7 +120,7 @@ export async function GET(req: NextRequest) {
   const editions = await db.select().from(schema.strategyEditions);
   const codeOf = new Map(editions.map((e) => [e.id, e.code]));
   return NextResponse.json({
-    data: rows.map((r) => ({ ...r, kind: "nds", edition: codeOf.get(r.editionId) ?? null })),
+    data: rows.map((r) => ({ ...r, kind: "nes", edition: codeOf.get(r.editionId) ?? null })),
     error: null,
   });
 }
@@ -128,7 +128,7 @@ export async function GET(req: NextRequest) {
 const PostBody = z.object({
   lessonId: z.string().min(1),
   nodeId: z.string().min(1),
-  nodeKind: z.enum(["nds", "council"]).optional(),
+  nodeKind: z.enum(["nes", "council"]).optional(),
   makePrimary: z.boolean().optional(),
 });
 

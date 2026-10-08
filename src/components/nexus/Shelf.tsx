@@ -43,27 +43,27 @@ export type ShelfDoc = {
   viewCount?: number;
   processing?: boolean;
   deliverableCode?: string | null;
-  /** CR08 8: this week's Knowledge of the Week wears a gold ribbon */
+  /** CR08 8: this week's Knowledge of the Week wears an aqua ribbon */
   kow?: boolean;
 };
 
-/* CR03 1.3: the Library palette. Cloth colours by knowledge type; the sand
+/* CR03 1.3: the Library palette. Cloth colours by knowledge type; the light
    cloth is the only one with dark text. */
 const CLOTH: Record<string, { color: string; darkText?: boolean }> = {
-  strategy: { color: "#7a1533" },
-  policy: { color: "#23303f" },
-  standard: { color: "#23303f" },
-  report: { color: "#145c63" },
-  study: { color: "#145c63" },
-  statistical_release: { color: "#4a5563" },
-  dataset: { color: "#4a5563" },
-  guideline: { color: "#4f5a3a" },
-  template: { color: "#4f5a3a" },
-  presentation: { color: "#4e2a4c" },
-  speech: { color: "#4e2a4c" },
-  minutes: { color: "#6b4a2e" },
-  circular: { color: "#6b4a2e" },
-  deliverable: { color: "#b9a57f", darkText: true },
+  strategy: { color: "#173044" },
+  policy: { color: "#0f2230" },
+  standard: { color: "#0f2230" },
+  report: { color: "#077c84" },
+  study: { color: "#077c84" },
+  statistical_release: { color: "#455669" },
+  dataset: { color: "#455669" },
+  guideline: { color: "#1f4a5a" },
+  template: { color: "#1f4a5a" },
+  presentation: { color: "#2b3f63" },
+  speech: { color: "#2b3f63" },
+  minutes: { color: "#5a6b82" },
+  circular: { color: "#5a6b82" },
+  deliverable: { color: "#9fb3c8", darkText: true },
 };
 
 function hashOf(id: string): number {
@@ -91,7 +91,7 @@ export function clothFor(doc: Pick<ShelfDoc, "typeCode" | "id">): {
   cover: string;
   darkText: boolean;
 } {
-  const cloth = CLOTH[doc.typeCode ?? ""] ?? { color: "#4a5563" };
+  const cloth = CLOTH[doc.typeCode ?? ""] ?? { color: "#455669" };
   // per-book lightness variance of +/- 6 percent by id hash (CR03 1.3)
   const variance = ((hashOf(doc.id) % 13) - 6) / 100;
   const base = mix(cloth.color, variance);
@@ -111,7 +111,7 @@ function spineWidth(pageCount: number | null | undefined): number {
   return 64;
 }
 
-const PAPER = "#fbf9f5";
+const PAPER = "#f8fafd";
 const PREVIEW_W = 320;
 
 function isTouch(): boolean {
@@ -214,9 +214,9 @@ function BookPreview({
             style={{
               top: 8,
               height: 34,
-              // warm book paper: an object colour, pinned since CR05 cooled the sand tokens
+              // cool book paper: an object colour, pinned as an object colour
               background: PAPER,
-              border: "1px solid #e2dac9",
+              border: "1px solid #d5dce8",
             }}
           />
           <span className="absolute inset-y-0 start-0 w-1" style={{ background: cloth.base }} />
@@ -241,14 +241,14 @@ function BookPreview({
               id: doc.ownerUserId,
               nameEn: doc.ownerName,
               nameAr: doc.ownerNameAr ?? doc.ownerName,
-              avatarColor: doc.ownerColor ?? "maroon",
+              avatarColor: doc.ownerColor ?? "navy",
             }}
             item={{ type: "document", id: doc.id, titleEn: doc.titleEn, titleAr: doc.titleAr, href: `/vault/${doc.id}` }}
             className="min-w-0 max-w-[60%]"
           />
         ) : owner ? (
           <span className="flex min-w-0 items-center gap-1.5">
-            <Avatar name={owner} color={doc.ownerColor ?? "maroon"} size={18} />
+            <Avatar name={owner} color={doc.ownerColor ?? "navy"} size={18} />
             <span className="truncate">{owner}</span>
           </span>
         ) : null}
@@ -265,7 +265,7 @@ function BookPreview({
           }
         />
         {doc.status === "verified" ? (
-          <span className="flex items-center gap-1 text-gulf-600">
+          <span className="flex items-center gap-1 text-teal-600">
             <Check className="size-3" /> {tc("verified")}
           </span>
         ) : null}
@@ -286,13 +286,13 @@ function BookPreview({
         </Button>
       </div>
       {collections ? (
-        <div className="mt-2 max-h-36 overflow-y-auto rounded-lg border border-sand-300 bg-sand-50">
+        <div className="mt-2 max-h-36 overflow-y-auto rounded-lg border border-mist-300 bg-mist-50">
           {collections.length ? (
             collections.map((c) => (
               <button
                 key={c.id}
                 onClick={() => saveTo(c.id)}
-                className="block w-full truncate px-3 py-1.5 text-start text-xs text-ink-900 hover:bg-maroon-100 cursor-pointer"
+                className="block w-full truncate px-3 py-1.5 text-start text-xs text-ink-900 hover:bg-navy-100 cursor-pointer"
               >
                 {bi(locale, c.nameEn, c.nameAr)}
               </button>
@@ -338,7 +338,7 @@ export function Book({
   const w = Math.round(spineWidth(doc.pageCount) * scale);
   const coverW = Math.round(120 * scale);
   const cloth = clothFor(doc);
-  const ink = cloth.darkText ? "#2b241c" : PAPER;
+  const ink = cloth.darkText ? "#0a151e" : PAPER;
 
   const wrapRef = React.useRef<HTMLDivElement>(null);
   const [pulled, setPulled] = React.useState(false);
@@ -487,8 +487,8 @@ export function Book({
         >
           <span aria-hidden className="absolute inset-x-0 top-0 h-1.5 rounded-t-[3px]" style={{ background: cloth.dark }} />
           <span aria-hidden className="absolute inset-x-0 bottom-0 h-1.5 rounded-b-[2px]" style={{ background: cloth.dark }} />
-          <span aria-hidden className="absolute inset-x-1 h-px" style={{ top: 14, background: "rgba(201,162,77,0.7)" }} />
-          <span aria-hidden className="absolute inset-x-1 h-px" style={{ bottom: 14, background: "rgba(201,162,77,0.7)" }} />
+          <span aria-hidden className="absolute inset-x-1 h-px" style={{ top: 14, background: "rgba(0, 222, 204,0.7)" }} />
+          <span aria-hidden className="absolute inset-x-1 h-px" style={{ bottom: 14, background: "rgba(0, 222, 204,0.7)" }} />
 
           {/* spine title, running along the spine */}
           <span
@@ -521,7 +521,7 @@ export function Book({
                 </span>
               ) : null}
               <span style={{ fontSize: 10, fontFamily: "var(--font-sans)", fontWeight: 600, letterSpacing: "0.08em", opacity: 0.75 }}>
-                NPC
+                the Office
               </span>
             </span>
           ) : null}
@@ -535,7 +535,7 @@ export function Book({
                 insetInlineStart: "50%",
                 bottom: h >= 150 ? 40 : 18,
                 transform: "translateX(-50%)",
-                background: "var(--color-gold-500)",
+                background: "var(--color-aqua-500)",
                 boxShadow: "0 1px 2px rgba(0,0,0,0.3)",
               }}
               aria-hidden
@@ -544,7 +544,7 @@ export function Book({
             </span>
           ) : null}
 
-          {/* CR08 8: a small gold ribbon hangs over the head of this week's pick */}
+          {/* CR08 8: a small aqua ribbon hangs over the head of this week's pick */}
           {doc.kow ? (
             <span
               aria-hidden
@@ -555,7 +555,7 @@ export function Book({
                 insetInlineEnd: 5,
                 width: 9,
                 height: h >= 150 ? 28 : 20,
-                background: "var(--color-gold-500)",
+                background: "var(--color-aqua-500)",
                 clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 74%, 0 100%)",
                 boxShadow: "0 1px 2px rgba(0,0,0,0.35)",
               }}
@@ -573,7 +573,7 @@ export function Book({
             transform: isRtl ? "rotateY(90deg)" : "rotateY(-90deg)",
             transformOrigin: isRtl ? "0% 50%" : "100% 50%",
             background:
-              "repeating-linear-gradient(to bottom, #f3efe6 0 2px, #e6e0d2 2px 3px), " + PAPER,
+              "repeating-linear-gradient(to bottom, #eef2f8 0 2px, #dfe5ef 2px 3px), " + PAPER,
           }}
         />
 
@@ -597,8 +597,8 @@ export function Book({
         >
           <span className="absolute inset-x-0 top-0 h-1.5" style={{ background: cloth.dark }} />
           <span className="absolute inset-x-0 bottom-0 h-1.5" style={{ background: cloth.dark }} />
-          <span className="absolute inset-x-1.5 h-px" style={{ top: 14, background: "rgba(201,162,77,0.7)" }} />
-          <span className="absolute inset-x-1.5 h-px" style={{ bottom: 14, background: "rgba(201,162,77,0.7)" }} />
+          <span className="absolute inset-x-1.5 h-px" style={{ top: 14, background: "rgba(0, 222, 204,0.7)" }} />
+          <span className="absolute inset-x-1.5 h-px" style={{ bottom: 14, background: "rgba(0, 222, 204,0.7)" }} />
 
           {/* the viewer sees the plane's back face; mirror the content back */}
           <span
@@ -612,9 +612,9 @@ export function Book({
               style={{
                 top: 20,
                 height: Math.round((h - 40) * 0.66),
-                // warm book paper: an object colour, pinned since CR05 cooled the sand tokens
+                // cool book paper: an object colour, pinned as an object colour
                 background: PAPER,
-                border: "1px solid #e2dac9",
+                border: "1px solid #d5dce8",
                 boxShadow: "inset 0 2px 3px rgba(30,27,31,0.08)",
               }}
             >
@@ -650,18 +650,18 @@ export function Book({
                 </span>
               ) : null}
             </span>
-            {/* below the plate: the NPC mark and the seal */}
+            {/* below the plate: the the Office mark and the seal */}
             <span
               className="absolute inset-x-0 bottom-3 flex items-center justify-center gap-2"
-              style={{ color: cloth.darkText ? "#2b241c" : PAPER }}
+              style={{ color: cloth.darkText ? "#0a151e" : PAPER }}
             >
               <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", opacity: 0.8 }}>
-                NPC
+                the Office
               </span>
               {doc.status === "verified" ? (
                 <span
                   className="flex size-3.5 items-center justify-center rounded-full"
-                  style={{ background: "var(--color-gold-500)" }}
+                  style={{ background: "var(--color-aqua-500)" }}
                 >
                   <Check className="size-2.5 text-white" strokeWidth={3.5} />
                 </span>
@@ -754,7 +754,7 @@ export function Shelf({
           <button
             onClick={() => scrollBy(-1)}
             aria-label={t("scrollBack")}
-            className="absolute start-1 top-1/2 z-20 -translate-y-1/2 rounded-full border border-sand-300 bg-white/95 p-1.5 text-ink-600 opacity-0 shadow-sm transition-opacity hover:text-maroon-700 group-hover/shelf:opacity-100 focus-visible:opacity-100 cursor-pointer"
+            className="absolute start-1 top-1/2 z-20 -translate-y-1/2 rounded-full border border-mist-300 bg-white/95 p-1.5 text-ink-600 opacity-0 shadow-sm transition-opacity hover:text-navy-700 group-hover/shelf:opacity-100 focus-visible:opacity-100 cursor-pointer"
           >
             <ChevronLeft className="size-4 flip-rtl" />
           </button>
@@ -763,7 +763,7 @@ export function Shelf({
           <button
             onClick={() => scrollBy(1)}
             aria-label={t("scrollForward")}
-            className="absolute end-1 top-1/2 z-20 -translate-y-1/2 rounded-full border border-sand-300 bg-white/95 p-1.5 text-ink-600 opacity-0 shadow-sm transition-opacity hover:text-maroon-700 group-hover/shelf:opacity-100 focus-visible:opacity-100 cursor-pointer"
+            className="absolute end-1 top-1/2 z-20 -translate-y-1/2 rounded-full border border-mist-300 bg-white/95 p-1.5 text-ink-600 opacity-0 shadow-sm transition-opacity hover:text-navy-700 group-hover/shelf:opacity-100 focus-visible:opacity-100 cursor-pointer"
           >
             <ChevronRight className="size-4 flip-rtl" />
           </button>
@@ -772,24 +772,24 @@ export function Shelf({
         <span
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-y-0 start-0 z-10 w-10 bg-gradient-to-r from-sand-50 to-transparent transition-opacity rtl:bg-gradient-to-l",
+            "pointer-events-none absolute inset-y-0 start-0 z-10 w-10 bg-gradient-to-r from-mist-50 to-transparent transition-opacity rtl:bg-gradient-to-l",
             overflow.start ? "opacity-100" : "opacity-0"
           )}
         />
         <span
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-y-0 end-0 z-10 w-10 bg-gradient-to-l from-sand-50 to-transparent transition-opacity rtl:bg-gradient-to-r",
+            "pointer-events-none absolute inset-y-0 end-0 z-10 w-10 bg-gradient-to-l from-mist-50 to-transparent transition-opacity rtl:bg-gradient-to-r",
             overflow.end ? "opacity-100" : "opacity-0"
           )}
         />
 
-        {/* the shelf back: sand-100 with a very faint vertical grain */}
+        {/* the shelf back: mist-100 with a very faint vertical grain */}
         <div
           className="rounded-t-lg"
           style={{
             background:
-              "repeating-linear-gradient(to right, rgba(31,35,40,0.016) 0 1px, transparent 1px 7px), var(--color-sand-100)",
+              "repeating-linear-gradient(to right, rgba(10, 21, 30,0.016) 0 1px, transparent 1px 7px), var(--color-mist-100)",
           }}
         >
           <div
@@ -823,19 +823,19 @@ export function Shelf({
             style={{
               background:
                 "linear-gradient(180deg, #ffffff 0 1px, var(--color-plank) 1px 55%, var(--color-plank-edge) 100%)",
-              boxShadow: "0 6px 12px -6px rgba(31,35,40,0.35)",
+              boxShadow: "0 6px 12px -6px rgba(10, 21, 30,0.35)",
             }}
           />
           {/* shelf ends: 10px brackets */}
           <span
             aria-hidden
             className="absolute bottom-0 start-0 w-2.5 rounded-t-[2px]"
-            style={{ height: 34, background: "var(--color-plank-edge)", boxShadow: "0 6px 8px -5px rgba(31,35,40,0.3)" }}
+            style={{ height: 34, background: "var(--color-plank-edge)", boxShadow: "0 6px 8px -5px rgba(10, 21, 30,0.3)" }}
           />
           <span
             aria-hidden
             className="absolute bottom-0 end-0 w-2.5 rounded-t-[2px]"
-            style={{ height: 34, background: "var(--color-plank-edge)", boxShadow: "0 6px 8px -5px rgba(31,35,40,0.3)" }}
+            style={{ height: 34, background: "var(--color-plank-edge)", boxShadow: "0 6px 8px -5px rgba(10, 21, 30,0.3)" }}
           />
         </div>
       </div>
@@ -857,7 +857,7 @@ export function KnowledgeCard({ doc }: { doc: ShelfDoc }) {
   const typeName = bi(locale, doc.typeNameEn ?? "", doc.typeNameAr ?? "");
   const owner = bi(locale, doc.ownerName ?? "", doc.ownerNameAr ?? doc.ownerName ?? "");
   const cloth = clothFor(doc);
-  const ink = cloth.darkText ? "#2b241c" : PAPER;
+  const ink = cloth.darkText ? "#0a151e" : PAPER;
 
   return (
     <Link
@@ -881,8 +881,8 @@ export function KnowledgeCard({ doc }: { doc: ShelfDoc }) {
       />
       <span aria-hidden className="absolute inset-x-0 top-0 h-1.5" style={{ background: cloth.dark }} />
       <span aria-hidden className="absolute inset-x-0 bottom-0 h-1.5" style={{ background: cloth.dark }} />
-      <span aria-hidden className="absolute inset-x-3 h-px" style={{ top: 14, background: "rgba(201,162,77,0.7)" }} />
-      <span aria-hidden className="absolute inset-x-3 h-px" style={{ bottom: 14, background: "rgba(201,162,77,0.7)" }} />
+      <span aria-hidden className="absolute inset-x-3 h-px" style={{ top: 14, background: "rgba(0, 222, 204,0.7)" }} />
+      <span aria-hidden className="absolute inset-x-3 h-px" style={{ bottom: 14, background: "rgba(0, 222, 204,0.7)" }} />
 
       <span className="absolute inset-x-0 flex flex-col gap-1.5 px-3.5" style={{ top: 24, bottom: 24, color: ink }}>
         <span
@@ -919,7 +919,7 @@ export function KnowledgeCard({ doc }: { doc: ShelfDoc }) {
             {doc.status === "verified" ? (
               <span
                 className="flex size-4 items-center justify-center rounded-full"
-                style={{ background: "var(--color-gold-500)" }}
+                style={{ background: "var(--color-aqua-500)" }}
                 aria-label={tc("verified")}
               >
                 <Check className="size-2.5 text-white" strokeWidth={3.5} />

@@ -35,7 +35,7 @@ async function main() {
   });
 
   await page.request.post(`${BASE}/api/v1/auth/login`, {
-    data: { email: "admin@npc.qa", password: "Nexus!2026" },
+    data: { email: "admin@enviroai.demo", password: "EnviroAI!2026" },
     timeout: 120000,
   });
   await page.goto(`${BASE}/en/indices`, { waitUntil: "domcontentloaded", timeout: 180000 });

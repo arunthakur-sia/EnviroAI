@@ -29,7 +29,7 @@ const def: SectionDefinition<StatsData> = {
   ),
   layout: "glance",
   estimatedPages: 3,
-  appliesTo: ["npc", "period"],
+  appliesTo: ["org", "period"],
   async load(ctx) {
     const headline = await memo(ctx, "stat-headline", () => headlineTiles(ctx.user).catch(() => []));
     const groups = await catalog(ctx.user).catch(() => []);
@@ -64,8 +64,8 @@ const def: SectionDefinition<StatsData> = {
       paragraphs: data.headline.length
         ? [
             bi(
-              `The official series held in SiaNexus give ${period.en} its statistical frame. ${movers.map((t) => `${t.nameEn} stands at ${valueText(t)} (${t.latestPeriod}), ${signed(changeOf(t), t.decimals)} on the previous period`).join("; ")}.`,
-              `تمنح السلاسل الرسمية المحفوظة في سيا نكسس ${period.ar} إطارها الإحصائي. ${movers.map((t) => `يبلغ ${t.nameAr} ${valueText(t)} (${t.latestPeriod})، بتغير ${signed(changeOf(t), t.decimals)} عن الفترة السابقة`).join("؛ ")}.`
+              `The official series held in EnviroAI give ${period.en} its statistical frame. ${movers.map((t) => `${t.nameEn} stands at ${valueText(t)} (${t.latestPeriod}), ${signed(changeOf(t), t.decimals)} on the previous period`).join("; ")}.`,
+              `تمنح السلاسل الرسمية المحفوظة في EnviroAI ${period.ar} إطارها الإحصائي. ${movers.map((t) => `يبلغ ${t.nameAr} ${valueText(t)} (${t.latestPeriod})، بتغير ${signed(changeOf(t), t.decimals)} عن الفترة السابقة`).join("؛ ")}.`
             ),
             bi(
               `${fmt(data.categories.reduce((s, c) => s + c.indicators.length, 0))} indicators across ${data.categories.map((c) => c.nameEn.toLowerCase()).join(", ")} are tabulated below with their latest and previous values; values marked illustrative are seeded placeholders awaiting the official release.`,
@@ -90,7 +90,7 @@ const def: SectionDefinition<StatsData> = {
       value: t.latest == null ? "n/a" : fmt(t.latest, t.decimals),
       unit: t.unit ?? undefined,
       delta: changeOf(t) != null ? `${signed(changeOf(t), t.decimals)} vs ${t.latestPeriod ? "previous" : ""}`.trim() : undefined,
-      tone: "maroon",
+      tone: "navy",
     }));
     const blocks: Block[] = [];
     if (tiles.length) blocks.push({ kind: "kpis", items: tiles });
@@ -111,7 +111,7 @@ const def: SectionDefinition<StatsData> = {
           bi(changeOf(t) == null ? "n/a" : signed(changeOf(t), t.decimals), changeOf(t) == null ? "غير متاح" : signed(changeOf(t), t.decimals)),
         ]),
         align: ["start", "end", "end", "end", "end"],
-        source: bi("National Statistics Center", "المركز الوطني للإحصاء"),
+        source: bi("General Authority for Statistics (GASTAT)", "الهيئة العامة للإحصاء"),
       });
     }
     if (data.chart) {
@@ -122,7 +122,7 @@ const def: SectionDefinition<StatsData> = {
           title: bi(data.chart.nameEn, data.chart.nameAr),
           unit: data.chart.unit ?? undefined,
           series: [{ name: bi(data.chart.nameEn, data.chart.nameAr), role: "primary", points: data.chart.points }],
-          source: bi("National Statistics Center, as held in SiaNexus", "المركز الوطني للإحصاء، كما هو محفوظ في سيا نكسس"),
+          source: bi("General Authority for Statistics (GASTAT), as held in EnviroAI", "الهيئة العامة للإحصاء، كما هو محفوظ في EnviroAI"),
         },
       });
     }

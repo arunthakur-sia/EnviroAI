@@ -75,7 +75,7 @@ export async function POST(
     ownerUserId: user.id,
     languageOriginal: row.language === "ar" ? "ar" : "en",
     status: "under_review",
-    sourceOrigin: "npc",
+    sourceOrigin: "org",
     publishYear: Number(nowIso().slice(0, 4)),
     originalFilename: filename,
     mime: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",

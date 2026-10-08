@@ -1,7 +1,7 @@
 "use client";
 // CR08 5.4: the report builder. Step 1 the type (cards grouped by family,
 // custom for the Super Admin), step 2 the period (year, quarter, month or a
-// range, as the type's cadence suggests) and the scope (the Council, an
+// range, as the type's cadence suggests) and the scope (the Office, an
 // outcome, a unit, a project; only the requester's allowed scopes), step 3
 // the audience and language with the classification, step 4 the sections
 // (defaults ticked, optional offered, library order kept). The structure
@@ -26,10 +26,10 @@ import type { AllowedScopes, ScopeOption } from "./scopes";
 type PeriodKind = "year" | "quarter" | "month" | "range";
 type FamilyKey = "public" | "internal" | "custom";
 type CadenceKey = "annual" | "quarterly" | "monthly" | "on_demand" | "on_closure";
-type PickKind = "npc" | "outcome" | "department" | "project";
+type PickKind = "org" | "outcome" | "department" | "project";
 const STEPS = ["type", "periodScope", "audience", "sections"] as const;
 const FAMILIES: FamilyKey[] = ["public", "internal", "custom"];
-const PICKABLE: PickKind[] = ["npc", "outcome", "department", "project"];
+const PICKABLE: PickKind[] = ["org", "outcome", "department", "project"];
 const AUDIENCES: Audience[] = ["leadership", "working", "public"];
 const LANGUAGES: LanguageMode[] = ["en", "ar", "both"];
 
@@ -65,7 +65,7 @@ function formFor(type: ReportTypeView | null, locale: string, prev?: Form): Form
     month: prev?.month ?? now.getUTCMonth() + 1,
     from: prev?.from ?? "",
     to: prev?.to ?? "",
-    scopeKind: type?.scopeKind ?? "npc",
+    scopeKind: type?.scopeKind ?? "org",
     scopeId: null,
     audience: type?.audienceDefault ?? "working",
     languageMode: prev?.languageMode ?? (locale === "ar" ? "ar" : "both"),
@@ -75,7 +75,7 @@ function formFor(type: ReportTypeView | null, locale: string, prev?: Form): Form
 }
 
 const SCOPE_ICON: Record<PickKind, React.ComponentType<{ className?: string }>> = {
-  npc: Landmark,
+  org: Landmark,
   outcome: Target,
   department: Building2,
   project: Workflow,
@@ -141,12 +141,12 @@ function ScopePicker({
               data-testid="scope-option"
               data-scope-id={o.id}
               className={cn(
-                "flex w-full cursor-pointer items-start gap-2.5 rounded-lg border px-3 py-2 text-start transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-gold-500",
-                checked ? "border-maroon-700 bg-maroon-50" : "border-sand-200 bg-white hover:border-maroon-300"
+                "flex w-full cursor-pointer items-start gap-2.5 rounded-lg border px-3 py-2 text-start transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-aqua-500",
+                checked ? "border-navy-700 bg-navy-50" : "border-mist-200 bg-white hover:border-navy-300"
               )}
             >
               <span
-                className={cn("mt-1 size-3.5 shrink-0 rounded-full border-[1.5px]", checked ? "border-maroon-700 bg-maroon-700 shadow-[inset_0_0_0_2px_white]" : "border-sand-300")}
+                className={cn("mt-1 size-3.5 shrink-0 rounded-full border-[1.5px]", checked ? "border-navy-700 bg-navy-700 shadow-[inset_0_0_0_2px_white]" : "border-mist-300")}
                 aria-hidden
               />
               <span className="min-w-0 flex-1">
@@ -218,16 +218,16 @@ export function ReportBuilder({
   const totalPages = ordered.reduce((sum, l) => sum + l.estimatedPages, 0);
 
   const scopeOptions: Record<PickKind, ScopeOption[]> = {
-    npc: [],
+    org: [],
     outcome: scopes.outcomes,
     department: scopes.departments,
     project: scopes.projects,
   };
-  const pickKind: PickKind = form.scopeKind === "period" ? "npc" : (form.scopeKind as PickKind);
-  const scopeChosen = pickKind === "npc" ? null : scopeOptions[pickKind].find((o) => o.id === form.scopeId) ?? null;
+  const pickKind: PickKind = form.scopeKind === "period" ? "org" : (form.scopeKind as PickKind);
+  const scopeChosen = pickKind === "org" ? null : scopeOptions[pickKind].find((o) => o.id === form.scopeId) ?? null;
   const periodValid =
     form.periodKind === "range" ? Boolean(form.from && form.to && form.from <= form.to) : form.periodKind === "quarter" ? form.quarter >= 1 && form.quarter <= 4 : true;
-  const scopeValid = pickKind === "npc" || Boolean(scopeChosen);
+  const scopeValid = pickKind === "org" || Boolean(scopeChosen);
   const valid = [Boolean(type), periodValid && scopeValid, true, ordered.length > 0];
   const reachable = (i: number) => valid.slice(0, i).every(Boolean);
 
@@ -235,11 +235,11 @@ export function ReportBuilder({
     if (form.periodKind === "year") return String(form.year);
     if (form.periodKind === "quarter") return `${t("builder.quarterLabel", { n: form.quarter })} ${form.year}`;
     if (form.periodKind === "month") {
-      return new Intl.DateTimeFormat(locale === "ar" ? "ar-QA" : "en-QA", { month: "long", year: "numeric" }).format(new Date(Date.UTC(form.year, form.month - 1, 1)));
+      return new Intl.DateTimeFormat(locale === "ar" ? "ar-SA" : "en-SA", { month: "long", year: "numeric" }).format(new Date(Date.UTC(form.year, form.month - 1, 1)));
     }
     return form.from && form.to ? t("builder.rangeLabel", { from: formatDate(form.from, locale), to: formatDate(form.to, locale) }) : t("builder.notChosen");
   })();
-  const scopeText = pickKind === "npc" ? t("builder.scopeCouncil") : scopeChosen ? `${scopeChosen.code ? `${scopeChosen.code} ` : ""}${bi(locale, scopeChosen.nameEn, scopeChosen.nameAr)}` : t("builder.notChosen");
+  const scopeText = pickKind === "org" ? t("builder.scopeCouncil") : scopeChosen ? `${scopeChosen.code ? `${scopeChosen.code} ` : ""}${bi(locale, scopeChosen.nameEn, scopeChosen.nameAr)}` : t("builder.notChosen");
 
   async function generate() {
     if (!type || !valid.every(Boolean)) return;
@@ -255,7 +255,7 @@ export function ReportBuilder({
     const body = {
       typeCode: type.code,
       period,
-      scope: pickKind === "npc" ? { kind: form.scopeKind === "period" ? "period" : "npc" } : { kind: pickKind, id: form.scopeId },
+      scope: pickKind === "org" ? { kind: form.scopeKind === "period" ? "period" : "org" } : { kind: pickKind, id: form.scopeId },
       audience: form.audience,
       languageMode: form.languageMode,
       sectionCodes: ordered.map((l) => l.code),
@@ -292,15 +292,15 @@ export function ReportBuilder({
     return [y - 4, y - 3, y - 2, y - 1, y, y + 1];
   }, []);
   const monthNames = React.useMemo(() => {
-    const f = new Intl.DateTimeFormat(locale === "ar" ? "ar-QA" : "en-QA", { month: "long" });
+    const f = new Intl.DateTimeFormat(locale === "ar" ? "ar-SA" : "en-SA", { month: "long" });
     return Array.from({ length: 12 }, (_, i) => f.format(new Date(Date.UTC(2026, i, 1))));
   }, [locale]);
 
   const eyebrow = "text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal";
   const pill = (active: boolean) =>
     cn(
-      "cursor-pointer rounded-full border px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-gold-500",
-      active ? "border-maroon-700 bg-maroon-700 text-white" : "border-sand-300 bg-white text-ink-600 hover:border-maroon-300 hover:text-maroon-700"
+      "cursor-pointer rounded-full border px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-aqua-500",
+      active ? "border-navy-700 bg-navy-700 text-white" : "border-mist-300 bg-white text-ink-600 hover:border-navy-300 hover:text-navy-700"
     );
 
   /* ---------------- steps ---------------- */
@@ -329,21 +329,21 @@ export function ReportBuilder({
                     data-testid="type-card"
                     data-type-code={tp.code}
                     className={cn(
-                      "flex h-full cursor-pointer flex-col gap-2 rounded-xl border p-4 text-start transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500",
-                      selected ? "border-maroon-700 bg-maroon-50 ring-1 ring-maroon-700" : "border-sand-300 bg-white"
+                      "flex h-full cursor-pointer flex-col gap-2 rounded-xl border p-4 text-start transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500",
+                      selected ? "border-navy-700 bg-navy-50 ring-1 ring-navy-700" : "border-mist-300 bg-white"
                     )}
                   >
                     <span className="flex items-start justify-between gap-2">
                       <span className="font-medium text-ink-900">{bi(locale, tp.nameEn, tp.nameAr)}</span>
-                      {selected ? <CheckCircle2 className="size-4 shrink-0 text-maroon-700" aria-hidden /> : null}
+                      {selected ? <CheckCircle2 className="size-4 shrink-0 text-navy-700" aria-hidden /> : null}
                     </span>
                     <span className="line-clamp-3 text-xs leading-5 text-ink-600">{bi(locale, tp.descriptionEn, tp.descriptionAr)}</span>
                     <span className="mt-auto flex flex-wrap items-center gap-1.5 pt-1">
                       {t(`families.${tp.family as FamilyKey}`) !== labels[Math.min(3, Math.max(0, tp.classificationDefault - 1))] ? (
-                        <Chip tone={FAMILY_TONE[tp.family] ?? "sand"}>{t(`families.${tp.family as FamilyKey}`)}</Chip>
+                        <Chip tone={FAMILY_TONE[tp.family] ?? "mist"}>{t(`families.${tp.family as FamilyKey}`)}</Chip>
                       ) : null}
-                      {tp.cadence ? <Chip tone="sand">{t(`cadences.${tp.cadence as CadenceKey}`)}</Chip> : null}
-                      <Chip tone="sand">{t(`scopeKinds.${tp.scopeKind}`)}</Chip>
+                      {tp.cadence ? <Chip tone="mist">{t(`cadences.${tp.cadence as CadenceKey}`)}</Chip> : null}
+                      <Chip tone="mist">{t(`scopeKinds.${tp.scopeKind}`)}</Chip>
                       <ClassificationChip level={tp.classificationDefault} labels={labels} />
                       <span className="text-[11px] text-ink-400 tnum">{t("builder.defaultSections", { count: tp.defaultSections.length })}</span>
                     </span>
@@ -359,7 +359,7 @@ export function ReportBuilder({
 
   const stepPeriodScope = type ? (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-      <div className="min-w-0 rounded-xl border border-sand-200 p-4" data-testid="period-card">
+      <div className="min-w-0 rounded-xl border border-mist-200 p-4" data-testid="period-card">
         <p className={eyebrow}>{t("builder.period")}</p>
         <p className="mt-1 text-xs text-ink-600">
           {t("builder.periodHint", { cadence: t(`cadences.${(type.cadence ?? "on_demand") as CadenceKey}`), kind: t(`builder.periodKinds.${suggestedKind(type.cadence)}`) })}
@@ -427,7 +427,7 @@ export function ReportBuilder({
         </div>
       </div>
 
-      <div className="min-w-0 rounded-xl border border-sand-200 p-4" data-testid="scope-card">
+      <div className="min-w-0 rounded-xl border border-mist-200 p-4" data-testid="scope-card">
         <p className={eyebrow}>{t("builder.scope")}</p>
         {type.family === "custom" ? (
           <div role="radiogroup" aria-label={t("builder.scopeKind")} className="mt-3 flex flex-wrap gap-1.5">
@@ -441,9 +441,9 @@ export function ReportBuilder({
           <p className="mt-1 text-xs text-ink-600">{t(`scopeKinds.${type.scopeKind}`)}</p>
         )}
         <div className="mt-3">
-          {pickKind === "npc" ? (
-            <div className="flex items-center gap-3 rounded-lg bg-sand-50 px-3 py-3" data-testid="scope-council">
-              <Landmark className="size-5 shrink-0 text-maroon-700" aria-hidden />
+          {pickKind === "org" ? (
+            <div className="flex items-center gap-3 rounded-lg bg-mist-50 px-3 py-3" data-testid="scope-council">
+              <Landmark className="size-5 shrink-0 text-navy-700" aria-hidden />
               <div>
                 <p className="text-sm font-medium text-ink-900">{t("builder.scopeCouncil")}</p>
                 <p className="text-xs text-ink-600">{t("builder.scopeCouncilHint")}</p>
@@ -452,7 +452,7 @@ export function ReportBuilder({
           ) : (
             <>
               <p className="mb-2 flex items-center gap-1.5 text-sm font-medium text-ink-900">
-                {React.createElement(SCOPE_ICON[pickKind], { className: "size-4 text-maroon-700" })}
+                {React.createElement(SCOPE_ICON[pickKind], { className: "size-4 text-navy-700" })}
                 {pickKind === "outcome" ? t("builder.pickOutcome") : pickKind === "department" ? t("builder.pickDepartment") : t("builder.pickProject")}
               </p>
               <ScopePicker
@@ -493,13 +493,13 @@ export function ReportBuilder({
                 onClick={() => patch({ audience: a })}
                 data-testid={`audience-${a}`}
                 className={cn(
-                  "flex cursor-pointer flex-col gap-1 rounded-xl border p-4 text-start transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500",
-                  selected ? "border-maroon-700 bg-maroon-50 ring-1 ring-maroon-700" : "border-sand-300 bg-white hover:border-maroon-300"
+                  "flex cursor-pointer flex-col gap-1 rounded-xl border p-4 text-start transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500",
+                  selected ? "border-navy-700 bg-navy-50 ring-1 ring-navy-700" : "border-mist-300 bg-white hover:border-navy-300"
                 )}
               >
                 <span className="flex items-center justify-between gap-2 text-sm font-medium text-ink-900">
                   {t(`audiences.${a}`)}
-                  {selected ? <CheckCircle2 className="size-4 text-maroon-700" aria-hidden /> : null}
+                  {selected ? <CheckCircle2 className="size-4 text-navy-700" aria-hidden /> : null}
                 </span>
                 <span className="text-xs leading-5 text-ink-600">{t(`audienceHints.${a}`)}</span>
               </button>
@@ -550,8 +550,8 @@ export function ReportBuilder({
             <label
               key={l.code}
               className={cn(
-                "flex cursor-pointer items-start gap-3 rounded-xl border p-3 transition-colors focus-within:outline-2 focus-within:outline-gold-500",
-                checked ? "border-maroon-300 bg-maroon-50/60" : "border-sand-300 bg-white hover:border-maroon-300"
+                "flex cursor-pointer items-start gap-3 rounded-xl border p-3 transition-colors focus-within:outline-2 focus-within:outline-aqua-500",
+                checked ? "border-navy-300 bg-navy-50/60" : "border-mist-300 bg-white hover:border-navy-300"
               )}
               data-testid="section-toggle"
               data-section-code={l.code}
@@ -561,12 +561,12 @@ export function ReportBuilder({
                 type="checkbox"
                 checked={checked}
                 onChange={(e) => patch({ selected: e.target.checked ? [...form.selected, l.code] : form.selected.filter((c) => c !== l.code) })}
-                className="mt-1 size-4 accent-[var(--color-maroon-700)]"
+                className="mt-1 size-4 accent-[var(--color-navy-700)]"
               />
               <span className="min-w-0 flex-1">
                 <span className="flex flex-wrap items-center gap-1.5">
                   <span className="text-sm font-medium text-ink-900">{bi(locale, l.name.en, l.name.ar)}</span>
-                  <Chip tone={isDefault ? "maroon" : "sand"}>{isDefault ? t("builder.default") : t("builder.optional")}</Chip>
+                  <Chip tone={isDefault ? "navy" : "mist"}>{isDefault ? t("builder.default") : t("builder.optional")}</Chip>
                   <span className="text-[11px] text-ink-400 tnum">{t("builder.pagesEach", { count: l.estimatedPages })}</span>
                 </span>
                 <span className="mt-0.5 block text-xs leading-5 text-ink-600">{bi(locale, l.description.en, l.description.ar)}</span>
@@ -614,11 +614,11 @@ export function ReportBuilder({
                 aria-current={current ? "step" : undefined}
                 data-testid={`step-${s}`}
                 className={cn(
-                  "flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-gold-500 disabled:cursor-not-allowed disabled:opacity-60",
-                  current ? "border-maroon-700 bg-maroon-700 text-white" : done ? "border-maroon-300 bg-maroon-100 text-maroon-900" : "border-sand-300 bg-white text-ink-600"
+                  "flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-aqua-500 disabled:cursor-not-allowed disabled:opacity-60",
+                  current ? "border-navy-700 bg-navy-700 text-white" : done ? "border-navy-300 bg-navy-100 text-navy-900" : "border-mist-300 bg-white text-ink-600"
                 )}
               >
-                <span className={cn("flex size-5 items-center justify-center rounded-full text-[11px] font-semibold tnum", current ? "bg-white/20" : done ? "bg-maroon-700 text-white" : "bg-sand-100")}>{i + 1}</span>
+                <span className={cn("flex size-5 items-center justify-center rounded-full text-[11px] font-semibold tnum", current ? "bg-white/20" : done ? "bg-navy-700 text-white" : "bg-mist-100")}>{i + 1}</span>
                 {t(`builder.steps.${s}`)}
               </button>
             </li>
@@ -636,7 +636,7 @@ export function ReportBuilder({
               {error}
             </p>
           ) : null}
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-2 border-t border-sand-200 pt-4">
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-2 border-t border-mist-200 pt-4">
             <Button variant="secondary" onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0 || submitting} data-testid="builder-prev">
               <ArrowLeft className="flip-rtl" /> {t("builder.previous")}
             </Button>
@@ -680,9 +680,9 @@ export function ReportBuilder({
             </dl>
             {structure.length ? (
               <>
-                <div className="mt-4 flex h-2 gap-px overflow-hidden rounded-full bg-sand-100" aria-hidden>
+                <div className="mt-4 flex h-2 gap-px overflow-hidden rounded-full bg-mist-100" aria-hidden>
                   {structure.map((l, i) => (
-                    <span key={l.code} className={cn("h-full", i % 2 === 0 ? "bg-maroon-700" : "bg-maroon-300")} style={{ flexGrow: l.estimatedPages }} title={bi(locale, l.name.en, l.name.ar)} />
+                    <span key={l.code} className={cn("h-full", i % 2 === 0 ? "bg-navy-700" : "bg-navy-300")} style={{ flexGrow: l.estimatedPages }} title={bi(locale, l.name.en, l.name.ar)} />
                   ))}
                 </div>
                 <ol className="mt-3 space-y-1 text-sm" data-testid="structure-list">
@@ -694,12 +694,12 @@ export function ReportBuilder({
                     </li>
                   ))}
                 </ol>
-                <p className="mt-3 border-t border-sand-200 pt-3 text-sm font-medium text-ink-900 tnum" data-testid="structure-total">
+                <p className="mt-3 border-t border-mist-200 pt-3 text-sm font-medium text-ink-900 tnum" data-testid="structure-total">
                   {t("builder.totalPages", { count: totalPages })}
                 </p>
               </>
             ) : (
-              <p className="mt-4 rounded-lg bg-sand-50 px-3 py-4 text-center text-xs text-ink-600">{type ? t("builder.noSections") : tc("nothingHere")}</p>
+              <p className="mt-4 rounded-lg bg-mist-50 px-3 py-4 text-center text-xs text-ink-600">{type ? t("builder.noSections") : tc("nothingHere")}</p>
             )}
           </div>
         </aside>

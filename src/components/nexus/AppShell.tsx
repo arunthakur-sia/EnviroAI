@@ -2,7 +2,7 @@
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter, Link } from "@/i18n/navigation";
-import { usePathname as useRawPathname } from "next/navigation";
+import { usePathname as useRawPathname, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   Home,
@@ -32,13 +32,17 @@ import {
   PanelLeftOpen,
   PanelLeftClose,
   ChevronDown,
-  Star,
+  Droplet,
+  Sprout,
+  Cloud,
+  Scale,
+  Bookmark,
   Menu,
   X,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { RAIL_GROUPS } from "@/server/db/json";
+import { PRIMARY_RAIL, RAIL_GROUPS } from "@/server/db/json";
 import { SiaLogo } from "./Logo";
 import { Avatar, ProgressRing, Chip } from "@/components/ui/primitives";
 import {
@@ -91,11 +95,14 @@ export type ShellUser = {
   inboxUnread: number;
 };
 
-/* CR08 2.2: every page of the rail, keyed by portal. Home and Settings stand
-   alone; the rest sit inside the four groups of RAIL_GROUPS (json.ts). Ask NPC
-   left the rail for the bar button and the floating launcher (2.3). */
+/* EnviroAI rail: the primary items (PRIMARY_RAIL in json.ts) sit at the top
+   with bilingual labels; every other module lives in the collapsible "More"
+   group (RAIL_GROUPS). Settings stands alone at the bottom. Ask left the rail
+   for the bar button and the floating launcher. */
 const PAGES: Record<string, { href: string; icon: LucideIcon }> = {
   home: { href: "/home", icon: Home },
+  regulatory: { href: "/regulatory", icon: Scale },
+  sources: { href: "/sources", icon: Bookmark },
   council: { href: "/council-strategy", icon: Target },
   strategy: { href: "/strategy", icon: Compass },
   statistics: { href: "/statistics", icon: BarChart3 },
@@ -114,17 +121,33 @@ const PAGES: Record<string, { href: string; icon: LucideIcon }> = {
   leaderboard: { href: "/leaderboard", icon: Trophy },
 };
 
-const GROUP_ICON: Record<string, LucideIcon> = {
-  strategy_hub: Compass,
-  data: BarChart3,
-  knowledge: Library,
-  people: Users,
+const PRIMARY_ICON: Record<string, LucideIcon> = {
+  home: Home,
+  indices: Globe2,
+  water: Droplet,
+  agriculture: Sprout,
+  climate: Cloud,
+  regulatory: Scale,
+  sources: Bookmark,
+  trends: BarChart3,
+  vault: Library,
 };
 
+const GROUP_ICON: Record<string, LucideIcon> = {
+  more: Layers,
+};
+
+/* The rail prefs store the groups the reader has collapsed; "More" starts
+   closed, so its state is kept as an opened marker in the same list. */
+const MORE_OPEN = "more:open";
+
 const ROW =
-  "flex min-h-10 items-center gap-3 overflow-hidden rounded-lg px-3 py-1.5 text-sm transition-colors outline-none focus-visible:outline-2 focus-visible:outline-gold-500";
-const ROW_IDLE = "text-ink-600 hover:bg-white/70 hover:text-ink-900";
-const ROW_ACTIVE = "bg-maroon-100 font-medium text-maroon-700";
+  "relative flex min-h-10 items-center gap-3 overflow-hidden rounded-lg px-3 py-1.5 text-sm transition-colors outline-none focus-visible:outline-2 focus-visible:outline-aqua-500";
+const ROW_IDLE = "text-white/80 hover:bg-white/8 hover:text-white";
+const ROW_ACTIVE = "bg-aqua-500/15 font-medium text-white";
+/* the compact flyout is a white card, so its rows use the light palette */
+const ROW_IDLE_LIGHT = "text-ink-600 hover:bg-mist-100 hover:text-ink-900";
+const ROW_ACTIVE_LIGHT = "bg-navy-100 font-medium text-navy-700";
 
 export function AppShell({
   user,
@@ -168,13 +191,39 @@ export function AppShell({
   }, []);
 
   const visible = new Set(user.portals);
+  const searchParams = useSearchParams();
+  const theme = searchParams.get("o");
+
+  type PrimaryItem = {
+    key: string;
+    href: string;
+    icon: LucideIcon;
+    theme?: string;
+  };
+  const primary: PrimaryItem[] = PRIMARY_RAIL.filter((i) => visible.has(i.portal)).map((i) => ({
+    key: i.key,
+    href: i.theme ? `/strategy?o=${i.theme}` : PAGES[i.portal].href,
+    icon: PRIMARY_ICON[i.key] ?? PAGES[i.portal].icon,
+    theme: i.theme,
+  }));
   const groups = RAIL_GROUPS.map((g) => ({
     key: g.key,
     icon: GROUP_ICON[g.key] ?? Layers,
     pages: g.portals.filter((p) => visible.has(p) && PAGES[p]),
   })).filter((g) => g.pages.length > 0);
 
-  const isActive = (portal: string) => pathname.startsWith(PAGES[portal].href);
+  const themeSlugs = PRIMARY_RAIL.flatMap((i) => (i.theme ? [i.theme] : []));
+  const isPrimaryActive = (item: PrimaryItem) => {
+    if (item.theme) return pathname.startsWith("/strategy") && theme === item.theme;
+    if (item.key === "home") return pathname === "/home" || pathname.startsWith("/home/");
+    return pathname.startsWith(item.href);
+  };
+  const isActive = (portal: string) => {
+    if (portal === "strategy") {
+      return pathname.startsWith("/strategy") && !(theme && themeSlugs.includes(theme as never));
+    }
+    return pathname.startsWith(PAGES[portal].href);
+  };
   const activeGroup = groups.find((g) => g.pages.some(isActive))?.key ?? null;
 
   function toggleExpanded() {
@@ -186,9 +235,10 @@ export function AppShell({
 
   function toggleGroup(key: string) {
     if (key === activeGroup) return; // the active group always stays open
+    const marker = `${key}:open`;
     const next = new Set(collapsed);
-    if (next.has(key)) next.delete(key);
-    else next.add(key);
+    if (next.has(marker)) next.delete(marker);
+    else next.add(marker);
     setCollapsed(next);
     persist({ expanded, collapsed: [...next] });
   }
@@ -224,21 +274,61 @@ export function AppShell({
 
   const groupLabel = (key: string) => t(`groups.${key}` as never);
 
-  function PageRow({ portal, showLabel }: { portal: string; showLabel: boolean }) {
+  /* a More row: one line, icon plus label */
+  function PageRow({
+    portal,
+    showLabel,
+    light = false,
+  }: {
+    portal: string;
+    showLabel: boolean;
+    light?: boolean;
+  }) {
     const page = PAGES[portal];
     const active = isActive(portal);
     return (
       <Link
         href={page.href as never}
-        className={cn(ROW, active ? ROW_ACTIVE : ROW_IDLE)}
+        className={cn(
+          ROW,
+          light ? (active ? ROW_ACTIVE_LIGHT : ROW_IDLE_LIGHT) : active ? ROW_ACTIVE : ROW_IDLE
+        )}
         aria-current={active ? "page" : undefined}
         data-testid={`rail-${portal}`}
       >
-        <page.icon className={cn("size-5 shrink-0", active && "text-maroon-700")} />
+        <page.icon className={cn("size-5 shrink-0", active && (light ? "text-navy-700" : "text-aqua-500"))} />
         {showLabel ? (
           <span className="line-clamp-2 leading-tight">{t(`nav.${portal}` as never)}</span>
         ) : (
           <span className="sr-only">{t(`nav.${portal}` as never)}</span>
+        )}
+      </Link>
+    );
+  }
+
+  /* a primary row: bilingual, the reader's language first, aqua bar when active */
+  function PrimaryRow({ item, showLabel }: { item: PrimaryItem; showLabel: boolean }) {
+    const active = isPrimaryActive(item);
+    const first = t(`primary.${item.key}.${locale === "ar" ? "ar" : "en"}` as never);
+    const second = t(`primary.${item.key}.${locale === "ar" ? "en" : "ar"}` as never);
+    return (
+      <Link
+        href={item.href as never}
+        className={cn(ROW, "min-h-12 py-2", active ? ROW_ACTIVE : ROW_IDLE)}
+        aria-current={active ? "page" : undefined}
+        data-testid={`rail-${item.key}`}
+      >
+        {active ? (
+          <span className="absolute inset-y-0 start-0 w-1 rounded-e-full bg-aqua-500" aria-hidden />
+        ) : null}
+        <item.icon className={cn("size-5 shrink-0", active && "text-aqua-500")} />
+        {showLabel ? (
+          <span className="min-w-0 leading-tight">
+            <span className="block text-sm">{first}</span>
+            <span className="block text-xs font-normal text-white/65">{second}</span>
+          </span>
+        ) : (
+          <span className="sr-only">{first}</span>
         )}
       </Link>
     );
@@ -258,32 +348,33 @@ export function AppShell({
                 onClick={() => setMobileOpen(false)}
               />
             ) : null}
-            {/* Rail (CR08 2.2: grouped, collapsible, remembered per user) */}
+            {/* Rail: dark navy sidebar at the start edge, grouped, collapsible,
+                remembered per user */}
             <nav
               className={cn(
-                "flex shrink-0 flex-col items-stretch gap-1 border-e border-sand-300 bg-sand-100 px-2.5 py-4 transition-[width] duration-300",
+                "flex shrink-0 flex-col items-stretch gap-1 border-e border-black/20 bg-navy-700 px-2.5 py-4 text-white transition-[width] duration-300",
                 mobileOpen
-                  ? "fixed inset-y-0 start-0 z-50 h-screen w-[232px] shadow-pop"
+                  ? "fixed inset-y-0 start-0 z-50 h-screen w-[264px] shadow-pop"
                   : "sticky top-0 z-40 hidden h-screen md:flex",
-                !mobileOpen && (expanded ? "w-[232px]" : "w-[72px]")
+                !mobileOpen && (expanded ? "w-[264px]" : "w-[72px]")
               )}
               aria-label={t("mainNav")}
               data-testid="rail"
               data-expanded={showLabels ? "1" : "0"}
             >
-              <div className="mb-3 flex h-10 items-center justify-between gap-2 ps-1.5">
-                <Link href="/home" className="flex h-10 items-center overflow-hidden" aria-label="SiaNexus">
+              <div className="mb-3 flex h-12 items-center justify-between gap-2 ps-1.5">
+                <Link href="/home" className="flex h-10 items-center overflow-hidden" aria-label="EnviroAI">
                   {showLabels ? (
-                    <SiaLogo variant="full" height={22} className="shrink-0" />
+                    <SiaLogo variant="full" white height={34} className="shrink-0" />
                   ) : (
-                    <SiaLogo variant="mark" height={30} className="shrink-0" />
+                    <SiaLogo variant="mark" white height={32} className="shrink-0" />
                   )}
                 </Link>
                 {mobileOpen ? (
                   <button
                     type="button"
                     onClick={() => setMobileOpen(false)}
-                    className="rounded-md p-1.5 text-ink-400 hover:bg-white/70 hover:text-ink-900 cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-gold-500"
+                    className="rounded-md p-1.5 text-white/70 hover:bg-white/10 hover:text-white cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-aqua-500"
                     aria-label={t("rail.collapse")}
                     data-testid="rail-close"
                   >
@@ -293,7 +384,7 @@ export function AppShell({
                   <button
                     type="button"
                     onClick={toggleExpanded}
-                    className="rounded-md p-1.5 text-ink-400 hover:bg-white/70 hover:text-ink-900 cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-gold-500"
+                    className="rounded-md p-1.5 text-white/70 hover:bg-white/10 hover:text-white cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-aqua-500"
                     aria-label={t("rail.collapse")}
                     data-testid="rail-toggle"
                   >
@@ -313,16 +404,22 @@ export function AppShell({
                 </button>
               ) : null}
 
-              {visible.has("home") ? <PageRow portal="home" showLabel={showLabels} /> : null}
-
               <div className="mt-1 flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto overflow-x-visible">
+                {primary.map((item) => (
+                  <React.Fragment key={item.key}>
+                    {item.key === "regulatory" ? (
+                      <hr className="mx-3 my-1.5 border-white/15" aria-hidden />
+                    ) : null}
+                    <PrimaryRow item={item} showLabel={showLabels} />
+                  </React.Fragment>
+                ))}
+
                 {groups.map((g) => {
                   const active = g.key === activeGroup;
-                  const open = active || !collapsed.has(g.key);
+                  const open = active || collapsed.has(`${g.key}:open`);
                   const label = groupLabel(g.key);
-                  const star = g.key === "knowledge" && user.knowledgeOfWeekLive;
                   if (!showLabels) {
-                    /* compact: one icon per group, a flyout with its pages */
+                    /* compact: one icon for the group, a flyout with its pages */
                     const isOpen = flyout === g.key;
                     return (
                       <div
@@ -347,15 +444,7 @@ export function AppShell({
                           onClick={() => setFlyout(isOpen ? null : g.key)}
                           data-testid={`rail-group-${g.key}`}
                         >
-                          <span className="relative">
-                            <g.icon className={cn("size-5 shrink-0", active && "text-maroon-700")} />
-                            {star ? (
-                              <Star
-                                className="absolute -end-1.5 -top-1.5 size-3 fill-gold-500 text-gold-500"
-                                aria-hidden
-                              />
-                            ) : null}
-                          </span>
+                          <g.icon className={cn("size-5 shrink-0", active && "text-aqua-500")} />
                         </button>
                         <AnimatePresence>
                           {isOpen ? (
@@ -366,15 +455,14 @@ export function AppShell({
                               animate={{ opacity: 1, x: 0 }}
                               exit={reduce ? undefined : { opacity: 0, x: locale === "ar" ? 6 : -6 }}
                               transition={{ duration: 0.18 }}
-                              className="absolute top-0 z-50 w-56 rounded-xl border border-sand-200 bg-white p-2 shadow-pop start-[calc(100%+6px)]"
+                              className="absolute top-0 z-50 max-h-[70vh] w-56 overflow-y-auto rounded-xl border border-mist-200 bg-white p-2 shadow-pop start-[calc(100%+6px)]"
                               data-testid={`rail-flyout-${g.key}`}
                             >
-                              <p className="mb-1 flex items-center gap-1.5 px-3 pt-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal">
+                              <p className="mb-1 px-3 pt-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal">
                                 {label}
-                                {star ? <Star className="size-3 fill-gold-500 text-gold-500" aria-hidden /> : null}
                               </p>
                               {g.pages.map((p) => (
-                                <PageRow key={p} portal={p} showLabel />
+                                <PageRow key={p} portal={p} showLabel light />
                               ))}
                             </motion.div>
                           ) : null}
@@ -382,32 +470,25 @@ export function AppShell({
                       </div>
                     );
                   }
-                  /* expanded: eyebrow header with chevron, animated height */
+                  /* expanded: the "More" header with a chevron, animated height */
                   return (
-                    <div key={g.key} data-testid={`rail-group-${g.key}`}>
+                    <div key={g.key} data-testid={`rail-group-${g.key}`} className="mt-1">
                       <button
                         type="button"
                         onClick={() => toggleGroup(g.key)}
                         className={cn(
-                          // ink-600, not ink-400: eleven-pixel uppercase text on
-                          // the rail's sand ground has to clear 4.5 to 1
-                          "mt-2 flex w-full items-center gap-1.5 rounded-md px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-600 outline-none focus-visible:outline-2 focus-visible:outline-gold-500 rtl:tracking-normal",
-                          active ? "cursor-default" : "cursor-pointer hover:text-ink-900"
+                          "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-white/80 outline-none focus-visible:outline-2 focus-visible:outline-aqua-500",
+                          active ? "cursor-default" : "cursor-pointer hover:bg-white/8 hover:text-white"
                         )}
                         aria-expanded={open}
                         aria-label={open ? t("rail.closeGroup", { group: label }) : t("rail.openGroup", { group: label })}
                         aria-disabled={active || undefined}
                       >
+                        <g.icon className="size-5 shrink-0" />
                         <span className="truncate">{label}</span>
-                        {star ? (
-                          <Star
-                            className="size-3 shrink-0 fill-gold-500 text-gold-500"
-                            aria-label={t("knowledgeOfWeekStar")}
-                          />
-                        ) : null}
                         <ChevronDown
                           className={cn(
-                            "ms-auto size-3.5 shrink-0 transition-transform duration-200",
+                            "ms-auto size-4 shrink-0 transition-transform duration-200",
                             open ? "rotate-180" : "",
                             active && "opacity-0"
                           )}
@@ -424,7 +505,7 @@ export function AppShell({
                             transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
                             className="overflow-hidden"
                           >
-                            <div className="flex flex-col gap-0.5 pt-1">
+                            <div className="ms-4 flex flex-col gap-0.5 border-s border-white/15 ps-1.5 pt-1">
                               {g.pages.map((p) => (
                                 <PageRow key={p} portal={p} showLabel />
                               ))}
@@ -441,14 +522,12 @@ export function AppShell({
                 {user.canSettings ? (
                   <Link
                     href="/settings"
-                    className={cn(
-                      ROW,
-                      pathname.startsWith("/settings")
-                        ? "bg-maroon-100 font-medium text-maroon-900"
-                        : ROW_IDLE
-                    )}
+                    className={cn(ROW, pathname.startsWith("/settings") ? ROW_ACTIVE : ROW_IDLE)}
                     data-testid="rail-settings"
                   >
+                    {pathname.startsWith("/settings") ? (
+                      <span className="absolute inset-y-0 start-0 w-1 rounded-e-full bg-aqua-500" aria-hidden />
+                    ) : null}
                     <Settings className="size-5 shrink-0" />
                     {showLabels ? (
                       <span className="whitespace-nowrap">{t("nav.settings")}</span>
@@ -457,21 +536,34 @@ export function AppShell({
                     )}
                   </Link>
                 ) : null}
+                {/* The Sia logo in the sidebar footer, white on the navy ground */}
+                <div className="mt-1 flex items-center gap-2 border-t border-white/15 px-3 pt-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/brand/Sia_logo_white.svg"
+                    alt="Sia"
+                    className={cn("w-auto select-none", showLabels ? "h-7" : "h-5")}
+                    draggable={false}
+                  />
+                  {showLabels ? (
+                    <span className="text-[11px] leading-tight text-white/65">{t("poweredBy")}</span>
+                  ) : null}
+                </div>
               </div>
             </nav>
 
             {/* Main column */}
             <div className="flex min-w-0 flex-1 flex-col">
-              {/* Top bar: NPC maroon with white ink (CR05 1.3) */}
+              {/* Top bar: white, wide rounded search, EN/AR segmented toggle,
+                  bell, user menu */}
               <header
-                data-bar
-                className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-maroon-900/40 bg-bar px-4 text-bar-ink md:gap-4 md:px-6"
+                className="topbar sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-mist-300 bg-white px-4 text-navy-900 md:gap-4 md:px-6"
               >
                 {/* CR08 2.2: the drawer handle under 768px */}
                 <button
                   type="button"
                   onClick={() => setMobileOpen(true)}
-                  className="rounded-lg p-2 text-bar-ink hover:bg-white/15 md:hidden cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-gold-500"
+                  className="rounded-lg p-2 text-navy-900 hover:bg-mist-100 md:hidden cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-aqua-500"
                   aria-label={t("mainNav")}
                   aria-expanded={mobileOpen}
                   data-testid="rail-open"
@@ -480,44 +572,65 @@ export function AppShell({
                 </button>
                 <div className="flex min-w-0 flex-1 items-center justify-center gap-3">
                   <GlobalSearch />
-                  {/* CR08 2.3: the solid Ask NPC button right after the search */}
+                  {/* CR08 2.3: the solid Ask button right after the search */}
                   {visible.has("ask") ? <AskBarButton /> : null}
                 </div>
                 <div className="flex items-center gap-2">
                   {aiMock ? (
                     <Tip content={t("aiMockHint")}>
                       <span>
-                        <Chip tone="gold" className="hidden md:inline-flex">
+                        <Chip tone="aqua" className="hidden md:inline-flex">
                           <Sparkles className="size-3" /> {t("aiMock")}
                         </Chip>
                       </span>
                     </Tip>
                   ) : null}
-                  <Link
-                    href={"/home"}
-                    locale={otherLocale}
-                    // preserve current path on locale switch
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.location.href = switchHref;
-                    }}
-                    className="rounded-lg border border-white/25 bg-bar-field px-2.5 py-1.5 text-xs font-semibold text-bar-ink hover:bg-white/25"
-                    // the name has to contain the word on the button
-                    aria-label={t("switchLanguageTo", { language: otherLocale === "ar" ? "العربية" : "EN" })}
+                  {/* EN / AR segmented toggle: the active language is the aqua pill */}
+                  <div
+                    className="flex items-center rounded-full border border-mist-300 bg-mist-50 p-0.5 text-xs font-semibold"
+                    role="group"
+                    aria-label={t("languageToggle")}
+                    data-testid="lang-toggle"
                   >
-                    {otherLocale === "ar" ? "العربية" : "EN"}
-                  </Link>
+                    {(["en", "ar"] as const).map((l) =>
+                      l === locale ? (
+                        <span
+                          key={l}
+                          className="rounded-full bg-aqua-500 px-3 py-1.5 text-navy-900"
+                          aria-current="true"
+                        >
+                          {l.toUpperCase()}
+                        </span>
+                      ) : (
+                        <Link
+                          key={l}
+                          href={"/home"}
+                          locale={otherLocale}
+                          // preserve current path on locale switch
+                          onClick={(e) => {
+                            e.preventDefault();
+                            window.location.href = switchHref;
+                          }}
+                          className="rounded-full px-3 py-1.5 text-ink-600 hover:text-navy-900"
+                          // the name has to contain the word on the button
+                          aria-label={t("switchLanguageTo", { language: otherLocale === "ar" ? "العربية" : "EN" })}
+                        >
+                          {l.toUpperCase()}
+                        </Link>
+                      )
+                    )}
+                  </div>
                   {/* CR08 9.2: the inbox sits next to the notifications */}
                   {visible.has("inbox") ? (
                     <Link
                       href={"/inbox" as never}
-                      className="relative rounded-lg p-2 text-bar-ink hover:bg-white/15 outline-none focus-visible:outline-2 focus-visible:outline-gold-500"
+                      className="relative rounded-lg p-2 text-navy-900 hover:bg-mist-100 outline-none focus-visible:outline-2 focus-visible:outline-aqua-500"
                       aria-label={t("inboxUnread", { count: user.inboxUnread })}
                       data-testid="bar-inbox"
                     >
                       <Inbox className="size-5" />
                       {user.inboxUnread > 0 ? (
-                        <span className="absolute -top-0.5 -end-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-gold-500 px-1 text-[10px] font-semibold text-ink-900">
+                        <span className="absolute -top-0.5 -end-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-aqua-500 px-1 text-[10px] font-semibold text-ink-900">
                           {user.inboxUnread > 9 ? "9+" : user.inboxUnread}
                         </span>
                       ) : null}
@@ -527,12 +640,16 @@ export function AppShell({
                   <Dropdown>
                     <DropdownTrigger asChild>
                       <button
-                        className="ms-1 flex items-center gap-2 rounded-full outline-none focus-visible:outline-2 focus-visible:outline-gold-500 cursor-pointer"
+                        className="ms-1 flex items-center gap-2 rounded-full outline-none focus-visible:outline-2 focus-visible:outline-aqua-500 cursor-pointer"
                         aria-label={t("userMenu")}
                       >
-                        <ProgressRing value={user.quietMode ? 0 : user.levelProgress} size={44} stroke={2.5} color="var(--color-gold-500)">
+                        <ProgressRing value={user.quietMode ? 0 : user.levelProgress} size={44} stroke={2.5} color="var(--color-aqua-500)">
                           <Avatar name={user.nameEn} color={user.avatarColor} size={34} />
                         </ProgressRing>
+                        <span className="hidden max-w-[160px] truncate text-sm font-medium text-navy-900 lg:inline">
+                          {name}
+                        </span>
+                        <ChevronDown className="hidden size-4 text-ink-400 lg:block" aria-hidden />
                       </button>
                     </DropdownTrigger>
                     <DropdownContent align="end">
@@ -562,38 +679,13 @@ export function AppShell({
                       </DropdownItem>
                     </DropdownContent>
                   </Dropdown>
-                  {/* NPC lockup at the end side of the bar (CR01 1.3, CR05 1.3:
-                      the white monochrome file on the maroon bar, no plate):
-                      full logo from 1024px, emblem-only crop 768-1024px,
-                      hidden below 768px. */}
-                  <span className="ms-4 hidden h-9 items-center border-s border-white/25 ps-4 md:flex">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/brand/NPC_logo_white_mono.png"
-                      alt={locale === "ar" ? "المجلس الوطني للتخطيط" : "National Planning Council"}
-                      className="hidden h-9 w-auto select-none lg:block"
-                      // the file's own pixels, so the box is reserved before it loads
-                      width={1021}
-                      height={347}
-                      draggable={false}
-                    />
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/brand/NPC_logo_white_mono.png"
-                      alt={locale === "ar" ? "المجلس الوطني للتخطيط" : "National Planning Council"}
-                      className="h-9 w-9 select-none object-cover object-right lg:hidden"
-                      width={1021}
-                      height={347}
-                      draggable={false}
-                    />
-                  </span>
                 </div>
               </header>
 
               {/* CR05 6.4: the read-only preview banner */}
               {user.previewLabel ? (
                 <div
-                  className="flex items-center justify-center gap-3 bg-gold-100 px-4 py-1.5 text-xs text-maroon-900"
+                  className="flex items-center justify-center gap-3 bg-aqua-100 px-4 py-1.5 text-xs text-navy-900"
                   data-testid="preview-banner"
                 >
                   <Eye className="size-3.5" aria-hidden />
@@ -607,7 +699,7 @@ export function AppShell({
                       });
                       window.location.href = `/${locale}/settings?tab=roles`;
                     }}
-                    className="rounded-md border border-maroon-300 px-2 py-0.5 font-medium hover:bg-maroon-100 cursor-pointer"
+                    className="rounded-md border border-navy-300 px-2 py-0.5 font-medium hover:bg-navy-100 cursor-pointer"
                     data-testid="preview-exit"
                   >
                     {t("previewExit")}

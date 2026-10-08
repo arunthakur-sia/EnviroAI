@@ -1,5 +1,5 @@
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const r = await db.execute(
   "select name_en, name_ar, definition_ar from indicators where code='cpi_inflation'"
 );

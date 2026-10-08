@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-// CR08 1: org_levels from the published levels, a first snapshot, two sample
+// CR08 1: org_levels from the standard levels, a first snapshot, two sample
 // change requests from the seeded department head. Owned by the Organisation
 // agent. Idempotent: levels are upserted by code, the snapshot is only taken
 // when none exists, and each request is matched on its text.
@@ -12,9 +12,10 @@ import { ulid } from "ulid";
 
 const now = () => new Date().toISOString();
 
-/** The levels found on npc.qa, with formal bilingual names. */
+/** The levels of the Programme Office structure, with formal bilingual names. The
+    top level keeps its stored code; its label is the Programme Director. */
 export const PUBLISHED_LEVELS = [
-  { code: "secretary_general", nameEn: "Secretary General", nameAr: "الأمين العام" },
+  { code: "secretary_general", nameEn: "Programme Director", nameAr: "مدير البرنامج" },
   { code: "sector", nameEn: "Sector", nameAr: "القطاع" },
   { code: "office", nameEn: "Office", nameAr: "المكتب" },
   { code: "department", nameEn: "Department", nameAr: "الإدارة" },
@@ -23,8 +24,8 @@ export const PUBLISHED_LEVELS = [
 
 const SAMPLE_REQUESTS = [
   {
-    what: "Rename the unit to Statistical Systems and Data Platforms Department to reflect the platform work it now carries.",
-    why: "The department has run the national data platforms since 2025 and the published name no longer describes the mandate.",
+    what: "Rename the unit to Data Systems and Platforms Department to reflect the platform work it now carries.",
+    why: "The department has run the environmental data platforms since 2025 and its current name no longer describes the mandate.",
     status: "open" as const,
     daysAgo: 3,
   },
@@ -74,7 +75,7 @@ export default async function seedCr08Org(): Promise<void> {
   const snapshots = await db.select({ id: schema.orgSnapshots.id }).from(schema.orgSnapshots).limit(1);
   let snapshotTaken = false;
   if (!snapshots.length) {
-    await takeSnapshot(null, "initial structure as published on npc.qa (CR08 seed)");
+    await takeSnapshot(null, "initial Programme Office structure (CR08 seed)");
     snapshotTaken = true;
   }
 
@@ -82,12 +83,12 @@ export default async function seedCr08Org(): Promise<void> {
   const [head] = await db
     .select({ id: schema.users.id, departmentId: schema.users.departmentId })
     .from(schema.users)
-    .where(eq(schema.users.email, "head.stats@npc.qa"))
+    .where(eq(schema.users.email, "head.stats@enviroai.demo"))
     .limit(1);
   const [admin] = await db
     .select({ id: schema.users.id })
     .from(schema.users)
-    .where(eq(schema.users.email, "admin@npc.qa"))
+    .where(eq(schema.users.email, "admin@enviroai.demo"))
     .limit(1);
   let requestsWritten = 0;
   if (head?.departmentId) {
@@ -119,7 +120,7 @@ export default async function seedCr08Org(): Promise<void> {
       requestsWritten++;
     }
   } else {
-    console.log("cr08 org: head.stats@npc.qa has no department, change requests skipped");
+    console.log("cr08 org: head.stats@enviroai.demo has no department, change requests skipped");
   }
 
   console.log(

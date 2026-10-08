@@ -17,7 +17,7 @@ loadEnv();
 const BASE = "http://localhost:3000";
 const OUT = path.join(process.cwd(), "data", "screenshots", "cr08");
 const ONLY = process.argv[2] ?? "all";
-const PASSWORD = "Nexus!2026";
+const PASSWORD = "EnviroAI!2026";
 const NAV = { waitUntil: "networkidle" as const, timeout: 120000 };
 const WAIT = 120000;
 
@@ -122,7 +122,7 @@ async function closeCard(page: Page) {
 
 async function pass(browser: Browser, locale: "en" | "ar", ids: Ids) {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-  await login(ctx, "admin@npc.qa");
+  await login(ctx, "admin@enviroai.demo");
   const page = await ctx.newPage();
   const errors: string[] = [];
   watch(page, errors);

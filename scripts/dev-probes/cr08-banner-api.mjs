@@ -14,7 +14,7 @@ const req = async (path, opts = {}) => {
 await req("/api/v1/auth/login", {
   method: "POST",
   headers: { "content-type": "application/json" },
-  body: JSON.stringify({ email: "mohammed.alsulaiti@npc.qa", password: "Nexus!2026" }),
+  body: JSON.stringify({ email: "mohammed.alqarni@enviroai.demo", password: "EnviroAI!2026" }),
 });
 const res = await req("/api/v1/handover?mine=1");
 const json = await res.json();

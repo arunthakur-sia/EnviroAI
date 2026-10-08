@@ -29,8 +29,8 @@ export async function GET(
 
   const { Document, Packer, Paragraph, TextRun, HeadingLevel } = await import("docx");
   const children = [
-    new Paragraph({ text: conv.title ?? "SiaNexus analyst conversation", heading: HeadingLevel.TITLE }),
-    new Paragraph({ text: `Exported from SiaNexus, ${new Date().toISOString().slice(0, 10)}` }),
+    new Paragraph({ text: conv.title ?? "EnviroAI analyst conversation", heading: HeadingLevel.TITLE }),
+    new Paragraph({ text: `Exported from EnviroAI, ${new Date().toISOString().slice(0, 10)}` }),
   ];
   for (const m of messages) {
     if (m.role === "user") {
@@ -90,7 +90,7 @@ export async function GET(
     headers: {
       "content-type":
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "content-disposition": `attachment; filename*=UTF-8''${encodeURIComponent("sianexus-answer.docx")}`,
+      "content-disposition": `attachment; filename*=UTF-8''${encodeURIComponent("enviroai-answer.docx")}`,
     },
   });
 }

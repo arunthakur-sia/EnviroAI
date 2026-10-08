@@ -39,7 +39,7 @@ const CHAIN = `(() => {
 const browser = await chromium.launch({ channel: "msedge" });
 const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
 await ctx.request.post(`${BASE}/api/v1/auth/login`, {
-  data: { email: "admin@npc.qa", password: "Nexus!2026" },
+  data: { email: "admin@enviroai.demo", password: "EnviroAI!2026" },
   timeout: 120000,
 });
 const page = await ctx.newPage();

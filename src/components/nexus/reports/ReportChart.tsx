@@ -1,6 +1,6 @@
 "use client";
-// CR08 5: a ChartSpec drawn with Recharts in the app's chart style: maroon
-// primary, gulf comparison, dashed gold target, dashed maroon forecast. One
+// CR08 5: a ChartSpec drawn with Recharts in the app's chart style: navy
+// primary, teal comparison, dashed aqua target, dashed navy forecast. One
 // y axis, thin marks, recessive grid, a hover tooltip, a legend for two or
 // more series, text in ink tokens only. The plot stays left to right in
 // Arabic because time reads the same way (as the Statistics Hub does).
@@ -27,10 +27,10 @@ import { pick } from "./shared";
 type Role = "primary" | "comparison" | "target" | "forecast";
 
 const ROLE_COLOUR: Record<Role, string> = {
-  primary: "var(--color-maroon-700)",
-  comparison: "var(--color-gulf-600)",
-  target: "var(--color-gold-500)",
-  forecast: "var(--color-maroon-700)",
+  primary: "var(--color-navy-700)",
+  comparison: "var(--color-teal-600)",
+  target: "var(--color-aqua-500)",
+  forecast: "var(--color-navy-700)",
 };
 const ROLE_DASH: Partial<Record<Role, string>> = { target: "6 4", forecast: "4 4" };
 const ROLE_WIDTH: Record<Role, number> = { primary: 2, comparison: 1.5, target: 1.5, forecast: 1.5 };
@@ -93,7 +93,7 @@ export function ReportChart({
         tickFormatter={(p) => formatPeriod(String(p), locale)}
         tick={tickProps}
         tickLine={false}
-        axisLine={{ stroke: "var(--color-sand-300)" }}
+        axisLine={{ stroke: "var(--color-mist-300)" }}
         minTickGap={24}
       />
     ),
@@ -107,13 +107,13 @@ export function ReportChart({
         domain={domain}
       />
     ),
-    grid: <CartesianGrid vertical={false} stroke="var(--color-sand-200)" />,
+    grid: <CartesianGrid vertical={false} stroke="var(--color-mist-200)" />,
     tooltip: (
       <Tooltip
         formatter={(v: any, name: any) => [`${fmt(Number(v))}${chart.unit ? ` ${chart.unit}` : ""}`, String(name)]}
         labelFormatter={(p) => formatPeriod(String(p), locale)}
-        contentStyle={{ fontSize: 12, borderRadius: 10, borderColor: "var(--color-sand-300)" }}
-        cursor={isBar ? { fill: "var(--color-sand-100)" } : { stroke: "var(--color-sand-300)" }}
+        contentStyle={{ fontSize: 12, borderRadius: 10, borderColor: "var(--color-mist-300)" }}
+        cursor={isBar ? { fill: "var(--color-mist-100)" } : { stroke: "var(--color-mist-300)" }}
       />
     ),
   };

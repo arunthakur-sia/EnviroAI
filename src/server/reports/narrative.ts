@@ -46,10 +46,10 @@ export function mockNarrative(
     .slice(0, options.summaryLength === "full" ? 6 : 3);
   const executive = ar
     ? [
-        `يجمع هذا التقرير ${items.length} عنصراً من سيا نكسس حول ${scope.labelAr || scope.labelEn}. ${summaryPool.join(" ")}`,
+        `يجمع هذا التقرير ${items.length} عنصراً من EnviroAI حول ${scope.labelAr || scope.labelEn}. ${summaryPool.join(" ")}`,
       ]
     : [
-        `This report brings together ${items.length} items from SiaNexus on ${scope.labelEn}. ${summaryPool.join(" ")}`,
+        `This report brings together ${items.length} items from EnviroAI on ${scope.labelEn}. ${summaryPool.join(" ")}`,
       ];
   const findings = items
     .slice(0, 8)

@@ -2,7 +2,7 @@
 // CR08 3 and 2.2: smoke checks for the Expert Network split (internal by
 // unit, external with engagement facts, two labelled groups everywhere) and
 // the Studies page. Wired into scripts/smoke.ts by the coordinator.
-//   ctx.cookie is a Contributor session (analyst@npc.qa), ctx.adminCookie the
+//   ctx.cookie is a Contributor session (analyst@enviroai.demo), ctx.adminCookie the
 //   Super Admin, ctx.db a raw libsql client.
 import type { Client } from "@libsql/client";
 
@@ -20,7 +20,7 @@ type Card = {
   projectCount: number;
   engagementCount: number;
   lastEngagementYear: number | null;
-  workedWithNpc: boolean;
+  workedWithOrg: boolean;
   availability: string;
 };
 type Grouped = { internal: Card[]; external: Card[]; all: Card[] };
@@ -52,7 +52,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   const internal = await getJson<Card[]>(ctx, ctx.cookie, "/api/v1/experts?view=internal");
   const internalRows = internal.data ?? [];
   check(
-    "internal experts list answers with NPC staff only",
+    "internal experts list answers with Office staff only",
     internal.status === 200 && internalRows.length >= 40 && internalRows.every((e) => e.kind === "internal"),
     `${internal.status}, ${internalRows.length}`
   );
@@ -76,7 +76,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
     "external experts carry a country and engagement facts",
     externalRows.filter((e) => e.country).length >= 40 && externalRows.some((e) => e.lastEngagementYear && e.engagementCount > 0)
   );
-  const seededNames = ["Dr. Noora Al-Kuwari", "Eng. Fahad Al-Naimi", "Omar Nasser", "Dr. Pieter van der Berg"];
+  const seededNames = ["Dr. Faisal Al-Harbi", "Eng. Turki Al-Shehri", "Omar Nasser", "Dr. Pieter van der Berg"];
   check(
     "the CR08 seeded externals are present across the four types",
     seededNames.every((n) => externalRows.some((e) => e.nameEn === n)) &&
@@ -94,8 +94,8 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   );
   const worked = await getJson<Card[]>(ctx, ctx.cookie, "/api/v1/experts?view=external&workedWith=1");
   check(
-    "worked-with-NPC filter keeps only experts with engagements or project roles",
-    (worked.data?.length ?? 0) > 0 && (worked.data ?? []).every((e) => e.workedWithNpc) && (worked.data?.length ?? 0) < externalRows.length,
+    "worked-with-Office filter keeps only experts with engagements or project roles",
+    (worked.data?.length ?? 0) > 0 && (worked.data ?? []).every((e) => e.workedWithOrg) && (worked.data?.length ?? 0) < externalRows.length,
     `${worked.data?.length} of ${externalRows.length}`
   );
   const qa = await getJson<Card[]>(ctx, ctx.cookie, "/api/v1/experts?view=external&country=QA&availability=available");
@@ -131,13 +131,13 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
         g.all.slice(g.internal.length).every((e) => e.kind === "external")
     )
   );
-  const named = await getJson<Grouped>(ctx, ctx.cookie, `/api/v1/experts?grouped=1&q=${encodeURIComponent("Noora Al-Kuwari")}`);
+  const named = await getJson<Grouped>(ctx, ctx.cookie, `/api/v1/experts?grouped=1&q=${encodeURIComponent("Faisal Al-Harbi")}`);
   check(
     "a seeded external found by semantic search lands in the external group only",
     Boolean(
       named.data &&
-        named.data.external.some((e) => e.nameEn === "Dr. Noora Al-Kuwari") &&
-        !named.data.internal.some((e) => e.nameEn === "Dr. Noora Al-Kuwari")
+        named.data.external.some((e) => e.nameEn === "Dr. Faisal Al-Harbi") &&
+        !named.data.internal.some((e) => e.nameEn === "Dr. Faisal Al-Harbi")
     ),
     `${named.data?.internal.length} internal, ${named.data?.external.length} external`
   );
@@ -155,7 +155,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   );
   const arPage = await getHtml(ctx, ctx.cookie, "/ar/experts?view=external");
   check("Arabic external view renders its title", arPage.status === 200 && arPage.html.includes("الخبراء الخارجيون"));
-  const searchPage = await getHtml(ctx, ctx.cookie, `/en/search?q=${encodeURIComponent("Noora Al-Kuwari")}`);
+  const searchPage = await getHtml(ctx, ctx.cookie, `/en/search?q=${encodeURIComponent("Faisal Al-Harbi")}`);
   check(
     "search results render the labelled expert groups",
     searchPage.status === 200 && searchPage.html.includes('data-testid="expert-groups"') && searchPage.html.includes('data-testid="expert-group-external"')
@@ -210,11 +210,11 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   });
   check("creating an external expert validates its body", bad.status === 400);
 
-  /* ---- Ask NPC tools ---- */
+  /* ---- Ask EnviroAI tools ---- */
   try {
     const { runTool, AnalystState } = await import("../src/server/ai/analyst/tools");
     const { getUserById } = await import("../src/server/auth/session");
-    const [analyst] = (await ctx.db.execute("select id from users where email = 'analyst@npc.qa'")).rows;
+    const [analyst] = (await ctx.db.execute("select id from users where email = 'analyst@enviroai.demo'")).rows;
     const user = analyst ? await getUserById(String(analyst.id)) : null;
     if (user) {
       const ctxTool = { user, state: new AnalystState() } as never;

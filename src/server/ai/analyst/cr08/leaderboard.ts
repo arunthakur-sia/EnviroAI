@@ -1,6 +1,6 @@
 // CR08 7: leaderboard tools (top people or departments for a period).
 // Owned by the Gamification agent. One tool, get_leaderboard, reads the
-// materialised table through the same service as the page, so Ask NPC and
+// materialised table through the same service as the page, so Ask EnviroAI and
 // the board can never disagree, and it respects the viewer: top five only,
 // hidden in quiet mode, administrator accounts unranked.
 import type { ToolModule } from "./types";
@@ -12,7 +12,7 @@ const mod: ToolModule = {
     {
       name: "get_leaderboard",
       description:
-        "CR08 7.2: the top five of the SiaNexus leaderboard for a period, from the materialised board (refreshed every ten minutes, never live). board: people (colleagues) or departments (organisation units, ranked by points per member). window: week, month, quarter, year or all. category: overall, contributors (uploads, answers, lessons, verified work), guardians (verification and review), learners (reading, listening, quizzes). Returns the ranked lines, the period, the refresh time and the asker's own position. Say the board is hidden when the tool says so (quiet mode).",
+        "CR08 7.2: the top five of the EnviroAI leaderboard for a period, from the materialised board (refreshed every ten minutes, never live). board: people (colleagues) or departments (organisation units, ranked by points per member). window: week, month, quarter, year or all. category: overall, contributors (uploads, answers, lessons, verified work), guardians (verification and review), learners (reading, listening, quizzes). Returns the ranked lines, the period, the refresh time and the asker's own position. Say the board is hidden when the tool says so (quiet mode).",
       input_schema: {
         type: "object",
         properties: {

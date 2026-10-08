@@ -78,7 +78,7 @@ async function subjectFor(
       titleAr: s.titleAr || s.titleEn,
       bodyEn: [
         s.descriptionEn ?? "",
-        s.whyItMattersEn ? `Why it matters for NDS3: ${s.whyItMattersEn}` : "",
+        s.whyItMattersEn ? `Why it matters for NES: ${s.whyItMattersEn}` : "",
         s.publisher ? `Source: ${s.publisher}${s.publishedAt ? `, ${s.publishedAt}` : ""}${s.url ? ` (${s.url})` : ""}` : "",
         s.sourceExcerpt ? `Source excerpt: ${s.sourceExcerpt}` : "",
       ]
@@ -111,7 +111,7 @@ async function subjectFor(
   }
   if (resourceType === "index") {
     // CR05 4.5.7: brief over an international index; forecasts cited as
-    // SiaNexus forecasts, never as facts
+    // EnviroAI forecasts, never as facts
     const [idx] = await db.select().from(schema.indices).where(eq(schema.indices.id, resourceId)).limit(1);
     if (!idx) return null;
     const obs = await db
@@ -120,7 +120,7 @@ async function subjectFor(
       .where(
         and(
           eq(schema.indexObservations.indexId, idx.id),
-          eq(schema.indexObservations.countryCode, "QAT")
+          eq(schema.indexObservations.countryCode, "SAU")
         )
       )
       .orderBy(desc(schema.indexObservations.year))
@@ -140,13 +140,13 @@ async function subjectFor(
       .map((o) => `${o.year}: ${o.rank != null ? `rank ${o.rank}` : ""}${o.score != null ? ` score ${o.score}` : ""}`.trim())
       .join("; ");
     const forecastLine = f3
-      ? `SiaNexus forecast (method ${f3.methodVersion}, generated ${f3.generatedAt.slice(0, 10)}): three-year central ${f3.centralRank != null ? `rank ${Math.round(f3.centralRank)}` : f3.centralScore}, direction ${f3.direction}. This is a forecast, not a published figure.`
+      ? `EnviroAI forecast (method ${f3.methodVersion}, generated ${f3.generatedAt.slice(0, 10)}): three-year central ${f3.centralRank != null ? `rank ${Math.round(f3.centralRank)}` : f3.centralScore}, direction ${f3.direction}. This is a forecast, not a published figure.`
       : "";
     return {
       titleEn: idx.nameEn,
       titleAr: idx.nameAr,
-      bodyEn: `${idx.methodologySummaryEn ?? ""}\n\nQatar series: ${seriesLine}\n\n${forecastLine}`,
-      bodyAr: `${idx.methodologySummaryAr ?? ""}\n\nسلسلة قطر: ${seriesLine}\n\n${forecastLine}`,
+      bodyEn: `${idx.methodologySummaryEn ?? ""}\n\nSaudi Arabia series: ${seriesLine}\n\n${forecastLine}`,
+      bodyAr: `${idx.methodologySummaryAr ?? ""}\n\nسلسلة السعودية: ${seriesLine}\n\n${forecastLine}`,
       numbers: obs.slice(0, 4).map((o) => ({
         label_en: String(o.year),
         label_ar: String(o.year),

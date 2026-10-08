@@ -51,7 +51,7 @@ export function AskLanding({ examples }: { examples: { en: string; ar: string }[
           <button
             type="submit"
             disabled={busy || !query.trim()}
-            className="absolute bottom-3 end-3 rounded-lg bg-maroon-700 p-2 text-white transition-colors hover:bg-maroon-900 disabled:opacity-40 cursor-pointer"
+            className="absolute bottom-3 end-3 rounded-lg bg-navy-700 p-2 text-white transition-colors hover:bg-navy-900 disabled:opacity-40 cursor-pointer"
             aria-label={t("askCta")}
           >
             <CornerDownLeft className="size-4" />
@@ -65,7 +65,7 @@ export function AskLanding({ examples }: { examples: { en: string; ar: string }[
                 key={i}
                 type="button"
                 onClick={() => setQuery(text)}
-                className="rounded-lg border border-sand-200 bg-sand-50 px-2.5 py-1 text-xs text-ink-600 transition-colors hover:border-maroon-300 hover:text-maroon-900 cursor-pointer"
+                className="rounded-lg border border-mist-200 bg-mist-50 px-2.5 py-1 text-xs text-ink-600 transition-colors hover:border-navy-300 hover:text-navy-900 cursor-pointer"
               >
                 {text}
               </button>

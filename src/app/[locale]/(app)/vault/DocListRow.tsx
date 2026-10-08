@@ -16,19 +16,19 @@ export function DocListRow({ doc }: { doc: ShelfDoc }) {
   const t = useTranslations("common");
   return (
     <div
-      className="relative flex items-center gap-4 px-4 py-3 transition-colors hover:bg-maroon-50"
+      className="relative flex items-center gap-4 px-4 py-3 transition-colors hover:bg-navy-50"
       data-testid="doc-list-row"
       data-doc-id={doc.id}
     >
       <div className="min-w-0 flex-1">
         <Link
           href={`/vault/${doc.id}`}
-          className="block rounded-md after:absolute after:inset-0 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-gold-500"
+          className="block rounded-md after:absolute after:inset-0 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-aqua-500"
         >
           <p className="flex items-center gap-2 truncate font-medium text-ink-900">
             {bi(locale, doc.titleEn, doc.titleAr)}
             {doc.status === "verified" ? (
-              <BadgeCheck className="size-4 shrink-0 text-gulf-600" aria-label={t("verified")} />
+              <BadgeCheck className="size-4 shrink-0 text-teal-600" aria-label={t("verified")} />
             ) : null}
           </p>
         </Link>
@@ -44,7 +44,7 @@ export function DocListRow({ doc }: { doc: ShelfDoc }) {
             id: doc.ownerUserId,
             nameEn: doc.ownerName,
             nameAr: doc.ownerNameAr ?? doc.ownerName,
-            avatarColor: doc.ownerColor ?? "maroon",
+            avatarColor: doc.ownerColor ?? "navy",
           }}
           item={{ type: "document", id: doc.id, titleEn: doc.titleEn, titleAr: doc.titleAr, href: `/vault/${doc.id}` }}
           size="sm"
@@ -52,7 +52,7 @@ export function DocListRow({ doc }: { doc: ShelfDoc }) {
         />
       ) : doc.ownerName ? (
         <span className="hidden items-center gap-2 sm:flex">
-          <Avatar name={doc.ownerName} color={doc.ownerColor ?? "maroon"} size={22} />
+          <Avatar name={doc.ownerName} color={doc.ownerColor ?? "navy"} size={22} />
         </span>
       ) : null}
       <ClassificationChip

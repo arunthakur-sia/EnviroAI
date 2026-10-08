@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 // CR05 seeds. Section 2: the entities register, the owner_entity_name
-// migration into node_leads, and lead assignments for every NDS3 initiative
+// migration into node_leads, and lead assignments for every NES initiative
 // and project. Section 3: stakeholders. Section 5: HR statuses, backups,
 // handovers, responsibilities. Section 6: role portals, the HR Admin role,
 // allowed domains. Idempotent: rows insert only when absent; the register
@@ -11,6 +11,7 @@ loadEnv();
 
 import { and, asc, eq, inArray, isNotNull, ne, sql } from "drizzle-orm";
 import { ulid } from "ulid";
+import { findHomeEdition } from "./data/edition";
 
 const now = () => new Date().toISOString();
 
@@ -35,158 +36,106 @@ type EntitySeed = {
   active?: boolean;
 };
 
-// The register: real bodies with real names in both languages (CR05 2.1 asks
-// for at least 25). Historical bodies from the seeded owner strings are kept
-// as inactive register rows so lineage stays honest.
+// The register: real public bodies with real names in both languages (CR05 2.1
+// asks for at least 25). Websites appear only where the data source databank
+// lists them. A few real predecessor bodies are kept as inactive rows so
+// lineage stays honest.
 const ENTITIES: EntitySeed[] = [
-  { key: "mof", en: "Ministry of Finance", ar: "وزارة المالية", shortEn: "MOF", shortAr: "المالية", kind: "ministry", website: "https://www.mof.gov.qa" },
-  { key: "moci", en: "Ministry of Commerce and Industry", ar: "وزارة التجارة والصناعة", shortEn: "MOCI", shortAr: "التجارة والصناعة", kind: "ministry", website: "https://www.moci.gov.qa" },
-  { key: "mcit", en: "Ministry of Communications and Information Technology", ar: "وزارة الاتصالات وتكنولوجيا المعلومات", shortEn: "MCIT", shortAr: "الاتصالات وتكنولوجيا المعلومات", kind: "ministry", website: "https://www.mcit.gov.qa" },
-  { key: "moehe", en: "Ministry of Education and Higher Education", ar: "وزارة التربية والتعليم والتعليم العالي", shortEn: "MOEHE", shortAr: "التربية والتعليم", kind: "ministry", website: "https://www.edu.gov.qa" },
-  { key: "moph", en: "Ministry of Public Health", ar: "وزارة الصحة العامة", shortEn: "MOPH", shortAr: "الصحة العامة", kind: "ministry", website: "https://www.moph.gov.qa" },
-  { key: "mom", en: "Ministry of Municipality", ar: "وزارة البلدية", shortEn: "MoM", shortAr: "البلدية", kind: "ministry", website: "https://www.mme.gov.qa" },
-  { key: "moecc", en: "Ministry of Environment and Climate Change", ar: "وزارة البيئة والتغير المناخي", shortEn: "MOECC", shortAr: "البيئة والتغير المناخي", kind: "ministry", website: "https://www.mecc.gov.qa" },
-  { key: "mol", en: "Ministry of Labour", ar: "وزارة العمل", shortEn: "MOL", shortAr: "العمل", kind: "ministry", website: "https://www.mol.gov.qa" },
-  { key: "msdf", en: "Ministry of Social Development and Family", ar: "وزارة التنمية الاجتماعية والأسرة", shortEn: "MSDF", shortAr: "التنمية الاجتماعية والأسرة", kind: "ministry", website: "https://www.msdf.gov.qa" },
-  { key: "culture", en: "Ministry of Culture", ar: "وزارة الثقافة", shortEn: "MoC", shortAr: "الثقافة", kind: "ministry", website: "https://www.moc.gov.qa" },
-  { key: "sports", en: "Ministry of Sports and Youth", ar: "وزارة الرياضة والشباب", shortEn: "MSY", shortAr: "الرياضة والشباب", kind: "ministry" },
-  { key: "mot", en: "Ministry of Transport", ar: "وزارة المواصلات", shortEn: "MOT", shortAr: "المواصلات", kind: "ministry", website: "https://www.mot.gov.qa" },
-  { key: "moi", en: "Ministry of Interior", ar: "وزارة الداخلية", shortEn: "MOI", shortAr: "الداخلية", kind: "ministry", website: "https://www.moi.gov.qa" },
-  { key: "moj", en: "Ministry of Justice", ar: "وزارة العدل", shortEn: "MOJ", shortAr: "العدل", kind: "ministry" },
-  { key: "mofa", en: "Ministry of Foreign Affairs", ar: "وزارة الخارجية", shortEn: "MOFA", shortAr: "الخارجية", kind: "ministry", website: "https://www.mofa.gov.qa" },
-  { key: "awqaf", en: "Ministry of Endowments and Islamic Affairs", ar: "وزارة الأوقاف والشؤون الإسلامية", shortEn: "Awqaf", shortAr: "الأوقاف", kind: "ministry" },
-  { key: "qcb", en: "Qatar Central Bank", ar: "مصرف قطر المركزي", shortEn: "QCB", shortAr: "المصرف المركزي", kind: "authority", website: "https://www.qcb.gov.qa" },
-  { key: "qia", en: "Qatar Investment Authority", ar: "جهاز قطر للاستثمار", shortEn: "QIA", shortAr: "جهاز الاستثمار", kind: "authority", website: "https://www.qia.qa" },
-  { key: "qfza", en: "Qatar Free Zones Authority", ar: "هيئة المناطق الحرة - قطر", shortEn: "QFZA", shortAr: "المناطق الحرة", kind: "authority", website: "https://qfz.gov.qa" },
-  { key: "qfc", en: "Qatar Financial Centre Authority", ar: "هيئة مركز قطر للمال", shortEn: "QFC", shortAr: "مركز قطر للمال", kind: "authority", website: "https://www.qfc.qa" },
-  { key: "qrdi", en: "Qatar Research, Development and Innovation Council", ar: "مجلس قطر للبحث والتطوير والابتكار", shortEn: "QRDI", shortAr: "مجلس البحث والابتكار", kind: "agency", website: "https://qrdi.org.qa" },
-  { key: "qf", en: "Qatar Foundation", ar: "مؤسسة قطر", shortEn: "QF", shortAr: "مؤسسة قطر", kind: "other", website: "https://www.qf.org.qa" },
-  { key: "qatarenergy", en: "QatarEnergy", ar: "قطر للطاقة", shortEn: "QatarEnergy", shortAr: "قطر للطاقة", kind: "company", website: "https://www.qatarenergy.qa" },
-  { key: "qt", en: "Qatar Tourism", ar: "قطر للسياحة", shortEn: "Qatar Tourism", shortAr: "قطر للسياحة", kind: "authority", website: "https://www.visitqatar.com" },
-  { key: "qm", en: "Qatar Museums", ar: "متاحف قطر", shortEn: "QM", shortAr: "متاحف قطر", kind: "authority", website: "https://qm.org.qa" },
-  { key: "cra", en: "Communications Regulatory Authority", ar: "هيئة تنظيم الاتصالات", shortEn: "CRA", shortAr: "تنظيم الاتصالات", kind: "authority", website: "https://www.cra.gov.qa" },
-  { key: "qdb", en: "Qatar Development Bank", ar: "بنك قطر للتنمية", shortEn: "QDB", shortAr: "بنك التنمية", kind: "company", website: "https://www.qdb.qa" },
-  { key: "ashghal", en: "Public Works Authority (Ashghal)", ar: "هيئة الأشغال العامة (أشغال)", shortEn: "Ashghal", shortAr: "أشغال", kind: "authority", website: "https://www.ashghal.gov.qa" },
-  { key: "kahramaa", en: "Qatar General Electricity and Water Corporation (Kahramaa)", ar: "المؤسسة العامة القطرية للكهرباء والماء (كهرماء)", shortEn: "Kahramaa", shortAr: "كهرماء", kind: "company", website: "https://www.km.qa" },
-  { key: "ncsa", en: "National Cyber Security Agency", ar: "الوكالة الوطنية للأمن السيبراني", shortEn: "NCSA", shortAr: "الأمن السيبراني", kind: "agency", website: "https://ncsa.gov.qa" },
-  { key: "cgb", en: "Civil Service and Government Development Bureau", ar: "ديوان الخدمة المدنية والتطوير الحكومي", shortEn: "CGB", shortAr: "ديوان الخدمة المدنية", kind: "agency", website: "https://www.cgb.gov.qa" },
-  { key: "ipa", en: "Invest Qatar (Investment Promotion Agency)", ar: "وكالة ترويج الاستثمار (استثمر في قطر)", shortEn: "Invest Qatar", shortAr: "استثمر في قطر", kind: "agency", website: "https://www.invest.qa" },
-  { key: "customs", en: "General Authority of Customs", ar: "الهيئة العامة للجمارك", shortEn: "Customs", shortAr: "الجمارك", kind: "authority", website: "https://www.customs.gov.qa" },
-  { key: "gta", en: "General Tax Authority", ar: "الهيئة العامة للضرائب", shortEn: "GTA", shortAr: "الضرائب", kind: "authority", website: "https://www.gta.gov.qa" },
-  { key: "qu", en: "Qatar University", ar: "جامعة قطر", shortEn: "QU", shortAr: "جامعة قطر", kind: "other", website: "https://www.qu.edu.qa" },
-  { key: "hmc", en: "Hamad Medical Corporation", ar: "مؤسسة حمد الطبية", shortEn: "HMC", shortAr: "حمد الطبية", kind: "company", website: "https://www.hamad.qa" },
-  { key: "phcc", en: "Primary Health Care Corporation", ar: "مؤسسة الرعاية الصحية الأولية", shortEn: "PHCC", shortAr: "الرعاية الأولية", kind: "company", website: "https://www.phcc.gov.qa" },
-  { key: "qse", en: "Qatar Stock Exchange", ar: "بورصة قطر", shortEn: "QSE", shortAr: "البورصة", kind: "company", website: "https://www.qe.com.qa" },
-  { key: "qrail", en: "Qatar Rail", ar: "سكك الحديد القطرية (الريل)", shortEn: "Qatar Rail", shortAr: "الريل", kind: "company", website: "https://www.qr.com.qa" },
-  { key: "mwani", en: "Mwani Qatar", ar: "موانئ قطر", shortEn: "Mwani", shortAr: "موانئ", kind: "company", website: "https://www.mwani.com.qa" },
-  { key: "manateq", en: "Manateq (Economic Zones Company)", ar: "شركة المناطق الاقتصادية (مناطق)", shortEn: "Manateq", shortAr: "مناطق", kind: "company", website: "https://www.manateq.qa" },
-  { key: "matar", en: "Hamad International Airport (MATAR)", ar: "مطار حمد الدولي (مطار)", shortEn: "MATAR", shortAr: "مطار حمد", kind: "company", website: "https://dohahamadairport.com" },
-  { key: "grsia", en: "General Retirement and Social Insurance Authority", ar: "الهيئة العامة للتقاعد والتأمينات الاجتماعية", shortEn: "GRSIA", shortAr: "التقاعد والتأمينات", kind: "authority", website: "https://www.grsia.gov.qa" },
-  { key: "qfsw", en: "Qatar Foundation for Social Work", ar: "المؤسسة القطرية للعمل الاجتماعي", shortEn: "QFSW", shortAr: "العمل الاجتماعي", kind: "other", website: "https://www.qfsw.org.qa" },
-  { key: "eaa", en: "Education Above All Foundation", ar: "مؤسسة التعليم فوق الجميع", shortEn: "EAA", shortAr: "التعليم فوق الجميع", kind: "other", website: "https://www.educationaboveall.org" },
-  { key: "gscm", en: "General Secretariat of the Council of Ministers", ar: "الأمانة العامة لمجلس الوزراء", shortEn: "GSCM", shortAr: "أمانة مجلس الوزراء", kind: "agency" },
-  { key: "qatalum", en: "Qatar Aluminium (Qatalum)", ar: "قطر للألمنيوم (كتلم)", shortEn: "Qatalum", shortAr: "كتلم", kind: "company", website: "https://www.qatalum.com" },
-  { key: "undp", en: "United Nations Development Programme", ar: "برنامج الأمم المتحدة الإنمائي", shortEn: "UNDP", shortAr: "الأمم المتحدة الإنمائي", kind: "international", website: "https://www.undp.org" },
-  { key: "worldbank", en: "World Bank", ar: "البنك الدولي", shortEn: "World Bank", shortAr: "البنك الدولي", kind: "international", website: "https://www.worldbank.org" },
-  // Historical bodies referenced by the seeded owner strings (inactive)
-  { key: "psa", en: "Planning and Statistics Authority", ar: "جهاز التخطيط والإحصاء", shortEn: "PSA", shortAr: "التخطيط والإحصاء", kind: "authority", active: false },
-  { key: "mdps", en: "Ministry of Development Planning and Statistics", ar: "وزارة التخطيط التنموي والإحصاء", shortEn: "MDPS", shortAr: "التخطيط التنموي", kind: "ministry", active: false },
-  { key: "gsdp", en: "General Secretariat for Development Planning", ar: "الأمانة العامة للتخطيط التنموي", shortEn: "GSDP", shortAr: "التخطيط التنموي", kind: "agency", active: false },
-  { key: "mme_hist", en: "Ministry of Municipality and Environment", ar: "وزارة البلدية والبيئة", shortEn: "MME", shortAr: "البلدية والبيئة", kind: "ministry", active: false },
-  { key: "madlsa", en: "Ministry of Administrative Development, Labor and Social Affairs", ar: "وزارة التنمية الإدارية والعمل والشؤون الاجتماعية", shortEn: "MADLSA", shortAr: "التنمية الإدارية", kind: "ministry", active: false },
-  { key: "mec", en: "Ministry of Economy and Commerce", ar: "وزارة الاقتصاد والتجارة", shortEn: "MEC", shortAr: "الاقتصاد والتجارة", kind: "ministry", active: false },
-  { key: "mcs", en: "Ministry of Culture and Sport", ar: "وزارة الثقافة والرياضة", shortEn: "MCS", shortAr: "الثقافة والرياضة", kind: "ministry", active: false },
-  { key: "motc", en: "Ministry of Transport and Communications", ar: "وزارة المواصلات والاتصالات", shortEn: "MOTC", shortAr: "المواصلات والاتصالات", kind: "ministry", active: false },
-  { key: "mei", en: "Ministry of Energy and Industry", ar: "وزارة الطاقة والصناعة", shortEn: "MEI", shortAr: "الطاقة والصناعة", kind: "ministry", active: false },
-  { key: "moe_hist", en: "Ministry of Environment", ar: "وزارة البيئة", shortEn: "MoE", shortAr: "البيئة", kind: "ministry", active: false },
-  { key: "mosa", en: "Ministry of Social Affairs", ar: "وزارة الشؤون الاجتماعية", shortEn: "MoSA", shortAr: "الشؤون الاجتماعية", kind: "ministry", active: false },
-  { key: "ictqatar", en: "Ministry of Information and Communications Technology (ictQATAR)", ar: "وزارة تكنولوجيا المعلومات والاتصالات", shortEn: "ictQATAR", shortAr: "تكنولوجيا المعلومات", kind: "ministry", active: false },
-  { key: "mcah", en: "Ministry of Culture, Arts and Heritage", ar: "وزارة الثقافة والفنون والتراث", shortEn: "MCAH", shortAr: "الثقافة والفنون", kind: "ministry", active: false },
-  { key: "sec", en: "Supreme Education Council", ar: "المجلس الأعلى للتعليم", shortEn: "SEC", shortAr: "الأعلى للتعليم", kind: "authority", active: false },
-  { key: "sch", en: "Supreme Council of Health", ar: "المجلس الأعلى للصحة", shortEn: "SCH", shortAr: "الأعلى للصحة", kind: "authority", active: false },
-  { key: "scfa", en: "Supreme Council for Family Affairs", ar: "المجلس الأعلى لشؤون الأسرة", shortEn: "SCFA", shortAr: "شؤون الأسرة", kind: "authority", active: false },
+  { key: "mewa", en: "Ministry of Environment, Water and Agriculture", ar: "وزارة البيئة والمياه والزراعة", shortEn: "MEWA", shortAr: "البيئة والمياه والزراعة", kind: "ministry", website: "https://www.mewa.gov.sa/en" },
+  { key: "ncec", en: "National Center for Environmental Compliance", ar: "المركز الوطني للرقابة على الالتزام البيئي", shortEn: "NCEC", shortAr: "الرقابة على الالتزام البيئي", kind: "agency", website: "https://ncec.gov.sa" },
+  { key: "ncw", en: "National Center for Wildlife", ar: "المركز الوطني لتنمية الحياة الفطرية", shortEn: "NCW", shortAr: "الحياة الفطرية", kind: "agency", website: "https://ncw.gov.sa" },
+  { key: "ncvc", en: "National Center for Vegetation Cover Development and Combating Desertification", ar: "المركز الوطني لتنمية الغطاء النباتي ومكافحة التصحر", shortEn: "NCVC", shortAr: "الغطاء النباتي", kind: "agency", website: "https://ncvc.gov.sa" },
+  { key: "mwan", en: "National Center for Waste Management", ar: "المركز الوطني لإدارة النفايات", shortEn: "MWAN", shortAr: "موان", kind: "agency", website: "https://mwan.gov.sa/en" },
+  { key: "envfund", en: "Environment Fund", ar: "صندوق البيئة", shortEn: "Environment Fund", shortAr: "صندوق البيئة", kind: "agency" },
+  { key: "swa", en: "Saudi Water Authority", ar: "الهيئة السعودية للمياه", shortEn: "SWA", shortAr: "الهيئة السعودية للمياه", kind: "authority", website: "https://swa.gov.sa" },
+  { key: "nwc", en: "National Water Company", ar: "شركة المياه الوطنية", shortEn: "NWC", shortAr: "المياه الوطنية", kind: "company", website: "https://www.nwc.com.sa" },
+  { key: "wera", en: "Water and Electricity Regulatory Authority", ar: "هيئة تنظيم المياه والكهرباء", shortEn: "WERA", shortAr: "تنظيم المياه والكهرباء", kind: "authority", website: "https://wera.gov.sa" },
+  { key: "gastat", en: "General Authority for Statistics", ar: "الهيئة العامة للإحصاء", shortEn: "GASTAT", shortAr: "الهيئة العامة للإحصاء", kind: "authority", website: "https://www.stats.gov.sa/en" },
+  { key: "sdaia", en: "Saudi Data and AI Authority", ar: "الهيئة السعودية للبيانات والذكاء الاصطناعي", shortEn: "SDAIA", shortAr: "سدايا", kind: "authority", website: "https://data.gov.sa" },
+  { key: "ncm", en: "National Center for Meteorology", ar: "المركز الوطني للأرصاد", shortEn: "NCM", shortAr: "الأرصاد", kind: "agency", website: "https://ncm.gov.sa" },
+  { key: "sgs", en: "Saudi Geological Survey", ar: "هيئة المساحة الجيولوجية السعودية", shortEn: "SGS", shortAr: "المساحة الجيولوجية", kind: "authority", website: "https://sgs.gov.sa/en" },
+  { key: "saso", en: "Saudi Standards, Metrology and Quality Organization", ar: "الهيئة السعودية للمواصفات والمقاييس والجودة", shortEn: "SASO", shortAr: "المواصفات والمقاييس", kind: "authority", website: "https://saso.gov.sa/en" },
+  { key: "momrah", en: "Ministry of Municipal, Rural Affairs and Housing", ar: "وزارة الشؤون البلدية والقروية والإسكان", shortEn: "MOMRAH", shortAr: "الشؤون البلدية والقروية", kind: "ministry", website: "https://momrah.gov.sa/en" },
+  { key: "moenergy", en: "Ministry of Energy", ar: "وزارة الطاقة", shortEn: "Ministry of Energy", shortAr: "وزارة الطاقة", kind: "ministry", website: "https://www.moenergy.gov.sa/en" },
+  { key: "mim", en: "Ministry of Industry and Mineral Resources", ar: "وزارة الصناعة والثروة المعدنية", shortEn: "MIM", shortAr: "الصناعة والثروة المعدنية", kind: "ministry", website: "https://mim.gov.sa/en" },
+  { key: "mof", en: "Ministry of Finance", ar: "وزارة المالية", shortEn: "MOF", shortAr: "المالية", kind: "ministry" },
+  { key: "gfsa", en: "General Food Security Authority", ar: "الهيئة العامة للأمن الغذائي", shortEn: "GFSA", shortAr: "الأمن الغذائي", kind: "authority", website: "https://gfsa.gov.sa/en" },
+  { key: "salic", en: "Saudi Agricultural and Livestock Investment Company", ar: "الشركة السعودية للاستثمار الزراعي والإنتاج الحيواني", shortEn: "SALIC", shortAr: "سالك", kind: "company", website: "https://salic.com" },
+  { key: "pif", en: "Public Investment Fund", ar: "صندوق الاستثمارات العامة", shortEn: "PIF", shortAr: "الاستثمارات العامة", kind: "authority", website: "https://www.pif.gov.sa" },
+  { key: "rcjy", en: "Royal Commission for Jubail and Yanbu", ar: "الهيئة الملكية للجبيل وينبع", shortEn: "RCJY", shortAr: "الجبيل وينبع", kind: "authority", website: "https://www.rcjy.gov.sa/en" },
+  { key: "rcu", en: "Royal Commission for AlUla", ar: "الهيئة الملكية لمحافظة العلا", shortEn: "RCU", shortAr: "العلا", kind: "authority", website: "https://www.rcu.gov.sa" },
+  { key: "sgi", en: "Saudi Green Initiative", ar: "مبادرة السعودية الخضراء", shortEn: "SGI", shortAr: "السعودية الخضراء", kind: "other", website: "https://sgi.gov.sa" },
+  { key: "mgi", en: "Middle East Green Initiative", ar: "مبادرة الشرق الأوسط الأخضر", shortEn: "MGI", shortAr: "الشرق الأوسط الأخضر", kind: "other", website: "https://www.vision2030.gov.sa/en/projects/middle-east-green-initiative/" },
+  { key: "kaust", en: "King Abdullah University of Science and Technology", ar: "جامعة الملك عبدالله للعلوم والتقنية", shortEn: "KAUST", shortAr: "كاوست", kind: "other", website: "https://www.kaust.edu.sa" },
+  { key: "kfupm", en: "King Fahd University of Petroleum and Minerals", ar: "جامعة الملك فهد للبترول والمعادن", shortEn: "KFUPM", shortAr: "جامعة الملك فهد", kind: "other" },
+  { key: "ksu", en: "King Saud University", ar: "جامعة الملك سعود", shortEn: "KSU", shortAr: "جامعة الملك سعود", kind: "other" },
+  { key: "kacst", en: "King Abdulaziz City for Science and Technology", ar: "مدينة الملك عبدالعزيز للعلوم والتقنية", shortEn: "KACST", shortAr: "مدينة الملك عبدالعزيز", kind: "agency", website: "https://www.kacst.gov.sa" },
+  { key: "kapsarc", en: "King Abdullah Petroleum Studies and Research Center", ar: "مركز الملك عبدالله للدراسات والبحوث البترولية", shortEn: "KAPSARC", shortAr: "كابسارك", kind: "other", website: "https://www.kapsarc.org" },
+  { key: "fao", en: "Food and Agriculture Organization of the United Nations", ar: "منظمة الأغذية والزراعة للأمم المتحدة", shortEn: "FAO", shortAr: "الفاو", kind: "international", website: "https://www.fao.org" },
+  { key: "worldbank", en: "World Bank", ar: "البنك الدولي", shortEn: "World Bank", shortAr: "البنك الدولي", kind: "international", website: "https://data.worldbank.org" },
+  { key: "unep", en: "United Nations Environment Programme", ar: "برنامج الأمم المتحدة للبيئة", shortEn: "UNEP", shortAr: "برنامج الأمم المتحدة للبيئة", kind: "international" },
+  { key: "undp", en: "United Nations Development Programme", ar: "برنامج الأمم المتحدة الإنمائي", shortEn: "UNDP", shortAr: "الأمم المتحدة الإنمائي", kind: "international" },
+  // Real predecessor bodies (inactive)
+  { key: "moa_hist", en: "Ministry of Agriculture", ar: "وزارة الزراعة", shortEn: "MoA", shortAr: "الزراعة", kind: "ministry", active: false },
+  { key: "mowe_hist", en: "Ministry of Water and Electricity", ar: "وزارة المياه والكهرباء", shortEn: "MOWE", shortAr: "المياه والكهرباء", kind: "ministry", active: false },
+  { key: "pme_hist", en: "Presidency of Meteorology and Environment", ar: "الرئاسة العامة للأرصاد وحماية البيئة", shortEn: "PME", shortAr: "الأرصاد وحماية البيئة", kind: "agency", active: false },
+  { key: "ecra_hist", en: "Electricity and Co-Generation Regulatory Authority", ar: "هيئة تنظيم الكهرباء والإنتاج المزدوج", shortEn: "ECRA", shortAr: "تنظيم الكهرباء", kind: "authority", active: false },
 ];
 
-// Every distinct owner_entity_name in the seed, mapped onto the register
-// (case variants deduplicated; historical bodies keep their own rows).
+// Aliases for owner_entity_name strings that differ from the register names.
+// Anything else resolves by a case-insensitive match on the English or short
+// name, then falls back to a new active register row.
 const OWNER_MAP: Record<string, string> = {
-  "ministry of municipality and environment": "mme_hist",
-  "ministry of administrative development, labor and social affairs": "madlsa",
-  "planning and statistics authority": "psa",
-  "ministry of public health": "moph",
-  "ministry of interior": "moi",
-  "ministry of foreign affairs": "mofa",
-  "ministry of finance": "mof",
-  "ministry of education and higher education": "moehe",
-  "ministry of culture and sport": "mcs",
-  "ministry of communications and information technology": "mcit",
-  "kahramaa": "kahramaa",
-  "qatar tourism": "qt",
-  "ministry of social development and family": "msdf",
-  "ministry of labour": "mol",
-  "ministry of economy and commerce": "mec",
-  "ministry of commerce and industry": "moci",
-  "general secretariat of the council of ministers": "gscm",
-  "qatarenergy": "qatarenergy",
-  "qatar museums": "qm",
-  "qatar development bank": "qdb",
-  "ministry of development planning and statistics": "mdps",
-  "civil service and government development bureau": "cgb",
-  "qatar foundation for social work": "qfsw",
-  "mwani qatar": "mwani",
-  "ministry of environment and climate change": "moecc",
-  "ministry of environment": "moe_hist",
-  "manateq": "manateq",
-  "hamad medical corporation": "hmc",
-  "supreme education council": "sec",
-  "supreme council of health": "sch",
-  "supreme council for family affairs": "scfa",
-  "qatar research, development and innovation council": "qrdi",
-  "qatar rail": "qrail",
-  "qatar investment authority": "qia",
-  "qatar financial centre authority": "qfc",
-  "qatar central bank": "qcb",
-  "qatar aluminium (qatalum)": "qatalum",
-  "primary health care corporation": "phcc",
-  "ministry of transport and communications": "motc",
-  "ministry of transport": "mot",
-  "ministry of social affairs": "mosa",
-  "ministry of municipality": "mom",
-  "ministry of justice": "moj",
-  "ministry of information and communications technology (ictqatar)": "ictqatar",
-  "ministry of energy and industry": "mei",
-  "ministry of culture, arts and heritage": "mcah",
-  "ministry of culture": "culture",
-  "invest qatar": "ipa",
-  "hamad international airport (matar)": "matar",
-  "general secretariat for development planning": "gsdp",
-  "general retirement and social insurance authority": "grsia",
-  "general authority of customs": "customs",
-  "education above all foundation": "eaa",
+  "ministry of environment, water & agriculture": "mewa",
+  "ministry of environment water and agriculture": "mewa",
+  "environment, water and agriculture": "mewa",
+  "national center for vegetation cover & combating desertification": "ncvc",
+  "national center for vegetation cover and combating desertification": "ncvc",
+  "national centre for waste management": "mwan",
+  "national centre for environmental compliance": "ncec",
+  "national centre for wildlife": "ncw",
+  "national centre for meteorology": "ncm",
+  "general authority of statistics": "gastat",
+  "statistics authority": "gastat",
+  "saudi water authority (swa)": "swa",
+  "national water company (nwc)": "nwc",
+  "ministry of municipal and rural affairs and housing": "momrah",
+  "ministry of municipal, rural affairs & housing": "momrah",
+  "ministry of industry and mineral resources (mim)": "mim",
+  "saudi green initiative (sgi)": "sgi",
+  "pif": "pif",
+  "public investment fund (pif)": "pif",
+  "fao": "fao",
+  "food and agriculture organization": "fao",
+  "un environment programme": "unep",
+  "united nations environment programme (unep)": "unep",
+  "undp": "undp",
+  "united nations development programme (undp)": "undp",
 };
 
-// Plausible lead pools per NDS3 outcome sort order (1..7), used only where the
+// Plausible lead pools per theme sort order (1..7: water, agriculture,
+// climate, biodiversity, waste, air quality, regulatory), used only where the
 // sources named nobody; those rows stay verified = 0.
 const OUTCOME_POOLS: Record<number, string[]> = {
-  1: ["moci", "mof", "qfza", "qdb", "ipa", "qia", "manateq", "qt", "qfc", "qatarenergy"],
-  2: ["mof", "qcb", "gta", "customs"],
-  3: ["moehe", "mol", "qu", "qf", "cgb"],
-  4: ["msdf", "culture", "awqaf", "qfsw", "sports"],
-  5: ["moph", "hmc", "phcc", "mom", "ashghal", "qm", "mot"],
-  6: ["moecc", "kahramaa", "mom", "qatarenergy"],
-  7: ["cgb", "mcit", "ncsa", "gscm", "moi", "moj"],
+  1: ["mewa", "swa", "nwc", "wera", "sgs", "momrah", "kfupm"],
+  2: ["mewa", "gfsa", "salic", "ncvc", "fao", "kaust", "worldbank"],
+  3: ["mewa", "ncm", "sgi", "mgi", "moenergy", "kapsarc", "unep", "undp"],
+  4: ["ncw", "ncvc", "rcu", "mewa", "kaust", "unep"],
+  5: ["mwan", "momrah", "ncec", "envfund", "mim", "rcjy"],
+  6: ["ncec", "ncm", "rcjy", "momrah", "moenergy", "kfupm"],
+  7: ["ncec", "mewa", "saso", "sdaia", "gastat", "mof", "mim", "wera"],
 };
 
-// NPC department co-lead pools per outcome (department codes). CR06 reuses
-// the first code of each pool as the outcome's department owner.
+// Programme Office unit co-lead pools per theme (unit codes). CR06 reuses
+// the first code of each pool as the theme's unit owner.
 export const OUTCOME_DEPTS: Record<number, string[]> = {
-  1: ["econ_planning"],
-  2: ["econ_planning", "monitoring_eval"],
-  3: ["social_planning"],
-  4: ["social_planning"],
-  5: ["social_planning", "monitoring_eval"],
-  6: ["foresight_risk"],
-  7: ["planning_policies", "national_data"],
+  1: ["WSD"],
+  2: ["AFD", "PMD"],
+  3: ["CLD"],
+  4: ["BLD"],
+  5: ["WCD", "PMD"],
+  6: ["AQD"],
+  7: ["RCM", "EDA"],
 };
 
 export async function seedCr05Entities(): Promise<void> {
@@ -196,10 +145,16 @@ export async function seedCr05Entities(): Promise<void> {
   const existing = await db.select().from(schema.entities);
   const byName = new Map(existing.map((e) => [e.nameEn.toLowerCase(), e]));
   const idOfKey = new Map<string, string>();
+  // case-insensitive lookup over English and short names, for owner strings
+  const idByLabel = new Map<string, string>();
+  const labelIndex = (id: string, ...labels: (string | null | undefined)[]) => {
+    for (const l of labels) if (l) idByLabel.set(l.trim().toLowerCase(), id);
+  };
   for (const e of ENTITIES) {
     const found = byName.get(e.en.toLowerCase());
     if (found) {
       idOfKey.set(e.key, found.id);
+      labelIndex(found.id, e.en, e.shortEn);
       continue;
     }
     const eid = ulid();
@@ -217,7 +172,10 @@ export async function seedCr05Entities(): Promise<void> {
       updatedAt: now(),
     });
     idOfKey.set(e.key, eid);
+    labelIndex(eid, e.en, e.shortEn);
   }
+  // rows already in the register (added by hand or by an earlier run)
+  for (const e of existing) labelIndex(e.id, e.nameEn, e.shortNameEn);
   console.log(`entities register: ${ENTITIES.length} rows ready`);
 
   /* 2. migrate owner_entity_name into node_leads (all editions) */
@@ -254,10 +212,11 @@ export async function seedCr05Entities(): Promise<void> {
   for (const n of nodes) {
     const raw = (n.ownerEntityName ?? "").trim();
     if (!raw) continue;
-    const key = OWNER_MAP[raw.toLowerCase()];
-    let entityId = key ? idOfKey.get(key) : undefined;
+    const lower = raw.toLowerCase();
+    const key = OWNER_MAP[lower];
+    let entityId = (key ? idOfKey.get(key) : undefined) ?? idByLabel.get(lower);
     if (!entityId) {
-      // unexpected value: create a register row with a machine-flagged Arabic name
+      // unexpected value: create an active register row named as given
       unmapped.add(raw);
       const eid = ulid();
       await db.insert(schema.entities).values({
@@ -267,12 +226,13 @@ export async function seedCr05Entities(): Promise<void> {
         shortNameEn: raw,
         shortNameAr: raw,
         kind: "other",
-        isActive: 0,
-        nameArMachine: 1,
+        isActive: 1,
+        nameArMachine: 0,
         createdAt: now(),
         updatedAt: now(),
       });
       entityId = eid;
+      labelIndex(eid, raw);
     }
     await db.insert(schema.nodeLeads).values({
       id: ulid(),
@@ -287,19 +247,16 @@ export async function seedCr05Entities(): Promise<void> {
     migrated++;
   }
   console.log(
-    `owner_entity_name migrated: ${migrated} leads${unmapped.size ? ` (${unmapped.size} unmapped values flagged)` : ""}`
+    `owner_entity_name migrated: ${migrated} leads${unmapped.size ? ` (${unmapped.size} unmapped values added to the register)` : ""}`
   );
 
-  /* 3. every NDS3 initiative and project gets a lead; joint department leads
+  /* 3. every NES initiative and project gets a lead; joint unit leads
         and supporting entities are assigned deterministically (verified 0) */
-  const [nds3] = await db
-    .select()
-    .from(schema.strategyEditions)
-    .where(eq(schema.strategyEditions.code, "nds3"));
-  if (!nds3) throw new Error("nds3 edition missing");
+  const homeEdition = await findHomeEdition(db, schema);
+  if (!homeEdition) throw new Error("strategy edition missing");
   const delivery = nodes.filter(
     (n) =>
-      n.editionId === nds3.id &&
+      n.editionId === homeEdition.id &&
       (n.nodeType === "initiative" || n.nodeType === "project")
   );
   const leadsNow = await db.select().from(schema.nodeLeads);
@@ -326,9 +283,9 @@ export async function seedCr05Entities(): Promise<void> {
       });
       assigned++;
     }
-    // roughly a third of delivery nodes are jointly led with an NPC department
+    // roughly a third of delivery nodes are jointly led with a Programme Office unit
     if (h % 3 === 0) {
-      const codes = OUTCOME_DEPTS[outcome] ?? ["planning_policies"];
+      const codes = OUTCOME_DEPTS[outcome] ?? ["SPD"];
       const dept = deptByCode.get(codes[(h >> 3) % codes.length]);
       if (dept) {
         await db.insert(schema.nodeLeads).values({
@@ -367,12 +324,12 @@ export async function seedCr05Entities(): Promise<void> {
     }
   }
   console.log(
-    `nds3 lead coverage: +${assigned} assigned, ${joints} joint department leads, ${supports} supporting rows`
+    `NES lead coverage: +${assigned} assigned, ${joints} joint unit leads, ${supports} supporting rows`
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* CR05 3: stakeholders on every NDS3 project (sponsor, owner, manager, */
+/* CR05 3: stakeholders on every NES project (sponsor, owner, manager, */
 /* team, experts with domains, and an external partner where an entity  */
 /* leads). Deterministic, idempotent (skips when any row exists).       */
 /* ------------------------------------------------------------------ */
@@ -385,11 +342,11 @@ export const EXPERT_NOTES: [string, string][] = [
 ];
 
 const PARTNER_NAMES: [string, string][] = [
-  ["Khalid Al-Sowaidi", "خالد السويدي"],
-  ["Noura Al-Hajri", "نورة الهاجري"],
-  ["Ibrahim Al-Malki", "إبراهيم المالكي"],
-  ["Hessa Al-Khalifa", "حصة آل خليفة"],
-  ["Salem Al-Naimi", "سالم النعيمي"],
+  ["Faisal Al-Rashidi", "فيصل الرشيدي"],
+  ["Reem Al-Zahrani", "ريم الزهراني"],
+  ["Abdulaziz Al-Otaibi", "عبدالعزيز العتيبي"],
+  ["Lama Al-Qahtani", "لمى القحطاني"],
+  ["Saud Al-Dosari", "سعود الدوسري"],
 ];
 
 export async function seedCr05Stakeholders(): Promise<void> {
@@ -402,20 +359,18 @@ export async function seedCr05Stakeholders(): Promise<void> {
     return;
   }
 
-  const [nds3] = await db
-    .select()
-    .from(schema.strategyEditions)
-    .where(eq2(schema.strategyEditions.code, "nds3"));
+  const homeEdition = await findHomeEdition(db, schema);
+  if (!homeEdition) throw new Error("strategy edition missing");
   const nodes = await db
     .select()
     .from(schema.strategyNodes)
-    .where(eq2(schema.strategyNodes.editionId, nds3.id))
+    .where(eq2(schema.strategyNodes.editionId, homeEdition.id))
     .orderBy(asc2(schema.strategyNodes.sort));
   const projects = nodes.filter((n) => n.nodeType === "project");
 
   const users = await db.select().from(schema.users);
   const alive = users.filter((u) => !u.deletedAt);
-  const heads = alive.filter((u) => u.email.startsWith("head.") || u.email === "admin@npc.qa");
+  const heads = alive.filter((u) => u.email.startsWith("head.") || u.email === "admin@enviroai.demo");
   const roleRows = await db.select().from(schema.roles);
   const roleName = new Map(roleRows.map((r) => [r.id, r.nameEn]));
   const contributors = alive.filter((u) =>
@@ -423,7 +378,7 @@ export async function seedCr05Stakeholders(): Promise<void> {
       roleName.get(u.roleId) ?? ""
     )
   );
-  const teamPool = alive.filter((u) => u.email !== "admin@npc.qa");
+  const teamPool = alive.filter((u) => u.email !== "admin@enviroai.demo");
 
   const experts = await db.select().from(schema.experts);
   const domains = await db.select().from(schema.expertDomains);
@@ -501,15 +456,12 @@ export async function seedCr05Stakeholders(): Promise<void> {
     if (leadEntityId) {
       const ent = entityById.get(leadEntityId);
       const partner = PARTNER_NAMES[h % PARTNER_NAMES.length];
-      const domain = ent?.website ? ent.website.replace(/^https?:\/\/(www\.)?/, "") : null;
       await add({
         personKind: "external_contact",
         nameEn: partner[0],
         nameAr: partner[1],
         organisation: ent?.nameEn ?? null,
-        email: domain
-          ? `${partner[0].split(" ")[0].toLowerCase()}.${partner[0].split(" ")[1].replace(/^Al-/, "").toLowerCase()}@${domain}`
-          : null,
+        email: null,
         role: "external_partner",
         roleNoteEn: "Entity focal point",
         roleNoteAr: "منسق الجهة",
@@ -613,46 +565,80 @@ export async function seedCr05Indices(): Promise<void> {
 /* ------------------------------------------------------------------ */
 
 const DEPT_RESPONSIBILITIES: Record<string, [string, string]> = {
-  econ_planning: [
-    "Leads macroeconomic and sectoral planning for NDS3: growth scenarios, diversification analysis, and the economic policy pipeline with the ministries and economic entities.",
-    "تقود التخطيط الاقتصادي الكلي والقطاعي للاستراتيجية الوطنية الثالثة: سيناريوهات النمو وتحليل التنويع الاقتصادي وخط السياسات الاقتصادية مع الوزارات والجهات الاقتصادية.",
+  WSD: [
+    "Leads the water security theme of the NES: demand and supply balance, desalination and wastewater reuse, and the water policy pipeline with MEWA, SWA and NWC.",
+    "تقود محور الأمن المائي في الاستراتيجية الوطنية للبيئة: توازن العرض والطلب وتحلية المياه وإعادة استخدام المياه المعالجة وخط سياسات المياه مع وزارة البيئة والمياه والزراعة والهيئة السعودية للمياه وشركة المياه الوطنية.",
   ],
-  social_planning: [
-    "Plans the social and human development agenda: education, health, labour, family and community outcomes, and their alignment with QNV 2030.",
-    "تخطط أجندة التنمية الاجتماعية والبشرية: مخرجات التعليم والصحة والعمل والأسرة والمجتمع ومواءمتها مع رؤية قطر الوطنية 2030.",
+  AFD: [
+    "Leads the agriculture and food security theme: sustainable farming, agricultural water use, food supply resilience, and alignment with GFSA and FAO.",
+    "تقود محور الأمن الغذائي والزراعة: الزراعة المستدامة واستخدام المياه الزراعية ومرونة إمدادات الغذاء والمواءمة مع الهيئة العامة للأمن الغذائي ومنظمة الفاو.",
   ],
-  foresight_risk: [
-    "Runs horizon scanning, the signals pipeline, national risk registers, and futures work that feeds the mid-term review.",
-    "تدير استشراف الأفق وخط الإشارات وسجلات المخاطر الوطنية وأعمال المستقبلات التي تغذي مراجعة منتصف المدة.",
+  CLD: [
+    "Leads the climate and environment theme: emissions and adaptation tracking, the Saudi Green Initiative targets, and climate data partnerships.",
+    "تقود محور المناخ والبيئة: تتبع الانبعاثات والتكيف ومستهدفات مبادرة السعودية الخضراء وشراكات بيانات المناخ.",
   ],
-  monitoring_eval: [
-    "Owns the NDS3 results framework: KPI collection, status updates, delivery reviews, and the evaluation calendar.",
-    "تملك إطار نتائج الاستراتيجية: جمع مؤشرات الأداء وتحديثات الحالة ومراجعات الإنجاز وتقويم التقييم.",
+  BLD: [
+    "Leads the biodiversity and land theme: protected areas, wildlife, vegetation cover, and desertification indicators with NCW and NCVC.",
+    "تقود محور التنوع الأحيائي والأراضي: المحميات والحياة الفطرية والغطاء النباتي ومؤشرات التصحر مع المركز الوطني لتنمية الحياة الفطرية والمركز الوطني لتنمية الغطاء النباتي.",
   ],
-  national_data: [
-    "Coordinates national data governance, data sharing agreements, and the statistical registers behind the indicators.",
-    "تنسق حوكمة البيانات الوطنية واتفاقيات تبادل البيانات والسجلات الإحصائية التي تقوم عليها المؤشرات.",
+  WCD: [
+    "Leads the waste and circular economy theme: waste data, recycling targets, and coordination with MWAN and the Environment Fund.",
+    "تقود محور النفايات والاقتصاد الدائري: بيانات النفايات ومستهدفات إعادة التدوير والتنسيق مع المركز الوطني لإدارة النفايات وصندوق البيئة.",
   ],
-  stat_operations: [
-    "Runs statistical field operations, surveys and censuses, and the production of official releases.",
-    "تدير العمليات الإحصائية الميدانية والمسوح والتعدادات وإنتاج الإصدارات الرسمية.",
+  AQD: [
+    "Leads the air quality theme: monitoring network data, air quality indices, and coordination with NCEC and NCM.",
+    "تقود محور جودة الهواء: بيانات شبكة الرصد ومؤشرات جودة الهواء والتنسيق مع المركز الوطني للرقابة على الالتزام البيئي والمركز الوطني للأرصاد.",
   ],
-  stat_systems: [
-    "Builds and maintains the statistical production systems, classifications, and quality frameworks.",
-    "تبني وتشغل نظم الإنتاج الإحصائي والتصنيفات وأطر الجودة.",
+  RCM: [
+    "Tracks regulatory compliance and change: the regulatory register, enforcement signals, and compliance reporting across the sector.",
+    "تتابع الامتثال التنظيمي والتغيرات التنظيمية: السجل التنظيمي وإشارات الإنفاذ وتقارير الامتثال على مستوى القطاع.",
   ],
-  planning_policies: [
-    "Develops planning policy, institutional modernization, and government excellence programmes with CGB.",
-    "تطور سياسات التخطيط وبرامج التحديث المؤسسي والتميز الحكومي بالتعاون مع ديوان الخدمة المدنية.",
+  FRS: [
+    "Runs horizon scanning, the signals pipeline, environmental risk registers, and futures work that feeds the mid-term review.",
+    "تدير استشراف الأفق وخط الإشارات وسجلات المخاطر البيئية وأعمال المستقبلات التي تغذي مراجعة منتصف المدة.",
   ],
-  it_dept: [
-    "Operates SiaNexus and the council's digital platforms, integrations, and information security posture.",
-    "تشغل سيا نكسس والمنصات الرقمية للمجلس وتكاملاتها ووضعها في أمن المعلومات.",
+  PMD: [
+    "Owns the NES results framework: KPI collection, status updates, delivery reviews, and the evaluation calendar.",
+    "تملك إطار نتائج الاستراتيجية الوطنية للبيئة: جمع مؤشرات الأداء وتحديثات الحالة ومراجعات الإنجاز وتقويم التقييم.",
   ],
-  sg_office: [
-    "Supports the Secretary General: cabinet coordination, entity relations, and the council's decision pipeline.",
-    "يساند الأمين العام: التنسيق مع مجلس الوزراء وعلاقات الجهات وخط قرارات المجلس.",
+  EDA: [
+    "Coordinates environmental data governance, data sharing agreements, and the registers behind the indicators.",
+    "تنسق حوكمة البيانات البيئية واتفاقيات تبادل البيانات والسجلات التي تقوم عليها المؤشرات.",
   ],
+  DOP: [
+    "Runs environmental monitoring operations, remote sensing and administrative record collection, and the production of data releases.",
+    "تدير عمليات الرصد البيئي والاستشعار عن بعد وجمع السجلات الإدارية وإنتاج إصدارات البيانات.",
+  ],
+  DSY: [
+    "Builds and maintains the data production systems, classifications, and quality frameworks.",
+    "تبني وتشغل نظم إنتاج البيانات والتصنيفات وأطر الجودة.",
+  ],
+  SPD: [
+    "Develops the Programme Strategy, institutional modernisation, and excellence programmes with partner entities.",
+    "تطور استراتيجية المكتب وبرامج التحديث المؤسسي والتميز مع الجهات الشريكة.",
+  ],
+  DIG: [
+    "Operates EnviroAI and the Office's digital platforms, integrations, and information security posture.",
+    "تشغل EnviroAI والمنصات الرقمية للمكتب وتكاملاتها ووضعها في أمن المعلومات.",
+  ],
+  OPD: [
+    "Supports the Programme Director: steering committee coordination, entity relations, and the Office's decision pipeline.",
+    "يساند مدير البرنامج: التنسيق مع اللجنة التوجيهية وعلاقات الجهات وخط قرارات المكتب.",
+  ],
+};
+
+// Placeholder department codes in legacy rows resolve to the new units.
+const LEGACY_UNIT: Record<string, string> = {
+  econ_planning: "WSD",
+  foresight_risk: "FRS",
+  it_dept: "DIG",
+  monitoring_eval: "PMD",
+  national_data: "EDA",
+  planning_policies: "SPD",
+  sg_office: "OPD",
+  social_planning: "AFD",
+  stat_operations: "DOP",
+  stat_systems: "DSY",
 };
 
 export async function seedCr05Hr(): Promise<void> {
@@ -683,7 +669,7 @@ export async function seedCr05Hr(): Promise<void> {
   const departments = await db.select().from(schema.departments);
   for (const d of departments) {
     if (d.responsibilitiesEn) continue;
-    const r = DEPT_RESPONSIBILITIES[d.code];
+    const r = DEPT_RESPONSIBILITIES[d.code] ?? DEPT_RESPONSIBILITIES[LEGACY_UNIT[d.code] ?? ""];
     if (!r) continue;
     await db
       .update(schema.departments)
@@ -700,13 +686,13 @@ export async function seedCr05Hr(): Promise<void> {
 
   const users = await db.select().from(schema.users).where(isNull(schema.users.deletedAt));
   const byEmail = new Map(users.map((u) => [u.email, u]));
-  const admin = byEmail.get("admin@npc.qa")!;
+  const admin = byEmail.get("admin@enviroai.demo")!;
 
   /* statuses: two leaving, one transferring, one long leave (5.8) */
-  const leaving1 = byEmail.get("tariq.odeh@npc.qa");
-  const leaving2 = byEmail.get("priya.nair@npc.qa");
-  const transferring = byEmail.get("nasser.almannai@npc.qa");
-  const longLeave = byEmail.get("mona.abdelrahman@npc.qa");
+  const leaving1 = byEmail.get("tariq.alsulami@enviroai.demo");
+  const leaving2 = byEmail.get("sarah.alanazi@enviroai.demo");
+  const transferring = byEmail.get("nasser.almutlaq@enviroai.demo");
+  const longLeave = byEmail.get("munira.althaqafi@enviroai.demo");
   const statusRows: [typeof leaving1, string, string | null][] = [
     [leaving1, "leaving", "2026-10-15"],
     [leaving2, "leaving", "2026-11-30"],
@@ -721,7 +707,7 @@ export async function seedCr05Hr(): Promise<void> {
       effectiveDate: date,
       targetDepartmentId:
         status === "transferring"
-          ? departments.find((d) => d.code === "national_data")?.id ?? null
+          ? departments.find((d) => d.code === "EDA" || d.code === "national_data")?.id ?? null
           : null,
       note: null,
       setBy: admin.id,
@@ -733,7 +719,7 @@ export async function seedCr05Hr(): Promise<void> {
   /* backups for about 60 percent of owned items */
   const { buildInventory } = await import("../src/server/services/hr");
   const inventory = await buildInventory();
-  const pool = users.filter((u) => !["admin@npc.qa"].includes(u.email));
+  const pool = users.filter((u) => !["admin@enviroai.demo"].includes(u.email));
   let backups = 0;
   for (const [userId, items] of inventory) {
     for (const item of items) {
@@ -765,9 +751,9 @@ export async function seedCr05Hr(): Promise<void> {
   );
   const actor = await getUserById(admin.id);
   if (!actor) throw new Error("admin missing");
-  const successorA = byEmail.get("sara.alansari@npc.qa");
-  const successorB = byEmail.get("omar.barakat@npc.qa");
-  const successorC = byEmail.get("aisha.alemadi@npc.qa");
+  const successorA = byEmail.get("sara.alansari@enviroai.demo");
+  const successorB = byEmail.get("omar.almansour@enviroai.demo");
+  const successorC = byEmail.get("asma.alajlan@enviroai.demo");
 
   // 1: leaving, in progress, half the items handled
   if (leaving1 && successorA) {
@@ -855,7 +841,7 @@ export async function seedCr05Access(): Promise<void> {
   const { eq: eqA, isNull } = await import("drizzle-orm");
 
   const domains = await getSetting<string[] | null>("allowed_domains", null as never);
-  if (!domains) await setSetting("allowed_domains", ["npc.qa"]);
+  if (!domains) await setSetting("allowed_domains", ["enviroai.demo"]);
 
   const roles = await db.select().from(schema.roles);
   let hrRole = roles.find((r) => r.nameEn === "HR Admin");
@@ -899,17 +885,17 @@ export async function seedCr05Access(): Promise<void> {
 
   /* the HR Admin account */
   const users = await db.select().from(schema.users).where(isNull(schema.users.deletedAt));
-  if (!users.some((u) => u.email === "hr@npc.qa")) {
+  if (!users.some((u) => u.email === "hr@enviroai.demo")) {
     const dept = (await db.select().from(schema.departments)).find(
-      (d) => d.code === "sg_office"
+      (d) => d.code === "OPD" || d.code === "sg_office"
     );
     await db.insert(schema.users).values({
       id: ulid(),
-      email: "hr@npc.qa",
-      passwordHash: await hashPassword("Nexus!2026"),
+      email: "hr@enviroai.demo",
+      passwordHash: await hashPassword("EnviroAI!2026"),
       nameEn: "Noof Al-Suwaidi",
       nameAr: "نوف السويدي",
-      avatarColor: "gold",
+      avatarColor: "aqua",
       departmentId: dept?.id ?? null,
       roleId: hrRole!.id,
       clearanceLevel: 3,
@@ -921,7 +907,7 @@ export async function seedCr05Access(): Promise<void> {
       createdAt: now(),
       updatedAt: now(),
     });
-    console.log("hr@npc.qa created (HR Admin)");
+    console.log("hr@enviroai.demo created (HR Admin)");
   }
 }
 
@@ -929,7 +915,7 @@ export async function seedCr05(): Promise<void> {
   await seedCr05Entities();
   await seedCr05Stakeholders();
   await seedCr05Indices();
-  // access first: the HR seed's risk owners fall back to hr@npc.qa
+  // access first: the HR seed's risk owners fall back to hr@enviroai.demo
   await seedCr05Access();
   await seedCr05Hr();
 }

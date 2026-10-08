@@ -13,12 +13,12 @@ import { OwnerControlCompact } from "@/components/nexus/people/OwnerControl";
 import type { ItemRef, OwnerRef } from "@/components/nexus/people/OwnerControl";
 import type { StakeholderRow } from "@/server/services/strategy";
 
-const ROLE_TONES: Record<string, "maroon" | "gulf" | "gold" | "sand" | "ghost"> = {
-  sponsor: "maroon",
-  owner: "gulf",
-  manager: "gold",
-  team: "sand",
-  expert: "gulf",
+const ROLE_TONES: Record<string, "navy" | "teal" | "aqua" | "mist" | "ghost"> = {
+  sponsor: "navy",
+  owner: "teal",
+  manager: "aqua",
+  team: "mist",
+  expert: "teal",
   external_partner: "ghost",
 };
 
@@ -122,11 +122,11 @@ export function AddStakeholderInline({
             aria-label={t("searchPlaceholder")}
           />
           {hits.length ? (
-            <div className="absolute top-11 z-30 w-full overflow-hidden rounded-xl border border-sand-300 bg-white shadow-[var(--shadow-pop)]">
+            <div className="absolute top-11 z-30 w-full overflow-hidden rounded-xl border border-mist-300 bg-white shadow-[var(--shadow-pop)]">
               {hits.slice(0, 6).map((h) => (
                 <button
                   key={`${h.kind}:${h.id}`}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-start text-sm hover:bg-maroon-100/50 cursor-pointer"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-start text-sm hover:bg-navy-100/50 cursor-pointer"
                   onClick={() => {
                     setPicked(h);
                     setHits([]);
@@ -192,7 +192,7 @@ export function StakeholdersSection({
         {canEdit ? (
           <button
             onClick={() => setAdding((a) => !a)}
-            className="flex items-center gap-1 rounded-lg border border-sand-300 bg-white px-2 py-1 text-xs font-medium text-ink-600 hover:border-maroon-300 hover:text-maroon-700 cursor-pointer"
+            className="flex items-center gap-1 rounded-lg border border-mist-300 bg-white px-2 py-1 text-xs font-medium text-ink-600 hover:border-navy-300 hover:text-navy-700 cursor-pointer"
             data-testid="stakeholder-add-toggle"
           >
             {adding ? <X className="size-3.5" /> : <Plus className="size-3.5" />}
@@ -211,7 +211,7 @@ export function StakeholdersSection({
         />
       ) : null}
 
-      <ul className="flex flex-col divide-y divide-sand-100">
+      <ul className="flex flex-col divide-y divide-mist-100">
         {rows.map((s) => {
           const person = s.userId ? owners?.[s.userId] ?? null : null;
           return (
@@ -248,17 +248,17 @@ export function StakeholdersSection({
             </div>
             <span className="flex shrink-0 items-center gap-1.5">
               {s.domain ? (
-                <Chip tone="gulf" className="hidden sm:inline-flex">
+                <Chip tone="teal" className="hidden sm:inline-flex">
                   {bi(locale, s.domain.nameEn, s.domain.nameAr)}
                 </Chip>
               ) : null}
-              <Chip tone={ROLE_TONES[s.role] ?? "sand"} data-testid="stakeholder-role-chip">
+              <Chip tone={ROLE_TONES[s.role] ?? "mist"} data-testid="stakeholder-role-chip">
                 {t(`roles.${s.role}` as never)}
               </Chip>
               {s.email ? (
                 <a
                   href={`mailto:${s.email}`}
-                  className="rounded-lg p-1.5 text-ink-400 hover:bg-sand-100 hover:text-maroon-700"
+                  className="rounded-lg p-1.5 text-ink-400 hover:bg-mist-100 hover:text-navy-700"
                   aria-label={t("email", { name: s.nameEn })}
                 >
                   <Mail className="size-4" />
@@ -268,7 +268,7 @@ export function StakeholdersSection({
                 <Link
                   href={`/experts/${s.expertId}` as never}
                   className={cn(
-                    "rounded-lg border border-sand-300 px-2 py-1 text-[11px] font-medium text-ink-600 hover:border-maroon-300 hover:text-maroon-700"
+                    "rounded-lg border border-mist-300 px-2 py-1 text-[11px] font-medium text-ink-600 hover:border-navy-300 hover:text-navy-700"
                   )}
                 >
                   {t("profile")}

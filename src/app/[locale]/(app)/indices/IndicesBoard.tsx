@@ -102,9 +102,9 @@ export function IndicesBoard({
         JSON.stringify(c.nameEn),
         JSON.stringify(c.publisher ?? ""),
         JSON.stringify(c.groupCodes.join("|")),
-        c.qatar?.year ?? "",
-        c.qatar?.rank ?? "",
-        c.qatar?.score ?? "",
+        c.home?.year ?? "",
+        c.home?.rank ?? "",
+        c.home?.score ?? "",
         c.change ?? "",
         c.gccPosition ?? "",
         c.target?.value ?? "",
@@ -117,7 +117,7 @@ export function IndicesBoard({
     const blob = new Blob([head.concat(rows).join("\n")], { type: "text/csv" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "sianexus-indices.csv";
+    a.download = "enviroai-indices.csv";
     a.click();
     URL.revokeObjectURL(a.href);
   }
@@ -256,7 +256,7 @@ export function IndicesBoard({
           {canManage ? (
             <Button
               size="sm"
-              variant={editing ? "gold" : "secondary"}
+              variant={editing ? "aqua" : "secondary"}
               onClick={() => {
                 setEditing((v) => !v);
                 setDrag(null);
@@ -269,24 +269,24 @@ export function IndicesBoard({
               {editing ? <Check /> : <Pencil />} {editing ? t("doneEditing") : t("editGroups")}
             </Button>
           ) : null}
-          <span className="inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5">
+          <span className="inline-flex items-center gap-0.5 rounded-lg bg-mist-100 p-0.5">
             <button
               type="button"
               onClick={() => setGccMode((v) => !v)}
               className={cn(
-                "rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500",
-                gccMode ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+                "rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500",
+                gccMode ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
               )}
               aria-pressed={gccMode}
               data-testid="gcc-mode"
             >
-              {t("qatarVsGcc")}
+              {t("homeVsGcc")}
             </button>
           </span>
           <button
             type="button"
             onClick={exportCsv}
-            className="flex items-center gap-1 text-xs font-medium text-ink-600 hover:text-maroon-700 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+            className="flex items-center gap-1 text-xs font-medium text-ink-600 hover:text-navy-700 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
           >
             <Download className="size-3.5" aria-hidden /> CSV
           </button>
@@ -309,8 +309,8 @@ export function IndicesBoard({
           aria-selected={active === null}
           onClick={() => selectGroup(null)}
           className={cn(
-            "rounded-lg px-3 py-1.5 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500",
-            active === null ? "bg-maroon-700 font-medium text-white" : "bg-sand-100 text-ink-600 hover:text-ink-900"
+            "rounded-lg px-3 py-1.5 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500",
+            active === null ? "bg-navy-700 font-medium text-white" : "bg-mist-100 text-ink-600 hover:text-ink-900"
           )}
           data-testid="group-tab-all"
         >
@@ -328,8 +328,8 @@ export function IndicesBoard({
               aria-selected={on}
               onClick={() => selectGroup(on ? null : g.code)}
               className={cn(
-                "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500",
-                on ? cn("font-medium text-ink-900 ring-1", style.soft, style.ring) : "bg-sand-100 text-ink-600 hover:text-ink-900"
+                "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500",
+                on ? cn("font-medium text-ink-900 ring-1", style.soft, style.ring) : "bg-mist-100 text-ink-600 hover:text-ink-900"
               )}
               data-testid={`group-tab-${g.code}`}
             >
@@ -343,7 +343,7 @@ export function IndicesBoard({
 
       {/* the whole-board summary strip (All view) */}
       {!active ? (
-        <div className="mb-6 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-xl border border-sand-300 bg-white px-4 py-2.5 text-sm" data-testid="indices-summary">
+        <div className="mb-6 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-xl border border-mist-300 bg-white px-4 py-2.5 text-sm" data-testid="indices-summary">
           <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal">
             {t("acrossBoard")}
           </span>
@@ -355,7 +355,7 @@ export function IndicesBoard({
       ) : null}
 
       {editing ? (
-        <p className="mb-4 rounded-lg bg-gold-100 px-3 py-2 text-xs text-maroon-900" data-testid="edit-hint">
+        <p className="mb-4 rounded-lg bg-aqua-100 px-3 py-2 text-xs text-navy-900" data-testid="edit-hint">
           {t("editHint")}
         </p>
       ) : null}

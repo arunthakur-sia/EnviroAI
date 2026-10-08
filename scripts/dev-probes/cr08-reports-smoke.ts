@@ -13,7 +13,7 @@ async function login(email: string): Promise<string> {
   const res = await fetch(BASE + "/api/v1/auth/login", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email, password: "EnviroAI!2026" }),
     redirect: "manual",
   });
   if (res.status !== 200) throw new Error(`login ${email}: ${res.status}`);
@@ -22,8 +22,8 @@ async function login(email: string): Promise<string> {
 }
 
 async function main() {
-  const cookie = await login("analyst@npc.qa");
-  const adminCookie = await login("admin@npc.qa");
+  const cookie = await login("analyst@enviroai.demo");
+  const adminCookie = await login("admin@enviroai.demo");
   const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
   const { run } = await import("../smoke-cr08-reports");
   let passed = 0;

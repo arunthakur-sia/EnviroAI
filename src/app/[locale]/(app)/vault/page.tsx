@@ -252,7 +252,7 @@ export default async function VaultPage({
           ))}
         </div>
       ) : (
-        <div className="card mt-6 divide-y divide-sand-100">
+        <div className="card mt-6 divide-y divide-mist-100">
           {shelfDocs.map((d) => (
             <DocListRow key={d.id} doc={d} />
           ))}

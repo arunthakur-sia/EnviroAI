@@ -28,7 +28,7 @@ const PAGES = ["/en/home", "/en/vault", "/en/strategy", "/en/indices", "/en/repo
     pages, not about the login screen. */
 async function login(ctx: BrowserContext) {
   const res = await ctx.request.post(`${BASE}/api/v1/auth/login`, {
-    data: { email: "admin@npc.qa", password: "Nexus!2026" },
+    data: { email: "admin@enviroai.demo", password: "EnviroAI!2026" },
     timeout: 120_000,
   });
   if (!res.ok()) throw new Error(`login failed: ${res.status()}`);
@@ -106,7 +106,7 @@ async function main() {
 
   // 3. server response, warm, measured by the browser's own resource timing
   const api: Record<string, number> = {};
-  for (const url of ["/api/v1/documents?limit=40", "/api/v1/indices", "/api/v1/leaderboard?board=people&window=month&category=overall", "/api/v1/search/suggest?q=qatar&locale=en"]) {
+  for (const url of ["/api/v1/documents?limit=40", "/api/v1/indices", "/api/v1/leaderboard?board=people&window=month&category=overall", "/api/v1/search/suggest?q=water&locale=en"]) {
     for (let i = 0; i < 2; i++) {
       const t0 = Date.now();
       const res = await page.request.get(`${BASE}${url}`, { timeout: 120_000 });

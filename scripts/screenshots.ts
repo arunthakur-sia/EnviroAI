@@ -14,7 +14,7 @@ const OUT = path.join(process.cwd(), "data", "screenshots");
 async function login(page: Page, email: string) {
   await page.goto(`${BASE}/en/login`);
   await page.fill("#email", email);
-  await page.fill("#password", "Nexus!2026");
+  await page.fill("#password", "EnviroAI!2026");
   await page.click("button[type=submit]");
   await page.waitForURL("**/home", { timeout: 30000 });
 }
@@ -41,7 +41,7 @@ async function main() {
     ["/en/vault/collections", "collections-en"],
     ["/en/strategy", "strategy-en"],
     ["/ar/strategy", "strategy-ar"],
-    ["/en/strategy?edition=nds2", "strategy-nds2-en"],
+    ["/en/strategy?edition=nes2", "strategy-earlier-cycle-en"],
     ["/en/statistics", "statistics-en"],
     ["/ar/statistics", "statistics-ar"],
     ["/en/experts", "experts-en"],
@@ -57,7 +57,7 @@ async function main() {
   // desktop 1440
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await ctx.newPage();
-  await login(page, "admin@npc.qa");
+  await login(page, "admin@enviroai.demo");
   console.log("1440px:");
   for (const [url, name] of targets) await shoot(page, url, name);
   await shoot(page, "/en/login", "login-en");
@@ -66,7 +66,7 @@ async function main() {
   // analyst home at 1280
   const ctx2 = await browser.newContext({ viewport: { width: 1280, height: 860 } });
   const page2 = await ctx2.newPage();
-  await login(page2, "analyst@npc.qa");
+  await login(page2, "analyst@enviroai.demo");
   console.log("1280px analyst:");
   await shoot(page2, "/en/home", "home-analyst");
   await ctx2.close();
@@ -74,7 +74,7 @@ async function main() {
   // mobile 390
   const ctx3 = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const page3 = await ctx3.newPage();
-  await login(page3, "admin@npc.qa");
+  await login(page3, "admin@enviroai.demo");
   console.log("390px:");
   await shoot(page3, "/en/home", "home-mobile");
   await shoot(page3, "/en/vault", "vault-mobile");

@@ -22,13 +22,13 @@ export function EpisodeCardClient({ episode }: { episode: EpisodeCard }) {
               new CustomEvent("sia:podcast:play", { detail: { id: episode.id } })
             )
           }
-          className="flex size-10 shrink-0 items-center justify-center rounded-full bg-maroon-700 text-white transition-colors hover:bg-maroon-900 cursor-pointer"
+          className="flex size-10 shrink-0 items-center justify-center rounded-full bg-navy-700 text-white transition-colors hover:bg-navy-900 cursor-pointer"
           aria-label={t("play")}
         >
           <Play className="size-4 fill-current" />
         </button>
         <Link href={`/podcast/${episode.id}` as never} className="min-w-0 flex-1">
-          <p className="line-clamp-2 font-medium leading-snug text-ink-900 hover:text-maroon-700">
+          <p className="line-clamp-2 font-medium leading-snug text-ink-900 hover:text-navy-700">
             {bi(locale, episode.titleEn, episode.titleAr)}
           </p>
         </Link>
@@ -44,11 +44,11 @@ export function EpisodeCardClient({ episode }: { episode: EpisodeCard }) {
         </p>
       ) : null}
       <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-1">
-        <Chip tone="sand">
+        <Chip tone="mist">
           <span className="tnum">{t("minutes", { minutes })}</span>
         </Chip>
-        <Chip tone="sand">{t(`langNames.${episode.language}` as never)}</Chip>
-        <Chip tone={episode.audioProvider === "browser" ? "sand" : "gold"}>
+        <Chip tone="mist">{t(`langNames.${episode.language}` as never)}</Chip>
+        <Chip tone={episode.audioProvider === "browser" ? "mist" : "aqua"}>
           {episode.audioProvider === "browser" ? t("browserVoice") : t("studioVoice")}
         </Chip>
         <span className="ms-auto flex items-center gap-1 text-[11px] text-ink-600 tnum">

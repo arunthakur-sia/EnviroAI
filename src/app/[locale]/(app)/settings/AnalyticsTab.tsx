@@ -81,7 +81,7 @@ export function AnalyticsTab({ data }: { data: AnalyticsData | null }) {
           <div>
             <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink-900">{narrative}</p>
             {actions.length ? (
-              <ul className="mt-3 space-y-1 border-t border-sand-100 pt-3 text-sm text-maroon-900">
+              <ul className="mt-3 space-y-1 border-t border-mist-100 pt-3 text-sm text-navy-900">
                 {actions.map((a, i) => (
                   <li key={i}>· {locale === "ar" ? a.text_ar : a.text_en}</li>
                 ))}
@@ -108,7 +108,7 @@ export function AnalyticsTab({ data }: { data: AnalyticsData | null }) {
       <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {tiles.map((tile) => (
           <div key={tile.label} className="card px-4 py-3.5">
-            <p className="font-[family-name:var(--font-display)] text-2xl font-semibold text-maroon-900 tnum">
+            <p className="font-[family-name:var(--font-display)] text-2xl font-semibold text-navy-900 tnum">
               {tile.value}
             </p>
             <p className="mt-0.5 text-xs text-ink-600">{tile.label}</p>
@@ -127,16 +127,16 @@ export function AnalyticsTab({ data }: { data: AnalyticsData | null }) {
                   dataKey="week"
                   tick={{ fontSize: 10, fill: "var(--color-ink-400)" }}
                   tickLine={false}
-                  axisLine={{ stroke: "var(--color-sand-300)" }}
+                  axisLine={{ stroke: "var(--color-mist-300)" }}
                 />
                 <YAxis tick={{ fontSize: 10, fill: "var(--color-ink-400)" }} tickLine={false} axisLine={false} width={28} />
-                <Tooltip contentStyle={{ fontSize: 12, borderRadius: 10, borderColor: "var(--color-sand-300)" }} />
+                <Tooltip contentStyle={{ fontSize: 12, borderRadius: 10, borderColor: "var(--color-mist-300)" }} />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="uploads" stackId="a" fill="var(--color-maroon-700)" name={t("cUploads")} />
-                <Bar dataKey="answers" stackId="a" fill="var(--color-gulf-600)" name={t("cAnswers")} />
-                <Bar dataKey="lessons" stackId="a" fill="var(--color-gold-500)" name={t("cLessons")} />
-                <Bar dataKey="verifications" stackId="a" fill="var(--color-maroon-300)" name={t("cVerifications")} />
-                <Bar dataKey="other" stackId="a" fill="var(--color-sand-300)" name={t("cOther")} radius={[3, 3, 0, 0]} />
+                <Bar dataKey="uploads" stackId="a" fill="var(--color-navy-700)" name={t("cUploads")} />
+                <Bar dataKey="answers" stackId="a" fill="var(--color-teal-600)" name={t("cAnswers")} />
+                <Bar dataKey="lessons" stackId="a" fill="var(--color-aqua-500)" name={t("cLessons")} />
+                <Bar dataKey="verifications" stackId="a" fill="var(--color-navy-300)" name={t("cVerifications")} />
+                <Bar dataKey="other" stackId="a" fill="var(--color-mist-300)" name={t("cOther")} radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

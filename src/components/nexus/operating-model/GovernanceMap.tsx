@@ -105,7 +105,7 @@ function BodyCard({
       ref={cardRef}
       className={cn(
         "card relative w-[272px] max-w-full overflow-hidden transition-colors",
-        open ? "border-maroon-300 shadow-[var(--shadow-lift)]" : "card-hover"
+        open ? "border-navy-300 shadow-[var(--shadow-lift)]" : "card-hover"
       )}
       data-testid="governance-body"
       data-body-id={body.id}
@@ -117,7 +117,7 @@ function BodyCard({
         aria-expanded={open}
         aria-controls={panelId}
         aria-label={open ? t("governance.closeAria", { name }) : t("governance.openAria", { name })}
-        className="flex w-full cursor-pointer flex-col gap-2 px-4 py-3.5 text-start outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+        className="flex w-full cursor-pointer flex-col gap-2 px-4 py-3.5 text-start outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
       >
         <span className="flex w-full items-start gap-2">
           <span
@@ -133,7 +133,7 @@ function BodyCard({
         </span>
         <span className="flex flex-wrap items-center gap-1.5">
           {cadence ? (
-            <Chip tone="gulf">
+            <Chip tone="teal">
               <CalendarDays className="size-3" aria-hidden />
               {cadence}
             </Chip>
@@ -155,14 +155,14 @@ function BodyCard({
             transition={{ duration: 0.24, ease: EASE }}
             className="overflow-hidden"
           >
-            <div className="space-y-3 border-t border-sand-200 px-4 py-3.5">
+            <div className="space-y-3 border-t border-mist-200 px-4 py-3.5">
               <div>
                 <SubLabel>
                   <Gavel className="me-1 inline size-3 align-[-1px]" aria-hidden />
                   {t("governance.decisions")}
                 </SubLabel>
                 {decisions.length ? (
-                  <ol className="list-decimal space-y-1 ps-4 text-xs leading-relaxed text-ink-900 marker:text-maroon-700">
+                  <ol className="list-decimal space-y-1 ps-4 text-xs leading-relaxed text-ink-900 marker:text-navy-700">
                     {decisions.map((d, i) => (
                       <li key={i}>{d}</li>
                     ))}
@@ -179,7 +179,7 @@ function BodyCard({
                 {body.members.length ? (
                   <div className="flex flex-wrap gap-1">
                     {body.members.map((m, i) => (
-                      <Chip key={i} tone="sand">
+                      <Chip key={i} tone="mist">
                         {bi(locale, m.en, m.ar)}
                       </Chip>
                     ))}
@@ -192,7 +192,7 @@ function BodyCard({
                 <SubLabel>{t("governance.escalation")}</SubLabel>
                 <p className="text-xs leading-relaxed text-ink-900">
                   {escalatesTo ? (
-                    <span className="font-medium text-maroon-700">
+                    <span className="font-medium text-navy-700">
                       {t("governance.escalatesTo", { body: bi(locale, escalatesTo.nameEn, escalatesTo.nameAr) })}
                     </span>
                   ) : (
@@ -286,7 +286,7 @@ export function GovernanceMap({ governance, n }: { governance: GovernanceView; n
       {bodies.length === 0 ? (
         <EmptyState title={t("governance.empty")} hint={t("governance.emptyHint")} />
       ) : (
-        <div className="rounded-2xl border border-sand-200 bg-white/60 px-3 py-6 sm:px-6" data-testid="governance-map">
+        <div className="rounded-2xl border border-mist-200 bg-white/60 px-3 py-6 sm:px-6" data-testid="governance-map">
           <div ref={containerRef} className="relative" role="group" aria-label={t("governance.mapAria")}>
             <svg
               className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
@@ -352,7 +352,7 @@ export function GovernanceMap({ governance, n }: { governance: GovernanceView; n
               ))}
             </div>
           </div>
-          <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-sand-200 pt-4" data-testid="governance-legend">
+          <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-mist-200 pt-4" data-testid="governance-legend">
             <span className="text-[11px] font-semibold text-ink-600">{t("governance.legend")}</span>
             {CONNECTOR_ORDER.map((kind) => (
               <span key={kind} className="flex items-center gap-2 text-xs text-ink-600">

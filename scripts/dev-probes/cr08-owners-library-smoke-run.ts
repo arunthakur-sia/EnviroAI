@@ -11,7 +11,7 @@ async function login(email: string): Promise<string> {
   const res = await fetch(`${BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email, password: "EnviroAI!2026" }),
   });
   if (res.status !== 200) throw new Error(`login ${email} -> ${res.status}`);
   return (res.headers.get("set-cookie") ?? "").split(";")[0];
@@ -21,7 +21,7 @@ async function main() {
   const { createClient } = await import("@libsql/client");
   const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
   await db.execute("PRAGMA busy_timeout = 8000");
-  const ctx = { base: BASE, cookie: await login("analyst@npc.qa"), adminCookie: await login("admin@npc.qa"), db };
+  const ctx = { base: BASE, cookie: await login("analyst@enviroai.demo"), adminCookie: await login("admin@enviroai.demo"), db };
   const { run } = await import("../smoke-cr08-owners-library");
   let pass = 0;
   let fail = 0;

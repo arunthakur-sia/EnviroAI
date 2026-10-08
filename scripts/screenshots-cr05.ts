@@ -17,7 +17,7 @@ const want = (s: string) => only.length === 0 || only.includes(s);
 async function login(page: Page, email: string) {
   await page.goto(`${BASE}/en/login`);
   await page.fill("#email", email);
-  await page.fill("#password", "Nexus!2026");
+  await page.fill("#password", "EnviroAI!2026");
   await page.click("button[type=submit]");
   await page.waitForURL("**/home", { timeout: 60000 });
 }
@@ -50,7 +50,7 @@ async function withViewport(
   width: number,
   height: number,
   fn: (page: Page) => Promise<void>,
-  email = "admin@npc.qa"
+  email = "admin@enviroai.demo"
 ) {
   const ctx = await browser.newContext({ viewport: { width, height } });
   const page = await ctx.newPage();
@@ -91,7 +91,7 @@ async function main() {
 
   if (want("colour")) {
     await withViewport(browser, 1440, 900, async (page) => {
-      console.log("after (Maroon Authority) 1440:");
+      console.log("after (Sia navy) 1440:");
       await auditPages(page, "after");
       // the bar search focus state
       await go(page, "/en/home");

@@ -22,7 +22,7 @@
 //     through personOf(), never through a bare users join.
 //   * `handover_items.successor_user_id` mirrors recipient_user_id so the
 //     CR05 readiness rules (deputies) keep reading.
-//   * Interview transcripts are never audited and never reach Ask NPC for
+//   * Interview transcripts are never audited and never reach Ask EnviroAI for
 //     anyone but the person and the administrators in scope.
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
@@ -266,7 +266,7 @@ export async function personOf(h: Pick<HandoverRow, "userId" | "personKind" | "e
       nameEn: e?.nameEn ?? h.externalName ?? "External",
       nameAr: e?.nameAr ?? h.externalName ?? "خبير خارجي",
       email: e?.email ?? h.externalEmail ?? null,
-      avatarColor: e?.avatarColor ?? "gulf",
+      avatarColor: e?.avatarColor ?? "teal",
       organisationEn: e?.organisationEn ?? null,
       organisationAr: e?.organisationAr ?? e?.organisationEn ?? null,
       positionEn: e?.positionEn ?? null,
@@ -289,7 +289,7 @@ export async function personOf(h: Pick<HandoverRow, "userId" | "personKind" | "e
     nameEn: u?.nameEn ?? "Unknown",
     nameAr: u?.nameAr ?? "غير معروف",
     email: u?.email ?? null,
-    avatarColor: u?.avatarColor ?? "maroon",
+    avatarColor: u?.avatarColor ?? "navy",
     organisationEn: null,
     organisationAr: null,
     positionEn: u?.positionEn ?? null,
@@ -439,7 +439,7 @@ export async function buildInventoryFor(person: { userId?: string | null; expert
     for (const l of lessons) {
       push({ category: "lesson", resourceType: "lesson", resourceId: l.id, title: l.titleEn, titleAr: l.titleAr, nodeId: l.nodeId, critical: false });
     }
-    // owned nodes (NDS and Council)
+    // owned nodes (NES and Programme Strategy)
     for (const n of nodes) {
       if (n.ownerUserId !== userId) continue;
       const t = nodeTitle(n);
@@ -547,7 +547,7 @@ export async function buildInventoryFor(person: { userId?: string | null; expert
 /* 6.1 who may start                                                    */
 /* ------------------------------------------------------------------ */
 
-/** Nodes (NDS and Council) the actor owns or manages. */
+/** Nodes (NES and Programme Strategy) the actor owns or manages. */
 async function ownedNodeIds(actor: CurrentUser): Promise<Set<string>> {
   const ids = new Set<string>();
   const owned = await db.select({ id: schema.strategyNodes.id }).from(schema.strategyNodes).where(eq(schema.strategyNodes.ownerUserId, actor.id));
@@ -610,7 +610,7 @@ async function resolvePerson(actor: CurrentUser, input: PersonInput): Promise<Pe
     const [e] = await db.select().from(schema.experts).where(eq(schema.experts.id, input.expertId)).limit(1);
     if (!e) throw new HandoverError("person_not_found", 404);
     if (e.userId) {
-      // an NPC employee's profile: the handover is internal
+      // a Programme Office employee's profile: the handover is internal
       return personOf({ userId: e.userId, personKind: "employee", expertId: null, externalName: null, externalEmail: null });
     }
     return personOf({ userId: e.id, personKind: "external", expertId: e.id, externalName: e.nameEn, externalEmail: e.email });
@@ -1184,7 +1184,7 @@ export type HandoverListRow = {
   readiness: boolean;
   cutOffAt: string | null;
   reportDocumentId: string | null;
-  /** seeded demonstration content, marked on the row like the Council Strategy */
+  /** seeded demonstration content, marked on the row like the Programme Strategy */
   illustrative: boolean;
 };
 
@@ -1248,7 +1248,7 @@ export async function searchStartCandidates(q: string): Promise<{ employees: (Us
     .leftJoin(schema.orgUnits, eq(schema.orgUnits.id, schema.users.departmentId))
     .where(isNull(schema.users.deletedAt))
     .orderBy(asc(schema.users.nameEn));
-  const experts = await db.select().from(schema.experts).where(ne(schema.experts.type, "npc_employee")).orderBy(asc(schema.experts.nameEn));
+  const experts = await db.select().from(schema.experts).where(ne(schema.experts.type, "org_employee")).orderBy(asc(schema.experts.nameEn));
   const match = (s: (string | null | undefined)[]) => !needle || s.some((x) => (x ?? "").toLowerCase().includes(needle));
   return {
     employees: users.filter((u) => match([u.nameEn, u.nameAr, u.email, u.unitEn])).slice(0, 12),
@@ -1504,7 +1504,7 @@ export async function markUnderstood(recipient: CurrentUser, itemId: string): Pr
 const MOCK_QUESTIONS: BiLine[] = [
   { en: "What is the current status of {topic}, and what is the next milestone a successor must not miss?", ar: "ما الوضع الحالي لـ {topic}، وما المحطة التالية التي لا ينبغي للخلف أن يفوّتها؟" },
   { en: "Which decisions shaped this work so far, and why were they taken?", ar: "ما القرارات التي شكّلت هذا العمل حتى الآن، ولماذا اتُّخذت؟" },
-  { en: "Who are the people a successor must know, inside NPC and outside it, and what does each one care about?", ar: "من الأشخاص الذين ينبغي للخلف معرفتهم داخل المجلس وخارجه، وما الذي يهم كل واحد منهم؟" },
+  { en: "Who are the people a successor must know, inside Programme Office and outside it, and what does each one care about?", ar: "من الأشخاص الذين ينبغي للخلف معرفتهم داخل المكتب وخارجه، وما الذي يهم كل واحد منهم؟" },
   { en: "What went wrong or nearly went wrong, and what should a successor avoid?", ar: "ما الذي أخفق أو كاد أن يخفق، وما الذي ينبغي للخلف تجنبه؟" },
   { en: "Where do the files, the data and the working papers live, and who holds access to them?", ar: "أين تُحفظ الملفات والبيانات وأوراق العمل، ومن يملك صلاحية الوصول إليها؟" },
   { en: "If you had one hour with your successor, what would you tell them first?", ar: "لو كان لديك ساعة واحدة مع خلفك، فما أول ما ستخبره به؟" },
@@ -1524,7 +1524,7 @@ async function interviewAccess(actor: InterviewActor, h: HandoverRow, write: boo
   if (!actor.userId) throw new HandoverError("unauthorized", 401);
   if (h.personKind === "employee" && h.userId === actor.userId) return;
   if (actor.admin && !write) return;
-  if (actor.admin && h.personKind === "external") return; // the NPC counterpart interviews on behalf
+  if (actor.admin && h.personKind === "external") return; // the Programme Office counterpart interviews on behalf
   throw new HandoverError("forbidden", 403);
 }
 
@@ -1738,7 +1738,7 @@ export async function completeInterview(actor: InterviewActor, interviewId: stri
           id: newId(),
           lessonId,
           nodeId: iv.topicRefId,
-          nodeKind: iv.topicRefType === "council_node" ? "council" : "nds",
+          nodeKind: iv.topicRefType === "council_node" ? "council" : "nes",
           isPrimary: 1,
           linkedBy: authorId,
           linkedAt: nowIso(),
@@ -1793,7 +1793,7 @@ const CATEGORY_TOPIC: Record<ItemCategory, BiLine> = {
   project_role: { en: "Owned projects", ar: "المشاريع المملوكة" },
   stakeholder_role: { en: "Project roles", ar: "الأدوار في المشاريع" },
   indicator: { en: "Indicators", ar: "المؤشرات" },
-  council_indicator: { en: "Council indicators", ar: "مؤشرات المجلس" },
+  council_indicator: { en: "Office indicators", ar: "مؤشرات المكتب" },
   expert_request: { en: "Open expert requests", ar: "طلبات الخبراء المفتوحة" },
   expert_profile: { en: "Expert profiles maintained", ar: "ملفات الخبراء المُدارة" },
   contact: { en: "Contacts", ar: "جهات الاتصال" },
@@ -2489,7 +2489,7 @@ export async function getTokenWorkspace(token: string): Promise<HandoverDetail |
   return { ...detail, recipients: [], filing: { ...detail.filing, items: [] } };
 }
 
-/** A text note or an uploaded file added through the token, owned by the NPC counterpart. */
+/** A text note or an uploaded file added through the token, owned by the Programme Office counterpart. */
 export async function addItemViaToken(
   token: string,
   input: { title: string; note: string | null; text?: string | null; file?: { name: string; mime: string; data: Buffer } | null }
@@ -2606,9 +2606,9 @@ export async function buildHandoverReportModel(detail: HandoverDetail, admin: Cu
       {
         kind: "kpis",
         items: [
-          { label: bi("To people", "إلى أشخاص"), value: String(toPerson.length), tone: "maroon" },
-          { label: bi("To the system", "إلى النظام"), value: String(toSystem.length), tone: "gulf" },
-          { label: bi("Interviews complete", "مقابلات مكتملة"), value: String(detail.progress.interviews.complete), tone: "gold" },
+          { label: bi("To people", "إلى أشخاص"), value: String(toPerson.length), tone: "navy" },
+          { label: bi("To the system", "إلى النظام"), value: String(toSystem.length), tone: "teal" },
+          { label: bi("Interviews complete", "مقابلات مكتملة"), value: String(detail.progress.interviews.complete), tone: "aqua" },
           { label: bi("Recipients signed off", "مستلمون وقّعوا"), value: `${detail.progress.paths.signedOff}/${detail.progress.paths.total}`, tone: "ink" },
         ],
       },
@@ -2642,7 +2642,7 @@ export async function buildHandoverReportModel(detail: HandoverDetail, admin: Cu
           kind: "table",
           columns: [bi("Item", "العنصر"), bi("Recipient", "المستلم"), bi("Status", "الحالة"), bi("Handover note", "ملاحظة التسليم")],
           rows: rows.map((r) => {
-            if (r.resourceType === "document") sourceN(r.title, "SiaNexus Institutional Memory");
+            if (r.resourceType === "document") sourceN(r.title, "EnviroAI Institutional Memory");
             const recipient = r.recipientKind === "system" ? bi(`Institutional Memory${r.filingProposal?.custodianNameEn ? ` (custodian ${r.filingProposal.custodianNameEn})` : ""}`, `مكتبة المعرفة${r.filingProposal?.custodianNameAr ? ` (الأمين ${r.filingProposal.custodianNameAr})` : ""}`) : r.recipient ? bi(r.recipient.nameEn, r.recipient.nameAr) : bi("Undecided", "لم يُقرر");
             return [bi(r.title, r.title), recipient, STATUS_LABEL[r.status] ?? bi(r.status, r.status), bi((r.note ?? "").slice(0, 300) || "No note", (r.note ?? "").slice(0, 300) || "لا توجد ملاحظة")];
           }),
@@ -2707,7 +2707,7 @@ export async function buildHandoverReportModel(detail: HandoverDetail, admin: Cu
     sources: [],
   });
   sections.push({ code: "sources_appendix", title: bi("Sources", "المصادر"), layout: "sources", blocks: [{ kind: "sources", items: sources }], sources });
-  sections.push({ code: "closing", title: bi("SiaNexus", "سيا نكسس"), layout: "closing", blocks: [] });
+  sections.push({ code: "closing", title: bi("EnviroAI", "EnviroAI"), layout: "closing", blocks: [] });
   let n = 0;
   const numbered = sections.map((s) => (s.code === "cover" || s.code === "contents" || s.code === "closing" ? s : { ...s, numeral: String(++n).padStart(2, "0") }));
   return {
@@ -2793,7 +2793,7 @@ async function archiveReport(admin: CurrentUser, detail: HandoverDetail): Promis
     ownerUserId: admin.id,
     languageOriginal: "en",
     status: "published",
-    sourceOrigin: "npc",
+    sourceOrigin: "org",
     publishYear: Number(now.slice(0, 4)),
     originalFilename: filename,
     mime: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",

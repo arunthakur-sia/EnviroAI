@@ -37,8 +37,8 @@ type AccessData = {
   audit: { action: string; by: string | null; at: string; meta: string | null }[];
 };
 
-const SOURCE_TONE: Record<string, "sand" | "ok" | "danger" | "ghost"> = {
-  role: "sand",
+const SOURCE_TONE: Record<string, "mist" | "ok" | "danger" | "ghost"> = {
+  role: "mist",
   grant: "ok",
   deny: "danger",
   none: "ghost",
@@ -209,7 +209,7 @@ export function UserAccessDialog({
             </div>
 
             {/* override context */}
-            <div className="flex flex-wrap items-end gap-3 rounded-xl bg-sand-50 p-3">
+            <div className="flex flex-wrap items-end gap-3 rounded-xl bg-mist-50 p-3">
               <div className="min-w-56 flex-1">
                 <Label htmlFor="user-access-reason">{t("reason")}</Label>
                 <Input id="user-access-reason" value={reason} onChange={(e) => setReason(e.target.value)} placeholder={t("reasonPlaceholder")} />
@@ -234,8 +234,8 @@ export function UserAccessDialog({
                     className={cn(
                       "flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs cursor-pointer",
                       p.effective
-                        ? "border-sand-300 bg-white text-ink-900"
-                        : "border-dashed border-sand-300 bg-sand-50 text-ink-400 line-through"
+                        ? "border-mist-300 bg-white text-ink-900"
+                        : "border-dashed border-mist-300 bg-mist-50 text-ink-400 line-through"
                     )}
                     title={t(`sources.${p.source}` as never)}
                   >
@@ -247,10 +247,10 @@ export function UserAccessDialog({
             </div>
 
             {/* module matrix */}
-            <div className="overflow-x-auto rounded-xl border border-sand-200" data-testid="access-matrix">
+            <div className="overflow-x-auto rounded-xl border border-mist-200" data-testid="access-matrix">
               <table className="w-full min-w-[680px] text-xs">
                 <thead>
-                  <tr className="bg-sand-50">
+                  <tr className="bg-mist-50">
                     <th className="px-3 py-2 text-start font-semibold text-ink-600">{ts("module")}</th>
                     {data.matrix[0]?.actions.map((a) => (
                       <th key={a.action} className="px-2 py-2 text-center font-semibold text-ink-600">
@@ -261,7 +261,7 @@ export function UserAccessDialog({
                 </thead>
                 <tbody>
                   {data.matrix.map((row) => (
-                    <tr key={row.module} className="border-t border-sand-100">
+                    <tr key={row.module} className="border-t border-mist-100">
                       <td className="px-3 py-1.5 font-medium text-ink-900">
                         {ts(`modules.${row.module}` as never)}
                       </td>
@@ -276,10 +276,10 @@ export function UserAccessDialog({
                               cell.effective
                                 ? cell.source === "grant"
                                   ? "border-ok bg-ok-light text-ok"
-                                  : "border-sand-300 bg-white text-ink-900"
+                                  : "border-mist-300 bg-white text-ink-900"
                                 : cell.source === "deny"
                                   ? "border-danger bg-danger-light text-danger"
-                                  : "border-sand-200 bg-sand-50 text-ink-200"
+                                  : "border-mist-200 bg-mist-50 text-ink-200"
                             )}
                             title={`${row.module}:${cell.action} · ${t(`sources.${cell.source}` as never)}`}
                             aria-label={`${row.module} ${cell.action} ${cell.effective ? "on" : "off"} (${cell.source})`}
@@ -302,7 +302,7 @@ export function UserAccessDialog({
                 </p>
                 <ul className="flex flex-col gap-1 text-xs">
                   {data.overrides.map((o, i) => (
-                    <li key={i} className="flex flex-wrap items-center gap-2 rounded-lg bg-sand-50 px-2.5 py-1.5">
+                    <li key={i} className="flex flex-wrap items-center gap-2 rounded-lg bg-mist-50 px-2.5 py-1.5">
                       <code className="tnum">{o.permissionKey}</code>
                       <Chip tone={o.effect === "grant" ? "ok" : "danger"}>{o.effect}</Chip>
                       {o.reason ? <span className="text-ink-600">{o.reason}</span> : null}

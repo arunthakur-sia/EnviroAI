@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 // One-command setup: npm run setup
 // Installs dependencies, applies machine-policy workarounds, creates ./data,
-// downloads fonts and public NPC sources, runs migrations, seeds everything.
+// downloads fonts and public Saudi environment sources, runs migrations, seeds everything.
 // Idempotent: safe to run again.
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -50,8 +50,8 @@ if (fs.existsSync(workerSrc)) {
 // 5. fonts (skips files already present)
 run("download fonts", "node", ["scripts/fetch-fonts.mjs"], { optional: true });
 
-// 6. public NPC sources (retries + fallbacks inside; never fails the setup)
-run("fetch public NPC sources", "node", ["scripts/fetch-sources.mjs"], { optional: true });
+// 6. public Saudi environment sources (from the KSA data source databank) (retries + fallbacks inside; never fails the setup)
+run("fetch public environment sources", "node", ["scripts/fetch-sources.mjs"], { optional: true });
 
 // 7. migrations + full seed (drops and recreates data/nexus.db). CR05: the
 // seed also fetches international index data (skippable with
@@ -62,14 +62,14 @@ run("seed database", "npx", ["tsx", "scripts/seed.ts"]);
 run("verify embeddings", "npx", ["tsx", "scripts/reembed.ts"], { optional: true });
 
 console.log(`
-== SiaNexus is ready ==
+== EnviroAI is ready ==
 
   npm run dev
 
 then open http://localhost:3000 and sign in:
 
-  admin@npc.qa / Nexus!2026   (Super Admin)
-  analyst@npc.qa / Nexus!2026 (Contributor, sees the onboarding quest)
+  admin@enviroai.demo / EnviroAI!2026   (Super Admin)
+  analyst@enviroai.demo / EnviroAI!2026 (Contributor, sees the onboarding quest)
 
 All accounts are listed in README.md.
 `);

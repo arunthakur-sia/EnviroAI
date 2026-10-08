@@ -13,7 +13,7 @@ async function login(email: string): Promise<string> {
   const res = await fetch(`${BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email, password: "EnviroAI!2026" }),
   });
   if (res.status !== 200) throw new Error(`login ${email}: ${res.status}`);
   const raw = res.headers.get("set-cookie") ?? "";
@@ -27,7 +27,7 @@ async function login(email: string): Promise<string> {
 async function main() {
   const { rawClient } = await import("../../src/server/db/client");
   const { run } = await import("../smoke-cr08-opmodel");
-  const [cookie, adminCookie] = await Promise.all([login("analyst@npc.qa"), login("admin@npc.qa")]);
+  const [cookie, adminCookie] = await Promise.all([login("analyst@enviroai.demo"), login("admin@enviroai.demo")]);
   let passed = 0;
   let failed = 0;
   await run(

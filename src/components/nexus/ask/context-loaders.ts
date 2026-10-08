@@ -1,5 +1,5 @@
 import "server-only";
-// CR08 2.3: server helpers that turn a route id into the Ask NPC context item
+// CR08 2.3: server helpers that turn a route id into the Ask EnviroAI context item
 // a page mounts, for pages whose renderer lives elsewhere (the strategy node
 // route delegates to node-detail.tsx and never sees the node itself).
 import { eq } from "drizzle-orm";

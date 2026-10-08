@@ -1,0 +1,194 @@
+{
+  "ksaSources": {
+    "title": "Source Library",
+    "subtitle": "{count} public sources on the Saudi environment, water and agriculture sector.",
+    "searchPlaceholder": "Search sources, publishers, formats, notes...",
+    "searchLabel": "Search the Source Library",
+    "all": "All",
+    "categories": {
+      "regulatory": "Regulatory & Government",
+      "scientific": "Scientific & Academic",
+      "initiatives": "National Initiatives",
+      "portals": "Global Data Portals",
+      "indices": "Global Indices & Market Research",
+      "verification": "Verification notes"
+    },
+    "categoryLabel": "Category",
+    "accessLabel": "Access",
+    "access": {
+      "free": "Free",
+      "registration": "Registration",
+      "paid": "Paid"
+    },
+    "anyAccess": "Any access",
+    "flaggedOnly": "Flagged only",
+    "showing": "Showing {shown} of {total} sources",
+    "showingNotes": "Showing {shown} of {total} verification notes",
+    "clear": "Clear filters",
+    "columns": {
+      "name": "Source name",
+      "organization": "Organization / Publisher",
+      "subCategory": "Sub-category",
+      "links": "Links",
+      "formats": "Formats",
+      "languages": "Languages",
+      "access": "Access",
+      "notes": "Notes"
+    },
+    "mainSite": "Main site",
+    "dataPage": "Data and publications",
+    "openLink": "Open {name} in a new tab",
+    "searchHint": "How to search",
+    "unverified": "Needs verification",
+    "flagged": "Flagged",
+    "noResults": "No sources match these filters.",
+    "noResultsHint": "Clear a filter or try a shorter search.",
+    "notesInEnglish": "Notes come from the source databank and are shown in English.",
+    "panel": {
+      "title": "Verification notes",
+      "issue": "Issue flagged",
+      "action": "Recommended action",
+      "appliesTo": "Applies to",
+      "tab": "Databank tab",
+      "none": "No verification note is attached to this source.",
+      "statusOnly": "The databank marks this source's access or status as unverified or unclear. Confirm it before relying on it.",
+      "close": "Close",
+      "open": "Review {count} verification notes",
+      "openOne": "Review verification note",
+      "gap": "Gap in the databank"
+    },
+    "verification": {
+      "intro": "Items the databank flags for a manual hand-check before they are relied on or shared externally."
+    }
+  },
+  "ksaRegulatory": {
+    "title": "Regulatory Overview",
+    "titleAlt": "نظام البيئة",
+    "subtitle": "The legal framework for environmental compliance in Saudi Arabia, and the institutions it created.",
+    "illustrativeBanner": "Rows and events marked Illustrative are placeholders that keep the layout complete. The source databank lists sources, not individual decrees, and does not confirm them.",
+    "directory": {
+      "title": "Regulator Directory",
+      "count": "{count, plural, one {# regulation} other {# regulations}}",
+      "select": "Show the regulations of {name}",
+      "clear": "Show all regulators",
+      "active": "Filtered by {name}"
+    },
+    "timeline": {
+      "title": "Key Regulatory Timeline",
+      "legend": "Legend",
+      "kinds": {
+        "law": "Law",
+        "decision": "Decision",
+        "event": "Important event"
+      },
+      "empty": "No timeline events yet."
+    },
+    "table": {
+      "title": "Regulations & Guidelines",
+      "title2": "Title",
+      "body": "Issuing body",
+      "type": "Instrument type",
+      "status": "Status",
+      "actions": "Actions",
+      "empty": "No regulations match this filter.",
+      "dateTbc": "Date to be confirmed",
+      "hijri": "H",
+      "viewDocument": "View document",
+      "noDocument": "No document link",
+      "fromSources": "Traced to the Source Library",
+      "filterLabel": "Filter by instrument type"
+    },
+    "filters": {
+      "all": "All",
+      "law": "Laws",
+      "royal_decree": "Royal Decrees",
+      "cabinet_resolution": "Cabinet Resolutions",
+      "executive_regulation": "Executive Regulations",
+      "strategy": "Strategies",
+      "library": "Libraries"
+    },
+    "types": {
+      "law": "Law",
+      "royal_decree": "Royal Decree",
+      "cabinet_resolution": "Cabinet Resolution",
+      "executive_regulation": "Executive Regulation",
+      "strategy": "Strategy",
+      "library": "Regulations library"
+    },
+    "status": {
+      "active": "Active",
+      "superseded": "Superseded"
+    },
+    "illustrative": "Illustrative",
+    "illustrativeHint": "Illustrative placeholder, not a verified instrument."
+  },
+  "ksaReader": {
+    "outline": "Document outline",
+    "outlineSearch": "Search in document...",
+    "collapseAll": "Collapse all",
+    "expandAll": "Expand all",
+    "collapsePanel": "Collapse the outline",
+    "showOutline": "Show the outline",
+    "noOutline": "No outline was extracted from this document.",
+    "noMatches": "No sections match.",
+    "progress": "Section {section} of {sections}. Page {page} of {total}",
+    "updated": "Updated {date}",
+    "actions": {
+      "listen": "Listen",
+      "translate": "Translate",
+      "extractFigures": "Extract figures",
+      "explainTerms": "Explain terms",
+      "compare": "Compare",
+      "cite": "Cite",
+      "comingSoon": "Coming soon",
+      "row": "Reading actions"
+    },
+    "toolbar": {
+      "label": "Page viewer",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "fitWidth": "Fit width",
+      "fullscreen": "Full screen",
+      "exitFullscreen": "Exit full screen",
+      "copyLink": "Copy link",
+      "copied": "Link copied"
+    },
+    "panel": {
+      "suggested": "Suggested actions",
+      "keyFacts": "Key facts from this document",
+      "verified": "Verified source",
+      "scopeNote": "Answers draw on this document."
+    },
+    "suggestions": {
+      "summarize": "Summarize this document",
+      "extractKpis": "Extract all KPIs",
+      "explainTerms": "Explain key terms",
+      "obligations": "Find obligations and deadlines",
+      "entities": "Show all entities mentioned",
+      "comparison": "Create a comparison table",
+      "briefing": "Draft a briefing note",
+      "related": "Find related documents"
+    },
+    "prompts": {
+      "summarize": "Summarize this document in five points for a busy decision maker.",
+      "extractKpis": "Extract all the KPIs, targets and key figures in this document, with their page references.",
+      "explainTerms": "Explain the key terms used in this document.",
+      "obligations": "List the obligations, deadlines and responsible bodies this document sets out.",
+      "entities": "List the institutions, programmes and places mentioned in this document.",
+      "comparison": "Create a comparison table of the main targets and indicators in this document.",
+      "briefing": "Draft a one-page briefing note on this document.",
+      "related": "Which other documents in EnviroAI relate to this one, and why?"
+    },
+    "tabs": {
+      "sections": "Sections",
+      "keyFacts": "Key facts",
+      "entities": "Entities",
+      "citations": "Citations",
+      "related": "Related documents",
+      "versions": "Version history"
+    },
+    "versionLine": "Version {no}",
+    "noVersions": "No earlier versions.",
+    "noKeyFacts": "No key facts were extracted."
+  }
+}

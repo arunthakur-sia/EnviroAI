@@ -32,20 +32,20 @@ function ChainCard({ node, index }: { node: ProcessMapNode; index: number }) {
       aria-label={t("processes.openAria", { code: node.code, name })}
       data-testid="chain-card"
       data-code={node.code}
-      className="card card-hover group/chain relative flex w-[236px] shrink-0 snap-start flex-col gap-2 px-4 py-3.5 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+      className="card card-hover group/chain relative flex w-[236px] shrink-0 snap-start flex-col gap-2 px-4 py-3.5 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
     >
       <span className="flex items-center gap-2">
         <span
-          className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-maroon-100 text-[15px] font-semibold text-maroon-900 tnum"
+          className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-navy-100 text-[15px] font-semibold text-navy-900 tnum"
           style={{ fontFamily: displayFont(locale) }}
           aria-hidden
         >
           {levelNumber(node.code) || index + 1}
         </span>
         <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-400 tnum rtl:tracking-normal">{node.code}</span>
-        <ArrowRight className="ms-auto size-4 text-ink-200 transition-colors group-hover/chain:text-maroon-700 flip-rtl" aria-hidden />
+        <ArrowRight className="ms-auto size-4 text-ink-200 transition-colors group-hover/chain:text-navy-700 flip-rtl" aria-hidden />
       </span>
-      <span className="line-clamp-2 min-h-10 text-sm font-medium leading-snug text-ink-900 group-hover/chain:text-maroon-900">{name}</span>
+      <span className="line-clamp-2 min-h-10 text-sm font-medium leading-snug text-ink-900 group-hover/chain:text-navy-900">{name}</span>
       <span className="text-[11px] text-ink-600">
         {node.ownerUnit ? (
           <>
@@ -61,7 +61,7 @@ function ChainCard({ node, index }: { node: ProcessMapNode; index: number }) {
         {node.counts.procedures ? <>, {t("processes.procedures", { count: node.counts.procedures })}</> : null}
       </span>
       {node.children.length ? (
-        <span className="mt-0.5 flex flex-col gap-0.5 border-t border-sand-100 pt-2" aria-hidden>
+        <span className="mt-0.5 flex flex-col gap-0.5 border-t border-mist-100 pt-2" aria-hidden>
           {node.children.slice(0, 3).map((c) => (
             <span key={c.id} className="truncate text-[11px] text-ink-600">
               <span className="text-ink-400 tnum">{c.code}</span> {bi(locale, c.nameEn, c.nameAr)}
@@ -86,7 +86,7 @@ export function ProcessLandscape({ chain, n }: { chain: ProcessMapNode[]; n: num
       aside={
         <Link
           href={"/processes" as never}
-          className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-sand-300 bg-white px-3 text-xs font-medium text-ink-900 transition-colors hover:border-maroon-300 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+          className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-mist-300 bg-white px-3 text-xs font-medium text-ink-900 transition-colors hover:border-navy-300 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
           data-testid="processes-open-page"
         >
           <Workflow className="size-3.5" aria-hidden /> {t("processes.openPage")}
@@ -106,7 +106,7 @@ export function ProcessLandscape({ chain, n }: { chain: ProcessMapNode[]; n: num
               <li key={node.id} className="flex items-center gap-1">
                 <ChainCard node={node} index={i} />
                 {i < chain.length - 1 ? (
-                  <span className={cn("flex w-6 shrink-0 items-center justify-center text-sand-300")} aria-hidden>
+                  <span className={cn("flex w-6 shrink-0 items-center justify-center text-mist-300")} aria-hidden>
                     <ChevronRight className="size-5 flip-rtl" />
                   </span>
                 ) : null}
@@ -117,7 +117,7 @@ export function ProcessLandscape({ chain, n }: { chain: ProcessMapNode[]; n: num
       )}
       {chain.some((c) => c.isIllustrative) ? (
         <p className="mt-1 flex items-center gap-2 text-[11px] text-ink-400">
-          <Chip tone="sand">{t("illustrative")}</Chip>
+          <Chip tone="mist">{t("illustrative")}</Chip>
           {t("illustrativeTitle")}
         </p>
       ) : null}

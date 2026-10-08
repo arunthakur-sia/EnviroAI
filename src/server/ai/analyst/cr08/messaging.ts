@@ -1,5 +1,5 @@
 // CR08 9: owner lookup tools (who owns X, with the person card facts).
-// Messages themselves are NEVER exposed to Ask NPC (CR08 9.2): this module
+// Messages themselves are NEVER exposed to Ask EnviroAI (CR08 9.2): this module
 // reads owners, units, documents, indicators and lessons, then the person
 // card service; it never touches message_threads, thread_participants or
 // messages.
@@ -232,7 +232,7 @@ export async function toolGetOwner(ctx: ToolContext, input: { item_type?: string
   }
   if (resolved.unitFallback) {
     const u = resolved.unitFallback;
-    return `${head}\n${resolved.role.replace(/_/g, " ").toUpperCase()}: the ${u.nameEn} (${u.nameAr})${u.headNameEn ? `, headed by ${u.headNameEn}${u.headTitleEn ? `, ${u.headTitleEn}` : ""}` : ""}. No SiaNexus account is linked to the head yet.`;
+    return `${head}\n${resolved.role.replace(/_/g, " ").toUpperCase()}: the ${u.nameEn} (${u.nameAr})${u.headNameEn ? `, headed by ${u.headNameEn}${u.headTitleEn ? `, ${u.headTitleEn}` : ""}` : ""}. No EnviroAI account is linked to the head yet.`;
   }
   return `${head}\nNo owner is recorded for this item yet.`;
 }
@@ -242,7 +242,7 @@ const mod: ToolModule = {
     {
       name: "get_owner",
       description:
-        "Who owns an item (a project, initiative, outcome or target of the strategy, a Council Strategy node, a document, study or policy, an indicator, an organisation unit, or a lesson) with the person-card facts: role, position, unit, expertise, availability, email, the HR backup owner and the messaging delegate. Never returns messages.",
+        "Who owns an item (a project, initiative, outcome or target of the strategy, a Programme Strategy node, a document, study or policy, an indicator, an organisation unit, or a lesson) with the person-card facts: role, position, unit, expertise, availability, email, the HR backup owner and the messaging delegate. Never returns messages.",
       input_schema: {
         type: "object",
         properties: {

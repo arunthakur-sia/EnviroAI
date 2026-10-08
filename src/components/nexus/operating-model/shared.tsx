@@ -11,7 +11,7 @@ import type { CalendarKind, FlowKind, GovernanceConnectorKind, RaciRole, Rag } f
 
 export const EASE = [0.22, 1, 0.36, 1] as const;
 
-/** The display face, Fraunces in English and Noto Kufi in Arabic. */
+/** The display face, Sora in English and Noto Kufi in Arabic. */
 export function displayFont(locale: string): string {
   return locale === "ar" ? "var(--font-kufi)" : "var(--font-display)";
 }
@@ -81,22 +81,22 @@ export function useFmt() {
       period: (period: string) => {
         if (!/^\d{4}-\d{2}$/.test(period)) return period;
         const [y, m] = period.split("-").map(Number);
-        const tag = `${locale === "ar" ? "ar-QA" : "en-QA"}-u-nu-${numerals === "eastern" ? "arab" : "latn"}`;
+        const tag = `${locale === "ar" ? "ar-SA" : "en-SA"}-u-nu-${numerals === "eastern" ? "arab" : "latn"}`;
         return new Intl.DateTimeFormat(tag, { month: "short", year: "numeric" }).format(new Date(Date.UTC(y, m - 1, 1)));
       },
       /** the month name alone, short or long */
       month: (monthIndex: number, style: "short" | "long" = "long") => {
-        const tag = locale === "ar" ? "ar-QA" : "en-QA";
+        const tag = locale === "ar" ? "ar-SA" : "en-SA";
         return new Intl.DateTimeFormat(tag, { month: style }).format(new Date(Date.UTC(2026, monthIndex, 1)));
       },
       /** "19 Sep" without the year */
       dayMonth: (iso: string) => {
-        const tag = `${locale === "ar" ? "ar-QA" : "en-QA"}-u-nu-${numerals === "eastern" ? "arab" : "latn"}`;
+        const tag = `${locale === "ar" ? "ar-SA" : "en-SA"}-u-nu-${numerals === "eastern" ? "arab" : "latn"}`;
         return new Intl.DateTimeFormat(tag, { day: "numeric", month: "short" }).format(new Date(`${iso}T00:00:00Z`));
       },
       /** a year with no grouping separator */
       year: (y: number) => {
-        const tag = `${locale === "ar" ? "ar-QA" : "en-QA"}-u-nu-${numerals === "eastern" ? "arab" : "latn"}`;
+        const tag = `${locale === "ar" ? "ar-SA" : "en-SA"}-u-nu-${numerals === "eastern" ? "arab" : "latn"}`;
         return new Intl.NumberFormat(tag, { useGrouping: false }).format(y);
       },
     }),
@@ -231,7 +231,7 @@ export function SectionBand({
             className="mt-1 flex items-baseline gap-3 text-[24px] leading-tight text-ink-900 sm:text-[28px]"
             style={{ fontFamily: displayFont(locale) }}
           >
-            <span className="text-maroon-300 tnum" aria-hidden>
+            <span className="text-navy-300 tnum" aria-hidden>
               {String(n).padStart(2, "0")}
             </span>
             <span>{title}</span>
@@ -257,7 +257,7 @@ export function SubLabel({ children, className }: { children: React.ReactNode; c
 export function EmptyLine({ children, testId }: { children: React.ReactNode; testId?: string }) {
   return (
     <p
-      className="rounded-lg border border-dashed border-sand-300 bg-sand-50 px-3 py-4 text-center text-xs text-ink-600"
+      className="rounded-lg border border-dashed border-mist-300 bg-mist-50 px-3 py-4 text-center text-xs text-ink-600"
       data-testid={testId}
     >
       {children}
@@ -269,11 +269,11 @@ export function EmptyLine({ children, testId }: { children: React.ReactNode; tes
 /* colour scales                                                        */
 /* ------------------------------------------------------------------ */
 
-export const RACI_TONE: Record<RaciRole, "maroon" | "gulf" | "gold" | "sand"> = {
-  A: "maroon",
-  R: "gulf",
-  C: "gold",
-  I: "sand",
+export const RACI_TONE: Record<RaciRole, "navy" | "teal" | "aqua" | "mist"> = {
+  A: "navy",
+  R: "teal",
+  C: "aqua",
+  I: "mist",
 };
 
 export const RAG_VAR: Record<Rag, string> = {
@@ -283,20 +283,20 @@ export const RAG_VAR: Record<Rag, string> = {
   no_data: "var(--color-ink-200)",
 };
 
-export const RAG_CHIP: Record<Rag, "ok" | "warn" | "danger" | "sand"> = {
+export const RAG_CHIP: Record<Rag, "ok" | "warn" | "danger" | "mist"> = {
   on_target: "ok",
   at_risk: "warn",
   behind: "danger",
-  no_data: "sand",
+  no_data: "mist",
 };
 
 /** Eight calendar kinds, each on its own token so the legend and the ring agree. */
 export const CALENDAR_KIND_VAR: Record<CalendarKind, string> = {
-  strategy_review: "var(--color-maroon-700)",
-  nds_review: "var(--color-maroon-300)",
+  strategy_review: "var(--color-navy-700)",
+  nes_review: "var(--color-navy-300)",
   council_meeting: "var(--color-ink-900)",
-  budget: "var(--color-gold-500)",
-  statistical_release: "var(--color-gulf-600)",
+  budget: "var(--color-aqua-500)",
+  statistical_release: "var(--color-teal-600)",
   report_deadline: "var(--color-info)",
   forum: "var(--color-warn)",
   other: "var(--color-ink-400)",
@@ -305,7 +305,7 @@ export const CALENDAR_KIND_VAR: Record<CalendarKind, string> = {
 export const CALENDAR_KIND_ORDER: CalendarKind[] = [
   "council_meeting",
   "strategy_review",
-  "nds_review",
+  "nes_review",
   "budget",
   "statistical_release",
   "report_deadline",
@@ -313,11 +313,11 @@ export const CALENDAR_KIND_ORDER: CalendarKind[] = [
   "other",
 ];
 
-export const FLOW_TONE: Record<FlowKind, "gulf" | "sand" | "maroon" | "gold" | "info"> = {
-  data: "gulf",
-  input: "sand",
-  approval: "maroon",
-  review: "gold",
+export const FLOW_TONE: Record<FlowKind, "teal" | "mist" | "navy" | "aqua" | "info"> = {
+  data: "teal",
+  input: "mist",
+  approval: "navy",
+  review: "aqua",
   deliverable: "info",
 };
 
@@ -327,9 +327,9 @@ export const CONNECTOR_STYLE: Record<
   GovernanceConnectorKind,
   { stroke: string; dash?: string; width: number }
 > = {
-  reports_to: { stroke: "var(--color-maroon-700)", width: 1.8 },
+  reports_to: { stroke: "var(--color-navy-700)", width: 1.8 },
   escalates_to: { stroke: "var(--color-warn)", width: 1.8 },
-  advises: { stroke: "var(--color-gulf-600)", dash: "6 4", width: 1.5 },
+  advises: { stroke: "var(--color-teal-600)", dash: "6 4", width: 1.5 },
   delegates_to: { stroke: "var(--color-info)", dash: "2 4", width: 1.8 },
   informs: { stroke: "var(--color-ink-400)", dash: "4 4", width: 1.2 },
 };
@@ -338,21 +338,21 @@ export const CONNECTOR_ORDER: GovernanceConnectorKind[] = ["reports_to", "escala
 
 /** Twelve distinct unit colours for the chord, cycled in org order. */
 export const UNIT_PALETTE = [
-  "var(--color-maroon-700)",
-  "var(--color-gulf-600)",
-  "var(--color-gold-500)",
+  "var(--color-navy-700)",
+  "var(--color-teal-600)",
+  "var(--color-aqua-500)",
   "var(--color-info)",
   "var(--color-ok)",
   "var(--color-warn)",
-  "var(--color-cloth-plum)",
-  "var(--color-maroon-300)",
-  "var(--color-gulf-400)",
-  "var(--color-cloth-umber)",
+  "var(--color-cloth-indigo)",
+  "var(--color-navy-300)",
+  "var(--color-teal-400)",
+  "var(--color-cloth-steel)",
   "var(--color-cloth-slate)",
-  "var(--color-cloth-olive)",
+  "var(--color-cloth-deep)",
   "var(--color-danger)",
   "var(--color-cloth-ink)",
-  "var(--color-cloth-sand)",
+  "var(--color-cloth-mist)",
   "var(--color-ink-600)",
 ];
 
@@ -368,7 +368,7 @@ export function NamePlaceholder({ name, size = 22, className }: { name: string; 
   return (
     <span className={cn("flex min-w-0 max-w-full items-center gap-2", className)}>
       <span
-        className="inline-flex shrink-0 items-center justify-center rounded-full border border-sand-300 bg-sand-100 font-semibold text-ink-600"
+        className="inline-flex shrink-0 items-center justify-center rounded-full border border-mist-300 bg-mist-100 font-semibold text-ink-600"
         style={{ width: size, height: size, fontSize: Math.max(9, size * 0.38) }}
         aria-hidden
       >

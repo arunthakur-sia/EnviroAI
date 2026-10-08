@@ -1,9 +1,9 @@
 "use client";
 // CR07 3.4: the unit panel. It opens beneath the chart, in the language of the
-// outcome panel: a sand-100 surface, section eyebrows, and everything the
+// outcome panel: a mist-100 surface, section eyebrows, and everything the
 // structure knows about one unit. CR08 1: the header stays, the sections sit
 // behind a tab strip defined as one array (UnitPanelTabs.tsx) so a later
-// module can append a tab, the panel registers itself with the Ask NPC
+// module can append a tab, the panel registers itself with the Ask EnviroAI
 // launcher, and a unit head can file a change request that reaches every
 // Super Admin, with a status chip on each of their own requests.
 import * as React from "react";
@@ -23,10 +23,10 @@ function otherLang(locale: string, en: string, ar: string): string {
   return locale === "ar" ? en : ar;
 }
 
-const STATUS_TONE: Record<string, "warn" | "ok" | "sand"> = {
+const STATUS_TONE: Record<string, "warn" | "ok" | "mist"> = {
   open: "warn",
   resolved: "ok",
-  declined: "sand",
+  declined: "mist",
 };
 
 /* ------------------------------------------------------------------ */
@@ -94,13 +94,13 @@ function RequestChange({ data, onSent }: { data: UnitPanelData; onSent: () => vo
             data-testid="org-request-chip"
           >
             <span className="max-w-56 truncate">{r.what}</span>
-            <Chip tone={STATUS_TONE[r.status] ?? "sand"}>{t(`request.status.${r.status}` as never)}</Chip>
+            <Chip tone={STATUS_TONE[r.status] ?? "mist"}>{t(`request.status.${r.status}` as never)}</Chip>
             <span className="text-ink-400 tnum">{formatDate(r.createdAt, locale, { style: "short" })}</span>
           </span>
         ))}
       </div>
       {open ? (
-        <div id={`${uid}-form`} className="mt-3 rounded-xl border border-sand-300 bg-white p-4 shadow-[var(--shadow-paper)]">
+        <div id={`${uid}-form`} className="mt-3 rounded-xl border border-mist-300 bg-white p-4 shadow-[var(--shadow-paper)]">
           <p className="text-sm font-medium text-ink-900">{t("request.title")}</p>
           <p className="mt-0.5 text-xs text-ink-600">{t("request.hint")}</p>
           <div className="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-2">
@@ -196,8 +196,8 @@ export function UnitPanel({
   }
 
   return (
-    <div className="rounded-2xl bg-sand-100" data-testid="org-unit-panel">
-      {/* CR08 2.3: the Ask NPC launcher knows which unit is open */}
+    <div className="rounded-2xl bg-mist-100" data-testid="org-unit-panel">
+      {/* CR08 2.3: the Ask EnviroAI launcher knows which unit is open */}
       <AskContextItem
         item={{
           kind: "unit",
@@ -220,7 +220,7 @@ export function UnitPanel({
                     <button
                       type="button"
                       onClick={() => onSelectUnit(crumb.code)}
-                      className="link-draw cursor-pointer rounded text-ink-600 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+                      className="link-draw cursor-pointer rounded text-ink-600 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
                     >
                       {bi(locale, crumb.nameEn, crumb.nameAr)}
                     </button>
@@ -231,18 +231,18 @@ export function UnitPanel({
             <h2 style={{ fontSize: 28, lineHeight: 1.2 }}>{name}</h2>
             <p className="mt-0.5 text-sm text-ink-400">{alt}</p>
             <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-              <Chip tone="gold">{bi(locale, data.levelNameEn, data.levelNameAr)}</Chip>
-              <Chip tone="sand">
+              <Chip tone="aqua">{bi(locale, data.levelNameEn, data.levelNameAr)}</Chip>
+              <Chip tone="mist">
                 <Users className="size-3" aria-hidden />
                 {t("panel.headcount", { count: unit.headcountTotal })}
               </Chip>
-              {unit.policyCount > 0 ? <Chip tone="maroon">{t("policyChip", { count: unit.policyCount })}</Chip> : null}
+              {unit.policyCount > 0 ? <Chip tone="navy">{t("policyChip", { count: unit.policyCount })}</Chip> : null}
               {!unit.isActive ? <Chip tone="ghost">{t("panel.inactive")}</Chip> : null}
             </div>
           </div>
           <div className="flex items-start gap-3">
             {/* CR08 9.1: the head who holds an account carries the person card;
-                the head published on npc.qa with no account keeps the plain
+                the head published on enviroai.demo with no account keeps the plain
                 block beneath, because there is nobody to open a card for */}
             {data.head ? (
               <div className="rounded-xl bg-white px-3 py-2 shadow-[var(--shadow-paper)]" data-testid="unit-head-owner">
@@ -252,7 +252,7 @@ export function UnitPanel({
               </div>
             ) : headName ? (
               <div className="flex items-center gap-2.5 rounded-xl bg-white px-3 py-2 shadow-[var(--shadow-paper)]">
-                <Avatar name={headName} color="maroon" size={36} />
+                <Avatar name={headName} color="navy" size={36} />
                 <span className="min-w-0">
                   <span className="block text-[10px] font-semibold uppercase tracking-[0.1em] text-ink-600 rtl:tracking-normal">{t("panel.head")}</span>
                   <span className="block truncate text-sm font-medium text-ink-900">{headName}</span>
@@ -267,7 +267,7 @@ export function UnitPanel({
                 type="button"
                 onClick={copyLink}
                 aria-label={t("panel.copyLink")}
-                className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-white/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+                className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-white/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
               >
                 <LinkIcon className="size-4" />
               </button>
@@ -276,7 +276,7 @@ export function UnitPanel({
                 onClick={onClose}
                 aria-label={t("panel.close")}
                 data-testid="org-panel-close"
-                className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-white/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+                className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-white/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
               >
                 <X className="size-4" />
               </button>
@@ -316,8 +316,8 @@ export function UnitPanel({
                 data-testid="org-panel-tab"
                 data-tab={def.key}
                 className={cn(
-                  "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500 [&_svg]:size-3.5",
-                  isActive ? "bg-maroon-100 font-medium text-maroon-900" : "text-ink-600 hover:text-maroon-900"
+                  "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500 [&_svg]:size-3.5",
+                  isActive ? "bg-navy-100 font-medium text-navy-900" : "text-ink-600 hover:text-navy-900"
                 )}
               >
                 <span aria-hidden>{def.icon}</span>

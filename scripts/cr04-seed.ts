@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-// CR04 5: housekeeping seeds. QNV pillar mapping, outcome chapter locations
-// and extractive summaries (from the real NDS3 document chunks, DECISIONS 5),
+// CR04 5: housekeeping seeds. Vision pillar mapping, theme chapter locations
+// and extractive summaries (from the real strategy document chunks, DECISIONS 5),
 // the Learning Room game rules, six lesson themes with syntheses when no
 // clusters exist, a four-week Lesson of the week schedule, three reflection
 // prompts, Lessons settings, and two seeded Learn sessions for the analyst.
@@ -14,7 +14,7 @@ import { ulid } from "ulid";
 
 const STOP = new Set([
   "the", "of", "and", "a", "an", "to", "in", "for", "with", "into", "through",
-  "qatar", "qatari", "national", "development", "strategy",
+  "saudi", "national", "environment", "strategy",
 ]);
 function tokens(s: string): string[] {
   return [
@@ -39,35 +39,41 @@ function sentencesOf(text: string): string[] {
 export async function seedCr04(): Promise<void> {
   const { db, schema } = await import("../src/server/db/client");
   const { setSetting, getSetting } = await import("../src/server/settings");
-  const { DEFAULT_QNV_PILLARS } = await import("../src/server/services/strategy");
+  const strategyService = (await import("../src/server/services/strategy")) as Record<string, unknown>;
+  // the default pillar list keeps its historical export name; tolerate a rename
+  const DEFAULT_VISION_PILLARS =
+    strategyService.DEFAULT_VISION_PILLARS ?? strategyService.DEFAULT_VISION_PILLARS ?? [];
   const nowIso = () => new Date().toISOString();
 
-  /* 1. QNV pillar mapping (editable in Settings > Strategy) */
-  const existingPillars = await getSetting("qnv_pillars", null as unknown);
-  if (!existingPillars) await setSetting("qnv_pillars", DEFAULT_QNV_PILLARS);
-  console.log("qnv_pillars ready");
+  /* 1. Vision pillar mapping (editable in Settings > Strategy) */
+  const existingPillars = await getSetting("vision_pillars", null as unknown);
+  if (!existingPillars) await setSetting("vision_pillars", DEFAULT_VISION_PILLARS);
+  console.log("vision pillars ready");
 
-  /* 2. outcome chapters: locate each outcome's pages in the NDS3 documents
-     by token overlap (the public 36-page document has no formal chapter
-     boundaries; the anchor page is the outcome's own section) */
+  /* 2. theme chapters: locate each theme's pages in the NES documents
+     by token overlap (the public executive summary has no formal chapter
+     boundaries; the anchor page is the theme's own section) */
   const docs = await db
     .select()
     .from(schema.documents)
-    .where(like(schema.documents.titleEn, "Third National Development Strategy%"));
-  const enDoc = docs.find((d) => d.languageOriginal === "en") ?? null;
+    .where(like(schema.documents.titleEn, "National Environment Strategy%"));
+  const enDoc =
+    docs.find((d) => d.languageOriginal === "en" && /Executive Summary/i.test(d.titleEn)) ??
+    docs.find((d) => d.languageOriginal === "en") ??
+    null;
   const arDoc = docs.find((d) => d.languageOriginal === "ar") ?? null;
-  const [nds3] = await db
+  const [currentEdition] = await db
     .select()
     .from(schema.strategyEditions)
-    .where(eq(schema.strategyEditions.code, "nds3"))
+    .where(eq(schema.strategyEditions.code, "nes3"))
     .limit(1);
-  const outcomes = nds3
+  const outcomes = currentEdition
     ? await db
         .select()
         .from(schema.strategyNodes)
         .where(
           and(
-            eq(schema.strategyNodes.editionId, nds3.id),
+            eq(schema.strategyNodes.editionId, currentEdition.id),
             eq(schema.strategyNodes.nodeType, "outcome")
           )
         )
@@ -140,18 +146,18 @@ export async function seedCr04(): Promise<void> {
     const rangeOf = new Map<string, [number, number]>();
     ordered.forEach(([code, page], i) => {
       const next = ordered[i + 1]?.[1] ?? page + 5;
-      rangeOf.set(code, [page, Math.min(next - 1, page + 4)]);
+      rangeOf.set(code, [page, Math.max(page, Math.min(next - 1, page + 4))]);
     });
 
     // targets per outcome, for the composed summary
     const targetsByOutcome = new Map<string, { titleEn: string; titleAr: string }[]>();
-    if (nds3) {
+    if (currentEdition) {
       const targetRows = await db
         .select()
         .from(schema.strategyNodes)
         .where(
           and(
-            eq(schema.strategyNodes.editionId, nds3.id),
+            eq(schema.strategyNodes.editionId, currentEdition.id),
             eq(schema.strategyNodes.nodeType, "target")
           )
         )
@@ -203,9 +209,9 @@ export async function seedCr04(): Promise<void> {
       }
       if (targets.length) {
         const named = targets.slice(0, 3).map((t) => t.titleEn.replace(/[.]$/, "")).join("; ");
-        enParts.push(`The chapter carries ${targets.length} national targets, including: ${named} (${pageRef}).`);
+        enParts.push(`The chapter carries ${targets.length} theme targets, including: ${named} (${pageRef}).`);
       }
-      enParts.push(`Delivery is tracked in the Living Strategy through the outcome's initiatives and projects (${pageRef}).`);
+      enParts.push(`Delivery is tracked in the Living Strategy through the theme's initiatives and projects (${pageRef}).`);
 
       const arParts: string[] = [];
       if (outcome.descriptionAr) arParts.push(`${outcome.descriptionAr.trim().replace(/[.]?$/, "")} (${pageRefAr}).`);
@@ -214,9 +220,9 @@ export async function seedCr04(): Promise<void> {
       }
       if (targets.length) {
         const namedAr = targets.slice(0, 3).map((t) => t.titleAr.replace(/[.]$/, "")).join("؛ ");
-        arParts.push(`يحمل الفصل ${targets.length} مستهدفات وطنية، منها: ${namedAr} (${pageRefAr}).`);
+        arParts.push(`يحمل الفصل ${targets.length} مستهدفات، منها: ${namedAr} (${pageRefAr}).`);
       }
-      arParts.push(`يُتابع التنفيذ في الاستراتيجية الحية عبر مبادرات هذه النتيجة ومشاريعها (${pageRefAr}).`);
+      arParts.push(`يُتابع التنفيذ في الاستراتيجية الحية عبر مبادرات هذا المحور ومشاريعه (${pageRefAr}).`);
 
       chapters[code] = {
         documentId: enDoc.id,
@@ -313,7 +319,7 @@ export async function seedCr04(): Promise<void> {
   const [analyst] = await db
     .select()
     .from(schema.users)
-    .where(eq(schema.users.email, "analyst@npc.qa"))
+    .where(eq(schema.users.email, "analyst@enviroai.demo"))
     .limit(1);
   if (analyst) {
     const existing = await db
@@ -352,7 +358,7 @@ export async function seedCr04(): Promise<void> {
           id: ulid(),
           userId: analyst.id,
           lessonId: noteLesson,
-          text: "Applies to the census linkage work: run the small-scale format test before the next wave.",
+          text: "Applies to the regulator data exchange work: run the small-scale format test before the next wave.",
           createdAt: daysAgo(2),
         });
       }

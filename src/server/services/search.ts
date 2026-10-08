@@ -126,10 +126,10 @@ export async function runSearch(user: CurrentUser, q: string, _locale: string) {
       titleMap.set(`${type}:${r.id}`, {
         titleEn: r.titleEn ?? r.nameEn ?? "",
         titleAr: r.titleAr ?? r.nameAr ?? "",
-        // CR08 3: NPC staff are internal, everyone else external
+        // CR08 3: Programme Office staff are internal, everyone else external
         kind:
           type === "expert"
-            ? r.userId || r.type === "npc_employee"
+            ? r.userId || r.type === "org_employee"
               ? "internal"
               : "external"
             : undefined,

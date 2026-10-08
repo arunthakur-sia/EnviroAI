@@ -16,17 +16,17 @@ async function cachedWhatChanged() {
     return whatChangedCache.value;
   }
   let changed: Awaited<ReturnType<typeof whatChanged>> | null = null;
-  const [nds3] = await db
+  const [nes3] = await db
     .select()
     .from(schema.strategyEditions)
-    .where(eq(schema.strategyEditions.code, "nds3"))
+    .where(eq(schema.strategyEditions.code, "nes3"))
     .limit(1);
-  if (nds3) {
+  if (nes3) {
     const nodeIds = (
       await db
         .select({ id: schema.strategyNodes.id })
         .from(schema.strategyNodes)
-        .where(eq(schema.strategyNodes.editionId, nds3.id))
+        .where(eq(schema.strategyNodes.editionId, nes3.id))
     ).map((n) => n.id);
     changed = await whatChanged(nodeIds, 7);
     if (!changed.highlights.length) changed = await whatChanged(nodeIds, 90);
@@ -250,7 +250,7 @@ export async function getHomeData(user: CurrentUser) {
       )[0] ?? null
     : null;
 
-  /* What changed in NDS3 this week (cached: the live model call is slow) */
+  /* What changed in NES this week (cached: the live model call is slow) */
   const changed = await cachedWhatChanged();
 
   /* CR02 1.4: latest podcast episode within clearance */
@@ -393,9 +393,9 @@ export async function getHomeData(user: CurrentUser) {
       sourceRef: w.sourceRef,
     }));
 
-  /* CR03 4.4.2: Qatar in numbers. The daily card's indicator when set, else a
+  /* CR03 4.4.2: Saudi Arabia in numbers. The daily card's indicator when set, else a
      headline indicator rotated by day. Series of the last 24 periods. */
-  let qatarNumber: {
+  let homeNumber: {
     indicatorId: string;
     nameEn: string;
     nameAr: string;
@@ -439,7 +439,7 @@ export async function getHomeData(user: CurrentUser) {
         const series = values.slice(-24).map((v) => ({ period: v.period, value: v.value }));
         const latest = series.at(-1);
         if (latest) {
-          qatarNumber = {
+          homeNumber = {
             indicatorId: ind.id,
             nameEn: ind.nameEn,
             nameAr: ind.nameAr,
@@ -723,7 +723,7 @@ export async function getHomeData(user: CurrentUser) {
       };
     }),
     quotes,
-    qatarNumber,
+    homeNumber,
     changedTimeline,
     constellation,
     progress: {

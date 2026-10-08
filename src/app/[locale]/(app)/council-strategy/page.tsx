@@ -1,4 +1,4 @@
-// CR07 2.4: the Council Strategy, the National Planning Council's own
+// CR07 2.4: the Programme Strategy, the Programme Office's own
 // institutional strategy read as a results chain. Deep-link state arrives in
 // the query string (?g=&io=&o=&p=&view=&period=&strategy=).
 import { redirect } from "next/navigation";

@@ -69,7 +69,7 @@ export function DelegateBlock() {
         <p className="text-sm font-medium text-ink-900">{t("title")}</p>
         {info ? (
           info.delegate ? (
-            <Chip tone={info.active ? "ok" : "sand"} data-testid="delegate-status">
+            <Chip tone={info.active ? "ok" : "mist"} data-testid="delegate-status">
               {info.active ? t("active") : t("scheduled")}
             </Chip>
           ) : (

@@ -1,4 +1,4 @@
-// CR08 9.1 smoke checks: the owner control on the strategy and council
+// CR08 9.1 smoke checks: the owner control on the strategy and Programme Strategy
 // surfaces. Every check reads the server-rendered HTML of a page (or the
 // payload a drawer loads) and asserts the control's testid is there, so a
 // regression that drops an owner chip fails here rather than in a screenshot.
@@ -75,7 +75,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
     | undefined;
 
   check(
-    "owners strategy: the fixtures exist (an owned project, an outcome with a KPI custodian, an owned council project)",
+    "owners strategy: the fixtures exist (an owned project, an theme with a KPI custodian, an owned Programme Strategy project)",
     Boolean(project && outcome && councilProject),
     `${project?.code ?? "-"} / ${outcome?.code ?? "-"} / ${councilProject?.code ?? "-"}`
   );
@@ -103,10 +103,10 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
     detailAr.includes(OWNER) && detailAr.includes(role("project_owner"))
   );
 
-  /* 3. the outcome page: the department head stands in for the missing person */
+  /* 3. the theme page: the department head stands in for the missing person */
   const outcomeDetail = await html(ctx, `/en/strategy/${outcome.id}`);
   check(
-    "owners strategy: an outcome with no recorded person falls back to the department head",
+    "owners strategy: an theme with no recorded person falls back to the department head",
     outcomeDetail.includes(OWNER) && outcomeDetail.includes(role("department_owner")),
     outcome.code
   );
@@ -122,10 +122,10 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
     !detailEn.includes("data-empty") && !outcomeDetail.includes("data-empty")
   );
 
-  /* 5. the canvas with the outcome panel open */
+  /* 5. the canvas with the theme panel open */
   const canvas = await html(ctx, `/en/strategy/${outcome.edition}?o=${slug(outcome.code)}`);
   check(
-    "owners strategy: the canvas outcome panel names an owner",
+    "owners strategy: the canvas theme panel names an owner",
     canvas.includes(OWNER),
     `${outcome.edition}?o=${slug(outcome.code)}`
   );
@@ -137,7 +137,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   /* 6. the outcome slug route (the target cards page) */
   const outcomePage = await html(ctx, `/en/strategy/${outcome.edition}/${slug(outcome.code)}`);
   check(
-    "owners strategy: the outcome slug page carries the owner control",
+    "owners strategy: the theme slug page carries the owner control",
     outcomePage.includes(OWNER) || outcomePage.includes(COMPACT),
     `${outcome.edition}/${slug(outcome.code)}`
   );
@@ -162,35 +162,35 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
     `${(card?.stakeholders ?? []).filter((s) => s.userId).length} accounts`
   );
 
-  /* 8. the council chain with a goal, an intermediate outcome and an output open */
+  /* 8. the Programme Strategy chain with a goal, an intermediate outcome and an output open */
   const chain = await html(
     ctx,
     `/en/council-strategy?g=${slug(councilProject.goal_code)}&io=${slug(councilProject.io_code)}&o=${slug(councilProject.output_code)}`
   );
   check(
-    "owners strategy: the council chain carries person chips on its project cards",
+    "owners strategy: the Programme Strategy chain carries person chips on its project cards",
     chain.includes(COMPACT),
     councilProject.output_code
   );
 
-  /* 9. the council project payload behind the drawer */
+  /* 9. the Programme Strategy project payload behind the drawer */
   const detail = await json<{
     node: { ownerUser: { id: string; avatarColor: string } | null };
     indicators: { responsible: { id: string; avatarColor: string } | null }[];
     stakeholderOwners: Record<string, { id: string }>;
   }>(ctx, `/api/v1/council?view=project&id=${councilProject.id}`);
   check(
-    "owners strategy: the council project payload carries the owner with an avatar colour",
+    "owners strategy: the Programme Strategy project payload carries the owner with an avatar colour",
     Boolean(detail?.node.ownerUser?.id && detail?.node.ownerUser?.avatarColor),
     councilProject.code
   );
   check(
-    "owners strategy: the council indicator custodian carries an avatar colour",
+    "owners strategy: the Programme Strategy indicator custodian carries an avatar colour",
     (detail?.indicators ?? []).some((i) => Boolean(i.responsible?.avatarColor)),
     `${(detail?.indicators ?? []).length} indicators`
   );
   check(
-    "owners strategy: the council project payload resolves its stakeholder people",
+    "owners strategy: the Programme Strategy project payload resolves its stakeholder people",
     typeof detail?.stakeholderOwners === "object" && detail?.stakeholderOwners !== null
   );
 

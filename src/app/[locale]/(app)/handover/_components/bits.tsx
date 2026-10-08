@@ -19,37 +19,37 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<{ ok
   return { ok: res.ok, status: res.status, data: json.data, error: json.error };
 }
 
-const KIND_TONE: Record<HandoverKind, "maroon" | "gulf" | "gold" | "info"> = {
-  leaving: "maroon",
-  transferring: "gulf",
-  long_leave: "gold",
+const KIND_TONE: Record<HandoverKind, "navy" | "teal" | "aqua" | "info"> = {
+  leaving: "navy",
+  transferring: "teal",
+  long_leave: "aqua",
   engagement_ending: "info",
 };
 
 export function KindChip({ kind, className }: { kind: HandoverKind; className?: string }) {
   const t = useTranslations("handover");
   return (
-    <Chip tone={KIND_TONE[kind] ?? "sand"} className={className} data-testid="handover-kind">
+    <Chip tone={KIND_TONE[kind] ?? "mist"} className={className} data-testid="handover-kind">
       {t(`kinds.${kind}`)}
     </Chip>
   );
 }
 
-const STATUS_TONE: Record<string, "ok" | "sand" | "gulf" | "danger"> = {
+const STATUS_TONE: Record<string, "ok" | "mist" | "teal" | "danger"> = {
   complete: "ok",
-  open: "sand",
-  in_progress: "gulf",
+  open: "mist",
+  in_progress: "teal",
   overdue: "danger",
 };
 
 export function StatusChip({ status }: { status: string }) {
   const t = useTranslations("handover");
-  return <Chip tone={STATUS_TONE[status] ?? "sand"}>{t(`status.${status}` as never)}</Chip>;
+  return <Chip tone={STATUS_TONE[status] ?? "mist"}>{t(`status.${status}` as never)}</Chip>;
 }
 
-const ITEM_TONE: Record<string, "sand" | "gulf" | "ok" | "ghost"> = {
-  pending: "sand",
-  reassigned: "gulf",
+const ITEM_TONE: Record<string, "mist" | "teal" | "ok" | "ghost"> = {
+  pending: "mist",
+  reassigned: "teal",
   captured: "ok",
   not_needed: "ghost",
 };
@@ -57,42 +57,42 @@ const ITEM_TONE: Record<string, "sand" | "gulf" | "ok" | "ghost"> = {
 export function ItemStatusChip({ status, inScope }: { status: string; inScope: boolean }) {
   const t = useTranslations("handover");
   if (!inScope) return <Chip tone="ghost">{t("itemStatus.out_of_scope")}</Chip>;
-  return <Chip tone={ITEM_TONE[status] ?? "sand"}>{t(`itemStatus.${status}` as never)}</Chip>;
+  return <Chip tone={ITEM_TONE[status] ?? "mist"}>{t(`itemStatus.${status}` as never)}</Chip>;
 }
 
-const FILING_TONE: Record<string, "sand" | "gulf" | "gold" | "ok"> = {
-  none: "sand",
-  proposed: "gulf",
-  approved: "gold",
+const FILING_TONE: Record<string, "mist" | "teal" | "aqua" | "ok"> = {
+  none: "mist",
+  proposed: "teal",
+  approved: "aqua",
   applied: "ok",
 };
 
 export function FilingChip({ status }: { status: string }) {
   const t = useTranslations("handover");
-  return <Chip tone={FILING_TONE[status] ?? "sand"}>{t(`filingStatus.${status}` as never)}</Chip>;
+  return <Chip tone={FILING_TONE[status] ?? "mist"}>{t(`filingStatus.${status}` as never)}</Chip>;
 }
 
 export function ProgressBar({
   value,
   label,
   detail,
-  tone = "maroon",
+  tone = "navy",
   testId,
 }: {
   value: number; // 0..100
   label: string;
   detail?: string;
-  tone?: "maroon" | "gulf" | "gold";
+  tone?: "navy" | "teal" | "aqua";
   testId?: string;
 }) {
-  const fill = tone === "gulf" ? "bg-gulf-600" : tone === "gold" ? "bg-gold-500" : "bg-maroon-700";
+  const fill = tone === "teal" ? "bg-teal-600" : tone === "aqua" ? "bg-aqua-500" : "bg-navy-700";
   return (
     <div data-testid={testId}>
       <div className="mb-1 flex items-baseline justify-between gap-3 text-xs">
         <span className="font-medium text-ink-900">{label}</span>
         <span className="tnum text-ink-600">{detail ?? `${value}%`}</span>
       </div>
-      <div className="h-2 overflow-hidden rounded-full bg-sand-200" role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={100} aria-label={label}>
+      <div className="h-2 overflow-hidden rounded-full bg-mist-200" role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={100} aria-label={label}>
         <div className={cn("h-full rounded-full transition-[width] duration-500 motion-reduce:transition-none", fill)} style={{ width: `${Math.min(100, Math.max(0, value))}%` }} />
       </div>
     </div>

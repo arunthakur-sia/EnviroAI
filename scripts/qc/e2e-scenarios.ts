@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 // CR08 14.3: the end-to-end scenarios, driven through a real browser against
 // the RUNNING server (npm run start:demo, or `next start`). Nine journeys, in
-// the order a person would meet them: Ask NPC everywhere, Knowledge of the
+// the order a person would meet them: Ask EnviroAI everywhere, Knowledge of the
 // Week, messaging between two people, the Reports lifecycle, an Organisation
 // structure edit that is undone again, the Leaderboard, a handover from both
 // sides, the seven roles and what each of them may see, and the Arabic mirror.
@@ -29,7 +29,7 @@ import { chromium, type Browser, type BrowserContext, type Page } from "playwrig
 const BASE = process.env.SMOKE_BASE ?? "http://localhost:3000";
 const ROOT = process.cwd();
 const SHOT_DIR = path.join(ROOT, "data", "screenshots", "cr08-e2e");
-const PASSWORD = "Nexus!2026";
+const PASSWORD = "EnviroAI!2026";
 const VIEWPORT = { width: 1440, height: 900 };
 const ONLY = process.argv.includes("--only")
   ? new Set(String(process.argv[process.argv.indexOf("--only") + 1] ?? "").split(",").map((s) => s.trim()))
@@ -187,14 +187,14 @@ function one(row: Record<string, unknown> | undefined, key: string): string {
 async function loadFixtures(): Promise<Fixtures> {
   const db = createClient({ url: `file:${ROOT.replace(/\\/g, "/")}/data/nexus.db` });
 
-  const admin = await db.execute("select id from users where email = 'admin@npc.qa' limit 1");
+  const admin = await db.execute("select id from users where email = 'admin@enviroai.demo' limit 1");
   const project = await db.execute(
     "select id, code, title_en from strategy_nodes where node_type = 'project' and code is not null order by code limit 1"
   );
   const owned = await db.execute(
     `select n.id, n.code, n.title_en, u.email, u.name_en
        from strategy_nodes n join users u on u.id = n.owner_user_id
-      where n.node_type = 'project' and u.email <> 'analyst@npc.qa'
+      where n.node_type = 'project' and u.email <> 'analyst@enviroai.demo'
       order by n.code limit 1`
   );
   const kowRow = await db.execute(
@@ -255,12 +255,12 @@ async function loadFixtures(): Promise<Fixtures> {
 }
 
 /* ------------------------------------------------------------------ */
-/* 1. Ask NPC everywhere                                                */
+/* 1. Ask EnviroAI everywhere                                                */
 /* ------------------------------------------------------------------ */
 
 async function scenarioAsk(browser: Browser, fx: Fixtures): Promise<void> {
-  group("1. Ask NPC everywhere");
-  const ctx = await signIn(browser, "admin@npc.qa");
+  group("1. Ask EnviroAI everywhere");
+  const ctx = await signIn(browser, "admin@enviroai.demo");
   const page = await ctx.newPage();
   try {
     await dismissKow(page);
@@ -375,7 +375,7 @@ async function scenarioKow(browser: Browser, fx: Fixtures): Promise<void> {
     args: [fx.kow.id, fx.adminId],
   });
 
-  const ctx = await signIn(browser, "admin@npc.qa");
+  const ctx = await signIn(browser, "admin@enviroai.demo");
   const page = await ctx.newPage();
   try {
     await open(page, `${BASE}/en/home`);
@@ -427,7 +427,7 @@ async function scenarioMessaging(browser: Browser, fx: Fixtures): Promise<void> 
   const replyMarker = `${marker}-reply`;
   const reply = `Noted, the milestone is signed off by the unit head. ${replyMarker}`;
 
-  const sender = await signIn(browser, "analyst@npc.qa");
+  const sender = await signIn(browser, "analyst@enviroai.demo");
   const recipient = await signIn(browser, fx.ownedProject.ownerEmail);
   const a = await sender.newPage();
   const b = await recipient.newPage();
@@ -541,7 +541,7 @@ async function scenarioMessaging(browser: Browser, fx: Fixtures): Promise<void> 
 
 async function scenarioReports(browser: Browser, fx: Fixtures): Promise<void> {
   group("4. Reports lifecycle");
-  const ctx = await signIn(browser, "admin@npc.qa");
+  const ctx = await signIn(browser, "admin@enviroai.demo");
   const page = await ctx.newPage();
   try {
     await dismissKow(page);
@@ -581,9 +581,9 @@ async function scenarioReports(browser: Browser, fx: Fixtures): Promise<void> {
       const next = page.locator('[data-testid="builder-next"]');
       if (await next.count()) {
         if (await next.isDisabled()) {
-          // a type scoped to the Council needs no pick; anything else does
-          const npc = page.locator('[data-testid="scope-kind-npc"]');
-          if (await npc.count()) await npc.click();
+          // a type scoped to the Programme Office needs no pick; anything else does
+          const orgKind = page.locator('[data-testid="scope-kind-org"]');
+          if (await orgKind.count()) await orgKind.click();
         }
         await next.click();
       }
@@ -621,7 +621,7 @@ async function afterOrgWrite(page: Page, action: () => Promise<void>): Promise<v
 
 async function scenarioOrganisation(browser: Browser): Promise<void> {
   group("5. Organisation structure edit");
-  const ctx = await signIn(browser, "admin@npc.qa");
+  const ctx = await signIn(browser, "admin@enviroai.demo");
   const page = await ctx.newPage();
   const CHILD = "QCE2E";
   const GRAND = "QCE2EC";
@@ -770,7 +770,7 @@ async function runLeaderboard(page: Page, locale: string, prefix: string): Promi
    the boards, so the pinned strip would carry the "you are not ranked" line
    rather than a standing. The Department Head earns points like everybody
    else, so the boards are read as a ranked person sees them. */
-const BOARD_VIEWER = "head.stats@npc.qa";
+const BOARD_VIEWER = "head.stats@enviroai.demo";
 
 async function scenarioLeaderboard(browser: Browser): Promise<void> {
   group("6. Leaderboard");
@@ -795,7 +795,7 @@ async function scenarioHandover(browser: Browser, fx: Fixtures): Promise<void> {
     skip("handover", "no in-progress handover in the database");
     return;
   }
-  const ctx = await signIn(browser, "hr@npc.qa");
+  const ctx = await signIn(browser, "hr@enviroai.demo");
   const page = await ctx.newPage();
   try {
     await dismissKow(page);
@@ -890,38 +890,38 @@ type RoleExpectation = {
 };
 
 const ROLES: RoleExpectation[] = [
-  { email: "admin@npc.qa", role: "Super Admin", hr: true, settings: true, hidden: null },
+  { email: "admin@enviroai.demo", role: "Super Admin", hr: true, settings: true, hidden: null },
   {
-    email: "knowledge@npc.qa",
+    email: "knowledge@enviroai.demo",
     role: "Knowledge Admin",
     hr: false,
     settings: true,
     hidden: { url: "/en/hr", marker: "hr-portal" },
   },
-  { email: "hr@npc.qa", role: "HR Admin", hr: true, settings: true, hidden: null },
+  { email: "hr@enviroai.demo", role: "HR Admin", hr: true, settings: true, hidden: null },
   {
-    email: "head.stats@npc.qa",
+    email: "head.stats@enviroai.demo",
     role: "Department Head",
     hr: true,
     settings: false,
     hidden: { url: "/en/settings?tab=organisation", marker: "organisation-settings" },
   },
   {
-    email: "verifier@npc.qa",
+    email: "verifier@enviroai.demo",
     role: "Expert Verifier",
     hr: false,
     settings: false,
     hidden: { url: "/en/hr", marker: "hr-portal" },
   },
   {
-    email: "analyst@npc.qa",
+    email: "analyst@enviroai.demo",
     role: "Contributor",
     hr: false,
     settings: false,
     hidden: { url: "/en/settings", marker: "user-access-open" },
   },
   {
-    email: "reader@npc.qa",
+    email: "reader@enviroai.demo",
     role: "Reader",
     hr: false,
     settings: false,
@@ -972,7 +972,7 @@ async function scenarioPermissions(browser: Browser): Promise<void> {
       );
       check(`${role.role}: HR is ${role.hr ? "on" : "off"} the rail`, got.includes("hr") === role.hr);
       check(`${role.role}: Settings is ${role.settings ? "on" : "off"} the rail`, got.includes("settings") === role.settings);
-      check(`${role.role}: the inbox and Ask NPC are in the bar`, state.inbox === 1 && state.ask === 1);
+      check(`${role.role}: the inbox and Ask EnviroAI are in the bar`, state.inbox === 1 && state.ask === 1);
 
       if (role.hidden) {
         const status = await open(page, `${BASE}${role.hidden.url}`);
@@ -982,7 +982,7 @@ async function scenarioPermissions(browser: Browser): Promise<void> {
       } else {
         skip(`${role.role}: hidden portal 404`, "this role holds every portal");
       }
-      if (role.email === "reader@npc.qa") await shot(page, "permissions-reader-404");
+      if (role.email === "reader@enviroai.demo") await shot(page, "permissions-reader-404");
     } finally {
       await ctx.close();
     }

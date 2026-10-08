@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-// Builds the full seeded SiaNexus database from /sources and scripts/seed-content.
+// Builds the full seeded EnviroAI database from /sources and scripts/seed-content.
 // Drops and recreates. Run: npm run seed
 import fs from "node:fs";
 import path from "node:path";
@@ -23,7 +23,7 @@ function pickBi(item: Record<string, unknown>, key: string): { en: string; ar: s
 }
 
 async function main() {
-  console.log("== SiaNexus seed ==");
+  console.log("== EnviroAI seed ==");
   const t0 = Date.now();
 
   // 1. reset database (in DATA_DIR, which the boot script may have moved)
@@ -228,16 +228,16 @@ async function main() {
     bump("departments");
   }
 
-  const passwordHash = await hashPassword("Nexus!2026");
+  const passwordHash = await hashPassword("EnviroAI!2026");
   const userIdByEmail = new Map<string, string>();
   const employeePool: string[] = []; // ids of non-named users for employee:N mapping
   const NAMED = new Set([
-    "admin@npc.qa",
-    "knowledge@npc.qa",
-    "head.stats@npc.qa",
-    "verifier@npc.qa",
-    "analyst@npc.qa",
-    "reader@npc.qa",
+    "admin@enviroai.demo",
+    "knowledge@enviroai.demo",
+    "head.stats@enviroai.demo",
+    "verifier@enviroai.demo",
+    "analyst@enviroai.demo",
+    "reader@enviroai.demo",
   ]);
   for (const u of taxonomyPack.users) {
     const id = newId();
@@ -251,7 +251,7 @@ async function main() {
       nameAr: u.name_ar,
       positionEn: u.position_en,
       positionAr: u.position_ar,
-      avatarColor: ["maroon", "gulf", "gold"].includes(u.avatar_color) ? u.avatar_color : "maroon",
+      avatarColor: ["navy", "teal", "aqua"].includes(u.avatar_color) ? u.avatar_color : "navy",
       departmentId: deptIds.get(u.department_code) ?? null,
       roleId: roleIds.get(u.role) ?? roleIds.get("reader")!,
       clearanceLevel: u.clearance_level,
@@ -296,12 +296,12 @@ async function main() {
     await db.insert(schema.experts).values({
       id,
       userId,
-      type: "npc_employee",
+      type: "org_employee",
       nameEn: u.name_en,
       nameAr: u.name_ar,
       avatarColor: u.avatar_color,
-      organisationEn: "National Planning Council",
-      organisationAr: "المجلس الوطني للتخطيط",
+      organisationEn: "Programme Office",
+      organisationAr: "مكتب البرنامج",
       positionEn: u.position_en,
       positionAr: u.position_ar,
       availability: "available",
@@ -573,12 +573,12 @@ async function main() {
     });
   }
   // a handful of recent status updates so "What changed" has life
-  const nds3Projects = strategyPack.nodes.filter(
-    (n) => n.edition === "nds3" && (n.node_type === "project" || n.node_type === "initiative")
+  const nes3Projects = strategyPack.nodes.filter(
+    (n) => n.edition === "nes3" && (n.node_type === "project" || n.node_type === "initiative")
   );
-  const updateAuthors = [uid("analyst@npc.qa"), uid("knowledge@npc.qa"), uid("head.stats@npc.qa")];
-  for (let i = 0; i < Math.min(8, nds3Projects.length); i++) {
-    const n = nds3Projects[(i * 9) % nds3Projects.length];
+  const updateAuthors = [uid("analyst@enviroai.demo"), uid("knowledge@enviroai.demo"), uid("head.stats@enviroai.demo")];
+  for (let i = 0; i < Math.min(8, nes3Projects.length); i++) {
+    const n = nes3Projects[(i * 9) % nes3Projects.length];
     const daysAgo = [1, 2, 3, 5, 6, 12, 20, 28][i] ?? 3;
     const createdAt = new Date(Date.now() - daysAgo * 86400000).toISOString();
     await db.insert(schema.statusUpdates).values({
@@ -628,183 +628,129 @@ async function main() {
   const okFiles = manifest.filter(
     (m) => (m.status === "ok" || m.status === "exists") && fs.existsSync(path.join(SOURCES, m.filename))
   );
-  /* Source files the demo deliberately does not carry. The npc.qa news
-     captures are verbatim press releases that name individual officials, and
-     the demo has no business holding a named public servant's quote in its
-     library; they also parse to no text at all, so they contribute nothing to
-     search or to an answer. The files stay in sources/ as provenance. Remove
-     the `npc_news_` pattern here to bring them back. */
-  const NOT_FOR_THE_DEMO = /^npc_news_/;
+  /* Public source captures are fetched by scripts/fetch-sources.mjs into
+     sources/ with fixed file names. Only documents that exist on disk are
+     ingested, so a machine without network access seeds an empty library and
+     the app still runs. */
   const seen = new Set<string>();
   const files = okFiles.filter((m) => {
     if (seen.has(m.filename)) return false;
     seen.add(m.filename);
-    if (NOT_FOR_THE_DEMO.test(m.filename)) return false;
     // skip machine artifacts
     return !/^opendata_catalog|manifest|SOURCES/.test(m.filename) && !m.filename.endsWith(".txt");
   });
 
-  // pre-authored bilingual metadata for the flagship documents
+  // pre-authored bilingual metadata for the public reference documents.
+  // Summaries describe the document type and publisher only; they make no
+  // claim about figures inside the file.
   const authored: Record<
     string,
-    { titleEn: string; titleAr: string; summaryEn: string; summaryAr: string; type: string; outcomes: string[]; topics: string[]; year: number }
+    { titleEn: string; titleAr: string; summaryEn: string; summaryAr: string; type: string; outcomes: string[]; topics: string[]; year: number | null }
   > = {
-    "QNDS3_EN.pdf": {
-      titleEn: "Third National Development Strategy 2024-2030",
-      titleAr: "استراتيجية التنمية الوطنية الثالثة 2024-2030",
+    "NES_Executive_Summary_EN.pdf": {
+      titleEn: "National Environment Strategy (NES): Executive Summary",
+      titleAr: "الاستراتيجية الوطنية للبيئة: الملخص التنفيذي",
       summaryEn:
-        "The Third National Development Strategy is Qatar's final delivery plan toward Qatar National Vision 2030. It sets seven strategic national outcomes: sustainable economic growth, fiscal sustainability, a future-ready workforce, a cohesive society, quality of life, environmental sustainability, and government excellence. The strategy targets average real GDP growth of around 4 percent to 2030, driven by productivity and non-hydrocarbon expansion through priority economic clusters, and is delivered through a portfolio of national programmes and projects with clear governance, measurable targets, and named accountability across more than twenty sector teams.",
+        "Executive summary of the National Environment Strategy as hosted on the website of the Ministry of Environment, Water and Agriculture (MEWA). It is the public reference for the strategy framework that the Programme Office delivery plan follows.",
       summaryAr:
-        "استراتيجية التنمية الوطنية الثالثة هي خطة قطر التنفيذية الأخيرة نحو رؤية قطر الوطنية 2030. وتحدد سبع نتائج وطنية استراتيجية: النمو الاقتصادي المستدام، والاستدامة المالية، وقوى عاملة جاهزة للمستقبل، ومجتمع متماسك، وجودة الحياة، والاستدامة البيئية، والتميز الحكومي. وتستهدف الاستراتيجية نمواً حقيقياً للناتج المحلي بمتوسط 4 بالمئة سنوياً حتى 2030، مدفوعاً بالإنتاجية وتوسع القطاع غير الهيدروكربوني عبر عناقيد اقتصادية ذات أولوية، وتُنفذ من خلال محفظة برامج ومشاريع وطنية بحوكمة واضحة ومستهدفات قابلة للقياس ومساءلة محددة عبر أكثر من عشرين فريقاً قطاعياً.",
+        "الملخص التنفيذي للاستراتيجية الوطنية للبيئة كما هو منشور على موقع وزارة البيئة والمياه والزراعة. وهو المرجع العام للإطار الاستراتيجي الذي تتبعه خطة تنفيذ مكتب البرنامج.",
       type: "strategy",
       outcomes: ["eco_growth", "fiscal_sust", "workforce", "cohesive_society", "quality_life", "env_sust", "gov_excellence"],
-      topics: ["strategy_design", "strategy_delivery"],
-      year: 2024,
-    },
-    "QNDS3_AR.pdf": {
-      titleEn: "Third National Development Strategy 2024-2030 (Arabic)",
-      titleAr: "استراتيجية التنمية الوطنية الثالثة 2024-2030",
-      summaryEn:
-        "The Arabic edition of the Third National Development Strategy 2024-2030, presenting the seven strategic national outcomes, headline national targets, priority economic clusters, and the delivery and governance model that carries Qatar to its National Vision 2030.",
-      summaryAr:
-        "النسخة العربية من استراتيجية التنمية الوطنية الثالثة 2024-2030، وتعرض النتائج الوطنية الاستراتيجية السبع والمستهدفات الوطنية الرئيسية والعناقيد الاقتصادية ذات الأولوية ونموذج التنفيذ والحوكمة الذي يقود قطر نحو رؤيتها الوطنية 2030.",
-      type: "strategy",
-      outcomes: ["eco_growth", "gov_excellence"],
-      topics: ["strategy_design", "strategy_delivery"],
-      year: 2024,
-    },
-    "www.npc.qa_en_planning_Documents_nds2_NDS2Final.pdf": {
-      titleEn: "Second National Development Strategy 2018-2022",
-      titleAr: "استراتيجية التنمية الوطنية الثانية 2018-2022",
-      summaryEn:
-        "Qatar's Second National Development Strategy set the country's development agenda for 2018-2022 across twelve sector strategies, from economic diversification and infrastructure to healthcare, education, and environmental management. It introduced a strengthened delivery framework with defined institutional responsibilities and formed the bridge between the first strategy's foundations and the outcome-driven Third National Development Strategy.",
-      summaryAr:
-        "حددت استراتيجية التنمية الوطنية الثانية أجندة التنمية في قطر للفترة 2018-2022 عبر اثنتي عشرة استراتيجية قطاعية، من التنويع الاقتصادي والبنية التحتية إلى الرعاية الصحية والتعليم والإدارة البيئية. وقدمت إطار تنفيذ معززاً بمسؤوليات مؤسسية محددة، وشكلت الجسر بين أسس الاستراتيجية الأولى واستراتيجية التنمية الوطنية الثالثة القائمة على النتائج.",
-      type: "strategy",
-      outcomes: [],
-      topics: ["strategy_design", "me_monitoring"],
+      topics: ["strategy_design", "environmental_law"],
       year: 2018,
     },
-    "www.npc.qa_ar_planning_Documents_nds2_NDS2Final.pdf": {
-      titleEn: "Second National Development Strategy 2018-2022 (Arabic)",
-      titleAr: "استراتيجية التنمية الوطنية الثانية 2018-2022",
+    "NES_Environmental_Strategy_Mirror_EN.pdf": {
+      titleEn: "National Environment Strategy (third-party mirror copy)",
+      titleAr: "الاستراتيجية الوطنية للبيئة (نسخة منشورة لدى جهة أخرى)",
       summaryEn:
-        "The Arabic edition of the Second National Development Strategy 2018-2022 with its twelve sector strategies and delivery framework.",
+        "A copy of the National Environment Strategy published on a third-party website. The authoritative copy remains the one hosted by MEWA; this mirror is kept for cross-checking.",
       summaryAr:
-        "النسخة العربية من استراتيجية التنمية الوطنية الثانية 2018-2022 باستراتيجياتها القطاعية الاثنتي عشرة وإطار تنفيذها.",
+        "نسخة من الاستراتيجية الوطنية للبيئة منشورة على موقع جهة أخرى. وتبقى النسخة المرجعية هي المنشورة لدى وزارة البيئة والمياه والزراعة، وتُحفظ هذه النسخة للمطابقة.",
       type: "strategy",
       outcomes: [],
       topics: ["strategy_design"],
-      year: 2018,
+      year: null,
     },
-    "QNV2030_EN.pdf": {
-      titleEn: "Qatar National Vision 2030",
-      titleAr: "رؤية قطر الوطنية 2030",
-      summaryEn:
-        "Qatar National Vision 2030, launched in 2008, is the nation's long-term development compass. It rests on four pillars: human development, social development, economic development, and environmental development, and commits Qatar to transforming into an advanced society capable of sustaining its development and providing a high standard of living for its people by 2030.",
-      summaryAr:
-        "رؤية قطر الوطنية 2030، التي أُطلقت عام 2008، هي بوصلة التنمية طويلة المدى للدولة. وترتكز على أربع ركائز: التنمية البشرية والتنمية الاجتماعية والتنمية الاقتصادية والتنمية البيئية، وتلتزم بتحويل قطر إلى مجتمع متقدم قادر على استدامة تنميته وتوفير مستوى معيشة مرتفع لشعبه بحلول 2030.",
-      type: "strategy",
-      outcomes: ["quality_life", "cohesive_society"],
-      topics: ["strategy_design"],
-      year: 2008,
+    "SGI_Factsheet_EN.pdf": {
+      titleEn: "About the Saudi Green Initiative (factsheet)",
+      titleAr: "نبذة عن مبادرة السعودية الخضراء (صحيفة وقائع)",
+      summaryEn: "Factsheet on the Saudi Green Initiative, published on the official Saudi Green Initiative website.",
+      summaryAr: "صحيفة وقائع عن مبادرة السعودية الخضراء منشورة على الموقع الرسمي للمبادرة.",
+      type: "report",
+      outcomes: ["env_sust", "workforce"],
+      topics: ["ghg_emissions", "renewable_energy", "desertification"],
+      year: null,
     },
-    "QNV2030_AR.pdf": {
-      titleEn: "Qatar National Vision 2030 (Arabic)",
-      titleAr: "رؤية قطر الوطنية 2030",
-      summaryEn: "The Arabic edition of Qatar National Vision 2030 and its four development pillars.",
-      summaryAr: "النسخة العربية من رؤية قطر الوطنية 2030 وركائزها التنموية الأربع.",
-      type: "strategy",
-      outcomes: [],
-      topics: ["strategy_design"],
-      year: 2008,
+    "Saudi_NDC_2025.pdf": {
+      titleEn: "Saudi Arabia second Nationally Determined Contribution (UNFCCC)",
+      titleAr: "المساهمة المحددة وطنياً الثانية للمملكة العربية السعودية (اتفاقية الأمم المتحدة الإطارية)",
+      summaryEn: "The Kingdom's second Nationally Determined Contribution document as hosted by the UNFCCC.",
+      summaryAr: "وثيقة المساهمة المحددة وطنياً الثانية للمملكة كما هي منشورة لدى اتفاقية الأمم المتحدة الإطارية بشأن تغير المناخ.",
+      type: "report",
+      outcomes: ["env_sust"],
+      topics: ["ghg_emissions", "climate_adaptation"],
+      year: 2025,
     },
-  };
-  // guidebook: filename contains 'Guidebook'
-  const guidebookEntry = files.find((f) => /guidebook/i.test(f.filename));
-  if (guidebookEntry) {
-    authored[guidebookEntry.filename] = {
-      titleEn: "NDS3 Governance Guidebook",
-      titleAr: "دليل حوكمة تنفيذ استراتيجية التنمية الوطنية الثالثة",
-      summaryEn:
-        "The guidebook for the governance of NDS3 implementation. It defines the delivery architecture: the roles of the National Planning Council, sector teams, and delivery entities, the cadence of reporting and escalation, and how outcomes, programmes, and projects are monitored so that accountability for Qatar's final push to Vision 2030 stays clear and evidence-based.",
-      summaryAr:
-        "دليل حوكمة تنفيذ استراتيجية التنمية الوطنية الثالثة. يحدد بنية التنفيذ: أدوار المجلس الوطني للتخطيط والفرق القطاعية والجهات المنفذة، وإيقاع التقارير والتصعيد، وكيفية متابعة النتائج والبرامج والمشاريع لتبقى المساءلة في مسيرة قطر الأخيرة نحو رؤية 2030 واضحة ومبنية على الأدلة.",
-      type: "guideline",
-      outcomes: ["gov_excellence"],
-      topics: ["strategy_delivery", "me_monitoring", "results_frameworks"],
+    "NCW_Annual_Report_2023.pdf": {
+      titleEn: "National Center for Wildlife Annual Report 2023",
+      titleAr: "التقرير السنوي للمركز الوطني للحياة الفطرية 2023",
+      summaryEn: "Annual report of the National Center for Wildlife (NCW) for 2023, published on the NCW website.",
+      summaryAr: "التقرير السنوي للمركز الوطني للحياة الفطرية لعام 2023 منشور على موقع المركز.",
+      type: "report",
+      outcomes: ["workforce"],
+      topics: ["biodiversity"],
+      year: 2023,
+    },
+    "Sustainable_Land_Management_Report_EN.pdf": {
+      titleEn: "Sustainable Land Management Report",
+      titleAr: "تقرير الإدارة المستدامة للأراضي",
+      summaryEn: "Report on sustainable land management hosted by the Ministry of Environment, Water and Agriculture.",
+      summaryAr: "تقرير عن الإدارة المستدامة للأراضي منشور لدى وزارة البيئة والمياه والزراعة.",
+      type: "report",
+      outcomes: ["workforce"],
+      topics: ["desertification", "environment_stats"],
+      year: null,
+    },
+    "IRENA_Saudi_Arabia_Statistical_Profile.pdf": {
+      titleEn: "IRENA Statistical Profile: Saudi Arabia",
+      titleAr: "الملف الإحصائي للوكالة الدولية للطاقة المتجددة: المملكة العربية السعودية",
+      summaryEn: "Renewable energy statistical profile for Saudi Arabia published by the International Renewable Energy Agency (IRENA).",
+      summaryAr: "ملف إحصائي للطاقة المتجددة في المملكة العربية السعودية صادر عن الوكالة الدولية للطاقة المتجددة.",
+      type: "statistical_release",
+      outcomes: ["env_sust"],
+      topics: ["renewable_energy", "energy_stats"],
+      year: null,
+    },
+    "ENOWA_Water_ESG_Report.pdf": {
+      titleEn: "ENOWA Water Inaugural ESG Report",
+      titleAr: "التقرير الأول للحوكمة البيئية والاجتماعية والمؤسسية لقطاع المياه في إينووا",
+      summaryEn: "Inaugural ESG report of the water business of ENOWA, as published by the company.",
+      summaryAr: "التقرير الأول للحوكمة البيئية والاجتماعية والمؤسسية لأعمال المياه في إينووا كما نشرته الشركة.",
+      type: "report",
+      outcomes: ["eco_growth"],
+      topics: ["water_resources", "desalination"],
+      year: null,
+    },
+    "SIRC_Sustainability_Report_2024.pdf": {
+      titleEn: "Saudi Investment Recycling Company: 2024 Sustainability Report",
+      titleAr: "الشركة السعودية لإعادة التدوير: تقرير الاستدامة 2024",
+      summaryEn: "2024 sustainability report of the Saudi Investment Recycling Company (SIRC), as published by the company.",
+      summaryAr: "تقرير الاستدامة لعام 2024 للشركة السعودية لإعادة التدوير كما نشرته الشركة.",
+      type: "report",
+      outcomes: ["cohesive_society"],
+      topics: ["waste_management"],
       year: 2024,
-    };
-  }
-
-  const knowledgeAdminId = uid("knowledge@npc.qa");
-
-  /** Pattern-based clean titles for fetched files without hand-authored metadata. */
-  const GCC_TITLES: Record<string, { en: string; ar: string }> = {
-    "GCC_20Market_20Statistics_20Bulletin": {
-      en: "GCC Market Statistics Bulletin",
-      ar: "نشرة إحصاءات أسواق دول مجلس التعاون",
-    },
-    "Education_20health_20and_20social_20services": {
-      en: "GCC Statistics: Education, Health and Social Services",
-      ar: "إحصاءات الخليج: التعليم والصحة والخدمات الاجتماعية",
-    },
-    "Practicing_20all_20economic_20investments_20and_20services_20activities": {
-      en: "GCC Statistics: Economic and Investment Activities",
-      ar: "إحصاءات الخليج: الأنشطة الاقتصادية والاستثمارية",
-    },
-    "Real_20estate_20ownership": {
-      en: "GCC Statistics: Real Estate Ownership",
-      ar: "إحصاءات الخليج: تملك العقارات",
-    },
-    "Social_20security_20and_20retirement": {
-      en: "GCC Statistics: Social Security and Retirement",
-      ar: "إحصاءات الخليج: الضمان الاجتماعي والتقاعد",
-    },
-    "Stock_20trading_20and_20companies_20establishment": {
-      en: "GCC Statistics: Stock Trading and Company Establishment",
-      ar: "إحصاءات الخليج: تداول الأسهم وتأسيس الشركات",
-    },
-    "Transportation_20and_20accommodation": {
-      en: "GCC Statistics: Transportation and Accommodation",
-      ar: "إحصاءات الخليج: النقل والإقامة",
-    },
-    "Work_20in_20the_20governmental_20and_20private_20sectors": {
-      en: "GCC Statistics: Employment in Government and Private Sectors",
-      ar: "إحصاءات الخليج: العمل في القطاعين الحكومي والخاص",
     },
   };
-  const AR_MONTHS = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-  const EN_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+  const knowledgeAdminId = uid("knowledge@enviroai.demo");
+
+  /** Clean titles for fetched files that have no hand-authored metadata. */
   function niceTitle(filename: string): { en: string; ar: string } | null {
-    if (/^npc_about_en/.test(filename))
-      return { en: "About the National Planning Council", ar: "عن المجلس الوطني للتخطيط" };
-    if (/^npc_about_ar/.test(filename))
-      return { en: "About the National Planning Council (Arabic)", ar: "عن المجلس الوطني للتخطيط" };
-    if (/^npc_nds3_overview/.test(filename))
-      return { en: "NDS3 Overview (npc.qa)", ar: "التعريف باستراتيجية التنمية الوطنية الثالثة" };
-    const news = /^npc_news_(en|ar)_.*?(\d{2})(\d{2})(\d{4})\.aspx/.exec(filename);
-    if (news) {
-      const [, lang, dd, mm, yyyy] = news;
-      const mi = Math.max(0, Math.min(11, Number(mm) - 1));
-      return {
-        en: `NPC News, ${Number(dd)} ${EN_MONTHS[mi]} ${yyyy}`,
-        ar: `أخبار المجلس الوطني للتخطيط، ${Number(dd)} ${AR_MONTHS[mi]} ${yyyy}`,
-      };
-    }
-    for (const [key, val] of Object.entries(GCC_TITLES)) {
-      if (filename.includes(key)) return val;
-    }
-    const od = /^opendata_(.+)\.csv$/.exec(filename);
-    if (od) {
-      const slug = od[1]
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase())
-        .slice(0, 90);
-      return { en: `Open Data: ${slug}`, ar: "" };
-    }
-    if (/statistics.*\.aspx/.test(filename)) {
-      return { en: "NPC Statistics Portal Page", ar: "صفحة بوابة الإحصاءات في المجلس" };
+    const page = /^page_(.+)\.html$/.exec(filename);
+    if (page) {
+      const slug = page[1].replace(/[_-]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()).slice(0, 90);
+      return { en: `Public page: ${slug}`, ar: "" };
     }
     return null;
   }
@@ -832,7 +778,7 @@ async function main() {
     const enrich = meta
       ? null
       : mockEnrich({
-          filename: f.filename.replace(/^www\.npc\.qa_|^opendata_/, "").replace(/_20/g, " "),
+          filename: f.filename.replace(/^opendata_/, "").replace(/_20/g, " "),
           text: parsed.text,
           pages: parsed.pages,
           lang: parsed.lang,
@@ -842,7 +788,7 @@ async function main() {
             nameAr: t.name_ar,
             dimension: t.dimension,
           })),
-          sourceOrigin: "npc",
+          sourceOrigin: "org",
         });
 
     const typeCode = meta?.type ?? enrich?.knowledge_type_code ?? "report";
@@ -865,8 +811,8 @@ async function main() {
       status: "verified",
       verifiedBy: knowledgeAdminId,
       verifiedAt: now,
-      sourceOrigin: "npc",
-      publishYear: meta?.year ?? enrich?.publish_year ?? null,
+      sourceOrigin: "org",
+      publishYear: meta ? meta.year : (enrich?.publish_year ?? null),
       originalFilename: f.filename,
       mime: (await import("../src/server/ingest/parse")).mimeFromFilename(f.filename),
       sizeBytes: buf.length,
@@ -948,32 +894,32 @@ async function main() {
     const documentId = newId();
     const versionId = newId();
     const confText =
-      "Confidential working paper: preliminary fiscal scenario assumptions for the 2027 budget cycle. " +
-      "Prepared for internal NPC deliberation only. Scenario A assumes hydrocarbon revenues stable; Scenario B models a 12 percent decline with expenditure smoothing through the stabilization buffer.";
+      "Confidential working paper: preliminary water tariff scenario assumptions for the 2027 planning cycle. " +
+      "Prepared for internal Programme Office deliberation only. Illustrative demo content. Scenario A assumes current consumption bands; Scenario B models a 10 percent demand reduction with a phased tariff step.";
     const uploadDir = path.join(dataDir, "uploads", documentId);
     fs.mkdirSync(uploadDir, { recursive: true });
-    fs.writeFileSync(path.join(uploadDir, "fiscal-scenarios-2027.txt"), confText);
+    fs.writeFileSync(path.join(uploadDir, "water-tariff-scenarios-2027.txt"), confText);
     fs.writeFileSync(path.join(uploadDir, "extracted.txt"), confText);
     const storagePath = path
-      .join("data", "uploads", documentId, "fiscal-scenarios-2027.txt")
+      .join("data", "uploads", documentId, "water-tariff-scenarios-2027.txt")
       .replace(/\\/g, "/");
     await db.insert(schema.documents).values({
       id: documentId,
-      titleEn: "Fiscal Scenario Assumptions 2027 (Working Paper)",
-      titleAr: "افتراضات السيناريوهات المالية 2027 (ورقة عمل)",
-      summaryEn: "Preliminary fiscal scenario assumptions for the 2027 budget cycle, for internal deliberation.",
-      summaryAr: "افتراضات أولية للسيناريوهات المالية لدورة موازنة 2027، للتداول الداخلي.",
+      titleEn: "Water Tariff Scenario Assumptions 2027 (Working Paper)",
+      titleAr: "افتراضات سيناريوهات تعرفة المياه 2027 (ورقة عمل)",
+      summaryEn: "Preliminary water tariff scenario assumptions for the 2027 planning cycle, for internal deliberation. Illustrative demo content.",
+      summaryAr: "افتراضات أولية لسيناريوهات تعرفة المياه لدورة تخطيط 2027، للتداول الداخلي. محتوى توضيحي لأغراض العرض.",
       knowledgeTypeTermId: termIdByKey.get("knowledge_type:study") ?? null,
       classificationLevel: 3,
       departmentId: deptIds.get("econ_planning") ?? null,
-      ownerUserId: uid("head.stats@npc.qa"),
+      ownerUserId: uid("head.stats@enviroai.demo"),
       languageOriginal: "en",
       status: "verified",
       verifiedBy: knowledgeAdminId,
       verifiedAt: now,
-      sourceOrigin: "npc",
+      sourceOrigin: "org",
       publishYear: 2026,
-      originalFilename: "fiscal-scenarios-2027.txt",
+      originalFilename: "water-tariff-scenarios-2027.txt",
       mime: "text/plain",
       sizeBytes: confText.length,
       pageCount: 1,
@@ -1039,8 +985,7 @@ async function main() {
   {
     const { eq } = await import("drizzle-orm");
     const map: [string, string][] = [
-      ["nds3", "QNDS3_EN.pdf"],
-      ["nds2", "www.npc.qa_en_planning_Documents_nds2_NDS2Final.pdf"],
+      ["nes3", "NES_Executive_Summary_EN.pdf"],
     ];
     for (const [code, fname] of map) {
       const docId = docIdByFilename.get(fname);
@@ -1072,7 +1017,7 @@ async function main() {
       type: e.type,
       nameEn: e.name_en,
       nameAr: e.name_ar,
-      avatarColor: ["gulf", "gold", "maroon"][Math.floor(Math.random() * 3)],
+      avatarColor: ["teal", "aqua", "navy"][Math.floor(Math.random() * 3)],
       organisationEn: e.organisation_en,
       organisationAr: e.organisation_ar,
       positionEn: e.position_en,
@@ -1085,7 +1030,7 @@ async function main() {
       educationJson: JSON.stringify(e.education ?? []),
       availability: e.availability ?? "available",
       clearanceLevel: 1,
-      ownerUserId: uid("knowledge@npc.qa"),
+      ownerUserId: uid("knowledge@enviroai.demo"),
       isVerified: 1,
       visibilityClassification: 2,
       createdAt: now,
@@ -1151,7 +1096,7 @@ async function main() {
   }
   // AI-suggested domains for the analyst account (drives the profile screen)
   {
-    const analystExpert = expertIdByUserId.get(uid("analyst@npc.qa"));
+    const analystExpert = expertIdByUserId.get(uid("analyst@enviroai.demo"));
     if (analystExpert) {
       for (const code of ["economic_diversification", "national_accounts", "sme_policy"]) {
         const termId = resolveTermId(code);
@@ -1247,7 +1192,7 @@ async function main() {
         bodyEn: a.body_en ?? null,
         bodyAr: a.body_ar ?? null,
         isVerified: a.verified ? 1 : 0,
-        verifiedBy: a.verified ? uid("verifier@npc.qa") : null,
+        verifiedBy: a.verified ? uid("verifier@enviroai.demo") : null,
         verifiedAt: a.verified ? now : null,
         helpfulCount: a.helpful_count ?? 0,
         createdAt: new Date(new Date(created).getTime() + (ai + 1) * 86400000).toISOString(),
@@ -1298,9 +1243,9 @@ async function main() {
   }
 
   // lessons + decisions
-  const nds3OutcomeNodes = strategyPack.nodes.filter((n) => n.edition === "nds3" && n.node_type === "outcome");
+  const nes3OutcomeNodes = strategyPack.nodes.filter((n) => n.edition === "nes3" && n.node_type === "outcome");
   const outcomeNodeByCode = new Map<string, string>();
-  for (const n of nds3OutcomeNodes) {
+  for (const n of nes3OutcomeNodes) {
     // node code like O1..O7; map by outcome order to outcome taxonomy codes
     outcomeNodeByCode.set(n.key, nodeIdByKey.get(n.key)!);
   }
@@ -1421,7 +1366,7 @@ async function main() {
       termId: b.topic_code ? resolveTermId(b.topic_code) : null,
       nodeId: null,
       status: "open",
-      postedBy: uid("knowledge@npc.qa"),
+      postedBy: uid("knowledge@enviroai.demo"),
       createdAt: now,
       updatedAt: now,
     });
@@ -1467,7 +1412,7 @@ async function main() {
       source: s.source ?? null,
       impact: s.impact ?? "medium",
       horizon: s.horizon ?? "mid",
-      createdBy: uid(s.created_by ?? "knowledge@npc.qa"),
+      createdBy: uid(s.created_by ?? "knowledge@enviroai.demo"),
       createdAt: now,
     });
     bump("signals");
@@ -1481,7 +1426,7 @@ async function main() {
       impact: r.impact ?? 3,
       mitigationEn: r.mitigation_en ?? null,
       mitigationAr: r.mitigation_ar ?? null,
-      ownerUserId: uid(r.owner ?? "admin@npc.qa"),
+      ownerUserId: uid(r.owner ?? "admin@enviroai.demo"),
       status: r.status ?? "open",
       createdAt: now,
     });
@@ -1495,7 +1440,7 @@ async function main() {
       blurbAr: s.blurb_ar,
       startsOn: todayIso(),
       endsOn: new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10),
-      chosenBy: uid("admin@npc.qa"),
+      chosenBy: uid("admin@enviroai.demo"),
     });
     bump("spotlights");
   }
@@ -1510,8 +1455,8 @@ async function main() {
       nameAr: c.name_ar,
       descriptionEn: c.description_en,
       descriptionAr: c.description_ar,
-      coverStyle: c.cover_style ?? "maroon-weave",
-      ownerUserId: uid("knowledge@npc.qa"),
+      coverStyle: c.cover_style ?? "navy-weave",
+      ownerUserId: uid("knowledge@enviroai.demo"),
       visibility: "all",
       isFeatured: 1,
       createdAt: now,
@@ -1529,7 +1474,7 @@ async function main() {
           resourceType: "document",
           resourceId: doc.id,
           sort: sort++,
-          addedBy: uid("knowledge@npc.qa"),
+          addedBy: uid("knowledge@enviroai.demo"),
           createdAt: now,
         });
       }
@@ -1580,17 +1525,17 @@ async function main() {
   const badgeDefs: [string, string, string, string, string | null][] = [
     ["builder_bronze", "builder", "Builder I", "بنّاء 1", "bronze"],
     ["builder_silver", "builder", "Builder II", "بنّاء 2", "silver"],
-    ["builder_gold", "builder", "Builder III", "بنّاء 3", "gold"],
+    ["builder_gold", "builder", "Builder III", "بنّاء 3", "aqua"],
     ["guardian_bronze", "guardian", "Guardian I", "حارس 1", "bronze"],
     ["guardian_silver", "guardian", "Guardian II", "حارس 2", "silver"],
-    ["guardian_gold", "guardian", "Guardian III", "حارس 3", "gold"],
+    ["guardian_gold", "guardian", "Guardian III", "حارس 3", "aqua"],
     ["connector_bronze", "connector", "Connector I", "موصّل 1", "bronze"],
     ["connector_silver", "connector", "Connector II", "موصّل 2", "silver"],
-    ["connector_gold", "connector", "Connector III", "موصّل 3", "gold"],
+    ["connector_gold", "connector", "Connector III", "موصّل 3", "aqua"],
     // CR08 7.1: the family keeps its code; the old level word left the names
     ["explorer_bronze", "explorer", "Pathfinder I", "رائد 1", "bronze"],
     ["explorer_silver", "explorer", "Pathfinder II", "رائد 2", "silver"],
-    ["explorer_gold", "explorer", "Pathfinder III", "رائد 3", "gold"],
+    ["explorer_gold", "explorer", "Pathfinder III", "رائد 3", "aqua"],
     ["first_shelf", "builder", "First Shelf", "أول رف", null],
     ["bilingual", "guardian", "Bilingual", "ثنائي اللغة", null],
     ["gap_closer", "connector", "Gap Closer", "سادّ الفجوات", null],
@@ -1631,7 +1576,7 @@ async function main() {
     // CR01 5.5 + 2.6
     ["knowledge_submitted", 15],
     ["knowledge_verified", 25],
-    ["knowledge_linked_to_nds", 5],
+    ["knowledge_linked_to_nes", 5],
     ["knowledge_from_event", 20],
     ["signal_accepted", 10],
   ];
@@ -1641,12 +1586,12 @@ async function main() {
 
   // history: a plausible spread of levels (the knowledge admin at the top)
   const spread: [string, number][] = [
-    ["knowledge@npc.qa", 4400],
-    ["admin@npc.qa", 1900],
-    ["head.stats@npc.qa", 1650],
-    ["verifier@npc.qa", 900],
-    ["analyst@npc.qa", 40],
-    ["reader@npc.qa", 25],
+    ["knowledge@enviroai.demo", 4400],
+    ["admin@enviroai.demo", 1900],
+    ["head.stats@enviroai.demo", 1650],
+    ["verifier@enviroai.demo", 900],
+    ["analyst@enviroai.demo", 40],
+    ["reader@enviroai.demo", 25],
   ];
   const historyTypes = ["document_uploaded", "answer_posted", "content_verified", "lesson_published", "daily_login", "kpi_value_entered"];
   const allUsers = [...spread, ...employeePool.slice(0, 24).map((id, i) => {
@@ -1678,8 +1623,8 @@ async function main() {
       userId,
       totalPoints: total,
       levelId: levelIds[Math.max(0, levelIdx)],
-      dailyStreak: email === "knowledge@npc.qa" ? 14 : Math.floor(Math.random() * 6),
-      weeklyStreak: email === "knowledge@npc.qa" ? 9 : Math.floor(Math.random() * 4),
+      dailyStreak: email === "knowledge@enviroai.demo" ? 14 : Math.floor(Math.random() * 6),
+      weeklyStreak: email === "knowledge@enviroai.demo" ? 9 : Math.floor(Math.random() * 4),
       streakFreezes: 1,
       lastActiveDate: todayIso(),
       lastContributionWeek: null,
@@ -1698,10 +1643,10 @@ async function main() {
   }
   // badges for the heavy hitters
   for (const [email, badgeCodes] of [
-    ["knowledge@npc.qa", ["builder_gold", "guardian_silver", "connector_silver", "first_shelf", "bilingual"]],
-    ["admin@npc.qa", ["builder_silver", "guardian_bronze", "first_shelf"]],
-    ["head.stats@npc.qa", ["builder_silver", "guardian_bronze"]],
-    ["verifier@npc.qa", ["guardian_silver", "first_shelf"]],
+    ["knowledge@enviroai.demo", ["builder_gold", "guardian_silver", "connector_silver", "first_shelf", "bilingual"]],
+    ["admin@enviroai.demo", ["builder_silver", "guardian_bronze", "first_shelf"]],
+    ["head.stats@enviroai.demo", ["builder_silver", "guardian_bronze"]],
+    ["verifier@enviroai.demo", ["guardian_silver", "first_shelf"]],
   ] as [string, string[]][]) {
     const userId = userIdByEmail.get(email);
     if (!userId) continue;
@@ -1715,19 +1660,21 @@ async function main() {
   /* ---------------- 11. relations ---------------- */
   console.log("-- linking documents to nodes and indicators...");
   const outcomeTermPairs: [string, string][] = [
-    ["eco_growth", "economic"],
-    ["fiscal_sust", "fiscal"],
-    ["workforce", "workforce"],
-    ["env_sust", "environment"],
-    ["gov_excellence", "government"],
+    ["eco_growth", "water"],
+    ["fiscal_sust", "agricultur"],
+    ["workforce", "biodiversity"],
+    ["cohesive_society", "waste"],
+    ["quality_life", "air quality"],
+    ["env_sust", "climate"],
+    ["gov_excellence", "compliance"],
   ];
-  const nds3EditionId = editionIdByCode.get("nds3");
+  const nes3EditionId = editionIdByCode.get("nes3");
   const { eq: eqOp, and: andOp } = await import("drizzle-orm");
-  const outcomeNodes = nds3EditionId
+  const outcomeNodes = nes3EditionId
     ? await db
         .select()
         .from(schema.strategyNodes)
-        .where(andOp(eqOp(schema.strategyNodes.editionId, nds3EditionId), eqOp(schema.strategyNodes.nodeType, "outcome")))
+        .where(andOp(eqOp(schema.strategyNodes.editionId, nes3EditionId), eqOp(schema.strategyNodes.nodeType, "outcome")))
     : [];
   for (const doc of allDocs) {
     const hay = `${doc.titleEn} ${doc.summaryEn ?? ""}`.toLowerCase();
@@ -1750,14 +1697,14 @@ async function main() {
       break;
     }
   }
-  // NDS3 doc -> all outcomes, experts -> outcomes
-  const nds3DocId = docIdByFilename.get("QNDS3_EN.pdf");
-  if (nds3DocId) {
+  // the NES executive summary -> all themes, experts -> outcomes
+  const nes3DocId = docIdByFilename.get("NES_Executive_Summary_EN.pdf");
+  if (nes3DocId) {
     for (const node of outcomeNodes) {
       await db.insert(schema.relations).values({
         id: newId(),
         fromType: "document",
-        fromId: nds3DocId,
+        fromId: nes3DocId,
         toType: "node",
         toId: node.id,
         relation: "about_node",
@@ -1816,30 +1763,27 @@ async function main() {
     example_questions: { en: string; ar: string }[];
   }>("cr01.json");
 
-  // 15 curated feeds (CR01 2.3 source 2)
+  // 12 curated feeds (CR01 2.3 source 2)
   const feedRows: [string, string, string][] = [
-    ["Qatar News Agency", "https://www.qna.org.qa/en/RSS-Feeds/News", "rss"],
-    ["Gulf Times", "https://www.gulf-times.com/rss/qatar", "rss"],
-    ["The Peninsula", "https://thepeninsulaqatar.com/rss", "rss"],
-    ["Qatar Tribune", "https://www.qatar-tribune.com/rss", "rss"],
-    ["Doha News", "https://dohanews.co/feed/", "rss"],
-    ["Hukoomi News", "https://hukoomi.gov.qa/en/rss/news", "rss"],
-    ["GCO News", "https://www.gco.gov.qa/en/feed/", "rss"],
-    ["NPC News", "https://www.npc.qa/en/_layouts/15/listfeed.aspx?List=news", "rss"],
-    ["IMF Qatar", "https://www.imf.org/en/Countries/QAT/rss", "rss"],
     ["World Bank MENA", "https://www.worldbank.org/en/region/mena/rss", "rss"],
     ["OECD Newsroom", "https://www.oecd.org/newsroom/index.xml", "rss"],
     ["UN ESCWA", "https://www.unescwa.org/rss.xml", "rss"],
     ["World Economic Forum", "https://www.weforum.org/agenda/rss.xml", "rss"],
-    ["Google News: Qatar NDS3", "https://news.google.com/rss/search?q=Qatar%20national%20development%20strategy", "google_news"],
-    ["Google News: Qatar economy", "https://news.google.com/rss/search?q=Qatar%20economy%20policy", "google_news"],
+    ["Google News: Saudi environment strategy", "https://news.google.com/rss/search?q=Saudi%20Arabia%20environment%20strategy", "google_news"],
+    ["Google News: Saudi water security", "https://news.google.com/rss/search?q=Saudi%20Arabia%20water%20desalination%20wastewater", "google_news"],
+    ["Google News: Saudi agriculture and food security", "https://news.google.com/rss/search?q=Saudi%20Arabia%20agriculture%20food%20security", "google_news"],
+    ["Google News: Saudi Green Initiative", "https://news.google.com/rss/search?q=Saudi%20Green%20Initiative", "google_news"],
+    ["Google News: Middle East Green Initiative", "https://news.google.com/rss/search?q=Middle%20East%20Green%20Initiative", "google_news"],
+    ["Google News: Saudi waste and recycling", "https://news.google.com/rss/search?q=Saudi%20Arabia%20waste%20management%20recycling", "google_news"],
+    ["Google News: Saudi climate and emissions", "https://news.google.com/rss/search?q=Saudi%20Arabia%20climate%20emissions%20renewable", "google_news"],
+    ["Google News: Saudi environmental regulation", "https://news.google.com/rss/search?q=Saudi%20Arabia%20environmental%20law%20NCEC", "google_news"],
   ];
   for (const [name, url, kind] of feedRows) {
     await db.insert(schema.feeds).values({ id: newId(), name, url, kind, isActive: 1, createdAt: now });
     bump("feeds");
   }
 
-  // outcome code -> nds3 outcome node id (by sort order, same rule as runtime)
+  // outcome code -> nes3 outcome node id (by sort order, same rule as runtime)
   const outcomeSortOrder = [
     "eco_growth",
     "fiscal_sust",
@@ -1872,17 +1816,17 @@ async function main() {
         (b.indicator_codes ?? []).map((c) => indicatorIdByCode2.get(c)).filter(Boolean)
       ),
       isActive: 1,
-      createdBy: userIdByEmail.get("knowledge@npc.qa") ?? null,
+      createdBy: userIdByEmail.get("knowledge@enviroai.demo") ?? null,
       createdAt: now,
     });
     bump("scan_briefs");
   }
 
-  // 30 accepted signals with embeddings and NDS3/indicator links
+  // 30 accepted signals with embeddings and NES3/indicator links
   const rankingsForLinks = await db.select().from(schema.indexRankings);
   const signalTexts = cr01.signals.map((s) => `${s.title_en} ${s.summary_en} ${s.title_ar}`.slice(0, 2000));
   const { vectors: signalVectors, model: signalModel } = await embedTexts(signalTexts);
-  const triager = userIdByEmail.get("knowledge@npc.qa") ?? null;
+  const triager = userIdByEmail.get("knowledge@enviroai.demo") ?? null;
   for (let i = 0; i < cr01.signals.length; i++) {
     const s = cr01.signals[i];
     const id = newId();
@@ -1995,16 +1939,16 @@ async function main() {
     const { analystStream } = await import("../src/server/ai/analyst");
     const { getCurrentUser: _g } = await import("../src/server/auth/session");
     void _g;
-    const analystUserId = userIdByEmail.get("analyst@npc.qa")!;
+    const analystUserId = userIdByEmail.get("analyst@enviroai.demo")!;
     const [analystUser] = await db.select().from(schema.users).where(eqOp(schema.users.id, analystUserId)).limit(1);
     const [analystRole] = await db.select().from(schema.roles).where(eqOp(schema.roles.id, analystUser.roleId)).limit(1);
     const fullUser = { ...analystUser, role: analystRole, department: null } as never;
     const conversationSeeds = [
-      "How are we doing in Qatarization?",
-      "How many targets are in NDS3?",
-      "Which outcomes are at risk?",
+      "How are we doing on per capita water consumption?",
+      "How many targets are in the National Environment Strategy?",
+      "Which themes are at risk?",
       "ما هو معدل التضخم الحالي؟",
-      "Compare NDS2 and NDS3 on labour market targets",
+      "Compare the earlier cycle and the current plan on water targets",
     ];
     for (const question of conversationSeeds) {
       const convId = newId();
@@ -2123,8 +2067,8 @@ async function main() {
     await seedCr06();
   }
 
-  /* ---------------- 12g. CR07: the organisation from npc.qa ---------------- */
-  console.log("-- CR07: the published organisation structure, policies, council strategy...");
+  /* ---------------- 12g. CR07: the Programme Office organisation ---------------- */
+  console.log("-- CR07: the published organisation structure, policies, programme strategy...");
   {
     // the two external sources; skippable with SKIP_CR07_FETCH=1 and harmless
     // when sources/ already holds them
@@ -2155,6 +2099,19 @@ async function main() {
   {
     const { seedCr08 } = await import("./cr08-seed");
     await seedCr08();
+  }
+
+  console.log("-- KSA: Source Library, regulators, regulations and timeline...");
+  {
+    const { execFile } = await import("node:child_process");
+    const { promisify } = await import("node:util");
+    await promisify(execFile)("npx", ["tsx", "scripts/ksa-seed.ts"], {
+      cwd: process.cwd(),
+      env: process.env,
+      windowsHide: true,
+      maxBuffer: 1024 * 1024 * 32,
+      shell: true,
+    });
   }
 
   /* ---------------- 13. report ---------------- */

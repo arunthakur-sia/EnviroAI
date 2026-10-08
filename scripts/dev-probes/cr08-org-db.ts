@@ -34,7 +34,7 @@ async function main() {
   console.log(
     "head.stats:",
     await q(
-      "select u.id, u.email, u.department_id, o.code, o.name_en, o.head_user_id = u.id as is_head from users u left join org_units o on o.id = u.department_id where u.email = 'head.stats@npc.qa'"
+      "select u.id, u.email, u.department_id, o.code, o.name_en, o.head_user_id = u.id as is_head from users u left join org_units o on o.id = u.department_id where u.email = 'head.stats@enviroai.demo'"
     )
   );
   console.log(

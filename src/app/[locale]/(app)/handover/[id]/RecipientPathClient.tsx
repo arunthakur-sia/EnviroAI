@@ -113,7 +113,7 @@ export function RecipientPathClient({ detail: initialDetail, initialPath }: { de
                   <Check className="size-3" aria-hidden /> {t("signedOffChip", { date: formatDate(path.signedOffAt, locale) })}
                 </Chip>
               ) : null}
-              {illustrative ? <Chip tone="sand">{tc("illustrative")}</Chip> : null}
+              {illustrative ? <Chip tone="mist">{tc("illustrative")}</Chip> : null}
             </div>
             <div className="mt-4 flex flex-wrap items-center gap-6">
               <PersonLine person={detail.person} size={44} />
@@ -123,8 +123,8 @@ export function RecipientPathClient({ detail: initialDetail, initialPath }: { de
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-4 rounded-xl bg-sand-50 px-5 py-4">
-            <ProgressRing value={pct / 100} size={96} stroke={8} color={pct === 100 ? "var(--color-ok)" : "var(--color-maroon-700)"}>
+          <div className="flex items-center gap-4 rounded-xl bg-mist-50 px-5 py-4">
+            <ProgressRing value={pct / 100} size={96} stroke={8} color={pct === 100 ? "var(--color-ok)" : "var(--color-navy-700)"}>
               <span className="text-xl font-semibold text-ink-900 tnum" data-testid="path-pct">
                 {pct}%
               </span>
@@ -178,7 +178,7 @@ export function RecipientPathClient({ detail: initialDetail, initialPath }: { de
                 data-understood={m.understoodAt ? "1" : "0"}
               >
                 <div className="flex items-start gap-3">
-                  <span className={cn("flex size-8 shrink-0 items-center justify-center rounded-full font-display text-sm", m.understoodAt ? "bg-ok text-white" : "bg-maroon-100 text-maroon-900")} aria-hidden>
+                  <span className={cn("flex size-8 shrink-0 items-center justify-center rounded-full font-display text-sm", m.understoodAt ? "bg-ok text-white" : "bg-navy-100 text-navy-900")} aria-hidden>
                     {m.understoodAt ? <Check className="size-4" /> : i + 1}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -210,7 +210,7 @@ export function RecipientPathClient({ detail: initialDetail, initialPath }: { de
                       {m.lessons.map((l) => (
                         <li key={l.id}>
                           <Link href={l.href as never} className="link-draw inline-flex items-center gap-1.5 text-sm text-ink-900">
-                            <Lightbulb className="size-3.5 text-gold-500" aria-hidden /> {bi(locale, l.titleEn, l.titleAr)}
+                            <Lightbulb className="size-3.5 text-aqua-500" aria-hidden /> {bi(locale, l.titleEn, l.titleAr)}
                           </Link>
                         </li>
                       ))}
@@ -218,7 +218,7 @@ export function RecipientPathClient({ detail: initialDetail, initialPath }: { de
                   </div>
                 ) : null}
                 {m.notes.length ? (
-                  <div className="rounded-lg bg-sand-50 p-3">
+                  <div className="rounded-lg bg-mist-50 p-3">
                     <Eyebrow className="mb-1">{t("notes")}</Eyebrow>
                     {m.notes.slice(0, 3).map((n, k) => (
                       <p key={k} className="flex gap-2 text-sm leading-relaxed text-ink-900" dir="auto">
@@ -230,7 +230,7 @@ export function RecipientPathClient({ detail: initialDetail, initialPath }: { de
                 ) : null}
                 <div className="flex flex-wrap items-center gap-2">
                   {m.episodeId ? (
-                    <Link href={`/podcast/${m.episodeId}` as never} className="inline-flex items-center gap-1.5 rounded-lg border border-sand-300 px-3 py-1.5 text-xs font-medium text-ink-900 transition-colors hover:border-maroon-300 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500" data-testid="module-episode">
+                    <Link href={`/podcast/${m.episodeId}` as never} className="inline-flex items-center gap-1.5 rounded-lg border border-mist-300 px-3 py-1.5 text-xs font-medium text-ink-900 transition-colors hover:border-navy-300 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500" data-testid="module-episode">
                       <Headphones className="size-3.5" aria-hidden /> {t("episode")}
                     </Link>
                   ) : (
@@ -239,9 +239,9 @@ export function RecipientPathClient({ detail: initialDetail, initialPath }: { de
                     </span>
                   )}
                 </div>
-                <div className="rounded-lg border border-gold-300 bg-gold-100/40 p-3">
+                <div className="rounded-lg border border-aqua-300 bg-aqua-100/40 p-3">
                   <p className="flex items-start gap-2 text-sm text-ink-900">
-                    <HelpCircle className="mt-0.5 size-4 shrink-0 text-maroon-700" aria-hidden />
+                    <HelpCircle className="mt-0.5 size-4 shrink-0 text-navy-700" aria-hidden />
                     <span>
                       <span className="block text-[11px] font-semibold uppercase text-ink-400">{t("checkQuestion")}</span>
                       {bi(locale, m.checkQuestion.en, m.checkQuestion.ar)}
@@ -250,7 +250,7 @@ export function RecipientPathClient({ detail: initialDetail, initialPath }: { de
                   <button
                     type="button"
                     onClick={() => setHints((h) => ({ ...h, [m.id]: !h[m.id] }))}
-                    className="mt-1.5 cursor-pointer text-xs font-medium text-maroon-700 hover:underline focus-visible:outline-2 focus-visible:outline-gold-500"
+                    className="mt-1.5 cursor-pointer text-xs font-medium text-navy-700 hover:underline focus-visible:outline-2 focus-visible:outline-aqua-500"
                     aria-expanded={Boolean(hints[m.id])}
                   >
                     {hints[m.id] ? t("hideHint") : t("showHint")}
@@ -279,7 +279,7 @@ export function RecipientPathClient({ detail: initialDetail, initialPath }: { de
       <div className="grid gap-4 lg:grid-cols-2">
         <section className="card p-5" data-testid="ask-person">
           <h2 className="flex items-center gap-2 font-display text-lg text-ink-900">
-            <MessageSquare className="size-4 text-maroon-700" aria-hidden /> {t("askTitle")}
+            <MessageSquare className="size-4 text-navy-700" aria-hidden /> {t("askTitle")}
           </h2>
           <p className="mt-1 text-sm text-ink-600">{personGone ? t("askGone") : t("askHint", { name: bi(locale, detail.person.nameEn, detail.person.nameAr) })}</p>
           {!personGone ? (
@@ -295,7 +295,7 @@ export function RecipientPathClient({ detail: initialDetail, initialPath }: { de
         </section>
         <section className="card p-5" data-testid="sign-off">
           <h2 className="flex items-center gap-2 font-display text-lg text-ink-900">
-            <PenSquare className="size-4 text-maroon-700" aria-hidden /> {t("signOffTitle")}
+            <PenSquare className="size-4 text-navy-700" aria-hidden /> {t("signOffTitle")}
           </h2>
           {path?.signedOffAt ? (
             <p className="mt-2 flex items-center gap-2 text-sm text-ink-900">

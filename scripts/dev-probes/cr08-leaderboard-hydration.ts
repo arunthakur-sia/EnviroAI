@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 // CR08 7: which page emits a hydration warning, and what attribute differs.
 // Also captures the Home-block preview in both locales.
-//   npx tsx scripts/dev-probes/cr08-leaderboard-hydration.ts reader@npc.qa
+//   npx tsx scripts/dev-probes/cr08-leaderboard-hydration.ts reader@enviroai.demo
 import fs from "node:fs";
 import path from "node:path";
 import { chromium } from "playwright";
@@ -25,10 +25,10 @@ async function main() {
   const browser = await chromium.launch({ channel: "msedge" });
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
-  const email = process.argv[2] ?? "admin@npc.qa";
+  const email = process.argv[2] ?? "admin@enviroai.demo";
   for (let attempt = 0; attempt < 3; attempt++) {
     const res = await context.request.post(`${BASE}/api/v1/auth/login`, {
-      data: { email, password: "Nexus!2026" },
+      data: { email, password: "EnviroAI!2026" },
       timeout: 120000,
     });
     if (res.status() === 200) break;

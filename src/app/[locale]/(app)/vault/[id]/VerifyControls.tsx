@@ -51,7 +51,7 @@ export function VerifyControls({ documentId }: { documentId: string }) {
             type="checkbox"
             checked={both}
             onChange={(e) => setBoth(e.target.checked)}
-            className="accent-maroon-700"
+            className="accent-navy-700"
           />
           {t("bothLanguagesChecked")}
         </label>

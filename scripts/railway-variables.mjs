@@ -81,7 +81,7 @@ const vars = [
   ["ELEVENLABS_API_KEY", pick("ELEVENLABS_API_KEY")],
   ["ELEVENLABS_VOICE_MARIAM", pick("ELEVENLABS_VOICE_MARIAM", voices.mariam)],
   ["ELEVENLABS_VOICE_HAMAD", pick("ELEVENLABS_VOICE_HAMAD", voices.hamad)],
-  ["TZ", "Asia/Qatar"],
+  ["TZ", "Asia/Riyadh"],
   ["SCAN_SCHEDULE_ENABLED", "false"],
   ["SKIP_INDICES_FETCH", "1"],
   ["SKIP_CR07_FETCH", "1"],
@@ -123,6 +123,6 @@ console.log(
 const setup = vars.find(([k]) => k === "SETUP_TOKEN")?.[1] ?? "";
 console.log(
   `\nSETUP_TOKEN (type this into /setup/restore after the first deploy):\n\n  ${setup}\n\n` +
-    "Upload sianexus-data.tar.gz there, then delete SETUP_TOKEN in Railway and deploy\n" +
-    "again. That removes the restore page and starts SiaNexus with your data."
+    "Upload enviroai-data.tar.gz there, then delete SETUP_TOKEN in Railway and deploy\n" +
+    "again. That removes the restore page and starts EnviroAI with your data."
 );

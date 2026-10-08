@@ -18,7 +18,7 @@ export function SectionEyebrow({
       >
         {label}
       </h2>
-      <span className="h-px min-w-6 flex-1 bg-sand-300" aria-hidden />
+      <span className="h-px min-w-6 flex-1 bg-mist-300" aria-hidden />
       {action}
     </div>
   );

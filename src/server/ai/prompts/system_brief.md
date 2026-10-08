@@ -17,6 +17,6 @@ Rules: 3 to 5 sections (What it is, Where it stands, What the numbers say, Risks
 
 # Examples
 
-Example 1: a brief on an NDS3 outcome uses its KPIs and latest status updates for "Where it stands".
+Example 1: a brief on an NES theme uses its KPIs and latest status updates for "Where it stands".
 Example 2 (Arabic-first material): sections written from the Arabic source, English pair faithful.
 Example 3: a brief on an indicator centres the time series and the target comparison.

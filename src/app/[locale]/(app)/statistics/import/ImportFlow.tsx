@@ -160,13 +160,13 @@ export function ImportFlow({
       <div
         {...getRootProps()}
         className={cn(
-          "flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-sand-300 bg-white px-6 py-10 text-center transition-colors",
-          isDragActive && "border-maroon-500 bg-maroon-50",
+          "flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-mist-300 bg-white px-6 py-10 text-center transition-colors",
+          isDragActive && "border-navy-500 bg-navy-50",
           !indicatorId && "opacity-50"
         )}
       >
         <input {...getInputProps()} aria-label={t("dropLabel")} />
-        <FileSpreadsheet className="size-8 text-gulf-600" />
+        <FileSpreadsheet className="size-8 text-teal-600" />
         <p className="text-sm font-medium text-ink-900">
           {indicatorId ? t("dropTitle") : t("chooseFirst")}
         </p>
@@ -227,9 +227,9 @@ export function ImportFlow({
             </div>
           ) : null}
 
-          <div className="mt-4 max-h-64 overflow-auto rounded-xl border border-sand-200">
+          <div className="mt-4 max-h-64 overflow-auto rounded-xl border border-mist-200">
             <table className="w-full text-sm">
-              <thead className="sticky top-0 bg-sand-50">
+              <thead className="sticky top-0 bg-mist-50">
                 <tr>
                   <th className="px-3 py-2 text-start text-xs font-semibold text-ink-600">{t("period")}</th>
                   <th className="px-3 py-2 text-end text-xs font-semibold text-ink-600">{t("value")}</th>
@@ -238,7 +238,7 @@ export function ImportFlow({
               </thead>
               <tbody>
                 {preview.preview.map((p, i) => (
-                  <tr key={i} className="border-t border-sand-100">
+                  <tr key={i} className="border-t border-mist-100">
                     <td className="px-3 py-1.5 tnum">{p.period ?? "-"}</td>
                     <td className="px-3 py-1.5 text-end tnum">{p.value ?? "-"}</td>
                     <td className="px-3 py-1.5">

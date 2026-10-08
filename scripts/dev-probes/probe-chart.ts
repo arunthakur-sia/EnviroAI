@@ -26,7 +26,7 @@ async function main() {
 
   // API login shares the cookie jar with the page context
   const loginRes = await page.request.post(`${BASE}/api/v1/auth/login`, {
-    data: { email: "admin@npc.qa", password: "Nexus!2026" },
+    data: { email: "admin@enviroai.demo", password: "EnviroAI!2026" },
   });
   console.log("api login:", loginRes.status());
 

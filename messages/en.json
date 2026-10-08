@@ -7,14 +7,14 @@
       "strategy": "Living Strategy",
       "statistics": "Statistics",
       "experts": "Experts",
-      "ask": "Ask NPC",
+      "ask": "Ask EnviroAI",
       "lessons": "Lessons",
-      "podcast": "NPC Knowledge Cast",
+      "podcast": "EnviroAI Briefing Cast",
       "trends": "Trends and Signals",
       "settings": "Settings",
       "indices": "Indices",
       "hr": "HR Knowledge",
-      "council": "Council Strategy",
+      "council": "Programme Strategy",
       "organisation": "Organisation",
       "processes": "Processes, Policies, and SOPs",
       "studies": "Studies",
@@ -24,7 +24,7 @@
       "inbox": "Inbox",
       "handover": "My Handover"
     },
-    "searchPlaceholder": "Search SiaNexus: documents, numbers, people, answers",
+    "searchPlaceholder": "Search EnviroAI: documents, numbers, people, answers",
     "searching": "Searching…",
     "seeAllResults": "See all results for \"{q}\"",
     "types": {
@@ -69,10 +69,10 @@
     "knowledgeOfWeekStar": "Knowledge of the Week is live"
   },
   "login": {
-    "heroTitle": "The living memory of the National Planning Council",
-    "heroSubtitle": "Every report, statistic, expert, lesson, and answer that NPC produces, findable in one search and explainable with citations.",
-    "descriptor": "The knowledge memory of the National Planning Council",
-    "footer": "State of Qatar · National Planning Council",
+    "heroTitle": "The living memory of the Programme Office",
+    "heroSubtitle": "Every report, statistic, expert, lesson, and answer that the Office produces, findable in one search and explainable with citations.",
+    "descriptor": "The knowledge memory of the Programme Office",
+    "footer": "Kingdom of Saudi Arabia · Programme Office",
     "email": "Email",
     "password": "Password",
     "signIn": "Sign in",
@@ -165,7 +165,7 @@
     },
     "groupBy": "Group shelves by",
     "groupByType": "By knowledge type",
-    "groupByOutcome": "By NDS3 outcome",
+    "groupByOutcome": "By NES theme",
     "filterType": "Type",
     "filterOutcome": "Outcome",
     "filterSector": "Sector",
@@ -213,7 +213,7 @@
   },
   "upload": {
     "title": "Upload to Institutional Memory",
-    "subtitle": "Drop files and watch SiaNexus title, summarise, tag, and classify them for you.",
+    "subtitle": "Drop files and watch EnviroAI title, summarise, tag, and classify them for you.",
     "dropLabel": "Choose files",
     "dropTitle": "Drop files here, or click to choose",
     "dropHint": "PDF, Word, Excel, PowerPoint, CSV. Several at once is fine.",
@@ -238,7 +238,7 @@
     "classificationLabel": "Classification",
     "reviewDate": "Review due",
     "reviewMonths": "In {count} months",
-    "outcomes": "NDS3 outcomes",
+    "outcomes": "NES themes",
     "topics": "Sectors and topics",
     "collection": "Collection",
     "noCollection": "No collection",
@@ -254,7 +254,7 @@
     "outline": "Outline",
     "keyFacts": "Key facts",
     "tags": "Tags",
-    "aiPanel": "SiaNexus Intelligence",
+    "aiPanel": "EnviroAI Intelligence",
     "extractNumbers": "Extract the numbers",
     "explainTerms": "Explain the key terms",
     "draftLesson": "Draft a lesson from this",
@@ -266,7 +266,7 @@
     "verifyHint": "Verification tells everyone this content is trustworthy and boosts it in search and answers.",
     "bothLanguagesChecked": "I checked both the Arabic and English text",
     "verifyNote": "Note to the owner (optional)",
-    "related": "Related in SiaNexus",
+    "related": "Related in EnviroAI",
     "prevPage": "Previous page",
     "nextPage": "Next page"
   },
@@ -276,7 +276,7 @@
     "resultsFor": "Results for \"{q}\"",
     "resultCount": "{count} results",
     "answerInstead": "Answer this instead",
-    "zeroTitle": "No NPC source yet",
+    "zeroTitle": "No Office source yet",
     "zeroHint": "Nothing in the knowledge base matches. Ask the network and an expert will pick it up.",
     "askNetwork": "Ask the network",
     "intentNumber": "Looks like you want a number",
@@ -325,7 +325,7 @@
       "annual": "Annual",
       "census": "Census"
     },
-    "linkedKpis": "Linked NDS3 KPIs",
+    "linkedKpis": "Linked NES KPIs",
     "linkedReleases": "Releases",
     "linkedSignals": "Related signals",
     "target": "Target",
@@ -420,12 +420,12 @@
     "canvas": {
       "copyLink": "Copy link",
       "linkCopied": "Link copied.",
-      "pillarsAria": "Qatar National Vision 2030 pillars",
+      "pillarsAria": "Saudi Vision 2030 pillars",
       "pillars": {
-        "human": "Human Development",
-        "social": "Social Development",
-        "economic": "Economic Development",
-        "environmental": "Environmental Development"
+        "human": "Vibrant Society",
+        "social": "Ambitious Nation",
+        "economic": "Thriving Economy",
+        "environmental": "Environment and Sustainability"
       },
       "timelineAria": "2024 to 2030 delivery timeline",
       "today": "Today",
@@ -452,7 +452,7 @@
       "byLead": "By lead",
       "leadFilterAria": "Filter by lead",
       "allLeads": "All leads",
-      "leadDepartments": "NPC departments",
+      "leadDepartments": "Office departments",
       "leadEntities": "Entities",
       "leadCounts": "{initiatives} initiatives · {projects} projects",
       "leadOnTrack": "{pct}% on track"
@@ -512,7 +512,7 @@
     },
     "nodeType": {
       "vision": "Vision",
-      "outcome": "National outcome",
+      "outcome": "Environmental theme",
       "target": "Target",
       "sector_strategy": "Sector strategy",
       "cluster": "Cluster",
@@ -634,7 +634,7 @@
   },
   "experts": {
     "title": "Expert Network",
-    "subtitle": "{count} experts who know what NPC needs to know",
+    "subtitle": "{count} experts who know what the Office needs to know",
     "addExternal": "Add external expert",
     "addExternalHint": "External experts are profiles owned by you; they do not get accounts.",
     "empty": "No experts match",
@@ -644,7 +644,7 @@
     "filterDomain": "Domain",
     "filterAvailability": "Availability",
     "types": {
-      "npc_employee": "NPC staff",
+      "org_employee": "Office staff",
       "government": "Government entity",
       "academic": "Academia",
       "consultant": "Consultant",
@@ -659,7 +659,7 @@
     "endorsements": "{count} endorsements",
     "yearsExperience": "{count} years experience",
     "bio": "About",
-    "engagements": "Engagements with NPC",
+    "engagements": "Engagements with the Office",
     "engYear": "Year",
     "engTitle": "Engagement",
     "engRole": "Role",
@@ -675,7 +675,7 @@
       "authority": "Authority"
     },
     "skills": "Skills",
-    "contributions": "Contributions in SiaNexus",
+    "contributions": "Contributions in EnviroAI",
     "contrib": {
       "documents": "Documents",
       "answers": "Answers",
@@ -710,11 +710,11 @@
     "views": {
       "internal": {
         "title": "Internal Experts",
-        "description": "NPC staff by organisation unit, with their domains, badges and the projects they carry."
+        "description": "Office staff by organisation unit, with their domains, badges and the projects they carry."
       },
       "external": {
         "title": "External Experts",
-        "description": "Other government entities, academia, consultants and international advisors who work with NPC."
+        "description": "Other government entities, academia, consultants and international advisors who work with the Office."
       },
       "count": "{count, plural, =0 {No experts shown} one {# expert shown} other {# experts shown}}"
     },
@@ -729,7 +729,7 @@
     "filterProjects": "Involved in projects",
     "filterOrganisation": "Organisation",
     "filterCountry": "Country",
-    "filterWorkedWith": "Worked with NPC",
+    "filterWorkedWith": "Worked with the Office",
     "clearFilters": "Clear filters",
     "expandAll": "Expand all",
     "collapseAll": "Collapse all",
@@ -742,14 +742,13 @@
     "groups": {
       "internal": "Internal experts",
       "external": "External experts",
-      "internalHint": "NPC staff",
+      "internalHint": "Office staff",
       "externalHint": "Other entities, academia, consultants, international advisors"
     },
     "emptyInternal": "No internal experts match",
     "emptyExternal": "No external experts match",
     "countryLabel": "Country",
     "countries": {
-      "QA": "Qatar",
       "SA": "Saudi Arabia",
       "AE": "United Arab Emirates",
       "KW": "Kuwait",
@@ -788,7 +787,7 @@
     "completion": "{pct}% complete",
     "points": "{count} points",
     "streak": "{count} day streak",
-    "suggestedDomains": "SiaNexus thinks you know about these. Accept the ones that fit.",
+    "suggestedDomains": "EnviroAI thinks you know about these. Accept the ones that fit.",
     "acceptDomain": "Accept",
     "dismissDomain": "Dismiss",
     "domainAccepted": "Domain added. 5 points.",
@@ -830,14 +829,14 @@
     }
   },
   "askPage": {
-    "title": "Ask NPC",
-    "subtitle": "Cited answers from NPC knowledge, in Arabic or English. Experts pick up what the AI cannot.",
+    "title": "Ask EnviroAI",
+    "subtitle": "Cited answers from EnviroAI knowledge, in Arabic or English. Experts pick up what the AI cannot.",
     "communities": "Communities",
     "openBoard": "Unanswered",
     "history": "My conversations",
-    "placeholder": "Ask anything: how is population measured, what changed in NDS3, who decided...",
+    "placeholder": "Ask anything: how is population measured, what changed in NES, who decided...",
     "askCta": "Ask",
-    "groundedHint": "Answers come only from NPC sources, with citations. Nothing is invented.",
+    "groundedHint": "Answers come only from Office sources, with citations. Nothing is invented.",
     "answerLabel": "Answer",
     "recentThreads": "Recent threads",
     "recentConversations": "Recent conversations",
@@ -850,7 +849,7 @@
     "postThread": "Post as a thread",
     "savedToHistory": "This conversation is saved in your history.",
     "bountyChip": "{points} point bounty",
-    "aiAnswer": "SiaNexus Intelligence",
+    "aiAnswer": "EnviroAI Intelligence",
     "yourAnswer": "Your answer",
     "answerPlaceholder": "Share what you know. Cite documents where you can.",
     "postAnswer": "Post answer",
@@ -888,7 +887,7 @@
     "pastePlaceholder": "Paste or type your notes here: meeting scribbles, conference takeaways, an email, anything in any language…",
     "dropHint": "Drop files here: docx, pdf, pptx, xlsx, photos of handwritten notes or slides",
     "whereFrom": "Where is this from? (optional)",
-    "whereFromPlaceholder": "Doha Data Forum 2026, a site visit, a directors meeting…",
+    "whereFromPlaceholder": "Saudi Green Initiative Forum, a site visit, a directors meeting…",
     "urls": "Links (optional)",
     "structureCta": "Structure with AI",
     "nothingToStructure": "Add some notes, a file, or a link first.",
@@ -937,7 +936,7 @@
     "cleanedEn": "Cleaned text (English)",
     "cleanedAr": "Cleaned text (Arabic)",
     "addTag": "Add tag…",
-    "addNdsLink": "Link to an outcome…",
+    "addNesLink": "Link to an outcome…",
     "toggleClassification": "Toggle classification",
     "split": "Split item",
     "merge": "Merge into previous",
@@ -950,19 +949,19 @@
     "addMore": "Add more knowledge"
   },
   "analyst": {
-    "backToAsk": "Ask SiaNexus",
+    "backToAsk": "Ask EnviroAI",
     "newConversation": "New conversation",
     "sharedChip": "Shared",
     "share": "Share",
     "unshare": "Unshare",
-    "sharedToast": "Shared. The link was copied; any NPC colleague can read it at their clearance.",
+    "sharedToast": "Shared. The link was copied; any Office colleague can read it at their clearance.",
     "unsharedToast": "Sharing turned off.",
     "export": "Export",
     "pin": "Pin",
     "pinTo": "Pin to a collection…",
     "pinnedToast": "Pinned to the collection.",
     "deletedToast": "Conversation deleted.",
-    "placeholder": "Ask anything about NDS3, statistics, documents, or people",
+    "placeholder": "Ask anything about NES, statistics, documents, or people",
     "followUpPlaceholder": "Ask a follow-up…",
     "send": "Send",
     "sectionStrategy": "Strategy",
@@ -1014,8 +1013,8 @@
       "promptEn": "Prompt (English)",
       "promptAr": "Prompt (Arabic)",
       "addPrompt": "Add a prompt",
-      "pillarsTitle": "QNV 2030 pillar mapping",
-      "pillarsHint": "Which national outcomes each pillar drives on the Strategy Canvas."
+      "pillarsTitle": "Saudi Vision 2030 pillar mapping",
+      "pillarsHint": "Which environmental themes each pillar drives on the Strategy Canvas."
     },
     "trendsTab": {
       "interval": "Scan every (hours)",
@@ -1075,7 +1074,7 @@
       "settings": "Settings",
       "analytics": "Analytics",
       "gamification": "Gamification",
-      "council": "Council Strategy",
+      "council": "Programme Strategy",
       "organisation": "Organisation",
       "reports": "Reports",
       "messaging": "Messaging",
@@ -1093,7 +1092,7 @@
     },
     "taxonomyDims": "Taxonomy dimensions",
     "classificationLevels": "Classification levels",
-    "classificationNote": "Aligned to the National Data Policy. Every item in SiaNexus carries one.",
+    "classificationNote": "Aligned to the National Data Policy. Every item in EnviroAI carries one.",
     "departmentsList": "Departments",
     "gamificationGlobal": "Engagement engine",
     "gamificationGlobalHint": "Turns points, streaks, badges and quests on or off for everyone.",
@@ -1233,9 +1232,9 @@
         "codeTaken": "That code is already in use",
         "colour": "Colour",
         "colours": {
-          "maroon": "Maroon",
-          "gulf": "Gulf",
-          "gold": "Gold",
+          "navy": "Navy",
+          "teal": "Teal",
+          "aqua": "Aqua",
           "ink": "Ink",
           "ok": "Green",
           "info": "Blue"
@@ -1306,7 +1305,7 @@
         "noStatistics": "None",
         "statisticsHint": "For national indicators: values are read from the series when no observations are published.",
         "groups": "Groups",
-        "targets": "Linked NDS3 targets",
+        "targets": "Linked NES targets",
         "targetsSearch": "Search targets",
         "targetsSelected": "{count, plural, =0 {No target linked} one {# target linked} other {# targets linked}}",
         "noTargets": "No targets match.",
@@ -1337,7 +1336,7 @@
           "rows": "{count, plural, =0 {no rows} one {# row} other {# rows}}",
           "rowsLabel": "Rows",
           "countriesLabel": "Countries",
-          "qatarYearsLabel": "Qatar years",
+          "homeYearsLabel": "Saudi Arabia years",
           "yearsLabel": "Years",
           "withRankLabel": "With rank",
           "withScoreLabel": "With score"
@@ -1349,7 +1348,7 @@
           "no_value": "{count, plural, one {# row had neither rank nor score} other {# rows had neither rank nor score}}",
           "bad_rank": "{count, plural, one {# row had an invalid rank} other {# rows had invalid ranks}}",
           "duplicate": "{count, plural, one {# duplicate country and year; the last row wins} other {# duplicate country and year pairs; the last row wins}}",
-          "no_qatar": "No row for Qatar (QAT): the board will show no value",
+          "no_home": "No row for Saudi Arabia (SAU): the board will show no value",
           "bad_url": "That is not a valid http or https address",
           "fetch_failed": "The publisher file could not be fetched",
           "too_large": "The file is larger than 6 MB",
@@ -1360,7 +1359,7 @@
         "rowsTitle": "Parsed rows",
         "moreRows": "{count, plural, one {# more row} other {# more rows}}",
         "forecastEnabled": "Forecasting",
-        "forecastEnabledHint": "Compute the SiaNexus forecast for this index (needs two or more Qatar values).",
+        "forecastEnabledHint": "Compute the EnviroAI forecast for this index (needs two or more Saudi Arabia values).",
         "forecastMode": "Mode",
         "forecastModes": {
           "auto": "Decide per data (rank where ranks exist)",
@@ -1399,7 +1398,7 @@
       "experts": "Experts",
       "hr": "HR",
       "settings": "Settings",
-      "council": "Council",
+      "council": "Office",
       "organisation": "Organisation",
       "processes": "Processes",
       "studies": "Studies",
@@ -1442,7 +1441,7 @@
       "inviteClearance": "Clearance",
       "inviteCta": "Create invitation",
       "csvTitle": "Or paste CSV (email, name, role, clearance)",
-      "csvPlaceholder": "maryam.x@npc.qa, Maryam X, Contributor, 2",
+      "csvPlaceholder": "maryam.x@enviroai.demo, Maryam X, Contributor, 2",
       "csvCta": "Invite all rows",
       "invitesCreated": "{count} invitation(s) created",
       "someRejected": "{count} row(s) rejected (domain or existing account)",
@@ -1490,7 +1489,7 @@
       "noParent": "No parent unit",
       "head": "Head of the unit",
       "headNone": "Head not assigned",
-      "headExternal": "Not a SiaNexus user",
+      "headExternal": "Not a EnviroAI user",
       "headNameEn": "Head name in English",
       "headNameAr": "Head name in Arabic",
       "headTitleEn": "Head title in English",
@@ -1512,7 +1511,7 @@
         "member": "Member"
       },
       "emailsLabel": "Email addresses",
-      "emailsPlaceholder": "name@npc.qa, second@npc.qa",
+      "emailsPlaceholder": "name@enviroai.demo, second@enviroai.demo",
       "emailsHint": "Separate the addresses with a comma, a semicolon or a new line. A CSV column pasted straight in works too.",
       "assign": "Assign",
       "membersAssigned": "{count} people added to the unit",
@@ -1522,7 +1521,7 @@
       "allMatched": "Every address matched an account.",
       "noEmails": "No email address was found in what you pasted.",
       "syncTitle": "Re-sync from the website",
-      "syncHint": "Compare the structure in SiaNexus against the published source. Nothing changes until you tick a change and apply it.",
+      "syncHint": "Compare the structure in EnviroAI against the published source. Nothing changes until you tick a change and apply it.",
       "syncCheck": "Check for changes",
       "syncIdle": "Run the check to see what differs from the published source.",
       "syncNotFetched": "The published source has not been fetched yet, so there is nothing to compare against.",
@@ -1543,9 +1542,9 @@
       "tickedCount": "{count} selected",
       "syncApply": "Apply the selected changes",
       "syncApplied": "{count} changes applied",
-      "councilTitle": "Council Strategy",
+      "councilTitle": "Programme Strategy",
       "strategyOffice": "Strategy Office",
-      "strategyOfficeHint": "Members of this department may edit the Council Strategy: its levels, indicators, targets and actual values. Everyone else reads it.",
+      "strategyOfficeHint": "Members of this department may edit the Programme Strategy: its levels, indicators, targets and actual values. Everyone else reads it.",
       "councilSaved": "The Strategy Office has been saved",
       "knowledgeTypesTitle": "Policies and procedures knowledge types",
       "knowledgeTypes": {
@@ -1773,17 +1772,17 @@
       "afternoon": "Good afternoon, {name}",
       "evening": "Good evening, {name}"
     },
-    "didYouKnow": "Did you know Qatar?",
+    "didYouKnow": "Did you know Saudi Arabia?",
     "quizCorrectToast": "Correct. {points} points.",
     "quizWrongToast": "Not quite, but {points} points for playing.",
     "openIndicator": "Open {name}",
     "factEmpty": "No fact card today. The Statistics Hub always has a number worth knowing.",
     "factEmptyAction": "Open Statistics",
     "todayEyebrow": "Today",
-    "whatChanged": "What changed in NDS3",
+    "whatChanged": "What changed in NES",
     "openStrategy": "Open the strategy",
     "changedEmpty": "No tracked changes this week. Browse the strategy for the full status.",
-    "podcastEyebrow": "NPC Knowledge Cast",
+    "podcastEyebrow": "EnviroAI Briefing Cast",
     "podcastPlay": "Play",
     "podcastMake": "Make an episode",
     "podcastEmpty": "No episodes yet. Make the first one from any project or topic.",
@@ -1805,11 +1804,11 @@
     "weeklyRing": "Contributed this week",
     "weeklyRingPending": "No contribution yet this week",
     "progressHidden": "Progress hidden",
-    "footprintHint": "Your knowledge footprint across the seven national outcomes. Open your profile for the detail.",
-    "askPlaceholder": "Ask SiaNexus anything about NDS3, statistics, documents, people",
+    "footprintHint": "Your knowledge footprint across the seven environmental themes. Open your profile for the detail.",
+    "askPlaceholder": "Ask EnviroAI anything about NES, statistics, documents, people",
     "askCta": "Ask",
     "continueConversation": "Continue: {title}",
-    "qatarNumbers": "Qatar in numbers",
+    "homeNumbers": "Saudi Arabia in numbers",
     "vsLastPeriod": "vs last period",
     "exploreIndicator": "Explore the indicator",
     "tomorrowNumber": "Tomorrow: another number",
@@ -1833,7 +1832,7 @@
       "lessons": "Lessons",
       "vault": "Institutional Memory",
       "node": "Strategy node and its children",
-      "ask": "Ask NPC answer",
+      "ask": "Ask EnviroAI answer",
       "podcast": "Podcast episode",
       "collection": "Collection",
       "indices": "International indices",
@@ -1874,7 +1873,7 @@
     "hub": {
       "eyebrow": "Knowledge Hub",
       "title": "Reports",
-      "lede": "Designed, bilingual reports written from the Council's live knowledge: request one for your scope, review it section by section, then publish it to Institutional Memory.",
+      "lede": "Designed, bilingual reports written from the Office's live knowledge: request one for your scope, review it section by section, then publish it to Institutional Memory.",
       "request": "Request report",
       "custom": "Build custom report",
       "illustrativeHint": "The published examples were generated from the prototype's seeded data.",
@@ -1899,7 +1898,7 @@
       "emptyMine": "You have not requested a report yet.",
       "emptyMineHint": "Pick a type, a period and a scope; the sections are written for you and land here for review.",
       "all": "All reports",
-      "allHint": "Every request across the Council, for review, approval and publishing.",
+      "allHint": "Every request across the Office, for review, approval and publishing.",
       "emptyAll": "No reports in this state.",
       "requestedBy": "Requested by {name}",
       "version": "v{n}",
@@ -1933,8 +1932,8 @@
       "custom": "Custom"
     },
     "scopeKinds": {
-      "npc": "Council-wide",
-      "period": "Council-wide",
+      "org": "Office-wide",
+      "period": "Office-wide",
       "outcome": "Outcome",
       "department": "Department",
       "project": "Project"
@@ -1992,7 +1991,7 @@
       },
       "familyHints": {
         "public": "Written for publication; the classification is Public.",
-        "internal": "For the Council's own work; Internal or Confidential.",
+        "internal": "For the Office's own work; Internal or Confidential.",
         "custom": "Any selection of sections from the library, on any scope and period."
       },
       "defaultSections": "{count, plural, one {# section} other {# sections}} by default",
@@ -2012,8 +2011,8 @@
       "quarterLabel": "Q{n}",
       "rangeInvalid": "The range must start before it ends.",
       "scope": "Scope",
-      "scopeCouncil": "National Planning Council",
-      "scopeCouncilHint": "This type reports on the Council as a whole.",
+      "scopeCouncil": "Programme Office",
+      "scopeCouncilHint": "This type reports on the Office as a whole.",
       "scopeKind": "Scope kind",
       "pickOutcome": "Choose an outcome",
       "pickDepartment": "Choose a unit",
@@ -2162,7 +2161,7 @@
       "locked": "Editing is closed while the report is {status}.",
       "previewsCount": "{count, plural, one {# page} other {# pages}}",
       "versions": "{count, plural, one {# version} other {# versions}}",
-      "askAbout": "Ask NPC knows this report",
+      "askAbout": "Ask EnviroAI about this report",
       "editedBy": "Edited manually",
       "showBoth": "Show both languages",
       "showOne": "Show one language",
@@ -2171,7 +2170,7 @@
     }
   },
   "podcast": {
-    "title": "NPC Knowledge Cast",
+    "title": "EnviroAI Briefing Cast",
     "subtitle": "Knowledge you can listen to: short two-voice episodes made from projects, lessons, numbers, and answers.",
     "make": "Make an episode",
     "listen": "Listen",
@@ -2233,7 +2232,7 @@
   },
   "lessons": {
     "title": "Lessons Learned",
-    "subtitle": "What NPC learned the hard way, captured in a minute, reused forever.",
+    "subtitle": "What the Office learned the hard way, captured in a minute, reused forever.",
     "capture": "Capture a lesson",
     "categories": {
       "delivery": "Delivery Lessons",
@@ -2242,7 +2241,7 @@
       "institutional": "Institutional Knowledge"
     },
     "captureTitle": "Capture a lesson",
-    "captureHint": "Type it rough. SiaNexus structures it into context, learning, and recommendation.",
+    "captureHint": "Type it rough. EnviroAI structures it into context, learning, and recommendation.",
     "roughLabel": "What happened, in your own words",
     "roughPlaceholder": "During the census field integration we assumed entities would share data within two weeks, but legal reviews took two months...",
     "structureCta": "Structure with AI",
@@ -2337,14 +2336,14 @@
       "notLinked": "Not linked to a project yet.",
       "moreLinks": "{count, plural, one {# more link} other {# more links}}",
       "internal": "Internal",
-      "storeNds": "National strategy",
-      "storeCouncil": "Council Strategy",
+      "storeNes": "National strategy",
+      "storeCouncil": "Programme Strategy",
       "searchPlaceholder": "Search by name or code",
       "noMatches": "Nothing matched that search."
     },
     "picker": {
-      "storeNds": "National strategy",
-      "storeCouncil": "Council Strategy",
+      "storeNes": "National strategy",
+      "storeCouncil": "Programme Strategy",
       "searchPlaceholder": "Search projects and initiatives",
       "noMatches": "Nothing matched that search.",
       "notLinked": "Not linked to a project",
@@ -2387,7 +2386,7 @@
       },
       "legend": "Legend",
       "legendImpact": "Impact",
-      "legendSentiment": "Outlook for Qatar",
+      "legendSentiment": "Outlook for Saudi Arabia",
       "sentiment": {
         "positive": "Positive",
         "negative": "Negative",
@@ -2413,7 +2412,7 @@
       "expandLane": "Expand {name}"
     },
     "title": "Trends and Signals",
-    "intro": "Continuous scanning of news, reports, and research, turned into structured signals linked to NDS3.",
+    "intro": "Continuous scanning of news, reports, and research, turned into structured signals linked to NES.",
     "lastScan": "Last refreshed:",
     "scanRunning": "refresh in progress",
     "scanNow": "Refresh signals",
@@ -2487,9 +2486,9 @@
       "converted": "Converted"
     },
     "sentiment": {
-      "positive": "Positive for Qatar",
+      "positive": "Positive for Saudi Arabia",
       "neutral": "Neutral",
-      "negative": "Negative for Qatar",
+      "negative": "Negative for Saudi Arabia",
       "mixed": "Mixed"
     },
     "accept": "Accept",
@@ -2512,7 +2511,7 @@
     "indexName": "Index",
     "publisher": "Publisher",
     "year": "Year",
-    "rank": "Qatar rank",
+    "rank": "Saudi Arabia rank",
     "outOf": "Out of",
     "entity": "Responsible entity",
     "signalsCol": "Signals",
@@ -2588,7 +2587,7 @@
       "edit": "edited an item",
       "verify": "verified content",
       "delete": "removed an item",
-      "ask": "asked SiaNexus",
+      "ask": "asked EnviroAI",
       "answer": "answered a question",
       "login": "signed in",
       "logout": "signed out",
@@ -2613,7 +2612,7 @@
   },
   "indices": {
     "title": "International Indices",
-    "subtitle": "Qatar's standing in the global indices that matter to NDS3: published values with sources, forecasts with their method in the open, and benchmarking against the peers you choose.",
+    "subtitle": "Saudi Arabia's standing in the global indices that matter to NES: published values with sources, forecasts with their method in the open, and benchmarking against the peers you choose.",
     "lastRefresh": "Data refreshed",
     "refresh": "Refresh data",
     "refreshQueued": "Refresh queued; new observations and forecasts will appear shortly",
@@ -2629,7 +2628,7 @@
     },
     "cards": "Cards",
     "table": "Table",
-    "qatarVsGcc": "Qatar vs GCC",
+    "homeVsGcc": "Saudi Arabia vs GCC",
     "improving": "improving",
     "stableCount": "stable",
     "declining": "declining",
@@ -2660,7 +2659,7 @@
       "wide": "Wide"
     },
     "forecastSummary": "Forecast summary",
-    "forecastDisclaimer": "SiaNexus forecasts (method v1). Model outputs from published history, accepted signals, and NDS3 targets; never published figures.",
+    "forecastDisclaimer": "EnviroAI forecasts (method v1). Model outputs from published history, accepted signals, and NES targets; never published figures.",
     "openMethod": "Open the index page and the full method",
     "publisherSite": "Publisher",
     "methodologyToggle": "Methodology",
@@ -2679,12 +2678,12 @@
       "title": "Forecast",
       "years": "years",
       "range": "Range",
-      "citedAs": "SiaNexus forecast, method {version}, generated on {date}",
+      "citedAs": "EnviroAI forecast, method {version}, generated on {date}",
       "none": "No forecast yet; refresh the data to compute one.",
       "whatIfBanner": "You are looking at a what-if simulation. It is never stored as the official forecast.",
       "moved": "The forecast moved from {from} to {to} since {date}.",
       "methodToggle": "Forecasting method, with the actual numbers",
-      "methodText": "The baseline is Holt linear exponential smoothing fitted on the published series since 2010 (a damped trend when fewer than five points exist). Accepted signals linked to this index shift the path within bounded caps (4/8/10 percent of the score range at +1/+3/+5 years), weighted by impact, horizon match, and age. A linked NDS3 target that states a rank pulls the path toward it, scaled by the target's status. A 5,000-run Monte Carlo (bootstrapped residuals, perturbed weights) gives the 10th/50th/90th percentiles, and ranks come from the latest distribution of other countries drifted by their own trends.",
+      "methodText": "The baseline is Holt linear exponential smoothing fitted on the published series since 2010 (a damped trend when fewer than five points exist). Accepted signals linked to this index shift the path within bounded caps (4/8/10 percent of the score range at +1/+3/+5 years), weighted by impact, horizon match, and age. A linked NES target that states a rank pulls the path toward it, scaled by the target's status. A 5,000-run Monte Carlo (bootstrapped residuals, perturbed weights) gives the 10th/50th/90th percentiles, and ranks come from the latest distribution of other countries drifted by their own trends.",
       "baselineMethod": "Baseline",
       "damped": "Damped trend",
       "residual": "Residual sd",
@@ -2725,7 +2724,7 @@
       "gapTo": "Gap to {country}",
       "gapUnit": "score points at the latest published values",
       "widestGaps": "Widest pillar gaps",
-      "narrativeCta": "Where Qatar leads and lags"
+      "narrativeCta": "Where Saudi Arabia leads and lags"
     },
     "groupSwitcher": "Index groups",
     "allGroups": "All",
@@ -2931,14 +2930,14 @@
     "resolvedOn": "resolved {date}"
   },
   "invite": {
-    "title": "You are invited to SiaNexus",
+    "title": "You are invited to EnviroAI",
     "hello": "Welcome, {name}. Set your password to activate the account.",
     "invalid": "This invitation is not valid",
     "invalidHint": "It may have expired (links last 7 days) or been revoked. Ask your administrator for a new one.",
     "password": "Password",
     "confirm": "Confirm password",
     "policy": "At least 12 characters, with at least one letter and one digit.",
-    "acceptableUse": "I will use SiaNexus for National Planning Council work, respect document classifications, and never share my account.",
+    "acceptableUse": "I will use EnviroAI for Programme Office work, respect document classifications, and never share my account.",
     "cta": "Activate account",
     "errors": {
       "mismatch": "The passwords do not match.",
@@ -2953,7 +2952,7 @@
   },
   "organisation": {
     "title": "Organisation",
-    "subtitle": "The organisational structure of the National Planning Council, as published.",
+    "subtitle": "The organisational structure of the Programme Office, as published.",
     "unitsCount": "{count} units",
     "chartView": "Chart",
     "listView": "List",
@@ -3008,11 +3007,11 @@
       "eyebrow": "Mandate",
       "english": "English",
       "arabic": "Arabic",
-      "source": "Source on the NPC website",
+      "source": "Source on the Office website",
       "fetched": "Fetched on {date}",
       "empty": "The mandate of this unit has not been recorded yet.",
       "document": "Open the source in Institutional Memory",
-      "responsibilities": "Responsibilities in SiaNexus"
+      "responsibilities": "Responsibilities in EnviroAI"
     },
     "people": {
       "eyebrow": "People",
@@ -3024,9 +3023,9 @@
     },
     "owns": {
       "eyebrow": "What this unit owns",
-      "council": "Council strategy",
-      "councilOpen": "Open Council Strategy",
-      "nds": "National strategy led",
+      "council": "Programme strategy",
+      "councilOpen": "Open Programme Strategy",
+      "nes": "National strategy led",
       "documents": "Documents by type",
       "indicators": "Indicators",
       "lessons": "Lessons learned",
@@ -3121,12 +3120,12 @@
   },
   "council": {
     "header": {
-      "emptyTitle": "No council strategy has been recorded yet",
-      "emptyHint": "Once the Strategy Office publishes the Council's institutional strategy, its strategic goals, intermediate outcomes, outputs and projects will open here as one results chain.",
+      "emptyTitle": "No programme strategy has been recorded yet",
+      "emptyHint": "Once the Strategy Office publishes the Office's institutional strategy, its strategic goals, intermediate outcomes, outputs and projects will open here as one results chain.",
       "internal": "Internal",
-      "internalTitle": "Internal to the National Planning Council. Do not circulate outside the Council.",
+      "internalTitle": "Internal to the Programme Office. Do not circulate outside the Office.",
       "illustrative": "Illustrative",
-      "illustrativeTitle": "This content is illustrative and stands in for the real strategy. The Council's approved strategy will replace it once it is issued.",
+      "illustrativeTitle": "This content is illustrative and stands in for the real strategy. The Office's approved strategy will replace it once it is issued.",
       "periodRange": "{from} to {to}",
       "approvedOn": "Approved on {date}",
       "notApproved": "Not yet approved",
@@ -3134,8 +3133,8 @@
       "openOwner": "Open {unit} in the organisation structure",
       "editionAria": "Choose the strategy edition",
       "briefMe": "Brief me",
-      "briefGoal": "Brief me on the strategic goal {title} in the Council strategy {strategy}: what it covers, its indicators, and the latest results.",
-      "briefStrategy": "Brief me on the Council strategy {strategy}: its strategic goals, its indicators, and the latest results.",
+      "briefGoal": "Brief me on the strategic goal {title} in the Programme strategy {strategy}: what it covers, its indicators, and the latest results.",
+      "briefStrategy": "Brief me on the Programme strategy {strategy}: its strategic goals, its indicators, and the latest results.",
       "extract": "Extract report",
       "extractUnavailable": "No source document is attached to this strategy yet, so a report cannot be extracted from it.",
       "listen": "Listen",
@@ -3168,7 +3167,7 @@
       "goalAriaNoData": "Strategic goal {title}, no indicator of this cadence reported"
     },
     "chain": {
-      "aria": "Results chain of the Council strategy",
+      "aria": "Results chain of the Programme strategy",
       "railAria": "Strategic goals",
       "closePanel": "Close the goal panel",
       "ownerUnit": "Owning unit",
@@ -3331,7 +3330,7 @@
       "target": "Target",
       "reportedPeriod": "Reported for",
       "sparkAria": "Target and actual over time for {indicator}.",
-      "sparkLegend": "Solid line: actual. Dashed line: target. The gold mark is the period in focus."
+      "sparkLegend": "Solid line: actual. Dashed line: target. The aqua mark is the period in focus."
     },
     "situation": {
       "title": "Situation analysis",
@@ -3473,34 +3472,34 @@
     }
   },
   "askEverywhere": {
-    "barButton": "Ask NPC",
-    "barButtonAria": "Ask NPC. Opens the assistant panel (Ctrl+K)",
-    "launcher": "Ask NPC",
-    "launcherAria": "Open Ask NPC (Ctrl+K)",
-    "title": "Ask NPC",
+    "barButton": "Ask EnviroAI",
+    "barButtonAria": "Ask EnviroAI. Opens the assistant panel (Ctrl+K)",
+    "launcher": "Ask EnviroAI",
+    "launcherAria": "Open Ask EnviroAI (Ctrl+K)",
+    "title": "Ask EnviroAI",
     "expand": "Expand",
     "expandAria": "Open this conversation on the full page",
     "newConversation": "New conversation",
-    "close": "Close the Ask NPC panel",
+    "close": "Close the Ask EnviroAI panel",
     "askingAbout": "Asking about",
     "removeContext": "Remove {title} from the question",
     "startWith": "Start with",
-    "intro": "Ask anything about NPC knowledge: the strategy, the numbers, the documents, the people. Every answer cites its sources.",
+    "intro": "Ask anything about EnviroAI knowledge: the strategy, the numbers, the documents, the people. Every answer cites its sources.",
     "recent": "Recent conversations",
     "recentEmpty": "No conversations yet",
-    "recentEmptyHint": "Your first question starts one. It stays here while you move around SiaNexus.",
+    "recentEmptyHint": "Your first question starts one. It stays here while you move around EnviroAI.",
     "recentError": "Could not load your conversations.",
     "retry": "Retry",
     "loadError": "Could not open that conversation.",
-    "placeholder": "Ask about this page or anything in NPC knowledge…",
+    "placeholder": "Ask about this page or anything in EnviroAI knowledge…",
     "followUp": "Ask a follow-up…",
     "send": "Send",
     "sending": "Gathering evidence…",
     "answerReady": "Answer ready",
     "error": "Something went wrong. Try again.",
-    "disclaimer": "Answers cite NPC sources. Verify against the citations; the AI can still misread them.",
+    "disclaimer": "Answers cite Office sources. Verify against the citations; the AI can still misread them.",
     "untitled": "Untitled conversation",
-    "byline": "SiaNexus Intelligence",
+    "byline": "EnviroAI Intelligence",
     "kinds": {
       "project": "Project",
       "initiative": "Initiative",
@@ -3509,7 +3508,7 @@
       "document": "Document",
       "indicator": "Indicator",
       "index": "Index",
-      "council_node": "Council node",
+      "council_node": "Programme node",
       "unit": "Unit",
       "lesson": "Lesson",
       "expert": "Expert",
@@ -3526,7 +3525,7 @@
       "document": "Ask about this document",
       "indicator": "Ask about this indicator",
       "index": "Ask about this index",
-      "council_node": "Ask about this council node",
+      "council_node": "Ask about this programme node",
       "unit": "Ask about this unit",
       "lesson": "Ask about this lesson",
       "expert": "Ask about this expert",
@@ -3567,14 +3566,14 @@
         "c": "How is {label} measured?"
       },
       "index": {
-        "a": "Where does Qatar stand in {label}?",
+        "a": "Where does Saudi Arabia stand in {label}?",
         "b": "What is the forecast for {label}?",
-        "c": "How does Qatar compare with the GCC in {label}?"
+        "c": "How does Saudi Arabia compare with the GCC in {label}?"
       },
       "council_node": {
         "a": "What is the status of {label}?",
         "b": "Which indicators track {label}?",
-        "c": "How does {label} align with NDS3?"
+        "c": "How does {label} align with NES?"
       },
       "unit": {
         "a": "What is the mandate of {label}?",
@@ -3648,7 +3647,7 @@
   "leaderboard": {
     "eyebrow": "People and Organisation",
     "title": "Leaderboard",
-    "subtitle": "Who is building the Council's memory this period, by person and by unit. Refreshed every ten minutes from the points ledger.",
+    "subtitle": "Who is building the Office's memory this period, by person and by unit. Refreshed every ten minutes from the points ledger.",
     "boardSwitch": "Board",
     "windowSwitch": "Period",
     "categorySwitch": "Category",
@@ -3818,7 +3817,7 @@
     },
     "ask": {
       "title": "Ask {name} a question",
-      "hint": "The question is created in Ask NPC and routed to {name}. The answer follows the usual verification flow.",
+      "hint": "The question is created in Ask EnviroAI and routed to {name}. The answer follows the usual verification flow.",
       "placeholder": "Write your question",
       "prefill": "About {title}: ",
       "prefillPlain": "Question for {name}: ",
@@ -3855,7 +3854,7 @@
     "filterLabel": "Filter conversations",
     "searchPlaceholder": "Search subjects, items and people",
     "emptyTitle": "Nothing in your Inbox yet",
-    "emptyHint": "Open a person card anywhere in SiaNexus and choose Message, or start one here.",
+    "emptyHint": "Open a person card anywhere in EnviroAI and choose Message, or start one here.",
     "noMatchTitle": "No conversations match",
     "noMatchHint": "Try another filter or search term.",
     "selectTitle": "Choose a conversation",
@@ -3871,7 +3870,7 @@
       "document": "Document",
       "indicator": "Indicator",
       "index": "Index",
-      "council_node": "Council Strategy",
+      "council_node": "Programme Strategy",
       "unit": "Organisation unit",
       "lesson": "Lesson",
       "process": "Process",
@@ -3893,7 +3892,7 @@
     "converting": "Converting",
     "converted": "Converted to a question",
     "viewQuestion": "Open the question",
-    "convertHint": "Creates a question in Ask NPC from this conversation, routed to your counterpart, and links it here.",
+    "convertHint": "Creates a question in Ask EnviroAI from this conversation, routed to your counterpart, and links it here.",
     "replyPlaceholder": "Write a reply",
     "send": "Send",
     "sendShortcut": "Ctrl+Enter sends",
@@ -3997,9 +3996,9 @@
   "operatingModel": {
     "eyebrow": "People and Organisation",
     "title": "Operating Model",
-    "intro": "How the Council runs: the principles it works by, who decides what, the processes it operates, who does what in each, the rhythm of the year, the interfaces inside and outside, and the measures that say whether it runs well.",
+    "intro": "How the Office runs: the principles it works by, who decides what, the processes it operates, who does what in each, the rhythm of the year, the interfaces inside and outside, and the measures that say whether it runs well.",
     "internal": "Internal",
-    "internalTitle": "Internal content, for NPC staff",
+    "internalTitle": "Internal content, for Office staff",
     "illustrative": "Illustrative",
     "illustrativeTitle": "Seeded to show the design. Every row is replaced by the Strategy Office before use.",
     "editorNote": "You can edit this page.",
@@ -4035,7 +4034,7 @@
     },
     "principles": {
       "title": "Operating principles",
-      "hint": "Five to seven statements the Council holds itself to, each with the reason behind it.",
+      "hint": "Five to seven statements the Office holds itself to, each with the reason behind it.",
       "count": "{count, plural, =0 {No principles} one {# principle} other {# principles}}",
       "empty": "No principles yet",
       "emptyHint": "The Strategy Office writes the first principle here.",
@@ -4053,7 +4052,7 @@
     },
     "governance": {
       "title": "Governance and decision rights",
-      "hint": "The bodies that decide, laid out from the Council down, with the way decisions flow between them. Open a body for its decisions, members and escalation path.",
+      "hint": "The bodies that decide, laid out from the Office down, with the way decisions flow between them. Open a body for its decisions, members and escalation path.",
       "mapAria": "Governance map",
       "tierAria": "Tier {n}",
       "legend": "Decision flows",
@@ -4065,7 +4064,7 @@
         "informs": "Informs"
       },
       "source": {
-        "council": "Council Strategy body",
+        "council": "Programme Strategy body",
         "operating_model": "Operating Model body"
       },
       "cadence": {
@@ -4085,7 +4084,7 @@
       "escalatesTo": "Escalates to {body}",
       "noEscalation": "Final authority; nothing escalates beyond this body.",
       "empty": "No governance bodies yet",
-      "emptyHint": "The Council Strategy governance table and the Operating Model bodies feed this map."
+      "emptyHint": "The Programme Strategy governance table and the Operating Model bodies feed this map."
     },
     "processes": {
       "title": "Process landscape",
@@ -4137,7 +4136,7 @@
     },
     "calendar": {
       "title": "Planning and reporting calendar",
-      "hint": "The year as a ring: strategy review windows, the budget cycle, statistical releases, NDS3 reviews, Council meetings, report deadlines and the Doha Data Forum. Hover for what is due, click to open the item.",
+      "hint": "The year as a ring: strategy review windows, the budget cycle, statistical releases, NES reviews, Programme meetings, report deadlines and the Saudi Green Initiative Forum. Hover for what is due, click to open the item.",
       "ringAria": "Annual ring calendar for {year}",
       "prevYear": "Previous year",
       "nextYear": "Next year",
@@ -4152,8 +4151,8 @@
         "strategy_review": "Strategy review",
         "budget": "Budget cycle",
         "statistical_release": "Statistical release",
-        "nds_review": "NDS3 review",
-        "council_meeting": "Council meeting",
+        "nes_review": "NES review",
+        "council_meeting": "Programme meeting",
         "report_deadline": "Report deadline",
         "forum": "Forum",
         "other": "Other"
@@ -4169,7 +4168,7 @@
         "process": "Process",
         "report_type": "Report",
         "release": "Release",
-        "council_strategy": "Council Strategy",
+        "council_strategy": "Programme Strategy",
         "other": "Item"
       },
       "owner": "Owner unit",
@@ -4209,14 +4208,14 @@
     },
     "interfaces": {
       "title": "Interfaces",
-      "hint": "What the Council gives and receives: the external entities it works with, and the flows between its own units.",
+      "hint": "What the Office gives and receives: the external entities it works with, and the flows between its own units.",
       "external": {
         "title": "External interfaces",
-        "hint": "Entities from the register, with what NPC provides and receives, the focal points on both sides, the legal basis and the cadence.",
+        "hint": "Entities from the register, with what The Office provides and receives, the focal points on both sides, the legal basis and the cadence.",
         "count": "{count, plural, =0 {No entities} one {# entity} other {# entities}}",
-        "provides": "NPC provides",
-        "receives": "NPC receives",
-        "focalNpc": "NPC focal point",
+        "provides": "The Office provides",
+        "receives": "The Office receives",
+        "focalOrg": "Office focal point",
         "focalEntity": "Entity focal point",
         "noFocal": "Not named yet",
         "legalBasis": "Legal basis",
@@ -4425,11 +4424,11 @@
   },
   "processes": {
     "title": "Processes, Policies, and SOPs",
-    "subtitle": "The Council's process architecture: the Level 0 value chain, the Level 1 processes beneath each core process, the Level 2 procedures and SOPs, and the policies and forms that govern them.",
+    "subtitle": "The Office's process architecture: the Level 0 value chain, the Level 1 processes beneath each core process, the Level 2 procedures and SOPs, and the policies and forms that govern them.",
     "internal": "Internal",
-    "internalTitle": "Internal content of the National Planning Council, not for circulation outside the Council.",
+    "internalTitle": "Internal content of the Programme Office, not for circulation outside the Office.",
     "illustrative": "Illustrative",
-    "illustrativeTitle": "The seeded process architecture is illustrative and will be replaced by the Council's approved operating model.",
+    "illustrativeTitle": "The seeded process architecture is illustrative and will be replaced by the Office's approved operating model.",
     "totals": "{level0, plural, one {# core process} other {# core processes}}, {level1, plural, one {# Level 1 process} other {# Level 1 processes}}, {level2, plural, one {# procedure} other {# procedures}}",
     "views": {
       "aria": "Choose a view",
@@ -4516,8 +4515,8 @@
       "internal": "Internal",
       "external": "External",
       "noInterfaces": "No interface is linked to this process yet.",
-      "provides": "NPC provides",
-      "receives": "NPC receives",
+      "provides": "The Office provides",
+      "receives": "The Office receives",
       "flow": {
         "data": "Data",
         "input": "Input",
@@ -4580,7 +4579,7 @@
       "noOwner": "No owner unit",
       "status": "Status",
       "illustrative": "Illustrative content",
-      "illustrativeHint": "Switch off once the content is the Council's own.",
+      "illustrativeHint": "Switch off once the content is the Office's own.",
       "sections": {
         "basics": "Basics",
         "steps": "Steps",
@@ -4705,7 +4704,7 @@
       "engagement_ending": "Engagement ending"
     },
     "personKinds": {
-      "employee": "NPC employee",
+      "employee": "Office employee",
       "external": "External"
     },
     "status": {
@@ -4736,7 +4735,7 @@
       "project_role": "Owned projects",
       "stakeholder_role": "Project roles",
       "indicator": "Indicators",
-      "council_indicator": "Council indicators",
+      "council_indicator": "Programme indicators",
       "expert_request": "Open expert requests",
       "expert_profile": "Expert profiles maintained",
       "contact": "Contacts",
@@ -4829,7 +4828,7 @@
         "pitfalls": "Pitfalls",
         "locations": "Where things live"
       },
-      "aiAsks": "SiaNexus asks",
+      "aiAsks": "EnviroAI asks",
       "otherLanguage": "Other language",
       "readyToComplete": "The interview covered the ground. Complete it to file the answers.",
       "complete": "Complete",
@@ -4864,7 +4863,7 @@
         "project_role": "Project",
         "stakeholder_role": "Project role",
         "indicator": "Indicator",
-        "council_indicator": "Council indicator",
+        "council_indicator": "Programme indicator",
         "expert_request": "Expert request",
         "expert_profile": "Expert profile",
         "contact": "Contact",
@@ -4969,7 +4968,7 @@
       "title": "Start a handover",
       "person": "Who is handing over",
       "personMode": {
-        "employee": "NPC employee",
+        "employee": "Office employee",
         "external": "External expert",
         "spot": "Add on the spot"
       },
@@ -5061,7 +5060,7 @@
           "organisation": "Organisation",
           "experts": "External Experts",
           "statistics": "Statistics Hub",
-          "council": "Council Strategy"
+          "council": "Programme Strategy"
         },
         "propose": "Propose",
         "noProposal": "No proposal yet",
@@ -5137,10 +5136,10 @@
     },
     "token": {
       "invalid": "This handover link is not valid",
-      "invalidHint": "It may have expired on the last working day, been revoked, or the handover has closed. Ask your NPC counterpart for a new one.",
+      "invalidHint": "It may have expired on the last working day, been revoked, or the handover has closed. Ask your Office counterpart for a new one.",
       "eyebrow": "Handover access",
       "title": "Handover of {name}",
-      "intro": "This workspace closes on your last working day. Add a note on every item, hand over any working papers, and, if you can, answer the short interview so your knowledge stays with the Council.",
+      "intro": "This workspace closes on your last working day. Add a note on every item, hand over any working papers, and, if you can, answer the short interview so your knowledge stays with the Office.",
       "expires": "Link expires",
       "checklist": "Your checklist",
       "addTitle": "Hand over a working paper or a note",
@@ -5154,7 +5153,7 @@
       "itemNote": "Handover note",
       "addSubmit": "Add to the handover",
       "added": "Added to the handover",
-      "footer": "SiaNexus, the knowledge memory of the National Planning Council. This link is personal; do not forward it."
+      "footer": "EnviroAI, the knowledge memory of the Programme Office. This link is personal; do not forward it."
     }
   }
 }

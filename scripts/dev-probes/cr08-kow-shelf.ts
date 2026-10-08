@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-// CR08 8: just the two shelf screenshots showing the gold ribbon on the spine
+// CR08 8: just the two shelf screenshots showing the aqua ribbon on the spine
 // of this week's pick in Institutional Memory. The clip is computed from the
 // book's viewport box plus the page scroll, because Playwright's screenshot
 // clip is document-relative while boundingBox() is viewport-relative.
@@ -19,7 +19,7 @@ async function login(page: Page, email: string) {
   for (let attempt = 0; attempt < 5; attempt++) {
     try {
       const res = await page.context().request.post(`${BASE}/api/v1/auth/login`, {
-        data: { email, password: "Nexus!2026" },
+        data: { email, password: "EnviroAI!2026" },
         timeout: 120000,
       });
       if (res.status() === 200) return;
@@ -35,7 +35,7 @@ async function main() {
   const browser = await chromium.launch({ channel: "msedge" });
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
-  await login(page, "reader@npc.qa");
+  await login(page, "reader@enviroai.demo");
 
   for (const locale of ["en", "ar"] as const) {
     let ready = false;

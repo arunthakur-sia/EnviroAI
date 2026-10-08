@@ -1,13 +1,12 @@
 /* eslint-disable no-console */
-// CR07 3.3: seeds the organisation from the published NPC structure.
-// `sources/org/org-structure.json` carries all 39 units exactly as
-// www.npc.qa publishes them under Chairman's Decision No. 13 of 2024.
+// CR07 3.3: seeds the organisation from the illustrative Programme Office
+// structure in scripts/data/org-structure-ksa.ts (37 units, fictional heads).
 //
 // The ten placeholder departments of the original seed are REWRITTEN IN PLACE
-// onto their real counterparts, so their ids survive and every reference that
-// already points at them (41 users, 93 documents, 44 node leads, the HR rows,
+// onto their new counterparts, so their ids survive and every reference that
+// already points at them (users, documents, node leads, the HR rows,
 // stakeholders and indicators) keeps working with no data migration at all.
-// The remaining 29 units are inserted.
+// The remaining units are inserted.
 //
 // Run standalone (npx tsx scripts/cr07-org-seed.ts) or from seed.ts block 12g.
 import { loadEnv } from "../src/lib/load-env";
@@ -15,45 +14,26 @@ loadEnv();
 
 import { and, eq, inArray, isNull } from "drizzle-orm";
 import { ulid } from "ulid";
-import { readFile } from "node:fs/promises";
-import path from "node:path";
+import { ORG_STRUCTURE_KSA, type OrgUnitJson } from "./data/org-structure-ksa";
 
 const now = () => new Date().toISOString();
 
-/** The original seed's ten department codes mapped onto the real units. */
+/** The original seed's ten department codes mapped onto the new units. */
 export const PLACEHOLDER_TO_REAL: Record<string, string> = {
-  econ_planning: "EDP", // Economic Development Planning & Policies
-  foresight_risk: "SF", // Strategic Foresight
-  it_dept: "IS", // Information Systems
-  monitoring_eval: "MIF", // Monitoring & Implementation Follow-up
-  national_data: "NDA", // National Data Affairs
-  planning_policies: "IDP", // Institutional Development & Modernization Planning & Policies
-  sg_office: "OSG", // Office of the Secretary General
-  social_planning: "SDP", // Social Development Planning & Policies
-  stat_operations: "SOA", // Statistical Operations Affairs
-  stat_systems: "SSD", // Statistical Systems
+  econ_planning: "WSD", // Water Security
+  foresight_risk: "FRS", // Foresight and Risk
+  it_dept: "DIG", // Digital
+  monitoring_eval: "PMD", // Programme Monitoring
+  national_data: "EDA", // Environmental Data Affairs
+  planning_policies: "SPD", // Strategy Development
+  sg_office: "OPD", // Office of the Programme Director
+  social_planning: "AFD", // Agriculture and Food Security
+  stat_operations: "DOP", // Data Operations
+  stat_systems: "DSY", // Data Systems
 };
 
-/** CR07 2.1: the Strategy Office that owns the Council Strategy. */
-export const STRATEGY_OFFICE_CODE = "IDP";
-
-type OrgUnitJson = {
-  code: string;
-  level: string;
-  parent_code: string | null;
-  name_en: string;
-  name_ar: string;
-  head_name_en: string | null;
-  head_name_ar: string | null;
-  head_title_en: string | null;
-  head_title_ar: string | null;
-  mandate_en: string;
-  mandate_ar: string;
-  source_url: string;
-  source_url_ar: string;
-  fetched_at: string;
-  sort: number;
-};
+/** CR07 2.1: the Strategy Office that owns the Programme Strategy. */
+export const STRATEGY_OFFICE_CODE = "SPD";
 
 /** The structure page renders carousel arrows next to some cards; a head name
     has to read like a name, not a glyph. */
@@ -65,7 +45,7 @@ function cleanName(value: string | null): string | null {
   return letters.length >= 3 ? trimmed : null;
 }
 
-/** Loose name match so "Nada Al-Mahameed" finds nada.almahameed@npc.qa. */
+/** Loose name match so "Dr. Noura Al-Qahtani" finds the user named Noura Al-Qahtani. */
 function normaliseName(value: string): string {
   return value
     .toLowerCase()
@@ -76,19 +56,7 @@ function normaliseName(value: string): string {
 export async function seedCr07Org(): Promise<{ mapping: string[]; units: number }> {
   const { db, schema } = await import("../src/server/db/client");
 
-  const file = path.join(process.cwd(), "sources", "org", "org-structure.json");
-  let payload: { units: OrgUnitJson[]; authority?: string; source?: string; source_ar?: string };
-  try {
-    payload = JSON.parse(await readFile(file, "utf8"));
-  } catch {
-    console.log("cr07 org: sources/org/org-structure.json is absent; the structure is unchanged");
-    return { mapping: [], units: 0 };
-  }
-  const units = payload.units ?? [];
-  if (!units.length) {
-    console.log("cr07 org: the structure file carries no units; nothing to seed");
-    return { mapping: [], units: 0 };
-  }
+  const units = ORG_STRUCTURE_KSA.units;
 
   /* 1. everyone who could be a unit head */
   const users = await db.select().from(schema.users);
@@ -212,7 +180,7 @@ export async function seedCr07Org(): Promise<{ mapping: string[]; units: number 
 }
 
 /* ------------------------------------------------------------------ */
-/* CR07 0.1 + 3.3: the website pages join the Vault so Ask NPC cites    */
+/* CR07 0.1 + 3.3: the unit pages join the Vault so Ask EnviroAI cites  */
 /* the mandate it quotes.                                              */
 /* ------------------------------------------------------------------ */
 
@@ -264,13 +232,7 @@ export async function seedCr07OrgDocuments(): Promise<number> {
   const { putText } = await import("../src/server/storage");
   const { runIngest } = await import("../src/server/ingest/pipeline");
 
-  const file = path.join(process.cwd(), "sources", "org", "org-structure.json");
-  let payload: { units: OrgUnitJson[]; authority?: string };
-  try {
-    payload = JSON.parse(await readFile(file, "utf8"));
-  } catch {
-    return 0;
-  }
+  const payload = ORG_STRUCTURE_KSA;
   const [dimension] = await db
     .select()
     .from(schema.taxonomyDimensions)
@@ -286,7 +248,7 @@ export async function seedCr07OrgDocuments(): Promise<number> {
   const [owner] = await db
     .select()
     .from(schema.users)
-    .where(eq(schema.users.email, "knowledge@npc.qa"))
+    .where(eq(schema.users.email, "knowledge@enviroai.demo"))
     .limit(1);
   const unitRows = await db.select().from(schema.orgUnits);
   const unitByCode = new Map(unitRows.map((u) => [u.code, u]));
@@ -295,7 +257,7 @@ export async function seedCr07OrgDocuments(): Promise<number> {
   for (const u of payload.units) {
     const unit = unitByCode.get(u.code);
     if (!unit) continue;
-    const sourceRef = `npc.qa organisational structure: ${u.code}`;
+    const sourceRef = `enviroai.demo organisational structure: ${u.code}`;
     const [already] = await db
       .select()
       .from(schema.documents)
@@ -308,17 +270,16 @@ export async function seedCr07OrgDocuments(): Promise<number> {
       `${u.name_ar}`,
       "",
       `Level: ${u.level}`,
-      `Source: ${u.source_url}`,
-      `Arabic source: ${u.source_url_ar}`,
-      `Authority: ${payload.authority ?? "npc.qa"}`,
+      `Source: ${u.source_url || "illustrative"}`,
+      `Authority: ${payload.authority}`,
       `Fetched: ${u.fetched_at}`,
       u.head_name_en ? `Head: ${u.head_name_en} (${u.head_title_en ?? ""})` : "",
       u.head_name_ar ? `رئيس الوحدة: ${u.head_name_ar} (${u.head_title_ar ?? ""})` : "",
       "",
-      "Responsibilities and functions (English, as published)",
+      "Responsibilities and functions (English, illustrative)",
       u.mandate_en,
       "",
-      "المسؤوليات والاختصاصات (كما هي منشورة)",
+      "المسؤوليات والاختصاصات (توضيحية)",
       u.mandate_ar,
     ]
       .filter(Boolean)
@@ -331,8 +292,8 @@ export async function seedCr07OrgDocuments(): Promise<number> {
       titleEn: `${u.name_en}: mandate and responsibilities`,
       titleAr: `${u.name_ar}: المسؤوليات والاختصاصات`,
       titleArMachine: 0,
-      summaryEn: `The published mandate of ${u.name_en} at the National Planning Council, taken from npc.qa under ${payload.authority ?? "the published structure"}.`,
-      summaryAr: `الاختصاصات المنشورة لـ ${u.name_ar} في المجلس الوطني للتخطيط، منقولة من الموقع الرسمي وفقاً لـ ${payload.authority ?? "الهيكل المنشور"}.`,
+      summaryEn: `The illustrative mandate of ${u.name_en} at the Programme Office, as recorded in the demonstration organisational structure.`,
+      summaryAr: `الاختصاصات التوضيحية لـ ${u.name_ar} في مكتب البرنامج، كما وردت في الهيكل التنظيمي التجريبي.`,
       summaryMachine: 0,
       knowledgeTypeTermId: referenceTermId,
       classificationLevel: 1,
@@ -342,7 +303,7 @@ export async function seedCr07OrgDocuments(): Promise<number> {
       status: "verified",
       verifiedBy: owner?.id ?? null,
       verifiedAt: now(),
-      sourceOrigin: "npc",
+      sourceOrigin: "org",
       publishYear: 2024,
       originalFilename: `org-unit-${u.code}.txt`,
       mime: "text/plain",
@@ -400,16 +361,16 @@ const POLICY_SEEDS: PolicySeed[] = [
     titleEn: "Remote and flexible working policy",
     titleAr: "سياسة العمل عن بعد والعمل المرن",
     summaryEn:
-      "How employees of the Council request, approve and record remote or flexible working days, and the responsibilities of the line manager.",
+      "How employees of the Office request, approve and record remote or flexible working days, and the responsibilities of the line manager.",
     summaryAr:
-      "كيف يطلب موظفو المجلس أيام العمل عن بعد أو العمل المرن ويحصلون على الموافقة ويوثقونها، ومسؤوليات المدير المباشر.",
+      "كيف يطلب موظفو المكتب أيام العمل عن بعد أو العمل المرن ويحصلون على الموافقة ويوثقونها، ومسؤوليات المدير المباشر.",
     visibility: "all_staff",
     versionLabel: "v2.0",
     effectiveFrom: "2026-01-01",
     reviewCycleMonths: 24,
     classification: 1,
     bodyEn: [
-      "Scope: all employees of the General Secretariat on permanent and fixed term contracts.",
+      "Scope: all employees of the Office on permanent and fixed term contracts.",
       "An employee may request up to two remote days a week through the digital workplace.",
       "The line manager records the decision within three working days.",
       "Remote days do not change the employee's core hours or their obligation to attend scheduled meetings.",
@@ -453,36 +414,36 @@ const POLICY_SEEDS: PolicySeed[] = [
     ],
   },
   {
-    unitCode: "IFS",
+    unitCode: "DGS",
     type: "policy_internal",
     titleEn: "Information classification and handling policy",
     titleAr: "سياسة تصنيف المعلومات والتعامل معها",
     summaryEn:
-      "The four classification levels used across the Council, who may assign them, and the handling rules for each level.",
+      "The four classification levels used across the Office, who may assign them, and the handling rules for each level.",
     summaryAr:
-      "مستويات تصنيف المعلومات الأربعة المعتمدة في المجلس، ومن يملك صلاحية تحديدها، وقواعد التعامل مع كل مستوى.",
+      "مستويات تصنيف المعلومات الأربعة المعتمدة في المكتب، ومن يملك صلاحية تحديدها، وقواعد التعامل مع كل مستوى.",
     visibility: "all_staff",
     versionLabel: "v3.1",
     effectiveFrom: "2026-03-01",
     reviewCycleMonths: 12,
     classification: 2,
     bodyEn: [
-      "Level 1 Public: cleared for publication on npc.qa.",
-      "Level 2 Internal: available to all employees of the Council.",
+      "Level 1 Public: cleared for publication on the Office public channels.",
+      "Level 2 Internal: available to all employees of the Office.",
       "Level 3 Confidential: available to named recipients and their unit head.",
-      "Level 4 Restricted: available only to the Secretary General and named recipients.",
-      "The owner of a document assigns its level; the Information Security Department audits a sample each quarter.",
+      "Level 4 Restricted: available only to the Programme Director and named recipients.",
+      "The owner of a document assigns its level; the Data Governance and Security Department audits a sample each quarter.",
     ],
     bodyAr: [
       "المستوى الأول عام: معتمد للنشر على الموقع الرسمي.",
-      "المستوى الثاني داخلي: متاح لجميع موظفي المجلس.",
+      "المستوى الثاني داخلي: متاح لجميع موظفي المكتب.",
       "المستوى الثالث سري: متاح للمستلمين المحددين ورئيس وحدتهم.",
       "المستوى الرابع مقيد: متاح للأمين العام والمستلمين المحددين فقط.",
       "يحدد مالك الوثيقة مستواها، وتدقق إدارة أمن المعلومات عينة كل ربع سنة.",
     ],
   },
   {
-    unitCode: "IFS",
+    unitCode: "DGS",
     type: "procedure",
     titleEn: "Security incident reporting procedure",
     titleAr: "إجراء الإبلاغ عن حوادث أمن المعلومات",
@@ -498,54 +459,54 @@ const POLICY_SEEDS: PolicySeed[] = [
     bodyEn: [
       "Step 1: report within one hour of discovery through the incident line.",
       "Step 2: the duty officer triages within two hours and assigns a severity.",
-      "Step 3: severity one and two incidents escalate to the Secretary General the same day.",
+      "Step 3: severity one and two incidents escalate to the Programme Director the same day.",
       "Step 4: containment actions are logged as they are taken, not afterwards.",
       "Step 5: a closure note with the root cause is filed within ten working days.",
     ],
     bodyAr: [
       "الخطوة الأولى: الإبلاغ خلال ساعة من اكتشاف الحادث عبر خط البلاغات.",
       "الخطوة الثانية: يفرز ضابط المناوبة البلاغ خلال ساعتين ويحدد درجة الخطورة.",
-      "الخطوة الثالثة: تصعد حوادث الدرجتين الأولى والثانية إلى الأمين العام في اليوم نفسه.",
+      "الخطوة الثالثة: تصعد حوادث الدرجتين الأولى والثانية إلى مدير البرنامج في اليوم نفسه.",
       "الخطوة الرابعة: توثق إجراءات الاحتواء أثناء تنفيذها لا بعده.",
       "الخطوة الخامسة: يرفع تقرير إغلاق يتضمن السبب الجذري خلال عشرة أيام عمل.",
     ],
   },
   {
-    unitCode: "SOA",
+    unitCode: "DOP",
     type: "procedure",
-    titleEn: "Statistical release and revision procedure",
-    titleAr: "إجراء إصدار الإحصاءات ومراجعتها",
+    titleEn: "Data release and revision procedure",
+    titleAr: "إجراء إصدار البيانات ومراجعتها",
     summaryEn:
-      "How a statistical product moves from production to release, the pre-announced calendar, and how revisions are published.",
+      "How a data product moves from production to release, the pre-announced calendar, and how revisions are published.",
     summaryAr:
-      "كيف ينتقل المنتج الإحصائي من الإنتاج إلى النشر، والتقويم المعلن مسبقاً، وكيفية نشر المراجعات.",
+      "كيف ينتقل منتج البيانات من الإنتاج إلى النشر، والتقويم المعلن مسبقاً، وكيفية نشر المراجعات.",
     visibility: "all_staff",
     versionLabel: "v2.2",
     effectiveFrom: "2026-01-15",
     reviewCycleMonths: 12,
     classification: 1,
     bodyEn: [
-      "Release dates are published at least three months ahead and are not moved without the approval of the head of the National Statistics Center.",
-      "Quality checks are signed off by the Statistics Quality Department before any figure leaves the building.",
-      "Pre-release access is limited to the named list held by the Statistical Operations Affairs Department.",
+      "Release dates are published at least three months ahead and are not moved without the approval of the Head of the Data and Knowledge Sector.",
+      "Quality checks are signed off by the Data Quality and Standards Department before any figure leaves the building.",
+      "Pre-release access is limited to the named list held by the Data Operations Department.",
       "A revision is published with a note stating what changed and why.",
     ],
     bodyAr: [
-      "تعلن مواعيد الإصدار قبل ثلاثة أشهر على الأقل ولا تعدل إلا بموافقة رئيس مركز الإحصاء الوطني.",
-      "تعتمد إدارة جودة الإحصاءات فحوص الجودة قبل خروج أي رقم.",
-      "يقتصر الاطلاع المسبق على القائمة المعتمدة لدى إدارة شؤون العمليات الإحصائية.",
+      "تعلن مواعيد الإصدار قبل ثلاثة أشهر على الأقل ولا تعدل إلا بموافقة رئيس قطاع البيانات والمعرفة.",
+      "تعتمد إدارة جودة البيانات والمعايير فحوص الجودة قبل خروج أي رقم.",
+      "يقتصر الاطلاع المسبق على القائمة المعتمدة لدى إدارة عمليات البيانات.",
       "تنشر المراجعة مصحوبة بملاحظة توضح ما تغير وسببه.",
     ],
   },
   {
-    unitCode: "SOA",
+    unitCode: "DOP",
     type: "service",
     titleEn: "Data request service for government entities",
     titleAr: "خدمة طلب البيانات للجهات الحكومية",
     summaryEn:
-      "The service a government entity uses to request statistical data that is not published, with turnaround times and the required approvals.",
+      "The service a government entity uses to request environmental data that is not published, with turnaround times and the required approvals.",
     summaryAr:
-      "الخدمة التي تستخدمها الجهات الحكومية لطلب بيانات إحصائية غير منشورة، مع أزمنة الاستجابة والموافقات المطلوبة.",
+      "الخدمة التي تستخدمها الجهات الحكومية لطلب بيانات بيئية غير منشورة، مع أزمنة الاستجابة والموافقات المطلوبة.",
     visibility: "all_staff",
     versionLabel: "v1.1",
     effectiveFrom: "2025-11-01",
@@ -554,23 +515,23 @@ const POLICY_SEEDS: PolicySeed[] = [
     bodyEn: [
       "Who may request: an authorised officer of a government entity.",
       "Turnaround: ten working days for published aggregates, twenty for new tabulations.",
-      "Microdata requests require a confidentiality undertaking and the approval of the National Statistics Center.",
-      "Requests and their outcomes are logged and reported in the annual statistical report.",
+      "Requests for record level data require a confidentiality undertaking and the approval of the Head of the Data and Knowledge Sector.",
+      "Requests and their outcomes are logged and reported in the Annual Environment Statistical Digest (illustrative).",
     ],
     bodyAr: [
       "من يحق له الطلب: مسؤول مفوض من جهة حكومية.",
       "زمن الاستجابة: عشرة أيام عمل للتجميعات المنشورة وعشرون يوماً للجداول الجديدة.",
-      "تتطلب طلبات البيانات الجزئية تعهد سرية وموافقة مركز الإحصاء الوطني.",
-      "تسجل الطلبات ونتائجها وترفع في التقرير الإحصائي السنوي.",
+      "تتطلب طلبات البيانات التفصيلية تعهد سرية وموافقة رئيس قطاع البيانات والمعرفة.",
+      "تسجل الطلبات ونتائجها وترفع في ملخص الإحصاءات البيئية السنوي (توضيحي).",
     ],
   },
   {
-    unitCode: "IDP",
+    unitCode: "SPD",
     type: "policy_internal",
     titleEn: "Strategy change control policy",
     titleAr: "سياسة ضبط التغيير على الاستراتيجية",
     summaryEn:
-      "Who may change a goal, an indicator target or a project in the Council Strategy, and the record each change must leave.",
+      "Who may change a goal, an indicator target or a project in the Programme Strategy, and the record each change must leave.",
     summaryAr:
       "من يملك صلاحية تعديل هدف أو مستهدف مؤشر أو مشروع في الاستراتيجية المؤسسية، والسجل الذي يجب أن يتركه كل تغيير.",
     visibility: "restricted",
@@ -613,7 +574,7 @@ export async function seedCr07Policies(): Promise<number> {
   const unitRows = await db.select().from(schema.orgUnits);
   const unitByCode = new Map(unitRows.map((u) => [u.code, u]));
   const users = await db.select().from(schema.users).where(isNull(schema.users.deletedAt));
-  const superAdmin = users.find((u) => u.email === "admin@npc.qa");
+  const superAdmin = users.find((u) => u.email === "admin@enviroai.demo");
 
   let made = 0;
   for (const p of POLICY_SEEDS) {
@@ -656,7 +617,7 @@ export async function seedCr07Policies(): Promise<number> {
       status: "verified",
       verifiedBy: superAdmin?.id ?? null,
       verifiedAt: now(),
-      sourceOrigin: "npc",
+      sourceOrigin: "org",
       publishYear: Number(p.effectiveFrom.slice(0, 4)),
       originalFilename: `${p.type}-${p.unitCode}.txt`,
       mime: "text/plain",
@@ -694,7 +655,7 @@ export async function seedCr07Policies(): Promise<number> {
 }
 
 /* ------------------------------------------------------------------ */
-/* CR07 2.1 and 3.1: both new portals are visible to all NPC staff, so  */
+/* CR07 2.1 and 3.1: both new portals are visible to all Office staff, so  */
 /* every stored role portal set gains them (roles that never stored a   */
 /* set already fall back to the defaults, which include both).          */
 /* ------------------------------------------------------------------ */

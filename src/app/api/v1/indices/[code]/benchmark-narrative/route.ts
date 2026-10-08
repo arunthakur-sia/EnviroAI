@@ -5,8 +5,9 @@ import { db, schema } from "@/server/db/client";
 import { getCurrentUser } from "@/server/auth/session";
 import { getAiSettings } from "@/server/settings";
 import { callJson } from "@/server/ai/client";
+import { HOME_ISO3, HOME_NAME_EN, HOME_SHORT_AR } from "@/server/indices/home";
 
-/* CR05 4.7: the "Where Qatar leads and lags" narrative, written by the AI
+/* CR05 4.7: the "Where Saudi Arabia leads and lags" narrative, written by the AI
    from the benchmark data (mock: templated from the same numbers). */
 const Body = z.object({
   countries: z.array(z.string().regex(/^[A-Z]{3}$/)).min(1).max(30),
@@ -27,7 +28,7 @@ export async function POST(
     .where(eq(schema.indices.code, code))
     .limit(1);
   if (!index) return NextResponse.json({ data: null, error: "not_found" }, { status: 404 });
-  const setCodes = [...new Set(["QAT", ...parsed.data.countries])];
+  const setCodes = [...new Set([HOME_ISO3, ...parsed.data.countries])];
   const obs = await db
     .select()
     .from(schema.indexObservations)
@@ -48,22 +49,24 @@ export async function POST(
   const value = (o: (typeof obs)[number]) =>
     o.rank != null ? -o.rank : higher ? o.score ?? -Infinity : -(o.score ?? Infinity);
   const sorted = rows.sort((a, b) => value(b.o) - value(a.o));
-  const qatPos = sorted.findIndex((r) => r.c === "QAT") + 1;
+  const home = rows.find((r) => r.c === HOME_ISO3);
+  // no published value for the home country: nothing to benchmark
+  if (!home) return NextResponse.json({ data: null, error: "no_home_data" }, { status: 422 });
+  const homePos = sorted.findIndex((r) => r.c === HOME_ISO3) + 1;
   const leader = sorted[0];
-  const behindQatar = sorted.slice(qatPos).map((r) => r.c);
-  const aheadOfQatar = sorted.slice(0, qatPos - 1).map((r) => r.c);
-  const qat = rows.find((r) => r.c === "QAT")!;
+  const behindHome = sorted.slice(homePos).map((r) => r.c);
+  const aheadOfHome = sorted.slice(0, homePos - 1).map((r) => r.c);
 
   const facts = {
     index: { en: index.nameEn, ar: index.nameAr },
-    year: qat.o.year,
-    qatar: { rank: qat.o.rank, score: qat.o.score },
-    position: qatPos,
+    year: home.o.year,
+    home: { rank: home.o.rank, score: home.o.score },
+    position: homePos,
     of: sorted.length,
     leader: leader.c,
     leaderValue: { rank: leader.o.rank, score: leader.o.score },
-    ahead: aheadOfQatar,
-    behind: behindQatar,
+    ahead: aheadOfHome,
+    behind: behindHome,
   };
 
   const settings = await getAiSettings();
@@ -73,7 +76,7 @@ export async function POST(
       JSON.stringify({
         task: "benchmark_narrative",
         instruction:
-          "Write a short 'Where Qatar leads and lags' narrative (3-4 sentences per language) strictly from these benchmark facts. Return {\"en\": \"...\", \"ar\": \"...\"}.",
+          "Write a short 'Where Saudi Arabia leads and lags' narrative (3-4 sentences per language) strictly from these benchmark facts. Return {\"en\": \"...\", \"ar\": \"...\"}.",
         facts,
       })
     );
@@ -81,25 +84,25 @@ export async function POST(
   }
 
   const en = [
-    `In the ${index.nameEn} (${facts.year}), Qatar stands ${qatPos} of ${sorted.length} in this group${
-      qat.o.rank != null ? ` with a global rank of ${qat.o.rank}` : ""
-    }${qat.o.score != null ? ` and a score of ${qat.o.score}` : ""}.`,
-    qatPos === 1
-      ? `Qatar leads the group ahead of ${behindQatar.slice(0, 3).join(", ")}.`
-      : `${leader.c} leads the group${leader.o.rank != null ? ` at rank ${leader.o.rank}` : ""}; Qatar sits ahead of ${
-          behindQatar.length ? behindQatar.slice(0, 3).join(", ") : "none of the group"
-        } and behind ${aheadOfQatar.slice(0, 3).join(", ")}.`,
+    `In the ${index.nameEn} (${facts.year}), ${HOME_NAME_EN} stands ${homePos} of ${sorted.length} in this group${
+      home.o.rank != null ? ` with a global rank of ${home.o.rank}` : ""
+    }${home.o.score != null ? ` and a score of ${home.o.score}` : ""}.`,
+    homePos === 1
+      ? `${HOME_NAME_EN} leads the group ahead of ${behindHome.slice(0, 3).join(", ")}.`
+      : `${leader.c} leads the group${leader.o.rank != null ? ` at rank ${leader.o.rank}` : ""}; ${HOME_NAME_EN} sits ahead of ${
+          behindHome.length ? behindHome.slice(0, 3).join(", ") : "none of the group"
+        } and behind ${aheadOfHome.slice(0, 3).join(", ")}.`,
     `Figures are the latest published values for each country; comparisons across different edition years are noted in the history table.`,
   ].join(" ");
   const ar = [
-    `في ${index.nameAr} (${facts.year})، تحل قطر في الموقع ${qatPos} من ${sorted.length} ضمن هذه المجموعة${
-      qat.o.rank != null ? ` بمرتبة عالمية ${qat.o.rank}` : ""
-    }${qat.o.score != null ? ` ودرجة ${qat.o.score}` : ""}.`,
-    qatPos === 1
-      ? `تتصدر قطر المجموعة متقدمةً على ${behindQatar.slice(0, 3).join("، ")}.`
-      : `تتصدر ${leader.c} المجموعة${leader.o.rank != null ? ` بمرتبة ${leader.o.rank}` : ""}؛ وتتقدم قطر على ${
-          behindQatar.length ? behindQatar.slice(0, 3).join("، ") : "لا أحد في المجموعة"
-        } وتأتي خلف ${aheadOfQatar.slice(0, 3).join("، ")}.`,
+    `في ${index.nameAr} (${facts.year})، تحل ${HOME_SHORT_AR} في الموقع ${homePos} من ${sorted.length} ضمن هذه المجموعة${
+      home.o.rank != null ? ` بمرتبة عالمية ${home.o.rank}` : ""
+    }${home.o.score != null ? ` ودرجة ${home.o.score}` : ""}.`,
+    homePos === 1
+      ? `تتصدر ${HOME_SHORT_AR} المجموعة متقدمةً على ${behindHome.slice(0, 3).join("، ")}.`
+      : `تتصدر ${leader.c} المجموعة${leader.o.rank != null ? ` بمرتبة ${leader.o.rank}` : ""}؛ وتتقدم ${HOME_SHORT_AR} على ${
+          behindHome.length ? behindHome.slice(0, 3).join("، ") : "لا أحد في المجموعة"
+        } وتأتي خلف ${aheadOfHome.slice(0, 3).join("، ")}.`,
     `الأرقام هي أحدث القيم المنشورة لكل دولة، والمقارنات بين سنوات إصدار مختلفة مبيَّنة في جدول السلسلة.`,
   ].join(" ");
   return NextResponse.json({ data: { en, ar }, error: null });

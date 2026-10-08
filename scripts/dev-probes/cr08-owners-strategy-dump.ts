@@ -11,7 +11,7 @@ async function login(email: string): Promise<string> {
   const res = await fetch(`${BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email, password: "EnviroAI!2026" }),
   });
   const raw = res.headers.get("set-cookie") ?? "";
   return raw
@@ -22,7 +22,7 @@ async function login(email: string): Promise<string> {
 }
 
 async function main() {
-  const cookie = await login("admin@npc.qa");
+  const cookie = await login("admin@enviroai.demo");
   const path = process.argv[2];
   const res = await fetch(`${BASE}${path}`, { headers: { cookie } });
   const text = await res.text();

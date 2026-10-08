@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
       nameAr: t.nameAr,
       dimension: t.dimension,
     })),
-    sourceOrigin: "npc",
+    sourceOrigin: "org",
   });
 
   // duplicate detection: the new document's opening text against existing chunks.
@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
     ownerUserId: user.id,
     languageOriginal: parsed.lang,
     status: "draft",
-    sourceOrigin: "npc",
+    sourceOrigin: "org",
     publishYear: enrichment.publish_year,
     originalFilename: file.name,
     mime,

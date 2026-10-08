@@ -17,7 +17,7 @@ const req = async (path, opts = {}) => {
 await req("/api/v1/auth/login", {
   method: "POST",
   headers: { "content-type": "application/json" },
-  body: JSON.stringify({ email: "hr@npc.qa", password: "Nexus!2026" }),
+  body: JSON.stringify({ email: "hr@enviroai.demo", password: "EnviroAI!2026" }),
 });
 
 const h = (

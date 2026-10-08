@@ -38,19 +38,19 @@ const STATUS_TOKEN: Record<string, string> = {
   completed: "var(--color-ok)",
 };
 
-const STATUS_CHIP: Record<string, "sand" | "info" | "warn" | "danger" | "ok"> = {
-  not_started: "sand",
+const STATUS_CHIP: Record<string, "mist" | "info" | "warn" | "danger" | "ok"> = {
+  not_started: "mist",
   on_track: "info",
   at_risk: "warn",
   delayed: "danger",
   completed: "ok",
 };
 
-const RAG_CHIP: Record<Rag, "ok" | "warn" | "danger" | "sand"> = {
+const RAG_CHIP: Record<Rag, "ok" | "warn" | "danger" | "mist"> = {
   on_target: "ok",
   at_risk: "warn",
   behind: "danger",
-  no_data: "sand",
+  no_data: "mist",
 };
 
 const RISK_STATUSES = ["open", "mitigating", "closed"] as const;
@@ -105,16 +105,16 @@ function Section({
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls={panelId}
-          className="flex w-full cursor-pointer items-center gap-3 px-5 py-4 text-start transition-colors hover:bg-sand-50"
+          className="flex w-full cursor-pointer items-center gap-3 px-5 py-4 text-start transition-colors hover:bg-mist-50"
         >
-          <span className="text-maroon-700 [&_svg]:size-4.5" aria-hidden>
+          <span className="text-navy-700 [&_svg]:size-4.5" aria-hidden>
             {icon}
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-sm font-semibold text-ink-900">{title}</span>
             <span className="mt-0.5 block text-xs text-ink-600">{hint}</span>
           </span>
-          {badge ? <Chip tone="sand">{badge}</Chip> : null}
+          {badge ? <Chip tone="mist">{badge}</Chip> : null}
           <ChevronDown
             className={cn(
               "size-4 shrink-0 text-ink-400 transition-transform duration-200",
@@ -136,7 +136,7 @@ function Section({
             out of the accessibility tree */}
         <div
           inert={!open}
-          className={cn("border-t border-sand-200 px-5 py-5", !open && "pointer-events-none")}
+          className={cn("border-t border-mist-200 px-5 py-5", !open && "pointer-events-none")}
         >
           {children}
         </div>
@@ -212,8 +212,8 @@ function StakeholderGrid({ data }: { data: CouncilPageData }) {
             y={PT}
             width={W - PL - PR}
             height={H - PT - PB}
-            fill="var(--color-sand-50)"
-            stroke="var(--color-sand-300)"
+            fill="var(--color-mist-50)"
+            stroke="var(--color-mist-300)"
           />
           {/* the quadrant divide */}
           <line
@@ -221,7 +221,7 @@ function StakeholderGrid({ data }: { data: CouncilPageData }) {
             y1={PT}
             x2={px(3)}
             y2={H - PB}
-            stroke="var(--color-sand-300)"
+            stroke="var(--color-mist-300)"
             strokeDasharray="4 4"
           />
           <line
@@ -229,7 +229,7 @@ function StakeholderGrid({ data }: { data: CouncilPageData }) {
             y1={py(3)}
             x2={W - PR}
             y2={py(3)}
-            stroke="var(--color-sand-300)"
+            stroke="var(--color-mist-300)"
             strokeDasharray="4 4"
           />
           <text x={PL + 8} y={PT + 16} fontSize={9} fill="var(--color-ink-400)">
@@ -316,8 +316,8 @@ function StakeholderGrid({ data }: { data: CouncilPageData }) {
                 cx={p.cx}
                 cy={p.cy}
                 r={12}
-                fill="var(--color-maroon-100)"
-                stroke={active === p.index ? "var(--color-gold-500)" : "var(--color-maroon-700)"}
+                fill="var(--color-navy-100)"
+                stroke={active === p.index ? "var(--color-aqua-500)" : "var(--color-navy-700)"}
                 strokeWidth={active === p.index ? 3 : 1.5}
               />
               <text
@@ -325,7 +325,7 @@ function StakeholderGrid({ data }: { data: CouncilPageData }) {
                 y={p.cy + 4}
                 fontSize={10}
                 textAnchor="middle"
-                fill="var(--color-maroon-900)"
+                fill="var(--color-navy-900)"
                 fontWeight={600}
               >
                 {p.index + 1}
@@ -336,7 +336,7 @@ function StakeholderGrid({ data }: { data: CouncilPageData }) {
 
         {hovered ? (
           <div
-            className="pointer-events-none absolute z-10 w-56 rounded-xl border border-sand-300 bg-white p-3 shadow-[var(--shadow-pop)]"
+            className="pointer-events-none absolute z-10 w-56 rounded-xl border border-mist-300 bg-white p-3 shadow-[var(--shadow-pop)]"
             style={{
               left: `${(hovered.cx / W) * 100}%`,
               top: `${(hovered.cy / H) * 100}%`,
@@ -365,12 +365,12 @@ function StakeholderGrid({ data }: { data: CouncilPageData }) {
             key={p.index}
             className={cn(
               "flex items-start gap-2 rounded-lg px-2 py-1.5 text-xs",
-              active === p.index ? "bg-maroon-50" : "bg-transparent"
+              active === p.index ? "bg-navy-50" : "bg-transparent"
             )}
             onMouseEnter={() => setActive(p.index)}
             onMouseLeave={() => setActive((cur) => (cur === p.index ? null : cur))}
           >
-            <span className="mt-0.5 inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-maroon-100 text-[10px] font-semibold text-maroon-900 tnum">
+            <span className="mt-0.5 inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-navy-100 text-[10px] font-semibold text-navy-900 tnum">
               {p.index + 1}
             </span>
             <span className="min-w-0">
@@ -455,7 +455,7 @@ function SituationAnalysis({ data }: { data: CouncilPageData }) {
             {data.analysis.challenges.map((challenge, i) => {
               const goal = goals.find((g) => g.code === challenge.goalCode);
               return (
-                <article key={i} className="rounded-xl border border-sand-200 p-4">
+                <article key={i} className="rounded-xl border border-mist-200 p-4">
                   <h5 className="text-sm font-semibold text-ink-900">
                     {bi(locale, challenge.titleEn, challenge.titleAr)}
                   </h5>
@@ -463,7 +463,7 @@ function SituationAnalysis({ data }: { data: CouncilPageData }) {
                     {bi(locale, challenge.descriptionEn, challenge.descriptionAr)}
                   </p>
                   <div className="mt-2.5">
-                    <Chip tone="maroon">
+                    <Chip tone="navy">
                       <Target className="size-3" aria-hidden />
                       {goal
                         ? `${goal.code ? `${goal.code} ` : ""}${bi(locale, goal.titleEn, goal.titleAr)}`
@@ -482,7 +482,7 @@ function SituationAnalysis({ data }: { data: CouncilPageData }) {
       <div>
         <h4 className="mb-3 text-sm font-semibold text-ink-900">{t("situation.baselineTitle")}</h4>
         {data.analysis.baseline.length ? (
-          <ol className="measure list-decimal space-y-2 ps-5 text-sm leading-relaxed text-ink-900 marker:text-maroon-700 marker:tnum">
+          <ol className="measure list-decimal space-y-2 ps-5 text-sm leading-relaxed text-ink-900 marker:text-navy-700 marker:tnum">
             {data.analysis.baseline.map((item, i) => (
               <li key={i}>{bi(locale, item.textEn, item.textAr)}</li>
             ))}
@@ -598,7 +598,7 @@ function ImplementationPlan({ data }: { data: CouncilPageData }) {
         <div className="overflow-x-auto" data-testid="implementation-timeline">
           <div className="relative" style={{ direction: "ltr", minWidth: "42rem" }}>
             {/* the year axis */}
-            <div className="relative mb-2 h-6 border-b border-sand-300">
+            <div className="relative mb-2 h-6 border-b border-mist-300">
               {AXIS_YEARS.map((year) => {
                 const left = ((Date.UTC(year, 0, 1) - AXIS_FROM) / AXIS_SPAN) * 100;
                 return (
@@ -616,11 +616,11 @@ function ImplementationPlan({ data }: { data: CouncilPageData }) {
             {/* today */}
             {todayPct != null ? (
               <div
-                className="pointer-events-none absolute bottom-0 top-6 w-px bg-maroon-700/60"
+                className="pointer-events-none absolute bottom-0 top-6 w-px bg-navy-700/60"
                 style={{ left: `${todayPct}%` }}
                 aria-hidden
               >
-                <span className="absolute -top-5 -translate-x-1/2 whitespace-nowrap rounded bg-maroon-700 px-1.5 py-0.5 text-[10px] text-white">
+                <span className="absolute -top-5 -translate-x-1/2 whitespace-nowrap rounded bg-navy-700 px-1.5 py-0.5 text-[10px] text-white">
                   {t("implementation.today")}
                 </span>
               </div>
@@ -657,7 +657,7 @@ function ImplementationPlan({ data }: { data: CouncilPageData }) {
                   if (start == null || end == null) {
                     return (
                       <div key={project.id} className="mb-1 flex h-7 items-center gap-2">
-                        <Chip tone="sand">{project.code ?? ""}</Chip>
+                        <Chip tone="mist">{project.code ?? ""}</Chip>
                         <span className="text-[11px] text-ink-400">
                           {t("implementation.noDates")}
                         </span>
@@ -699,8 +699,8 @@ function ImplementationPlan({ data }: { data: CouncilPageData }) {
 
       {/* the raised card for the bar under the pointer or the keyboard focus */}
       {hoveredProject ? (
-        <div className="mt-2 rounded-xl border border-sand-300 bg-white p-3 shadow-[var(--shadow-paper)]">
-          <p className="text-[11px] font-semibold text-maroon-700 tnum">
+        <div className="mt-2 rounded-xl border border-mist-300 bg-white p-3 shadow-[var(--shadow-paper)]">
+          <p className="text-[11px] font-semibold text-navy-700 tnum">
             {hoveredProject.code ?? ""}
           </p>
           <p className="text-sm font-semibold text-ink-900">
@@ -720,7 +720,7 @@ function ImplementationPlan({ data }: { data: CouncilPageData }) {
               : t("implementation.noDates")}
           </p>
           <div className="mt-2">
-            <Chip tone={STATUS_CHIP[hoveredProject.status] ?? "sand"}>
+            <Chip tone={STATUS_CHIP[hoveredProject.status] ?? "mist"}>
               {t(`implementation.status.${hoveredProject.status}`)}
             </Chip>
           </div>
@@ -805,7 +805,7 @@ function MonitoringFramework({ data }: { data: CouncilPageData }) {
       {lanes.map((lane) => (
         <div key={lane.cadence}>
           <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold text-ink-900">
-            <Gauge className="size-4 text-maroon-700" aria-hidden />
+            <Gauge className="size-4 text-navy-700" aria-hidden />
             {t(`me.cadence.${lane.cadence}`)}
             <span className="text-ink-400 tnum">{lane.items.length}</span>
           </h4>
@@ -816,10 +816,10 @@ function MonitoringFramework({ data }: { data: CouncilPageData }) {
                 return (
                   <article
                     key={indicator.id}
-                    className="rounded-xl border border-sand-200 bg-white p-3"
+                    className="rounded-xl border border-mist-200 bg-white p-3"
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <p className="text-[11px] font-semibold text-maroon-700 tnum">
+                      <p className="text-[11px] font-semibold text-navy-700 tnum">
                         {indicator.code}
                       </p>
                       <Chip tone={RAG_CHIP[indicator.rag]}>{t(`me.rag.${indicator.rag}`)}</Chip>
@@ -848,14 +848,14 @@ function MonitoringFramework({ data }: { data: CouncilPageData }) {
 
       <div>
         <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold text-ink-900">
-          <CalendarDays className="size-4 text-maroon-700" aria-hidden />
+          <CalendarDays className="size-4 text-navy-700" aria-hidden />
           {t("me.calendarTitle")}
         </h4>
         <p className="mb-3 text-xs text-ink-600">{t("me.calendarHint")}</p>
         {calendar.length ? (
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
             {calendar.map((moment) => (
-              <div key={moment.date} className="rounded-xl border border-sand-200 px-3 py-2.5">
+              <div key={moment.date} className="rounded-xl border border-mist-200 px-3 py-2.5">
                 <p className="text-xs font-semibold text-ink-900 tnum">
                   {formatDate(moment.date, locale, { style: "medium" })}
                 </p>
@@ -864,7 +864,7 @@ function MonitoringFramework({ data }: { data: CouncilPageData }) {
                 </p>
                 <p className="mt-1 flex flex-wrap gap-1">
                   {moment.parts.map((part) => (
-                    <Chip key={part} tone="sand">
+                    <Chip key={part} tone="mist">
                       {t(`me.cadenceShort.${part}`)}
                     </Chip>
                   ))}
@@ -963,12 +963,12 @@ function RiskRegister({ data, canEdit }: { data: CouncilPageData; canEdit: boole
                       }
                       className={cn(
                         "flex h-11 w-full cursor-pointer items-center justify-center rounded-lg text-sm font-semibold tnum transition-transform duration-150 hover:-translate-y-0.5",
-                        selected && "ring-2 ring-gold-500"
+                        selected && "ring-2 ring-aqua-500"
                       )}
                       style={{
                         backgroundColor: count
                           ? `color-mix(in srgb, ${token} ${10 + score * 2.4}%, transparent)`
-                          : "var(--color-sand-50)",
+                          : "var(--color-mist-50)",
                         color: count ? token : "var(--color-ink-400)",
                         border: `1px solid color-mix(in srgb, ${token} ${count ? 40 : 14}%, transparent)`,
                       }}
@@ -999,7 +999,7 @@ function RiskRegister({ data, canEdit }: { data: CouncilPageData; canEdit: boole
           <button
             type="button"
             onClick={() => setCell(null)}
-            className="mt-2 cursor-pointer text-xs font-medium text-maroon-700 underline-offset-4 hover:underline"
+            className="mt-2 cursor-pointer text-xs font-medium text-navy-700 underline-offset-4 hover:underline"
           >
             {tc("clearFilters")}
           </button>
@@ -1012,22 +1012,22 @@ function RiskRegister({ data, canEdit }: { data: CouncilPageData; canEdit: boole
             <article
               key={risk.id}
               data-testid="risk-row"
-              className="rounded-xl border border-sand-200 p-4"
+              className="rounded-xl border border-mist-200 p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="min-w-0">
                   {risk.code ? (
-                    <p className="text-[11px] font-semibold text-maroon-700 tnum">{risk.code}</p>
+                    <p className="text-[11px] font-semibold text-navy-700 tnum">{risk.code}</p>
                   ) : null}
                   <h5 className="text-sm font-semibold text-ink-900">
                     {bi(locale, risk.titleEn, risk.titleAr)}
                   </h5>
                 </div>
                 <div className="flex flex-wrap items-center gap-1.5">
-                  <Chip tone="sand">
+                  <Chip tone="mist">
                     {t("risks.likelihoodChip", { value: risk.likelihood })}
                   </Chip>
-                  <Chip tone="sand">{t("risks.impactChip", { value: risk.impact })}</Chip>
+                  <Chip tone="mist">{t("risks.impactChip", { value: risk.impact })}</Chip>
                   <Chip
                     tone={
                       risk.status === "closed"
@@ -1239,15 +1239,15 @@ function PriorityMatrix({ data, canEdit }: { data: CouncilPageData; canEdit: boo
             y={PPT}
             width={PW - PPL - PPR}
             height={PH - PPT - PPB}
-            fill="var(--color-sand-50)"
-            stroke="var(--color-sand-300)"
+            fill="var(--color-mist-50)"
+            stroke="var(--color-mist-300)"
           />
           <line
             x1={pfx(3)}
             y1={PPT}
             x2={pfx(3)}
             y2={PH - PPB}
-            stroke="var(--color-sand-300)"
+            stroke="var(--color-mist-300)"
             strokeDasharray="4 4"
           />
           <line
@@ -1255,7 +1255,7 @@ function PriorityMatrix({ data, canEdit }: { data: CouncilPageData; canEdit: boo
             y1={pfy(3)}
             x2={PW - PPR}
             y2={pfy(3)}
-            stroke="var(--color-sand-300)"
+            stroke="var(--color-mist-300)"
             strokeDasharray="4 4"
           />
           <text x={PPL + 8} y={PPT + 16} fontSize={9} fill="var(--color-ink-400)">
@@ -1401,14 +1401,14 @@ function PriorityMatrix({ data, canEdit }: { data: CouncilPageData; canEdit: boo
 
         {hovered ? (
           <div
-            className="pointer-events-none absolute z-10 w-56 rounded-xl border border-sand-300 bg-white p-3 shadow-[var(--shadow-pop)]"
+            className="pointer-events-none absolute z-10 w-56 rounded-xl border border-mist-300 bg-white p-3 shadow-[var(--shadow-pop)]"
             style={{
               left: `${(pfx(coordsOf(hovered).feasibility) / PW) * 100}%`,
               top: `${(pfy(coordsOf(hovered).impact) / PH) * 100}%`,
               transform: "translate(-50%, -115%)",
             }}
           >
-            <p className="text-[11px] font-semibold text-maroon-700 tnum">{hovered.code ?? ""}</p>
+            <p className="text-[11px] font-semibold text-navy-700 tnum">{hovered.code ?? ""}</p>
             <p className="text-sm font-semibold leading-snug text-ink-900">
               {bi(locale, hovered.titleEn, hovered.titleAr)}
             </p>
@@ -1531,13 +1531,13 @@ export function ReferenceSections({
         {data.governance.length ? (
           <div className="grid gap-3 sm:grid-cols-2">
             {data.governance.map((body) => (
-              <article key={body.id} className="rounded-xl border border-sand-200 p-4">
+              <article key={body.id} className="rounded-xl border border-mist-200 p-4">
                 <div className="flex items-start justify-between gap-2">
                   <h4 className="text-sm font-semibold text-ink-900">
                     {bi(locale, body.bodyNameEn, body.bodyNameAr)}
                   </h4>
                   {body.cadence ? (
-                    <Chip tone="gulf">
+                    <Chip tone="teal">
                       <CalendarDays className="size-3" aria-hidden />
                       {KNOWN_CADENCES.has(body.cadence)
                         ? t(`governance.cadence.${body.cadence}`)
@@ -1558,7 +1558,7 @@ export function ReferenceSections({
                     </p>
                     <div className="mt-1.5 flex flex-wrap gap-1.5">
                       {body.members.map((member, i) => (
-                        <Chip key={i} tone="sand">
+                        <Chip key={i} tone="mist">
                           {bi(locale, member.en, member.ar)}
                         </Chip>
                       ))}

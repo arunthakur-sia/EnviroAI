@@ -31,7 +31,7 @@ import fsp from "node:fs/promises";
 import path from "node:path";
 import { IMPORT_DIR } from "@/server/paths";
 
-export const BUNDLE_NAME = "sianexus-data.tar.gz";
+export const BUNDLE_NAME = "enviroai-data.tar.gz";
 export const PART_NAME = `${BUNDLE_NAME}.part`;
 export const META_NAME = `${BUNDLE_NAME}.part.json`;
 /** 8 MB: large enough that a 120 MB bundle is 15 requests, small enough that a

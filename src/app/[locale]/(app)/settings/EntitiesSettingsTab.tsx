@@ -191,7 +191,7 @@ export function EntitiesSettingsTab() {
       <div className="card overflow-x-auto">
         <table className="w-full min-w-[860px] text-sm">
           <thead>
-            <tr className="border-b border-sand-100 text-start text-[11px] uppercase tracking-wider text-ink-600">
+            <tr className="border-b border-mist-100 text-start text-[11px] uppercase tracking-wider text-ink-600">
               <th className="px-4 py-2.5 text-start">{t("name")}</th>
               <th className="px-4 py-2.5 text-start">{t("shortName")}</th>
               <th className="px-4 py-2.5 text-start">{t("kind")}</th>
@@ -202,7 +202,7 @@ export function EntitiesSettingsTab() {
           </thead>
           <tbody>
             {filtered.map((e) => (
-              <tr key={e.id} className="border-b border-sand-100 last:border-0" data-testid="entity-row">
+              <tr key={e.id} className="border-b border-mist-100 last:border-0" data-testid="entity-row">
                 <td className="px-4 py-2.5">
                   <span className="block font-medium text-ink-900">{bi(locale, e.nameEn, e.nameAr)}</span>
                   <span className="block text-xs text-ink-600" dir="auto">
@@ -214,7 +214,7 @@ export function EntitiesSettingsTab() {
                 </td>
                 <td className="px-4 py-2.5 text-ink-600">{bi(locale, e.shortNameEn ?? "", e.shortNameAr ?? "")}</td>
                 <td className="px-4 py-2.5">
-                  <Chip tone="sand">{t(`kinds.${e.kind}` as never)}</Chip>
+                  <Chip tone="mist">{t(`kinds.${e.kind}` as never)}</Chip>
                 </td>
                 <td className="px-4 py-2.5 text-xs text-ink-600">
                   {e.contactName ?? "-"}
@@ -233,7 +233,7 @@ export function EntitiesSettingsTab() {
                   <span className="flex items-center justify-end gap-1">
                     <button
                       onClick={() => openEdit(e)}
-                      className="rounded-lg p-1.5 text-ink-400 hover:bg-sand-100 hover:text-maroon-700 cursor-pointer"
+                      className="rounded-lg p-1.5 text-ink-400 hover:bg-mist-100 hover:text-navy-700 cursor-pointer"
                       aria-label={t("edit")}
                     >
                       <Pencil className="size-4" />
@@ -242,14 +242,14 @@ export function EntitiesSettingsTab() {
                       <>
                         <button
                           onClick={() => setMerging(e)}
-                          className="rounded-lg p-1.5 text-ink-400 hover:bg-sand-100 hover:text-maroon-700 cursor-pointer"
+                          className="rounded-lg p-1.5 text-ink-400 hover:bg-mist-100 hover:text-navy-700 cursor-pointer"
                           aria-label={t("merge")}
                         >
                           <Merge className="size-4" />
                         </button>
                         <button
                           onClick={() => toggleActive(e)}
-                          className="rounded-lg p-1.5 text-ink-400 hover:bg-sand-100 hover:text-maroon-700 cursor-pointer"
+                          className="rounded-lg p-1.5 text-ink-400 hover:bg-mist-100 hover:text-navy-700 cursor-pointer"
                           aria-label={e.isActive ? t("deactivate") : t("activate")}
                         >
                           <Power className="size-4" />

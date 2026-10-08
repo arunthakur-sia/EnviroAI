@@ -46,7 +46,7 @@ const ITEM_TYPES = new Set([
 function timeOf(iso: string, locale: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
-  return new Intl.DateTimeFormat(locale === "ar" ? "ar-QA-u-nu-latn" : "en-QA-u-nu-latn", {
+  return new Intl.DateTimeFormat(locale === "ar" ? "ar-SA-u-nu-latn" : "en-SA-u-nu-latn", {
     timeStyle: "short",
   }).format(d);
 }
@@ -345,11 +345,11 @@ export function InboxClient({
       <div className="card grid min-h-[560px] grid-cols-1 overflow-hidden md:h-[calc(100vh-14rem)] md:grid-cols-[360px_minmax(0,1fr)]">
         {/* ---- list pane ---- */}
         <aside
-          className={cn("flex min-h-0 min-w-0 flex-col border-sand-200 md:border-e", selectedId ? "hidden md:flex" : "flex")}
+          className={cn("flex min-h-0 min-w-0 flex-col border-mist-200 md:border-e", selectedId ? "hidden md:flex" : "flex")}
           aria-label={t("listLabel")}
         >
-          <div className="flex flex-col gap-2.5 border-b border-sand-100 p-3">
-            <div className="flex items-center gap-1 rounded-xl bg-sand-100 p-1" role="tablist" aria-label={t("filterLabel")}>
+          <div className="flex flex-col gap-2.5 border-b border-mist-100 p-3">
+            <div className="flex items-center gap-1 rounded-xl bg-mist-100 p-1" role="tablist" aria-label={t("filterLabel")}>
               {FILTERS.map((f) => (
                 <button
                   key={f}
@@ -357,8 +357,8 @@ export function InboxClient({
                   aria-selected={filter === f}
                   onClick={() => changeFilter(f)}
                   className={cn(
-                    "flex-1 whitespace-nowrap rounded-lg px-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500",
-                    filter === f ? "bg-white text-maroon-900 shadow-sm" : "text-ink-600 hover:text-ink-900"
+                    "flex-1 whitespace-nowrap rounded-lg px-1.5 py-1.5 text-xs font-medium transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500",
+                    filter === f ? "bg-white text-navy-900 shadow-sm" : "text-ink-600 hover:text-ink-900"
                   )}
                   data-testid={`inbox-filter-${f}`}
                 >
@@ -372,7 +372,7 @@ export function InboxClient({
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder={t("searchPlaceholder")}
-                className="h-9 w-full rounded-lg border border-sand-300 bg-white ps-8 pe-3 text-sm text-ink-900 placeholder:text-ink-400 focus:border-maroon-500 focus:outline-none focus:ring-2 focus:ring-maroon-100"
+                className="h-9 w-full rounded-lg border border-mist-300 bg-white ps-8 pe-3 text-sm text-ink-900 placeholder:text-ink-400 focus:border-navy-500 focus:outline-none focus:ring-2 focus:ring-navy-100"
                 aria-label={t("searchPlaceholder")}
                 data-testid="inbox-search"
               />
@@ -422,7 +422,7 @@ export function InboxClient({
                     setItemType("");
                     setPersonId("");
                   }}
-                  className="rounded-md text-[11px] font-medium text-maroon-700 hover:text-maroon-900 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+                  className="rounded-md text-[11px] font-medium text-navy-700 hover:text-navy-900 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
                   data-testid="inbox-filter-clear"
                 >
                   {t("clearFilters")}
@@ -468,9 +468,9 @@ export function InboxClient({
               </div>
             ) : (
               groups.map((g) => (
-                <section key={g.key} className="border-b border-sand-100 last:border-0" data-testid="inbox-group">
-                  <header className="sticky top-0 z-10 flex items-center gap-2 bg-sand-50/95 px-3 py-1.5 backdrop-blur">
-                    <Chip tone={g.resource ? "gulf" : "ghost"} className="shrink-0">
+                <section key={g.key} className="border-b border-mist-100 last:border-0" data-testid="inbox-group">
+                  <header className="sticky top-0 z-10 flex items-center gap-2 bg-mist-50/95 px-3 py-1.5 backdrop-blur">
+                    <Chip tone={g.resource ? "teal" : "ghost"} className="shrink-0">
                       {g.resource ? itemLabel(g.resource.type) : t("noItem")}
                     </Chip>
                     {g.resource ? (
@@ -492,14 +492,14 @@ export function InboxClient({
                         onClick={() => select(th.id)}
                         aria-current={selected ? "true" : undefined}
                         className={cn(
-                          "flex w-full items-start gap-3 border-s-2 px-3 py-3 text-start transition-colors cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-gold-500",
-                          selected ? "border-maroon-700 bg-maroon-100/50" : "border-transparent hover:bg-sand-50"
+                          "flex w-full items-start gap-3 border-s-2 px-3 py-3 text-start transition-colors cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-aqua-500",
+                          selected ? "border-navy-700 bg-navy-100/50" : "border-transparent hover:bg-mist-50"
                         )}
                       >
                         <span className="relative shrink-0">
                           {other ? <Avatar name={other.nameEn} color={other.avatarColor} size={36} /> : <Avatar name={me.nameEn} color={me.avatarColor} size={36} />}
                           {th.unread ? (
-                            <span className="absolute -end-0.5 -top-0.5 size-2.5 rounded-full bg-gold-500 ring-2 ring-white" aria-label={t("unread")} data-testid="inbox-unread-dot" />
+                            <span className="absolute -end-0.5 -top-0.5 size-2.5 rounded-full bg-aqua-500 ring-2 ring-white" aria-label={t("unread")} data-testid="inbox-unread-dot" />
                           ) : null}
                         </span>
                         <span className="min-w-0 flex-1">
@@ -532,7 +532,7 @@ export function InboxClient({
                           {th.asDelegateFor || th.status === "done" || th.questionId ? (
                             <span className="mt-1.5 flex flex-wrap gap-1">
                               {th.asDelegateFor ? (
-                                <Chip tone="gold" data-testid="delegate-chip">
+                                <Chip tone="aqua" data-testid="delegate-chip">
                                   {t("asDelegate", { name: bi(locale, th.asDelegateFor.nameEn, th.asDelegateFor.nameAr) })}
                                 </Chip>
                               ) : null}
@@ -541,7 +541,7 @@ export function InboxClient({
                                   <Check className="size-3" /> {t("done")}
                                 </Chip>
                               ) : null}
-                              {th.questionId ? <Chip tone="maroon">{t("converted")}</Chip> : null}
+                              {th.questionId ? <Chip tone="navy">{t("converted")}</Chip> : null}
                             </span>
                           ) : null}
                         </span>
@@ -565,7 +565,7 @@ export function InboxClient({
               <button
                 type="button"
                 onClick={() => select(null)}
-                className="inline-flex w-fit items-center gap-1.5 text-sm text-maroon-700 hover:text-maroon-900 md:hidden cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+                className="inline-flex w-fit items-center gap-1.5 text-sm text-navy-700 hover:text-navy-900 md:hidden cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
                 data-testid="inbox-back"
               >
                 <ArrowLeft className="size-4 flip-rtl" /> {t("back")}
@@ -583,7 +583,7 @@ export function InboxClient({
               <button
                 type="button"
                 onClick={() => select(null)}
-                className="mb-4 inline-flex items-center gap-1.5 text-sm text-maroon-700 hover:text-maroon-900 md:hidden cursor-pointer"
+                className="mb-4 inline-flex items-center gap-1.5 text-sm text-navy-700 hover:text-navy-900 md:hidden cursor-pointer"
               >
                 <ArrowLeft className="size-4 flip-rtl" /> {t("back")}
               </button>
@@ -591,11 +591,11 @@ export function InboxClient({
             </div>
           ) : (
             <>
-              <header className="border-b border-sand-100 px-5 py-4">
+              <header className="border-b border-mist-100 px-5 py-4">
                 <button
                   type="button"
                   onClick={() => select(null)}
-                  className="mb-2 inline-flex items-center gap-1.5 text-sm text-maroon-700 hover:text-maroon-900 md:hidden cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+                  className="mb-2 inline-flex items-center gap-1.5 text-sm text-navy-700 hover:text-navy-900 md:hidden cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
                   data-testid="inbox-back"
                 >
                   <ArrowLeft className="size-4 flip-rtl" /> {t("back")}
@@ -608,9 +608,9 @@ export function InboxClient({
                     <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-ink-600">
                       {detail.resource ? (
                         <>
-                          <Chip tone="gulf">{itemLabel(detail.resource.type)}</Chip>
+                          <Chip tone="teal">{itemLabel(detail.resource.type)}</Chip>
                           {detail.resource.link ? (
-                            <Link href={detail.resource.link as never} className="link-draw inline-flex items-center gap-1 font-medium text-maroon-700" data-testid="inbox-item-link">
+                            <Link href={detail.resource.link as never} className="link-draw inline-flex items-center gap-1 font-medium text-navy-700" data-testid="inbox-item-link">
                               {bi(locale, detail.resource.titleEn, detail.resource.titleAr)}
                               <ExternalLink className="size-3" aria-hidden />
                             </Link>
@@ -622,7 +622,7 @@ export function InboxClient({
                         <Chip tone="ghost">{t("noItem")}</Chip>
                       )}
                       {detail.asDelegateFor ? (
-                        <Chip tone="gold" data-testid="delegate-chip">
+                        <Chip tone="aqua" data-testid="delegate-chip">
                           {t("asDelegate", { name: bi(locale, detail.asDelegateFor.nameEn, detail.asDelegateFor.nameAr) })}
                         </Chip>
                       ) : null}
@@ -659,7 +659,7 @@ export function InboxClient({
                     {detail.questionId ? (
                       <Link
                         href={`/ask/${detail.questionId}` as never}
-                        className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-gold-300 bg-gold-100 px-3 text-xs font-medium text-maroon-900 hover:bg-gold-300/40 focus-visible:outline-2 focus-visible:outline-gold-500"
+                        className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-aqua-300 bg-aqua-100 px-3 text-xs font-medium text-navy-900 hover:bg-aqua-300/40 focus-visible:outline-2 focus-visible:outline-aqua-500"
                         data-testid="inbox-view-question"
                       >
                         <HelpCircle className="size-4" /> {t("viewQuestion")}
@@ -671,7 +671,7 @@ export function InboxClient({
                         </Button>
                       </Tip>
                     )}
-                    <Button size="sm" variant={detail.status === "done" ? "ghost" : "gold"} onClick={toggleDone} loading={acting === "done"} data-testid="inbox-done">
+                    <Button size="sm" variant={detail.status === "done" ? "ghost" : "aqua"} onClick={toggleDone} loading={acting === "done"} data-testid="inbox-done">
                       {detail.status === "done" ? <RotateCcw /> : <CheckCheck />}
                       {detail.status === "done" ? t("reopen") : t("markDone")}
                     </Button>
@@ -679,7 +679,7 @@ export function InboxClient({
                 </div>
               </header>
 
-              <div className="min-h-0 flex-1 overflow-y-auto bg-sand-50/60 px-5 py-4" data-testid="inbox-messages">
+              <div className="min-h-0 flex-1 overflow-y-auto bg-mist-50/60 px-5 py-4" data-testid="inbox-messages">
                 <ol className="flex flex-col gap-4">
                   {detail.messages.map((m, i) => {
                     const mine = m.senderId === me.id;
@@ -689,9 +689,9 @@ export function InboxClient({
                       <React.Fragment key={m.id}>
                         {newDay ? (
                           <li className="flex items-center gap-3 text-[11px] text-ink-400 tnum" aria-hidden>
-                            <span className="h-px flex-1 bg-sand-200" />
+                            <span className="h-px flex-1 bg-mist-200" />
                             {formatDate(m.createdAt, locale, { style: "medium" })}
-                            <span className="h-px flex-1 bg-sand-200" />
+                            <span className="h-px flex-1 bg-mist-200" />
                           </li>
                         ) : null}
                         <li className={cn("flex items-end gap-2.5", mine && "flex-row-reverse")} data-testid="inbox-message" data-mine={mine ? "1" : "0"}>
@@ -700,11 +700,11 @@ export function InboxClient({
                             className={cn(
                               "max-w-[78%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed",
                               mine
-                                ? "rounded-ee-md bg-maroon-100 text-maroon-900"
-                                : "rounded-es-md border border-sand-200 bg-white text-ink-900 shadow-[var(--shadow-paper)]"
+                                ? "rounded-ee-md bg-navy-100 text-navy-900"
+                                : "rounded-es-md border border-mist-200 bg-white text-ink-900 shadow-[var(--shadow-paper)]"
                             )}
                           >
-                            <p className={cn("mb-1 flex items-baseline gap-2 text-[11px]", mine ? "text-maroon-700/80" : "text-ink-400")}>
+                            <p className={cn("mb-1 flex items-baseline gap-2 text-[11px]", mine ? "text-navy-700/80" : "text-ink-400")}>
                               <span className="font-medium">{mine ? t("you") : bi(locale, m.sender.nameEn, m.sender.nameAr)}</span>
                               <span className="tnum">{timeOf(m.createdAt, locale)}</span>
                             </p>
@@ -714,7 +714,7 @@ export function InboxClient({
                             {m.attachments.length ? (
                               <div className="mt-2 flex flex-wrap gap-1.5" data-testid="inbox-attachment">
                                 {m.attachments.map((a) => (
-                                  <Link key={a.documentId} href={`/vault/${a.documentId}` as never} className="focus-visible:outline-2 focus-visible:outline-gold-500">
+                                  <Link key={a.documentId} href={`/vault/${a.documentId}` as never} className="focus-visible:outline-2 focus-visible:outline-aqua-500">
                                     <AttachmentChips value={[{ id: a.documentId, titleEn: a.titleEn, titleAr: a.titleAr }]} />
                                   </Link>
                                 ))}
@@ -730,7 +730,7 @@ export function InboxClient({
               </div>
 
               <form
-                className="border-t border-sand-100 p-3"
+                className="border-t border-mist-100 p-3"
                 onSubmit={(e) => {
                   e.preventDefault();
                   sendReply();

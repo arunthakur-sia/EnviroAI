@@ -23,9 +23,9 @@ export type UnitHeadAccount = {
 
 export type UnitHeadRef = {
   unitId: string;
-  /** the head who holds a SiaNexus account (org_units.head_user_id or a head member row) */
+  /** the head who holds a EnviroAI account (org_units.head_user_id or a head member row) */
   account: UnitHeadAccount | null;
-  /** the head as published on npc.qa when they hold no account */
+  /** the head as published on enviroai.demo when they hold no account */
   publishedNameEn: string | null;
   publishedNameAr: string | null;
   publishedTitleEn: string | null;

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 /**
- * Writes `sianexus-data.tar.gz` in the project root: everything under DATA_DIR
+ * Writes `enviroai-data.tar.gz` in the project root: everything under DATA_DIR
  * that the deployed app needs, and nothing it can rebuild.
  *
  * Carried: the database, and the folders the app writes into and reads back
@@ -25,7 +25,7 @@ import net from "node:net";
 import { createClient } from "@libsql/client";
 import { DATA_DIR, DB_PATH, dbUrl } from "./lib/paths.mjs";
 
-const OUT = path.join(process.cwd(), "sianexus-data.tar.gz");
+const OUT = path.join(process.cwd(), "enviroai-data.tar.gz");
 
 /**
  * The bundle carries what the deployed app reads, and nothing else. This is an
@@ -142,7 +142,7 @@ async function main() {
     for (const s of skipped) console.log(`  ${s}`);
   }
   console.log(`\nwrote ${path.basename(OUT)}  ${human(fs.statSync(OUT).size)}`);
-  console.log("upload it to the volume as data/import/sianexus-data.tar.gz; the boot script restores it once.");
+  console.log("upload it to the volume as data/import/enviroai-data.tar.gz; the boot script restores it once.");
 }
 
 main().catch((e) => {

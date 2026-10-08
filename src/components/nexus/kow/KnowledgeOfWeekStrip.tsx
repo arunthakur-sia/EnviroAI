@@ -41,29 +41,29 @@ export function KnowledgeOfWeekStrip({ card, numerals, className }: { card: KowC
       data-testid="kow-strip"
       aria-label={t("strip.aria")}
       className={cn(
-        "relative overflow-hidden rounded-[var(--radius-card)] border border-gold-300 bg-white shadow-[var(--shadow-paper)]",
+        "relative overflow-hidden rounded-[var(--radius-card)] border border-aqua-300 bg-white shadow-[var(--shadow-paper)]",
         className
       )}
     >
-      <span aria-hidden className="absolute inset-y-0 start-0 w-1.5 bg-gold-500" />
+      <span aria-hidden className="absolute inset-y-0 start-0 w-1.5 bg-aqua-500" />
       <div className="flex flex-wrap items-center gap-x-5 gap-y-3 py-4 pe-5 ps-6">
         <span
           aria-hidden
-          className="flex size-11 shrink-0 items-center justify-center rounded-full border border-gold-300 bg-gold-100"
+          className="flex size-11 shrink-0 items-center justify-center rounded-full border border-aqua-300 bg-aqua-100"
         >
-          <Star className="size-5 text-gold-500" fill="currentColor" />
+          <Star className="size-5 text-aqua-500" fill="currentColor" />
         </span>
 
         <div className="min-w-0 flex-1 basis-64">
           <p className="flex flex-wrap items-center gap-x-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-600 rtl:tracking-normal">
             <span>{t("eyebrow")}</span>
-            <span aria-hidden className="text-gold-500">·</span>
+            <span aria-hidden className="text-aqua-500">·</span>
             <span className="font-medium normal-case tracking-normal text-ink-400">{t(`kinds.${card.resourceType}`)}</span>
           </p>
           <a
             href={card.href}
             onClick={read}
-            className="mt-0.5 block truncate font-display text-lg text-ink-900 transition-colors hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500"
+            className="mt-0.5 block truncate font-display text-lg text-ink-900 transition-colors hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500"
             style={{ fontWeight: 550 }}
             data-testid="kow-strip-title"
           >
@@ -95,7 +95,7 @@ export function KnowledgeOfWeekStrip({ card, numerals, className }: { card: KowC
           </Button>
           <Link
             href={"/hall-of-knowledge" as never}
-            className="link-draw inline-flex items-center gap-1 text-xs font-medium text-maroon-700"
+            className="link-draw inline-flex items-center gap-1 text-xs font-medium text-navy-700"
             data-testid="kow-strip-hall"
           >
             {t("hallLink")} <ArrowRight className="size-3 flip-rtl" aria-hidden />

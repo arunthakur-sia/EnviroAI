@@ -51,7 +51,7 @@ export function PersonPicker({
   if (value) {
     return (
       <div
-        className="flex h-9.5 items-center gap-2 rounded-lg border border-sand-300 bg-sand-50 ps-2 pe-1"
+        className="flex h-9.5 items-center gap-2 rounded-lg border border-mist-300 bg-mist-50 ps-2 pe-1"
         data-testid={`${testId}-selected`}
       >
         <Avatar name={value.nameEn} color={value.avatarColor} size={22} />
@@ -66,7 +66,7 @@ export function PersonPicker({
             setQ("");
             setOpen(true);
           }}
-          className="rounded-md p-1 text-ink-400 hover:bg-sand-100 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-gold-500 cursor-pointer"
+          className="rounded-md p-1 text-ink-400 hover:bg-mist-100 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-aqua-500 cursor-pointer"
           aria-label={t("remove", { name: bi(locale, value.nameEn, value.nameAr) })}
           data-testid={`${testId}-clear`}
         >
@@ -118,7 +118,7 @@ export function PersonPicker({
         <ul
           id={listId}
           role="listbox"
-          className="absolute inset-x-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-xl border border-sand-300 bg-white p-1 shadow-[var(--shadow-pop)]"
+          className="absolute inset-x-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-xl border border-mist-300 bg-white p-1 shadow-[var(--shadow-pop)]"
         >
           {rows === null || (busy && !rows.length) ? (
             <li className="px-3 py-2 text-xs text-ink-400">{t("searching")}</li>
@@ -138,7 +138,7 @@ export function PersonPicker({
                 onMouseEnter={() => setActive(i)}
                 className={cn(
                   "flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm",
-                  i === active ? "bg-maroon-100/60 text-maroon-900" : "text-ink-900"
+                  i === active ? "bg-navy-100/60 text-navy-900" : "text-ink-900"
                 )}
                 data-testid={`${testId}-option`}
               >

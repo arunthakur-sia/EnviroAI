@@ -14,7 +14,7 @@ const LOCALE = process.env.PROBE_LOCALE ?? "en";
 async function login(page: Page, email: string) {
   for (let i = 0; i < 12; i++) {
     try {
-      const res = await page.request.post(`${BASE}/api/v1/auth/login`, { data: { email, password: "Nexus!2026" }, timeout: 120000 });
+      const res = await page.request.post(`${BASE}/api/v1/auth/login`, { data: { email, password: "EnviroAI!2026" }, timeout: 120000 });
       if (res.ok()) return;
       console.log(`  login: ${res.status()}, retrying`);
     } catch (e) {
@@ -53,12 +53,12 @@ async function main() {
   const ctx = await browser.newContext({ viewport: { width: WIDTH, height: 844 }, locale: LOCALE === "ar" ? "ar-QA" : "en-QA" });
   const page = await ctx.newPage();
   page.setDefaultTimeout(120000);
-  await login(page, "admin@npc.qa");
+  await login(page, "admin@enviroai.demo");
 
   const j = await (await page.request.get(`${BASE}/api/v1/report-builder`, { timeout: 180000 })).json();
   const list = (j?.data?.reports ?? []) as { id: string; status: string; previewCount: number; typeCode: string }[];
   const usable = list.filter((r) => r.status === "published" && r.previewCount > 0);
-  const ids = [usable.find((r) => r.typeCode === "npc_annual_report")?.id, usable[0]?.id].filter(Boolean) as string[];
+  const ids = [usable.find((r) => r.typeCode === "org_annual_report")?.id, usable[0]?.id].filter(Boolean) as string[];
 
   for (const url of [`${BASE}/${LOCALE}/reports`, `${BASE}/${LOCALE}/reports/new`, ...ids.map((id) => `${BASE}/${LOCALE}/reports/${id}`)]) {
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 180000 });

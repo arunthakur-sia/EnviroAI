@@ -3,7 +3,7 @@
 // Reports "read fully" once the reader reaches the end.
 import * as React from "react";
 import { useTranslations } from "next-intl";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Copy, Maximize2, Minimize2, Minus, Plus } from "lucide-react";
 import { Button, Skeleton } from "@/components/ui/primitives";
 
 type TableData = { caption: string | null; columns: string[]; rows: string[][] };
@@ -14,12 +14,17 @@ export function Reader({
   pageCount,
   initialPage,
   tables,
+  page,
+  onPageChange,
 }: {
   documentId: string;
   kind: "pdf" | "html" | "tables" | "text";
   pageCount: number;
   initialPage: number;
   tables: TableData[];
+  /** controlled page, so the outline can move the viewer; omit for a self-managed viewer */
+  page?: number;
+  onPageChange?: (page: number) => void;
 }) {
   const readReported = React.useRef(false);
 
@@ -37,6 +42,8 @@ export function Reader({
           pageCount={pageCount}
           initialPage={initialPage}
           onLastPage={reportRead}
+          page={page}
+          onPageChange={onPageChange}
         />
       ) : kind === "html" ? (
         <HtmlViewer documentId={documentId} onEnd={reportRead} />
@@ -45,14 +52,14 @@ export function Reader({
           {tables.map((tb, i) => (
             <div key={i} className="card overflow-hidden">
               {tb.caption ? (
-                <p className="border-b border-sand-100 px-4 py-2.5 text-sm font-medium text-ink-900">
+                <p className="border-b border-mist-100 px-4 py-2.5 text-sm font-medium text-ink-900">
                   {tb.caption}
                 </p>
               ) : null}
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-sand-50 text-start">
+                    <tr className="bg-mist-50 text-start">
                       {tb.columns.map((c, j) => (
                         <th key={j} className="px-3 py-2 text-start text-xs font-semibold text-ink-600">
                           {c}
@@ -62,7 +69,7 @@ export function Reader({
                   </thead>
                   <tbody>
                     {tb.rows.slice(0, 200).map((r, j) => (
-                      <tr key={j} className="border-t border-sand-100">
+                      <tr key={j} className="border-t border-mist-100">
                         {r.map((cell, k) => (
                           <td key={k} className="px-3 py-1.5 text-ink-900 tnum">
                             {cell}
@@ -83,25 +90,48 @@ export function Reader({
   );
 }
 
+const ZOOM_STEPS = [50, 75, 100, 125, 150, 200] as const;
+
 function PdfViewer({
   documentId,
   pageCount,
   initialPage,
   onLastPage,
+  page: controlledPage,
+  onPageChange,
 }: {
   documentId: string;
   pageCount: number;
   initialPage: number;
   onLastPage: () => void;
+  page?: number;
+  onPageChange?: (page: number) => void;
 }) {
   const t = useTranslations("reader");
+  const tk = useTranslations("ksaReader.toolbar");
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const [page, setPage] = React.useState(Math.min(Math.max(1, initialPage), pageCount || 1));
+  const shellRef = React.useRef<HTMLDivElement>(null);
+  const [localPage, setLocalPage] = React.useState(Math.min(Math.max(1, initialPage), pageCount || 1));
   const [total, setTotal] = React.useState(pageCount || 1);
   const [loading, setLoading] = React.useState(true);
+  const [ready, setReady] = React.useState(false);
+  const [zoom, setZoom] = React.useState<number>(100);
+  const [fullscreen, setFullscreen] = React.useState(false);
+  const [copied, setCopied] = React.useState(false);
   const pdfRef = React.useRef<any>(null);
   const renderTaskRef = React.useRef<any>(null);
+
+  const controlled = controlledPage !== undefined;
+  const page = Math.min(Math.max(1, controlled ? controlledPage : localPage), total || 1);
+  const setPage = React.useCallback(
+    (next: number | ((p: number) => number)) => {
+      const value = typeof next === "function" ? next(page) : next;
+      if (controlled) onPageChange?.(value);
+      else setLocalPage(value);
+    },
+    [controlled, onPageChange, page]
+  );
 
   React.useEffect(() => {
     let cancelled = false;
@@ -114,6 +144,7 @@ function PdfViewer({
         if (cancelled) return;
         pdfRef.current = doc;
         setTotal(doc.numPages);
+        setReady(true);
       } catch (e) {
         console.error("pdf load failed", e);
         setLoading(false);
@@ -131,7 +162,7 @@ function PdfViewer({
       const doc = pdfRef.current;
       const canvas = canvasRef.current;
       const container = containerRef.current;
-      if (!doc || !canvas || !container) return;
+      if (!ready || !doc || !canvas || !container) return;
       setLoading(true);
       try {
         renderTaskRef.current?.cancel?.();
@@ -139,12 +170,13 @@ function PdfViewer({
         if (cancelled) return;
         const containerWidth = container.clientWidth - 2;
         const viewport0 = pdfPage.getViewport({ scale: 1 });
-        const scale = (containerWidth / viewport0.width) * (window.devicePixelRatio || 1);
+        const dpr = window.devicePixelRatio || 1;
+        const scale = (containerWidth / viewport0.width) * (zoom / 100) * dpr;
         const viewport = pdfPage.getViewport({ scale });
         canvas.width = viewport.width;
         canvas.height = viewport.height;
-        canvas.style.width = `${viewport.width / (window.devicePixelRatio || 1)}px`;
-        canvas.style.height = `${viewport.height / (window.devicePixelRatio || 1)}px`;
+        canvas.style.width = `${viewport.width / dpr}px`;
+        canvas.style.height = `${viewport.height / dpr}px`;
         const ctx = canvas.getContext("2d")!;
         renderTaskRef.current = pdfPage.render({ canvasContext: ctx, viewport });
         await renderTaskRef.current.promise;
@@ -158,51 +190,85 @@ function PdfViewer({
     return () => {
       cancelled = true;
     };
-  }, [page, total, onLastPage]);
+  }, [ready, page, total, zoom, fullscreen, onLastPage]);
 
-  // re-render when the pdf finishes loading
-  const [tick, setTick] = React.useState(0);
   React.useEffect(() => {
-    const iv = setInterval(() => {
-      if (pdfRef.current) {
-        setTick((x) => x + 1);
-        clearInterval(iv);
-      }
-    }, 200);
-    return () => clearInterval(iv);
+    const onChange = () => setFullscreen(document.fullscreenElement === shellRef.current);
+    document.addEventListener("fullscreenchange", onChange);
+    return () => document.removeEventListener("fullscreenchange", onChange);
   }, []);
-  React.useEffect(() => {
-    if (tick > 0) setPage((p) => p); // trigger render effect
-  }, [tick]);
+
+  function stepZoom(dir: 1 | -1) {
+    const idx = ZOOM_STEPS.findIndex((z) => z >= zoom);
+    const cur = idx === -1 ? ZOOM_STEPS.length - 1 : idx;
+    const next = Math.min(ZOOM_STEPS.length - 1, Math.max(0, cur + dir));
+    setZoom(ZOOM_STEPS[next]);
+  }
+  function toggleFullscreen() {
+    const el = shellRef.current;
+    if (!el) return;
+    if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
+    else el.requestFullscreen?.().catch(() => {});
+  }
+  async function copyLink() {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("page", String(page));
+      await navigator.clipboard.writeText(url.toString());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      /* clipboard unavailable */
+    }
+  }
+
+  const tbBtn =
+    "grid size-8 place-items-center rounded-lg border border-mist-300 bg-white text-ink-600 transition-colors hover:border-navy-300 hover:text-navy-700 disabled:pointer-events-none disabled:opacity-40 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500";
 
   return (
-    <div>
-      <div className="mb-3 flex items-center justify-center gap-3">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setPage((p) => Math.max(1, p - 1))}
-          disabled={page <= 1}
-          aria-label={t("prevPage")}
-        >
-          <ChevronLeft className="flip-rtl" />
-        </Button>
-        <span className="text-sm text-ink-600 tnum" dir="ltr">
+    <div ref={shellRef} className={fullscreen ? "flex h-full flex-col overflow-auto bg-mist-50 p-4" : undefined}>
+      <div
+        role="toolbar"
+        aria-label={tk("label")}
+        className="mb-3 flex flex-wrap items-center justify-center gap-x-2 gap-y-2"
+        data-testid="reader-toolbar"
+      >
+        <button type="button" className={tbBtn} onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} aria-label={t("prevPage")}>
+          <ChevronLeft className="size-4 flip-rtl" />
+        </button>
+        <span className="min-w-16 text-center text-sm text-ink-600 tnum" dir="ltr" data-testid="reader-page">
           {page} / {total}
         </span>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setPage((p) => Math.min(total, p + 1))}
-          disabled={page >= total}
-          aria-label={t("nextPage")}
+        <button type="button" className={tbBtn} onClick={() => setPage((p) => Math.min(total, p + 1))} disabled={page >= total} aria-label={t("nextPage")}>
+          <ChevronRight className="size-4 flip-rtl" />
+        </button>
+        <span aria-hidden className="mx-1 h-5 w-px bg-mist-300" />
+        <button type="button" className={tbBtn} onClick={() => stepZoom(-1)} disabled={zoom <= ZOOM_STEPS[0]} aria-label={tk("zoomOut")}>
+          <Minus className="size-4" />
+        </button>
+        <span className="min-w-12 text-center text-sm text-ink-600 tnum" dir="ltr" data-testid="reader-zoom">{zoom}%</span>
+        <button type="button" className={tbBtn} onClick={() => stepZoom(1)} disabled={zoom >= ZOOM_STEPS[ZOOM_STEPS.length - 1]} aria-label={tk("zoomIn")}>
+          <Plus className="size-4" />
+        </button>
+        <button
+          type="button"
+          onClick={() => setZoom(100)}
+          className="h-8 cursor-pointer rounded-lg border border-mist-300 bg-white px-3 text-xs font-medium text-ink-600 transition-colors hover:border-navy-300 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500"
         >
-          <ChevronRight className="flip-rtl" />
-        </Button>
+          {tk("fitWidth")}
+        </button>
+        <span aria-hidden className="mx-1 h-5 w-px bg-mist-300" />
+        <button type="button" className={tbBtn} onClick={toggleFullscreen} aria-label={fullscreen ? tk("exitFullscreen") : tk("fullscreen")}>
+          {fullscreen ? <Minimize2 className="size-4" /> : <Maximize2 className="size-4" />}
+        </button>
+        <button type="button" className={tbBtn} onClick={copyLink} aria-label={tk("copyLink")} title={copied ? tk("copied") : tk("copyLink")}>
+          <Copy className="size-4" />
+        </button>
+        <span role="status" className="sr-only">{copied ? tk("copied") : ""}</span>
       </div>
-      <div ref={containerRef} className="card overflow-hidden">
+      <div ref={containerRef} className="card overflow-auto" style={fullscreen ? undefined : { maxHeight: "calc(100vh - 14rem)" }}>
         {loading ? <Skeleton className="aspect-[1/1.35] w-full" /> : null}
-        <canvas ref={canvasRef} className={loading ? "hidden" : "block w-full"} />
+        <canvas ref={canvasRef} className={loading ? "hidden" : "block"} />
       </div>
     </div>
   );
@@ -227,7 +293,7 @@ function HtmlViewer({ documentId, onEnd }: { documentId: string; onEnd: () => vo
           </div>
         ) : (
           <div
-            className="prose-sm leading-relaxed [&_h1]:text-xl [&_h2]:text-lg [&_h1]:mt-4 [&_h2]:mt-3 [&_p]:my-2 [&_table]:w-full [&_td]:border [&_td]:border-sand-200 [&_td]:px-2 [&_td]:py-1"
+            className="prose-sm leading-relaxed [&_h1]:text-xl [&_h2]:text-lg [&_h1]:mt-4 [&_h2]:mt-3 [&_p]:my-2 [&_table]:w-full [&_td]:border [&_td]:border-mist-200 [&_td]:px-2 [&_td]:py-1"
             dangerouslySetInnerHTML={{ __html: html }}
           />
         )}

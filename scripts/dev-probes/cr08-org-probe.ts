@@ -11,7 +11,7 @@ import path from "node:path";
 const BASE = "http://localhost:3000";
 const OUT = path.join(process.cwd(), "data", "screenshots", "cr08");
 const PART = process.argv[2] ?? "all";
-const PASSWORD = "Nexus!2026";
+const PASSWORD = "EnviroAI!2026";
 
 const problems: string[] = [];
 const notes: string[] = [];
@@ -86,7 +86,7 @@ const ACTIVE_CODE = "(document.activeElement && document.activeElement.getAttrib
 async function chartPart(browser: import("playwright").Browser) {
   for (const locale of PART === "request" ? ([] as const) : (["en", "ar"] as const)) {
     const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-    await login(ctx, "admin@npc.qa");
+    await login(ctx, "admin@enviroai.demo");
     const page = await ctx.newPage();
     const errors: string[] = [];
     watch(page, errors);
@@ -233,7 +233,7 @@ async function chartPart(browser: import("playwright").Browser) {
   /* the unit head files a change request */
   {
     const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-    await login(ctx, "head.stats@npc.qa");
+    await login(ctx, "head.stats@enviroai.demo");
     const page = await ctx.newPage();
     const errors: string[] = [];
     watch(page, errors);
@@ -262,7 +262,7 @@ async function chartPart(browser: import("playwright").Browser) {
   /* narrow: the list is the default */
   if (PART !== "request") {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
-    await login(ctx, "admin@npc.qa");
+    await login(ctx, "admin@enviroai.demo");
     const page = await ctx.newPage();
     console.log("== 390px");
     await page.goto(`${BASE}/en/organisation`, { waitUntil: "networkidle", timeout: 120000 });
@@ -280,7 +280,7 @@ async function chartPart(browser: import("playwright").Browser) {
 async function settingsPart(browser: import("playwright").Browser) {
   for (const locale of ["en", "ar"] as const) {
     const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-    await login(ctx, "admin@npc.qa");
+    await login(ctx, "admin@enviroai.demo");
     const page = await ctx.newPage();
     const errors: string[] = [];
     watch(page, errors);
@@ -484,7 +484,7 @@ async function settingsPart(browser: import("playwright").Browser) {
   /* a Knowledge Admin must not see the editor's mutations */
   {
     const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-    await login(ctx, "knowledge@npc.qa");
+    await login(ctx, "knowledge@enviroai.demo");
     const page = await ctx.newPage();
     const res = await page.request.post(`${BASE}/api/v1/organisation/editor`, {
       data: { action: "snapshots.take", note: "probe" },

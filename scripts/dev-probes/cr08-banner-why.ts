@@ -12,7 +12,7 @@ async function main() {
   const [row] = await db
     .select({ id: schema.users.id, email: schema.users.email })
     .from(schema.users)
-    .where(eq(schema.users.email, "mohammed.alsulaiti@npc.qa"))
+    .where(eq(schema.users.email, "mohammed.alqarni@enviroai.demo"))
     .limit(1);
   if (!row) {
     console.log("no such user");

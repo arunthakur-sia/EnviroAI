@@ -10,7 +10,7 @@ const BASE = process.env.PROBE_BASE ?? "http://localhost:3000";
 async function login(page: Page, email: string) {
   for (let i = 0; i < 12; i++) {
     try {
-      const res = await page.request.post(`${BASE}/api/v1/auth/login`, { data: { email, password: "Nexus!2026" }, timeout: 120000 });
+      const res = await page.request.post(`${BASE}/api/v1/auth/login`, { data: { email, password: "EnviroAI!2026" }, timeout: 120000 });
       if (res.ok()) return;
       console.log(`  login: ${res.status()}, retrying`);
     } catch (e) {
@@ -36,7 +36,7 @@ async function main() {
   page.on("pageerror", (e) => {
     if (/hydrat/i.test(String(e))) messages.push(String(e));
   });
-  await login(page, process.env.PROBE_EMAIL ?? "admin@npc.qa");
+  await login(page, process.env.PROBE_EMAIL ?? "admin@enviroai.demo");
 
   const j = await (await page.request.get(`${BASE}/api/v1/report-builder`, { timeout: 180000 })).json();
   const list = (j?.data?.reports ?? []) as { id: string; status: string; previewCount: number }[];

@@ -32,8 +32,8 @@ export const LEVEL_DEFS: LevelDef[] = [
   { order: 6, nameEn: "Level 6", nameAr: "المستوى 6", minPoints: 2200, descriptorEn: "Community lead", descriptorAr: "قائد مجتمع", unlocks: ["communities_lead"] },
   { order: 7, nameEn: "Level 7", nameAr: "المستوى 7", minPoints: 3500, descriptorEn: "Guards the institutional memory", descriptorAr: "يصون الذاكرة المؤسسية", unlocks: ["podcast_propose"] },
   { order: 8, nameEn: "Level 8", nameAr: "المستوى 8", minPoints: 5500, descriptorEn: "Senior expert", descriptorAr: "خبير أول", unlocks: ["expert_verify"] },
-  { order: 9, nameEn: "Level 9", nameAr: "المستوى 9", minPoints: 8500, descriptorEn: "Counsel the Council turns to", descriptorAr: "رأي يعود إليه المجلس", unlocks: ["report_request_any"] },
-  { order: 10, nameEn: "Level 10", nameAr: "المستوى 10", minPoints: 13000, descriptorEn: "Living legend of the Council", descriptorAr: "أسطورة المجلس", unlocks: ["hall_of_fame"] },
+  { order: 9, nameEn: "Level 9", nameAr: "المستوى 9", minPoints: 8500, descriptorEn: "Counsel the Office turns to", descriptorAr: "رأي يعود إليه المكتب", unlocks: ["report_request_any"] },
+  { order: 10, nameEn: "Level 10", nameAr: "المستوى 10", minPoints: 13000, descriptorEn: "Living legend of the Office", descriptorAr: "أسطورة المكتب", unlocks: ["hall_of_fame"] },
 ];
 
 /** CR08 7.2 and 8: rules the leaderboard and the Knowledge of the Week

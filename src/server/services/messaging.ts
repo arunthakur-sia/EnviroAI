@@ -5,7 +5,7 @@
 // read. Nothing in this file, in src/server/search (fts.ts, vector.ts,
 // hybrid.ts, records.ts) or in the embed_records job reads message_threads,
 // thread_participants or messages, so message bodies never reach the search
-// index or Ask NPC. The only way a thread's words leave the thread is
+// index or Ask EnviroAI. The only way a thread's words leave the thread is
 // convertToQuestion(), which a participant chooses explicitly.
 import { and, asc, desc, eq, gt, inArray, isNull, or, sql } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
@@ -560,7 +560,7 @@ export async function getThread(user: CurrentUser, id: string): Promise<ThreadDe
   ]);
   const now = nowIso();
   await db.update(schema.threadParticipants).set({ lastReadAt: now }).where(eq(schema.threadParticipants.id, me.id));
-  const unknown = (uid: string): PersonRef => ({ id: uid, nameEn: "Former colleague", nameAr: "زميل سابق", avatarColor: "maroon" });
+  const unknown = (uid: string): PersonRef => ({ id: uid, nameEn: "Former colleague", nameAr: "زميل سابق", avatarColor: "navy" });
   return {
     id: t.id,
     subject: t.subject,
@@ -602,7 +602,7 @@ export async function markDone(user: CurrentUser, id: string, done = true): Prom
   await audit(user.id, done ? "message_done" : "message_reopen", "message_thread", id);
 }
 
-/** Turns a thread into a routed Ask NPC question: the subject becomes the
+/** Turns a thread into a routed Ask EnviroAI question: the subject becomes the
     title, the opening message the body, and the question is routed to the
     other party's expert profile when one exists. The thread keeps the link. */
 export async function convertToQuestion(
@@ -658,8 +658,8 @@ export async function convertToQuestion(
     await notify(
       p.userId,
       "message",
-      `${user.nameEn} turned "${t.subject.slice(0, 50)}" into an Ask NPC question`,
-      `حوّل ${user.nameAr} "${t.subject.slice(0, 50)}" إلى سؤال في اسأل المجلس`,
+      `${user.nameEn} turned "${t.subject.slice(0, 50)}" into an Ask EnviroAI question`,
+      `حوّل ${user.nameAr} "${t.subject.slice(0, 50)}" إلى سؤال في اسأل EnviroAI`,
       `/ask/${questionId}`
     );
   }

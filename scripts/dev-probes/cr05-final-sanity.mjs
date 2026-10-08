@@ -1,14 +1,14 @@
 // CR05 final sanity on the fresh DB.
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const q = async (sql, args = []) => (await db.execute({ sql, args })).rows;
 const one = async (sql) => Number((await q(sql))[0].c);
 
 console.log("entities:", await one("select count(*) c from entities"));
 console.log(
-  "nds3 delivery nodes without a lead:",
+  "nes3 delivery nodes without a lead:",
   await one(
-    `select count(*) c from strategy_nodes n where n.edition_id=(select id from strategy_editions where code='nds3')
+    `select count(*) c from strategy_nodes n where n.edition_id=(select id from strategy_editions where code='nes3')
      and n.node_type in ('initiative','project')
      and not exists (select 1 from node_leads l where l.node_id=n.id and l.role='lead')`
   )
@@ -35,12 +35,12 @@ console.log("handover items:", await one("select count(*) c from handover_items"
 console.log("open hr risks:", await one("select count(*) c from hr_risks where resolved_at is null"));
 console.log("hr game rules:", await one("select count(*) c from game_rules where event_type like 'handover%' or event_type in ('backup_assigned','knowledge_capture_bonus')"));
 console.log("HR Admin role:", await one("select count(*) c from roles where name_en='HR Admin'"));
-console.log("hr@npc.qa:", await one("select count(*) c from users where email='hr@npc.qa'"));
+console.log("hr@enviroai.demo:", await one("select count(*) c from users where email='hr@enviroai.demo'"));
 console.log("roles with portal sets:", await one("select count(*) c from roles where portals_json is not null"));
 const domains = await q("select value_json from settings where key='allowed_domains'");
 console.log("allowed domains:", domains[0]?.value_json ?? "MISSING");
 const qatYears = await q(
   `select i.code, count(o.id) c from indices i left join index_observations o on o.index_id=i.id and o.country_code='QAT' group by i.code order by i.code`
 );
-console.log("qatar years per index:", qatYears.map((r) => `${r.code}=${r.c}`).join(" "));
+console.log("home years per index:", qatYears.map((r) => `${r.code}=${r.c}`).join(" "));
 db.close();

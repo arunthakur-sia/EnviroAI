@@ -7,6 +7,7 @@
 import { and, eq, inArray } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import { newId, nowIso } from "@/lib/ids";
+import { HOME_ISO3 } from "./home";
 import { callJson } from "@/server/ai/client";
 import { getAiSettings } from "@/server/settings";
 import {
@@ -23,7 +24,7 @@ import {
 
 /* CR08 4.1: the mode an index runs in. indices.forecast_mode wins when set
    (rank | score | target_gap); otherwise the CR05 rule decides: scores when
-   Qatar has at least five scored years (or all its years are scored), ranks
+   Saudi Arabia has at least five scored years (or all its years are scored), ranks
    in -rank units otherwise. target_gap needs indices.target_value and
    target_year; without them the index falls back to score mode. */
 export type ForecastMode = "rank" | "score" | "target_gap";
@@ -67,7 +68,7 @@ function monthsBetween(fromIso: string, to: Date): number {
   );
 }
 
-/** Reads a rank or score target out of a linked NDS3 target's wording, e.g.
+/** Reads a rank or score target out of a linked national target's wording, e.g.
     "top-10 business environment" -> rank 10 by the edition horizon. */
 export function parseTargetStatement(
   text: string
@@ -97,17 +98,17 @@ export async function assembleInputs(
     .from(schema.indexObservations)
     .where(eq(schema.indexObservations.indexId, indexId));
 
-  const qat = obs
-    .filter((o) => o.countryCode === "QAT" && o.year >= 2010)
+  const home = obs
+    .filter((o) => o.countryCode === HOME_ISO3 && o.year >= 2010)
     .sort((a, b) => a.year - b.year);
-  if (!qat.length) return null;
-  const scorePoints = qat.filter((o) => o.score != null);
+  if (!home.length) return null;
+  const scorePoints = home.filter((o) => o.score != null);
   const mode = resolveForecastMode(
     index.forecastMode,
     {
       scored: scorePoints.length,
-      ranked: qat.filter((o) => o.rank != null).length,
-      total: qat.length,
+      ranked: home.filter((o) => o.rank != null).length,
+      total: home.length,
     },
     { value: index.targetValue, year: index.targetYear }
   );
@@ -117,7 +118,7 @@ export async function assembleInputs(
       ? { value: index.targetValue, year: index.targetYear }
       : null;
   const series = (usingRankFallback
-    ? qat.filter((o) => o.rank != null).map((o) => ({ year: o.year, value: -(o.rank as number) }))
+    ? home.filter((o) => o.rank != null).map((o) => ({ year: o.year, value: -(o.rank as number) }))
     : scorePoints.map((o) => ({ year: o.year, value: o.score as number }))
   ).filter((p) => Number.isFinite(p.value));
   if (!series.length) return null;
@@ -205,7 +206,7 @@ export async function assembleInputs(
   /* peers: every other country's series drifted by its own trend */
   const peerSeries = new Map<string, { year: number; value: number }[]>();
   for (const o of obs) {
-    if (o.countryCode === "QAT" || o.year < 2010) continue;
+    if (o.countryCode === HOME_ISO3 || o.year < 2010) continue;
     const v = usingRankFallback
       ? o.rank != null
         ? -(o.rank as number)
@@ -248,8 +249,8 @@ export async function assembleInputs(
     peerValues.h5.push(at(5));
   }
 
-  const latestQat = qat[qat.length - 1];
-  const latestRanked = [...qat].reverse().find((o) => o.rank != null) ?? null;
+  const latestHome = home[home.length - 1];
+  const latestRanked = [...home].reverse().find((o) => o.rank != null) ?? null;
   const inputs: ForecastInputs = {
     higherIsBetter: index.higherIsBetter === 1,
     scoreMin: index.scoreMin ?? 0,
@@ -261,7 +262,7 @@ export async function assembleInputs(
     target,
     peerValues,
     latestRank: latestRanked?.rank ?? null,
-    totalCountries: latestQat.totalCountries ?? latestRanked?.totalCountries ?? null,
+    totalCountries: latestHome.totalCountries ?? latestRanked?.totalCountries ?? null,
     assumptions: { ...DEFAULT_ASSUMPTIONS, ...(await storedAssumptions(indexId)), ...assumptions },
     runs,
     // deterministic per index and data day
@@ -341,7 +342,7 @@ export function mockExplanation(
   ].join(" ");
   const assessEn = `Assessment: the trajectory reads as ${trendWord}${
     h3.rankCentral ? `, with a central rank around ${h3.rankCentral} in three years` : ""
-  }. This is a SiaNexus forecast (method v1), not a published figure.`;
+  }. This is an EnviroAI forecast (method v1), not a published figure.`;
   const evidenceAr = [
     `الشواهد: يضع خط الأساس (${result.method === "holt" ? "تمهيد هولت" : "اتجاه مخمد"}) القيمة المركزية بعد ثلاث سنوات عند ${fmt(h3.baseline)} بانحراف بواقٍ قدره ${fmt(result.residualSd)} ${unitAr}.`,
     top.length
@@ -385,7 +386,7 @@ export function gapExplanation(
     `Evidence: the national target is ${fmt(gap.targetValue)} by ${gap.targetYear}; the latest value leaves a gap of ${fmt(gap.gapNow)}.`,
     `The fitted ${result.method === "holt" ? "Holt" : "damped-trend"} baseline moves ${fmt(gap.trendPerYear)} per year against the ${fmt(gap.requiredPacePerYear)} per year the target needs.`,
     `The simulation puts the ${gap.targetYear} value between ${fmt(gap.low)} and ${fmt(gap.high)} (central ${fmt(gap.central)}), a remaining gap of ${fmt(gap.gapCentral)}; ${pct} percent of runs meet the target on time.`,
-    `Assessment: ${closesEn} The target pull is switched off in this mode so the gap reads the trajectory, not the aspiration. This is a SiaNexus forecast (method v1), not a published figure.`,
+    `Assessment: ${closesEn} The target pull is switched off in this mode so the gap reads the trajectory, not the aspiration. This is an EnviroAI forecast (method v1), not a published figure.`,
   ].join(" ");
   const ar = [
     `الشواهد: المستهدف الوطني ${fmt(gap.targetValue)} بحلول ${gap.targetYear}، وتترك آخر قيمة فجوة قدرها ${fmt(gap.gapNow)}.`,

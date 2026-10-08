@@ -1,9 +1,9 @@
 // CR08 4.1 (agent B) verification probe: per group the member count, per new
-// index (everything beyond the CR05 twelve) the observation count, Qatar's
+// index (everything beyond the CR05 indices) the observation count, the home country's
 // years, the forecast mode and the current forecast rows. Read-only.
 // Usage: node scripts/dev-probes/cr08-indices-b-check.mjs
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const q = async (sql, args = []) => (await db.execute({ sql, args })).rows;
 
 const CR05 = ["hdi", "gii", "cpi", "egdi", "gpi", "imd", "lpi", "nri", "ttdi", "epi", "gtci", "wjp"];
@@ -20,7 +20,7 @@ const rows = await q(
   `select i.id, i.code, i.scale, i.forecast_mode, i.forecast_enabled, i.target_value, i.target_year, i.latest_year,
      (select count(*) from index_observations o where o.index_id = i.id) obs,
      (select count(distinct o.country_code) from index_observations o where o.index_id = i.id) countries,
-     (select group_concat(o.year, ',') from (select year from index_observations o where o.index_id = i.id and o.country_code = 'QAT' order by year) o) qyears,
+     (select group_concat(o.year, ',') from (select year from index_observations o where o.index_id = i.id and o.country_code = 'SAU' order by year) o) qyears,
      (select count(*) from index_forecasts f where f.index_id = i.id and f.status = 'current') fc,
      (select f.inputs_json from index_forecasts f where f.index_id = i.id and f.status = 'current' and f.horizon_years = 3) inputs
    from indices i order by i.code`
@@ -37,14 +37,14 @@ for (const r of rows) {
   }
   const qy = r.qyears ? String(r.qyears).split(",") : [];
   console.log(
-    `${String(r.code).padEnd(30)} obs=${String(r.obs).padStart(4)} countries=${String(r.countries).padStart(3)} qatar=${
+    `${String(r.code).padEnd(30)} obs=${String(r.obs).padStart(4)} countries=${String(r.countries).padStart(3)} home=${
       qy.length ? `${qy.length}y ${qy[0]}-${qy[qy.length - 1]}` : "none"
     } mode=${r.forecast_mode ?? "auto"}${r.forecast_enabled === 0 ? " (off)" : ""} target=${
       r.target_value == null ? "-" : `${r.target_value}@${r.target_year}`
     } forecasts=${r.fc}${r.fc ? ` (${mode})` : ""}`
   );
 }
-console.log(`\n${total} indices beyond the CR05 twelve`);
+console.log(`\n${total} indices beyond the CR05 indices`);
 const gapRows = await q(
   `select i.code, f.horizon_years, f.central_score, f.low, f.high, f.simulation_summary_json
    from index_forecasts f join indices i on i.id = f.index_id

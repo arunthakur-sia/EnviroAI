@@ -97,7 +97,7 @@ const def: SectionDefinition<ProgressData> = {
           type: "bar",
           title: bi("Initiatives and projects by status", "المبادرات والمشاريع بحسب الحالة"),
           series: [{ name: bi("Items", "العناصر"), role: "primary", points: present.map((s) => ({ x: statusText(s).en, y: data.counts[s] })) }],
-          source: bi("SiaNexus Living Strategy", "الاستراتيجية الحية في سيا نكسس"),
+          source: bi("EnviroAI Living Strategy", "الاستراتيجية الحية في EnviroAI"),
         },
       });
       blocks.push({

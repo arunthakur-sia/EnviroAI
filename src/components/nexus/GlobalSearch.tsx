@@ -45,7 +45,7 @@ export function GlobalSearch() {
 
   React.useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      // CR08 2.3: Ctrl/Cmd+K now opens Ask NPC; "/" focuses the search when
+      // CR08 2.3: Ctrl/Cmd+K now opens Ask EnviroAI; "/" focuses the search when
       // the reader is not typing in a field
       if (e.key === "/" && !e.ctrlKey && !e.metaKey && !e.altKey) {
         const target = e.target as HTMLElement | null;
@@ -111,30 +111,30 @@ export function GlobalSearch() {
         onFocus={() => q.length >= 2 && setOpen(true)}
         onKeyDown={(e) => e.key === "Enter" && submit()}
         placeholder={t("searchPlaceholder")}
-        // CR05 1.3: translucent field on the maroon bar; on focus it turns
-        // white with ink text and a 2px gold ring
-        className="peer h-10.5 w-full rounded-xl border border-white/20 bg-bar-field ps-10 pe-14 text-sm text-bar-ink transition-all placeholder:text-white/72 focus:border-transparent focus:bg-bar-field-focus focus:text-ink-900 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:placeholder:text-ink-400"
+        // CR05 1.3: translucent field on the navy bar; on focus it turns
+        // white with ink text and a 2px aqua ring
+        className="peer h-10.5 w-full rounded-xl border border-white/20 bg-bar-field ps-10 pe-14 text-sm text-bar-ink transition-all placeholder:text-white/72 focus:border-transparent focus:bg-bar-field-focus focus:text-ink-900 focus:outline-none focus:ring-2 focus:ring-aqua-500 focus:placeholder:text-ink-400"
         role="combobox"
         aria-expanded={open}
         aria-controls="global-search-suggestions"
         aria-label={t("searchPlaceholder")}
       />
       <Search className="pointer-events-none absolute start-3.5 top-1/2 size-4 -translate-y-1/2 text-white/70 peer-focus:text-ink-400" />
-      <kbd className="pointer-events-none absolute end-3 top-1/2 hidden -translate-y-1/2 rounded border border-white/25 bg-white/10 px-1.5 py-0.5 text-[10px] text-white/70 peer-focus:border-sand-300 peer-focus:bg-sand-50 peer-focus:text-ink-400 md:block">
+      <kbd className="pointer-events-none absolute end-3 top-1/2 hidden -translate-y-1/2 rounded border border-white/25 bg-white/10 px-1.5 py-0.5 text-[10px] text-white/70 peer-focus:border-mist-300 peer-focus:bg-mist-50 peer-focus:text-ink-400 md:block">
         /
       </kbd>
 
       {open && (hasResults || loading) ? (
         <div
           id="global-search-suggestions"
-          className="absolute top-12 z-50 w-full overflow-hidden rounded-xl border border-sand-300 bg-white shadow-[var(--shadow-pop)]"
+          className="absolute top-12 z-50 w-full overflow-hidden rounded-xl border border-mist-300 bg-white shadow-[var(--shadow-pop)]"
         >
           {loading && !hasResults ? (
             <div className="px-4 py-3 text-sm text-ink-400">{t("searching")}</div>
           ) : null}
           {Object.entries(groups).map(([type, items]) =>
             items.length ? (
-              <div key={type} className="border-b border-sand-100 last:border-0">
+              <div key={type} className="border-b border-mist-100 last:border-0">
                 <p className="px-4 pb-1 pt-2.5 text-[10px] font-semibold uppercase tracking-wider text-ink-400">
                   {t(`types.${type}`)}
                 </p>
@@ -143,7 +143,7 @@ export function GlobalSearch() {
                   return (
                     <button
                       key={s.id}
-                      className="flex w-full items-center gap-3 px-4 py-2 text-start text-sm hover:bg-maroon-100/50"
+                      className="flex w-full items-center gap-3 px-4 py-2 text-start text-sm hover:bg-navy-100/50"
                       onClick={() => {
                         setOpen(false);
                         setQ("");
@@ -162,7 +162,7 @@ export function GlobalSearch() {
             ) : null
           )}
           <button
-            className="flex w-full items-center gap-2 bg-sand-50 px-4 py-2.5 text-sm font-medium text-maroon-700 hover:bg-maroon-100/50"
+            className="flex w-full items-center gap-2 bg-mist-50 px-4 py-2.5 text-sm font-medium text-navy-700 hover:bg-navy-100/50"
             onClick={submit}
           >
             <Search className="size-4" />

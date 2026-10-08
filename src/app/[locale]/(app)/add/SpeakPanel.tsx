@@ -94,7 +94,7 @@ export function SpeakPanel({
       const bars = 48;
       const step = Math.floor(data.length / bars);
       const barWidth = width / bars;
-      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--color-maroon-700") || "#8a1538";
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--color-navy-700") || "#173044";
       for (let i = 0; i < bars; i++) {
         const v = data[i * step] / 255;
         const h = Math.max(3, v * height * 0.9);
@@ -118,7 +118,7 @@ export function SpeakPanel({
     // Mixed runs recognition in the primary language; the structuring step
     // fixes mixed segments (CR02 5.2).
     const primary = language === "mixed" ? (locale === "ar" ? "ar" : "en") : language;
-    rec.lang = primary === "ar" ? "ar-QA" : "en-US";
+    rec.lang = primary === "ar" ? "ar-SA" : "en-US";
     rec.continuous = true;
     rec.interimResults = true;
     rec.onresult = (e) => {
@@ -266,14 +266,14 @@ export function SpeakPanel({
         {recState === "idle" || recState === "stopped" ? (
           <button
             onClick={recState === "idle" ? start : reRecord}
-            className="flex h-16 w-16 items-center justify-center rounded-full bg-maroon-700 text-white shadow-md transition-colors hover:bg-maroon-900 cursor-pointer"
+            className="flex h-16 w-16 items-center justify-center rounded-full bg-navy-700 text-white shadow-md transition-colors hover:bg-navy-900 cursor-pointer"
             aria-label={recState === "idle" ? t("record") : t("reRecord")}
             data-testid="record-button"
           >
             {recState === "idle" ? <Mic className="size-7" /> : <RotateCcw className="size-6" />}
           </button>
         ) : (
-          <span className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-maroon-700 text-maroon-700">
+          <span className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-navy-700 text-navy-700">
             <Circle className={cn("size-4 fill-current", recState === "recording" && "animate-pulse")} />
           </span>
         )}
@@ -282,7 +282,7 @@ export function SpeakPanel({
             ref={canvasRef}
             width={520}
             height={56}
-            className="h-14 w-full rounded-lg bg-sand-50"
+            className="h-14 w-full rounded-lg bg-mist-50"
             aria-hidden
           />
         </div>
@@ -346,7 +346,7 @@ export function SpeakPanel({
       <div className="mt-3">
         <Label htmlFor="speak-transcript">
           {t("transcriptLabel")}
-          {transcribing ? <span className="ms-2 text-maroon-700">{t("transcribing")}</span> : null}
+          {transcribing ? <span className="ms-2 text-navy-700">{t("transcribing")}</span> : null}
         </Label>
         <Textarea
           id="speak-transcript"
@@ -372,7 +372,7 @@ export function SpeakPanel({
         />
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="flex items-center gap-1.5 text-xs font-medium text-maroon-700 hover:underline cursor-pointer"
+          className="flex items-center gap-1.5 text-xs font-medium text-navy-700 hover:underline cursor-pointer"
         >
           <UploadCloud className="size-3.5" /> {t("uploadAudio")}
         </button>
@@ -393,7 +393,7 @@ function SpeakButton({
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-1.5 rounded-lg border border-sand-300 bg-white px-3 py-1.5 text-sm text-ink-900 transition-colors hover:border-maroon-300 hover:text-maroon-700 cursor-pointer"
+      className="flex items-center gap-1.5 rounded-lg border border-mist-300 bg-white px-3 py-1.5 text-sm text-ink-900 transition-colors hover:border-navy-300 hover:text-navy-700 cursor-pointer"
     >
       {icon}
       {children}

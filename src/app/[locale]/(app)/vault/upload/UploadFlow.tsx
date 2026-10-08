@@ -135,12 +135,12 @@ export function UploadFlow({
       <div
         {...getRootProps()}
         className={cn(
-          "flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-sand-300 bg-white px-6 py-12 text-center transition-colors",
-          isDragActive && "border-maroon-500 bg-maroon-50"
+          "flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-mist-300 bg-white px-6 py-12 text-center transition-colors",
+          isDragActive && "border-navy-500 bg-navy-50"
         )}
       >
         <input {...getInputProps()} aria-label={t("dropLabel")} />
-        <UploadCloud className="size-10 text-maroon-700" />
+        <UploadCloud className="size-10 text-navy-700" />
         <p className="font-medium text-ink-900">{t("dropTitle")}</p>
         <p className="text-sm text-ink-600">{t("dropHint")}</p>
       </div>
@@ -233,8 +233,8 @@ function FileCard({
 
   return (
     <div className="card overflow-hidden">
-      <div className="flex items-center gap-3 border-b border-sand-100 px-5 py-3.5">
-        <FileText className="size-5 text-maroon-700" />
+      <div className="flex items-center gap-3 border-b border-mist-100 px-5 py-3.5">
+        <FileText className="size-5 text-navy-700" />
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium text-ink-900">{job.file.name}</p>
           <p className="text-xs text-ink-400 tnum">
@@ -244,7 +244,7 @@ function FileCard({
         </div>
         {job.phase === "parsing" ? (
           <span className="flex items-center gap-2 text-xs text-ink-600">
-            <Sparkles className="size-4 animate-pulse text-gold-500" />
+            <Sparkles className="size-4 animate-pulse text-aqua-500" />
             {t("phases." + PHASE_STEPS[Math.min(PHASE_STEPS.length - 1, Math.floor(job.progressHint * PHASE_STEPS.length))])}
           </span>
         ) : job.phase === "done" ? (
@@ -254,9 +254,9 @@ function FileCard({
 
       {job.phase === "parsing" ? (
         <div className="px-5 py-4">
-          <div className="h-1.5 overflow-hidden rounded-full bg-sand-100">
+          <div className="h-1.5 overflow-hidden rounded-full bg-mist-100">
             <div
-              className="h-full rounded-full bg-maroon-700 transition-all duration-500"
+              className="h-full rounded-full bg-navy-700 transition-all duration-500"
               style={{ width: `${job.progressHint * 100}%` }}
             />
           </div>
@@ -290,7 +290,7 @@ function FileCard({
                   type="checkbox"
                   checked={asVersion}
                   onChange={(e) => setAsVersion(e.target.checked)}
-                  className="accent-maroon-700"
+                  className="accent-navy-700"
                 />
                 {t("addAsVersion")}
               </label>
@@ -346,10 +346,10 @@ function FileCard({
                 <div>
                   {/* a read-only list of extracted facts, not a form control */}
                   <p className="mb-1.5 block text-xs font-medium text-ink-600">{t("keyFacts")}</p>
-                  <ul className="space-y-1.5 rounded-xl bg-sand-50 px-4 py-3">
+                  <ul className="space-y-1.5 rounded-xl bg-mist-50 px-4 py-3">
                     {form.key_facts.map((f, i) => (
                       <li key={i} className="flex gap-2 text-sm text-ink-900">
-                        <Sparkles className="mt-0.5 size-3.5 shrink-0 text-gold-500" />
+                        <Sparkles className="mt-0.5 size-3.5 shrink-0 text-aqua-500" />
                         <span>
                           {bi(locale, f.text_en, f.text_ar)}
                           {f.page ? (
@@ -450,7 +450,7 @@ function FileCard({
                 <p className="text-xs text-ink-600">
                   {t("relatedHint")}{" "}
                   {job.related.map((r, i) => (
-                    <span key={r.id} className="text-maroon-700">
+                    <span key={r.id} className="text-navy-700">
                       {bi(locale, r.titleEn, r.titleAr)}
                       {i < job.related!.length - 1 ? "، " : ""}
                     </span>
@@ -460,7 +460,7 @@ function FileCard({
             </>
           ) : null}
 
-          <div className="flex justify-end gap-2 border-t border-sand-100 pt-4">
+          <div className="flex justify-end gap-2 border-t border-mist-100 pt-4">
             <Button loading={job.phase === "saving"} onClick={confirm} size="lg">
               {asVersion ? t("addVersionCta") : t("uploadCta")}
             </Button>
@@ -498,7 +498,7 @@ function TagPicker({
         {collapsible ? (
           <button
             onClick={() => setOpen(!open)}
-            className="flex items-center text-xs text-maroon-700 cursor-pointer"
+            className="flex items-center text-xs text-navy-700 cursor-pointer"
             type="button"
           >
             <ChevronDown className={cn("size-3.5 transition-transform", open && "rotate-180")} />
@@ -516,8 +516,8 @@ function TagPicker({
               className={cn(
                 "rounded-lg border px-2.5 py-1 text-xs transition-colors cursor-pointer",
                 active
-                  ? "border-maroon-700 bg-maroon-100 font-medium text-maroon-900"
-                  : "border-sand-300 bg-white text-ink-600 hover:border-maroon-300"
+                  ? "border-navy-700 bg-navy-100 font-medium text-navy-900"
+                  : "border-mist-300 bg-white text-ink-600 hover:border-navy-300"
               )}
             >
               {bi(locale, term.nameEn, term.nameAr)}

@@ -1,185 +1,2077 @@
 {
-  "word_of_day": [
-    {"kind":"quote","text_en":"Data is not a byproduct of government; it is the foundation on which sound national decisions are built.","text_ar":"البيانات ليست نتاجاً ثانوياً للحكومة، بل هي الأساس الذي تُبنى عليه القرارات الوطنية السليمة.","attribution_en":"HE the Secretary General of the National Planning Council","attribution_ar":"معالي الأمين العام للمجلس الوطني للتخطيط","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"Qatar National Vision 2030 remains our compass, and the third National Development Strategy is how we translate that vision into measurable progress.","text_ar":"تظل رؤية قطر الوطنية 2030 بوصلتنا، والاستراتيجية الوطنية الثالثة للتنمية هي وسيلتنا لترجمة هذه الرؤية إلى تقدم قابل للقياس.","attribution_en":"HE the Prime Minister","attribution_ar":"معالي رئيس مجلس الوزراء","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"Statistics without context are just numbers; our task is to turn numbers into understanding for policymakers and citizens alike.","text_ar":"الإحصاءات بلا سياق مجرد أرقام؛ ومهمتنا هي تحويل الأرقام إلى فهم يخدم صناع القرار والمواطنين على حد سواء.","attribution_en":"HE the Secretary General of the National Planning Council","attribution_ar":"معالي الأمين العام للمجلس الوطني للتخطيط","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"A nation that measures itself honestly is a nation that can improve itself continuously.","text_ar":"الأمة التي تقيس نفسها بصدق هي أمة قادرة على تطوير نفسها باستمرار.","attribution_en":"HE the Secretary General of the National Planning Council","attribution_ar":"معالي الأمين العام للمجلس الوطني للتخطيط","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"The success of NDS3 will be judged not by the plans we wrote, but by the outcomes we delivered for the people of Qatar.","text_ar":"لن يُحكم على نجاح الاستراتيجية الوطنية الثالثة بما كتبناه من خطط، بل بما حققناه من نتائج لصالح أهل قطر.","attribution_en":"HE the Prime Minister","attribution_ar":"معالي رئيس مجلس الوزراء","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"Every ministry that shares its data responsibly makes the whole of government smarter.","text_ar":"كل وزارة تشارك بياناتها بمسؤولية تجعل الحكومة بأكملها أكثر ذكاءً.","attribution_en":"HE the Secretary General of the National Planning Council","attribution_ar":"معالي الأمين العام للمجلس الوطني للتخطيط","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"Planning is a continuous act of listening to evidence and adjusting our course accordingly.","text_ar":"التخطيط عمل مستمر من الإصغاء إلى الأدلة وتعديل مسارنا وفقاً لها.","attribution_en":"HE the Secretary General of the National Planning Council","attribution_ar":"معالي الأمين العام للمجلس الوطني للتخطيط","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"We owe our citizens transparency in how national indicators are measured and reported.","text_ar":"الشفافية في كيفية قياس المؤشرات الوطنية والإبلاغ عنها حق لمواطنينا علينا.","attribution_en":"HE the Prime Minister","attribution_ar":"معالي رئيس مجلس الوزراء","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"The strength of our statistical system is the trust that institutions and citizens place in it.","text_ar":"قوة نظامنا الإحصائي تكمن في الثقة التي توليها له المؤسسات والمواطنون.","attribution_en":"HE the Secretary General of the National Planning Council","attribution_ar":"معالي الأمين العام للمجلس الوطني للتخطيط","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"Qatar's development story is written in data as much as in policy.","text_ar":"قصة تنمية قطر مكتوبة بالبيانات كما هي مكتوبة بالسياسات.","attribution_en":"HE the Prime Minister","attribution_ar":"معالي رئيس مجلس الوزراء","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"Foresight is not about predicting the future with certainty; it is about preparing the nation for several possible futures.","text_ar":"استشراف المستقبل لا يعني التنبؤ به بيقين، بل إعداد الوطن لعدة مستقبلات محتملة.","attribution_en":"HE the Secretary General of the National Planning Council","attribution_ar":"معالي الأمين العام للمجلس الوطني للتخطيط","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"The National Data Standards are the quiet infrastructure that makes every dashboard and every decision more reliable.","text_ar":"معايير البيانات الوطنية هي البنية الهادئة التي تجعل كل لوحة بيانات وكل قرار أكثر موثوقية.","attribution_en":"HE the Secretary General of the National Planning Council","attribution_ar":"معالي الأمين العام للمجلس الوطني للتخطيط","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"We invest in census and survey infrastructure because good decisions require good numbers.","text_ar":"نستثمر في البنية التحتية للتعداد والمسوحات لأن القرارات الجيدة تتطلب أرقاماً جيدة.","attribution_en":"HE the Prime Minister","attribution_ar":"معالي رئيس مجلس الوزراء","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"Sustainable growth and fiscal discipline are two sides of the same national commitment.","text_ar":"النمو المستدام والانضباط المالي وجهان لالتزام وطني واحد.","attribution_en":"HE the Secretary General of the National Planning Council","attribution_ar":"معالي الأمين العام للمجلس الوطني للتخطيط","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"A knowledge-based economy begins with a knowledge-based government.","text_ar":"الاقتصاد القائم على المعرفة يبدأ بحكومة قائمة على المعرفة.","attribution_en":"HE the Prime Minister","attribution_ar":"معالي رئيس مجلس الوزراء","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"Every indicator we publish is a promise of accountability to the people of Qatar.","text_ar":"كل مؤشر ننشره هو التزام بالمساءلة تجاه أهل قطر.","attribution_en":"HE the Secretary General of the National Planning Council","attribution_ar":"معالي الأمين العام للمجلس الوطني للتخطيط","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"Our ambition is that no policy in this country is made without first consulting the evidence.","text_ar":"طموحنا ألا تُتخذ سياسة في هذا البلد دون الرجوع أولاً إلى الأدلة.","attribution_en":"HE the Prime Minister","attribution_ar":"معالي رئيس مجلس الوزراء","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"The National Planning Council exists to connect strategy, statistics, and delivery in one continuous cycle.","text_ar":"يسعى المجلس الوطني للتخطيط إلى ربط الاستراتيجية والإحصاء والتنفيذ في دورة واحدة مستمرة.","attribution_en":"HE the Secretary General of the National Planning Council","attribution_ar":"معالي الأمين العام للمجلس الوطني للتخطيط","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"Qatar's global standing in international indices reflects the daily work of thousands of dedicated public servants.","text_ar":"يعكس مركز قطر في المؤشرات الدولية العمل اليومي لآلاف الموظفين العموميين المتفانين.","attribution_en":"HE the Prime Minister","attribution_ar":"معالي رئيس مجلس الوزراء","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"quote","text_en":"We ask every sector team to treat monitoring and evaluation not as a burden, but as a compass.","text_ar":"نطلب من كل فريق قطاعي أن يتعامل مع المتابعة والتقييم لا بوصفه عبئاً، بل بوصفه بوصلة.","attribution_en":"HE the Secretary General of the National Planning Council","attribution_ar":"معالي الأمين العام للمجلس الوطني للتخطيط","source_ref":"public remarks, NPC forums 2024-2026"},
-    {"kind":"fact","text_en":"NDS3 is built around seven national outcomes spanning economic, social, and environmental development.","text_ar":"تقوم الاستراتيجية الوطنية الثالثة للتنمية على سبعة مخرجات وطنية تغطي التنمية الاقتصادية والاجتماعية والبيئية.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"More than 20 sector teams and over 600 government officials contributed to shaping NDS3.","text_ar":"أسهم أكثر من 20 فريقاً قطاعياً وأكثر من 600 مسؤول حكومي في صياغة الاستراتيجية الوطنية الثالثة.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"NDS3 comprises more than 110 projects with combined investment exceeding QAR 3 billion.","text_ar":"تضم الاستراتيجية الوطنية الثالثة أكثر من 110 مشاريع باستثمارات إجمالية تتجاوز 3 مليارات ريال قطري.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"Census 2025 involved coordination across more than 30 government entities.","text_ar":"شارك في تعداد 2025 أكثر من 30 جهة حكومية بالتنسيق فيما بينها.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"Census 2025 generated more than 40 million data points about Qatar's population and establishments.","text_ar":"أنتج تعداد 2025 أكثر من 40 مليون نقطة بيانات حول سكان قطر ومنشآتها.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"The National Data Standards framework spans 12 domains.","text_ar":"يغطي إطار معايير البيانات الوطنية 12 مجالاً.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"The National Data Standards framework defines 61 controls across those domains.","text_ar":"يحدد إطار معايير البيانات الوطنية 61 ضابطاً عبر هذه المجالات.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"The National Data Standards framework sets out 162 detailed specifications for government data.","text_ar":"يتضمن إطار معايير البيانات الوطنية 162 مواصفة تفصيلية للبيانات الحكومية.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"The Qatar Data Trust Index measures data quality and governance across 7 dimensions.","text_ar":"يقيس مؤشر قطر للثقة بالبيانات جودة البيانات وحوكمتها عبر 7 أبعاد.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"The Qatar Data Trust Index is built from 50 sub-indicators.","text_ar":"يتكون مؤشر قطر للثقة بالبيانات من 50 مؤشراً فرعياً.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"Qatar's Open Data portal hosts more than 1,100 published datasets.","text_ar":"تستضيف بوابة البيانات المفتوحة القطرية أكثر من 1,100 مجموعة بيانات منشورة.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"Q Insights tracks 119 indicators across Qatar's national outcomes.","text_ar":"تتابع منصة Q Insights 119 مؤشراً عبر مخرجات قطر الوطنية.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"NDS3 targets real GDP growth of around 4 percent annually.","text_ar":"تستهدف الاستراتيجية الوطنية الثالثة نمواً حقيقياً للناتج المحلي الإجمالي بنحو 4 بالمئة سنوياً.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"NDS3 sets a target of around 4 gigawatts of installed solar capacity.","text_ar":"تحدد الاستراتيجية الوطنية الثالثة هدفاً بنحو 4 غيغاواط من القدرة الشمسية المركبة.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"NDS3's seven national outcomes include economic diversification, fiscal sustainability, and a cohesive society.","text_ar":"تشمل المخرجات الوطنية السبعة للاستراتيجية الوطنية الثالثة التنويع الاقتصادي والاستدامة المالية ومجتمعاً متماسكاً.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"Each of NDS3's more than 110 projects is tracked against milestones and owned by a named sector team.","text_ar":"يخضع كل مشروع من مشاريع الاستراتيجية الوطنية الثالثة التي تتجاوز 110 مشاريع لمتابعة مؤشرات إنجاز ولإشراف فريق قطاعي محدد.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"NPC's sector teams meet regularly to review monitoring and evaluation data against NDS3 targets.","text_ar":"تجتمع الفرق القطاعية في المجلس الوطني للتخطيط بانتظام لمراجعة بيانات المتابعة والتقييم مقابل أهداف الاستراتيجية الوطنية الثالثة.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"Census 2025 is Qatar's latest population and housing census, run under the coordination of the National Planning Council.","text_ar":"يُعد تعداد 2025 أحدث تعداد للسكان والمساكن في قطر، وينفذ بتنسيق من المجلس الوطني للتخطيط.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"The Qatar Data Trust Index's 50 sub-indicators roll up into 7 broader dimensions of trust in public data.","text_ar":"تتجمع المؤشرات الفرعية الخمسون لمؤشر قطر للثقة بالبيانات في 7 أبعاد أوسع للثقة بالبيانات العامة.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"fact","text_en":"The National Data Standards' 162 specifications are designed to make data shared across ministries comparable and reusable.","text_ar":"صُممت المواصفات الـ162 لمعايير البيانات الوطنية لجعل البيانات المتبادلة بين الوزارات قابلة للمقارنة وإعادة الاستخدام.","attribution_en":null,"attribution_ar":null,"source_ref":"NPC / NDS3 official publications"},
-    {"kind":"tip","text_en":"Drag a PDF anywhere onto SiaNexus to upload it and start extracting insights instantly.","text_ar":"اسحب أي ملف PDF إلى أي مكان في سيا نكسس لرفعه والبدء فوراً في استخراج الرؤى منه.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Press Ask to get answers with citations back to the original source documents.","text_ar":"اضغط على زر اسأل للحصول على إجابات مع استشهادات تعيدك إلى المستندات المصدرية الأصلية.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Follow topics that matter to your work to shape your For You feed.","text_ar":"تابع المواضيع التي تهم عملك لتخصيص محتوى صفحة لك.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Verify a machine translation into Arabic or English to earn Guardian points.","text_ar":"تحقق من ترجمة آلية إلى العربية أو الإنجليزية لتكسب نقاط الحارس.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Use the Vault search to filter documents by outcome, topic, or sector team.","text_ar":"استخدم البحث في المخزن لتصفية المستندات حسب المخرج أو الموضوع أو الفريق القطاعي.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Bookmark a document to find it again quickly from your personal library.","text_ar":"احفظ مستنداً في المفضلة لتجده بسرعة لاحقاً في مكتبتك الشخصية.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Open the Statistics module to explore indicators alongside their full metadata.","text_ar":"افتح وحدة الإحصاء لاستكشاف المؤشرات مع بياناتها الوصفية الكاملة.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Submit a bounty answer to help close a knowledge gap and earn recognition.","text_ar":"قدّم إجابة على مكافأة للمساعدة في سد فجوة معرفية واكسب التقدير.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Check your Impact Receipts to see how your contributions were cited elsewhere.","text_ar":"راجع إيصالات الأثر لمعرفة كيف تم الاستشهاد بمساهماتك في مواضع أخرى.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Use collections to browse curated sets of documents on a single theme.","text_ar":"استخدم المجموعات لتصفح مجموعات مختارة من المستندات حول موضوع واحد.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Ask a follow-up question in the same thread to go deeper on a topic.","text_ar":"اطرح سؤالاً متابعاً في نفس المحادثة للتعمق أكثر في موضوع ما.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Rate an answer's usefulness to help SiaNexus improve future responses.","text_ar":"قيّم فائدة الإجابة لمساعدة سيا نكسس على تحسين ردوده المستقبلية.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Add a note to any document to capture context for your team.","text_ar":"أضف ملاحظة إلى أي مستند لتوثيق السياق لفريقك.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Check the Signals feed to see foresight trends that could affect NDS3 outcomes.","text_ar":"تابع بث الإشارات لرصد اتجاهات استشرافية قد تؤثر في مخرجات الاستراتيجية الوطنية الثالثة.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Review the Risk Register regularly to keep mitigation plans current.","text_ar":"راجع سجل المخاطر بانتظام للحفاظ على تحديث خطط التخفيف.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Use the Compare view to see how Qatar ranks across multiple international indices.","text_ar":"استخدم طريقة عرض المقارنة لمعرفة ترتيب قطر عبر عدة مؤشرات دولية.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Subscribe to a sector team's updates to get notified when new documents land.","text_ar":"اشترك في تحديثات فريق قطاعي لتصلك إشعارات عند إضافة مستندات جديدة.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Tag a colleague in a comment to bring them into a document discussion.","text_ar":"أشر إلى زميل في تعليق لإشراكه في نقاش حول مستند.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Check your Guardian points on your profile to see your verification streak.","text_ar":"تحقق من نقاط الحارس في ملفك الشخصي لمعرفة سلسلة عمليات التحقق الخاصة بك.","attribution_en":null,"attribution_ar":null,"source_ref":null},
-    {"kind":"tip","text_en":"Use quick filters on the daily card to jump straight to indicators you follow.","text_ar":"استخدم عوامل التصفية السريعة في بطاقة اليوم للانتقال مباشرة إلى المؤشرات التي تتابعها.","attribution_en":null,"attribution_ar":null,"source_ref":null}
-  ],
-  "daily_cards": [
-    {"offset_day":0,"indicator_code":"pop_total","big_number":"3,205,000","fact_en":"people were living in Qatar at the end of July 2026","fact_ar":"شخصاً كانوا يعيشون في قطر في نهاية يوليو 2026","hook_en":"Qatar's population keeps climbing as the country approaches the final stretch of NDS3.","hook_ar":"يواصل عدد سكان قطر ارتفاعه مع اقتراب البلاد من المرحلة الأخيرة من الاستراتيجية الوطنية الثالثة.","quiz_question_en":"Roughly how many people were living in Qatar as of mid-2026?","quiz_question_ar":"كم كان عدد سكان قطر تقريباً في منتصف عام 2026؟","options":[{"en":"About 2.2 million","ar":"نحو 2.2 مليون"},{"en":"About 3.2 million","ar":"نحو 3.2 مليون"},{"en":"About 4.5 million","ar":"نحو 4.5 مليون"}],"correct_index":1,"explanation_en":"Qatar's resident population has grown steadily, passing the 3 million mark in recent years.","explanation_ar":"نما عدد سكان قطر المقيمين باطراد، متجاوزاً عتبة 3 ملايين نسمة في السنوات الأخيرة."},
-    {"offset_day":1,"indicator_code":"gdp_real_growth","big_number":"4.0%","fact_en":"was the real GDP growth rate Qatar targeted under NDS3 for the non-hydrocarbon economy","fact_ar":"كانت نسبة النمو الحقيقي للناتج المحلي الإجمالي التي استهدفتها الاستراتيجية الوطنية الثالثة للاقتصاد غير النفطي","hook_en":"Four percent is more than a number, it is the growth pace NDS3 asks every sector to help sustain.","hook_ar":"أربعة بالمئة ليست مجرد رقم، بل وتيرة النمو التي تطلب الاستراتيجية الوطنية الثالثة من كل قطاع المساهمة في تحقيقها.","quiz_question_en":"What annual real GDP growth rate does NDS3 target?","quiz_question_ar":"ما نسبة النمو السنوي الحقيقي للناتج المحلي الإجمالي التي تستهدفها الاستراتيجية الوطنية الثالثة؟","options":[{"en":"About 1%","ar":"نحو 1%"},{"en":"About 4%","ar":"نحو 4%"},{"en":"About 9%","ar":"نحو 9%"}],"correct_index":1,"explanation_en":"NDS3 sets a real GDP growth target of around 4 percent annually to sustain diversified growth.","explanation_ar":"تحدد الاستراتيجية الوطنية الثالثة هدف نمو حقيقي للناتج المحلي الإجمالي بنحو 4 بالمئة سنوياً لدعم النمو المتنوع."},
-    {"offset_day":2,"indicator_code":"gdp_nonhydro_share","big_number":"65%","fact_en":"of Qatar's GDP came from non-hydrocarbon sectors in the latest national accounts estimate","fact_ar":"كانت حصة القطاعات غير النفطية من الناتج المحلي الإجمالي لقطر في أحدث تقدير للحسابات القومية","hook_en":"Two out of every three riyals of Qatar's economy now come from outside oil and gas.","hook_ar":"أصبح ريالان من كل ثلاثة ريالات في اقتصاد قطر يأتيان من خارج قطاعي النفط والغاز.","quiz_question_en":"Roughly what share of Qatar's GDP now comes from non-hydrocarbon sectors?","quiz_question_ar":"ما هي حصة القطاعات غير النفطية تقريباً من الناتج المحلي الإجمالي لقطر؟","options":[{"en":"About 25%","ar":"نحو 25%"},{"en":"About 45%","ar":"نحو 45%"},{"en":"About 65%","ar":"نحو 65%"}],"correct_index":2,"explanation_en":"Non-hydrocarbon sectors now account for roughly two-thirds of Qatar's GDP, reflecting years of diversification.","explanation_ar":"أصبحت القطاعات غير النفطية تشكل نحو ثلثي الناتج المحلي الإجمالي لقطر، مما يعكس سنوات من التنويع الاقتصادي."},
-    {"offset_day":3,"indicator_code":"cpi_inflation","big_number":"1.6%","fact_en":"was Qatar's annual consumer price inflation rate in the most recent CPI release","fact_ar":"كانت نسبة التضخم السنوي في أسعار المستهلك في قطر في أحدث إصدار للرقم القياسي لأسعار المستهلك","hook_en":"Keeping inflation low and steady protects household purchasing power across Qatar.","hook_ar":"الحفاظ على تضخم منخفض ومستقر يحمي القوة الشرائية للأسر في قطر.","quiz_question_en":"What does the CPI measure?","quiz_question_ar":"ماذا يقيس الرقم القياسي لأسعار المستهلك؟","options":[{"en":"Changes in the price of a basket of consumer goods and services","ar":"التغير في أسعار سلة من السلع والخدمات الاستهلاكية"},{"en":"The number of building permits issued","ar":"عدد رخص البناء الصادرة"},{"en":"The size of the labour force","ar":"حجم القوى العاملة"}],"correct_index":0,"explanation_en":"The Consumer Price Index tracks changes in the average price of a fixed basket of goods and services over time.","explanation_ar":"يتتبع الرقم القياسي لأسعار المستهلك التغير في متوسط أسعار سلة ثابتة من السلع والخدمات عبر الزمن."},
-    {"offset_day":4,"indicator_code":"unemployment_rate","big_number":"0.1%","fact_en":"was Qatar's unemployment rate, among the lowest recorded anywhere in the world","fact_ar":"كانت نسبة البطالة في قطر، وهي من أدنى النسب المسجلة في العالم","hook_en":"Qatar's labour market runs close to full employment, one of the tightest in the world.","hook_ar":"يعمل سوق العمل في قطر بالقرب من التوظيف الكامل، وهو من أكثر الأسواق إحكاماً في العالم.","quiz_question_en":"How does Qatar's unemployment rate compare globally?","quiz_question_ar":"كيف تُقارن نسبة البطالة في قطر عالمياً؟","options":[{"en":"Among the highest in the world","ar":"من بين الأعلى في العالم"},{"en":"Among the lowest in the world","ar":"من بين الأدنى في العالم"},{"en":"Roughly at the global average","ar":"قريبة من المتوسط العالمي"}],"correct_index":1,"explanation_en":"Qatar's unemployment rate is consistently among the lowest in the world, reflecting strong labour demand.","explanation_ar":"تُعد نسبة البطالة في قطر من بين الأدنى في العالم باستمرار، مما يعكس قوة الطلب على العمالة."},
-    {"offset_day":5,"indicator_code":"trade_balance","big_number":"QAR 15.4 billion","fact_en":"was Qatar's merchandise trade balance surplus in the most recent monthly foreign trade bulletin","fact_ar":"كان فائض الميزان التجاري السلعي لقطر في أحدث نشرة شهرية للتجارة الخارجية","hook_en":"Qatar's exports continue to outweigh imports by a wide margin most months.","hook_ar":"تواصل صادرات قطر تجاوز وارداتها بهامش كبير في معظم الأشهر.","quiz_question_en":"What does a trade balance surplus mean?","quiz_question_ar":"ماذا يعني فائض الميزان التجاري؟","options":[{"en":"Exports exceed imports","ar":"الصادرات تتجاوز الواردات"},{"en":"Imports exceed exports","ar":"الواردات تتجاوز الصادرات"},{"en":"Exports and imports are exactly equal","ar":"الصادرات والواردات متساوية تماماً"}],"correct_index":0,"explanation_en":"A trade balance surplus occurs when the value of exports exceeds the value of imports.","explanation_ar":"يتحقق فائض الميزان التجاري عندما تتجاوز قيمة الصادرات قيمة الواردات."},
-    {"offset_day":6,"indicator_code":"building_permits","big_number":"1,180","fact_en":"building permits were issued across Qatar's municipalities in the latest quarterly bulletin","fact_ar":"رخصة بناء صدرت في بلديات قطر خلال أحدث نشرة ربع سنوية","hook_en":"Building permits are one of the earliest signals of where construction activity is heading next.","hook_ar":"تُعد رخص البناء من أولى الإشارات على اتجاه نشاط البناء في المستقبل القريب.","quiz_question_en":"Why do statisticians watch building permits closely?","quiz_question_ar":"لماذا يتابع الإحصائيون رخص البناء عن كثب؟","options":[{"en":"They are an early indicator of future construction activity","ar":"لأنها مؤشر مبكر على نشاط البناء المستقبلي"},{"en":"They measure inflation directly","ar":"لأنها تقيس التضخم مباشرة"},{"en":"They replace the population census","ar":"لأنها تحل محل تعداد السكان"}],"correct_index":0,"explanation_en":"Building permits are a leading indicator that helps forecast future construction and real estate activity.","explanation_ar":"تُعد رخص البناء مؤشراً استباقياً يساعد في التنبؤ بنشاط البناء والعقارات المستقبلي."},
-    {"offset_day":7,"indicator_code":"lfpr_qatari","big_number":"62%","fact_en":"was the labour force participation rate among Qataris in the latest labour force survey","fact_ar":"كانت نسبة المشاركة في القوى العاملة بين القطريين في أحدث مسح للقوى العاملة","hook_en":"Raising Qatari labour force participation is one of the workforce outcome's central goals under NDS3.","hook_ar":"يُعد رفع نسبة مشاركة القطريين في القوى العاملة أحد الأهداف المحورية لمخرج القوى العاملة في الاستراتيجية الوطنية الثالثة.","quiz_question_en":"What does labour force participation rate measure?","quiz_question_ar":"ماذا تقيس نسبة المشاركة في القوى العاملة؟","options":[{"en":"The share of the working-age population that is employed or looking for work","ar":"نسبة السكان في سن العمل الذين يعملون أو يبحثون عن عمل"},{"en":"The number of building permits issued","ar":"عدد رخص البناء الصادرة"},{"en":"The rate of inflation","ar":"معدل التضخم"}],"correct_index":0,"explanation_en":"The labour force participation rate measures the share of the working-age population that is employed or actively seeking work.","explanation_ar":"تقيس نسبة المشاركة في القوى العاملة حصة السكان في سن العمل الذين يعملون أو يبحثون بنشاط عن عمل."},
-    {"offset_day":8,"indicator_code":"solar_capacity","big_number":"875 MW","fact_en":"of solar power capacity had been installed in Qatar on the road toward the NDS3 target","fact_ar":"ميغاواط من الطاقة الشمسية تم تركيبها في قطر على الطريق نحو هدف الاستراتيجية الوطنية الثالثة","hook_en":"Every new solar array brings Qatar closer to its national renewable energy target.","hook_ar":"كل محطة طاقة شمسية جديدة تقرب قطر خطوة من هدفها الوطني للطاقة المتجددة.","quiz_question_en":"What is NDS3's approximate target for installed solar capacity?","quiz_question_ar":"ما هو الهدف التقريبي للاستراتيجية الوطنية الثالثة للقدرة الشمسية المركبة؟","options":[{"en":"About 400 megawatts","ar":"نحو 400 ميغاواط"},{"en":"About 4 gigawatts","ar":"نحو 4 غيغاواط"},{"en":"About 40 gigawatts","ar":"نحو 40 غيغاواط"}],"correct_index":1,"explanation_en":"NDS3 sets a target of around 4 gigawatts of installed solar capacity to support environmental sustainability.","explanation_ar":"تحدد الاستراتيجية الوطنية الثالثة هدفاً بنحو 4 غيغاواط من القدرة الشمسية المركبة دعماً للاستدامة البيئية."},
-    {"offset_day":9,"indicator_code":"ghg_per_capita","big_number":"34.8 tonnes CO2e","fact_en":"was Qatar's estimated greenhouse gas emissions per capita in the latest environmental statistics release","fact_ar":"كانت الانبعاثات التقديرية لغازات الاحتباس الحراري للفرد في قطر في أحدث إصدار للإحصاءات البيئية","hook_en":"Lowering emissions per capita while the economy grows is one of NDS3's toughest balancing acts.","hook_ar":"يُعد خفض الانبعاثات للفرد مع استمرار نمو الاقتصاد أحد أصعب التوازنات التي تسعى الاستراتيجية الوطنية الثالثة لتحقيقها.","quiz_question_en":"What does the greenhouse gas emissions per capita indicator help track?","quiz_question_ar":"بماذا يساعد مؤشر انبعاثات غازات الاحتباس الحراري للفرد؟","options":[{"en":"Environmental sustainability progress","ar":"التقدم في الاستدامة البيئية"},{"en":"Building permit approvals","ar":"الموافقة على رخص البناء"},{"en":"Consumer price inflation","ar":"تضخم أسعار المستهلك"}],"correct_index":0,"explanation_en":"Greenhouse gas emissions per capita is a core indicator for tracking environmental sustainability progress.","explanation_ar":"يُعد مؤشر انبعاثات غازات الاحتباس الحراري للفرد مؤشراً أساسياً لتتبع التقدم في الاستدامة البيئية."},
-    {"offset_day":10,"indicator_code":"fdi_inflows","big_number":"QAR 9.6 billion","fact_en":"of foreign direct investment flowed into Qatar in the latest annual balance of payments statistics","fact_ar":"ريال قطري من الاستثمار الأجنبي المباشر تدفقت إلى قطر في أحدث إحصاءات سنوية لميزان المدفوعات","hook_en":"Foreign direct investment is a key gauge of how attractive Qatar's economy looks to global investors.","hook_ar":"يُعد الاستثمار الأجنبي المباشر مقياساً رئيسياً لمدى جاذبية اقتصاد قطر للمستثمرين العالميين.","quiz_question_en":"What does FDI stand for?","quiz_question_ar":"ماذا يعني الاستثمار الأجنبي المباشر؟","options":[{"en":"Foreign Direct Investment","ar":"الاستثمار الأجنبي المباشر"},{"en":"Federal Development Index","ar":"مؤشر التنمية الفيدرالي"},{"en":"Fiscal Debt Instrument","ar":"أداة الدين المالي"}],"correct_index":0,"explanation_en":"FDI, or foreign direct investment, measures capital that foreign entities invest directly into a country's economy.","explanation_ar":"يقيس الاستثمار الأجنبي المباشر رأس المال الذي تستثمره جهات أجنبية مباشرة في اقتصاد بلد ما."},
-    {"offset_day":11,"indicator_code":"digital_services_share","big_number":"92%","fact_en":"of eligible government services in Qatar could be completed fully online according to the latest digital government review","fact_ar":"كانت نسبة الخدمات الحكومية المؤهلة في قطر التي يمكن إنجازها بالكامل عبر الإنترنت وفق أحدث مراجعة للحكومة الرقمية","hook_en":"Digital transformation turns long queues into a few clicks for the people of Qatar.","hook_ar":"يحوّل التحول الرقمي طوابير الانتظار الطويلة إلى بضع نقرات لأهل قطر.","quiz_question_en":"What does the digital services share indicator measure?","quiz_question_ar":"ماذا يقيس مؤشر حصة الخدمات الرقمية؟","options":[{"en":"The share of government services that can be completed fully online","ar":"نسبة الخدمات الحكومية التي يمكن إنجازها بالكامل عبر الإنترنت"},{"en":"The number of solar panels installed","ar":"عدد الألواح الشمسية المركبة"},{"en":"The rate of inflation","ar":"معدل التضخم"}],"correct_index":0,"explanation_en":"The digital services share tracks how much of government service delivery has moved to fully online channels.","explanation_ar":"يتتبع مؤشر حصة الخدمات الرقمية مدى انتقال تقديم الخدمات الحكومية إلى قنوات إلكترونية كاملة."},
-    {"offset_day":12,"indicator_code":"pop_total","big_number":"3,221,000","fact_en":"people were counted as residents of Qatar as national statistics were updated in late 2026","fact_ar":"شخصاً تم إحصاؤهم كمقيمين في قطر مع تحديث الإحصاءات الوطنية في أواخر عام 2026","hook_en":"Every month, new administrative records refine our picture of who calls Qatar home.","hook_ar":"تُحسّن السجلات الإدارية الجديدة كل شهر صورتنا عن سكان قطر.","quiz_question_en":"What kind of sources help update Qatar's population figures between census rounds?","quiz_question_ar":"ما نوع المصادر التي تساعد على تحديث أرقام سكان قطر بين جولات التعداد؟","options":[{"en":"Administrative records only","ar":"السجلات الإدارية فقط"},{"en":"Administrative records and sample surveys","ar":"السجلات الإدارية والمسوحات العينية"},{"en":"Guesswork by ministries","ar":"تقديرات اجتهادية من الوزارات"}],"correct_index":1,"explanation_en":"Qatar blends administrative records with sample surveys to keep population estimates current between censuses.","explanation_ar":"تجمع قطر بين السجلات الإدارية والمسوحات العينية للحفاظ على تحديث تقديرات السكان بين التعدادات."},
-    {"offset_day":13,"indicator_code":"gdp_real_growth","big_number":"3.8%","fact_en":"was Qatar's estimated real GDP growth rate in a recent quarterly national accounts release","fact_ar":"كانت النسبة التقديرية للنمو الحقيقي للناتج المحلي الإجمالي في قطر في أحدث إصدار ربع سنوي للحسابات القومية","hook_en":"Quarter after quarter, national accounts show whether diversification efforts are translating into growth.","hook_ar":"تُظهر الحسابات القومية كل ربع سنة ما إذا كانت جهود التنويع تترجم إلى نمو فعلي.","quiz_question_en":"Which statistical release tracks quarterly real GDP growth in Qatar?","quiz_question_ar":"أي إصدار إحصائي يتابع النمو الحقيقي الربع سنوي للناتج المحلي الإجمالي في قطر؟","options":[{"en":"The national accounts release","ar":"إصدار الحسابات القومية"},{"en":"The census bulletin","ar":"نشرة التعداد"},{"en":"The trade balance report","ar":"تقرير الميزان التجاري"}],"correct_index":0,"explanation_en":"Qatar's national accounts release reports quarterly real GDP growth by sector.","explanation_ar":"يقدم إصدار الحسابات القومية في قطر بيانات النمو الحقيقي الربع سنوي للناتج المحلي الإجمالي حسب القطاع."},
-    {"offset_day":14,"indicator_code":"gdp_nonhydro_share","big_number":"66%","fact_en":"was the non-hydrocarbon share of GDP recorded as construction and services sectors expanded","fact_ar":"كانت حصة القطاع غير النفطي من الناتج المحلي الإجمالي المسجلة مع توسع قطاعي البناء والخدمات","hook_en":"A rising non-hydrocarbon share is one of the clearest signals that QNV 2030 diversification goals are on track.","hook_ar":"يُعد ارتفاع حصة القطاع غير النفطي من أوضح الإشارات على أن أهداف التنويع في رؤية قطر الوطنية 2030 تسير في مسارها الصحيح.","quiz_question_en":"Which sectors typically drive growth in Qatar's non-hydrocarbon GDP share?","quiz_question_ar":"أي القطاعات تقود عادة نمو حصة الناتج المحلي الإجمالي غير النفطي في قطر؟","options":[{"en":"Construction and services","ar":"البناء والخدمات"},{"en":"Only crude oil extraction","ar":"استخراج النفط الخام فقط"},{"en":"Only liquefied natural gas exports","ar":"صادرات الغاز الطبيعي المسال فقط"}],"correct_index":0,"explanation_en":"Construction, services, and other non-hydrocarbon sectors are the main drivers of Qatar's diversification.","explanation_ar":"يمثل البناء والخدمات وغيرها من القطاعات غير النفطية المحركات الرئيسية لتنويع اقتصاد قطر."},
-    {"offset_day":15,"indicator_code":"cpi_inflation","big_number":"1.9%","fact_en":"was the year-on-year inflation rate reported in a recent monthly CPI bulletin","fact_ar":"كانت نسبة التضخم على أساس سنوي الواردة في نشرة شهرية حديثة للرقم القياسي لأسعار المستهلك","hook_en":"Housing and food weights in the CPI basket often drive month-to-month swings in Qatar's inflation rate.","hook_ar":"غالباً ما تدفع أوزان الإسكان والغذاء في سلة الرقم القياسي التقلبات الشهرية في معدل التضخم في قطر.","quiz_question_en":"Which two groups often carry the largest weight in Qatar's CPI basket?","quiz_question_ar":"ما المجموعتان اللتان تحملان عادة أكبر وزن في سلة الرقم القياسي لأسعار المستهلك في قطر؟","options":[{"en":"Housing and food","ar":"الإسكان والغذاء"},{"en":"Jewellery and antiques","ar":"المجوهرات والتحف"},{"en":"Space travel and yachts","ar":"السفر الفضائي واليخوت"}],"correct_index":0,"explanation_en":"Housing, water, electricity, and food and beverages typically carry significant weight in Qatar's CPI basket.","explanation_ar":"تحمل مجموعات الإسكان والمياه والكهرباء والأغذية والمشروبات عادة وزناً كبيراً في سلة الرقم القياسي لأسعار المستهلك في قطر."},
-    {"offset_day":16,"indicator_code":"unemployment_rate","big_number":"0.2%","fact_en":"was the unemployment rate among Qatar's labour force in the latest labour force survey round","fact_ar":"كانت نسبة البطالة بين القوى العاملة في قطر في أحدث جولة من مسح القوى العاملة","hook_en":"The labour force survey is the main tool the National Planning Council uses to track employment trends.","hook_ar":"يُعد مسح القوى العاملة الأداة الرئيسية التي يستخدمها المجلس الوطني للتخطيط لمتابعة اتجاهات التوظيف.","quiz_question_en":"Which survey does the National Planning Council use to track employment trends in Qatar?","quiz_question_ar":"أي مسح يستخدمه المجلس الوطني للتخطيط لمتابعة اتجاهات التوظيف في قطر؟","options":[{"en":"The labour force survey","ar":"مسح القوى العاملة"},{"en":"The trade balance report","ar":"تقرير الميزان التجاري"},{"en":"The building permits register","ar":"سجل رخص البناء"}],"correct_index":0,"explanation_en":"The labour force survey is the main source for employment and unemployment statistics in Qatar.","explanation_ar":"يُعد مسح القوى العاملة المصدر الرئيسي لإحصاءات التوظيف والبطالة في قطر."},
-    {"offset_day":17,"indicator_code":"trade_balance","big_number":"QAR 14.7 billion","fact_en":"was the trade surplus recorded as LNG exports remained the largest contributor to Qatar's exports","fact_ar":"كان الفائض التجاري المسجل مع بقاء صادرات الغاز الطبيعي المسال أكبر مساهم في صادرات قطر","hook_en":"Liquefied natural gas remains the single largest driver behind Qatar's trade surplus.","hook_ar":"يظل الغاز الطبيعي المسال أكبر محرك منفرد للفائض التجاري في قطر.","quiz_question_en":"What is the largest single contributor to Qatar's export value?","quiz_question_ar":"ما أكبر مساهم منفرد في قيمة صادرات قطر؟","options":[{"en":"Liquefied natural gas","ar":"الغاز الطبيعي المسال"},{"en":"Handicrafts","ar":"المشغولات اليدوية"},{"en":"Agricultural produce","ar":"المنتجات الزراعية"}],"correct_index":0,"explanation_en":"Liquefied natural gas remains Qatar's largest export category by value.","explanation_ar":"يظل الغاز الطبيعي المسال أكبر فئة صادرات لقطر من حيث القيمة."},
-    {"offset_day":18,"indicator_code":"building_permits","big_number":"1,305","fact_en":"building permits were approved as residential construction activity picked up across Qatar","fact_ar":"رخصة بناء تمت الموافقة عليها مع تسارع نشاط البناء السكني في أنحاء قطر","hook_en":"A rise in building permits often points to growing confidence in Qatar's real estate sector.","hook_ar":"غالباً ما يشير ارتفاع رخص البناء إلى تنامي الثقة في قطاع العقارات في قطر.","quiz_question_en":"What does a rise in issued building permits typically signal?","quiz_question_ar":"بماذا يوحي عادة ارتفاع عدد رخص البناء الصادرة؟","options":[{"en":"Falling confidence in real estate","ar":"تراجع الثقة في قطاع العقارات"},{"en":"Growing confidence in real estate","ar":"تنامي الثقة في قطاع العقارات"},{"en":"A decline in the population","ar":"تراجع عدد السكان"}],"correct_index":1,"explanation_en":"A rise in building permits typically signals growing confidence and activity in the real estate and construction sectors.","explanation_ar":"يشير ارتفاع رخص البناء عادة إلى تنامي الثقة والنشاط في قطاعي العقارات والبناء."},
-    {"offset_day":19,"indicator_code":"lfpr_qatari","big_number":"63%","fact_en":"was the Qatari labour force participation rate as more nationals entered the private sector workforce","fact_ar":"كانت نسبة مشاركة القطريين في القوى العاملة مع التحاق مزيد من المواطنين بالقطاع الخاص","hook_en":"A rising Qatari labour force participation rate reflects both education and workforce policy shifts.","hook_ar":"يعكس ارتفاع نسبة مشاركة القطريين في القوى العاملة التحولات في السياسات التعليمية وسياسات القوى العاملة.","quiz_question_en":"Which national outcome most directly tracks Qatari labour force participation?","quiz_question_ar":"أي مخرج وطني يتابع بشكل مباشر مشاركة القطريين في القوى العاملة؟","options":[{"en":"Workforce","ar":"القوى العاملة"},{"en":"Environmental sustainability","ar":"الاستدامة البيئية"},{"en":"Foreign trade","ar":"التجارة الخارجية"}],"correct_index":0,"explanation_en":"The workforce national outcome tracks indicators like Qatari labour force participation as a core priority.","explanation_ar":"يتابع مخرج القوى العاملة الوطني مؤشرات مثل مشاركة القطريين في القوى العاملة بوصفها أولوية أساسية."},
-    {"offset_day":20,"indicator_code":"solar_capacity","big_number":"910 MW","fact_en":"was Qatar's installed solar capacity as new facilities came online","fact_ar":"كانت القدرة الشمسية المركبة في قطر مع دخول محطات جديدة الخدمة","hook_en":"Solar capacity is one of the fastest-growing indicators under the environmental sustainability outcome.","hook_ar":"تُعد القدرة الشمسية المركبة من أسرع المؤشرات نمواً ضمن مخرج الاستدامة البيئية.","quiz_question_en":"Which national outcome does solar capacity growth primarily support?","quiz_question_ar":"أي مخرج وطني يدعمه نمو القدرة الشمسية بشكل رئيسي؟","options":[{"en":"Environmental sustainability","ar":"الاستدامة البيئية"},{"en":"Foreign trade","ar":"التجارة الخارجية"},{"en":"Cohesive society","ar":"المجتمع المتماسك"}],"correct_index":0,"explanation_en":"Solar capacity is a key indicator under the environmental sustainability national outcome.","explanation_ar":"تُعد القدرة الشمسية مؤشراً رئيسياً ضمن مخرج الاستدامة البيئية الوطني."},
-    {"offset_day":21,"indicator_code":"ghg_per_capita","big_number":"34.1 tonnes CO2e","fact_en":"was the per capita emissions figure recorded as energy efficiency and renewables expanded","fact_ar":"كان رقم الانبعاثات للفرد المسجل مع توسع كفاءة الطاقة ومصادر الطاقة المتجددة","hook_en":"A gradual decline in per capita emissions reflects the combined effect of efficiency gains and renewable energy.","hook_ar":"يعكس التراجع التدريجي في الانبعاثات للفرد الأثر المشترك لمكاسب الكفاءة والطاقة المتجددة.","quiz_question_en":"Which two factors help reduce greenhouse gas emissions per capita?","quiz_question_ar":"ما العاملان اللذان يساعدان على خفض انبعاثات غازات الاحتباس الحراري للفرد؟","options":[{"en":"Energy efficiency and renewable energy","ar":"كفاءة الطاقة والطاقة المتجددة"},{"en":"Higher imports and lower exports","ar":"ارتفاع الواردات وانخفاض الصادرات"},{"en":"More building permits","ar":"مزيد من رخص البناء"}],"correct_index":0,"explanation_en":"Energy efficiency measures and renewable energy expansion both help lower emissions per capita over time.","explanation_ar":"تساعد إجراءات كفاءة الطاقة وتوسع الطاقة المتجددة كلاهما على خفض الانبعاثات للفرد بمرور الوقت."},
-    {"offset_day":22,"indicator_code":"fdi_inflows","big_number":"QAR 10.1 billion","fact_en":"was the value of foreign direct investment inflows recorded as economic diversification efforts continued","fact_ar":"كانت قيمة تدفقات الاستثمار الأجنبي المباشر المسجلة مع استمرار جهود التنويع الاقتصادي","hook_en":"Rising FDI inflows often follow new investment-friendly reforms and free zone incentives.","hook_ar":"غالباً ما يتبع ارتفاع تدفقات الاستثمار الأجنبي المباشر إصلاحات جديدة داعمة للاستثمار وحوافز في المناطق الحرة.","quiz_question_en":"Which national outcome is most closely linked to FDI inflows?","quiz_question_ar":"أي مخرج وطني يرتبط ارتباطاً وثيقاً بتدفقات الاستثمار الأجنبي المباشر؟","options":[{"en":"Economic growth","ar":"النمو الاقتصادي"},{"en":"Cohesive society","ar":"المجتمع المتماسك"},{"en":"Quality of life","ar":"جودة الحياة"}],"correct_index":0,"explanation_en":"FDI inflows are closely tied to the economic growth national outcome and diversification efforts.","explanation_ar":"ترتبط تدفقات الاستثمار الأجنبي المباشر ارتباطاً وثيقاً بمخرج النمو الاقتصادي الوطني وجهود التنويع."},
-    {"offset_day":23,"indicator_code":"digital_services_share","big_number":"94%","fact_en":"of government transactions in Qatar were completed through digital channels in the most recent digital government update","fact_ar":"كانت نسبة المعاملات الحكومية في قطر التي أُنجزت عبر القنوات الرقمية في أحدث تحديث للحكومة الرقمية","hook_en":"Digital transformation is one of the fastest-moving levers under the governance excellence outcome.","hook_ar":"يُعد التحول الرقمي أحد أسرع الروافع تحركاً ضمن مخرج التميز في الحوكمة.","quiz_question_en":"Which national outcome is digital services share most closely linked to?","quiz_question_ar":"بأي مخرج وطني ترتبط حصة الخدمات الرقمية ارتباطاً وثيقاً؟","options":[{"en":"Governance excellence","ar":"التميز في الحوكمة"},{"en":"Foreign trade","ar":"التجارة الخارجية"},{"en":"Population statistics","ar":"إحصاءات السكان"}],"correct_index":0,"explanation_en":"Digital services share is closely tied to the governance excellence national outcome.","explanation_ar":"ترتبط حصة الخدمات الرقمية ارتباطاً وثيقاً بمخرج التميز في الحوكمة الوطني."},
-    {"offset_day":24,"indicator_code":"pop_total","big_number":"3,238,000","fact_en":"people were estimated to be living in Qatar according to the latest quarterly update","fact_ar":"نسمة كان العدد التقديري لسكان قطر بحسب آخر تحديث ربع سنوي","hook_en":"Population growth is one of the fastest-moving numbers the National Planning Council tracks.","hook_ar":"يُعد نمو السكان من أسرع الأرقام تغيراً التي يتابعها المجلس الوطني للتخطيط.","quiz_question_en":"Which entity coordinates the official population count in Qatar?","quiz_question_ar":"ما الجهة التي تنسق الإحصاء الرسمي لسكان قطر؟","options":[{"en":"The National Planning Council","ar":"المجلس الوطني للتخطيط"},{"en":"Individual municipalities acting alone","ar":"البلديات منفردة"},{"en":"Private research firms","ar":"شركات بحث خاصة"}],"correct_index":0,"explanation_en":"The National Planning Council coordinates population statistics, including census operations, across government entities.","explanation_ar":"ينسق المجلس الوطني للتخطيط إحصاءات السكان، بما في ذلك عمليات التعداد، بالتعاون مع الجهات الحكومية."},
-    {"offset_day":25,"indicator_code":"gdp_real_growth","big_number":"4.2%","fact_en":"was the real GDP growth rate recorded as the non-hydrocarbon sector continued to expand","fact_ar":"كانت نسبة النمو الحقيقي للناتج المحلي الإجمالي المسجلة مع استمرار توسع القطاع غير النفطي","hook_en":"Non-hydrocarbon growth above the NDS3 target signals diversification is gaining momentum.","hook_ar":"يشير النمو غير النفطي الذي يفوق هدف الاستراتيجية الوطنية الثالثة إلى تسارع زخم التنويع.","quiz_question_en":"What does growth above the NDS3 target in the non-hydrocarbon sector suggest?","quiz_question_ar":"بماذا يوحي النمو الذي يتجاوز هدف الاستراتيجية الوطنية الثالثة في القطاع غير النفطي؟","options":[{"en":"Diversification is losing momentum","ar":"أن التنويع يفقد زخمه"},{"en":"Diversification efforts are gaining momentum","ar":"أن جهود التنويع تكتسب زخماً"},{"en":"The hydrocarbon sector has stopped","ar":"أن القطاع النفطي قد توقف"}],"correct_index":1,"explanation_en":"Growth above target in the non-hydrocarbon sector is read as a sign that diversification efforts are gaining momentum.","explanation_ar":"يُفسَّر النمو الذي يتجاوز الهدف في القطاع غير النفطي على أنه مؤشر على اكتساب جهود التنويع مزيداً من الزخم."},
-    {"offset_day":26,"indicator_code":"gdp_nonhydro_share","big_number":"67%","fact_en":"was the non-hydrocarbon share of GDP as Qatar's diversification push entered its final NDS3 years","fact_ar":"كانت حصة القطاع غير النفطي من الناتج المحلي الإجمالي مع دخول دفعة التنويع في قطر سنواتها الأخيرة ضمن الاستراتيجية الوطنية الثالثة","hook_en":"Each percentage point gained in the non-hydrocarbon share marks real progress toward NDS3's economic diversification goal.","hook_ar":"تمثل كل نقطة مئوية تُكتسب في حصة القطاع غير النفطي تقدماً حقيقياً نحو هدف التنويع الاقتصادي في الاستراتيجية الوطنية الثالثة.","quiz_question_en":"Which NDS3 outcome does a rising non-hydrocarbon GDP share primarily support?","quiz_question_ar":"أي مخرج من مخرجات الاستراتيجية الوطنية الثالثة يدعمه بشكل رئيسي ارتفاع حصة الناتج المحلي الإجمالي غير النفطي؟","options":[{"en":"Economic diversification and growth","ar":"التنويع الاقتصادي والنمو"},{"en":"Cohesive society","ar":"المجتمع المتماسك"},{"en":"Environmental sustainability alone","ar":"الاستدامة البيئية فقط"}],"correct_index":0,"explanation_en":"A growing non-hydrocarbon GDP share is a direct sign of progress on economic diversification and growth.","explanation_ar":"يُعد ارتفاع حصة الناتج المحلي الإجمالي غير النفطي دليلاً مباشراً على التقدم في التنويع الاقتصادي والنمو."},
-    {"offset_day":27,"indicator_code":"cpi_inflation","big_number":"1.7%","fact_en":"was Qatar's annual inflation rate as transport and communication prices stayed broadly stable","fact_ar":"كانت نسبة التضخم السنوي في قطر مع استقرار أسعار النقل والاتصالات بشكل عام","hook_en":"Stable transport and communication prices help keep Qatar's overall inflation rate low.","hook_ar":"يساعد استقرار أسعار النقل والاتصالات على إبقاء معدل التضخم العام في قطر منخفضاً.","quiz_question_en":"Which body publishes Qatar's official CPI figures?","quiz_question_ar":"ما الجهة التي تنشر أرقام الرقم القياسي لأسعار المستهلك الرسمية في قطر؟","options":[{"en":"The National Planning Council","ar":"المجلس الوطني للتخطيط"},{"en":"Individual supermarkets","ar":"محال السوبرماركت منفردة"},{"en":"Foreign embassies","ar":"السفارات الأجنبية"}],"correct_index":0,"explanation_en":"The National Planning Council compiles and publishes Qatar's official Consumer Price Index figures.","explanation_ar":"يتولى المجلس الوطني للتخطيط جمع ونشر أرقام الرقم القياسي لأسعار المستهلك الرسمية في قطر."},
-    {"offset_day":28,"indicator_code":"unemployment_rate","big_number":"0.1%","fact_en":"was the unemployment rate reported for Qatari nationals in the latest labour market snapshot","fact_ar":"كانت نسبة البطالة المعلنة بين المواطنين القطريين في أحدث لقطة لسوق العمل","hook_en":"Near-zero unemployment keeps the policy focus on participation and skills rather than job creation alone.","hook_ar":"يبقي معدل البطالة شبه المعدوم تركيز السياسات على المشاركة والمهارات وليس فقط على خلق الوظائف.","quiz_question_en":"When unemployment is already very low, what does workforce policy typically focus on next?","quiz_question_ar":"عندما تكون البطالة منخفضة جداً بالفعل، على ماذا تركز سياسات القوى العاملة عادة بعد ذلك؟","options":[{"en":"Participation and skills development","ar":"المشاركة وتنمية المهارات"},{"en":"Increasing building permits","ar":"زيادة رخص البناء"},{"en":"Lowering the trade balance","ar":"خفض الميزان التجاري"}],"correct_index":0,"explanation_en":"With unemployment already very low, workforce policy shifts focus toward labour force participation and skills development.","explanation_ar":"مع انخفاض البطالة بشكل كبير أصلاً، تتحول سياسات القوى العاملة للتركيز على المشاركة في القوى العاملة وتنمية المهارات."},
-    {"offset_day":29,"indicator_code":"trade_balance","big_number":"QAR 16.0 billion","fact_en":"was Qatar's trade surplus as exports of refined petroleum products and LNG remained strong","fact_ar":"كان الفائض التجاري لقطر مع استمرار قوة صادرات المنتجات النفطية المكررة والغاز الطبيعي المسال","hook_en":"A healthy trade surplus continues to support Qatar's fiscal sustainability outcome.","hook_ar":"يواصل الفائض التجاري الصحي دعم مخرج الاستدامة المالية في قطر.","quiz_question_en":"Which national outcome does a healthy trade surplus most directly support?","quiz_question_ar":"أي مخرج وطني يدعمه الفائض التجاري الصحي بشكل مباشر؟","options":[{"en":"Fiscal sustainability","ar":"الاستدامة المالية"},{"en":"Cohesive society","ar":"المجتمع المتماسك"},{"en":"Quality of life alone","ar":"جودة الحياة فقط"}],"correct_index":0,"explanation_en":"A sustained trade surplus supports government revenues and the fiscal sustainability national outcome.","explanation_ar":"يدعم الفائض التجاري المستمر إيرادات الحكومة ومخرج الاستدامة المالية الوطني."}
-  ],
-  "bounties": [
-    {"title_en":"Document the CPI rebasing methodology","title_ar":"توثيق منهجية إعادة سنة الأساس للرقم القياسي لأسعار المستهلك","description_en":"Write up how the Consumer Price Index basket and base year were last rebased, including sources and weighting changes.","description_ar":"أعدّ توثيقاً لكيفية إعادة تحديد سلة ووزن سنة الأساس للرقم القياسي لأسعار المستهلك مؤخراً، بما في ذلك المصادر والتغيرات في الأوزان.","source":"gap_radar","points":100,"topic_code":"prices_cpi","outcome_code":"gov_excellence","status":"open"},
-    {"title_en":"Upload the NDS2 final results report","title_ar":"رفع تقرير النتائج النهائية للاستراتيجية الوطنية الثانية","description_en":"Locate and upload the final evaluation report for NDS2 so lessons can inform NDS3 delivery.","description_ar":"حدد وارفع تقرير التقييم النهائي للاستراتيجية الوطنية الثانية للتنمية حتى يُستفاد من دروسها في تنفيذ الاستراتيجية الثالثة.","source":"manual","points":80,"topic_code":"strategy_delivery","outcome_code":null,"status":"open"},
-    {"title_en":"Capture lessons from Census 2025 field integration","title_ar":"توثيق دروس التكامل الميداني لتعداد 2025","description_en":"Interview field coordinators and summarize what worked and what did not during Census 2025 data collection.","description_ar":"أجرِ مقابلات مع منسقي العمل الميداني ولخص ما نجح وما لم ينجح خلال جمع بيانات تعداد 2025.","source":"gap_radar","points":120,"topic_code":"census_methodology","outcome_code":"gov_excellence","status":"open"},
-    {"title_en":"Map data sharing agreements across ministries","title_ar":"رسم خريطة اتفاقيات تبادل البيانات بين الوزارات","description_en":"Compile a list of active inter-ministerial data sharing agreements and flag any that need renewal.","description_ar":"أعدّ قائمة باتفاقيات تبادل البيانات النشطة بين الوزارات وحدد ما يحتاج منها إلى تجديد.","source":"gap_radar","points":90,"topic_code":"data_governance","outcome_code":"gov_excellence","status":"open"},
-    {"title_en":"Summarize the National Data Standards' 12 domains","title_ar":"تلخيص المجالات الاثني عشر لمعايير البيانات الوطنية","description_en":"Produce a plain-language summary of each of the 12 domains in the National Data Standards for new SiaNexus users.","description_ar":"أعدّ ملخصاً بلغة ميسّرة لكل مجال من المجالات الاثني عشر في معايير البيانات الوطنية لمستخدمي سيا نكسس الجدد.","source":"manual","points":70,"topic_code":"data_governance","outcome_code":null,"status":"open"},
-    {"title_en":"Document the open data publication checklist","title_ar":"توثيق قائمة التحقق لنشر البيانات المفتوحة","description_en":"Write the step-by-step checklist a sector team should follow before publishing a new dataset on the open data portal.","description_ar":"اكتب قائمة تحقق تفصيلية يجب أن يتبعها الفريق القطاعي قبل نشر مجموعة بيانات جديدة على بوابة البيانات المفتوحة.","source":"gap_radar","points":60,"topic_code":"open_data","outcome_code":null,"status":"open"},
-    {"title_en":"Trace Qatar's Global Peace Index ranking methodology","title_ar":"تتبع منهجية ترتيب قطر في مؤشر السلام العالمي","description_en":"Explain how the Global Peace Index scores countries and which indicators most affect Qatar's rank.","description_ar":"اشرح كيف يقيّم مؤشر السلام العالمي الدول وأي المؤشرات تؤثر أكثر في ترتيب قطر.","source":"manual","points":75,"topic_code":"index_monitoring","outcome_code":null,"status":"open"},
-    {"title_en":"Draft an early warning indicator for labour market shocks","title_ar":"صياغة مؤشر إنذار مبكر لصدمات سوق العمل","description_en":"Propose a leading indicator that could flag labour market disruption before it shows up in unemployment statistics.","description_ar":"اقترح مؤشراً استباقياً يمكن أن ينبه إلى اضطراب سوق العمل قبل ظهوره في إحصاءات البطالة.","source":"gap_radar","points":130,"topic_code":"early_warning","outcome_code":"workforce","status":"open"},
-    {"title_en":"Compile lessons learned from prior scenario planning exercises","title_ar":"تجميع الدروس المستفادة من تمارين التخطيط بالسيناريوهات السابقة","description_en":"Review past foresight workshops and summarize which scenarios materialized and which assumptions need updating.","description_ar":"راجع ورش العمل الاستشرافية السابقة ولخص السيناريوهات التي تحققت والافتراضات التي تحتاج إلى تحديث.","source":"gap_radar","points":110,"topic_code":"scenario_planning","outcome_code":null,"status":"open"},
-    {"title_en":"Verify the Arabic translation of the Data Trust Index glossary","title_ar":"التحقق من الترجمة العربية لمسرد مؤشر الثقة بالبيانات","description_en":"Review the machine-translated Arabic glossary of Data Trust Index terms and correct any inaccurate terminology.","description_ar":"راجع المسرد المترجم آلياً باللغة العربية لمصطلحات مؤشر الثقة بالبيانات وصحح أي مصطلحات غير دقيقة.","source":"manual","points":50,"topic_code":"data_trust_index","outcome_code":null,"status":"open"}
-  ],
-  "knowledge_gaps": [
-    {"label_en":"How CPI weights are updated between rebasing years","label_ar":"كيفية تحديث أوزان الرقم القياسي لأسعار المستهلك بين سنوات إعادة الأساس","example_queries":["how are CPI weights updated","CPI basket revision Qatar","consumer price index weight changes"],"topic_code":"prices_cpi","status":"open"},
-    {"label_en":"NDS2 final evaluation and lessons learned","label_ar":"التقييم النهائي للاستراتيجية الوطنية الثانية والدروس المستفادة","example_queries":["NDS2 final report","NDS2 lessons learned","second national development strategy evaluation"],"topic_code":"strategy_delivery","status":"open"},
-    {"label_en":"Census 2025 field data integration challenges","label_ar":"تحديات تكامل البيانات الميدانية لتعداد 2025","example_queries":["census 2025 field integration","census data collection challenges","census 2025 field coordinators"],"topic_code":"census_methodology","status":"open"},
-    {"label_en":"Detailed inter-ministerial data sharing agreements","label_ar":"تفاصيل اتفاقيات تبادل البيانات بين الوزارات","example_queries":["data sharing agreement ministries","inter-ministerial MOU data","government data sharing Qatar"],"topic_code":"data_governance","status":"open"},
-    {"label_en":"How the Qatar Data Trust Index sub-indicators are scored","label_ar":"كيفية احتساب درجات المؤشرات الفرعية لمؤشر قطر للثقة بالبيانات","example_queries":["data trust index scoring method","data trust index sub-indicators","how is data trust index calculated"],"topic_code":"data_trust_index","status":"open"},
-    {"label_en":"Methodology behind Qatar's early warning indicators","label_ar":"المنهجية وراء مؤشرات الإنذار المبكر في قطر","example_queries":["early warning indicator methodology","risk early warning system Qatar","how are early warning signals generated"],"topic_code":"early_warning","status":"open"},
-    {"label_en":"Assumptions behind published foresight scenarios","label_ar":"الافتراضات وراء سيناريوهات الاستشراف المنشورة","example_queries":["foresight scenario assumptions","scenario planning Qatar 2030","NDS3 scenario planning workshops"],"topic_code":"scenario_planning","status":"open"},
-    {"label_en":"AI governance guidance for sector teams","label_ar":"إرشادات حوكمة الذكاء الاصطناعي للفرق القطاعية","example_queries":["AI governance policy Qatar","responsible AI guidance government","AI governance framework sector teams"],"topic_code":"ai_gov","status":"open"}
-  ],
-  "index_rankings": [
-    {"index_name_en":"IMD World Competitiveness Ranking","index_name_ar":"مؤشر التنافسية العالمية لمعهد التنمية الإدارية","publisher":"IMD World Competitiveness Center","year":2025,"rank":12,"score":null,"total_countries":67,"responsible_entity":"National Planning Council","source_url":null,"note":"to verify"},
-    {"index_name_en":"Human Development Index","index_name_ar":"مؤشر التنمية البشرية","publisher":"United Nations Development Programme","year":2025,"rank":40,"score":0.86,"total_countries":193,"responsible_entity":"National Planning Council","source_url":null,"note":"to verify"},
-    {"index_name_en":"Global Innovation Index","index_name_ar":"مؤشر الابتكار العالمي","publisher":"World Intellectual Property Organization","year":2025,"rank":55,"score":null,"total_countries":132,"responsible_entity":"National Planning Council","source_url":null,"note":"to verify"},
-    {"index_name_en":"E-Government Development Index","index_name_ar":"مؤشر تطور الحكومة الإلكترونية","publisher":"United Nations Department of Economic and Social Affairs","year":2024,"rank":53,"score":0.81,"total_countries":193,"responsible_entity":"National Planning Council","source_url":null,"note":"to verify"},
-    {"index_name_en":"Corruption Perceptions Index","index_name_ar":"مؤشر مدركات الفساد","publisher":"Transparency International","year":2025,"rank":40,"score":60,"total_countries":180,"responsible_entity":"National Planning Council","source_url":null,"note":"to verify"},
-    {"index_name_en":"Global Peace Index","index_name_ar":"مؤشر السلام العالمي","publisher":"Institute for Economics and Peace","year":2025,"rank":24,"score":null,"total_countries":163,"responsible_entity":"National Planning Council","source_url":null,"note":"to verify"},
-    {"index_name_en":"Network Readiness Index","index_name_ar":"مؤشر جاهزية الشبكات","publisher":"Portulans Institute","year":2024,"rank":32,"score":null,"total_countries":133,"responsible_entity":"National Planning Council","source_url":null,"note":"to verify"},
-    {"index_name_en":"Travel and Tourism Development Index","index_name_ar":"مؤشر تطور السفر والسياحة","publisher":"World Economic Forum","year":2024,"rank":47,"score":null,"total_countries":119,"responsible_entity":"National Planning Council","source_url":null,"note":"to verify"},
-    {"index_name_en":"Logistics Performance Index","index_name_ar":"مؤشر أداء الخدمات اللوجستية","publisher":"World Bank","year":2023,"rank":22,"score":3.8,"total_countries":139,"responsible_entity":"National Planning Council","source_url":null,"note":"to verify"},
-    {"index_name_en":"Open Data Inventory","index_name_ar":"مؤشر جرد البيانات المفتوحة","publisher":"Open Data Watch","year":2024,"rank":null,"score":null,"total_countries":195,"responsible_entity":"National Planning Council","source_url":null,"note":"to verify"},
-    {"index_name_en":"World Digital Competitiveness Ranking","index_name_ar":"مؤشر التنافسية الرقمية العالمية","publisher":"IMD World Competitiveness Center","year":2025,"rank":29,"score":null,"total_countries":67,"responsible_entity":"National Planning Council","source_url":null,"note":"to verify"},
-    {"index_name_en":"Global Cybersecurity Index","index_name_ar":"مؤشر الأمن السيبراني العالمي","publisher":"International Telecommunication Union","year":2024,"rank":10,"score":null,"total_countries":194,"responsible_entity":"National Planning Council","source_url":null,"note":"to verify"}
-  ],
-  "signals": [
-    {"title_en":"AI-driven automation reshaping labour demand","title_ar":"الأتمتة القائمة على الذكاء الاصطناعي تعيد تشكيل الطلب على العمالة","description_en":"International reports point to accelerating automation of routine white-collar tasks, which could reshape skills needed in Qatar's labour market over the next decade.","description_ar":"تشير التقارير الدولية إلى تسارع أتمتة المهام الروتينية في الوظائف المكتبية، وهو ما قد يعيد تشكيل المهارات المطلوبة في سوق العمل القطري خلال العقد المقبل.","source":"scan of international reports","impact":"high","horizon":"mid","outcome_codes":["workforce","eco_growth"],"created_by":"analyst@npc.qa"},
-    {"title_en":"Shifting global LNG demand patterns","title_ar":"تحولات في أنماط الطلب العالمي على الغاز الطبيعي المسال","description_en":"Emerging alternative energy sources and new supply entrants are gradually changing long-term global demand projections for liquefied natural gas.","description_ar":"تعمل مصادر الطاقة البديلة الناشئة والموردون الجدد على تغيير توقعات الطلب العالمي طويل الأجل على الغاز الطبيعي المسال تدريجياً.","source":"scan of international reports","impact":"high","horizon":"long","outcome_codes":["eco_growth","fiscal_sust"],"created_by":"head.stats@npc.qa"},
-    {"title_en":"Rising regional competition in logistics hubs","title_ar":"تصاعد المنافسة الإقليمية بين مراكز الخدمات اللوجستية","description_en":"Neighbouring states are expanding port and logistics infrastructure, intensifying competition for regional trade and re-export flows.","description_ar":"تعمل الدول المجاورة على توسيع بنيتها التحتية للموانئ والخدمات اللوجستية، مما يكثف المنافسة على تدفقات التجارة وإعادة التصدير الإقليمية.","source":"scan of international reports","impact":"medium","horizon":"mid","outcome_codes":["eco_growth"],"created_by":"employee:7"},
-    {"title_en":"Increasing heat stress from climate change","title_ar":"تزايد الإجهاد الحراري الناجم عن تغير المناخ","description_en":"Climate projections point to more frequent extreme heat days in the Gulf region, with implications for outdoor labour, energy demand, and public health planning.","description_ar":"تشير توقعات المناخ إلى زيادة تواتر أيام الحرارة الشديدة في منطقة الخليج، مع تداعيات على العمالة في الهواء الطلق والطلب على الطاقة وتخطيط الصحة العامة.","source":"scan of international reports","impact":"high","horizon":"long","outcome_codes":["env_sust","quality_life"],"created_by":"analyst@npc.qa"},
-    {"title_en":"Demographic aging within the expatriate workforce","title_ar":"تقدم العمر الديموغرافي ضمن القوى العاملة الوافدة","description_en":"Long-tenured segments of the expatriate workforce are aging, raising future questions about succession planning and pension arrangements.","description_ar":"تتقدم شرائح من القوى العاملة الوافدة طويلة الأمد في العمر، مما يثير تساؤلات مستقبلية حول التخطيط للإحلال الوظيفي وترتيبات التقاعد.","source":"scan of international reports","impact":"medium","horizon":"mid","outcome_codes":["workforce"],"created_by":"employee:14"},
-    {"title_en":"Growing regulatory attention to synthetic data","title_ar":"تزايد الاهتمام التنظيمي بالبيانات الاصطناعية","description_en":"Several governments are drafting rules for synthetic and AI-generated data used in official statistics, which could shape future data governance standards.","description_ar":"تعكف عدة حكومات على صياغة قواعد للبيانات الاصطناعية والمولدة بالذكاء الاصطناعي المستخدمة في الإحصاءات الرسمية، وهو ما قد يشكل معايير حوكمة البيانات مستقبلاً.","source":"scan of international reports","impact":"medium","horizon":"near","outcome_codes":["gov_excellence"],"created_by":"verifier@npc.qa"},
-    {"title_en":"Expansion of generative AI in public sector service delivery","title_ar":"توسع الذكاء الاصطناعي التوليدي في تقديم الخدمات بالقطاع العام","description_en":"Governments worldwide are piloting generative AI assistants for citizen services, prompting new questions about accuracy, oversight, and trust.","description_ar":"تجرب حكومات حول العالم مساعدات الذكاء الاصطناعي التوليدي لخدمة المواطنين، مما يثير تساؤلات جديدة حول الدقة والرقابة والثقة.","source":"scan of international reports","impact":"high","horizon":"near","outcome_codes":["gov_excellence"],"created_by":"knowledge@npc.qa"},
-    {"title_en":"Diversifying trade corridors amid geopolitical shifts","title_ar":"تنويع الممرات التجارية في ظل التحولات الجيوسياسية","description_en":"Global shipping and trade patterns are adjusting to new geopolitical alignments, with potential effects on Qatar's foreign trade routes.","description_ar":"تتكيف أنماط الشحن والتجارة العالمية مع التحولات الجيوسياسية الجديدة، مع تأثيرات محتملة على طرق التجارة الخارجية لقطر.","source":"scan of international reports","impact":"medium","horizon":"mid","outcome_codes":["eco_growth"],"created_by":"employee:22"},
-    {"title_en":"Water scarcity pressures across the region","title_ar":"ضغوط ندرة المياه في المنطقة","description_en":"Regional water stress indicators are worsening, adding urgency to desalination capacity planning and demand management.","description_ar":"تتفاقم مؤشرات الإجهاد المائي الإقليمي، مما يضيف إلحاحاً لتخطيط قدرات تحلية المياه وإدارة الطلب.","source":"scan of international reports","impact":"medium","horizon":"long","outcome_codes":["env_sust"],"created_by":"employee:3"},
-    {"title_en":"Cybersecurity threats targeting critical statistical infrastructure","title_ar":"تهديدات سيبرانية تستهدف البنية التحتية الإحصائية الحيوية","description_en":"International cybersecurity reports flag a rise in attacks targeting government data infrastructure, underscoring the need for resilient statistical systems.","description_ar":"تشير تقارير الأمن السيبراني الدولية إلى تصاعد الهجمات التي تستهدف البنية التحتية لبيانات الحكومات، مما يبرز الحاجة إلى أنظمة إحصائية قادرة على الصمود.","source":"scan of international reports","impact":"high","horizon":"near","outcome_codes":["gov_excellence"],"created_by":"verifier@npc.qa"}
-  ],
-  "risks": [
-    {"title_en":"Delays in inter-ministerial data sharing","title_ar":"تأخر تبادل البيانات بين الوزارات","likelihood":4,"impact":4,"mitigation_en":"Formalize data sharing agreements with clear timelines and escalation paths.","mitigation_ar":"إضفاء الطابع الرسمي على اتفاقيات تبادل البيانات مع جداول زمنية واضحة ومسارات تصعيد.","status":"mitigating","owner":"head.stats@npc.qa","outcome_code":"gov_excellence"},
-    {"title_en":"Scarcity of specialized data science talent","title_ar":"ندرة الكفاءات المتخصصة في علوم البيانات","likelihood":4,"impact":3,"mitigation_en":"Expand training partnerships and competitive fellowship programs to build local talent pipelines.","mitigation_ar":"توسيع شراكات التدريب وبرامج الزمالة التنافسية لبناء قنوات محلية للكفاءات.","status":"open","owner":"employee:5","outcome_code":"workforce"},
-    {"title_en":"Reprioritization of NDS3 project funding","title_ar":"إعادة ترتيب أولويات تمويل مشاريع الاستراتيجية الوطنية الثالثة","likelihood":3,"impact":5,"mitigation_en":"Maintain a transparent project prioritization framework tied to outcome impact scores.","mitigation_ar":"الحفاظ على إطار شفاف لترتيب أولويات المشاريع مرتبط بدرجات الأثر على المخرجات.","status":"open","owner":"admin@npc.qa","outcome_code":"fiscal_sust"},
-    {"title_en":"Vendor lock-in on core statistical systems","title_ar":"التبعية لمورد واحد في الأنظمة الإحصائية الأساسية","likelihood":2,"impact":4,"mitigation_en":"Require open standards and data portability clauses in all new technology contracts.","mitigation_ar":"اشتراط معايير مفتوحة وبنود لقابلية نقل البيانات في جميع العقود التقنية الجديدة.","status":"open","owner":"employee:9","outcome_code":"gov_excellence"},
-    {"title_en":"Cyber incident affecting statistical data integrity","title_ar":"حادث سيبراني يؤثر في سلامة البيانات الإحصائية","likelihood":1,"impact":5,"mitigation_en":"Strengthen backup protocols, access controls, and incident response drills for statistical systems.","mitigation_ar":"تعزيز بروتوكولات النسخ الاحتياطي وضوابط الوصول وتمارين الاستجابة للحوادث في الأنظمة الإحصائية.","status":"mitigating","owner":"verifier@npc.qa","outcome_code":"gov_excellence"},
-    {"title_en":"Methodology changes at international index providers","title_ar":"تغييرات منهجية لدى مزودي المؤشرات الدولية","likelihood":3,"impact":1,"mitigation_en":"Monitor index provider announcements closely and pre-brief sector teams on likely methodology shifts.","mitigation_ar":"متابعة إعلانات مزودي المؤشرات عن كثب وتوعية الفرق القطاعية مسبقاً بالتغيرات المنهجية المحتملة.","status":"open","owner":"analyst@npc.qa","outcome_code":null},
-    {"title_en":"Incomplete response rates in household surveys","title_ar":"انخفاض معدلات الاستجابة في مسوحات الأسر","likelihood":3,"impact":3,"mitigation_en":"Diversify survey collection channels and strengthen public awareness campaigns ahead of fieldwork.","mitigation_ar":"تنويع قنوات جمع بيانات المسوحات وتعزيز حملات التوعية العامة قبل العمل الميداني.","status":"open","owner":"employee:11","outcome_code":"quality_life"},
-    {"title_en":"Overlapping mandates between sector teams","title_ar":"تداخل الصلاحيات بين الفرق القطاعية","likelihood":2,"impact":2,"mitigation_en":"Clarify roles and responsibilities through updated governance charters for each sector team.","mitigation_ar":"توضيح الأدوار والمسؤوليات من خلال مواثيق حوكمة محدثة لكل فريق قطاعي.","status":"mitigating","owner":"admin@npc.qa","outcome_code":"gov_excellence"},
-    {"title_en":"Slower than expected renewable energy project delivery","title_ar":"تأخر تسليم مشاريع الطاقة المتجددة عن الجدول الزمني المتوقع","likelihood":2,"impact":3,"mitigation_en":"Track project milestones monthly and escalate delivery risks to the relevant sector team early.","mitigation_ar":"متابعة مراحل إنجاز المشاريع شهرياً ورفع مخاطر التسليم إلى الفريق القطاعي المعني في وقت مبكر.","status":"open","owner":"employee:18","outcome_code":"env_sust"},
-    {"title_en":"Public misinterpretation of published indicators","title_ar":"سوء تفسير الجمهور للمؤشرات المنشورة","likelihood":5,"impact":2,"mitigation_en":"Publish plain-language explainers alongside technical releases to reduce misinterpretation.","mitigation_ar":"نشر شروح مبسطة إلى جانب الإصدارات الفنية للحد من سوء الفهم.","status":"open","owner":"knowledge@npc.qa","outcome_code":"gov_excellence"},
-    {"title_en":"Fragmented administrative data standards across entities","title_ar":"تشتت معايير البيانات الإدارية بين الجهات","likelihood":5,"impact":4,"mitigation_en":"Accelerate rollout of the National Data Standards across remaining government entities.","mitigation_ar":"تسريع تعميم معايير البيانات الوطنية على الجهات الحكومية المتبقية.","status":"mitigating","owner":"head.stats@npc.qa","outcome_code":"gov_excellence"},
-    {"title_en":"Low awareness of foresight tools among sector teams","title_ar":"ضعف الوعي بأدوات الاستشراف بين الفرق القطاعية","likelihood":2,"impact":1,"mitigation_en":"Run regular foresight capacity-building workshops for sector team focal points.","mitigation_ar":"تنظيم ورش عمل دورية لبناء القدرات الاستشرافية لمنسقي الفرق القطاعية.","status":"open","owner":"employee:26","outcome_code":null}
-  ],
-  "spotlights": [
-    {"user":"analyst@npc.qa","blurb_en":"A careful review of national accounts documentation this quarter helped three sector teams align their briefs with the latest GDP figures.","blurb_ar":"أسهمت مراجعة دقيقة لوثائق الحسابات القومية هذا الربع في مساعدة ثلاثة فرق قطاعية على مواءمة موجزاتها مع أحدث أرقام الناتج المحلي الإجمالي."},
-    {"user":"knowledge@npc.qa","blurb_en":"Curating the new NDS3 Foundations collection made it far easier for new joiners to find the strategy documents they need in one place.","blurb_ar":"جعل تنظيم مجموعة أسس الاستراتيجية الوطنية الثالثة الجديدة من الأسهل بكثير على الموظفين الجدد إيجاد وثائق الاستراتيجية التي يحتاجونها في مكان واحد."},
-    {"user":"employee:14","blurb_en":"Twelve verified Arabic translations in a single month made this contributor one of SiaNexus's most trusted Guardians this quarter.","blurb_ar":"جعلت اثنتا عشرة ترجمة عربية موثقة خلال شهر واحد هذا المساهم من أكثر حراس سيا نكسس الموثوق بهم هذا الربع."}
-  ],
-  "collections": [
-    {"code":"nds3_foundations","name_en":"NDS3 Foundations","name_ar":"أسس الاستراتيجية الوطنية الثالثة","description_en":"Core strategy documents, outcome frameworks, and project charters underpinning the third National Development Strategy.","description_ar":"وثائق الاستراتيجية الأساسية وأطر المخرجات ومواثيق المشاريع التي تستند إليها الاستراتيجية الوطنية الثالثة للتنمية.","cover_style":"maroon-weave","keywords":["NDS3","National Development Strategy","strategy framework","national outcomes","الاستراتيجية الوطنية الثالثة"]},
-    {"code":"national_data_program","name_en":"National Data Program","name_ar":"البرنامج الوطني للبيانات","description_en":"Standards, governance frameworks, and trust indices that shape how Qatar's government collects, shares, and safeguards data.","description_ar":"المعايير وأطر الحوكمة ومؤشرات الثقة التي تشكل كيفية جمع حكومة قطر للبيانات ومشاركتها وحمايتها.","cover_style":"gulf-weave","keywords":["National Data Standards","data governance","Data Trust Index","open data","معايير البيانات الوطنية"]},
-    {"code":"census_2025","name_en":"Census 2025","name_ar":"تعداد 2025","description_en":"Planning documents, field manuals, and results from Qatar's 2025 population and housing census.","description_ar":"وثائق التخطيط والأدلة الميدانية والنتائج الخاصة بتعداد قطر للسكان والمساكن لعام 2025.","cover_style":"gold-weave","keywords":["Census 2025","population census","housing census","field manual","تعداد 2025"]},
-    {"code":"releases_2026","name_en":"Statistical Releases 2026","name_ar":"الإصدارات الإحصائية 2026","description_en":"Quarterly and monthly statistical bulletins published across national accounts, prices, trade, and labour statistics in 2026.","description_ar":"النشرات الإحصائية الربع سنوية والشهرية المنشورة في مجالات الحسابات القومية والأسعار والتجارة وإحصاءات العمل خلال عام 2026.","cover_style":"maroon-arc","keywords":["statistical release","2026 bulletin","quarterly statistics","monthly bulletin","الإصدارات الإحصائية"]},
-    {"code":"qatar_indices","name_en":"Qatar in International Indices","name_ar":"قطر في المؤشرات الدولية","description_en":"Qatar's standing across major global indices, including competitiveness, human development, and governance rankings.","description_ar":"مكانة قطر عبر أبرز المؤشرات العالمية، بما في ذلك التنافسية والتنمية البشرية وترتيبات الحوكمة.","cover_style":"gulf-arc","keywords":["international index","global ranking","competitiveness index","human development index","المؤشرات الدولية"]},
-    {"code":"legacy_strategies","name_en":"Legacy Strategies: NDS1 and NDS2","name_ar":"الاستراتيجيات السابقة: الأولى والثانية للتنمية","description_en":"Archived documents and evaluation reports from Qatar's first and second National Development Strategies.","description_ar":"الوثائق المؤرشفة وتقارير التقييم الخاصة بالاستراتيجيتين الوطنيتين الأولى والثانية للتنمية في قطر.","cover_style":"gold-arc","keywords":["NDS1","NDS2","legacy strategy","first national development strategy","second national development strategy","الاستراتيجية الوطنية الأولى","الاستراتيجية الوطنية الثانية"]}
-  ],
-  "notification_templates": [
-    {"kind":"impact","title_en":"Your answer was cited","title_ar":"تم الاستشهاد بإجابتك","body_en":"Your answer on population methodology was cited in 4 briefs this month.","body_ar":"تم الاستشهاد بإجابتك حول منهجية السكان في 4 موجزات هذا الشهر.","link":"/impact"},
-    {"kind":"impact","title_en":"Your document is trending","title_ar":"مستندك يحقق تفاعلاً متزايداً","body_en":"Your uploaded report on non-hydrocarbon growth was viewed by 30 colleagues this week.","body_ar":"شاهد تقريرك المرفوع عن النمو غير النفطي 30 زميلاً هذا الأسبوع.","link":"/vault"},
-    {"kind":"route","title_en":"New question routed to you","title_ar":"تم توجيه سؤال جديد إليك","body_en":"A question about CPI weighting has been routed to you as the topic expert.","body_ar":"تم توجيه سؤال حول ترجيح الرقم القياسي لأسعار المستهلك إليك بصفتك خبير الموضوع.","link":"/ask"},
-    {"kind":"route","title_en":"Bounty assigned to your team","title_ar":"تم تعيين مكافأة لفريقك","body_en":"A new bounty on census field integration has been routed to your sector team.","body_ar":"تم توجيه مكافأة جديدة حول التكامل الميداني للتعداد إلى فريقك القطاعي.","link":"/bounties"},
-    {"kind":"verify","title_en":"Translation needs verification","title_ar":"ترجمة بحاجة إلى التحقق","body_en":"A machine translation of the Data Trust Index glossary is ready for your verification.","body_ar":"ترجمة آلية لمسرد مؤشر الثقة بالبيانات جاهزة للتحقق منها.","link":"/vault"},
-    {"kind":"verify","title_en":"Verify a new indicator explanation","title_ar":"تحقق من شرح مؤشر جديد","body_en":"Please review and verify the plain-language explanation drafted for the trade balance indicator.","body_ar":"يرجى مراجعة والتحقق من الشرح المبسط الذي أُعد لمؤشر الميزان التجاري.","link":"/statistics"},
-    {"kind":"release","title_en":"New statistical release published","title_ar":"إصدار إحصائي جديد منشور","body_en":"The latest national accounts bulletin is now available in the Statistics module.","body_ar":"أصبحت أحدث نشرة للحسابات القومية متاحة الآن في وحدة الإحصاء.","link":"/statistics"},
-    {"kind":"release","title_en":"New index ranking update","title_ar":"تحديث جديد لترتيب المؤشرات","body_en":"Qatar's latest position across three international indices has just been added to the vault.","body_ar":"أُضيف إلى المخزن للتو أحدث مركز لقطر عبر ثلاثة مؤشرات دولية.","link":"/vault"},
-    {"kind":"bounty","title_en":"New bounty available","title_ar":"مكافأة جديدة متاحة","body_en":"A new bounty on CPI rebasing methodology is open and worth 100 points.","body_ar":"مكافأة جديدة حول منهجية إعادة سنة الأساس للرقم القياسي لأسعار المستهلك متاحة وتساوي 100 نقطة.","link":"/bounties"},
-    {"kind":"bounty","title_en":"Bounty deadline approaching","title_ar":"اقتراب موعد استحقاق المكافأة","body_en":"The bounty to document open data publication steps closes soon, submit your answer today.","body_ar":"تقترب مهلة مكافأة توثيق خطوات نشر البيانات المفتوحة، قدّم إجابتك اليوم.","link":"/bounties"},
-    {"kind":"welcome","title_en":"Welcome to SiaNexus","title_ar":"مرحباً بك في سيا نكسس","body_en":"Welcome to SiaNexus, your gateway to NDS3 strategy, statistics, and foresight in one place.","body_ar":"مرحباً بك في سيا نكسس، بوابتك إلى استراتيجية الاستراتيجية الوطنية الثالثة والإحصاءات والاستشراف في مكان واحد.","link":"/vault"},
-    {"kind":"welcome","title_en":"Get started with your first question","title_ar":"ابدأ بطرح سؤالك الأول","body_en":"Ask your first question in SiaNexus and get an answer with citations in seconds.","body_ar":"اطرح سؤالك الأول في سيا نكسس واحصل على إجابة مدعومة بالاستشهادات خلال ثوانٍ.","link":"/ask"}
-  ]
+ "word_of_day": [
+  {
+   "kind": "quote",
+   "text_en": "Good environmental decisions start with data that people trust.",
+   "text_ar": "القرارات البيئية الجيدة تبدأ ببيانات يثق بها الناس.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "Saudi Vision 2030 is our compass; the National Environment Strategy is how we turn it into measurable progress.",
+   "text_ar": "رؤية السعودية 2030 هي بوصلتنا، والاستراتيجية الوطنية للبيئة هي الطريق لتحويلها إلى تقدم قابل للقياس.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "Statistics without context are just numbers; our task is to turn numbers into understanding.",
+   "text_ar": "الإحصاءات بلا سياق مجرد أرقام، ومهمتنا تحويل الأرقام إلى فهم.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "An institution that measures itself honestly can improve itself continuously.",
+   "text_ar": "المؤسسة التي تقيس نفسها بصدق قادرة على التحسن باستمرار.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "Success is judged not by the plans we wrote, but by the outcomes delivered for water, land and air.",
+   "text_ar": "يُقاس النجاح لا بالخطط التي كتبناها، بل بالنتائج التي تحققت للمياه والأرض والهواء.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "Every entity that shares its data responsibly makes the whole sector smarter.",
+   "text_ar": "كل جهة تشارك بياناتها بمسؤولية تجعل القطاع كله أكثر ذكاءً.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "Planning is a continuous act of listening to evidence and adjusting course.",
+   "text_ar": "وضع الخطط عمل مستمر من الإصغاء إلى الأدلة وتعديل المسار.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "We owe the public transparency in how environmental indicators are measured and reported.",
+   "text_ar": "نحن مدينون للجمهور بالشفافية في كيفية قياس المؤشرات البيئية والإبلاغ عنها.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "The strength of a monitoring system is the trust that institutions and citizens place in it.",
+   "text_ar": "قوة منظومة الرصد هي الثقة التي تضعها فيها المؤسسات والمواطنون.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "Every drop saved is a decision made well upstream.",
+   "text_ar": "كل لتر مياه نوفره هي قرار أُحسن اتخاذه في وقت مبكر.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "Foresight is not predicting the future with certainty; it is preparing for several possible futures.",
+   "text_ar": "الاستشراف ليس التنبؤ بالمستقبل بيقين، بل الاستعداد لعدة مستقبلات ممكنة.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "Shared data standards are the quiet infrastructure behind every dashboard and every decision.",
+   "text_ar": "معايير البيانات المشتركة هي البنية الهادئة وراء كل لوحة مؤشرات وكل قرار.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "We invest in monitoring and surveys because good decisions require good numbers.",
+   "text_ar": "نستثمر في الرصد والمسوح لأن القرارات الجيدة تتطلب أرقاماً جيدة.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "Environmental protection and economic growth are two sides of the same commitment.",
+   "text_ar": "حماية البيئة والنمو الاقتصادي وجهان لالتزام واحد.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "A knowledge-based sector begins with institutional memory that is easy to search and trust.",
+   "text_ar": "القطاع القائم على المعرفة يبدأ بذاكرة مؤسسية يسهل البحث فيها والوثوق بها.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "Every indicator we publish is a promise of accountability.",
+   "text_ar": "كل مؤشر ننشره هو وعد بالمساءلة.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "Our ambition is that no environmental policy is made without first consulting the evidence.",
+   "text_ar": "طموحنا ألا تُصاغ سياسة بيئية دون الاطلاع أولاً على الأدلة.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "The Programme Office exists to connect strategy, data and delivery in one continuous cycle.",
+   "text_ar": "يوجد مكتب البرنامج ليربط الاستراتيجية والبيانات والتنفيذ في دورة واحدة متصلة.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "Compliance is easier when requirements are clear, current and easy to find.",
+   "text_ar": "الامتثال أيسر حين تكون المتطلبات واضحة ومحدّثة ويسهل الوصول إليها.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "quote",
+   "text_en": "We ask every delivery team to treat monitoring and evaluation not as a burden but as a compass.",
+   "text_ar": "نطلب من كل فريق تنفيذ أن ينظر إلى المتابعة والتقييم بوصفهما بوصلة لا عبئاً.",
+   "attribution_en": "Programme Office guiding principle",
+   "attribution_ar": "مبدأ توجيهي لمكتب البرنامج",
+   "source_ref": "Programme Office demo copy"
+  },
+  {
+   "kind": "fact",
+   "text_en": "The National Environment Strategy delivery plan in this demo is organised into seven environment themes mapped to Saudi Vision 2030.",
+   "text_ar": "تنظم خطة تنفيذ الاستراتيجية الوطنية للبيئة في هذا العرض في سبعة محاور بيئية مرتبطة برؤية السعودية 2030.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "Saudi Vision 2030 rests on three pillars: a Vibrant Society, a Thriving Economy and an Ambitious Nation.",
+   "text_ar": "ترتكز رؤية السعودية 2030 على ثلاث ركائز: مجتمع حيوي واقتصاد مزدهر ووطن طموح.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The Saudi Green Initiative includes a target to protect 30 percent of land and sea areas by 2030.",
+   "text_ar": "تتضمن مبادرة السعودية الخضراء مستهدفاً لحماية 30 بالمئة من المساحات البرية والبحرية بحلول 2030.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The Saudi Green Initiative targets 50 percent of electricity from renewable sources by 2030.",
+   "text_ar": "تستهدف مبادرة السعودية الخضراء توليد 50 بالمئة من الكهرباء من مصادر متجددة بحلول 2030.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The Kingdom announced in 2021 an ambition to reach net zero emissions by 2060 through a circular carbon economy approach.",
+   "text_ar": "أعلنت المملكة عام 2021 طموحها لبلوغ الحياد الصفري للانبعاثات بحلول 2060 عبر نهج الاقتصاد الدائري للكربون.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The Saudi Green Initiative aims to reduce emissions by 278 million tonnes of CO2e annually by 2030.",
+   "text_ar": "تهدف مبادرة السعودية الخضراء إلى خفض الانبعاثات بمقدار 278 مليون طن مكافئ من ثاني أكسيد الكربون سنوياً بحلول 2030.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The Middle East Green Initiative aims to plant 50 billion trees across the region.",
+   "text_ar": "تهدف مبادرة الشرق الأوسط الأخضر إلى زراعة 50 مليار شجرة في المنطقة.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The Saudi Green Initiative includes a target to plant 10 billion trees in the Kingdom.",
+   "text_ar": "تتضمن مبادرة السعودية الخضراء مستهدفاً لزراعة 10 مليارات شجرة في المملكة.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The Ministry of Environment, Water and Agriculture (MEWA) leads water, environment and agriculture policy.",
+   "text_ar": "تتولى وزارة البيئة والمياه والزراعة قيادة سياسات المياه والبيئة والزراعة.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The National Center for Environmental Compliance (NCEC) is the national environmental compliance and enforcement body.",
+   "text_ar": "المركز الوطني للرقابة على الالتزام البيئي هو الجهة الوطنية للامتثال والإنفاذ البيئي.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The National Center for Wildlife (NCW) manages biodiversity and protected areas.",
+   "text_ar": "يتولى المركز الوطني للحياة الفطرية إدارة التنوع الأحيائي والمحميات.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The National Center for Vegetation Cover Development and Combating Desertification (NCVC) works on vegetation cover and desertification.",
+   "text_ar": "يعمل المركز الوطني لتنمية الغطاء النباتي ومكافحة التصحر على الغطاء النباتي والتصحر.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The National Center for Waste Management (MWAN) regulates and develops the waste sector.",
+   "text_ar": "ينظم المركز الوطني لإدارة النفايات قطاع النفايات ويطوره.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The Source Library in EnviroAI is built from a databank of public Saudi and international sources on environment, water and agriculture.",
+   "text_ar": "بنيت مكتبة المصادر في EnviroAI من قاعدة مصادر عامة سعودية ودولية عن البيئة والمياه والزراعة.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The Source Library groups sources into regulators, research institutions, national initiatives, global data portals and global indices.",
+   "text_ar": "تصنف مكتبة المصادر المصادر إلى جهات تنظيمية ومؤسسات بحثية ومبادرات وطنية ومنصات بيانات عالمية ومؤشرات عالمية.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "Every demo statistic in EnviroAI that is not sourced is labelled Illustrative so it is never mistaken for a published figure.",
+   "text_ar": "كل إحصاء توضيحي في EnviroAI غير موثق يوسم بأنه توضيحي حتى لا يختلط بالأرقام المنشورة.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The delivery plan tracks more than 60 projects, each owned by a named delivery entity.",
+   "text_ar": "تتابع خطة التنفيذ أكثر من 60 مشروعاً، يملك كل منها جهة تنفيذ محددة.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The Programme Office reviews monitoring and evaluation data against theme targets on a regular cycle.",
+   "text_ar": "يراجع مكتب البرنامج بيانات المتابعة والتقييم مقابل مستهدفات المحاور وفق دورة منتظمة.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The Environment Fund supports financing of environmental projects.",
+   "text_ar": "يدعم صندوق البيئة تمويل المشاريع البيئية.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "fact",
+   "text_en": "The National Water Strategy 2030 frames the Kingdom's long-term water agenda.",
+   "text_ar": "تؤطر الاستراتيجية الوطنية للمياه 2030 أجندة المملكة طويلة المدى في المياه.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Drag a PDF anywhere onto EnviroAI to upload it and start extracting insights instantly.",
+   "text_ar": "اسحب ملف PDF إلى أي مكان في EnviroAI لرفعه وبدء استخراج الرؤى فوراً.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Press Ask to get answers with citations back to the original source documents.",
+   "text_ar": "اضغط على اسأل لتحصل على إجابات مع إحالات إلى الوثائق المصدرية الأصلية.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Follow topics that matter to your work to shape your For You feed.",
+   "text_ar": "تابع المواضيع المهمة لعملك لتشكيل صفحة المقترحات لك.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Verify a machine translation into Arabic or English to earn Guardian points.",
+   "text_ar": "راجع ترجمة آلية إلى العربية أو الإنجليزية لتكسب نقاط الحارس.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Use Institutional Memory search to filter documents by theme, topic or department.",
+   "text_ar": "استخدم بحث الذاكرة المؤسسية لتصفية الوثائق بحسب المحور أو الموضوع أو الإدارة.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Bookmark a document to find it again quickly from your personal library.",
+   "text_ar": "ضع إشارة على وثيقة للعودة إليها بسرعة من مكتبتك الشخصية.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Open the Scorecard to explore indicators alongside their full metadata.",
+   "text_ar": "افتح بطاقة المؤشرات لاستعراض المؤشرات مع بياناتها الوصفية كاملة.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Submit a bounty answer to help close a knowledge gap and earn recognition.",
+   "text_ar": "قدّم إجابة على مكافأة معرفية للمساعدة في سد فجوة معرفية وكسب التقدير.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Check your Impact Receipts to see how your contributions were cited elsewhere.",
+   "text_ar": "اطلع على إيصالات الأثر لترى كيف استُشهد بمساهماتك.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Use collections to browse curated sets of documents on a single theme.",
+   "text_ar": "استخدم المجموعات لتصفح مجموعات منتقاة من الوثائق حول محور واحد.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Ask a follow-up question in the same thread to go deeper on a topic.",
+   "text_ar": "اطرح سؤالاً تالياً في المحادثة نفسها للتعمق في موضوع ما.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Rate an answer's usefulness to help EnviroAI improve future responses.",
+   "text_ar": "قيّم فائدة الإجابة لمساعدة EnviroAI على تحسين الإجابات القادمة.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Add a note to any document to capture context for your team.",
+   "text_ar": "أضف ملاحظة إلى أي وثيقة لتوثيق السياق لفريقك.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Check the Signals feed to see foresight trends that could affect your theme.",
+   "text_ar": "اطلع على تغذية الإشارات لتعرف اتجاهات الاستشراف التي قد تؤثر في محورك.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Review the Risk Register regularly to keep mitigation plans current.",
+   "text_ar": "راجع سجل المخاطر بانتظام لإبقاء خطط المعالجة محدّثة.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Use the Regulatory Overview to see which regulator owns a topic.",
+   "text_ar": "استخدم نظام البيئة لمعرفة الجهة التنظيمية المسؤولة عن موضوع ما.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Subscribe to a department's updates to get notified when new documents land.",
+   "text_ar": "اشترك في مستجدات إدارة لتصلك إشعارات بالوثائق الجديدة.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Tag a colleague in a comment to bring them into a document discussion.",
+   "text_ar": "أشر إلى زميل في تعليق لإشراكه في نقاش حول وثيقة.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Check your Guardian points on your profile to see your verification streak.",
+   "text_ar": "اطلع على نقاط الحارس في ملفك لترى سلسلة التحقق لديك.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  },
+  {
+   "kind": "tip",
+   "text_en": "Use quick filters on the daily card to jump straight to indicators you follow.",
+   "text_ar": "استخدم المرشحات السريعة في البطاقة اليومية للانتقال مباشرة إلى المؤشرات التي تتابعها.",
+   "attribution_en": null,
+   "attribution_ar": null,
+   "source_ref": null
+  }
+ ],
+ "daily_cards": [
+  {
+   "offset_day": 0,
+   "indicator_code": "water_consumption_pc",
+   "big_number": "238",
+   "fact_en": "litres per person per day was the average municipal water consumption in the latest demo series",
+   "fact_ar": "لتراً للفرد في اليوم هو متوسط استهلاك المياه البلدية في السلسلة التوضيحية الأحدث",
+   "hook_en": "Demand management is the cheapest new source of water.",
+   "hook_ar": "إدارة الطلب هي أرخص مصدر جديد للمياه.",
+   "quiz_question_en": "Which lever usually delivers the fastest reduction in municipal water demand?",
+   "quiz_question_ar": "أي رافعة تحقق عادة أسرع خفض في الطلب على المياه البلدية؟",
+   "options": [
+    {
+     "en": "Smart metering and tariff signals",
+     "ar": "العدادات الذكية وإشارات التعرفة"
+    },
+    {
+     "en": "Building more dams",
+     "ar": "بناء مزيد من السدود"
+    },
+    {
+     "en": "Importing bottled water",
+     "ar": "استيراد المياه المعبأة"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Metering and tariff signals change behaviour quickly and cost little compared with new supply.",
+   "explanation_ar": "القياس وإشارات التعرفة يغيران السلوك بسرعة وبتكلفة قليلة مقارنة بالإمداد الجديد."
+  },
+  {
+   "offset_day": 1,
+   "indicator_code": "desal_capacity",
+   "big_number": "11.9",
+   "fact_en": "million cubic metres per day of desalination capacity in the latest demo series",
+   "fact_ar": "مليون متر مكعب في اليوم من طاقة التحلية في السلسلة التوضيحية الأحدث",
+   "hook_en": "Desalination capacity is the backbone of municipal supply.",
+   "hook_ar": "طاقة التحلية هي العمود الفقري للإمداد البلدي.",
+   "quiz_question_en": "What is the main cost driver of desalinated water?",
+   "quiz_question_ar": "ما العامل الرئيسي في تكلفة المياه المحلاة؟",
+   "options": [
+    {
+     "en": "Energy",
+     "ar": "الطاقة"
+    },
+    {
+     "en": "Land",
+     "ar": "الأرض"
+    },
+    {
+     "en": "Packaging",
+     "ar": "التعبئة"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Energy is the largest operating cost, which is why energy intensity is tracked.",
+   "explanation_ar": "الطاقة هي أكبر كلفة تشغيلية، ولذلك تُتابع كثافة استهلاك الطاقة."
+  },
+  {
+   "offset_day": 2,
+   "indicator_code": "treated_wastewater_reuse",
+   "big_number": "30.8",
+   "fact_en": "percent of treated wastewater was reused in the latest demo series",
+   "fact_ar": "بالمئة من مياه الصرف المعالجة أعيد استخدامها في السلسلة التوضيحية الأحدث",
+   "hook_en": "Reused water frees up scarce fresh and groundwater.",
+   "hook_ar": "المياه المعاد استخدامها تحرر المياه العذبة والجوفية الشحيحة.",
+   "quiz_question_en": "Where is treated wastewater most commonly reused?",
+   "quiz_question_ar": "أين تُعاد غالباً استخدامات مياه الصرف المعالجة؟",
+   "options": [
+    {
+     "en": "Irrigation, industry and urban greening",
+     "ar": "الري والصناعة والتشجير الحضري"
+    },
+    {
+     "en": "Direct drinking supply",
+     "ar": "مياه الشرب المباشرة"
+    },
+    {
+     "en": "Swimming pools only",
+     "ar": "المسابح فقط"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Reuse in irrigation, industry and greening is the established pathway.",
+   "explanation_ar": "إعادة الاستخدام في الري والصناعة والتشجير هي المسار المعتمد."
+  },
+  {
+   "offset_day": 3,
+   "indicator_code": "groundwater_abstraction",
+   "big_number": "14.2",
+   "fact_en": "billion cubic metres of non-renewable groundwater were abstracted in the latest demo series",
+   "fact_ar": "مليار متر مكعب من المياه الجوفية غير المتجددة سُحبت في السلسلة التوضيحية الأحدث",
+   "hook_en": "Non-renewable aquifers cannot be refilled on human timescales.",
+   "hook_ar": "الخزانات الجوفية غير المتجددة لا يمكن إعادة ملؤها في أزمنة بشرية.",
+   "quiz_question_en": "Why is non-renewable groundwater abstraction tracked closely?",
+   "quiz_question_ar": "لماذا تُتابع معدلات السحب من المياه الجوفية غير المتجددة بدقة؟",
+   "options": [
+    {
+     "en": "Aquifers refill very slowly",
+     "ar": "الخزانات تتجدد ببطء شديد"
+    },
+    {
+     "en": "It is free of charge",
+     "ar": "لأنه بلا تكلفة"
+    },
+    {
+     "en": "It is used only for cooling",
+     "ar": "يُستخدم للتبريد فقط"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "These aquifers recharge extremely slowly, so abstraction is effectively mining.",
+   "explanation_ar": "تتغذى هذه الخزانات ببطء شديد، فيصبح السحب منها استنزافاً فعلياً."
+  },
+  {
+   "offset_day": 4,
+   "indicator_code": "efficient_irrigation_share",
+   "big_number": "55.9",
+   "fact_en": "percent of irrigated area used efficient irrigation in the latest demo series",
+   "fact_ar": "بالمئة من المساحة المروية استخدمت الري الكفؤ في السلسلة التوضيحية الأحدث",
+   "hook_en": "Agriculture is the largest water user, so efficiency matters most here.",
+   "hook_ar": "الزراعة هي أكبر مستخدم للمياه، ولذلك تكتسب الكفاءة هنا أهمية قصوى.",
+   "quiz_question_en": "Which of these is an efficient irrigation system?",
+   "quiz_question_ar": "أي مما يلي نظام ري كفؤ؟",
+   "options": [
+    {
+     "en": "Drip irrigation",
+     "ar": "الري بالتنقيط"
+    },
+    {
+     "en": "Flood irrigation",
+     "ar": "الري بالغمر"
+    },
+    {
+     "en": "Uncontrolled sprinklers",
+     "ar": "الرش غير المنضبط"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Drip systems deliver water directly to roots with minimal loss.",
+   "explanation_ar": "توصل أنظمة التنقيط الماء مباشرة إلى الجذور بأقل فاقد."
+  },
+  {
+   "offset_day": 5,
+   "indicator_code": "food_self_sufficiency",
+   "big_number": "54.0",
+   "fact_en": "percent self-sufficiency in selected staples in the latest demo series",
+   "fact_ar": "بالمئة اكتفاء ذاتي في السلع الأساسية المختارة في السلسلة التوضيحية الأحدث",
+   "hook_en": "Food security combines domestic production, reserves and trade.",
+   "hook_ar": "الأمن الغذائي يجمع بين الإنتاج المحلي والمخزون والتجارة.",
+   "quiz_question_en": "Food security strategies typically combine which three elements?",
+   "quiz_question_ar": "ما العناصر الثلاثة التي تجمعها عادة استراتيجيات الأمن الغذائي؟",
+   "options": [
+    {
+     "en": "Production, reserves and trade",
+     "ar": "الإنتاج والمخزون والتجارة"
+    },
+    {
+     "en": "Tariffs, tourism and transport",
+     "ar": "التعرفة والسياحة والنقل"
+    },
+    {
+     "en": "Packaging, pricing and promotion",
+     "ar": "التغليف والتسعير والترويج"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Resilience comes from combining domestic production, strategic reserves and diversified trade.",
+   "explanation_ar": "تأتي المرونة من الجمع بين الإنتاج المحلي والمخزون الاستراتيجي وتنويع التجارة."
+  },
+  {
+   "offset_day": 6,
+   "indicator_code": "protected_areas_share",
+   "big_number": "18.6",
+   "fact_en": "percent of land and sea was under protection in the latest demo series",
+   "fact_ar": "بالمئة من المساحات البرية والبحرية كانت محمية في السلسلة التوضيحية الأحدث",
+   "hook_en": "The Saudi Green Initiative target is 30 percent by 2030.",
+   "hook_ar": "مستهدف مبادرة السعودية الخضراء هو 30 بالمئة بحلول 2030.",
+   "quiz_question_en": "What protected-area share does the Saudi Green Initiative target by 2030?",
+   "quiz_question_ar": "ما نسبة المساحات المحمية التي تستهدفها مبادرة السعودية الخضراء بحلول 2030؟",
+   "options": [
+    {
+     "en": "10 percent",
+     "ar": "10 بالمئة"
+    },
+    {
+     "en": "30 percent",
+     "ar": "30 بالمئة"
+    },
+    {
+     "en": "60 percent",
+     "ar": "60 بالمئة"
+    }
+   ],
+   "correct_index": 1,
+   "explanation_en": "The Saudi Green Initiative targets protecting 30 percent of land and sea areas by 2030.",
+   "explanation_ar": "تستهدف مبادرة السعودية الخضراء حماية 30 بالمئة من المساحات البرية والبحرية بحلول 2030."
+  },
+  {
+   "offset_day": 7,
+   "indicator_code": "trees_planted",
+   "big_number": "190",
+   "fact_en": "million trees planted cumulatively in the latest demo series",
+   "fact_ar": "مليون شجرة مزروعة تراكمياً في السلسلة التوضيحية الأحدث",
+   "hook_en": "The long-term national ambition is 10 billion trees.",
+   "hook_ar": "الطموح الوطني بعيد المدى هو 10 مليارات شجرة.",
+   "quiz_question_en": "How many trees does the Saudi Green Initiative aim to plant nationally?",
+   "quiz_question_ar": "كم شجرة تهدف مبادرة السعودية الخضراء إلى زراعتها وطنياً؟",
+   "options": [
+    {
+     "en": "1 billion",
+     "ar": "مليار شجرة"
+    },
+    {
+     "en": "10 billion",
+     "ar": "10 مليارات شجرة"
+    },
+    {
+     "en": "100 billion",
+     "ar": "100 مليار شجرة"
+    }
+   ],
+   "correct_index": 1,
+   "explanation_en": "The initiative's national greening ambition is 10 billion trees; the Middle East Green Initiative aims for 50 billion regionally.",
+   "explanation_ar": "الطموح الوطني للتشجير في المبادرة 10 مليارات شجرة، أما مبادرة الشرق الأوسط الأخضر فتستهدف 50 ملياراً على مستوى المنطقة."
+  },
+  {
+   "offset_day": 8,
+   "indicator_code": "renewable_energy_share",
+   "big_number": "9.6",
+   "fact_en": "percent of electricity came from renewables in the latest demo series",
+   "fact_ar": "بالمئة من الكهرباء جاءت من مصادر متجددة في السلسلة التوضيحية الأحدث",
+   "hook_en": "The Saudi Green Initiative targets 50 percent by 2030.",
+   "hook_ar": "تستهدف مبادرة السعودية الخضراء 50 بالمئة بحلول 2030.",
+   "quiz_question_en": "What renewable share of electricity is targeted for 2030?",
+   "quiz_question_ar": "ما حصة الطاقة المتجددة من الكهرباء المستهدفة لعام 2030؟",
+   "options": [
+    {
+     "en": "About 5 percent",
+     "ar": "نحو 5 بالمئة"
+    },
+    {
+     "en": "About 50 percent",
+     "ar": "نحو 50 بالمئة"
+    },
+    {
+     "en": "100 percent",
+     "ar": "100 بالمئة"
+    }
+   ],
+   "correct_index": 1,
+   "explanation_en": "The Saudi Green Initiative targets 50 percent renewables in the power mix by 2030.",
+   "explanation_ar": "تستهدف مبادرة السعودية الخضراء 50 بالمئة من الطاقة المتجددة في مزيج الطاقة بحلول 2030."
+  },
+  {
+   "offset_day": 9,
+   "indicator_code": "ghg_per_capita",
+   "big_number": "17.8",
+   "fact_en": "tonnes of CO2e per person in the latest demo series",
+   "fact_ar": "طن مكافئ من ثاني أكسيد الكربون للفرد في السلسلة التوضيحية الأحدث",
+   "hook_en": "Per capita emissions normalise the footprint for population growth.",
+   "hook_ar": "انبعاثات الفرد تضبط البصمة الكربونية بحسب نمو السكان.",
+   "quiz_question_en": "Which unit measures emissions in carbon-equivalent terms?",
+   "quiz_question_ar": "أي وحدة تقيس الانبعاثات بما يعادلها من الكربون؟",
+   "options": [
+    {
+     "en": "tCO2e",
+     "ar": "طن مكافئ ثاني أكسيد الكربون"
+    },
+    {
+     "en": "kWh",
+     "ar": "كيلوواط ساعة"
+    },
+    {
+     "en": "m3",
+     "ar": "متر مكعب"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "tCO2e converts different greenhouse gases into carbon dioxide equivalents.",
+   "explanation_ar": "تحوّل هذه الوحدة الغازات الدفيئة المختلفة إلى ما يعادلها من ثاني أكسيد الكربون."
+  },
+  {
+   "offset_day": 10,
+   "indicator_code": "solar_capacity",
+   "big_number": "5,685",
+   "fact_en": "MW of installed solar PV in the latest demo series",
+   "fact_ar": "ميغاواط من الطاقة الشمسية الكهروضوئية المركبة في السلسلة التوضيحية الأحدث",
+   "hook_en": "Solar is central to the renewable share target.",
+   "hook_ar": "الطاقة الشمسية محورية لمستهدف حصة الطاقة المتجددة.",
+   "quiz_question_en": "Which unit expresses installed generation capacity?",
+   "quiz_question_ar": "أي وحدة تعبّر عن القدرة المركبة للتوليد؟",
+   "options": [
+    {
+     "en": "MW",
+     "ar": "ميغاواط"
+    },
+    {
+     "en": "mm",
+     "ar": "ملم"
+    },
+    {
+     "en": "ppm",
+     "ar": "جزء في المليون"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Installed capacity is measured in megawatts.",
+   "explanation_ar": "تقاس القدرة المركبة بالميغاواط."
+  },
+  {
+   "offset_day": 11,
+   "indicator_code": "waste_diversion_rate",
+   "big_number": "21.9",
+   "fact_en": "percent of waste was diverted from landfill in the latest demo series",
+   "fact_ar": "بالمئة من النفايات حُوّلت عن المرادم في السلسلة التوضيحية الأحدث",
+   "hook_en": "Diversion is the first step towards a circular economy.",
+   "hook_ar": "التحويل عن المرادم هو الخطوة الأولى نحو الاقتصاد الدائري.",
+   "quiz_question_en": "What does waste diversion mean?",
+   "quiz_question_ar": "ماذا يعني تحويل النفايات عن المرادم؟",
+   "options": [
+    {
+     "en": "Recovering or treating waste instead of landfilling it",
+     "ar": "استرداد النفايات أو معالجتها بدلاً من طمرها"
+    },
+    {
+     "en": "Moving waste to another landfill",
+     "ar": "نقل النفايات إلى مرمى آخر"
+    },
+    {
+     "en": "Burning waste in the open",
+     "ar": "حرق النفايات في العراء"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Diversion counts waste that is recycled, recovered or treated rather than landfilled.",
+   "explanation_ar": "يشمل التحويل النفايات المعاد تدويرها أو المستردة أو المعالجة بدلاً من طمرها."
+  },
+  {
+   "offset_day": 12,
+   "indicator_code": "recycling_rate",
+   "big_number": "13.9",
+   "fact_en": "percent recycling rate for municipal waste in the latest demo series",
+   "fact_ar": "بالمئة معدل إعادة تدوير النفايات البلدية في السلسلة التوضيحية الأحدث",
+   "hook_en": "Source separation makes recycling cheaper.",
+   "hook_ar": "الفرز من المصدر يجعل إعادة التدوير أقل كلفة.",
+   "quiz_question_en": "Which step most improves recycling quality?",
+   "quiz_question_ar": "أي خطوة تحسن جودة إعادة التدوير أكثر؟",
+   "options": [
+    {
+     "en": "Separation at source",
+     "ar": "الفرز من المصدر"
+    },
+    {
+     "en": "Mixing all waste",
+     "ar": "خلط جميع النفايات"
+    },
+    {
+     "en": "Longer transport",
+     "ar": "إطالة النقل"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Clean, separated streams are far easier to recycle.",
+   "explanation_ar": "من الأسهل كثيراً إعادة تدوير التيارات النظيفة المفرزة."
+  },
+  {
+   "offset_day": 13,
+   "indicator_code": "air_quality_index_avg",
+   "big_number": "79",
+   "fact_en": "index points was the average air quality index in the latest demo series",
+   "fact_ar": "نقطة هي متوسط مؤشر جودة الهواء في السلسلة التوضيحية الأحدث",
+   "hook_en": "Lower is better for the air quality index used in this demo.",
+   "hook_ar": "القيمة الأقل أفضل في مؤشر جودة الهواء المستخدم في هذا العرض.",
+   "quiz_question_en": "For a pollution index, is a lower value generally better or worse?",
+   "quiz_question_ar": "في مؤشر التلوث، هل القيمة الأقل أفضل عموماً أم أسوأ؟",
+   "options": [
+    {
+     "en": "Better",
+     "ar": "أفضل"
+    },
+    {
+     "en": "Worse",
+     "ar": "أسوأ"
+    },
+    {
+     "en": "It makes no difference",
+     "ar": "لا فرق"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "A lower index means cleaner air.",
+   "explanation_ar": "القيمة الأقل في المؤشر تعني هواءً أنظف."
+  },
+  {
+   "offset_day": 14,
+   "indicator_code": "pm10_exceedance_days",
+   "big_number": "121",
+   "fact_en": "days above the PM10 guideline in the latest demo series",
+   "fact_ar": "يوماً فوق الحد الإرشادي للجسيمات PM10 في السلسلة التوضيحية الأحدث",
+   "hook_en": "Dust is a major driver of PM10 peaks.",
+   "hook_ar": "الغبار من أبرز أسباب ذروات الجسيمات PM10.",
+   "quiz_question_en": "What natural source often drives high PM10 days?",
+   "quiz_question_ar": "ما المصدر الطبيعي الذي يتسبب غالباً في ارتفاع الجسيمات PM10؟",
+   "options": [
+    {
+     "en": "Dust and sandstorms",
+     "ar": "الغبار والعواصف الرملية"
+    },
+    {
+     "en": "Rainfall",
+     "ar": "الأمطار"
+    },
+    {
+     "en": "Sea breeze only",
+     "ar": "نسيم البحر فقط"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Dust events are a major natural contributor to PM10.",
+   "explanation_ar": "تُعد أحداث الغبار مساهماً طبيعياً رئيسياً في الجسيمات PM10."
+  },
+  {
+   "offset_day": 15,
+   "indicator_code": "inspections_total",
+   "big_number": "24,583",
+   "fact_en": "environmental inspections were recorded in the latest demo series",
+   "fact_ar": "عملية تفتيش بيئي سُجلت في السلسلة التوضيحية الأحدث",
+   "hook_en": "Risk-based inspection puts effort where it matters most.",
+   "hook_ar": "التفتيش القائم على المخاطر يوجه الجهد إلى حيث تشتد الحاجة.",
+   "quiz_question_en": "What does risk-based inspection prioritise?",
+   "quiz_question_ar": "ماذا يعطي التفتيش القائم على المخاطر الأولوية؟",
+   "options": [
+    {
+     "en": "Higher-risk facilities",
+     "ar": "المنشآت الأعلى مخاطرة"
+    },
+    {
+     "en": "The oldest files",
+     "ar": "أقدم الملفات"
+    },
+    {
+     "en": "Random order",
+     "ar": "الترتيب العشوائي"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Inspection effort is directed to facilities with the highest risk.",
+   "explanation_ar": "يوجَّه جهد التفتيش إلى المنشآت الأعلى مخاطرة."
+  },
+  {
+   "offset_day": 16,
+   "indicator_code": "compliance_rate",
+   "big_number": "75.8",
+   "fact_en": "percent of inspected facilities were compliant at first inspection in the latest demo series",
+   "fact_ar": "بالمئة من المنشآت المفتش عليها كانت ملتزمة عند أول تفتيش في السلسلة التوضيحية الأحدث",
+   "hook_en": "Clear requirements raise first-time compliance.",
+   "hook_ar": "وضوح المتطلبات يرفع الالتزام من أول مرة.",
+   "quiz_question_en": "Which body leads national environmental compliance and enforcement?",
+   "quiz_question_ar": "أي جهة تقود الامتثال والإنفاذ البيئي على المستوى الوطني؟",
+   "options": [
+    {
+     "en": "NCEC",
+     "ar": "المركز الوطني للرقابة على الالتزام البيئي"
+    },
+    {
+     "en": "NCW",
+     "ar": "المركز الوطني للحياة الفطرية"
+    },
+    {
+     "en": "MWAN",
+     "ar": "المركز الوطني لإدارة النفايات"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "The National Center for Environmental Compliance (NCEC) is the national compliance and enforcement body.",
+   "explanation_ar": "المركز الوطني للرقابة على الالتزام البيئي هو الجهة الوطنية للامتثال والإنفاذ."
+  },
+  {
+   "offset_day": 17,
+   "indicator_code": "permit_processing_days",
+   "big_number": "22",
+   "fact_en": "working days was the average permit processing time in the latest demo series",
+   "fact_ar": "يوم عمل هو متوسط مدة معالجة الترخيص في السلسلة التوضيحية الأحدث",
+   "hook_en": "A single platform shortens permit decisions.",
+   "hook_ar": "منصة واحدة تختصر مدة قرارات الترخيص.",
+   "quiz_question_en": "What shortens permit processing time most?",
+   "quiz_question_ar": "ما الذي يختصر مدة معالجة الترخيص أكثر؟",
+   "options": [
+    {
+     "en": "Risk tiering and one digital platform",
+     "ar": "تصنيف المخاطر ومنصة رقمية واحدة"
+    },
+    {
+     "en": "More paper forms",
+     "ar": "مزيد من النماذج الورقية"
+    },
+    {
+     "en": "More approval layers",
+     "ar": "مزيد من طبقات الاعتماد"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Risk tiers and a single digital platform remove duplicate steps.",
+   "explanation_ar": "يزيل تصنيف المخاطر والمنصة الرقمية الواحدة الخطوات المكررة."
+  },
+  {
+   "offset_day": 18,
+   "indicator_code": "env_fund_financing",
+   "big_number": "3.4",
+   "fact_en": "SAR billion of cumulative Environment Fund financing in the latest demo series",
+   "fact_ar": "مليار ريال سعودي من تمويل صندوق البيئة التراكمي في السلسلة التوضيحية الأحدث",
+   "hook_en": "Financing turns environmental plans into projects.",
+   "hook_ar": "التمويل يحول الخطط البيئية إلى مشاريع.",
+   "quiz_question_en": "Which institution finances environmental projects in this demo?",
+   "quiz_question_ar": "أي مؤسسة تمول المشاريع البيئية في هذا العرض؟",
+   "options": [
+    {
+     "en": "The Environment Fund",
+     "ar": "صندوق البيئة"
+    },
+    {
+     "en": "A stock exchange",
+     "ar": "سوق الأسهم"
+    },
+    {
+     "en": "A tourism board",
+     "ar": "هيئة سياحية"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "The Environment Fund supports financing of environmental projects.",
+   "explanation_ar": "يدعم صندوق البيئة تمويل المشاريع البيئية."
+  },
+  {
+   "offset_day": 19,
+   "indicator_code": "pop_total",
+   "big_number": "35,819,028",
+   "fact_en": "people were estimated as the Kingdom's population in the latest demo series",
+   "fact_ar": "شخص هو تقدير عدد سكان المملكة في السلسلة التوضيحية الأحدث",
+   "hook_en": "Population growth shapes demand for water, food and waste services.",
+   "hook_ar": "نمو السكان يشكل الطلب على المياه والغذاء وخدمات النفايات.",
+   "quiz_question_en": "Which services does population growth most directly affect in this programme?",
+   "quiz_question_ar": "ما الخدمات التي يؤثر فيها نمو السكان مباشرة في هذا البرنامج؟",
+   "options": [
+    {
+     "en": "Water, food and waste",
+     "ar": "المياه والغذاء والنفايات"
+    },
+    {
+     "en": "Only tourism",
+     "ar": "السياحة فقط"
+    },
+    {
+     "en": "Only sports",
+     "ar": "الرياضة فقط"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Demand for water, food and waste services rises with population.",
+   "explanation_ar": "يرتفع الطلب على المياه والغذاء وخدمات النفايات مع نمو السكان."
+  },
+  {
+   "offset_day": 20,
+   "indicator_code": "gdp_nonhydro_share",
+   "big_number": "55.4",
+   "fact_en": "percent was the non-oil share of GDP in the latest demo series",
+   "fact_ar": "بالمئة هي حصة الأنشطة غير النفطية من الناتج المحلي في السلسلة التوضيحية الأحدث",
+   "hook_en": "Diversification is a core Saudi Vision 2030 theme.",
+   "hook_ar": "التنويع الاقتصادي محور أساسي في رؤية السعودية 2030.",
+   "quiz_question_en": "Which national vision frames economic diversification in Saudi Arabia?",
+   "quiz_question_ar": "أي رؤية وطنية تؤطر التنويع الاقتصادي في المملكة العربية السعودية؟",
+   "options": [
+    {
+     "en": "Saudi Vision 2030",
+     "ar": "رؤية السعودية 2030"
+    },
+    {
+     "en": "Vision 2050",
+     "ar": "رؤية 2050"
+    },
+    {
+     "en": "Vision 2015",
+     "ar": "رؤية 2015"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Saudi Vision 2030 sets the diversification agenda.",
+   "explanation_ar": "تضع رؤية السعودية 2030 أجندة التنويع الاقتصادي."
+  },
+  {
+   "offset_day": 21,
+   "indicator_code": "cpi_food",
+   "big_number": "1.8",
+   "fact_en": "percent was food price inflation in the latest demo series",
+   "fact_ar": "بالمئة هو التضخم في أسعار الغذاء في السلسلة التوضيحية الأحدث",
+   "hook_en": "Food prices connect trade, supply and household budgets.",
+   "hook_ar": "أسعار الغذاء تربط التجارة والإمداد وميزانيات الأسر.",
+   "quiz_question_en": "Which indicator tracks the food price change over a year?",
+   "quiz_question_ar": "أي مؤشر يتتبع تغير أسعار الغذاء خلال سنة؟",
+   "options": [
+    {
+     "en": "Food price inflation",
+     "ar": "التضخم في أسعار الغذاء"
+    },
+    {
+     "en": "Aircraft movements",
+     "ar": "حركة الطائرات"
+    },
+    {
+     "en": "Protected areas share",
+     "ar": "حصة المحميات"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Food price inflation measures the annual change in food prices.",
+   "explanation_ar": "يقيس التضخم في أسعار الغذاء التغير السنوي في أسعارها."
+  },
+  {
+   "offset_day": 22,
+   "indicator_code": "municipal_waste",
+   "big_number": "16.9",
+   "fact_en": "million tonnes of municipal solid waste were generated in the latest demo series",
+   "fact_ar": "مليون طن من النفايات البلدية الصلبة تولدت في السلسلة التوضيحية الأحدث",
+   "hook_en": "Waste prevention is cheaper than treatment.",
+   "hook_ar": "منع النفايات أقل كلفة من معالجتها.",
+   "quiz_question_en": "Which approach comes first in the waste hierarchy?",
+   "quiz_question_ar": "أي نهج يأتي أولاً في هرم إدارة النفايات؟",
+   "options": [
+    {
+     "en": "Prevention",
+     "ar": "المنع"
+    },
+    {
+     "en": "Landfill",
+     "ar": "الطمر"
+    },
+    {
+     "en": "Open burning",
+     "ar": "الحرق المكشوف"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Prevention is the top step of the waste hierarchy.",
+   "explanation_ar": "المنع هو أعلى درجات هرم إدارة النفايات."
+  },
+  {
+   "offset_day": 23,
+   "indicator_code": "land_restored",
+   "big_number": "639",
+   "fact_en": "thousand hectares of degraded land under rehabilitation in the latest demo series",
+   "fact_ar": "ألف هكتار من الأراضي المتدهورة قيد إعادة التأهيل في السلسلة التوضيحية الأحدث",
+   "hook_en": "Restored land absorbs carbon and cuts dust.",
+   "hook_ar": "الأراضي المعاد تأهيلها تمتص الكربون وتقلل الغبار.",
+   "quiz_question_en": "Which body works on vegetation cover and combating desertification?",
+   "quiz_question_ar": "أي جهة تعمل على الغطاء النباتي ومكافحة التصحر؟",
+   "options": [
+    {
+     "en": "NCVC",
+     "ar": "المركز الوطني لتنمية الغطاء النباتي ومكافحة التصحر"
+    },
+    {
+     "en": "NCEC",
+     "ar": "المركز الوطني للرقابة على الالتزام البيئي"
+    },
+    {
+     "en": "MWAN",
+     "ar": "المركز الوطني لإدارة النفايات"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "NCVC leads vegetation cover development and desertification control.",
+   "explanation_ar": "يتولى المركز الوطني لتنمية الغطاء النباتي ومكافحة التصحر قيادة تنمية الغطاء النباتي ومكافحة التصحر."
+  },
+  {
+   "offset_day": 24,
+   "indicator_code": "species_reintroduced",
+   "big_number": "17",
+   "fact_en": "native species with active reintroduction programmes in the latest demo series",
+   "fact_ar": "نوعاً أصيلاً لديه برامج نشطة لإعادة التوطين في السلسلة التوضيحية الأحدث",
+   "hook_en": "Species recovery needs breeding, release and long monitoring.",
+   "hook_ar": "استعادة الأنواع تتطلب التكاثر والإطلاق ورصداً طويلاً.",
+   "quiz_question_en": "Which body manages wildlife and protected areas?",
+   "quiz_question_ar": "أي جهة تدير الحياة الفطرية والمحميات؟",
+   "options": [
+    {
+     "en": "NCW",
+     "ar": "المركز الوطني للحياة الفطرية"
+    },
+    {
+     "en": "SASO",
+     "ar": "الهيئة السعودية للمواصفات والمقاييس والجودة"
+    },
+    {
+     "en": "GASTAT",
+     "ar": "الهيئة العامة للإحصاء"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "The National Center for Wildlife (NCW) manages biodiversity and protected areas.",
+   "explanation_ar": "يدير المركز الوطني للحياة الفطرية التنوع الأحيائي والمحميات."
+  },
+  {
+   "offset_day": 25,
+   "indicator_code": "water_network_loss",
+   "big_number": "26.9",
+   "fact_en": "percent of treated water was lost or unbilled in networks in the latest demo series",
+   "fact_ar": "بالمئة من المياه المعالجة فُقدت أو لم تُفوتر في الشبكات في السلسلة التوضيحية الأحدث",
+   "hook_en": "Fixing leaks is often cheaper than new supply.",
+   "hook_ar": "إصلاح التسربات غالباً أقل كلفة من الإمداد الجديد.",
+   "quiz_question_en": "What is non-revenue water?",
+   "quiz_question_ar": "ما المقصود بالمياه غير المحتسبة؟",
+   "options": [
+    {
+     "en": "Water produced but lost or unbilled",
+     "ar": "مياه منتجة لكنها مفقودة أو غير مفوترة"
+    },
+    {
+     "en": "Rainwater",
+     "ar": "مياه الأمطار"
+    },
+    {
+     "en": "Bottled water",
+     "ar": "المياه المعبأة"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Non-revenue water is water that is produced but never billed, mainly due to leaks and metering gaps.",
+   "explanation_ar": "المياه غير المحتسبة مياه تُنتج ولا تُفوتر، وغالباً بسبب التسربات وفجوات القياس."
+  },
+  {
+   "offset_day": 26,
+   "indicator_code": "digital_services_share",
+   "big_number": "86.0",
+   "fact_en": "percent of environmental services were fully online in the latest demo series",
+   "fact_ar": "بالمئة من الخدمات البيئية كانت إلكترونية بالكامل في السلسلة التوضيحية الأحدث",
+   "hook_en": "Digital permits cut time and paperwork.",
+   "hook_ar": "التراخيص الرقمية تقلل الوقت والأوراق.",
+   "quiz_question_en": "What does end to end digital service mean?",
+   "quiz_question_ar": "ماذا تعني الخدمة الرقمية من البداية إلى النهاية؟",
+   "options": [
+    {
+     "en": "No paper step is needed",
+     "ar": "لا حاجة لأي خطوة ورقية"
+    },
+    {
+     "en": "A website exists",
+     "ar": "وجود موقع إلكتروني"
+    },
+    {
+     "en": "A phone number exists",
+     "ar": "وجود رقم هاتف"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "End to end means the whole service can be completed online.",
+   "explanation_ar": "تعني أن الخدمة كلها يمكن إتمامها إلكترونياً."
+  },
+  {
+   "offset_day": 27,
+   "indicator_code": "aq_stations",
+   "big_number": "205",
+   "fact_en": "operational air quality monitoring stations in the latest demo series",
+   "fact_ar": "محطة رصد لجودة الهواء عاملة في السلسلة التوضيحية الأحدث",
+   "hook_en": "More stations give a sharper picture of local air quality.",
+   "hook_ar": "كلما زادت المحطات اتضحت صورة جودة الهواء المحلية.",
+   "quiz_question_en": "Why expand a monitoring network?",
+   "quiz_question_ar": "لماذا يجري توسيع شبكة الرصد؟",
+   "options": [
+    {
+     "en": "To measure local air quality more accurately",
+     "ar": "لقياس جودة الهواء المحلية بدقة أكبر"
+    },
+    {
+     "en": "To reduce data",
+     "ar": "لتقليل البيانات"
+    },
+    {
+     "en": "To avoid reporting",
+     "ar": "لتجنب الإبلاغ"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "A denser network gives better local coverage.",
+   "explanation_ar": "الشبكة الأكثر كثافة تعطي تغطية محلية أفضل."
+  },
+  {
+   "offset_day": 28,
+   "indicator_code": "water_consumption_pc",
+   "big_number": "238",
+   "fact_en": "litres per person per day was the average municipal water consumption in the latest demo series",
+   "fact_ar": "لتراً للفرد في اليوم هو متوسط استهلاك المياه البلدية في السلسلة التوضيحية الأحدث",
+   "hook_en": "Demand management is the cheapest new source of water.",
+   "hook_ar": "إدارة الطلب هي أرخص مصدر جديد للمياه.",
+   "quiz_question_en": "Which lever usually delivers the fastest reduction in municipal water demand?",
+   "quiz_question_ar": "أي رافعة تحقق عادة أسرع خفض في الطلب على المياه البلدية؟",
+   "options": [
+    {
+     "en": "Smart metering and tariff signals",
+     "ar": "العدادات الذكية وإشارات التعرفة"
+    },
+    {
+     "en": "Building more dams",
+     "ar": "بناء مزيد من السدود"
+    },
+    {
+     "en": "Importing bottled water",
+     "ar": "استيراد المياه المعبأة"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Metering and tariff signals change behaviour quickly and cost little compared with new supply.",
+   "explanation_ar": "القياس وإشارات التعرفة يغيران السلوك بسرعة وبتكلفة قليلة مقارنة بالإمداد الجديد."
+  },
+  {
+   "offset_day": 29,
+   "indicator_code": "desal_capacity",
+   "big_number": "11.9",
+   "fact_en": "million cubic metres per day of desalination capacity in the latest demo series",
+   "fact_ar": "مليون متر مكعب في اليوم من طاقة التحلية في السلسلة التوضيحية الأحدث",
+   "hook_en": "Desalination capacity is the backbone of municipal supply.",
+   "hook_ar": "طاقة التحلية هي العمود الفقري للإمداد البلدي.",
+   "quiz_question_en": "What is the main cost driver of desalinated water?",
+   "quiz_question_ar": "ما العامل الرئيسي في تكلفة المياه المحلاة؟",
+   "options": [
+    {
+     "en": "Energy",
+     "ar": "الطاقة"
+    },
+    {
+     "en": "Land",
+     "ar": "الأرض"
+    },
+    {
+     "en": "Packaging",
+     "ar": "التعبئة"
+    }
+   ],
+   "correct_index": 0,
+   "explanation_en": "Energy is the largest operating cost, which is why energy intensity is tracked.",
+   "explanation_ar": "الطاقة هي أكبر كلفة تشغيلية، ولذلك تُتابع كثافة استهلاك الطاقة."
+  }
+ ],
+ "bounties": [
+  {
+   "title_en": "Document the water tariff review methodology",
+   "title_ar": "توثيق منهجية مراجعة تعرفة المياه",
+   "description_en": "Write up how the municipal water tariff structure was last reviewed, including sources and assumptions.",
+   "description_ar": "أعدّ توثيقاً لكيفية مراجعة هيكل تعرفة المياه البلدية مؤخراً، بما في ذلك المصادر والافتراضات.",
+   "source": "gap_radar",
+   "points": 100,
+   "topic_code": "prices_cpi",
+   "outcome_code": "gov_excellence",
+   "status": "open"
+  },
+  {
+   "title_en": "Upload the earlier cycle final results report",
+   "title_ar": "رفع تقرير النتائج النهائية للدورة السابقة",
+   "description_en": "Locate and upload the final evaluation report of the earlier environment sector programme so lessons can inform delivery.",
+   "description_ar": "حدّد ورفع التقرير النهائي لتقييم برنامج قطاع البيئة السابق حتى تفيد دروسه في التنفيذ.",
+   "source": "manual",
+   "points": 80,
+   "topic_code": "strategy_delivery",
+   "outcome_code": null,
+   "status": "open"
+  },
+  {
+   "title_en": "Capture lessons from the household water survey",
+   "title_ar": "استخلاص الدروس من مسح المياه الأسري",
+   "description_en": "Interview field coordinators and summarise what worked and what did not during household water survey collection.",
+   "description_ar": "قابل منسقي العمل الميداني ولخّص ما نجح وما لم ينجح أثناء جمع بيانات مسح المياه الأسري.",
+   "source": "gap_radar",
+   "points": 120,
+   "topic_code": "census_methodology",
+   "outcome_code": "gov_excellence",
+   "status": "open"
+  },
+  {
+   "title_en": "Map data sharing agreements across regulators",
+   "title_ar": "حصر اتفاقيات تبادل البيانات بين الجهات التنظيمية",
+   "description_en": "Compile a list of active data sharing agreements between environmental regulators and flag any that need renewal.",
+   "description_ar": "أعدّ قائمة باتفاقيات تبادل البيانات القائمة بين الجهات التنظيمية البيئية ونبّه إلى ما يحتاج إلى تجديد.",
+   "source": "gap_radar",
+   "points": 90,
+   "topic_code": "data_governance",
+   "outcome_code": "gov_excellence",
+   "status": "open"
+  },
+  {
+   "title_en": "Summarise the data standards for new users",
+   "title_ar": "تلخيص معايير البيانات للمستخدمين الجدد",
+   "description_en": "Produce a plain-language summary of the data standards that environmental datasets must follow, for new EnviroAI users.",
+   "description_ar": "أعدّ ملخصاً بلغة مبسطة لمعايير البيانات التي يجب أن تتبعها مجموعات البيانات البيئية للمستخدمين الجدد في EnviroAI.",
+   "source": "manual",
+   "points": 70,
+   "topic_code": "data_governance",
+   "outcome_code": null,
+   "status": "open"
+  },
+  {
+   "title_en": "Document the open data publication checklist",
+   "title_ar": "توثيق قائمة التحقق لنشر البيانات المفتوحة",
+   "description_en": "Write the step-by-step checklist a team should follow before publishing a new dataset on the open data portal.",
+   "description_ar": "اكتب قائمة التحقق خطوة بخطوة التي ينبغي أن يتبعها الفريق قبل نشر مجموعة بيانات جديدة على بوابة البيانات المفتوحة.",
+   "source": "gap_radar",
+   "points": 60,
+   "topic_code": "open_data",
+   "outcome_code": null,
+   "status": "open"
+  },
+  {
+   "title_en": "Explain how the Environmental Performance Index scores countries",
+   "title_ar": "شرح كيفية تقييم مؤشر الأداء البيئي للدول",
+   "description_en": "Explain how the Yale Environmental Performance Index scores countries and which indicators most affect the Kingdom's position.",
+   "description_ar": "اشرح كيف يقيّم مؤشر الأداء البيئي الصادر عن جامعة ييل الدول وأي المؤشرات أشد أثراً في موقع المملكة.",
+   "source": "manual",
+   "points": 75,
+   "topic_code": "index_monitoring",
+   "outcome_code": null,
+   "status": "open"
+  },
+  {
+   "title_en": "Draft an early warning indicator for groundwater stress",
+   "title_ar": "صياغة مؤشر إنذار مبكر لإجهاد المياه الجوفية",
+   "description_en": "Propose a leading indicator that could flag aquifer stress before it shows up in abstraction statistics.",
+   "description_ar": "اقترح مؤشراً استباقياً يمكنه الإنذار بإجهاد الخزانات الجوفية قبل ظهوره في إحصاءات السحب.",
+   "source": "gap_radar",
+   "points": 130,
+   "topic_code": "early_warning",
+   "outcome_code": "eco_growth",
+   "status": "open"
+  },
+  {
+   "title_en": "Compile lessons from prior scenario planning exercises",
+   "title_ar": "تجميع الدروس من تمارين تخطيط السيناريوهات السابقة",
+   "description_en": "Review past foresight workshops and summarise which scenarios materialised and which assumptions need updating.",
+   "description_ar": "راجع ورش الاستشراف السابقة ولخّص السيناريوهات التي تحققت والافتراضات التي تحتاج إلى تحديث.",
+   "source": "gap_radar",
+   "points": 110,
+   "topic_code": "scenario_planning",
+   "outcome_code": null,
+   "status": "open"
+  },
+  {
+   "title_en": "Verify the Arabic translation of the regulatory glossary",
+   "title_ar": "مراجعة الترجمة العربية للمسرد التنظيمي",
+   "description_en": "Review the machine-translated Arabic glossary of environmental regulatory terms and correct any inaccurate terminology.",
+   "description_ar": "راجع المسرد العربي المترجم آلياً للمصطلحات التنظيمية البيئية وصحّح أي مصطلح غير دقيق.",
+   "source": "manual",
+   "points": 50,
+   "topic_code": "environmental_law",
+   "outcome_code": null,
+   "status": "open"
+  }
+ ],
+ "knowledge_gaps": [
+  {
+   "label_en": "How municipal water tariffs are reviewed",
+   "label_ar": "كيفية مراجعة تعرفة المياه البلدية",
+   "example_queries": [
+    "how are water tariffs reviewed",
+    "municipal water tariff review Saudi Arabia",
+    "water tariff structure"
+   ],
+   "topic_code": "prices_cpi",
+   "status": "open"
+  },
+  {
+   "label_en": "Earlier cycle evaluation and lessons learned",
+   "label_ar": "تقييم الدورة السابقة والدروس المستفادة",
+   "example_queries": [
+    "environment sector programme evaluation",
+    "lessons learned earlier cycle",
+    "final results report"
+   ],
+   "topic_code": "strategy_delivery",
+   "status": "open"
+  },
+  {
+   "label_en": "Household water survey field integration challenges",
+   "label_ar": "تحديات تكامل البيانات الميدانية في مسح المياه الأسري",
+   "example_queries": [
+    "household water survey lessons",
+    "field data integration challenges",
+    "survey fieldwork"
+   ],
+   "topic_code": "census_methodology",
+   "status": "open"
+  },
+  {
+   "label_en": "Detailed data sharing agreements between regulators",
+   "label_ar": "اتفاقيات تبادل البيانات التفصيلية بين الجهات التنظيمية",
+   "example_queries": [
+    "data sharing agreements regulators",
+    "inter-agency data exchange",
+    "MEWA NCEC data sharing"
+   ],
+   "topic_code": "data_governance",
+   "status": "open"
+  },
+  {
+   "label_en": "How source reliability ratings are scored",
+   "label_ar": "كيفية احتساب تصنيفات موثوقية المصادر",
+   "example_queries": [
+    "source reliability rating",
+    "data trust rating methodology",
+    "how sources are scored"
+   ],
+   "topic_code": "data_trust_index",
+   "status": "open"
+  },
+  {
+   "label_en": "Methodology behind early warning indicators for water stress",
+   "label_ar": "منهجية مؤشرات الإنذار المبكر لإجهاد المياه",
+   "example_queries": [
+    "early warning water stress",
+    "groundwater stress indicator",
+    "drought early warning"
+   ],
+   "topic_code": "early_warning",
+   "status": "open"
+  },
+  {
+   "label_en": "Assumptions behind published climate scenarios",
+   "label_ar": "الافتراضات وراء السيناريوهات المناخية المنشورة",
+   "example_queries": [
+    "climate scenario assumptions",
+    "foresight scenarios",
+    "emissions pathway assumptions"
+   ],
+   "topic_code": "scenario_planning",
+   "status": "open"
+  },
+  {
+   "label_en": "AI governance guidance for delivery teams",
+   "label_ar": "إرشادات حوكمة الذكاء الاصطناعي لفرق التنفيذ",
+   "example_queries": [
+    "AI governance guidance",
+    "responsible AI",
+    "SDAIA AI ethics"
+   ],
+   "topic_code": "ai_gov",
+   "status": "open"
+  }
+ ],
+ "index_rankings": [
+  {
+   "index_name_en": "Environmental Performance Index (EPI)",
+   "index_name_ar": "مؤشر الأداء البيئي",
+   "publisher": "Yale Center for Environmental Law & Policy / Columbia University",
+   "year": 2025,
+   "rank": null,
+   "score": null,
+   "total_countries": null,
+   "responsible_entity": "Ministry of Environment, Water and Agriculture",
+   "source_url": "https://epi.yale.edu",
+   "note": "Rank to be captured from the publisher; no value is shown until verified"
+  },
+  {
+   "index_name_en": "ND-GAIN Country Index",
+   "index_name_ar": "مؤشر نوتردام لقدرة الدول على التكيف",
+   "publisher": "University of Notre Dame Global Adaptation Initiative",
+   "year": 2025,
+   "rank": null,
+   "score": null,
+   "total_countries": null,
+   "responsible_entity": "Ministry of Environment, Water and Agriculture",
+   "source_url": "https://gain.nd.edu",
+   "note": "Rank to be captured from the publisher; no value is shown until verified"
+  },
+  {
+   "index_name_en": "Sustainable Development Report (SDG Index)",
+   "index_name_ar": "تقرير التنمية المستدامة (مؤشر أهداف التنمية المستدامة)",
+   "publisher": "UN Sustainable Development Solutions Network (SDSN)",
+   "year": 2025,
+   "rank": null,
+   "score": null,
+   "total_countries": null,
+   "responsible_entity": "Ministry of Environment, Water and Agriculture",
+   "source_url": "https://www.sdgindex.org",
+   "note": "Rank to be captured from the publisher; no value is shown until verified"
+  },
+  {
+   "index_name_en": "Global Climate Risk Index",
+   "index_name_ar": "مؤشر المخاطر المناخية العالمي",
+   "publisher": "Germanwatch",
+   "year": 2025,
+   "rank": null,
+   "score": null,
+   "total_countries": null,
+   "responsible_entity": "Ministry of Environment, Water and Agriculture",
+   "source_url": "https://www.germanwatch.org/en/cri",
+   "note": "Rank to be captured from the publisher; no value is shown until verified"
+  },
+  {
+   "index_name_en": "Energy Transition Index",
+   "index_name_ar": "مؤشر تحول الطاقة",
+   "publisher": "World Economic Forum",
+   "year": 2025,
+   "rank": null,
+   "score": null,
+   "total_countries": null,
+   "responsible_entity": "Ministry of Environment, Water and Agriculture",
+   "source_url": "https://www.weforum.org",
+   "note": "Rank to be captured from the publisher; no value is shown until verified"
+  },
+  {
+   "index_name_en": "Global Risks Report",
+   "index_name_ar": "تقرير المخاطر العالمية",
+   "publisher": "World Economic Forum",
+   "year": 2025,
+   "rank": null,
+   "score": null,
+   "total_countries": null,
+   "responsible_entity": "Ministry of Environment, Water and Agriculture",
+   "source_url": "https://www.weforum.org/publications/global-risks-report-2025",
+   "note": "Rank to be captured from the publisher; no value is shown until verified"
+  }
+ ],
+ "signals": [
+  {
+   "title_en": "Water scarcity pressures across the region",
+   "title_ar": "ضغوط ندرة المياه في المنطقة",
+   "description_en": "Regional water stress indicators are worsening, adding urgency to desalination capacity planning, reuse and demand management.",
+   "description_ar": "تتفاقم مؤشرات الإجهاد المائي في المنطقة، مما يزيد إلحاح تخطيط طاقة التحلية وإعادة الاستخدام وإدارة الطلب.",
+   "source": "scan of international reports",
+   "impact": "high",
+   "horizon": "long",
+   "outcome_codes": [
+    "eco_growth",
+    "env_sust"
+   ],
+   "created_by": "analyst@enviroai.demo"
+  },
+  {
+   "title_en": "Increasing heat stress from climate change",
+   "title_ar": "تزايد الإجهاد الحراري الناجم عن تغير المناخ",
+   "description_en": "Climate projections point to more frequent extreme heat days in the Gulf region, with implications for outdoor labour, energy demand and public health.",
+   "description_ar": "تشير الإسقاطات المناخية إلى تكرار أكبر لأيام الحرارة الشديدة في منطقة الخليج، بما يؤثر في العمل الخارجي والطلب على الطاقة والصحة العامة.",
+   "source": "scan of international reports",
+   "impact": "high",
+   "horizon": "long",
+   "outcome_codes": [
+    "env_sust",
+    "quality_life"
+   ],
+   "created_by": "analyst@enviroai.demo"
+  },
+  {
+   "title_en": "Growing demand for high-integrity carbon markets",
+   "title_ar": "تنامي الطلب على أسواق الكربون عالية النزاهة",
+   "description_en": "Voluntary and compliance carbon markets are tightening integrity expectations, which shapes how national offsets and removals are valued.",
+   "description_ar": "تتشدد أسواق الكربون الطوعية والإلزامية في معايير النزاهة، مما يؤثر في تقييم المقاصات والإزالات الوطنية.",
+   "source": "scan of international reports",
+   "impact": "medium",
+   "horizon": "mid",
+   "outcome_codes": [
+    "env_sust"
+   ],
+   "created_by": "head.stats@enviroai.demo"
+  },
+  {
+   "title_en": "Satellite monitoring of vegetation and water",
+   "title_ar": "رصد الغطاء النباتي والمياه بالأقمار الصناعية",
+   "description_en": "Earth observation costs are falling, making operational vegetation and water monitoring feasible at national scale.",
+   "description_ar": "تنخفض كلفة رصد الأرض، مما يجعل الرصد التشغيلي للغطاء النباتي والمياه ممكناً على المستوى الوطني.",
+   "source": "scan of international reports",
+   "impact": "medium",
+   "horizon": "near",
+   "outcome_codes": [
+    "workforce"
+   ],
+   "created_by": "employee:7"
+  },
+  {
+   "title_en": "Expansion of generative AI in public sector service delivery",
+   "title_ar": "توسع الذكاء الاصطناعي التوليدي في تقديم الخدمات الحكومية",
+   "description_en": "Governments are piloting generative AI assistants for regulatory guidance, prompting questions about accuracy, oversight and trust.",
+   "description_ar": "تجرّب الحكومات مساعدين بالذكاء الاصطناعي التوليدي للإرشاد التنظيمي، مما يثير أسئلة عن الدقة والرقابة والثقة.",
+   "source": "scan of international reports",
+   "impact": "high",
+   "horizon": "near",
+   "outcome_codes": [
+    "gov_excellence"
+   ],
+   "created_by": "knowledge@enviroai.demo"
+  },
+  {
+   "title_en": "Circular economy requirements spreading in packaging",
+   "title_ar": "انتشار متطلبات الاقتصاد الدائري في التغليف",
+   "description_en": "Producer responsibility rules for packaging are spreading across markets, shaping waste and recycling policy.",
+   "description_ar": "تنتشر قواعد مسؤولية المنتج في التغليف عبر الأسواق، مما يشكل سياسات النفايات وإعادة التدوير.",
+   "source": "scan of international reports",
+   "impact": "medium",
+   "horizon": "mid",
+   "outcome_codes": [
+    "cohesive_society"
+   ],
+   "created_by": "employee:14"
+  },
+  {
+   "title_en": "Dust and sandstorm intensity",
+   "title_ar": "شدة الغبار والعواصف الرملية",
+   "description_en": "Land degradation and drought can raise dust event frequency, affecting air quality and public health.",
+   "description_ar": "قد يزيد تدهور الأراضي والجفاف من تكرار أحداث الغبار، بما يؤثر في جودة الهواء والصحة العامة.",
+   "source": "scan of international reports",
+   "impact": "medium",
+   "horizon": "mid",
+   "outcome_codes": [
+    "quality_life"
+   ],
+   "created_by": "employee:22"
+  },
+  {
+   "title_en": "Volatile food import prices",
+   "title_ar": "تقلب أسعار واردات الغذاء",
+   "description_en": "Global food price swings and shipping disruptions can affect staple availability and import costs.",
+   "description_ar": "قد تؤثر تقلبات أسعار الغذاء العالمية واضطرابات الشحن في توافر السلع الأساسية وتكاليف الاستيراد.",
+   "source": "scan of international reports",
+   "impact": "medium",
+   "horizon": "near",
+   "outcome_codes": [
+    "fiscal_sust"
+   ],
+   "created_by": "employee:3"
+  },
+  {
+   "title_en": "Stricter ESG disclosure expectations",
+   "title_ar": "تشدد توقعات الإفصاح البيئي والاجتماعي والحوكمي",
+   "description_en": "Investors and regulators increasingly expect structured environmental disclosure, raising demand for reliable emissions and water data.",
+   "description_ar": "يتوقع المستثمرون والجهات التنظيمية بصورة متزايدة إفصاحاً بيئياً منظماً، مما يرفع الطلب على بيانات موثوقة للانبعاثات والمياه.",
+   "source": "scan of international reports",
+   "impact": "medium",
+   "horizon": "mid",
+   "outcome_codes": [
+    "gov_excellence",
+    "env_sust"
+   ],
+   "created_by": "verifier@enviroai.demo"
+  },
+  {
+   "title_en": "Cybersecurity threats targeting environmental monitoring infrastructure",
+   "title_ar": "تهديدات الأمن السيبراني التي تستهدف بنية الرصد البيئي",
+   "description_en": "Reports flag rising attacks on utilities and monitoring infrastructure, underscoring the need for resilient systems.",
+   "description_ar": "تشير التقارير إلى تصاعد الهجمات على المرافق والبنية التحتية للرصد، مما يؤكد الحاجة إلى نظم مرنة.",
+   "source": "scan of international reports",
+   "impact": "high",
+   "horizon": "near",
+   "outcome_codes": [
+    "gov_excellence"
+   ],
+   "created_by": "verifier@enviroai.demo"
+  }
+ ],
+ "risks": [
+  {
+   "title_en": "Delays in data sharing between regulators",
+   "title_ar": "تأخر تبادل البيانات بين الجهات التنظيمية",
+   "likelihood": 4,
+   "impact": 4,
+   "mitigation_en": "Formalise data sharing agreements with clear timelines and escalation paths.",
+   "mitigation_ar": "إضفاء الطابع الرسمي على اتفاقيات تبادل البيانات مع جداول زمنية ومسارات تصعيد واضحة.",
+   "status": "mitigating",
+   "owner": "head.stats@enviroai.demo",
+   "outcome_code": "gov_excellence"
+  },
+  {
+   "title_en": "Scarcity of specialised data and environmental science talent",
+   "title_ar": "ندرة الكفاءات المتخصصة في البيانات والعلوم البيئية",
+   "likelihood": 4,
+   "impact": 3,
+   "mitigation_en": "Expand training partnerships and fellowships with Saudi universities to build local pipelines.",
+   "mitigation_ar": "توسيع شراكات التدريب والزمالات مع الجامعات السعودية لبناء مسارات كفاءات محلية.",
+   "status": "open",
+   "owner": "employee:5",
+   "outcome_code": null
+  },
+  {
+   "title_en": "Reprioritisation of programme funding",
+   "title_ar": "إعادة ترتيب أولويات تمويل البرنامج",
+   "likelihood": 3,
+   "impact": 5,
+   "mitigation_en": "Maintain a transparent prioritisation framework tied to theme impact scores.",
+   "mitigation_ar": "الحفاظ على إطار شفاف لترتيب الأولويات مرتبط بدرجات أثر المحاور.",
+   "status": "open",
+   "owner": "admin@enviroai.demo",
+   "outcome_code": "fiscal_sust"
+  },
+  {
+   "title_en": "Vendor lock-in on core monitoring systems",
+   "title_ar": "الارتهان لمورد واحد في نظم الرصد الأساسية",
+   "likelihood": 2,
+   "impact": 4,
+   "mitigation_en": "Require open standards and data portability clauses in all new technology contracts.",
+   "mitigation_ar": "اشتراط المعايير المفتوحة وبنود قابلية نقل البيانات في جميع عقود التقنية الجديدة.",
+   "status": "open",
+   "owner": "employee:9",
+   "outcome_code": "gov_excellence"
+  },
+  {
+   "title_en": "Cyber incident affecting monitoring data integrity",
+   "title_ar": "حادث سيبراني يؤثر في سلامة بيانات الرصد",
+   "likelihood": 1,
+   "impact": 5,
+   "mitigation_en": "Strengthen backup protocols, access controls and incident response drills.",
+   "mitigation_ar": "تعزيز بروتوكولات النسخ الاحتياطي وضوابط الوصول وتمارين الاستجابة للحوادث.",
+   "status": "mitigating",
+   "owner": "verifier@enviroai.demo",
+   "outcome_code": "gov_excellence"
+  },
+  {
+   "title_en": "Methodology changes at international index providers",
+   "title_ar": "تغيير المنهجية لدى مزودي المؤشرات الدولية",
+   "likelihood": 3,
+   "impact": 1,
+   "mitigation_en": "Monitor provider announcements closely and pre-brief teams on likely methodology shifts.",
+   "mitigation_ar": "متابعة إعلانات المزودين عن كثب وإحاطة الفرق مسبقاً بتغييرات المنهجية المحتملة.",
+   "status": "open",
+   "owner": "analyst@enviroai.demo",
+   "outcome_code": null
+  },
+  {
+   "title_en": "Incomplete response rates in household surveys",
+   "title_ar": "انخفاض معدلات الاستجابة في المسوح الأسرية",
+   "likelihood": 3,
+   "impact": 3,
+   "mitigation_en": "Diversify survey channels and run awareness campaigns ahead of fieldwork.",
+   "mitigation_ar": "تنويع قنوات المسح وتنفيذ حملات توعية قبل العمل الميداني.",
+   "status": "open",
+   "owner": "employee:11",
+   "outcome_code": "quality_life"
+  },
+  {
+   "title_en": "Overlapping mandates between delivery entities",
+   "title_ar": "تداخل الاختصاصات بين جهات التنفيذ",
+   "likelihood": 2,
+   "impact": 2,
+   "mitigation_en": "Clarify roles through updated governance charters for each delivery entity.",
+   "mitigation_ar": "توضيح الأدوار عبر مواثيق حوكمة محدثة لكل جهة تنفيذ.",
+   "status": "mitigating",
+   "owner": "admin@enviroai.demo",
+   "outcome_code": "gov_excellence"
+  },
+  {
+   "title_en": "Slower than expected renewable energy project delivery",
+   "title_ar": "تباطؤ تنفيذ مشاريع الطاقة المتجددة عن المتوقع",
+   "likelihood": 2,
+   "impact": 3,
+   "mitigation_en": "Track project milestones monthly and escalate delivery risks early.",
+   "mitigation_ar": "متابعة معالم المشاريع شهرياً وتصعيد مخاطر التنفيذ مبكراً.",
+   "status": "open",
+   "owner": "employee:18",
+   "outcome_code": "env_sust"
+  },
+  {
+   "title_en": "Public misinterpretation of published indicators",
+   "title_ar": "سوء تفسير الجمهور للمؤشرات المنشورة",
+   "likelihood": 5,
+   "impact": 2,
+   "mitigation_en": "Publish plain-language explainers alongside technical releases.",
+   "mitigation_ar": "نشر شروح مبسطة إلى جانب الإصدارات الفنية.",
+   "status": "open",
+   "owner": "knowledge@enviroai.demo",
+   "outcome_code": "gov_excellence"
+  },
+  {
+   "title_en": "Fragmented environmental data standards across entities",
+   "title_ar": "تشتت معايير البيانات البيئية بين الجهات",
+   "likelihood": 5,
+   "impact": 4,
+   "mitigation_en": "Accelerate rollout of shared data standards across remaining entities.",
+   "mitigation_ar": "تسريع تطبيق معايير البيانات المشتركة في الجهات المتبقية.",
+   "status": "mitigating",
+   "owner": "head.stats@enviroai.demo",
+   "outcome_code": "gov_excellence"
+  },
+  {
+   "title_en": "Low awareness of foresight tools among delivery teams",
+   "title_ar": "ضعف الوعي بأدوات الاستشراف لدى فرق التنفيذ",
+   "likelihood": 2,
+   "impact": 1,
+   "mitigation_en": "Run regular foresight capacity-building workshops for focal points.",
+   "mitigation_ar": "تنظيم ورش منتظمة لبناء قدرات الاستشراف لدى منسقي الفرق.",
+   "status": "open",
+   "owner": "employee:26",
+   "outcome_code": null
+  }
+ ],
+ "spotlights": [
+  {
+   "user": "analyst@enviroai.demo",
+   "blurb_en": "A careful review of water statistics documentation this quarter helped three teams align their briefs with the latest series.",
+   "blurb_ar": "أسهمت مراجعة دقيقة لوثائق إحصاءات المياه هذا الربع في مساعدة ثلاثة فرق على مواءمة موجزاتها مع أحدث السلاسل."
+  },
+  {
+   "user": "knowledge@enviroai.demo",
+   "blurb_en": "Curating the new Programme Foundations collection made it far easier for new joiners to find the strategy documents they need in one place.",
+   "blurb_ar": "جعل إعداد مجموعة أسس البرنامج الجديدة وصول المنضمين الجدد إلى وثائق الاستراتيجية التي يحتاجونها في مكان واحد أيسر بكثير."
+  },
+  {
+   "user": "employee:14",
+   "blurb_en": "Twelve verified Arabic translations in a single month made this contributor one of EnviroAI's most trusted Guardians this quarter.",
+   "blurb_ar": "جعلت اثنتا عشرة ترجمة عربية موثقة في شهر واحد هذا المساهم من أكثر الحراس موثوقية في EnviroAI هذا الربع."
+  }
+ ],
+ "collections": [
+  {
+   "code": "nes_foundations",
+   "name_en": "Programme Foundations",
+   "name_ar": "أسس البرنامج",
+   "description_en": "Core strategy documents, theme frameworks and project charters underpinning the National Environment Strategy delivery plan.",
+   "description_ar": "وثائق الاستراتيجية الأساسية وأطر المحاور ومواثيق المشاريع التي تستند إليها خطة تنفيذ الاستراتيجية الوطنية للبيئة.",
+   "cover_style": "navy-weave",
+   "keywords": [
+    "National Environment Strategy",
+    "Environmental Strategy",
+    "NES",
+    "Vision 2030",
+    "الاستراتيجية الوطنية للبيئة"
+   ]
+  },
+  {
+   "code": "national_data_program",
+   "name_en": "Environmental Data and Standards",
+   "name_ar": "البيانات والمعايير البيئية",
+   "description_en": "Data governance, standards and open data material for environmental datasets.",
+   "description_ar": "مواد حوكمة البيانات والمعايير والبيانات المفتوحة لمجموعات البيانات البيئية.",
+   "cover_style": "teal-weave",
+   "keywords": [
+    "data",
+    "open data",
+    "standards",
+    "metadata",
+    "البيانات"
+   ]
+  },
+  {
+   "code": "water_collection",
+   "name_en": "Water Security",
+   "name_ar": "الأمن المائي",
+   "description_en": "Strategies and statistics on water supply, demand, desalination and reuse.",
+   "description_ar": "استراتيجيات وإحصاءات عن إمدادات المياه والطلب والتحلية وإعادة الاستخدام.",
+   "cover_style": "aqua-weave",
+   "keywords": [
+    "water",
+    "wastewater",
+    "desalination",
+    "groundwater",
+    "المياه"
+   ]
+  },
+  {
+   "code": "releases_2026",
+   "name_en": "Statistical Releases 2026",
+   "name_ar": "الإصدارات الإحصائية 2026",
+   "description_en": "Demo statistical bulletins released during 2026.",
+   "description_ar": "نشرات إحصائية توضيحية صدرت خلال 2026.",
+   "cover_style": "navy-weave",
+   "keywords": [
+    "bulletin",
+    "statistics",
+    "release",
+    "نشرة"
+   ]
+  },
+  {
+   "code": "climate_collection",
+   "name_en": "Climate and Green Initiatives",
+   "name_ar": "المناخ والمبادرات الخضراء",
+   "description_en": "Material on emissions, renewable energy, the Saudi Green Initiative and the Middle East Green Initiative.",
+   "description_ar": "مواد عن الانبعاثات والطاقة المتجددة ومبادرة السعودية الخضراء ومبادرة الشرق الأوسط الأخضر.",
+   "cover_style": "teal-weave",
+   "keywords": [
+    "climate",
+    "emissions",
+    "green initiative",
+    "renewable",
+    "NDC",
+    "المناخ"
+   ]
+  },
+  {
+   "code": "legacy_strategies",
+   "name_en": "Earlier Strategies",
+   "name_ar": "الاستراتيجيات السابقة",
+   "description_en": "Earlier environment, water and agriculture strategies kept for lineage and lessons.",
+   "description_ar": "استراتيجيات سابقة للبيئة والمياه والزراعة محفوظة لتتبع التسلسل واستخلاص الدروس.",
+   "cover_style": "aqua-weave",
+   "keywords": [
+    "strategy",
+    "sector strategy",
+    "land management",
+    "استراتيجية"
+   ]
+  }
+ ],
+ "notification_templates": [
+  {
+   "kind": "impact",
+   "title_en": "Your answer was cited",
+   "title_ar": "تم الاستشهاد بإجابتك",
+   "body_en": "Your answer on water statistics methodology was cited in 4 briefs this month.",
+   "body_ar": "تم الاستشهاد بإجابتك حول منهجية إحصاءات المياه في 4 موجزات هذا الشهر.",
+   "link": "/impact"
+  },
+  {
+   "kind": "impact",
+   "title_en": "Your document is trending",
+   "title_ar": "وثيقتك تحظى باهتمام",
+   "body_en": "Your uploaded report on wastewater reuse was viewed by 30 colleagues this week.",
+   "body_ar": "اطلع 30 زميلاً هذا الأسبوع على تقريرك المرفوع عن إعادة استخدام مياه الصرف.",
+   "link": "/vault"
+  },
+  {
+   "kind": "route",
+   "title_en": "New question routed to you",
+   "title_ar": "سؤال جديد موجه إليك",
+   "body_en": "A question about water tariff methodology has been routed to you as the topic expert.",
+   "body_ar": "وُجّه إليك سؤال عن منهجية تعرفة المياه بوصفك خبير الموضوع.",
+   "link": "/ask"
+  },
+  {
+   "kind": "route",
+   "title_en": "Bounty assigned to your team",
+   "title_ar": "مكافأة معرفية مسندة إلى فريقك",
+   "body_en": "A new bounty on household water survey integration has been routed to your team.",
+   "body_ar": "أُسندت إلى فريقك مكافأة معرفية جديدة بشأن تكامل مسح المياه الأسري.",
+   "link": "/bounties"
+  },
+  {
+   "kind": "verify",
+   "title_en": "Translation needs verification",
+   "title_ar": "ترجمة تحتاج إلى مراجعة",
+   "body_en": "A machine translation of the regulatory glossary is ready for your verification.",
+   "body_ar": "ترجمة آلية للمسرد التنظيمي جاهزة لمراجعتك.",
+   "link": "/vault"
+  },
+  {
+   "kind": "verify",
+   "title_en": "Verify a new indicator explanation",
+   "title_ar": "راجع شرح مؤشر جديد",
+   "body_en": "Please review and verify the plain-language explanation drafted for the treated wastewater reuse indicator.",
+   "body_ar": "يرجى مراجعة الشرح المبسط الذي أُعد لمؤشر إعادة استخدام مياه الصرف المعالجة والتحقق منه.",
+   "link": "/statistics"
+  },
+  {
+   "kind": "release",
+   "title_en": "New statistical release published",
+   "title_ar": "صدور نشرة إحصائية جديدة",
+   "body_en": "The latest Water Security bulletin is now available in the Scorecard.",
+   "body_ar": "أصبحت أحدث نشرة للأمن المائي متاحة الآن في بطاقة المؤشرات.",
+   "link": "/statistics"
+  },
+  {
+   "kind": "release",
+   "title_en": "New index update",
+   "title_ar": "تحديث جديد لمؤشر",
+   "body_en": "The latest position across three international environment indices has been added to the library.",
+   "body_ar": "أضيف إلى المكتبة أحدث موقع في ثلاثة مؤشرات بيئية دولية.",
+   "link": "/vault"
+  },
+  {
+   "kind": "bounty",
+   "title_en": "New bounty available",
+   "title_ar": "مكافأة معرفية جديدة متاحة",
+   "body_en": "A new bounty on water tariff review methodology is open and worth 100 points.",
+   "body_ar": "فُتحت مكافأة معرفية جديدة عن منهجية مراجعة تعرفة المياه بقيمة 100 نقطة.",
+   "link": "/bounties"
+  },
+  {
+   "kind": "bounty",
+   "title_en": "Bounty deadline approaching",
+   "title_ar": "اقتراب موعد انتهاء مكافأة معرفية",
+   "body_en": "The bounty to document open data publication steps closes soon, submit your answer today.",
+   "body_ar": "تنتهي قريباً المكافأة المعرفية الخاصة بتوثيق خطوات نشر البيانات المفتوحة، قدّم إجابتك اليوم.",
+   "link": "/bounties"
+  },
+  {
+   "kind": "welcome",
+   "title_en": "Welcome to EnviroAI",
+   "title_ar": "مرحباً بك في EnviroAI",
+   "body_en": "Welcome to EnviroAI, your gateway to environment, water and agriculture strategy, indicators and regulation in one place.",
+   "body_ar": "مرحباً بك في EnviroAI، بوابتك إلى استراتيجية البيئة والمياه والزراعة ومؤشراتها وأنظمتها في مكان واحد.",
+   "link": "/vault"
+  },
+  {
+   "kind": "welcome",
+   "title_en": "Get started with your first question",
+   "title_ar": "ابدأ بطرح سؤالك الأول",
+   "body_en": "Ask your first question in EnviroAI and get an answer with citations in seconds.",
+   "body_ar": "اطرح سؤالك الأول في EnviroAI واحصل على إجابة مع إحالات خلال ثوانٍ.",
+   "link": "/ask"
+  }
+ ]
 }

@@ -10,7 +10,7 @@ async function loginCookie(email: string): Promise<string> {
   const res = await fetch(`${BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email, password: "EnviroAI!2026" }),
     redirect: "manual",
   });
   const pairs: string[] = [];
@@ -21,7 +21,7 @@ async function loginCookie(email: string): Promise<string> {
 }
 
 async function main() {
-  const cookie = await loginCookie(process.argv[2] ?? "reader@npc.qa");
+  const cookie = await loginCookie(process.argv[2] ?? "reader@enviroai.demo");
   for (const board of ["people", "departments"]) {
     for (const window of ["week", "month", "quarter", "year", "all"]) {
       for (const category of ["overall", "contributors", "guardians", "learners"]) {

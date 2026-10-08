@@ -63,9 +63,9 @@ export function GlobalDropZone({
     <>
       {children}
       {dragging ? (
-        <div className="pointer-events-none fixed inset-0 z-[90] flex items-center justify-center bg-maroon-900/20 backdrop-blur-[2px]">
+        <div className="pointer-events-none fixed inset-0 z-[90] flex items-center justify-center bg-navy-900/20 backdrop-blur-[2px]">
           <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-white bg-white/95 px-12 py-10 shadow-[var(--shadow-pop)]">
-            <UploadCloud className="size-10 text-maroon-700" />
+            <UploadCloud className="size-10 text-navy-700" />
             <p className="text-lg font-medium text-ink-900">{t("dropToUpload")}</p>
           </div>
         </div>

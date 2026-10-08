@@ -1,4 +1,4 @@
-// CR07 2.4: the arithmetic of the Council Strategy, with no database import,
+// CR07 2.4: the arithmetic of the Programme Strategy, with no database import,
 // so the server service and the client views share one implementation instead
 // of keeping two copies in step.
 

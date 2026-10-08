@@ -3,7 +3,7 @@
 //   node scripts/dev-probes/cr08-indices-ui-groupdump.mjs [groupCode]
 import { createClient } from "@libsql/client";
 
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const q = async (sql, args = []) => (await db.execute({ sql, args })).rows;
 const only = process.argv[2];
 

@@ -32,13 +32,13 @@ export default async function LeaderboardSettingsPage({
           <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal">
             {tl("title")}
           </p>
-          <h1 className="mt-1 font-display text-2xl font-semibold text-maroon-900">
+          <h1 className="mt-1 font-display text-2xl font-semibold text-navy-900">
             {t("tabs.gamification")}
           </h1>
         </div>
         <Link
           href={"/leaderboard" as never}
-          className="link-draw flex items-center gap-1 text-sm font-medium text-maroon-700"
+          className="link-draw flex items-center gap-1 text-sm font-medium text-navy-700"
           data-testid="board-settings-back"
         >
           <ArrowLeft className="size-4 flip-rtl" aria-hidden /> {tl("backToBoard")}

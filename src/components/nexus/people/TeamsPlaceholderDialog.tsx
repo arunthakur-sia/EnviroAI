@@ -19,7 +19,7 @@ export function TeamsPlaceholderDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent title={t("title")} className="w-[min(440px,92vw)]" data-testid="teams-dialog">
         <div className="flex items-start gap-4">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-gulf-100 text-gulf-600">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-teal-100 text-teal-600">
             <MessagesSquare className="size-5" aria-hidden />
           </span>
           <p className="text-sm leading-relaxed text-ink-600">{t("body")}</p>

@@ -3,6 +3,10 @@ import { drizzle } from "drizzle-orm/libsql";
 import fs from "node:fs";
 import * as schema from "./schema";
 import { DATA_DIR, DB_PATH } from "@/server/paths";
+import { createPgClient } from "./pg-adapter";
+
+/** Set DATABASE_URL (a postgres:// URL, e.g. Supabase) to run on Postgres instead of the SQLite file. */
+export const isPostgres = /^postgres(ql)?:\/\//.test(process.env.DATABASE_URL ?? "");
 
 const DB_DIR = DATA_DIR;
 
@@ -12,6 +16,10 @@ declare global {
 }
 
 function makeDb() {
+  if (isPostgres) {
+    const client = createPgClient(process.env.DATABASE_URL!) as unknown as Client;
+    return { db: drizzle(client, { schema }), client };
+  }
   fs.mkdirSync(DB_DIR, { recursive: true });
   const client: Client = createClient({ url: `file:${DB_PATH.replace(/\\/g, "/")}` });
   /* CR08 Phase A, the data layer. One shared connection for the whole

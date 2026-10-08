@@ -1,5 +1,5 @@
 "use client";
-// KPI charts: actual vs dashed gold target, RAG colouring against the target path.
+// KPI charts: actual vs dashed aqua target, RAG colouring against the target path.
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { bi } from "@/lib/utils";
@@ -105,7 +105,7 @@ export function KpiSection({
                   height={180}
                 />
               ) : latest ? (
-                <p className="py-4 text-center font-[family-name:var(--font-display)] text-3xl font-semibold text-maroon-900 tnum">
+                <p className="py-4 text-center font-[family-name:var(--font-display)] text-3xl font-semibold text-navy-900 tnum">
                   {formatNumber(latest.value!, locale, { decimals: 1 })}
                   {kpi.unit ? <span className="ms-1 text-base text-ink-600">{kpi.unit}</span> : null}
                 </p>
@@ -115,7 +115,7 @@ export function KpiSection({
               {kpi.indicatorId ? (
                 <Link
                   href={`/statistics/${kpi.indicatorId}` as never}
-                  className="mt-2 inline-block text-xs font-medium text-gulf-600 hover:underline"
+                  className="mt-2 inline-block text-xs font-medium text-teal-600 hover:underline"
                 >
                   {t("openIndicator")}
                 </Link>

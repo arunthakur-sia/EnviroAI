@@ -173,7 +173,7 @@ export function TrendsSettingsTab() {
         <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-400">
           {t("trendsTab.briefs")}
         </p>
-        <div className="card divide-y divide-sand-100">
+        <div className="card divide-y divide-mist-100">
           {briefs.map((b) => (
             <div key={b.id} className="flex items-center gap-3 px-4 py-2.5 text-sm">
               <Switch
@@ -248,7 +248,7 @@ export function TrendsSettingsTab() {
         <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-400">
           {t("trendsTab.feeds")}
         </p>
-        <div className="card divide-y divide-sand-100">
+        <div className="card divide-y divide-mist-100">
           {feeds.map((f) => (
             <div key={f.id} className="flex items-center gap-3 px-4 py-2.5 text-sm">
               <Switch
@@ -319,7 +319,7 @@ export function TrendsSettingsTab() {
         <div className="card overflow-x-auto">
           <table className="w-full min-w-[640px] text-sm">
             <thead>
-              <tr className="bg-sand-50 text-xs font-semibold text-ink-600">
+              <tr className="bg-mist-50 text-xs font-semibold text-ink-600">
                 <th className="px-4 py-2.5 text-start">{t("trendsTab.runStarted")}</th>
                 <th className="px-4 py-2.5 text-start">{t("trendsTab.runStatus")}</th>
                 <th className="px-4 py-2.5 text-end">{t("trendsTab.runCandidates")}</th>
@@ -338,7 +338,7 @@ export function TrendsSettingsTab() {
                 </tr>
               ) : (
                 runs.map((r) => (
-                  <tr key={r.id} className="border-t border-sand-100">
+                  <tr key={r.id} className="border-t border-mist-100">
                     <td className="px-4 py-2.5 tnum">{formatDate(r.startedAt, locale)}</td>
                     <td className="px-4 py-2.5">
                       <Chip tone={r.status === "done" ? "ok" : r.status === "failed" ? "danger" : "warn"}>
@@ -346,7 +346,7 @@ export function TrendsSettingsTab() {
                       </Chip>
                     </td>
                     <td className="px-4 py-2.5 text-end tnum">{r.candidates}</td>
-                    <td className="px-4 py-2.5 text-end font-semibold text-maroon-900 tnum">
+                    <td className="px-4 py-2.5 text-end font-semibold text-navy-900 tnum">
                       {r.acceptedNew}
                     </td>
                     <td className="px-4 py-2.5 text-end tnum">{r.duplicates}</td>

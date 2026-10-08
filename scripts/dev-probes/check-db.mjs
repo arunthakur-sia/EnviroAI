@@ -1,6 +1,6 @@
 // Quick DB introspection: node scripts/dev-probes/check-db.mjs "<sql>" [...more]
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 for (const sql of process.argv.slice(2)) {
   try {
     const r = await db.execute(sql);

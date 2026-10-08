@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { asc, desc, eq } from "drizzle-orm";
-import { ShieldAlert, BadgeCheck, Download, Headphones } from "lucide-react";
+import { ShieldAlert, BadgeCheck, Download, FileText, Headphones } from "lucide-react";
 import { db, schema } from "@/server/db/client";
 import { getCurrentUser } from "@/server/auth/session";
 import { can } from "@/server/auth/permissions";
@@ -14,18 +14,17 @@ import {
 import { getOwnerRefs } from "@/server/services/people";
 import { parseJson, KeyFacts } from "@/server/db/json";
 import { bi } from "@/lib/utils";
+import { formatDate } from "@/lib/format";
 import { Chip, ClassificationChip, EmptyState } from "@/components/ui/primitives";
 import { OwnerControl } from "@/components/nexus/people/OwnerControl";
 import { Reveal } from "@/components/motion";
-import { BriefDialog } from "@/components/nexus/BriefDialog";
 import { Link } from "@/i18n/navigation";
 import { SetKnowledgeOfWeekButton } from "@/components/nexus/kow";
 import {
   canManageKnowledgeOfWeek,
   kowKindForDocument,
 } from "@/server/services/knowledge-of-week";
-import { Reader } from "./Reader";
-import { AiPanel } from "./AiPanel";
+import { ReaderWorkspace } from "./ReaderWorkspace";
 import { VerifyControls } from "./VerifyControls";
 import { RelatedStrip } from "./RelatedStrip";
 import { AskContextItem } from "@/components/nexus/ask/AskContextItem";
@@ -44,6 +43,7 @@ export default async function DocumentPage({
   const user = await getCurrentUser();
   if (!user) redirect(`/${locale}/login`);
   const t = await getTranslations("reader");
+  const tk = await getTranslations("ksaReader");
   const tc = await getTranslations("common");
   const tp = await getTranslations("podcast");
 
@@ -115,39 +115,47 @@ export default async function DocumentPage({
 
   return (
     <Reveal>
-      {/* CR08 2.3: the Ask NPC launcher knows this document */}
+      {/* CR08 2.3: the Ask EnviroAI launcher knows this document */}
       <AskContextItem item={askItem} />
       {/* Top bar */}
       <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0">
-          <h1 className="text-xl leading-snug">{title}</h1>
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            <ClassificationChip
-              level={doc.classificationLevel}
-              labels={[
-                tc("classification.1"),
-                tc("classification.2"),
-                tc("classification.3"),
-                tc("classification.4"),
-              ]}
-            />
-            <Chip tone={doc.status === "verified" ? "gulf" : "sand"}>
-              {doc.status === "verified" ? <BadgeCheck className="size-3" /> : null}
-              {tc(`status.${doc.status}` as never)}
-            </Chip>
-            {doc.titleArMachine || doc.summaryMachine ? (
-              <Chip tone="gold">{tc("aiTranslation")}</Chip>
-            ) : null}
-            {doc.pageCount ? (
-              <span className="text-xs text-ink-400 tnum">
-                {t("pageCount", { count: doc.pageCount })}
+        <div className="flex min-w-0 items-start gap-4">
+          <span className="grid size-16 shrink-0 place-items-center rounded-xl bg-navy-900 text-aqua-300" aria-hidden>
+            <FileText className="size-7" />
+          </span>
+          <div className="min-w-0">
+            <h1 className="text-xl leading-snug">{title}</h1>
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              {doc.status === "verified" ? (
+                <Chip tone="teal">
+                  <BadgeCheck className="size-3" /> {tk("panel.verified")}
+                </Chip>
+              ) : (
+                <Chip tone="mist">{tc(`status.${doc.status}` as never)}</Chip>
+              )}
+              <Chip tone="mist">{doc.languageOriginal.toUpperCase()}</Chip>
+              <ClassificationChip
+                level={doc.classificationLevel}
+                labels={[
+                  tc("classification.1"),
+                  tc("classification.2"),
+                  tc("classification.3"),
+                  tc("classification.4"),
+                ]}
+              />
+              {doc.titleArMachine || doc.summaryMachine ? (
+                <Chip tone="aqua">{tc("aiTranslation")}</Chip>
+              ) : null}
+              {doc.pageCount ? (
+                <span className="text-xs text-ink-600 tnum">{t("pageCount", { count: doc.pageCount })}</span>
+              ) : null}
+              {versions.length > 1 ? (
+                <span className="text-xs text-ink-600 tnum">{t("versionCount", { count: versions.length })}</span>
+              ) : null}
+              <span className="text-xs text-ink-600 tnum">
+                {tk("updated", { date: formatDate(doc.updatedAt, locale, { numerals: user.numeralsPref }) })}
               </span>
-            ) : null}
-            {versions.length > 1 ? (
-              <span className="text-xs text-ink-400 tnum">
-                {t("versionCount", { count: versions.length })}
-              </span>
-            ) : null}
+            </div>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
@@ -176,15 +184,14 @@ export default async function DocumentPage({
             {canVerify && doc.status !== "verified" ? <VerifyControls documentId={id} /> : null}
             <a
               href={`/api/v1/documents/${id}/download`}
-              className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-sand-300 bg-white px-4 text-sm font-medium text-ink-900 hover:border-maroon-300 hover:text-maroon-700"
+              className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-mist-300 bg-white px-4 text-sm font-medium text-ink-900 hover:border-navy-300 hover:text-navy-700"
             >
               <Download className="size-4" /> {tc("download")}
             </a>
-            <BriefDialog resourceType="document" resourceId={id} />
             {/* CR02 4.3: make an episode from this document */}
             <Link
               href={`/podcast/new?document=${id}` as never}
-              className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-sand-300 bg-white px-4 text-sm font-medium text-ink-900 hover:border-maroon-300 hover:text-maroon-700"
+              className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-mist-300 bg-white px-4 text-sm font-medium text-ink-900 hover:border-navy-300 hover:text-navy-700"
             >
               <Headphones className="size-4" /> {tp("listen")}
             </Link>
@@ -192,86 +199,35 @@ export default async function DocumentPage({
         </div>
       </div>
 
-      {/* Three-column reading layout */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[220px_minmax(0,1fr)_300px]">
-        {/* Outline */}
-        <aside className="hidden lg:block">
-          <div className="sticky top-20 space-y-5">
-            {outline.length ? (
-              <div>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-400">
-                  {t("outline")}
-                </p>
-                <nav className="flex flex-col gap-0.5 text-sm">
-                  {outline.map((o, i) => (
-                    <a
-                      key={i}
-                      href={`?page=${o.pageFrom ?? 1}`}
-                      className="truncate rounded px-2 py-1 text-ink-600 hover:bg-maroon-50 hover:text-maroon-900"
-                    >
-                      {o.heading}
-                    </a>
-                  ))}
-                </nav>
-              </div>
-            ) : null}
-            {keyFacts.length ? (
-              <div>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-400">
-                  {t("keyFacts")}
-                </p>
-                <ul className="space-y-2 text-xs leading-relaxed text-ink-900">
-                  {keyFacts.map((f, i) => (
-                    <li key={i} className="rounded-lg bg-gold-100/60 px-2.5 py-2">
-                      {bi(locale, f.text_en, f.text_ar)}
-                      {f.page ? (
-                        <span className="ms-1 text-ink-400 tnum">({f.page})</span>
-                      ) : null}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
-            {tags.length ? (
-              <div>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-400">
-                  {t("tags")}
-                </p>
-                <div className="flex flex-wrap gap-1">
-                  {tags.map((tag) => (
-                    <Chip key={tag.id} tone={tag.dimension === "outcome" ? "maroon" : "sand"}>
-                      {bi(locale, tag.nameEn, tag.nameAr)}
-                    </Chip>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-          </div>
-        </aside>
+      {/* Three-column reading workspace: outline, page viewer, EnviroAI Intelligence */}
+      <ReaderWorkspace
+        documentId={id}
+        kind={viewerKind as "pdf" | "html" | "tables" | "text"}
+        pageCount={doc.pageCount ?? 1}
+        initialPage={initialPage}
+        tables={tables.map((tb) => ({
+          caption: tb.caption,
+          columns: parseJson({ parse: (v) => v as string[] }, tb.columnsJson, []),
+          rows: parseJson({ parse: (v) => v as string[][] }, tb.rowsJson, []),
+        }))}
+        outline={outline.map((o) => ({ heading: o.heading as string, page: o.pageFrom ?? 1 }))}
+        keyFacts={keyFacts.map((f) => ({ text: bi(locale, f.text_en, f.text_ar), page: f.page ?? null }))}
+        tags={tags.map((tag) => ({
+          id: tag.id,
+          label: bi(locale, tag.nameEn, tag.nameAr),
+          tone: tag.dimension === "outcome" ? ("navy" as const) : ("mist" as const),
+        }))}
+        versions={versions.map((v) => ({ versionNo: v.versionNo, createdAt: v.createdAt, note: v.note }))}
+        summaryEn={doc.summaryEn}
+        summaryAr={doc.summaryAr}
+        summaryMachine={doc.summaryMachine === 1}
+        verified={doc.status === "verified"}
+        numerals={user.numeralsPref}
+      />
 
-        {/* Document */}
-        <Reader
-          documentId={id}
-          kind={viewerKind as "pdf" | "html" | "tables" | "text"}
-          pageCount={doc.pageCount ?? 1}
-          initialPage={initialPage}
-          tables={tables.map((tb) => ({
-            caption: tb.caption,
-            columns: parseJson({ parse: (v) => v as string[] }, tb.columnsJson, []),
-            rows: parseJson({ parse: (v) => v as string[][] }, tb.rowsJson, []),
-          }))}
-        />
-
-        {/* AI panel */}
-        <AiPanel
-          documentId={id}
-          summaryEn={doc.summaryEn}
-          summaryAr={doc.summaryAr}
-          summaryMachine={doc.summaryMachine === 1}
-        />
+      <div id="related-documents">
+        <RelatedStrip related={related} />
       </div>
-
-      <RelatedStrip related={related} />
     </Reveal>
   );
 }

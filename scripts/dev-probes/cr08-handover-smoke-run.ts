@@ -13,7 +13,7 @@ async function cookieFor(email: string): Promise<string> {
   const res = await fetch(`${BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email, password: "EnviroAI!2026" }),
   });
   if (!res.ok) throw new Error(`login failed for ${email}: ${res.status}`);
   return (res.headers.get("set-cookie") ?? "").split(";")[0];
@@ -21,7 +21,7 @@ async function cookieFor(email: string): Promise<string> {
 
 async function main() {
   const db = createClient({ url: `file:${path.join(process.cwd(), "data", "nexus.db").replace(/\\/g, "/")}` });
-  const [cookie, adminCookie] = [await cookieFor("analyst@npc.qa"), await cookieFor("admin@npc.qa")];
+  const [cookie, adminCookie] = [await cookieFor("analyst@enviroai.demo"), await cookieFor("admin@enviroai.demo")];
   const mod = await import("../smoke-cr08-handover");
   let pass = 0;
   let fail = 0;

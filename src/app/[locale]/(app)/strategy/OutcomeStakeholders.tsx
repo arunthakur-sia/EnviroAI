@@ -21,7 +21,7 @@ import type { OutcomeStakeholders, OutcomePerson } from "@/server/services/strat
 const EYEBROW =
   "text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-600";
 
-/** Toggle the gold outline on every lane card of the given nodes. */
+/** Toggle the aqua outline on every lane card of the given nodes. */
 function setLaneGlow(ids: string[], on: boolean) {
   for (const id of ids) {
     document
@@ -33,7 +33,7 @@ function setLaneGlow(ids: string[], on: boolean) {
 function DirectChip() {
   const t = useTranslations("strategy.outcomeStakeholders");
   return (
-    <Chip tone="gold" className="ms-2 align-middle" data-testid="direct-chip">
+    <Chip tone="aqua" className="ms-2 align-middle" data-testid="direct-chip">
       {t("directChip")}
     </Chip>
   );
@@ -107,13 +107,13 @@ function DepartmentOwnerRow({
       >
         {owner ? (
           <>
-            {/* the NPC emblem, as on department lead chips */}
+            {/* the Sia mark, as on department lead chips */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/brand/NPC_logo_transparent.png"
+              src="/brand/EnviroAI_mark.svg"
               alt=""
               aria-hidden
-              className="size-7 shrink-0 select-none object-cover object-right"
+              className="size-7 shrink-0 select-none object-contain"
               draggable={false}
             />
             <div className="min-w-0 flex-1">
@@ -154,7 +154,7 @@ function DepartmentOwnerRow({
             </div>
             <Link
               href={`/departments/${owner.code}` as never}
-              className="link-draw shrink-0 text-xs font-medium text-maroon-700"
+              className="link-draw shrink-0 text-xs font-medium text-navy-700"
               data-testid="dept-owner-link"
             >
               {t("openDepartment")}
@@ -162,7 +162,7 @@ function DepartmentOwnerRow({
             {canEdit ? (
               <button
                 onClick={() => setPicking((v) => !v)}
-                className="shrink-0 rounded-lg border border-sand-300 px-2 py-1 text-[11px] font-medium text-ink-600 hover:border-maroon-300 hover:text-maroon-700 cursor-pointer"
+                className="shrink-0 rounded-lg border border-mist-300 px-2 py-1 text-[11px] font-medium text-ink-600 hover:border-navy-300 hover:text-navy-700 cursor-pointer"
                 data-testid="set-owner-toggle"
               >
                 {t("setOwner")}
@@ -175,7 +175,7 @@ function DepartmentOwnerRow({
             {canEdit ? (
               <button
                 onClick={() => setPicking((v) => !v)}
-                className="shrink-0 rounded-lg border border-sand-300 px-2 py-1 text-xs font-medium text-maroon-700 hover:border-maroon-300 cursor-pointer"
+                className="shrink-0 rounded-lg border border-mist-300 px-2 py-1 text-xs font-medium text-navy-700 hover:border-navy-300 cursor-pointer"
                 data-testid="set-owner-toggle"
               >
                 {t("setOwner")}
@@ -255,7 +255,7 @@ function LeaderGroup({
             {p.email ? (
               <a
                 href={`mailto:${p.email}`}
-                className="shrink-0 rounded-lg p-1 text-ink-400 hover:bg-sand-100 hover:text-maroon-700"
+                className="shrink-0 rounded-lg p-1 text-ink-400 hover:bg-mist-100 hover:text-navy-700"
                 aria-label={ts("email", { name: p.nameEn })}
               >
                 <Mail className="size-3.5" />
@@ -264,7 +264,7 @@ function LeaderGroup({
             {p.expertId ? (
               <Link
                 href={`/experts/${p.expertId}` as never}
-                className="shrink-0 rounded-lg border border-sand-300 px-1.5 py-0.5 text-[11px] font-medium text-ink-600 hover:border-maroon-300 hover:text-maroon-700"
+                className="shrink-0 rounded-lg border border-mist-300 px-1.5 py-0.5 text-[11px] font-medium text-ink-600 hover:border-navy-300 hover:text-navy-700"
               >
                 {ts("profile")}
               </Link>
@@ -328,7 +328,7 @@ export function OutcomeStakeholdersSection({
         {canEdit ? (
           <button
             onClick={() => setAdding((a) => !a)}
-            className="flex items-center gap-1 rounded-lg border border-sand-300 bg-white px-2 py-1 text-xs font-medium text-ink-600 hover:border-maroon-300 hover:text-maroon-700 cursor-pointer"
+            className="flex items-center gap-1 rounded-lg border border-mist-300 bg-white px-2 py-1 text-xs font-medium text-ink-600 hover:border-navy-300 hover:text-navy-700 cursor-pointer"
             data-testid="outcome-add-stakeholder"
           >
             {adding ? <X className="size-3.5" /> : <Plus className="size-3.5" />}
@@ -378,8 +378,8 @@ export function OutcomeStakeholdersSection({
                   className={cn(
                     "inline-flex max-w-full items-center gap-1 rounded-md border px-2 py-1 text-[11px] font-medium leading-4 transition-colors cursor-pointer",
                     active
-                      ? "border-maroon-700 bg-maroon-700 text-white"
-                      : "border-gulf-100 bg-gulf-100 text-gulf-600 hover:border-gulf-600/40"
+                      ? "border-navy-700 bg-navy-700 text-white"
+                      : "border-teal-100 bg-teal-100 text-teal-600 hover:border-teal-600/40"
                   )}
                 >
                   <KindGlyph lead={chip} />
@@ -409,7 +409,7 @@ export function OutcomeStakeholdersSection({
         </p>
         {data.experts.length ? (
           <>
-            <ul className="flex flex-col divide-y divide-sand-100" data-testid="outcome-experts">
+            <ul className="flex flex-col divide-y divide-mist-100" data-testid="outcome-experts">
               {experts.map((e) => {
                 /* CR08 9.1: an expert with an account opens their card */
                 const person = e.userId ? owners?.[e.userId] ?? null : null;
@@ -446,7 +446,7 @@ export function OutcomeStakeholdersSection({
                   </div>
                   <span className="flex shrink-0 items-center gap-1.5">
                     {e.domains.slice(0, 2).map((d) => (
-                      <Chip key={d.id} tone="gulf" className="hidden sm:inline-flex">
+                      <Chip key={d.id} tone="teal" className="hidden sm:inline-flex">
                         {bi(locale, d.nameEn, d.nameAr)}
                       </Chip>
                     ))}
@@ -474,7 +474,7 @@ export function OutcomeStakeholdersSection({
                     {e.email ? (
                       <a
                         href={`mailto:${e.email}`}
-                        className="rounded-lg p-1.5 text-ink-400 hover:bg-sand-100 hover:text-maroon-700"
+                        className="rounded-lg p-1.5 text-ink-400 hover:bg-mist-100 hover:text-navy-700"
                         aria-label={ts("email", { name: e.nameEn })}
                       >
                         <Mail className="size-4" />
@@ -483,7 +483,7 @@ export function OutcomeStakeholdersSection({
                     {e.expertId ? (
                       <Link
                         href={`/experts/${e.expertId}` as never}
-                        className="rounded-lg border border-sand-300 px-2 py-1 text-[11px] font-medium text-ink-600 hover:border-maroon-300 hover:text-maroon-700"
+                        className="rounded-lg border border-mist-300 px-2 py-1 text-[11px] font-medium text-ink-600 hover:border-navy-300 hover:text-navy-700"
                       >
                         {ts("profile")}
                       </Link>
@@ -496,7 +496,7 @@ export function OutcomeStakeholdersSection({
             {data.experts.length > 6 ? (
               <button
                 onClick={() => setAllExperts((v) => !v)}
-                className="link-draw mt-1 text-xs font-medium text-maroon-700 cursor-pointer"
+                className="link-draw mt-1 text-xs font-medium text-navy-700 cursor-pointer"
                 data-testid="experts-show-all"
               >
                 {allExperts ? t("showLess") : t("showAll", { count: data.experts.length })}
@@ -513,10 +513,10 @@ export function OutcomeStakeholdersSection({
         <button
           onClick={() => setLeadersOpen((v) => !v)}
           aria-expanded={leadersOpen}
-          className="flex w-full items-center gap-2 px-3.5 py-2.5 text-start cursor-pointer hover:bg-sand-50"
+          className="flex w-full items-center gap-2 px-3.5 py-2.5 text-start cursor-pointer hover:bg-mist-50"
           data-testid="outcome-leaders-toggle"
         >
-          <Users2 className="size-4 shrink-0 text-maroon-700" aria-hidden />
+          <Users2 className="size-4 shrink-0 text-navy-700" aria-hidden />
           <span className="text-sm font-medium text-ink-900">{t("leaders")}</span>
           <span className="text-xs text-ink-600 tnum">{leaderTotal}</span>
           <ChevronDown
@@ -536,7 +536,7 @@ export function OutcomeStakeholdersSection({
               transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
               className="overflow-hidden"
             >
-              <div className="grid gap-x-6 gap-y-4 border-t border-sand-100 px-3.5 py-3 sm:grid-cols-3">
+              <div className="grid gap-x-6 gap-y-4 border-t border-mist-100 px-3.5 py-3 sm:grid-cols-3">
                 <LeaderGroup labelKey="sponsors" people={data.leaders.sponsor} owners={owners} item={item} />
                 <LeaderGroup labelKey="owners" people={data.leaders.owner} owners={owners} item={item} />
                 <LeaderGroup labelKey="managers" people={data.leaders.manager} owners={owners} item={item} />

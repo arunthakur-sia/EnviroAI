@@ -76,7 +76,7 @@ export function Constellation({ data }: { data: ConstellationData }) {
               key={i}
               d={`M ${l.x1} ${l.y1} Q ${mx} ${my} ${l.x2} ${l.y2}`}
               fill="none"
-              stroke={lit ? "rgba(138, 21, 56, 0.6)" : "var(--connection)"}
+              stroke={lit ? "rgba(23, 48, 68, 0.6)" : "var(--connection)"}
               strokeWidth={lit ? 1.2 : 1}
               style={{ transition: "stroke 300ms var(--ease-paper)" }}
             />
@@ -92,10 +92,10 @@ export function Constellation({ data }: { data: ConstellationData }) {
               r={lit ? (n.hub ? 6 : 4.5) : n.hub ? 4 : 3}
               fill={
                 lit
-                  ? "rgba(138, 21, 56, 0.6)"
+                  ? "rgba(23, 48, 68, 0.6)"
                   : n.hub
-                    ? "var(--color-sand-300)"
-                    : "var(--color-sand-300)"
+                    ? "var(--color-mist-300)"
+                    : "var(--color-mist-300)"
               }
               opacity={lit ? 1 : 0.6}
               style={{ transition: "all 300ms var(--ease-paper)" }}

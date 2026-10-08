@@ -55,7 +55,7 @@ const DOT: Record<SectionStatusKey, string> = {
   pending: "bg-ink-200",
   generating: "bg-info",
   ready: "bg-ok",
-  edited: "bg-gold-500",
+  edited: "bg-aqua-500",
   failed: "bg-danger",
   needsEditing: "bg-warn",
 };
@@ -176,7 +176,7 @@ export function ReportPage({
 
   const title = bi(locale, report.titleEn, report.titleAr);
   const familyLabel = t(`families.${report.family as "public" | "internal" | "custom"}`);
-  const scopeText = report.scope.kind === "npc" || report.scope.kind === "period" ? t(`scopeKinds.${report.scope.kind}`) : bi(locale, report.scope.label.en, report.scope.label.ar);
+  const scopeText = report.scope.kind === "org" || report.scope.kind === "period" ? t(`scopeKinds.${report.scope.kind}`) : bi(locale, report.scope.label.en, report.scope.label.ar);
   const hasContent = detail.sections.some((s) => s.content && s.content.blocks.length);
   const showProgress = generating || report.status === "failed";
   const locked = !detail.canEdit && (report.status === "in_review" || report.status === "approved");
@@ -195,10 +195,10 @@ export function ReportPage({
               {title}
             </h1>
             <div className="mt-2 flex flex-wrap items-center gap-1.5">
-              <Chip tone={STATUS_TONE[report.status] ?? "sand"} data-testid="status-chip">
+              <Chip tone={STATUS_TONE[report.status] ?? "mist"} data-testid="status-chip">
                 {t(`statuses.${report.status as StatusKey}`)}
               </Chip>
-              {familyLabel !== labels[Math.min(3, Math.max(0, report.classification - 1))] ? <Chip tone={FAMILY_TONE[report.family] ?? "sand"}>{familyLabel}</Chip> : null}
+              {familyLabel !== labels[Math.min(3, Math.max(0, report.classification - 1))] ? <Chip tone={FAMILY_TONE[report.family] ?? "mist"}>{familyLabel}</Chip> : null}
               <ClassificationChip level={report.classification} labels={labels} />
               <span className="text-xs text-ink-400 tnum">{t("hub.version", { n: report.version })}</span>
             </div>
@@ -246,7 +246,7 @@ export function ReportPage({
               </Button>
             ) : null}
             {report.publishedDocumentId ? (
-              <ButtonLink href={`/vault/${report.publishedDocumentId}`} variant="gold" size="sm" data-testid="memory-link">
+              <ButtonLink href={`/vault/${report.publishedDocumentId}`} variant="aqua" size="sm" data-testid="memory-link">
                 <Library /> {t("report.memoryDoc")}
               </ButtonLink>
             ) : null}
@@ -267,7 +267,7 @@ export function ReportPage({
           scrolls sideways on a phone */}
       <div className="grid grid-cols-1 gap-5 md:grid-cols-[220px_minmax(0,1fr)]">
         <div className="mx-auto w-full max-w-[220px] md:mx-0" data-testid="report-cover">
-          <div className="aspect-[5/7] w-full overflow-hidden rounded-xl border border-sand-300 bg-maroon-900 shadow-[var(--shadow-paper)]">
+          <div className="aspect-[5/7] w-full overflow-hidden rounded-xl border border-mist-300 bg-navy-900 shadow-[var(--shadow-paper)]">
             {report.previewCount > 0 ? (
               // the cover page rendered by the template, served by the module API
               // eslint-disable-next-line @next/next/no-img-element
@@ -317,7 +317,7 @@ export function ReportPage({
             <div>
               <dt className={eyebrow}>{t("report.meta.status")}</dt>
               <dd className="mt-1">
-                <Chip tone={STATUS_TONE[report.status] ?? "sand"}>{t(`statuses.${report.status as StatusKey}`)}</Chip>
+                <Chip tone={STATUS_TONE[report.status] ?? "mist"}>{t(`statuses.${report.status as StatusKey}`)}</Chip>
               </dd>
             </div>
             {report.requesterNameEn ? (
@@ -358,7 +358,7 @@ export function ReportPage({
               </div>
             ) : null}
           </dl>
-          <div className="mt-5 border-t border-sand-200 pt-4">
+          <div className="mt-5 border-t border-mist-200 pt-4">
             <p className={cn(eyebrow, "mb-2")}>
               {t("report.pages")}
               {report.previewCount ? <span className="ms-1.5 normal-case tracking-normal text-ink-400 tnum">{t("report.previewsCount", { count: report.previewCount })}</span> : null}
@@ -392,7 +392,7 @@ export function ReportPage({
                     <li key={s.code}>
                       <a
                         href={`#section-${s.code}`}
-                        className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-ink-600 hover:bg-maroon-50 hover:text-maroon-900 focus-visible:outline-2 focus-visible:outline-gold-500"
+                        className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-ink-600 hover:bg-navy-50 hover:text-navy-900 focus-visible:outline-2 focus-visible:outline-aqua-500"
                       >
                         <span className={cn("size-2 shrink-0 rounded-full", DOT[st])} aria-hidden />
                         <span className="w-6 shrink-0 text-[11px] text-ink-400 tnum">{s.content?.numeral ?? ""}</span>
@@ -415,21 +415,21 @@ export function ReportPage({
                 <article
                   key={s.code}
                   id={`section-${s.code}`}
-                  className={cn("card scroll-mt-6 p-5 sm:p-6", focusSection === s.code && "ring-1 ring-gold-500")}
+                  className={cn("card scroll-mt-6 p-5 sm:p-6", focusSection === s.code && "ring-1 ring-aqua-500")}
                   data-testid="report-section"
                   data-section-code={s.code}
                   data-section-status={st}
                 >
                   <header className="flex flex-wrap items-start gap-3">
                     {content?.numeral ? (
-                      <span className="font-display text-4xl leading-none text-maroon-300 tnum" aria-hidden>
+                      <span className="font-display text-4xl leading-none text-navy-300 tnum" aria-hidden>
                         {content.numeral}
                       </span>
                     ) : null}
                     <div className="min-w-0 flex-1">
                       <h2 className="font-display text-xl text-ink-900">{pick(lang, content?.title ?? s.name)}</h2>
                       <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-ink-600">
-                        <Chip tone={SECTION_STATUS_TONE[st] ?? "sand"} data-testid="section-status">
+                        <Chip tone={SECTION_STATUS_TONE[st] ?? "mist"} data-testid="section-status">
                           {t(`sectionStatus.${st}`)}
                         </Chip>
                         <span className="text-ink-400">{bi(locale, s.name.en, s.name.ar)}</span>
@@ -466,8 +466,8 @@ export function ReportPage({
                     <div className="mt-4">
                       {content.lead ? <p className="font-display text-lg leading-relaxed text-ink-900">{pick(lang, content.lead)}</p> : null}
                       {content.keyFigure ? (
-                        <div className="mt-3 inline-flex flex-col rounded-xl bg-maroon-50 px-4 py-3">
-                          <span className="font-display text-3xl leading-none text-maroon-900 tnum" style={{ unicodeBidi: "plaintext" }}>
+                        <div className="mt-3 inline-flex flex-col rounded-xl bg-navy-50 px-4 py-3">
+                          <span className="font-display text-3xl leading-none text-navy-900 tnum" style={{ unicodeBidi: "plaintext" }}>
                             {content.keyFigure.value}
                           </span>
                           <span className="mt-1 text-xs text-ink-600">{pick(lang, content.keyFigure.label)}</span>
@@ -490,7 +490,7 @@ export function ReportPage({
                         // the cover and the contents carry no blocks: the
                         // document template composes those pages, so say so
                         // instead of calling a finished section empty
-                        <p className="mt-3 flex items-center gap-2 rounded-lg bg-sand-50 px-3 py-2 text-xs text-ink-600" data-testid="template-page">
+                        <p className="mt-3 flex items-center gap-2 rounded-lg bg-mist-50 px-3 py-2 text-xs text-ink-600" data-testid="template-page">
                           <FileText className="size-3.5 shrink-0 text-ink-400" aria-hidden /> {t("report.templatePage")}
                         </p>
                       ) : (
@@ -502,7 +502,7 @@ export function ReportPage({
                   )}
 
                   {/* comments */}
-                  <div className="mt-5 border-t border-sand-200 pt-4" data-testid="section-comments">
+                  <div className="mt-5 border-t border-mist-200 pt-4" data-testid="section-comments">
                     <p className="flex items-center gap-1.5 text-xs font-semibold text-ink-600">
                       <MessageSquare className="size-3.5" aria-hidden /> {t("report.comments", { count: s.comments.length })}
                     </p>
@@ -511,7 +511,7 @@ export function ReportPage({
                         {s.comments.map((c) => (
                           <li key={c.id} className="flex gap-2.5" data-testid="section-comment">
                             <Avatar name={bi(locale, c.nameEn, c.nameAr)} size={26} className="mt-0.5" />
-                            <div className="min-w-0 flex-1 rounded-lg bg-sand-50 px-3 py-2">
+                            <div className="min-w-0 flex-1 rounded-lg bg-mist-50 px-3 py-2">
                               <p className="text-xs text-ink-600">
                                 <span className="font-medium text-ink-900">{bi(locale, c.nameEn, c.nameAr)}</span>{" "}
                                 <TimeAgo iso={c.at} className="text-ink-400" />

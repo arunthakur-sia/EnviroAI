@@ -14,7 +14,7 @@ import { useToast } from "@/components/ui/toast";
 export type LessonLinkView = {
   id: string;
   nodeId: string;
-  nodeKind: "nds" | "council";
+  nodeKind: "nes" | "council";
   isPrimary: boolean;
   code: string | null;
   titleEn: string;
@@ -29,7 +29,7 @@ type Hit = {
   titleEn: string;
   titleAr: string;
   level: string;
-  kind: "nds" | "council";
+  kind: "nes" | "council";
   edition: string | null;
 };
 
@@ -48,10 +48,10 @@ export function PrimaryNodeChip({
   const extra = links.length - 1;
   return (
     <span className={cn("inline-flex items-center gap-1", className)} data-testid="lesson-primary-chip">
-      <Chip tone={primary.nodeKind === "council" ? "gulf" : "sand"}>
+      <Chip tone={primary.nodeKind === "council" ? "teal" : "mist"}>
         {primary.code ?? bi(locale, primary.titleEn, primary.titleAr)}
       </Chip>
-      {primary.nodeKind === "council" ? <Chip tone="maroon">{t("internal")}</Chip> : null}
+      {primary.nodeKind === "council" ? <Chip tone="navy">{t("internal")}</Chip> : null}
       {extra > 0 ? (
         <span className="text-[10px] text-ink-600 tnum" title={t("moreLinks", { count: extra })}>
           +{extra}
@@ -80,7 +80,7 @@ export function LessonLinksSection({
   const { toast } = useToast();
   const [links, setLinks] = React.useState(initial);
   const [adding, setAdding] = React.useState(false);
-  const [store, setStore] = React.useState<"nds" | "council">("nds");
+  const [store, setStore] = React.useState<"nes" | "council">("nes");
   const [query, setQuery] = React.useState("");
   const [hits, setHits] = React.useState<Hit[]>([]);
   const [busy, setBusy] = React.useState(false);
@@ -192,7 +192,7 @@ export function LessonLinksSection({
         {canEdit ? (
           <button
             onClick={() => setAdding((a) => !a)}
-            className="flex items-center gap-1 rounded-lg border border-sand-300 bg-white px-2 py-1 text-xs font-medium text-ink-600 hover:border-maroon-300 hover:text-maroon-700 cursor-pointer"
+            className="flex items-center gap-1 rounded-lg border border-mist-300 bg-white px-2 py-1 text-xs font-medium text-ink-600 hover:border-navy-300 hover:text-navy-700 cursor-pointer"
             data-testid="lesson-link-add"
           >
             {adding ? <X className="size-3.5" /> : <Plus className="size-3.5" />}
@@ -206,24 +206,24 @@ export function LessonLinksSection({
           {links.map((link) => (
             <li
               key={link.id}
-              className="flex items-center gap-2 rounded-lg border border-sand-100 bg-white px-2.5 py-1.5"
+              className="flex items-center gap-2 rounded-lg border border-mist-100 bg-white px-2.5 py-1.5"
               data-testid="lesson-link-row"
             >
               <Link2 className="size-3.5 shrink-0 text-ink-400" aria-hidden />
-              <Link href={href(link)} className="min-w-0 flex-1 truncate text-sm text-ink-900 hover:text-maroon-700">
+              <Link href={href(link)} className="min-w-0 flex-1 truncate text-sm text-ink-900 hover:text-navy-700">
                 {link.code ? <span className="me-1.5 text-xs text-ink-600 tnum">{link.code}</span> : null}
                 {bi(locale, link.titleEn, link.titleAr)}
               </Link>
-              {link.nodeKind === "council" ? <Chip tone="maroon">{t("internal")}</Chip> : null}
-              {link.edition ? <Chip tone="sand">{link.edition.toUpperCase()}</Chip> : null}
+              {link.nodeKind === "council" ? <Chip tone="navy">{t("internal")}</Chip> : null}
+              {link.edition ? <Chip tone="mist">{link.edition.toUpperCase()}</Chip> : null}
               {link.isPrimary ? (
-                <Chip tone="gold" data-testid="lesson-link-primary">
+                <Chip tone="aqua" data-testid="lesson-link-primary">
                   {t("primary")}
                 </Chip>
               ) : canEdit ? (
                 <button
                   onClick={() => makePrimary(link.id)}
-                  className="rounded-lg p-1 text-ink-400 hover:bg-sand-100 hover:text-gold-500 cursor-pointer"
+                  className="rounded-lg p-1 text-ink-400 hover:bg-mist-100 hover:text-aqua-500 cursor-pointer"
                   aria-label={t("makePrimary")}
                   title={t("makePrimary")}
                 >
@@ -233,7 +233,7 @@ export function LessonLinksSection({
               {canEdit ? (
                 <button
                   onClick={() => remove(link.id)}
-                  className="rounded-lg p-1 text-ink-400 hover:bg-sand-100 hover:text-danger cursor-pointer"
+                  className="rounded-lg p-1 text-ink-400 hover:bg-mist-100 hover:text-danger cursor-pointer"
                   aria-label={t("unlink")}
                   title={t("unlink")}
                   data-testid="lesson-link-remove"
@@ -252,18 +252,18 @@ export function LessonLinksSection({
 
       {adding && canEdit ? (
         <div className="card mt-2 flex flex-col gap-2 p-3" data-testid="lesson-link-form">
-          <span className="inline-flex w-fit items-center gap-0.5 rounded-lg bg-sand-100 p-0.5">
-            {(["nds", "council"] as const).map((key) => (
+          <span className="inline-flex w-fit items-center gap-0.5 rounded-lg bg-mist-100 p-0.5">
+            {(["nes", "council"] as const).map((key) => (
               <button
                 key={key}
                 onClick={() => setStore(key)}
                 aria-pressed={store === key}
                 className={cn(
                   "rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
-                  store === key ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+                  store === key ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
                 )}
               >
-                {key === "nds" ? t("storeNds") : t("storeCouncil")}
+                {key === "nes" ? t("storeNes") : t("storeCouncil")}
               </button>
             ))}
           </span>
@@ -281,17 +281,17 @@ export function LessonLinksSection({
             />
           </span>
           {hits.length ? (
-            <div className="overflow-hidden rounded-xl border border-sand-300 bg-white">
+            <div className="overflow-hidden rounded-xl border border-mist-300 bg-white">
               {hits.map((hit) => (
                 <button
                   key={`${hit.kind}:${hit.id}`}
                   onClick={() => add(hit)}
                   disabled={busy}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-start text-sm hover:bg-maroon-100/50 cursor-pointer"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-start text-sm hover:bg-navy-100/50 cursor-pointer"
                 >
                   {hit.code ? <span className="text-xs text-ink-600 tnum">{hit.code}</span> : null}
                   <span className="min-w-0 flex-1 truncate">{bi(locale, hit.titleEn, hit.titleAr)}</span>
-                  <Chip tone={hit.kind === "council" ? "gulf" : "sand"}>
+                  <Chip tone={hit.kind === "council" ? "teal" : "mist"}>
                     {hit.edition ? hit.edition.toUpperCase() : t("storeCouncil")}
                   </Chip>
                 </button>

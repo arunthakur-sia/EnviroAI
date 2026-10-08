@@ -5,8 +5,8 @@
 // planning and reporting calendar, the internal and external interfaces, the
 // operational KPI scorecard), plus the permission-checked writes behind them.
 //
-// Governance reuses the Council Strategy's governance bodies (council.ts) and
-// adds the bodies the Council Strategy does not carry (the Council itself, the
+// Governance reuses the Programme Strategy's governance bodies (council.ts) and
+// adds the bodies the Programme Strategy does not carry (the Office itself, the
 // Secretary General, the Executive Committee, the National Statistics
 // Committee, the Data Governance Board) from the settings key
 // `operating_model_governance`, which the seed writes.
@@ -70,7 +70,7 @@ export type CalendarKind =
   | "strategy_review"
   | "budget"
   | "statistical_release"
-  | "nds_review"
+  | "nes_review"
   | "council_meeting"
   | "report_deadline"
   | "forum"
@@ -79,7 +79,7 @@ export const CALENDAR_KINDS: readonly CalendarKind[] = [
   "strategy_review",
   "budget",
   "statistical_release",
-  "nds_review",
+  "nes_review",
   "council_meeting",
   "report_deadline",
   "forum",
@@ -278,7 +278,7 @@ export type EntityInterfaceView = {
   providesAr: string | null;
   receivesEn: string | null;
   receivesAr: string | null;
-  focalNpc: PersonRef | null;
+  focalOrg: PersonRef | null;
   focalEntityName: string | null;
   legalBasisEn: string | null;
   legalBasisAr: string | null;
@@ -768,7 +768,7 @@ async function entityInterfaceViews(
     ? await db.select().from(schema.entities).where(inArray(schema.entities.id, entityIds))
     : [];
   const entityById = new Map(entities.map((e) => [e.id, e]));
-  const people = await loadPeople(rows.map((r) => r.focalNpcUserId));
+  const people = await loadPeople(rows.map((r) => r.focalOrgUserId));
   const out: EntityInterfaceView[] = [];
   for (const r of rows) {
     const e = entityById.get(r.entityId);
@@ -780,7 +780,7 @@ async function entityInterfaceViews(
       providesAr: r.providesAr,
       receivesEn: r.receivesEn,
       receivesAr: r.receivesAr,
-      focalNpc: r.focalNpcUserId ? people.get(r.focalNpcUserId) ?? null : null,
+      focalOrg: r.focalOrgUserId ? people.get(r.focalOrgUserId) ?? null : null,
       focalEntityName: r.focalEntityName,
       legalBasisEn: r.legalBasisEn,
       legalBasisAr: r.legalBasisAr,
@@ -888,7 +888,7 @@ export async function getPrinciples(): Promise<Principle[]> {
 }
 
 /* ------------------------------------------------------------------ */
-/* governance: the Council Strategy's bodies plus the settings extras   */
+/* governance: the Programme Strategy's bodies plus the settings extras   */
 /* ------------------------------------------------------------------ */
 
 const GovernanceSettingSchema = z.object({
@@ -1219,7 +1219,7 @@ export async function getUnitInterfaces(user: CurrentUser, unitId: string): Prom
   const peopleIds = new Set(unitPeople.map((p) => p.id));
   const external = await entityInterfaceViews(
     index.entityInterfaces.filter(
-      (e) => (e.focalNpcUserId && peopleIds.has(e.focalNpcUserId)) || entityProcessIds(e).some((id) => ownedIds.has(id))
+      (e) => (e.focalOrgUserId && peopleIds.has(e.focalOrgUserId)) || entityProcessIds(e).some((id) => ownedIds.has(id))
     ),
     index
   );
@@ -1397,7 +1397,7 @@ export async function getOperatingModel(user: CurrentUser, opts: { year?: number
   };
 }
 
-/** One section of the model, for `?section=` and the Ask NPC tool. */
+/** One section of the model, for `?section=` and the Ask EnviroAI tool. */
 export async function getOperatingModelSection(
   user: CurrentUser,
   section: OperatingModelSection,
@@ -1757,7 +1757,7 @@ export type EntityInterfaceInput = {
   providesAr?: string | null;
   receivesEn?: string | null;
   receivesAr?: string | null;
-  focalNpcUserId?: string | null;
+  focalOrgUserId?: string | null;
   focalEntityName?: string | null;
   legalBasisEn?: string | null;
   legalBasisAr?: string | null;
@@ -1775,7 +1775,7 @@ export async function upsertEntityInterface(user: CurrentUser | null, input: Ent
     providesAr: input.providesAr ?? null,
     receivesEn: input.receivesEn ?? null,
     receivesAr: input.receivesAr ?? null,
-    focalNpcUserId: input.focalNpcUserId ?? null,
+    focalOrgUserId: input.focalOrgUserId ?? null,
     focalEntityName: input.focalEntityName ?? null,
     legalBasisEn: input.legalBasisEn ?? null,
     legalBasisAr: input.legalBasisAr ?? null,

@@ -160,7 +160,7 @@ export function LearnMode({ onLeave }: { onLeave: () => void }) {
                 key={i}
                 className={cn(
                   "size-2 rounded-full transition-colors",
-                  i < index || phase !== "reading" ? "bg-maroon-700" : i === index ? "bg-maroon-500 ring-2 ring-maroon-100" : "bg-sand-300"
+                  i < index || phase !== "reading" ? "bg-navy-700" : i === index ? "bg-navy-500 ring-2 ring-navy-100" : "bg-mist-300"
                 )}
                 aria-hidden
               />
@@ -177,7 +177,7 @@ export function LearnMode({ onLeave }: { onLeave: () => void }) {
 
       {!session ? (
         <div className="card flex h-64 items-center justify-center" aria-busy>
-          <Loader2 className="size-6 animate-spin text-maroon-700" />
+          <Loader2 className="size-6 animate-spin text-navy-700" />
         </div>
       ) : phase === "done" ? (
         <div className="card flex flex-col items-center gap-3 p-10 text-center">
@@ -217,12 +217,12 @@ export function LearnMode({ onLeave }: { onLeave: () => void }) {
             className="card p-6"
           >
             <p className="flex flex-wrap items-center gap-2">
-              <Chip tone={CATEGORY_TONES[lesson.category] ?? "sand"}>
+              <Chip tone={CATEGORY_TONES[lesson.category] ?? "mist"}>
                 {t(`categories.${lesson.category}` as never)}
               </Chip>
-              {lesson.nodeCode ? <Chip tone="sand">{lesson.nodeCode}</Chip> : null}
+              {lesson.nodeCode ? <Chip tone="mist">{lesson.nodeCode}</Chip> : null}
               {lesson.outcomeNameEn ? (
-                <Chip tone="maroon">{bi(locale, lesson.outcomeNameEn, lesson.outcomeNameAr ?? "")}</Chip>
+                <Chip tone="navy">{bi(locale, lesson.outcomeNameEn, lesson.outcomeNameAr ?? "")}</Chip>
               ) : null}
             </p>
             <h3 className="mt-2 text-xl leading-snug">{bi(locale, lesson.titleEn, lesson.titleAr)}</h3>
@@ -237,7 +237,7 @@ export function LearnMode({ onLeave }: { onLeave: () => void }) {
               </p>
             ) : null}
             {(lesson.recommendationEn || lesson.recommendationAr) ? (
-              <p className="mt-3 rounded-xl bg-gulf-100/50 p-3.5 text-sm leading-relaxed text-ink-900">
+              <p className="mt-3 rounded-xl bg-teal-100/50 p-3.5 text-sm leading-relaxed text-ink-900">
                 {bi(locale, lesson.recommendationEn ?? "", lesson.recommendationAr ?? "")}
               </p>
             ) : null}
@@ -258,7 +258,7 @@ export function LearnMode({ onLeave }: { onLeave: () => void }) {
                   onClick={() => setIndex(Math.max(0, index - 1))}
                   disabled={index === 0}
                   aria-label={t("room.close")}
-                  className="rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 disabled:opacity-30 cursor-pointer"
+                  className="rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 disabled:opacity-30 cursor-pointer"
                 >
                   <ChevronLeft className="size-4 flip-rtl" />
                 </button>
@@ -266,7 +266,7 @@ export function LearnMode({ onLeave }: { onLeave: () => void }) {
                   onClick={() => setIndex(Math.min(count - 1, index + 1))}
                   disabled={index >= count - 1}
                   aria-label={t("room.gotIt")}
-                  className="rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 disabled:opacity-30 cursor-pointer"
+                  className="rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 disabled:opacity-30 cursor-pointer"
                 >
                   <ChevronRight className="size-4 flip-rtl" />
                 </button>

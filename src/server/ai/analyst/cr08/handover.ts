@@ -1,4 +1,4 @@
-// CR08 6: handover tools for Ask NPC. get_my_handover (the caller's own
+// CR08 6: handover tools for Ask EnviroAI. get_my_handover (the caller's own
 // open handover), get_handovers_in_scope (administrators: open handovers
 // with readiness), get_learning_path (the caller's path progress). Interview
 // transcripts of other people are never exposed: the tools return counts,

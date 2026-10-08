@@ -1,12 +1,13 @@
 /* eslint-disable no-console */
 // CR08 10: the illustrative operating model: six principles, the governance
-// bodies beyond the Council Strategy's own (a settings row), eight Level 0
+// bodies beyond the Programme Strategy's own (a settings row), eight Level 0
 // processes with their Level 1 processes and Level 2 procedures, the RACI
 // for every Level 1, the 2026 planning and reporting calendar (strategy
-// reviews, the budget cycle, the statistical releases of the releases table
-// plus the census and the quarterly GDP, CPI and labour force releases, NDS3
-// reviews, quarterly Council meetings, report deadlines from report_types,
-// the Doha Data Forum), ten external interfaces on entities of the register,
+// reviews, the budget cycle, the data releases of the releases table
+// plus the field survey round and the quarterly water balance and monthly air
+// quality releases, NES reviews, quarterly Programme Steering Committee
+// meetings, report deadlines from report_types, the Saudi Green Initiative
+// Forum), ten external interfaces on entities of the register,
 // twenty internal unit-to-unit interfaces with focal users, and five
 // operational KPIs with monthly 2026 values.
 //
@@ -57,7 +58,7 @@ export default async function seedCr08OpModel(): Promise<void> {
     if (!unit) return null;
     const head = unit.headUserId ? users.find((u) => u.id === unit.headUserId) : null;
     if (head) return head;
-    return users.find((u) => u.departmentId === unit.id && u.email !== "admin@npc.qa") ?? null;
+    return users.find((u) => u.departmentId === unit.id && u.email !== "admin@enviroai.demo") ?? null;
   };
 
   /* 1. principles, keyed by the English title */
@@ -71,7 +72,7 @@ export default async function seedCr08OpModel(): Promise<void> {
     principles++;
   }
 
-  /* 2. the governance bodies beyond the Council Strategy's, once */
+  /* 2. the governance bodies beyond the Programme Strategy's, once */
   const currentGovernance = await getSetting<{ bodies?: unknown[] }>(GOVERNANCE_SETTING_KEY, {});
   if (!Array.isArray(currentGovernance.bodies) || !currentGovernance.bodies.length || process.env.CR08_OPMODEL_RESEED === "1") {
     await setSetting(GOVERNANCE_SETTING_KEY, {
@@ -213,9 +214,9 @@ export default async function seedCr08OpModel(): Promise<void> {
       recurrence: c.recurrence,
     });
   }
-  // the statistical releases already in the releases table, dated as published
+  // the data releases already in the releases table, dated as published
   const releaseOwner = (title: string) =>
-    /price|national accounts|trade|building|business/i.test(title) ? "ECS" : /environment|yearbook|government finance/i.test(title) ? "SES" : "SOA";
+    /water|balance|account|digest|index|indices/i.test(title) ? "EAS" : /air quality|emission/i.test(title) ? "AQD" : "DOP";
   for (const r of releases) {
     calRows.push({
       kind: "statistical_release",
@@ -314,14 +315,14 @@ export default async function seedCr08OpModel(): Promise<void> {
       warn(`entity "${e.entityShort}" is not in the register; skipped`);
       continue;
     }
-    const focal = personOfUnit(e.focalNpcUnitCode);
+    const focal = personOfUnit(e.focalOrgUnitCode);
     const values = {
       entityId: entity.id,
       providesEn: e.providesEn,
       providesAr: e.providesAr,
       receivesEn: e.receivesEn,
       receivesAr: e.receivesAr,
-      focalNpcUserId: focal?.id ?? null,
+      focalOrgUserId: focal?.id ?? null,
       focalEntityName: e.focalEntityName,
       legalBasisEn: e.legalBasisEn,
       legalBasisAr: e.legalBasisAr,

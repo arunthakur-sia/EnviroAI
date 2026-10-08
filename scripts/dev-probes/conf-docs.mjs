@@ -1,5 +1,5 @@
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const r = await db.execute(
   "select classification_level, count(*) c from documents where deleted_at is null group by classification_level"
 );

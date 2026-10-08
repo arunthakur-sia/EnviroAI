@@ -10,4 +10,4 @@ Classify the search query. Classes: number (wants a statistic), person (wants an
 
 Example 1: "population growth 2026" -> {"intent":"number","lang":"en"}
 Example 2: "من يعرف منهجية التعداد" -> {"intent":"person","lang":"ar"}
-Example 3: "NDS3 حالة مشاريع القطاع المالي" -> {"intent":"status","lang":"mixed"}
+Example 3: "NES حالة مشاريع القطاع المالي" -> {"intent":"status","lang":"mixed"}

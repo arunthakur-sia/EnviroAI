@@ -13,7 +13,7 @@ async function sessionCookies(email: string) {
   const res = await fetch(BASE + "/api/v1/auth/login", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email, password: "EnviroAI!2026" }),
     redirect: "manual",
   });
   const out: { name: string; value: string; domain: string; path: string }[] = [];
@@ -30,7 +30,7 @@ async function main() {
   const target = process.argv[2] ?? "/en/profile";
   const browser = await chromium.launch({ channel: "msedge" });
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-  await ctx.addCookies(await sessionCookies(process.env.WARM_EMAIL ?? "analyst@npc.qa"));
+  await ctx.addCookies(await sessionCookies(process.env.WARM_EMAIL ?? "analyst@enviroai.demo"));
   const page = await ctx.newPage();
   const seen: string[] = [];
   page.on("response", (r) => {

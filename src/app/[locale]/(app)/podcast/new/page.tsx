@@ -84,8 +84,8 @@ export default async function PodcastComposerPage({
       initialScope = {
         kind: "conversation",
         ids: [conv.id],
-        labelEn: conv.title ?? "Ask NPC answer",
-        labelAr: conv.title ?? "إجابة اسأل المجلس",
+        labelEn: conv.title ?? "Ask EnviroAI answer",
+        labelAr: conv.title ?? "إجابة اسأل EnviroAI",
         query: lastAnswer?.content?.slice(0, 6000) ?? "",
       };
     }

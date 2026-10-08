@@ -48,12 +48,12 @@ export function RankSparkline({
   const last = xy[xy.length - 1];
   return (
     <svg width={w} height={h} className="block" aria-hidden style={{ direction: "ltr" }}>
-      <path d={path} fill="none" stroke="var(--color-maroon-500)" strokeWidth={1.75} strokeLinejoin="round" />
+      <path d={path} fill="none" stroke="var(--color-navy-500)" strokeWidth={1.75} strokeLinejoin="round" />
       <circle
         cx={last.x}
         cy={last.y}
         r={highlight ? 4 : 2.5}
-        fill="var(--color-maroon-700)"
+        fill="var(--color-navy-700)"
         stroke="#fff"
         strokeWidth={highlight ? 1.5 : 0}
       />
@@ -98,7 +98,7 @@ export function TargetLine({
       className={cn("flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px] text-ink-600 tnum", className)}
       data-testid="target-line"
     >
-      <Target className="size-3 text-gold-500" aria-hidden />
+      <Target className="size-3 text-aqua-500" aria-hidden />
       <span className="font-medium text-ink-900">
         {target.year ? t("targetBy", { value, year: target.year }) : t("targetOnly", { value })}
       </span>

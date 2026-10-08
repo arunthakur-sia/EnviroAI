@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-// CR02 2.3: seed 3 to 5 deliverables for at least 20 NDS3 projects as real
+// CR02 2.3: seed 3 to 5 deliverables for at least 20 National Environment Strategy projects as real
 // docx files with meaningful, deterministic bilingual content, so uploads,
 // reading, citations, and the get_deliverables tool work in the demo.
 // Idempotent via the cr02_deliverables_seeded setting. Callable from seed.
@@ -78,18 +78,18 @@ export async function seedDeliverablesCr02(): Promise<number> {
     return 0;
   }
 
-  const [nds3] = await db
+  const [currentEdition] = await db
     .select()
     .from(schema.strategyEditions)
-    .where(eq(schema.strategyEditions.code, "nds3"))
+    .where(eq(schema.strategyEditions.code, "nes3"))
     .limit(1);
-  if (!nds3) return 0;
+  if (!currentEdition) return 0;
   const projects = await db
     .select()
     .from(schema.strategyNodes)
     .where(
       and(
-        eq(schema.strategyNodes.editionId, nds3.id),
+        eq(schema.strategyNodes.editionId, currentEdition.id),
         eq(schema.strategyNodes.nodeType, "project")
       )
     )
@@ -98,7 +98,7 @@ export async function seedDeliverablesCr02(): Promise<number> {
   const [admin] = await db
     .select()
     .from(schema.users)
-    .where(eq(schema.users.email, "admin@npc.qa"))
+    .where(eq(schema.users.email, "admin@enviroai.demo"))
     .limit(1);
   const termId = await ensureDeliverableTerm();
   const now = new Date().toISOString();
@@ -130,7 +130,7 @@ export async function seedDeliverablesCr02(): Promise<number> {
               new Paragraph({
                 children: [
                   new TextRun({
-                    text: `Deliverable ${tpl.code} of project ${project.code ?? project.titleEn}, milestone ${tpl.milestone}. Prepared for the National Planning Council under ${outcome?.titleEn ?? "NDS3"}.`,
+                    text: `Deliverable ${tpl.code} of project ${project.code ?? project.titleEn}, milestone ${tpl.milestone}. Prepared for the Programme Office under ${outcome?.titleEn ?? "the National Environment Strategy"}.`,
                     italics: true,
                   }),
                 ],
@@ -155,7 +155,7 @@ export async function seedDeliverablesCr02(): Promise<number> {
               ),
               new Paragraph({ text: "4. Recommendations", heading: HeadingLevel.HEADING_1 }),
               new Paragraph(
-                `Sustain the current cadence of fortnightly delivery reviews, close the open acceptance items before milestone ${tpl.milestone === "M5" ? "closure" : "M" + (Number(tpl.milestone[1]) + 1)}, and record the lessons learned in SiaNexus so the next phase reuses them.`
+                `Sustain the current cadence of fortnightly delivery reviews, close the open acceptance items before milestone ${tpl.milestone === "M5" ? "closure" : "M" + (Number(tpl.milestone[1]) + 1)}, and record the lessons learned in EnviroAI so the next phase reuses them.`
               ),
               new Paragraph({ text: "٥. ملخص تنفيذي (عربي)", heading: HeadingLevel.HEADING_1 }),
               new Paragraph({
@@ -203,7 +203,7 @@ export async function seedDeliverablesCr02(): Promise<number> {
         verifiedBy: verified ? admin?.id ?? null : null,
         verifiedAt: verified ? now : null,
         reviewDueAt: new Date(Date.now() + 365 * 86400000).toISOString(),
-        sourceOrigin: "npc",
+        sourceOrigin: "org",
         publishYear: year,
         originalFilename: filename,
         mime: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",

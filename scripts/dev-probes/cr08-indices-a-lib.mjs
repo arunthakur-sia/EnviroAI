@@ -28,14 +28,17 @@ import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 export const XLSX = require("xlsx");
 
-export const DL =
-  process.env.CR08_DL ||
-  "C:\\Users\\ABDULR~1.AZU\\AppData\\Local\\Temp\\claude\\c--npckms\\b8e33f37-ace0-486b-adf9-194230e6fae3\\scratchpad\\dl";
+export const DL = process.env.CR08_DL || path.join(process.cwd(), "sources", "indices", "dl");
 export const OUT = path.join(process.cwd(), "sources", "indices", "research");
 
+// The home country of the Indices module. Mirrors HOME_ISO3 in
+// src/server/indices/home.ts (plain JavaScript cannot import TypeScript):
+// keep the two equal.
+export const HOME_ISO3 = "SAU";
+
 export const FOCUS = [
-  "QAT", "SAU", "ARE", "KWT", "BHR", "OMN", "USA", "GBR", "SGP", "KOR", "TUR",
-  "EGY", "JOR", "MAR", "DEU", "FRA", "JPN", "CHN", "IND",
+  HOME_ISO3, "ARE", "KWT", "BHR", "OMN", "USA", "GBR", "SGP", "KOR", "TUR",
+  "EGY", "JOR", "MAR", "DEU", "FRA", "JPN", "CHN", "IND", "AUS",
 ];
 
 export function dl(name) {
@@ -291,9 +294,9 @@ export function writeResearch(meta, observations, extra = {}) {
   fs.mkdirSync(OUT, { recursive: true });
   const file = path.join(OUT, `cr08-${meta.code}.json`);
   fs.writeFileSync(file, text, { encoding: "utf8" });
-  const qat = sorted.filter((o) => o.country === "QAT").map((o) => o.year);
+  const home = sorted.filter((o) => o.country === HOME_ISO3).map((o) => o.year);
   console.log(
-    `${path.basename(file)}: ${sorted.length} observations, ${new Set(sorted.map((o) => o.country)).size} countries, years ${Math.min(...sorted.map((o) => o.year))}-${Math.max(...sorted.map((o) => o.year))}, Qatar ${qat.length ? qat.join(",") : "none"}`
+    `${path.basename(file)}: ${sorted.length} observations, ${new Set(sorted.map((o) => o.country)).size} countries, years ${Math.min(...sorted.map((o) => o.year))}-${Math.max(...sorted.map((o) => o.year))}, ${HOME_ISO3} ${home.length ? home.join(",") : "none"}`
   );
   return file;
 }

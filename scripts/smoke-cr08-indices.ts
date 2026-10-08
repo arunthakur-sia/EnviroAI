@@ -3,7 +3,9 @@
 // reorder, archive, a non-admin refused), membership PUT with order, the
 // grouped board and the index page chips, the Add index wizard through
 // preview to commit with three pasted rows (then deactivated), and the three
-// Ask NPC tools answering. Wired into scripts/smoke.ts by the coordinator.
+// Ask EnviroAI tools answering. Wired into scripts/smoke.ts by the coordinator.
+import { HOME_ISO3 } from "../src/server/indices/home";
+
 type Check = (name: string, ok: boolean, detail?: string) => void;
 type Ctx = {
   base: string;
@@ -12,7 +14,7 @@ type Ctx = {
   db: import("@libsql/client").Client;
 };
 
-const GROUP_CODES = ["sdg", "national", "competitiveness", "gallup", "governance", "human", "environment", "peace", "digital"];
+const GROUP_CODES = ["sdg", "national", "environment", "climate", "water", "agriculture", "governance", "human"];
 
 export async function run(check: Check, ctx: Ctx): Promise<void> {
   const { base, cookie, adminCookie, db } = ctx;
@@ -37,12 +39,13 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   const list = await get("/api/v1/indices/groups", adminCookie);
   const listJson = await json(list);
   const groups = (listJson?.data ?? []) as { id: string; code: string; isActive: boolean; memberIds: string[]; memberCount: number }[];
-  check("indices groups: GET lists the nine fixed groups", list.status === 200 && GROUP_CODES.every((c) => groups.some((g) => g.code === c)), `codes=${groups.map((g) => g.code).join(",")}`);
+  check("indices groups: GET lists the fixed groups", list.status === 200 && GROUP_CODES.every((c) => groups.some((g) => g.code === c)), `codes=${groups.map((g) => g.code).join(",")}`);
   const contributorList = await get("/api/v1/indices/groups", cookie);
   check("indices groups: a contributor can read the groups", contributorList.status === 200);
   check("indices groups: refused without a session", (await get("/api/v1/indices/groups")).status === 401);
-  const competitiveness = groups.find((g) => g.code === "competitiveness");
-  check("indices groups: competitiveness carries members", (competitiveness?.memberCount ?? 0) >= 5, String(competitiveness?.memberCount));
+  const governanceGroup = groups.find((g) => g.code === "governance");
+  const environment = groups.find((g) => g.code === "environment");
+  check("indices groups: environment carries members", (environment?.memberCount ?? 0) >= 3, String(environment?.memberCount));
 
   const refused = await send("/api/v1/indices/groups", "POST", { action: "create", nameEn: "Nope", nameAr: "لا" }, cookie);
   check("indices groups: a non-admin cannot create a group", refused.status === 403, String(refused.status));
@@ -63,7 +66,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
     const reordered = await send("/api/v1/indices/groups", "POST", { action: "reorder", ids: [groupId, ...groups.map((g) => g.id)] }, adminCookie);
     const sortRow = await db.execute({ sql: "select sort from index_groups where id = ?", args: [groupId] });
     check("indices groups: reorder puts the group first", reordered.status === 200 && Number(sortRow.rows[0]?.sort) === 1);
-    // restore the seeded order (the fixed nine in their seed order)
+    // restore the seeded order (the fixed groups in their seed order)
     await send("/api/v1/indices/groups", "POST", { action: "reorder", ids: GROUP_CODES.map((c) => groups.find((g) => g.code === c)?.id).filter(Boolean) }, adminCookie);
     const archived = await send("/api/v1/indices/groups", "POST", { action: "archive", id: groupId, isActive: false }, adminCookie);
     const activeRow = await db.execute({ sql: "select is_active from index_groups where id = ?", args: [groupId] });
@@ -73,20 +76,20 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   }
 
   /* 2. membership PUT */
-  if (competitiveness && competitiveness.memberIds.length >= 2) {
-    const original = competitiveness.memberIds;
+  if (governanceGroup && governanceGroup.memberIds.length >= 2) {
+    const original = governanceGroup.memberIds;
     const reversed = [...original].reverse();
-    const refusedPut = await send("/api/v1/indices/groups/members", "PUT", { groupId: competitiveness.id, indexIds: reversed }, cookie);
+    const refusedPut = await send("/api/v1/indices/groups/members", "PUT", { groupId: governanceGroup.id, indexIds: reversed }, cookie);
     check("indices members: a non-admin cannot change membership", refusedPut.status === 403, String(refusedPut.status));
-    const put = await send("/api/v1/indices/groups/members", "PUT", { groups: [{ groupId: competitiveness.id, indexIds: reversed }] }, adminCookie);
-    const rows = await db.execute({ sql: "select index_id from index_group_members where group_id = ? order by sort", args: [competitiveness.id] });
+    const put = await send("/api/v1/indices/groups/members", "PUT", { groups: [{ groupId: governanceGroup.id, indexIds: reversed }] }, adminCookie);
+    const rows = await db.execute({ sql: "select index_id from index_group_members where group_id = ? order by sort", args: [governanceGroup.id] });
     const stored = rows.rows.map((r) => String(r.index_id));
     check("indices members: PUT replaces the ordered membership", put.status === 200 && stored.join(",") === reversed.join(","));
-    await send("/api/v1/indices/groups/members", "PUT", { groupId: competitiveness.id, indexIds: original }, adminCookie);
-    const unknown = await send("/api/v1/indices/groups/members", "PUT", { groupId: competitiveness.id, indexIds: ["no-such-index"] }, adminCookie);
+    await send("/api/v1/indices/groups/members", "PUT", { groupId: governanceGroup.id, indexIds: original }, adminCookie);
+    const unknown = await send("/api/v1/indices/groups/members", "PUT", { groupId: governanceGroup.id, indexIds: ["no-such-index"] }, adminCookie);
     check("indices members: unknown index ids are rejected", unknown.status === 400);
   } else {
-    check("indices members: PUT replaces the ordered membership", false, "competitiveness has fewer than two members");
+    check("indices members: PUT replaces the ordered membership", false, "governance has fewer than two members");
   }
 
   /* 3. the board and the index page */
@@ -97,16 +100,16 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   const oneGroup = await get("/en/indices?group=governance", adminCookie);
   const oneHtml = await oneGroup.text();
   check("indices board: ?group= renders one section", oneGroup.status === 200 && (oneHtml.match(/data-testid="group-section"/g) ?? []).length === 1);
-  const arBoard = await get("/ar/indices?group=competitiveness", cookie);
-  check("indices board: Arabic renders for a contributor", arBoard.status === 200 && (await arBoard.text()).includes('data-group-code="competitiveness"'));
-  const egdi = await get("/en/indices/egdi", cookie);
-  const egdiHtml = await egdi.text();
-  check("index page: EGDI carries its two group chips", egdi.status === 200 && (egdiHtml.match(/data-testid="index-group-chip"/g) ?? []).length === 2);
+  const arBoard = await get("/ar/indices?group=governance", cookie);
+  check("indices board: Arabic renders for a contributor", arBoard.status === 200 && (await arBoard.text()).includes('data-group-code="governance"'));
+  const epi = await get("/en/indices/epi", cookie);
+  const epiHtml = await epi.text();
+  check("index page: EPI carries its two group chips", epi.status === 200 && (epiHtml.match(/data-testid="index-group-chip"/g) ?? []).length === 2);
 
   /* 4. the Add index wizard API */
   const options = await get("/api/v1/indices/create", adminCookie);
   const optionsJson = await json(options);
-  check("add index: options list groups, entities and targets", options.status === 200 && (optionsJson?.data?.groups?.length ?? 0) >= 9 && (optionsJson?.data?.targets?.length ?? 0) > 0);
+  check("add index: options list groups, entities and targets", options.status === 200 && (optionsJson?.data?.groups?.length ?? 0) >= 8 && (optionsJson?.data?.targets?.length ?? 0) > 0);
   check("add index: options refused for a non-admin", (await get("/api/v1/indices/create", cookie)).status === 403);
   const code = `sm${stamp}`;
   const governance = groups.find((g) => g.code === "governance");
@@ -114,7 +117,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   const preview = await send(
     "/api/v1/indices/create",
     "POST",
-    { step: "preview", basics, data: { mode: "paste", csv: "country,year,rank,score\nQAT,2022,30,60.5\nQAT,2023,28,62.1\nQAT,2024,25,64.0\nNOPE,2024,1,99\n" }, forecasting: { enabled: true, mode: "auto" }, groupIds: governance ? [governance.id] : [] },
+    { step: "preview", basics, data: { mode: "paste", csv: `country,year,rank,score\n${HOME_ISO3},2022,30,60.5\n${HOME_ISO3},2023,28,62.1\n${HOME_ISO3},2024,25,64.0\nNOPE,2024,1,99\n` }, forecasting: { enabled: true, mode: "auto" }, groupIds: governance ? [governance.id] : [] },
     adminCookie
   );
   const previewJson = await json(preview);
@@ -148,7 +151,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
     await send("/api/v1/indices", "PATCH", { id: newId, isActive: false }, adminCookie);
   }
 
-  /* 5. the Ask NPC tools, called directly (the mock planner never picks them) */
+  /* 5. the Ask EnviroAI tools, called directly (the mock planner never picks them) */
   try {
     const mod = (await import("../src/server/ai/analyst/cr08/indices")).default;
     const sources: { resource_type: string; resource_id: string }[] = [];
@@ -168,8 +171,8 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
     const groupsOut = (await mod.run(toolCtx, "get_index_groups", {})) ?? "";
     check("indices tools: get_index_groups names every group with counts", GROUP_CODES.every((c) => groupsOut.includes(`${c}:`)) && /improving/.test(groupsOut), groupsOut.slice(0, 120));
     check("indices tools: groups register index_group sources", sources.some((s) => s.resource_type === "index_group"));
-    const membersOut = (await mod.run(toolCtx, "query_index_group", { group: "competitiveness" })) ?? "";
-    check("indices tools: query_index_group lists members with Qatar's values", /imd/.test(membersOut) && /Qatar \d{4}/.test(membersOut) && sources.some((s) => s.resource_type === "index" && s.resource_id === "imd"), membersOut.slice(0, 160));
+    const membersOut = (await mod.run(toolCtx, "query_index_group", { group: "environment" })) ?? "";
+    check("indices tools: query_index_group lists members with Saudi Arabia's values", /epi/.test(membersOut) && /Saudi Arabia \d{4}/.test(membersOut) && sources.some((s) => s.resource_type === "index" && s.resource_id === "epi"), membersOut.slice(0, 160));
     const byName = (await mod.run(toolCtx, "query_index_group", { group: "الحوكمة" })) ?? "";
     check("indices tools: a group resolves by its Arabic name", /governance/.test(byName), byName.slice(0, 80));
     const sdgOut = (await mod.run(toolCtx, "get_sdg_scores", {})) ?? "";

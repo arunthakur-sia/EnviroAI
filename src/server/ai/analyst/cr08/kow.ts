@@ -1,6 +1,6 @@
 // CR08 8: Knowledge of the Week tool. `get_knowledge_of_week` answers with
 // this week's pick and the last four archived ones through the same service
-// as the Hall page, so Ask NPC and the Hall never disagree. Each pick's item
+// as the Hall page, so Ask EnviroAI and the Hall never disagree. Each pick's item
 // is registered as a source (a study is a document) so the answer can cite
 // it; items above the asker's clearance never reach the model.
 import type { ToolModule } from "./types";
@@ -11,7 +11,7 @@ const mod: ToolModule = {
     {
       name: "get_knowledge_of_week",
       description:
-        "CR08 8: the Council's Knowledge of the Week: this week's pick (a verified document, lesson, study or report chosen by a Knowledge Admin, opened on Home for everyone) and the last four picks from the Hall of Knowledge. Each line carries the week, the item and its kind, the contributor and their unit, the administrator's note on why it was chosen, and how many colleagues read it. Use it for questions like 'what is this week's knowledge', 'who was featured recently', 'what should I read this week'. Cite the item.",
+        "CR08 8: the Office's Knowledge of the Week: this week's pick (a verified document, lesson, study or report chosen by a Knowledge Admin, opened on Home for everyone) and the last four picks from the Hall of Knowledge. Each line carries the week, the item and its kind, the contributor and their unit, the administrator's note on why it was chosen, and how many colleagues read it. Use it for questions like 'what is this week's knowledge', 'who was featured recently', 'what should I read this week'. Cite the item.",
       input_schema: {
         type: "object",
         properties: {

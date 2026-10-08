@@ -3,7 +3,7 @@
 // Inbox, delegates and the get_owner tool. Privacy is checked explicitly: an
 // admin cannot read another pair's thread, and a message body never reaches
 // the search index or the search service.
-//   ctx.cookie is a Contributor session (analyst@npc.qa), ctx.adminCookie the
+//   ctx.cookie is a Contributor session (analyst@enviroai.demo), ctx.adminCookie the
 //   Super Admin, ctx.db a raw libsql client.
 import type { Client } from "@libsql/client";
 
@@ -35,9 +35,9 @@ async function getHtml(ctx: Ctx, cookie: string, path: string) {
 export async function run(check: Check, ctx: Ctx): Promise<void> {
   const one = async (sqlText: string) => (await ctx.db.execute(sqlText)).rows[0] ?? {};
   const idOf = async (email: string) => String((await one(`select id from users where email = '${email}'`)).id ?? "");
-  const analystId = await idOf("analyst@npc.qa");
-  const headId = await idOf("head.stats@npc.qa");
-  const knowledgeId = await idOf("knowledge@npc.qa");
+  const analystId = await idOf("analyst@enviroai.demo");
+  const headId = await idOf("head.stats@enviroai.demo");
+  const knowledgeId = await idOf("knowledge@enviroai.demo");
 
   /* a run that died before its cleanup (the shared dev server restarts under
      load) leaves its thread behind and would inflate the next run's counts */
@@ -131,7 +131,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   check("a reply appends a message and moves last_message_at", replied.status === 200 && Number(count.c) === 2 && th.last_message_at === count.last);
 
   /* ---- messages never reach search (checked BEFORE the thread is converted:
-     converting publishes the opening message as an Ask NPC question by the
+     converting publishes the opening message as an Ask EnviroAI question by the
      participant's explicit choice, and questions are indexed) ---- */
   const idx = await one(`select count(*) as c from search_index where text like '%${secret}%'`);
   const chunks = await one(`select count(*) as c from document_chunks where text like '%${secret}%'`);
@@ -139,7 +139,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   try {
     const { runSearch } = await import("../src/server/services/search");
     const { getUserById } = await import("../src/server/auth/session");
-    const admin = await getUserById(await idOf("admin@npc.qa"));
+    const admin = await getUserById(await idOf("admin@enviroai.demo"));
     const results = admin ? await runSearch(admin, secret, "en") : null;
     check(
       "the search service returns no result carrying a message body",
@@ -156,7 +156,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   const q = await one(`select title_en, status from questions where id = '${qid}'`);
   const linked = await one(`select question_id from message_threads where id = '${threadId}'`);
   check(
-    "convert creates an Ask NPC question linked to the thread",
+    "convert creates an Ask EnviroAI question linked to the thread",
     converted.status === 200 && Boolean(qid) && q.title_en === SMOKE_SUBJECT && linked.question_id === qid,
     `${converted.status} ${converted.error ?? ""}`
   );
@@ -208,7 +208,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   const profile = await getHtml(ctx, ctx.cookie, "/en/profile");
   check("the profile carries the delegate block", profile.status === 200 && profile.html.includes('data-testid="delegate-block"'));
 
-  /* ---- Ask NPC tool ---- */
+  /* ---- Ask EnviroAI tool ---- */
   try {
     const { runTool, AnalystState } = await import("../src/server/ai/analyst/tools");
     const { getUserById } = await import("../src/server/auth/session");

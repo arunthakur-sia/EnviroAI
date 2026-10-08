@@ -1,4 +1,4 @@
-// SiaNexus Intelligence capabilities. Each function tries the live model and falls
+// EnviroAI Intelligence capabilities. Each function tries the live model and falls
 // back to the deterministic mock so every screen works without a key.
 import { desc, eq, and, gte } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
@@ -27,7 +27,7 @@ export async function enrichContent(input: MockEnrichInput): Promise<EnrichResul
     .join("\n");
   const live = await callJson<Omit<EnrichResult, "machine">>(
     "system_enrich",
-    `Filename: ${input.filename}\nDetected language: ${input.lang}\nSource origin: ${input.sourceOrigin ?? "npc"}\n\nTaxonomy codes:\n${termList}\n\nDocument text (first pages):\n${input.pages
+    `Filename: ${input.filename}\nDetected language: ${input.lang}\nSource origin: ${input.sourceOrigin ?? "org"}\n\nTaxonomy codes:\n${termList}\n\nDocument text (first pages):\n${input.pages
       .slice(0, 12)
       .map((p) => `[page ${p.page}] ${p.text.slice(0, 1600)}`)
       .join("\n\n")

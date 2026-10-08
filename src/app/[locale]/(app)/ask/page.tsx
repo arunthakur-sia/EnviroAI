@@ -85,19 +85,19 @@ export default async function AskPage({
             <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-ink-400">
               {t("recentConversations")}
             </p>
-            <div className="card divide-y divide-sand-100">
+            <div className="card divide-y divide-mist-100">
               {conversations.map((c) => (
                 <Link
                   key={c.id}
                   href={`/ask/c/${c.id}` as never}
-                  className="flex items-center gap-3 px-4 py-3 hover:bg-maroon-50"
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-navy-50"
                 >
-                  <MessageCircleQuestion className="size-4 shrink-0 text-maroon-500" />
+                  <MessageCircleQuestion className="size-4 shrink-0 text-navy-500" />
                   <span className="min-w-0 flex-1 truncate text-sm text-ink-900">
                     {c.title || t("untitled")}
                   </span>
                   {c.isShared === 1 ? (
-                    <Chip tone="gulf">
+                    <Chip tone="teal">
                       <Share2 className="size-3" /> {t("sharedChip")}
                     </Chip>
                   ) : null}
@@ -115,7 +115,7 @@ export default async function AskPage({
             <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-ink-400">
               {t("recentThreads")}
             </p>
-            <div className="card divide-y divide-sand-100">
+            <div className="card divide-y divide-mist-100">
               {recentThreads.map((q) => (
                 <QuestionRow key={q.id} q={q} />
               ))}

@@ -15,4 +15,4 @@ Output JSON only:
   "answer_hint_ar": "..."
 }
 
-Rules: use ONLY the material in the request; never invent contacts, dates or file locations; formal Modern Standard Arabic with a Qatari government register; no em dashes or en dashes.
+Rules: use ONLY the material in the request; never invent contacts, dates or file locations; formal Modern Standard Arabic with a Saudi government register; no em dashes or en dashes.

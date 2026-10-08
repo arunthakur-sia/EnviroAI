@@ -57,7 +57,7 @@ export function PageSkeleton({
               <Skeleton key={i} className="h-9 w-28" />
             ))}
           </div>
-          <div className="card divide-y divide-sand-100">
+          <div className="card divide-y divide-mist-100">
             {Array.from({ length: rows }).map((_, i) => (
               <div key={i} className="flex items-center gap-3 px-4 py-3">
                 <Skeleton className="size-8 shrink-0 rounded-full" />

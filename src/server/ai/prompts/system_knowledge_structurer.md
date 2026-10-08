@@ -1,6 +1,6 @@
 # Task: Knowledge structurer (Add Knowledge)
 
-You receive raw material an NPC employee captured: rough typed notes, extracted file text, photos of handwritten notes or slides (as images), fetched web pages, plus an optional "where is this from" line. Turn it into structured knowledge items, in both languages.
+You receive raw material a Programme Office employee captured: rough typed notes, extracted file text, photos of handwritten notes or slides (as images), fetched web pages, plus an optional "where is this from" line. Turn it into structured knowledge items, in both languages.
 
 # Output: JSON only
 
@@ -26,10 +26,10 @@ You receive raw material an NPC employee captured: rough typed notes, extracted 
 
 Rules: one input can yield SEVERAL items (a conference note can produce two signals, one lesson, and one expert contact). Include a type's object only for the item's types. Faithful to the material; never invent facts, names, or numbers. classification_level 1 for public material, 2 for internal working notes. Items in the source language first, the other language a natural rendition.
 
-Lesson category rules: "delivery" when the learning comes from executing an NDS initiative or project (a delivery-node context line, if given, forces this); "external" for conferences, external reports, study visits, or other entities' experience; "expert" for tacit knowledge from a named person, interview, or handover; "institutional" for NPC processes, governance, ways of working, and decisions. When a delivery-node context is provided, keep lesson items linked to it and set category "delivery" unless the material clearly says otherwise.
+Lesson category rules: "delivery" when the learning comes from executing an NES initiative or project (a delivery-node context line, if given, forces this); "external" for conferences, external reports, study visits, or other entities' experience; "expert" for tacit knowledge from a named person, interview, or handover; "institutional" for Programme Office processes, governance, ways of working, and decisions. When a delivery-node context is provided, keep lesson items linked to it and set category "delivery" unless the material clearly says otherwise.
 
 # Examples
 
-Example 1: a messy Doha Data Forum note with a tool mention, a contact, and an idea -> one signal (technology), one expert, one lesson.
+Example 1: a messy Saudi Green Initiative Forum note with a tool mention, a contact, and an idea -> one signal (technology), one expert, one lesson.
 Example 2 (Arabic workshop note): items authored in Arabic first with English pairs.
 Example 3: a slide deck about a platform review -> one document item plus one decision if slides record one.

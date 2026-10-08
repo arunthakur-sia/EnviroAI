@@ -34,14 +34,14 @@ const def: SectionDefinition<CoverData> = {
     };
   },
   async write(ctx, data) {
-    const isNpc = ctx.request.scope.kind === "npc" || ctx.request.scope.kind === "period";
+    const isOrg = ctx.request.scope.kind === "org" || ctx.request.scope.kind === "period";
     // the template prints the period label under the subtitle, so the
     // subtitle names only who or what the report is about
-    const subtitle = isNpc
-      ? bi("National Planning Council", "المجلس الوطني للتخطيط")
+    const subtitle = isOrg
+      ? bi("Programme Office", "مكتب البرنامج")
       : bi(data.scopeLabel.en, data.scopeLabel.ar);
     const keyFigure =
-      isNpc && data.targetsTotal
+      isOrg && data.targetsTotal
         ? { value: `${data.targetsOnTrack}/${data.targetsTotal}`, label: bi("targets on track", "مستهدفات على المسار") }
         : undefined;
     return section("cover", data.typeName ? bi(data.typeName.en, data.typeName.ar) : bi("Report", "تقرير"), "cover", {

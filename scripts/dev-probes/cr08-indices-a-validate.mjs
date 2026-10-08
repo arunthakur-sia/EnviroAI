@@ -12,11 +12,11 @@ const DIR = path.join(process.cwd(), "sources", "indices", "research");
 const CODES = [
   "sdg_index",
   ...Array.from({ length: 17 }, (_, i) => `sdg_${String(i + 1).padStart(2, "0")}`),
-  "gallup_law_order", "gallup_safe_night", "gallup_positive", "gallup_negative", "gallup_life_eval",
-  "gender_inequality", "gender_gap", "happiness", "social_progress",
+  "social_progress",
   "wgi_voice", "wgi_stability", "wgi_effectiveness", "wgi_regulatory", "wgi_rule_of_law", "wgi_corruption",
 ];
-const FOCUS = ["QAT", "SAU", "ARE", "KWT", "BHR", "OMN", "USA", "GBR", "SGP", "KOR", "TUR", "EGY", "JOR", "MAR", "DEU", "FRA", "JPN", "CHN", "IND"];
+const HOME_ISO3 = "SAU"; // mirrors src/server/indices/home.ts
+const FOCUS = [HOME_ISO3, "ARE", "KWT", "BHR", "OMN", "USA", "GBR", "SGP", "KOR", "TUR", "EGY", "JOR", "MAR", "DEU", "FRA", "JPN", "CHN", "IND", "AUS"];
 
 let failures = 0;
 const fail = (msg) => {
@@ -71,7 +71,7 @@ for (const code of CODES) {
     if (perFocus.has(o.country)) perFocus.get(o.country).push(o.year);
   }
   const ys = [...years].sort((a, b) => a - b);
-  const qat = perFocus.get("QAT").sort((a, b) => a - b);
+  const home = perFocus.get(HOME_ISO3).sort((a, b) => a - b);
   const missingFocus = FOCUS.filter((c) => !perFocus.get(c).length);
   const partialFocus = FOCUS.filter((c) => perFocus.get(c).length && perFocus.get(c).length < ys.length).map((c) => `${c} ${perFocus.get(c).length}/${ys.length}`);
   rows.push({
@@ -79,20 +79,20 @@ for (const code of CODES) {
     obs: data.observations.length,
     years: ys.length > 1 ? `${ys[0]} to ${ys[ys.length - 1]} (${ys.length})` : String(ys[0]),
     countries: countries.size,
-    qatar: qat.length ? (qat.length === ys.length ? "all years" : qat.join(", ")) : "none",
+    home: home.length ? (home.length === ys.length ? "all years" : home.join(", ")) : "none",
     missingFocus,
     partialFocus,
     urls: [...urls],
   });
-  console.log(`ok ${code}: ${data.observations.length} obs, ${countries.size} countries, years ${ys[0]}-${ys[ys.length - 1]}, Qatar ${qat.length ? qat.length + " years" : "none"}, ${urls.size} source URL(s)`);
+  console.log(`ok ${code}: ${data.observations.length} obs, ${countries.size} countries, years ${ys[0]}-${ys[ys.length - 1]}, ${HOME_ISO3} ${home.length ? home.length + " years" : "none"}, ${urls.size} source URL(s)`);
 }
 
 if (process.argv.includes("--table")) {
   console.log("");
-  console.log("| Index | Observations | Years | Countries | Qatar | Focus countries missing | Focus countries partial |");
+  console.log("| Index | Observations | Years | Countries | Saudi Arabia | Focus countries missing | Focus countries partial |");
   console.log("|---|---|---|---|---|---|---|");
   for (const r of rows) {
-    console.log(`| ${r.code} | ${r.obs} | ${r.years} | ${r.countries} | ${r.qatar} | ${r.missingFocus.join(", ") || "none"} | ${r.partialFocus.join(", ") || "none"} |`);
+    console.log(`| ${r.code} | ${r.obs} | ${r.years} | ${r.countries} | ${r.home} | ${r.missingFocus.join(", ") || "none"} | ${r.partialFocus.join(", ") || "none"} |`);
   }
   console.log("");
   console.log("URLs per index:");

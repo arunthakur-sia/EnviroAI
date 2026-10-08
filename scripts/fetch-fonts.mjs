@@ -11,12 +11,8 @@ const UA =
 // family css2 url -> list of {subset, weight?, file}
 const TARGETS = [
   {
-    css: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,100..900&display=swap",
-    picks: [{ subset: "latin", file: "fraunces-var-latin.woff2" }],
-  },
-  {
-    css: "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap",
-    picks: [{ subset: "latin", file: "inter-var-latin.woff2" }],
+    css: "https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap",
+    picks: [{ subset: "latin", file: "sora-var-latin.woff2" }],
   },
   {
     css: "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap",

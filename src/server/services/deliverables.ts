@@ -182,7 +182,7 @@ export async function createDeliverable(
       nameAr: t.nameAr,
       dimension: t.dimension,
     })),
-    sourceOrigin: "npc",
+    sourceOrigin: "org",
   });
 
   const versionId = newId();
@@ -202,7 +202,7 @@ export async function createDeliverable(
     languageOriginal: parsed.lang,
     status: "under_review",
     reviewDueAt: new Date(Date.now() + 365 * 86400000).toISOString(),
-    sourceOrigin: "npc",
+    sourceOrigin: "org",
     publishYear: enrichment.publish_year,
     originalFilename: input.filename,
     mime,

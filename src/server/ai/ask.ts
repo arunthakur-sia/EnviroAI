@@ -1,4 +1,4 @@
-// The Ask SiaNexus pipeline: permission-aware hybrid retrieval, optional rerank,
+// The Ask EnviroAI pipeline: permission-aware hybrid retrieval, optional rerank,
 // grounded streaming generation (live or mock), citation validation, confidence,
 // and expert suggestions. Yields SSE-ready events.
 import { and, desc, eq, inArray } from "drizzle-orm";
@@ -75,7 +75,7 @@ export type SuggestedExpert = {
   availability: string;
   reasonEn: string;
   reasonAr: string;
-  /* CR08 3: NPC staff are internal, everyone else external */
+  /* CR08 3: Programme Office staff are internal, everyone else external */
   kind: "internal" | "external";
 };
 
@@ -110,7 +110,7 @@ export async function retrieveIndicatorSources(
     keywordQuery ? ftsRecords(keywordQuery, 60) : Promise.resolve([]),
   ]);
   // Keyword bonus decays with BM25 rank: an indicator matched on a rare term like
-  // "التضخم" outranks ones matched only on generic tokens like "معدل" or "قطر".
+  // "التضخم" outranks ones matched only on generic tokens like "معدل" or "السعودية".
   const ftsIndicatorIds = ftsHits
     .filter((h) => h.resourceType === "indicator")
     .map((h) => h.resourceId);
@@ -159,7 +159,7 @@ export async function retrieveIndicatorSources(
       `Official statistical indicator: ${ind.nameEn} / ${ind.nameAr}.`,
       ind.definitionEn ? `Definition: ${ind.definitionEn}` : "",
       ind.definitionAr ? `التعريف: ${ind.definitionAr}` : "",
-      `Frequency: ${ind.frequency}. Unit: ${ind.unit ?? "-"}. Source: ${ind.sourceEn ?? "National Statistics Center"}.`,
+      `Frequency: ${ind.frequency}. Unit: ${ind.unit ?? "-"}. Source: ${ind.sourceEn ?? "General Authority for Statistics (GASTAT)"}.`,
       `Latest value: ${latest.value}${ind.unit ? ` ${ind.unit}` : ""} for period ${latest.period}${latest.status !== "final" ? ` (${latest.status}; بيانات أولية)` : ""}.`,
       `Recent series: ${series}.`,
       illustrative
@@ -250,7 +250,7 @@ export async function suggestExpertsGrouped(
     .filter((e): e is NonNullable<typeof e> => Boolean(e))
     .filter((e) => (e.visibilityClassification ?? 2) <= user.clearanceLevel);
   const kindOf = (e: (typeof visible)[number]): "internal" | "external" =>
-    e.userId || e.type === "npc_employee" ? "internal" : "external";
+    e.userId || e.type === "org_employee" ? "internal" : "external";
   const ordered = [
     ...visible.filter((e) => kindOf(e) === "internal").slice(0, limit),
     ...visible.filter((e) => kindOf(e) === "external").slice(0, limit),
@@ -410,7 +410,7 @@ export async function* askStream(params: {
   }
 
   const coverage = citationCoverage(markdown);
-  const noSourceLine = /could not find a reliable NPC source|لم أجد مصدراً موثوقاً/.test(markdown);
+  const noSourceLine = /could not find a reliable EnviroAI source|لم أجد مصدراً موثوقاً/.test(markdown);
   const confidence = noSourceLine
     ? "low"
     : computeConfidence(chunks, effectiveSimilarity, coverage);

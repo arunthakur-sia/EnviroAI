@@ -11,7 +11,7 @@ async function cookieFor(email: string): Promise<string> {
   const res = await fetch(`${BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email, password: "EnviroAI!2026" }),
     redirect: "manual",
   });
   const set = (res.headers as unknown as { getSetCookie?: () => string[] }).getSetCookie?.() ?? [];
@@ -28,7 +28,7 @@ async function show(label: string, url: string, cookie: string) {
 }
 
 async function main() {
-  const cookie = await cookieFor("analyst@npc.qa");
+  const cookie = await cookieFor("analyst@enviroai.demo");
   await show("unknown report id", `${BASE}/en/reports/01NOTAREPORT00000000000000`, cookie);
   await show("unknown route under reports", `${BASE}/en/reports/nope/deeper`, cookie);
   await show("a real published report", `${BASE}/en/reports/01M2WTABGTPRD4Q0VE5TW78RWF`, cookie);

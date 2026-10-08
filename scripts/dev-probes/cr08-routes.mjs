@@ -22,7 +22,7 @@ async function req(path, opts = {}) {
 await req("/api/v1/auth/login", {
   method: "POST",
   headers: { "content-type": "application/json" },
-  body: JSON.stringify({ email: "admin@npc.qa", password: "Nexus!2026" }),
+  body: JSON.stringify({ email: "admin@enviroai.demo", password: "EnviroAI!2026" }),
 });
 
 const routes = [
@@ -50,7 +50,7 @@ const routes = [
   "/ask",
   "/settings",
   "/profile",
-  "/search?q=qatar",
+  "/search?q=water",
 ];
 
 const rows = [];

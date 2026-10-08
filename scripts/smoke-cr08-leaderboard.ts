@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 // CR08 7: smoke checks for the numeric levels and the materialised
 // leaderboard. Wired into scripts/smoke.ts by the coordinator.
-//   ctx.cookie is a Contributor session (analyst@npc.qa), ctx.adminCookie the
+//   ctx.cookie is a Contributor session (analyst@enviroai.demo), ctx.adminCookie the
 //   Super Admin, ctx.db a raw libsql client.
 import type { Client } from "@libsql/client";
 
@@ -68,7 +68,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
     )
   );
   const oldNames = await ctx.db.execute(
-    "select count(*) as n from levels where name_en in ('Explorer','Contributor','Curator','Knowledge Keeper','NPC Sage') or name_ar in ('مستكشف','مساهم','أمين معرفة','حافظ المعرفة','حكيم المجلس')"
+    "select count(*) as n from levels where name_en in ('Explorer','Contributor','Curator','Knowledge Keeper','Sage') or name_ar in ('مستكشف','مساهم','أمين معرفة','حافظ المعرفة','حكيم')"
   );
   check("no old level names remain in the levels table", Number(oldNames.rows[0].n) === 0);
   const mismatched = await ctx.db.execute(
@@ -138,7 +138,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   check("an unknown board is rejected", bad.status === 400);
 
   /* ---- the board reads the materialised table, not the ledger ---- */
-  const contributorRow = await ctx.db.execute("select id from users where email = 'analyst@npc.qa'");
+  const contributorRow = await ctx.db.execute("select id from users where email = 'analyst@enviroai.demo'");
   const contributorId = String(contributorRow.rows[0]?.id ?? "");
   const before = contributor.data?.mine?.points ?? 0;
   const probeId = `smoke-lb-${Date.now()}`;
@@ -195,7 +195,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
     await execRetry(ctx.db, { sql: "update users set quiet_mode = 0 where id = ?", args: [contributorId] });
   }
 
-  /* ---- Ask NPC ---- */
+  /* ---- Ask EnviroAI ---- */
   try {
     const { runTool, AnalystState } = await import("../src/server/ai/analyst/tools");
     const { getUserById } = await import("../src/server/auth/session");

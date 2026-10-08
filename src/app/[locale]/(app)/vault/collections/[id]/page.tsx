@@ -95,7 +95,7 @@ export default async function CollectionPage({
           {/* CR02 4.3: make an episode from this collection */}
           <Link
             href={`/podcast/new?collection=${collection.id}` as never}
-            className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-sand-300 bg-white px-4 text-sm font-medium text-ink-900 hover:border-maroon-300 hover:text-maroon-700"
+            className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-mist-300 bg-white px-4 text-sm font-medium text-ink-900 hover:border-navy-300 hover:text-navy-700"
           >
             <Headphones className="size-4" /> {tp("listen")}
           </Link>

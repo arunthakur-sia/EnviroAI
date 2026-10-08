@@ -104,7 +104,7 @@ export function NewExpertForm({
         <Label htmlFor="cv">{t("cvPaste")}</Label>
         <Textarea id="cv" value={cv} onChange={(e) => setCv(e.target.value)} rows={4} placeholder={t("cvPlaceholder")} />
         <Button type="button" variant="ghost" size="sm" className="mt-2" onClick={prefill} disabled={!cv.trim()}>
-          <Sparkles className="text-gold-500" /> {t("prefillCta")}
+          <Sparkles className="text-aqua-500" /> {t("prefillCta")}
         </Button>
       </div>
 
@@ -206,10 +206,10 @@ export function NewExpertForm({
                   )
                 }
                 className={cn(
-                  "rounded-lg border px-2.5 py-1 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500",
+                  "rounded-lg border px-2.5 py-1 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500",
                   active
-                    ? "border-maroon-700 bg-maroon-100 font-medium text-maroon-900"
-                    : "border-sand-300 bg-white text-ink-600 hover:border-maroon-300"
+                    ? "border-navy-700 bg-navy-100 font-medium text-navy-900"
+                    : "border-mist-300 bg-white text-ink-600 hover:border-navy-300"
                 )}
               >
                 {bi(locale, topic.nameEn, topic.nameAr)}

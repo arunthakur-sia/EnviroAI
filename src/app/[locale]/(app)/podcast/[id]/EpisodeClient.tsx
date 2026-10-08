@@ -125,12 +125,12 @@ export function EpisodeClient({
           </p>
         ) : null}
         <div className="mt-3 flex flex-wrap items-center gap-1.5">
-          <Chip tone="sand">
+          <Chip tone="mist">
             <span className="tnum">{t("minutes", { minutes })}</span>
           </Chip>
-          <Chip tone="sand">{t(`langNames.${episode.language}` as never)}</Chip>
-          <Chip tone="sand">{t(`focus.${episode.focus}` as never)}</Chip>
-          <Chip tone={episode.audioProvider === "browser" ? "sand" : "gold"}>
+          <Chip tone="mist">{t(`langNames.${episode.language}` as never)}</Chip>
+          <Chip tone="mist">{t(`focus.${episode.focus}` as never)}</Chip>
+          <Chip tone={episode.audioProvider === "browser" ? "mist" : "aqua"}>
             {episode.audioProvider === "browser" ? t("browserVoice") : t("studioVoice")}
           </Chip>
           <span className="ms-auto flex items-center gap-1 text-[11px] text-ink-600 tnum">
@@ -184,7 +184,7 @@ export function EpisodeClient({
           <p className="mt-2 text-xs text-ink-600">{t("noAudio")}</p>
         ) : null}
         {rendering ? (
-          <p className="mt-2 text-xs font-medium text-maroon-700 tnum" aria-live="polite">
+          <p className="mt-2 text-xs font-medium text-navy-700 tnum" aria-live="polite">
             {t("rendering", { done: rendering.done, total: rendering.total })}
           </p>
         ) : null}
@@ -201,14 +201,14 @@ export function EpisodeClient({
                 className={cn(
                   "flex items-start gap-3 rounded-xl px-4 py-3 transition-colors",
                   i === currentSegment
-                    ? "bg-maroon-100/70 ring-1 ring-maroon-300"
+                    ? "bg-navy-100/70 ring-1 ring-navy-300"
                     : "bg-white"
                 )}
                 data-current={i === currentSegment || undefined}
               >
                 <Avatar
                   name={s.speaker === "mariam" ? "Mariam Doctor" : "Hamad Host"}
-                  color={s.speaker === "mariam" ? "maroon" : "gulf"}
+                  color={s.speaker === "mariam" ? "navy" : "teal"}
                   size={30}
                 />
                 <div className="min-w-0">
@@ -217,7 +217,7 @@ export function EpisodeClient({
                   </p>
                   <p className="mt-0.5 text-sm leading-relaxed text-ink-900">{s.text}</p>
                   {s.source_mention ? (
-                    <p className="mt-1 text-[11px] text-gulf-600">{s.source_mention}</p>
+                    <p className="mt-1 text-[11px] text-teal-600">{s.source_mention}</p>
                   ) : null}
                 </div>
               </div>
@@ -230,14 +230,14 @@ export function EpisodeClient({
       {sources.length ? (
         <div className="mt-6">
           <h2 className="mb-3 text-lg">{t("sources")}</h2>
-          <div className="card divide-y divide-sand-100">
+          <div className="card divide-y divide-mist-100">
             {sources.map((s) => (
               <Link
                 key={`${s.resource_type}-${s.resource_id}-${s.n}`}
                 href={sourceHref(s) as never}
-                className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-maroon-50"
+                className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-navy-50"
               >
-                <span className="flex size-5 shrink-0 items-center justify-center rounded bg-sand-100 text-[10px] font-semibold text-ink-600 tnum">
+                <span className="flex size-5 shrink-0 items-center justify-center rounded bg-mist-100 text-[10px] font-semibold text-ink-600 tnum">
                   {s.n}
                 </span>
                 <span className="min-w-0 flex-1 truncate text-ink-900">{s.title}</span>

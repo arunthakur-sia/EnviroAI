@@ -82,14 +82,14 @@ export function ShelvesBoard({
       <div className="mb-1 flex items-center justify-end gap-1">
         <button
           onClick={() => setAll(true)}
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-ink-600 transition-colors hover:bg-sand-100 hover:text-maroon-700 cursor-pointer"
+          className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-ink-600 transition-colors hover:bg-mist-100 hover:text-navy-700 cursor-pointer"
           data-testid="expand-all"
         >
           <UnfoldVertical className="size-3.5" /> {t("expandAll")}
         </button>
         <button
           onClick={() => setAll(false)}
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-ink-600 transition-colors hover:bg-sand-100 hover:text-maroon-700 cursor-pointer"
+          className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-ink-600 transition-colors hover:bg-mist-100 hover:text-navy-700 cursor-pointer"
           data-testid="collapse-all"
         >
           <FoldVertical className="size-3.5" /> {t("collapseAll")}
@@ -105,10 +105,10 @@ export function ShelvesBoard({
             <button
               onClick={() => toggle(g.key)}
               aria-expanded={isOpen}
-              className="group/header flex w-full items-center gap-2 rounded-lg px-1.5 py-2 text-start transition-colors hover:bg-sand-100/70 cursor-pointer"
+              className="group/header flex w-full items-center gap-2 rounded-lg px-1.5 py-2 text-start transition-colors hover:bg-mist-100/70 cursor-pointer"
             >
               <h2
-                className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-600 group-hover/header:text-maroon-900"
+                className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-600 group-hover/header:text-navy-900"
                 style={{ fontFamily: "inherit" }}
               >
                 {isProjects && !isOpen
@@ -118,7 +118,7 @@ export function ShelvesBoard({
               {!(isProjects && !isOpen) ? (
                 <span className="text-xs text-ink-600 tnum">{g.count}</span>
               ) : null}
-              <span className="mx-2 h-px flex-1 bg-sand-300/70" aria-hidden />
+              <span className="mx-2 h-px flex-1 bg-mist-300/70" aria-hidden />
               <ChevronDown
                 className={cn(
                   "size-4 shrink-0 text-ink-400 transition-transform duration-200",

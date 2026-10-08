@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 // CR02 2.1: migrate strategy nodes to Outcomes > Targets > Initiatives and
-// Projects. NDS3 only; the archives (NDS2 sector strategies, NDS1 outcome
+// Projects. The current edition only; the archives (earlier sector strategies and outcome
 // areas) keep their historical shape and the navigator adapts (DECISIONS 39).
 //
 // Rules (deterministic, idempotent via the cr02_strategy_migrated setting):
@@ -14,11 +14,12 @@
 //   (under_enabler), then attach to an outcome round-robin ACROSS outcomes at
 //   outcome level. These carry the "Outcome-level" label in the navigator.
 // - projects stay under their initiatives and inherit the target through them.
+import { DATA_DIR } from "./lib/paths.mjs";
 import { createClient } from "@libsql/client";
 import path from "node:path";
 import { ulid } from "ulid";
 
-const dbPath = path.join(process.cwd(), "data", "nexus.db").replace(/\\/g, "/");
+const dbPath = path.join(DATA_DIR, "nexus.db").replace(/\\/g, "/");
 
 export async function migrateStrategyCr02(): Promise<Record<string, number>> {
   const db = createClient({ url: `file:${dbPath}` });
@@ -38,15 +39,15 @@ export async function migrateStrategyCr02(): Promise<Record<string, number>> {
     return counts;
   }
 
-  const nds3 = (
-    await db.execute("select id from strategy_editions where code='nds3'")
+  const currentEdition = (
+    await db.execute("select id from strategy_editions where code='nes3'")
   ).rows[0];
-  if (!nds3) {
-    console.log("no nds3 edition, nothing to migrate");
+  if (!currentEdition) {
+    console.log("no current edition, nothing to migrate");
     db.close();
     return counts;
   }
-  const editionId = String(nds3.id);
+  const editionId = String(currentEdition.id);
 
   const nodes = (
     await db.execute({

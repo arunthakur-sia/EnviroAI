@@ -12,6 +12,7 @@ loadEnv();
 
 import { eq } from "drizzle-orm";
 import { ulid } from "ulid";
+import { findHomeEdition } from "./data/edition";
 
 const now = () => new Date().toISOString();
 
@@ -42,7 +43,7 @@ export async function seedCr07LessonLinks(): Promise<void> {
     (linksByLesson.get(l.lessonId) ?? linksByLesson.set(l.lessonId, []).get(l.lessonId)!).push(l);
   }
 
-  const ndsNodes = await db
+  const nesNodes = await db
     .select({
       id: schema.strategyNodes.id,
       parentId: schema.strategyNodes.parentId,
@@ -50,13 +51,9 @@ export async function seedCr07LessonLinks(): Promise<void> {
       editionId: schema.strategyNodes.editionId,
     })
     .from(schema.strategyNodes);
-  const [nds3] = await db
-    .select()
-    .from(schema.strategyEditions)
-    .where(eq(schema.strategyEditions.code, "nds3"))
-    .limit(1);
-  const delivery = ndsNodes.filter(
-    (n) => n.editionId === nds3?.id && (n.nodeType === "project" || n.nodeType === "initiative")
+  const homeEdition = await findHomeEdition(db, schema);
+  const delivery = nesNodes.filter(
+    (n) => n.editionId === homeEdition?.id && (n.nodeType === "project" || n.nodeType === "initiative")
   );
   const councilProjects = await db
     .select({ id: schema.councilNodes.id, level: schema.councilNodes.level })
@@ -84,7 +81,7 @@ export async function seedCr07LessonLinks(): Promise<void> {
         id: ulid(),
         lessonId: lesson.id,
         nodeId: node.id,
-        nodeKind: "nds",
+        nodeKind: "nes",
         isPrimary: 1,
         linkedBy: lesson.authorId,
         linkedAt: now(),
@@ -106,7 +103,7 @@ export async function seedCr07LessonLinks(): Promise<void> {
     const extras = h % 11 === 0 ? 2 : 1;
     const existingIds = new Set(own.map((l) => l.nodeId));
     for (let i = 0; i < extras; i++) {
-      // one in four second links reaches into the Council Strategy
+      // one in four second links reaches into the Programme Strategy
       const intoCouncil = councilTargets.length > 0 && (h + i) % 4 === 0;
       const pool = intoCouncil ? councilTargets : delivery;
       const node = pool[(h + i * 7919) % pool.length];
@@ -116,7 +113,7 @@ export async function seedCr07LessonLinks(): Promise<void> {
         id: ulid(),
         lessonId: lesson.id,
         nodeId: node.id,
-        nodeKind: intoCouncil ? "council" : "nds",
+        nodeKind: intoCouncil ? "council" : "nes",
         isPrimary: 0,
         linkedBy: lesson.authorId,
         linkedAt: now(),
@@ -136,7 +133,7 @@ export async function seedCr07LessonLinks(): Promise<void> {
     `cr07 lessons: ${added} links added, ${total.length} links total, ${[...multi.values()].filter((c) => c > 1).length} lessons linked to several nodes, ${unlinked} deliberately unlinked`
   );
 
-  // every lesson's legacy node_id mirrors its primary NDS link
+  // every lesson's legacy node_id mirrors its primary edition link
   const { syncPrimaryMirror } = await import("../src/server/services/lesson-links");
   for (const lessonId of lessons.map((l) => l.id)) await syncPrimaryMirror(lessonId);
 }

@@ -11,7 +11,7 @@ const REQUEST_CONFIG = "./src/i18n/request.ts";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  serverExternalPackages: ["@libsql/client", "unpdf", "mammoth", "xlsx"],
+  serverExternalPackages: ["@libsql/client", "pg", "unpdf", "mammoth", "xlsx"],
   eslint: {
     ignoreDuringBuilds: true,
   },

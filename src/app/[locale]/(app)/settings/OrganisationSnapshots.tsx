@@ -109,7 +109,7 @@ export function OrganisationSnapshots({
       ) : rows.length === 0 ? (
         <EmptyState icon={<History />} title={t("snapshotEmpty")} className="py-8" />
       ) : (
-        <div role="table" aria-label={t("snapshotsTitle")} className="divide-y divide-sand-100">
+        <div role="table" aria-label={t("snapshotsTitle")} className="divide-y divide-mist-100">
           {rows.map((s, i) => (
             <div key={s.id} role="row" className="flex flex-wrap items-center gap-x-3 gap-y-1 py-2" data-testid="org-snapshot-row">
               <span role="cell" className="w-36 text-xs text-ink-900 tnum" dir="ltr">

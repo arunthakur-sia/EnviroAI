@@ -22,7 +22,7 @@ async function login(page: Page, email: string) {
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const res = await page.context().request.post(`${BASE}/api/v1/auth/login`, {
-        data: { email, password: "Nexus!2026" },
+        data: { email, password: "EnviroAI!2026" },
         timeout: 120000,
       });
       status = res.status();
@@ -91,8 +91,8 @@ async function main() {
   page.on("pageerror", (e) => problems.push(`pageerror: ${String(e).slice(0, 300)}`));
 
   /* ---- the reader: default board, pinned own row beyond the top ten ---- */
-  console.log("reader@npc.qa");
-  await login(page, "reader@npc.qa");
+  console.log("reader@enviroai.demo");
+  await login(page, "reader@enviroai.demo");
   for (const locale of ["en", "ar"] as const) {
     await open(page, `${BASE}/${locale}/leaderboard`, "[data-testid=board-table]");
     await rawKeys(page, `board ${locale}`);
@@ -155,7 +155,7 @@ async function main() {
 
   /* ---- quiet mode: the calm empty state ---- */
   console.log("quiet mode");
-  await setQuiet("reader@npc.qa", true);
+  await setQuiet("reader@enviroai.demo", true);
   try {
     for (const locale of ["en", "ar"] as const) {
       await open(page, `${BASE}/${locale}/leaderboard`, "[data-testid=leaderboard-page]");
@@ -166,7 +166,7 @@ async function main() {
       await shoot(page, `leaderboard-quiet-${locale}`);
     }
   } finally {
-    await setQuiet("reader@npc.qa", false);
+    await setQuiet("reader@enviroai.demo", false);
   }
 
   /* ---- profile: the level chip with its descriptor ---- */
@@ -200,9 +200,9 @@ async function main() {
   }
 
   /* ---- the administrator: full list, refresh now, settings tab ---- */
-  console.log("admin@npc.qa");
+  console.log("admin@enviroai.demo");
   await context.clearCookies();
-  await login(page, "admin@npc.qa");
+  await login(page, "admin@enviroai.demo");
   await open(page, `${BASE}/en/leaderboard?window=all`, "[data-testid=board-table]");
   const adminRows = await page.locator("[data-testid=board-row]").count();
   console.log(`  admin rows (all time)=${adminRows}`);
@@ -228,7 +228,7 @@ async function main() {
   /* ---- the reader must not reach the settings shortcut ---- */
   const readerContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const readerPage = await readerContext.newPage();
-  await login(readerPage, "reader@npc.qa");
+  await login(readerPage, "reader@enviroai.demo");
   const res = await readerPage.goto(`${BASE}/en/leaderboard/settings`, {
     waitUntil: "domcontentloaded",
     timeout: 120000,

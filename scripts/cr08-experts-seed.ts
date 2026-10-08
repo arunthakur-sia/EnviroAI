@@ -6,7 +6,8 @@
 // check assigns a department only to an internal expert whose user has none.
 //
 // Every profile below is fictional and clearly illustrative (the bio says so);
-// the organisations are real institutions NPC works with.
+// the organisations are real public institutions the Office works with; the
+// people are fictional.
 import { loadEnv } from "../src/lib/load-env";
 loadEnv();
 
@@ -45,292 +46,292 @@ type ExternalExpert = {
   education?: { degree: string; institution: string; year: number | null }[];
   engagements: Engagement[];
   verified: boolean;
-  avatarColor: "gulf" | "gold" | "maroon";
+  avatarColor: "teal" | "aqua" | "navy";
 };
 
-const ILLUSTRATIVE_EN = " Illustrative profile for the SiaNexus prototype.";
-const ILLUSTRATIVE_AR = " ملف تعريفي توضيحي لنموذج سيا نكسس الأولي.";
+const ILLUSTRATIVE_EN = " Illustrative profile for the EnviroAI prototype. The person is fictional; the institution is real.";
+const ILLUSTRATIVE_AR = " ملف تعريفي توضيحي لنموذج EnviroAI الأولي. الشخصية افتراضية والمؤسسة حقيقية.";
 
 const EXTERNALS: ExternalExpert[] = [
   /* ---- academia ---- */
   {
-    nameEn: "Dr. Noora Al-Kuwari",
-    nameAr: "د. نورة الكواري",
+    nameEn: "Dr. Faisal Al-Harbi",
+    nameAr: "د. فيصل الحربي",
     type: "academic",
-    organisationEn: "Qatar University",
-    organisationAr: "جامعة قطر",
-    positionEn: "Associate Professor of Economics",
-    positionAr: "أستاذ مشارك في الاقتصاد",
-    country: "QA",
-    nationality: "Qatari",
+    organisationEn: "King Abdullah University of Science and Technology (KAUST)",
+    organisationAr: "جامعة الملك عبدالله للعلوم والتقنية (كاوست)",
+    positionEn: "Associate Professor of Water Resources Engineering",
+    positionAr: "أستاذ مشارك في هندسة الموارد المائية",
+    country: "SA",
+    nationality: "Saudi",
     availability: "available",
     yearsExperience: 14,
     languages: ["Arabic", "English"],
     bioEn:
-      "Researches economic diversification and productivity measurement in hydrocarbon economies, with published work on non-oil growth accounting for the GCC. Advises on the indicators behind the NDS3 diversification targets." +
+      "Researches desalination energy efficiency, treated wastewater reuse and groundwater depletion in arid regions. Advises on the indicators behind the water security theme." +
       ILLUSTRATIVE_EN,
     bioAr:
-      "تبحث في التنويع الاقتصادي وقياس الإنتاجية في الاقتصادات الهيدروكربونية، ولها أعمال منشورة في محاسبة النمو غير النفطي لدول مجلس التعاون. تقدم المشورة في مؤشرات أهداف التنويع في استراتيجية التنمية الوطنية الثالثة." +
+      "يبحث في كفاءة الطاقة في تحلية المياه وإعادة استخدام المياه المعالجة واستنزاف المياه الجوفية في المناطق الجافة. يقدم المشورة في المؤشرات الداعمة لمحور الأمن المائي." +
       ILLUSTRATIVE_AR,
-    domains: ["economic_diversification", "national_accounts", "labour_market"],
-    skills: ["Growth accounting", "Panel econometrics"],
-    education: [{ degree: "PhD Economics", institution: "London School of Economics", year: 2012 }],
+    domains: ["environment_stats", "data_quality", "index_monitoring"],
+    skills: ["Water balance modelling", "Desalination energy analysis"],
+    education: [{ degree: "PhD Civil and Environmental Engineering", institution: "Stanford University", year: 2012 }],
     engagements: [
       {
-        title: "Review of the non-oil GDP contribution indicators",
+        title: "Review of the water supply and demand indicators",
         year: 2024,
         role: "Technical reviewer",
-        outcomeEn: "Indicator definitions aligned with the SNA 2008 treatment of non-oil sectors",
-        outcomeAr: "مواءمة تعريفات المؤشرات مع معالجة نظام الحسابات القومية 2008 للقطاعات غير النفطية",
+        outcomeEn: "Indicator definitions aligned with a single water balance method",
+        outcomeAr: "مواءمة تعريفات المؤشرات مع منهجية موحدة للميزان المائي",
         rating: 5,
-        unit: "EDP",
+        unit: "WSD",
       },
       {
-        title: "Diversification index methodology workshop",
+        title: "Water balance methodology workshop",
         year: 2023,
         role: "Lead facilitator",
-        outcomeEn: "Composite index weights agreed with the Economic Development Planning team",
-        outcomeAr: "الاتفاق على أوزان المؤشر المركب مع فريق تخطيط التنمية الاقتصادية",
+        outcomeEn: "Groundwater and desalination accounting rules agreed with the Water Security team",
+        outcomeAr: "الاتفاق على قواعد احتساب المياه الجوفية والتحلية مع فريق الأمن المائي",
         rating: 4,
-        unit: "EDP",
+        unit: "WSD",
       },
     ],
     verified: true,
-    avatarColor: "gulf",
+    avatarColor: "teal",
   },
   {
-    nameEn: "Dr. Khalid Al-Marri",
-    nameAr: "د. خالد المري",
+    nameEn: "Dr. Huda Al-Otaibi",
+    nameAr: "د. هدى العتيبي",
     type: "academic",
-    organisationEn: "Qatar University, Social and Economic Survey Research Institute",
-    organisationAr: "جامعة قطر، معهد البحوث الاجتماعية والاقتصادية المسحية",
-    positionEn: "Professor of Survey Methodology",
-    positionAr: "أستاذ منهجيات المسوح",
-    country: "QA",
-    nationality: "Qatari",
+    organisationEn: "King Fahd University of Petroleum and Minerals (KFUPM), Environmental Engineering",
+    organisationAr: "جامعة الملك فهد للبترول والمعادن، الهندسة البيئية",
+    positionEn: "Professor of Air Quality and Atmospheric Science",
+    positionAr: "أستاذ جودة الهواء وعلوم الغلاف الجوي",
+    country: "SA",
+    nationality: "Saudi",
     availability: "limited",
     yearsExperience: 19,
     languages: ["Arabic", "English"],
     bioEn:
-      "Leads household survey design and non-response research for Qatar. Long collaboration with the National Statistics Center on sampling frames and mixed-mode collection." +
+      "Leads research on particulate matter, dust events and ambient air monitoring network design. Long collaboration with environmental regulators on station siting and data validation." +
       ILLUSTRATIVE_EN,
     bioAr:
-      "يقود تصميم المسوح الأسرية وبحوث عدم الاستجابة في قطر. تعاون طويل مع المركز الوطني للإحصاء في أطر المعاينة والجمع متعدد الأنماط." +
+      "تقود بحوثاً في الجسيمات العالقة والعواصف الغبارية وتصميم شبكات رصد جودة الهواء المحيط. تعاون طويل مع الجهات التنظيمية البيئية في اختيار مواقع المحطات والتحقق من البيانات." +
       ILLUSTRATIVE_AR,
-    domains: ["household_surveys", "census_methodology", "social_statistics"],
-    skills: ["Sampling design", "Non-response adjustment"],
-    education: [{ degree: "PhD Statistics", institution: "University of Michigan", year: 2007 }],
+    domains: ["environment_stats", "data_quality", "data_standards"],
+    skills: ["Air quality monitoring design", "Dust source attribution"],
+    education: [{ degree: "PhD Atmospheric Science", institution: "University of Michigan", year: 2007 }],
     engagements: [
       {
-        title: "Non-response study for the 2025 household expenditure survey",
+        title: "Air quality station network validation study",
         year: 2025,
         role: "Principal investigator",
-        outcomeEn: "Weighting adjustments adopted; response rate model documented",
-        outcomeAr: "اعتماد تعديلات الترجيح وتوثيق نموذج معدل الاستجابة",
+        outcomeEn: "Validation rules adopted and a station siting checklist documented",
+        outcomeAr: "اعتماد قواعد التحقق وتوثيق قائمة فحص لاختيار مواقع المحطات",
         rating: 5,
-        unit: "SOA",
+        unit: "AQD",
       },
     ],
     verified: true,
-    avatarColor: "maroon",
+    avatarColor: "navy",
   },
   {
-    nameEn: "Dr. Layla Al-Thani",
-    nameAr: "د. ليلى آل ثاني",
+    nameEn: "Dr. Saad Al-Dossary",
+    nameAr: "د. سعد الدوسري",
     type: "academic",
-    organisationEn: "Hamad Bin Khalifa University, College of Public Policy",
-    organisationAr: "جامعة حمد بن خليفة، كلية السياسات العامة",
-    positionEn: "Assistant Professor of Public Policy",
-    positionAr: "أستاذ مساعد في السياسات العامة",
-    country: "QA",
-    nationality: "Qatari",
+    organisationEn: "King Saud University, College of Food and Agriculture Sciences",
+    organisationAr: "جامعة الملك سعود، كلية علوم الأغذية والزراعة",
+    positionEn: "Assistant Professor of Agricultural Economics",
+    positionAr: "أستاذ مساعد في الاقتصاد الزراعي",
+    country: "SA",
+    nationality: "Saudi",
     availability: "available",
     yearsExperience: 8,
     languages: ["Arabic", "English", "French"],
     bioEn:
-      "Works on programme evaluation and results-based management in Gulf public administrations, including theory-of-change design for national strategies." +
+      "Works on crop water productivity, agricultural water pricing and food security policy in Gulf economies, including results frameworks for national strategies." +
       ILLUSTRATIVE_EN,
     bioAr:
-      "تعمل في تقييم البرامج والإدارة القائمة على النتائج في الإدارات العامة الخليجية، بما في ذلك تصميم نظرية التغيير للاستراتيجيات الوطنية." +
+      "يعمل في إنتاجية المياه للمحاصيل وتسعير المياه الزراعية وسياسات الأمن الغذائي في الاقتصادات الخليجية، بما في ذلك أطر النتائج للاستراتيجيات الوطنية." +
       ILLUSTRATIVE_AR,
     domains: ["evaluation_methods", "results_frameworks", "me_monitoring"],
-    skills: ["Theory of change", "Contribution analysis"],
-    education: [{ degree: "PhD Public Policy", institution: "Sciences Po", year: 2017 }],
+    skills: ["Agricultural policy analysis", "Contribution analysis"],
+    education: [{ degree: "PhD Agricultural Economics", institution: "Wageningen University", year: 2017 }],
     engagements: [
       {
-        title: "Evaluation framework for the NDS3 mid-term review",
+        title: "Evaluation framework for the NES mid-term review",
         year: 2025,
         role: "Methodological advisor",
-        outcomeEn: "Evaluation questions and evidence matrix adopted for the mid-term review",
-        outcomeAr: "اعتماد أسئلة التقييم ومصفوفة الأدلة لمراجعة منتصف المدة",
+        outcomeEn: "Evaluation questions and evidence matrix adopted for the agriculture theme",
+        outcomeAr: "اعتماد أسئلة التقييم ومصفوفة الأدلة لمحور الزراعة",
         rating: 4,
-        unit: "MIF",
+        unit: "PMD",
       },
     ],
     verified: true,
-    avatarColor: "gold",
+    avatarColor: "aqua",
   },
   {
-    nameEn: "Dr. Reem Al-Sulaiti",
-    nameAr: "د. ريم السليطي",
+    nameEn: "Dr. Abeer Al-Ghamdi",
+    nameAr: "د. عبير الغامدي",
     type: "academic",
-    organisationEn: "Qatar Foundation, Research, Development and Innovation",
-    organisationAr: "مؤسسة قطر، البحث والتطوير والابتكار",
-    positionEn: "Director of Research Programmes",
-    positionAr: "مديرة برامج البحث",
-    country: "QA",
-    nationality: "Qatari",
+    organisationEn: "King Abdulaziz University, Faculty of Marine Sciences",
+    organisationAr: "جامعة الملك عبدالعزيز، كلية علوم البحار",
+    positionEn: "Associate Professor of Marine Biodiversity",
+    positionAr: "أستاذ مشارك في التنوع الأحيائي البحري",
+    country: "SA",
+    nationality: "Saudi",
     availability: "limited",
     yearsExperience: 16,
     languages: ["Arabic", "English"],
     bioEn:
-      "Directs national research programmes in foresight and education, and sits on advisory panels on the future of skills in Qatar." +
+      "Directs Red Sea coral reef and mangrove monitoring programmes and sits on advisory panels on coastal biodiversity baselines." +
       ILLUSTRATIVE_EN,
     bioAr:
-      "تدير برامج بحثية وطنية في الاستشراف والتعليم، وتشارك في لجان استشارية حول مستقبل المهارات في قطر." +
+      "تدير برامج رصد الشعاب المرجانية وأشجار المانغروف في البحر الأحمر، وتشارك في لجان استشارية حول خطوط الأساس للتنوع الأحيائي الساحلي." +
       ILLUSTRATIVE_AR,
-    domains: ["foresight_methods", "scenario_planning", "education_stats"],
-    education: [{ degree: "PhD Education Policy", institution: "University College London", year: 2010 }],
+    domains: ["environment_stats", "foresight_methods", "scenario_planning"],
+    education: [{ degree: "PhD Marine Biology", institution: "University of Southampton", year: 2010 }],
     engagements: [],
     verified: true,
-    avatarColor: "gulf",
+    avatarColor: "teal",
   },
 
-  /* ---- other government entities ---- */
+  /* ---- government entities ---- */
   {
-    nameEn: "Eng. Fahad Al-Naimi",
-    nameAr: "م. فهد النعيمي",
+    nameEn: "Eng. Turki Al-Shehri",
+    nameAr: "م. تركي الشهري",
     type: "government",
-    organisationEn: "Ministry of Public Health",
-    organisationAr: "وزارة الصحة العامة",
-    positionEn: "Director of Health Information Systems",
-    positionAr: "مدير نظم المعلومات الصحية",
-    country: "QA",
-    nationality: "Qatari",
+    organisationEn: "Ministry of Environment, Water and Agriculture (MEWA)",
+    organisationAr: "وزارة البيئة والمياه والزراعة",
+    positionEn: "Director of Water Resources Planning",
+    positionAr: "مدير تخطيط الموارد المائية",
+    country: "SA",
+    nationality: "Saudi",
     availability: "available",
     yearsExperience: 17,
     languages: ["Arabic", "English"],
     bioEn:
-      "Owns the national health information architecture and the data-sharing agreements that feed the health statistics programme." +
+      "Owns the sector water information architecture and the data-sharing agreements that feed the national water statistics." +
       ILLUSTRATIVE_EN,
     bioAr:
-      "يتولى بنية المعلومات الصحية الوطنية واتفاقيات تبادل البيانات التي تغذي برنامج الإحصاءات الصحية." +
+      "يتولى بنية المعلومات المائية للقطاع واتفاقيات تبادل البيانات التي تغذي الإحصاءات الوطنية للمياه." +
       ILLUSTRATIVE_AR,
-    domains: ["health_stats", "data_governance", "data_quality"],
-    skills: ["Health registries", "Data sharing agreements"],
+    domains: ["environment_stats", "data_governance", "data_quality"],
+    skills: ["Water information systems", "Data sharing agreements"],
     engagements: [
       {
-        title: "Health statistics data-sharing agreement",
+        title: "Water statistics data-sharing agreement",
         year: 2024,
         role: "Counterpart lead",
-        outcomeEn: "Quarterly registry extracts flowing to the statistics programme",
-        outcomeAr: "تدفق مستخرجات السجلات الفصلية إلى برنامج الإحصاءات",
+        outcomeEn: "Quarterly water extraction and supply extracts flowing to the Office",
+        outcomeAr: "تدفق مستخرجات السحب والإمداد المائي الفصلية إلى المكتب",
         rating: 5,
-        unit: "SOA",
+        unit: "DOP",
       },
       {
-        title: "Data quality review of vital statistics feeds",
+        title: "Data quality review of metering feeds",
         year: 2025,
         role: "Joint reviewer",
-        outcomeEn: "Completeness thresholds agreed for births and deaths registration",
-        outcomeAr: "الاتفاق على عتبات الاكتمال لتسجيل المواليد والوفيات",
+        outcomeEn: "Completeness thresholds agreed for utility and well metering returns",
+        outcomeAr: "الاتفاق على عتبات الاكتمال لبيانات القياس لدى المرافق والآبار",
         rating: 4,
-        unit: "NDA",
+        unit: "EDA",
       },
     ],
     verified: true,
-    avatarColor: "maroon",
+    avatarColor: "navy",
   },
   {
-    nameEn: "Mariam Al-Hajri",
-    nameAr: "مريم الهاجري",
+    nameEn: "Mona Al-Qahtani",
+    nameAr: "منى القحطاني",
     type: "government",
-    organisationEn: "Ministry of Education and Higher Education",
-    organisationAr: "وزارة التربية والتعليم والتعليم العالي",
-    positionEn: "Head of Planning and Quality",
-    positionAr: "رئيسة التخطيط والجودة",
-    country: "QA",
-    nationality: "Qatari",
+    organisationEn: "National Center for Environmental Compliance (NCEC)",
+    organisationAr: "المركز الوطني للرقابة على الالتزام البيئي",
+    positionEn: "Head of Compliance Monitoring",
+    positionAr: "رئيسة متابعة الامتثال",
+    country: "SA",
+    nationality: "Saudi",
     availability: "limited",
     yearsExperience: 12,
     languages: ["Arabic", "English"],
     bioEn:
-      "Coordinates the education sector's contribution to national strategy indicators and the annual education statistics release." +
+      "Coordinates the compliance monitoring contribution to national strategy indicators and the annual inspection and permit data release." +
       ILLUSTRATIVE_EN,
     bioAr:
-      "تنسق مساهمة قطاع التعليم في مؤشرات الاستراتيجية الوطنية والإصدار السنوي لإحصاءات التعليم." +
+      "تنسق مساهمة متابعة الامتثال في مؤشرات الاستراتيجية الوطنية والإصدار السنوي لبيانات التفتيش والتراخيص." +
       ILLUSTRATIVE_AR,
-    domains: ["education_stats", "kpi_design", "strategy_delivery"],
+    domains: ["kpi_design", "strategy_delivery", "institutional_excellence"],
     engagements: [
       {
-        title: "Education outcome indicators alignment",
+        title: "Compliance outcome indicators alignment",
         year: 2025,
         role: "Sector focal point",
-        outcomeEn: "Sector KPIs mapped to the NDS3 human development outcome",
-        outcomeAr: "ربط مؤشرات القطاع بنتيجة التنمية البشرية في الاستراتيجية الوطنية",
+        outcomeEn: "Inspection and permit KPIs mapped to the regulatory compliance theme",
+        outcomeAr: "ربط مؤشرات التفتيش والتراخيص بمحور الامتثال التنظيمي",
         rating: 4,
-        unit: "SDP",
+        unit: "RCM",
       },
     ],
     verified: true,
-    avatarColor: "gold",
+    avatarColor: "aqua",
   },
   {
-    nameEn: "Abdulla Al-Mohannadi",
-    nameAr: "عبدالله المهندي",
+    nameEn: "Abdulaziz Al-Zahrani",
+    nameAr: "عبدالعزيز الزهراني",
     type: "government",
-    organisationEn: "Ministry of Municipality",
-    organisationAr: "وزارة البلدية",
-    positionEn: "Director of Urban Planning Studies",
-    positionAr: "مدير دراسات التخطيط العمراني",
-    country: "QA",
-    nationality: "Qatari",
+    organisationEn: "National Center for Wildlife (NCW)",
+    organisationAr: "المركز الوطني لتنمية الحياة الفطرية",
+    positionEn: "Director of Species Monitoring",
+    positionAr: "مدير رصد الأنواع",
+    country: "SA",
+    nationality: "Saudi",
     availability: "available",
     yearsExperience: 15,
     languages: ["Arabic", "English"],
     bioEn:
-      "Leads the studies behind the national spatial framework and the environmental baselines used in municipal planning." +
+      "Leads the monitoring studies behind protected area baselines and species recovery reporting." +
       ILLUSTRATIVE_EN,
     bioAr:
-      "يقود الدراسات التي يقوم عليها الإطار المكاني الوطني وخطوط الأساس البيئية المستخدمة في التخطيط البلدي." +
+      "يقود دراسات الرصد التي تقوم عليها خطوط الأساس للمناطق المحمية والتقارير الخاصة بتعافي الأنواع." +
       ILLUSTRATIVE_AR,
-    domains: ["construction_stats", "environment_stats", "public_investment"],
+    domains: ["environment_stats", "public_investment", "index_monitoring"],
     engagements: [],
     verified: false,
-    avatarColor: "gulf",
+    avatarColor: "teal",
   },
 
-  /* ---- consultants ---- */
+  /* ---- consultants (fictional firms) ---- */
   {
     nameEn: "Omar Nasser",
     nameAr: "عمر ناصر",
     type: "consultant",
-    organisationEn: "Doha Delivery Partners (illustrative)",
-    organisationAr: "شركاء التنفيذ بالدوحة (توضيحي)",
+    organisationEn: "Najd Delivery Partners (illustrative)",
+    organisationAr: "شركاء نجد للتنفيذ (توضيحي)",
     positionEn: "Managing Partner",
     positionAr: "شريك إداري",
-    country: "QA",
+    country: "SA",
     nationality: "Jordanian",
     availability: "available",
     yearsExperience: 21,
     languages: ["Arabic", "English"],
     bioEn:
-      "Delivery-unit practitioner who has set up KPI cascades and quarterly performance dialogues for several Qatari entities." +
+      "Delivery-unit practitioner who has set up KPI cascades and quarterly performance dialogues for several Saudi entities." +
       ILLUSTRATIVE_EN,
     bioAr:
-      "ممارس في وحدات التنفيذ أنشأ تسلسلات مؤشرات الأداء وحوارات الأداء الفصلية لعدد من الجهات القطرية." +
+      "ممارس في وحدات التنفيذ أنشأ تسلسلات مؤشرات الأداء وحوارات الأداء الفصلية لعدد من الجهات السعودية." +
       ILLUSTRATIVE_AR,
     domains: ["strategy_delivery", "kpi_design", "results_frameworks"],
     skills: ["Delivery units", "Performance dialogues"],
     engagements: [
       {
-        title: "KPI cascade design for NDS3 outcome owners",
+        title: "KPI cascade design for NES theme owners",
         year: 2022,
         role: "Lead consultant",
-        outcomeEn: "Three-level KPI cascade adopted across eight outcomes",
-        outcomeAr: "اعتماد تسلسل مؤشرات ثلاثي المستويات عبر ثماني نتائج",
+        outcomeEn: "Three-level KPI cascade adopted across seven themes",
+        outcomeAr: "اعتماد تسلسل مؤشرات ثلاثي المستويات عبر سبعة محاور",
         rating: 4,
-        unit: "IDP",
+        unit: "SPD",
       },
       {
         title: "Quarterly performance dialogue facilitation",
@@ -339,7 +340,7 @@ const EXTERNALS: ExternalExpert[] = [
         outcomeEn: "Dialogue format standardised; escalation paths documented",
         outcomeAr: "توحيد صيغة الحوار وتوثيق مسارات التصعيد",
         rating: 5,
-        unit: "MIF",
+        unit: "PMD",
       },
       {
         title: "Delivery risk review, first half 2025",
@@ -348,11 +349,11 @@ const EXTERNALS: ExternalExpert[] = [
         outcomeEn: "Twelve at-risk projects re-planned with owners",
         outcomeAr: "إعادة تخطيط اثني عشر مشروعاً معرضاً للخطر مع مالكيها",
         rating: 4,
-        unit: "MIF",
+        unit: "PMD",
       },
     ],
     verified: true,
-    avatarColor: "maroon",
+    avatarColor: "navy",
   },
   {
     nameEn: "Hanna Lindqvist",
@@ -373,7 +374,7 @@ const EXTERNALS: ExternalExpert[] = [
     bioAr:
       "مقيّمة مستقلة للبرامج العامة في الخليج، متخصصة في التصاميم مختلطة الأساليب ومسوح المستفيدين." +
       ILLUSTRATIVE_AR,
-    domains: ["evaluation_methods", "me_monitoring", "household_surveys"],
+    domains: ["evaluation_methods", "me_monitoring", "kpi_design"],
     engagements: [
       {
         title: "Evaluation of the digital services uptake programme",
@@ -382,11 +383,11 @@ const EXTERNALS: ExternalExpert[] = [
         outcomeEn: "Final evaluation report with six recommendations, four adopted",
         outcomeAr: "تقرير تقييم نهائي بست توصيات اعتُمدت أربع منها",
         rating: 4,
-        unit: "MIF",
+        unit: "PMD",
       },
     ],
     verified: true,
-    avatarColor: "gold",
+    avatarColor: "aqua",
   },
   {
     nameEn: "Youssef El-Sayed",
@@ -394,33 +395,33 @@ const EXTERNALS: ExternalExpert[] = [
     type: "consultant",
     organisationEn: "Northline Strategy Consulting (illustrative)",
     organisationAr: "نورث لاين للاستشارات الاستراتيجية (توضيحي)",
-    positionEn: "Senior Advisor, Public Finance",
-    positionAr: "مستشار أول، المالية العامة",
+    positionEn: "Senior Advisor, Environmental Finance",
+    positionAr: "مستشار أول، التمويل البيئي",
     country: "EG",
     nationality: "Egyptian",
     availability: "unavailable",
     yearsExperience: 24,
     languages: ["Arabic", "English"],
     bioEn:
-      "Former ministry of finance official advising on medium-term fiscal frameworks and debt sustainability analysis." +
+      "Former finance ministry official advising on medium-term funding frameworks for environmental programmes and on the economics of water and agriculture subsidies." +
       ILLUSTRATIVE_EN,
     bioAr:
-      "مسؤول سابق في وزارة المالية يقدم المشورة في الأطر المالية متوسطة المدى وتحليل استدامة الدين." +
+      "مسؤول سابق في وزارة المالية يقدم المشورة في أطر التمويل متوسطة المدى للبرامج البيئية وفي اقتصاديات دعم المياه والزراعة." +
       ILLUSTRATIVE_AR,
-    domains: ["fiscal_policy", "public_finance", "debt_management"],
+    domains: ["fiscal_policy", "public_finance", "public_investment"],
     engagements: [
       {
-        title: "Fiscal sustainability scenario review",
+        title: "Funding scenario review",
         year: 2023,
         role: "External reviewer",
-        outcomeEn: "Scenario assumptions benchmarked against IMF Article IV projections",
-        outcomeAr: "مقارنة افتراضات السيناريوهات بتوقعات مشاورات المادة الرابعة لصندوق النقد الدولي",
+        outcomeEn: "Scenario assumptions benchmarked against published multilateral projections",
+        outcomeAr: "مقارنة افتراضات السيناريوهات بتوقعات منشورة للمؤسسات متعددة الأطراف",
         rating: 3,
-        unit: "SF",
+        unit: "SCN",
       },
     ],
     verified: true,
-    avatarColor: "gulf",
+    avatarColor: "teal",
   },
 
   /* ---- international advisors ---- */
@@ -430,77 +431,77 @@ const EXTERNALS: ExternalExpert[] = [
     type: "international",
     organisationEn: "World Bank",
     organisationAr: "البنك الدولي",
-    positionEn: "Senior Economist, Middle East and North Africa",
-    positionAr: "خبيرة اقتصادية أولى، الشرق الأوسط وشمال أفريقيا",
+    positionEn: "Senior Water Economist, Middle East and North Africa",
+    positionAr: "خبيرة اقتصاد المياه الأولى، الشرق الأوسط وشمال أفريقيا",
     country: "US",
     nationality: "Italian",
     availability: "limited",
     yearsExperience: 18,
     languages: ["English", "Italian", "French"],
     bioEn:
-      "Covers private sector development and diversification for the Gulf in the World Bank's regional economic updates." +
+      "Covers water sector reform and utility performance for the Gulf in the World Bank's regional work." +
       ILLUSTRATIVE_EN,
     bioAr:
-      "تغطي تنمية القطاع الخاص والتنويع في الخليج ضمن التحديثات الاقتصادية الإقليمية للبنك الدولي." +
+      "تغطي إصلاح قطاع المياه وأداء المرافق في الخليج ضمن أعمال البنك الدولي الإقليمية." +
       ILLUSTRATIVE_AR,
-    domains: ["economic_diversification", "sme_policy", "fdi"],
+    domains: ["economic_diversification", "public_investment", "index_monitoring"],
     education: [{ degree: "PhD Economics", institution: "Bocconi University", year: 2008 }],
     engagements: [
       {
-        title: "Peer review of the diversification composite index",
+        title: "Peer review of the water security composite index",
         year: 2024,
         role: "Peer reviewer",
         outcomeEn: "Index methodology note published with reviewer comments addressed",
         outcomeAr: "نشر مذكرة منهجية المؤشر مع معالجة ملاحظات المراجعين",
         rating: 5,
-        unit: "EDP",
+        unit: "WSD",
       },
       {
-        title: "SME finance indicator advisory",
+        title: "Utility performance indicator advisory",
         year: 2025,
         role: "Advisor",
-        outcomeEn: "Two indicators added to the business environment target card",
-        outcomeAr: "إضافة مؤشرين إلى بطاقة هدف بيئة الأعمال",
+        outcomeEn: "Two indicators added to the water security target card",
+        outcomeAr: "إضافة مؤشرين إلى بطاقة هدف الأمن المائي",
         rating: 4,
-        unit: "EDP",
+        unit: "WSD",
       },
     ],
     verified: true,
-    avatarColor: "gold",
+    avatarColor: "aqua",
   },
   {
     nameEn: "Dr. Pieter van der Berg",
     nameAr: "د. بيتر فان دير بيرغ",
     type: "international",
-    organisationEn: "Organisation for Economic Co-operation and Development (OECD)",
-    organisationAr: "منظمة التعاون الاقتصادي والتنمية",
-    positionEn: "Head of Unit, Public Governance Directorate",
-    positionAr: "رئيس وحدة، مديرية الحوكمة العامة",
-    country: "FR",
+    organisationEn: "Food and Agriculture Organization of the United Nations (FAO)",
+    organisationAr: "منظمة الأغذية والزراعة للأمم المتحدة (الفاو)",
+    positionEn: "Senior Land and Water Officer",
+    positionAr: "كبير موظفي الأراضي والمياه",
+    country: "IT",
     nationality: "Dutch",
     availability: "available",
     yearsExperience: 20,
     languages: ["English", "Dutch", "French"],
     bioEn:
-      "Leads OECD work on centre-of-government capacity and strategic planning systems, including reviews for MENA governments." +
+      "Leads FAO work on water accounting, irrigation efficiency and food security monitoring, including reviews for MENA governments." +
       ILLUSTRATIVE_EN,
     bioAr:
-      "يقود أعمال المنظمة في قدرات مركز الحكومة ونظم التخطيط الاستراتيجي، بما فيها مراجعات لحكومات المنطقة." +
+      "يقود أعمال المنظمة في المحاسبة المائية وكفاءة الري ورصد الأمن الغذائي، بما فيها مراجعات لحكومات المنطقة." +
       ILLUSTRATIVE_AR,
-    domains: ["gov_services", "institutional_excellence", "digital_transformation"],
+    domains: ["environment_stats", "institutional_excellence", "data_standards"],
     engagements: [
       {
-        title: "Centre-of-government capacity review",
+        title: "Agricultural water use accounting review",
         year: 2025,
         role: "Review lead",
-        outcomeEn: "Peer review findings presented to the Council leadership",
-        outcomeAr: "عرض نتائج مراجعة الأقران على قيادة المجلس",
+        outcomeEn: "Review findings presented to the Office leadership",
+        outcomeAr: "عرض نتائج المراجعة على قيادة المكتب",
         rating: 5,
-        unit: "IDP",
+        unit: "AFD",
       },
     ],
     verified: true,
-    avatarColor: "maroon",
+    avatarColor: "navy",
   },
   {
     nameEn: "Amina Diallo",
@@ -521,7 +522,7 @@ const EXTERNALS: ExternalExpert[] = [
     bioAr:
       "تدعم توطين أهداف التنمية المستدامة والمراجعات الوطنية الطوعية، مع تركيز على أطر المؤشرات وفجوات البيانات." +
       ILLUSTRATIVE_AR,
-    domains: ["index_monitoring", "results_frameworks", "social_protection"],
+    domains: ["index_monitoring", "results_frameworks", "environment_stats"],
     engagements: [
       {
         title: "SDG indicator gap assessment",
@@ -530,11 +531,11 @@ const EXTERNALS: ExternalExpert[] = [
         outcomeEn: "Gap assessment informed the national indicator roadmap",
         outcomeAr: "أسهم تقييم الفجوات في خارطة طريق المؤشرات الوطنية",
         rating: 4,
-        unit: "IIC",
+        unit: "PAR",
       },
     ],
     verified: true,
-    avatarColor: "gulf",
+    avatarColor: "teal",
   },
   {
     nameEn: "Dr. Hiroshi Tanaka",
@@ -542,23 +543,23 @@ const EXTERNALS: ExternalExpert[] = [
     type: "international",
     organisationEn: "Independent international advisor (formerly UN ESCWA)",
     organisationAr: "مستشار دولي مستقل (الإسكوا سابقاً)",
-    positionEn: "Advisor on statistical standards",
-    positionAr: "مستشار في المعايير الإحصائية",
+    positionEn: "Advisor on environmental statistical standards",
+    positionAr: "مستشار في المعايير الإحصائية البيئية",
     country: "JP",
     nationality: "Japanese",
     availability: "available",
     yearsExperience: 27,
     languages: ["English", "Japanese"],
     bioEn:
-      "Former director of statistics at a UN regional commission, advising national statistical offices on SDMX adoption and metadata standards." +
+      "Former director of statistics at a UN regional commission, advising national statistical offices on SDMX adoption, environmental accounting and metadata standards." +
       ILLUSTRATIVE_EN,
     bioAr:
-      "مدير سابق للإحصاء في لجنة إقليمية أممية، يقدم المشورة للمكاتب الإحصائية الوطنية في اعتماد SDMX ومعايير البيانات الوصفية." +
+      "مدير سابق للإحصاء في لجنة إقليمية أممية، يقدم المشورة للمكاتب الإحصائية الوطنية في اعتماد SDMX والمحاسبة البيئية ومعايير البيانات الوصفية." +
       ILLUSTRATIVE_AR,
-    domains: ["national_accounts", "data_standards", "metadata"],
+    domains: ["environment_stats", "data_standards", "metadata"],
     engagements: [],
     verified: false,
-    avatarColor: "gold",
+    avatarColor: "aqua",
   },
 ];
 
@@ -566,12 +567,13 @@ const EXTERNALS: ExternalExpert[] = [
    is an international body, otherwise from the nationality on file. */
 const ORG_COUNTRY: [RegExp, string][] = [
   [/world bank|international monetary fund|united nations statistics|undp/i, "US"],
+  [/\bfao\b|food and agriculture organi[sz]ation/i, "IT"],
   [/oecd|organisation for economic/i, "FR"],
   [/escwa/i, "LB"],
-  [/qatar|doha|georgetown university in qatar|hamad bin khalifa|ministry|central bank/i, "QA"],
+  [/kaust|king abdullah|kfupm|king fahd|king saud|king abdulaziz|kacst|kapsarc|\bmewa\b|\bncec\b|\bncw\b|ministry|national center|saudi|riyadh/i, "SA"],
 ];
 const NATIONALITY_COUNTRY: Record<string, string> = {
-  Qatari: "QA",
+  Saudi: "SA",
   American: "US",
   British: "GB",
   Colombian: "CO",
@@ -607,7 +609,7 @@ export default async function seedCr08Experts(): Promise<void> {
   const [owner] = await db
     .select({ id: schema.users.id })
     .from(schema.users)
-    .where(eq(schema.users.email, "knowledge@npc.qa"))
+    .where(eq(schema.users.email, "knowledge@enviroai.demo"))
     .limit(1);
   const terms = await db
     .select({ id: schema.taxonomyTerms.id, code: schema.taxonomyTerms.code })

@@ -21,7 +21,7 @@ const def: SectionDefinition<ContinuityData> = {
   ),
   layout: "body",
   estimatedPages: 2,
-  appliesTo: ["npc", "department"],
+  appliesTo: ["org", "department"],
   async load(ctx) {
     const scope = await resolveScope(ctx);
     const overview = await memo(ctx, "hr-overview", () => getHrOverview(ctx.user).catch(() => null));
@@ -77,9 +77,9 @@ const def: SectionDefinition<ContinuityData> = {
     const blocks: Block[] = [];
     if (data.rings) {
       const tiles: KpiTile[] = [
-        { label: bi("Readiness", "الجاهزية"), value: fmt(data.rings.readiness), tone: "maroon" },
-        { label: bi("Continuity", "الاستمرارية"), value: fmt(data.rings.continuity), tone: "gulf" },
-        { label: bi("Handovers complete", "تسليمات مكتملة"), value: `${fmt(data.rings.handoversComplete)}%`, tone: "gold" },
+        { label: bi("Readiness", "الجاهزية"), value: fmt(data.rings.readiness), tone: "navy" },
+        { label: bi("Continuity", "الاستمرارية"), value: fmt(data.rings.continuity), tone: "teal" },
+        { label: bi("Handovers complete", "تسليمات مكتملة"), value: `${fmt(data.rings.handoversComplete)}%`, tone: "aqua" },
         { label: bi("Open risks", "مخاطر مفتوحة"), value: fmt(data.riskCounts ? data.riskCounts.critical + data.riskCounts.high + data.riskCounts.medium + data.riskCounts.low : 0), tone: "ink" },
       ];
       blocks.push({ kind: "kpis", items: tiles });
@@ -95,7 +95,7 @@ const def: SectionDefinition<ContinuityData> = {
           columns: [T.department, T.headcount, T.readiness, T.continuity, T.risks, T.documents, bi("Verified", "موثق"), T.lessons, T.deliverables],
           rows: data.departments.map((d) => [bi(d.nameEn, d.nameAr), bi(fmt(d.headcount), fmt(d.headcount)), bi(fmt(d.readiness), fmt(d.readiness)), bi(fmt(d.continuity), fmt(d.continuity)), bi(fmt(d.openRisks), fmt(d.openRisks)), bi(fmt(d.documents), fmt(d.documents)), bi(pct(d.verifiedShare), pct(d.verifiedShare)), bi(fmt(d.lessons), fmt(d.lessons)), bi(fmt(d.deliverables), fmt(d.deliverables))]),
           align: ["start", "end", "end", "end", "end", "end", "end", "end", "end"],
-          source: bi("SiaNexus HR Knowledge Dashboard", "لوحة معرفة الموارد البشرية في سيا نكسس"),
+          source: bi("EnviroAI HR Knowledge Dashboard", "لوحة معرفة الموارد البشرية في EnviroAI"),
         });
       }
       if (data.topRisks.length) {

@@ -1,7 +1,7 @@
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const r = await db.execute(
-  "select n.node_type, count(distinct k.id) kn, count(distinct n.id) nodes from strategy_nodes n left join kpis k on k.node_id=n.id where n.edition_id=(select id from strategy_editions where code='nds3') group by n.node_type"
+  "select n.node_type, count(distinct k.id) kn, count(distinct n.id) nodes from strategy_nodes n left join kpis k on k.node_id=n.id where n.edition_id=(select id from strategy_editions where code='nes3') group by n.node_type"
 );
 console.log(r.rows);
 const d = await db.execute("select count(*) c from kpi_values");

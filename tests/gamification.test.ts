@@ -196,7 +196,7 @@ describe("gamification engine against the seeded database", () => {
     const [reader] = await db
       .select()
       .from(schema.users)
-      .where(eq(schema.users.email, "reader@npc.qa"))
+      .where(eq(schema.users.email, "reader@enviroai.demo"))
       .limit(1);
     expect(reader).toBeTruthy();
     userId = reader.id;

@@ -37,7 +37,7 @@ const def: SectionDefinition<ScorecardData> = {
   ),
   layout: "scorecard",
   estimatedPages: 2,
-  appliesTo: ["npc", "period", "outcome", "project"],
+  appliesTo: ["org", "period", "outcome", "project"],
   async load(ctx) {
     const [scope, nav] = await Promise.all([resolveScope(ctx), navigator(ctx)]);
     if (!nav) return { rows: [], counts: { green: 0, amber: 0, red: 0, none: 0 }, editionCode: null };
@@ -121,7 +121,7 @@ const def: SectionDefinition<ScorecardData> = {
             { text: r.rag === "green" ? "on target" : r.rag === "amber" ? "at risk" : r.rag === "red" ? "behind" : "no data", rag: r.rag },
           ],
         })),
-        source: bi("SiaNexus Living Strategy, KPI values", "الاستراتيجية الحية في سيا نكسس، قيم المؤشرات"),
+        source: bi("EnviroAI Living Strategy, KPI values", "الاستراتيجية الحية في EnviroAI، قيم المؤشرات"),
       });
     }
     return section("targets_scorecard", bi("Targets scorecard", "بطاقة أداء المستهدفات"), "scorecard", {

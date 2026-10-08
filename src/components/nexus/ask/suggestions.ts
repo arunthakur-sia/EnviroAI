@@ -1,5 +1,5 @@
 "use client";
-// CR08 2.3: per-kind helpers for the Ask NPC panel: the glyph of each item
+// CR08 2.3: per-kind helpers for the Ask EnviroAI panel: the glyph of each item
 // kind, the deterministic first suggestions about the current item, and the
 // legacy analyst context the conversation API already understands.
 import type { ComponentType } from "react";

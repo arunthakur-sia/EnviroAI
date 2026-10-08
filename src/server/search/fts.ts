@@ -1,5 +1,5 @@
 // FTS5 keyword search over document chunks and structured records.
-import { rawClient } from "@/server/db/client";
+import { rawClient, isPostgres } from "@/server/db/client";
 
 export type FtsChunkHit = {
   chunkId: string;
@@ -28,11 +28,27 @@ export function ftsQuery(q: string): string {
   return tokens.map((t) => `"${t}"`).join(" OR ");
 }
 
+/** Postgres tsquery: the same tokens, OR-ed, letters and digits only. */
+function pgQuery(q: string): string {
+  const tokens = q
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter((t) => t.length > 1)
+    .slice(0, 12);
+  return tokens.join(" | ");
+}
+
 export async function ftsChunks(q: string, limit = 40): Promise<FtsChunkHit[]> {
-  const match = ftsQuery(q);
+  const match = isPostgres ? pgQuery(q) : ftsQuery(q);
   if (!match) return [];
   try {
-    const res = await rawClient.execute({
+    const res = await rawClient.execute(isPostgres ? {
+      sql: `SELECT dc.id as chunk_id, dc.document_id, dc.page_from, dc.text, dc.lang,
+                   -ts_rank(to_tsvector('simple', dc.text), to_tsquery('simple', ?)) as rank
+            FROM document_chunks dc
+            WHERE to_tsvector('simple', dc.text) @@ to_tsquery('simple', ?)
+            ORDER BY rank LIMIT ?`,
+      args: [match, match, limit],
+    } : {
       sql: `SELECT dc.id as chunk_id, dc.document_id, dc.page_from, dc.text, dc.lang,
                    bm25(chunks_fts) as rank
             FROM chunks_fts
@@ -56,10 +72,17 @@ export async function ftsChunks(q: string, limit = 40): Promise<FtsChunkHit[]> {
 }
 
 export async function ftsRecords(q: string, limit = 40): Promise<FtsRecordHit[]> {
-  const match = ftsQuery(q);
+  const match = isPostgres ? pgQuery(q) : ftsQuery(q);
   if (!match) return [];
   try {
-    const res = await rawClient.execute({
+    const res = await rawClient.execute(isPostgres ? {
+      sql: `SELECT si.resource_type, si.resource_id, si.text,
+                   -ts_rank(to_tsvector('simple', si.text), to_tsquery('simple', ?)) as rank
+            FROM search_index si
+            WHERE to_tsvector('simple', si.text) @@ to_tsquery('simple', ?)
+            ORDER BY rank LIMIT ?`,
+      args: [match, match, limit],
+    } : {
       sql: `SELECT si.resource_type, si.resource_id, si.text, bm25(records_fts) as rank
             FROM records_fts
             JOIN search_index si ON si.rowid = records_fts.rowid

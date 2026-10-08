@@ -1,5 +1,5 @@
 "use client";
-// CR07 2.4 (1 to 5): the Council Strategy, the centrepiece of SiaNexus. One
+// CR07 2.4 (1 to 5): the Programme Strategy, the centrepiece of EnviroAI. One
 // page, one URL: the strategy header with the Internal mark, the strategic
 // direction band, the scorecard strip of goal rings with a period switch, and
 // the results chain navigator that opens a goal panel beneath the strip with a
@@ -198,7 +198,7 @@ function GoalRing({
       }
       data-testid="goal-ring"
       data-selected={selected || undefined}
-      className="group/ring flex cursor-pointer flex-col items-center gap-2 rounded-2xl p-2 text-center outline-none transition-transform duration-200 ease-[var(--ease-paper)] hover:-translate-y-1.5 focus-visible:-translate-y-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700"
+      className="group/ring flex cursor-pointer flex-col items-center gap-2 rounded-2xl p-2 text-center outline-none transition-transform duration-200 ease-[var(--ease-paper)] hover:-translate-y-1.5 focus-visible:-translate-y-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700"
     >
       <span className="relative block" style={{ width: size, height: size }}>
         <svg width={size} height={size} className="block" aria-hidden style={{ direction: "ltr" }}>
@@ -206,8 +206,8 @@ function GoalRing({
             cx={size / 2}
             cy={size / 2}
             r={r}
-            fill={selected ? "var(--color-maroon-50)" : "none"}
-            stroke="var(--color-sand-300)"
+            fill={selected ? "var(--color-navy-50)" : "none"}
+            stroke="var(--color-mist-300)"
             strokeWidth={stroke}
           />
           <circle
@@ -215,13 +215,13 @@ function GoalRing({
             cy={size / 2}
             r={r}
             fill="none"
-            stroke={selected ? "var(--color-maroon-500)" : "var(--color-maroon-700)"}
+            stroke={selected ? "var(--color-navy-500)" : "var(--color-navy-700)"}
             strokeWidth={selected ? stroke + 2 : stroke}
             strokeLinecap="round"
             strokeDasharray={c}
             strokeDashoffset={drawn ? c * (1 - value) : c}
             transform={`rotate(-90 ${size / 2} ${size / 2})`}
-            className="group-hover/ring:stroke-maroon-500"
+            className="group-hover/ring:stroke-navy-500"
             style={{
               transition: reduced
                 ? undefined
@@ -241,7 +241,7 @@ function GoalRing({
         </svg>
         <span className="absolute inset-0 flex items-center justify-center">
           <span
-            className="font-semibold text-maroon-900 tnum"
+            className="font-semibold text-navy-900 tnum"
             style={{ fontFamily: "var(--font-display)", fontSize: 38 }}
           >
             {levelNumber(goal.code)}
@@ -256,7 +256,7 @@ function GoalRing({
           {t("scorecard.noCadence")}
         </span>
       ) : (
-        <span className="text-[11px] font-medium text-maroon-900 tnum">
+        <span className="text-[11px] font-medium text-navy-900 tnum">
           {t("scorecard.onTarget", { pct })}
           <span className="font-normal text-ink-600">
             {" · "}
@@ -301,7 +301,7 @@ function IndicatorTile({
     <button
       onClick={onOpen}
       aria-label={t("chain.openIndicator", { name })}
-      className="flex cursor-pointer flex-col gap-1.5 rounded-[var(--radius-card)] bg-white px-3.5 py-3 text-start shadow-[var(--shadow-paper)] transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700"
+      className="flex cursor-pointer flex-col gap-1.5 rounded-[var(--radius-card)] bg-white px-3.5 py-3 text-start shadow-[var(--shadow-paper)] transition-all duration-200 ease-[var(--ease-paper)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700"
       data-testid="indicator-tile"
     >
       <span className="flex items-center gap-2">
@@ -313,7 +313,7 @@ function IndicatorTile({
       </span>
       <span className="line-clamp-2 min-h-9 text-sm font-medium leading-snug text-ink-900">{name}</span>
       <span className="flex items-baseline gap-1.5">
-        <span className="text-xl font-semibold leading-none text-maroon-900 tnum">
+        <span className="text-xl font-semibold leading-none text-navy-900 tnum">
           {latest?.actual != null ? formatNumber(latest.actual, locale) : t("chain.noResult")}
         </span>
         {latest?.target != null ? (
@@ -374,8 +374,8 @@ function IndicatorCardDialog({
         <div className="flex flex-col gap-4">
           <div>
             <p className="flex flex-wrap items-center gap-2 text-xs text-ink-600">
-              {indicator.code ? <Chip tone="sand">{indicator.code}</Chip> : null}
-              <Chip tone="maroon">{t(`indicator.cadence.${indicator.frequency}` as never)}</Chip>
+              {indicator.code ? <Chip tone="mist">{indicator.code}</Chip> : null}
+              <Chip tone="navy">{t(`indicator.cadence.${indicator.frequency}` as never)}</Chip>
               <span className="flex items-center gap-1.5">
                 <RagMark rag={indicator.rag} />
                 {t(`indicator.rag.${indicator.rag}` as never)}
@@ -387,7 +387,7 @@ function IndicatorCardDialog({
             <h3 className="mt-1.5 text-lg leading-snug">{name}</h3>
           </div>
 
-          <div className="rounded-xl bg-sand-50 p-3">
+          <div className="rounded-xl bg-mist-50 p-3">
             <SubHeading>{t("indicator.chart")}</SubHeading>
             <IndicatorChart indicator={indicator} labelId={`indicator-chart-${indicator.id}`} />
           </div>
@@ -473,7 +473,7 @@ function IndicatorCardDialog({
           </dl>
 
           {indicator.linkedStatisticsIndicatorId ? (
-            <p className="text-xs text-gulf-600">{t("indicator.linkedStatistics")}</p>
+            <p className="text-xs text-teal-600">{t("indicator.linkedStatistics")}</p>
           ) : null}
         </div>
       </DialogContent>
@@ -497,14 +497,14 @@ function DirectionBand({ strategy }: { strategy: CouncilPageData["strategy"] }) 
 
   return (
     <section
-      className="mt-6 rounded-2xl bg-sand-100 px-5 py-6 sm:px-7"
+      className="mt-6 rounded-2xl bg-mist-100 px-5 py-6 sm:px-7"
       aria-label={t("header.directionAria")}
       data-testid="direction-band"
     >
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-10">
         {vision ? (
           <div>
-            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-maroon-700">
+            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-navy-700">
               {t("header.vision")}
             </p>
             <p
@@ -517,7 +517,7 @@ function DirectionBand({ strategy }: { strategy: CouncilPageData["strategy"] }) 
         ) : null}
         {mission ? (
           <div>
-            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-maroon-700">
+            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-navy-700">
               {t("header.mission")}
             </p>
             <p
@@ -532,7 +532,7 @@ function DirectionBand({ strategy }: { strategy: CouncilPageData["strategy"] }) 
 
       {strategy.values.length ? (
         <div className="mt-6">
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-maroon-700">
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-navy-700">
             {t("header.values")}
           </p>
           <div className="flex flex-wrap gap-2">
@@ -544,8 +544,8 @@ function DirectionBand({ strategy }: { strategy: CouncilPageData["strategy"] }) 
                 <div
                   key={`${name}-${i}`}
                   className={cn(
-                    "overflow-hidden rounded-xl border border-sand-300 bg-white transition-colors",
-                    isOpen ? "w-full border-maroon-300" : ""
+                    "overflow-hidden rounded-xl border border-mist-300 bg-white transition-colors",
+                    isOpen ? "w-full border-navy-300" : ""
                   )}
                   data-testid="value-chip"
                 >
@@ -555,7 +555,7 @@ function DirectionBand({ strategy }: { strategy: CouncilPageData["strategy"] }) 
                     aria-label={
                       isOpen ? t("header.valueCollapse", { name }) : t("header.valueExpand", { name })
                     }
-                    className="flex w-full cursor-pointer items-center gap-1.5 px-3 py-1.5 text-start text-sm font-medium text-ink-900 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700"
+                    className="flex w-full cursor-pointer items-center gap-1.5 px-3 py-1.5 text-start text-sm font-medium text-ink-900 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700"
                   >
                     {name}
                     <ChevronDown
@@ -575,7 +575,7 @@ function DirectionBand({ strategy }: { strategy: CouncilPageData["strategy"] }) 
                         transition={{ duration: 0.24, ease: EASE }}
                         className="overflow-hidden"
                       >
-                        <p className="border-t border-sand-100 px-3 py-2.5 text-sm leading-relaxed text-ink-600">
+                        <p className="border-t border-mist-100 px-3 py-2.5 text-sm leading-relaxed text-ink-600">
                           {description}
                         </p>
                       </motion.div>
@@ -622,7 +622,7 @@ function ProjectCard({
         data-chain-level="project"
         data-testid="project-card"
         aria-label={t("chain.openProject", { title })}
-        className="flex cursor-pointer flex-col gap-1.5 rounded-lg text-start focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700"
+        className="flex cursor-pointer flex-col gap-1.5 rounded-lg text-start focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700"
       >
         <span className="flex items-center gap-2">
           <RagMark
@@ -677,7 +677,7 @@ function OutputCard({
     <div
       className={cn(
         "overflow-hidden rounded-xl border bg-white transition-colors",
-        expanded ? "border-maroon-300" : "border-sand-200"
+        expanded ? "border-navy-300" : "border-mist-200"
       )}
       data-testid="output-card"
       data-expanded={expanded}
@@ -687,9 +687,9 @@ function OutputCard({
         data-chain-level="output"
         aria-expanded={expanded}
         aria-label={expanded ? t("chain.collapse", { title }) : t("chain.expand", { title })}
-        className="flex w-full cursor-pointer items-start gap-2.5 px-3.5 py-3 text-start outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700"
+        className="flex w-full cursor-pointer items-start gap-2.5 px-3.5 py-3 text-start outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700"
       >
-        <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md bg-gulf-100 text-[10px] font-semibold text-gulf-600 tnum">
+        <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md bg-teal-100 text-[10px] font-semibold text-teal-600 tnum">
           {levelNumber(node.code) || "·"}
         </span>
         <span className="min-w-0 flex-1">
@@ -718,7 +718,7 @@ function OutputCard({
             transition={{ duration: 0.26, ease: EASE }}
             className="overflow-hidden"
           >
-            <div className="border-t border-sand-100 px-3.5 py-3">
+            <div className="border-t border-mist-100 px-3.5 py-3">
               <SubHeading>{t("chain.projects")}</SubHeading>
               {projects.length ? (
                 <div
@@ -730,7 +730,7 @@ function OutputCard({
                   ))}
                 </div>
               ) : (
-                <p className="rounded-lg border border-dashed border-sand-300 bg-sand-50 px-3 py-3 text-center text-xs text-ink-600">
+                <p className="rounded-lg border border-dashed border-mist-300 bg-mist-50 px-3 py-3 text-center text-xs text-ink-600">
                   {t("chain.noProjects")}
                 </p>
               )}
@@ -773,7 +773,7 @@ function IoCard({
     <div
       className={cn(
         "rounded-[var(--radius-card)] bg-white shadow-[var(--shadow-paper)] transition-shadow duration-200 hover:shadow-[var(--shadow-lift)]",
-        expanded && "col-span-full border-s-2 border-maroon-100"
+        expanded && "col-span-full border-s-2 border-navy-100"
       )}
       data-testid="io-card"
       data-expanded={expanded}
@@ -783,7 +783,7 @@ function IoCard({
         data-chain-level="io"
         aria-expanded={expanded}
         aria-label={expanded ? t("chain.collapse", { title }) : t("chain.expand", { title })}
-        className="block w-full cursor-pointer rounded-[var(--radius-card)] px-5 py-4 text-start outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700"
+        className="block w-full cursor-pointer rounded-[var(--radius-card)] px-5 py-4 text-start outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700"
       >
         <span className="flex items-center gap-2">
           <span
@@ -794,7 +794,7 @@ function IoCard({
           </span>
           <RagMark rag={shareRag(node.onTargetShare)} />
           <span className="ms-auto flex items-center gap-1.5">
-            <Chip tone="sand">{t("chain.childCounts", {
+            <Chip tone="mist">{t("chain.childCounts", {
               outputs: node.counts.outputs,
               projects: node.counts.projects,
             })}</Chip>
@@ -808,7 +808,7 @@ function IoCard({
         <span className="mt-3 flex items-baseline gap-2">
           {pct != null ? (
             <>
-              <span className="text-[30px] font-semibold leading-none text-maroon-900 tnum">{pct}%</span>
+              <span className="text-[30px] font-semibold leading-none text-navy-900 tnum">{pct}%</span>
               <span className="text-xs text-ink-600">{t("chain.onTarget", { pct })}</span>
             </>
           ) : (
@@ -836,7 +836,7 @@ function IoCard({
             transition={{ duration: 0.26, ease: EASE }}
             className="overflow-hidden"
           >
-            <div className="border-t border-sand-100 px-5 py-4">
+            <div className="border-t border-mist-100 px-5 py-4">
               <SubHeading>{t("chain.outputs")}</SubHeading>
               {outputs.length ? (
                 <div className="flex flex-col gap-2">
@@ -852,7 +852,7 @@ function IoCard({
                   ))}
                 </div>
               ) : (
-                <p className="rounded-lg border border-dashed border-sand-300 bg-sand-50 px-3 py-4 text-center text-xs text-ink-600">
+                <p className="rounded-lg border border-dashed border-mist-300 bg-mist-50 px-3 py-4 text-center text-xs text-ink-600">
                   {t("chain.noOutputs")}
                 </p>
               )}
@@ -936,12 +936,12 @@ function GoalPanel({
     <div
       ref={panelRef}
       onKeyDown={onKeyDown}
-      className="relative overflow-hidden rounded-2xl bg-sand-100"
+      className="relative overflow-hidden rounded-2xl bg-mist-100"
       data-testid="goal-panel"
     >
       <span
         aria-hidden
-        className="pointer-events-none absolute top-1 start-4 select-none font-semibold text-maroon-100"
+        className="pointer-events-none absolute top-1 start-4 select-none font-semibold text-navy-100"
         style={{ fontFamily: "var(--font-display)", fontSize: 96, lineHeight: 1 }}
       >
         {levelNumber(goal.code)}
@@ -950,7 +950,7 @@ function GoalPanel({
       <div className="relative px-5 py-6 sm:px-7">
         <div className="flex flex-wrap items-start gap-4">
           <div className="min-w-0 max-w-2xl flex-1">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-maroon-700 tnum">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-navy-700 tnum">
               {t("levels.goal")} {goal.code}
             </p>
             <h2 className="mt-1 text-2xl leading-tight sm:text-[30px]">
@@ -963,13 +963,13 @@ function GoalPanel({
               {goal.ownerUnit ? (
                 <Link
                   href={`/organisation?unit=${encodeURIComponent(goal.ownerUnit.code)}` as never}
-                  className="inline-flex items-center gap-1 rounded-md bg-white px-2 py-0.5 text-[11px] font-medium text-maroon-700 shadow-sm hover:text-maroon-900"
+                  className="inline-flex items-center gap-1 rounded-md bg-white px-2 py-0.5 text-[11px] font-medium text-navy-700 shadow-sm hover:text-navy-900"
                 >
                   {t("chain.ownerUnit")}: {bi(locale, goal.ownerUnit.nameEn, goal.ownerUnit.nameAr)}
                 </Link>
               ) : null}
               {goal.isIllustrative ? (
-                <Chip tone="gold" title={t("header.illustrativeTitle")}>
+                <Chip tone="aqua" title={t("header.illustrativeTitle")}>
                   {t("header.illustrative")}
                 </Chip>
               ) : null}
@@ -992,19 +992,19 @@ function GoalPanel({
               {alignment.map((a) => {
                 const label = bi(locale, a.labelEn ?? "", a.labelAr ?? "") || a.targetId;
                 const note = bi(locale, a.noteEn ?? "", a.noteAr ?? "");
-                return a.ndsSlug ? (
+                return a.nesSlug ? (
                   <Link
                     key={a.id}
-                    href={`/strategy?o=${encodeURIComponent(a.ndsSlug)}` as never}
+                    href={`/strategy?o=${encodeURIComponent(a.nesSlug)}` as never}
                     title={note || undefined}
                     aria-label={t("chain.alignmentOpen", { label })}
                     data-testid="alignment-chip"
-                    className="inline-flex items-center gap-1 rounded-md bg-gulf-100 px-2 py-0.5 text-[11px] font-medium leading-4 text-gulf-600 transition-colors hover:bg-gulf-400 hover:text-white"
+                    className="inline-flex items-center gap-1 rounded-md bg-teal-100 px-2 py-0.5 text-[11px] font-medium leading-4 text-teal-600 transition-colors hover:bg-teal-400 hover:text-white"
                   >
                     {label}
                   </Link>
                 ) : (
-                  <Chip key={a.id} tone="gulf" title={note || undefined} data-testid="alignment-chip">
+                  <Chip key={a.id} tone="teal" title={note || undefined} data-testid="alignment-chip">
                     {label}
                   </Chip>
                 );
@@ -1023,7 +1023,7 @@ function GoalPanel({
               ))}
             </div>
           ) : (
-            <p className="rounded-lg border border-dashed border-sand-300 bg-sand-50 px-3 py-4 text-center text-xs text-ink-600">
+            <p className="rounded-lg border border-dashed border-mist-300 bg-mist-50 px-3 py-4 text-center text-xs text-ink-600">
               {t("chain.noIndicators")}
             </p>
           )}
@@ -1050,7 +1050,7 @@ function GoalPanel({
               ))}
             </div>
           ) : (
-            <p className="rounded-lg border border-dashed border-sand-300 bg-sand-50 px-3 py-6 text-center text-sm text-ink-600">
+            <p className="rounded-lg border border-dashed border-mist-300 bg-mist-50 px-3 py-6 text-center text-sm text-ink-600">
               {t("chain.noIntermediateOutcomes")}
             </p>
           )}
@@ -1308,11 +1308,11 @@ export function CouncilStrategy({
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
             <div className="mb-2 flex flex-wrap items-center gap-1.5">
-              <Chip tone="maroon" title={t("header.internalTitle")} data-testid="internal-chip">
+              <Chip tone="navy" title={t("header.internalTitle")} data-testid="internal-chip">
                 {t("header.internal")}
               </Chip>
               {data.strategy.isIllustrative ? (
-                <Chip tone="gold" title={t("header.illustrativeTitle")} data-testid="illustrative-chip">
+                <Chip tone="aqua" title={t("header.illustrativeTitle")} data-testid="illustrative-chip">
                   {t("header.illustrative")}
                 </Chip>
               ) : null}
@@ -1340,7 +1340,7 @@ export function CouncilStrategy({
                   aria-label={t("header.openOwner", {
                     unit: bi(locale, data.strategy.owner.nameEn, data.strategy.owner.nameAr),
                   })}
-                  className="link-draw font-medium text-maroon-700"
+                  className="link-draw font-medium text-navy-700"
                 >
                   {bi(locale, data.strategy.owner.nameEn, data.strategy.owner.nameAr)}
                 </Link>
@@ -1360,7 +1360,7 @@ export function CouncilStrategy({
                 }}
                 aria-label={t("header.editionAria")}
                 data-testid="council-edition"
-                className="h-9.5 max-w-56 cursor-pointer rounded-lg border border-sand-300 bg-white px-2.5 text-sm text-ink-900 focus:border-maroon-500 focus:outline-none"
+                className="h-9.5 max-w-56 cursor-pointer rounded-lg border border-mist-300 bg-white px-2.5 text-sm text-ink-900 focus:border-navy-500 focus:outline-none"
               >
                 {strategies.map((s) => (
                   <option key={s.id} value={s.id}>
@@ -1372,7 +1372,7 @@ export function CouncilStrategy({
 
             {/* the view toggle switches in place, not by route */}
             <span
-              className="inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5"
+              className="inline-flex items-center gap-0.5 rounded-lg bg-mist-100 p-0.5"
               role="group"
               aria-label={t("header.viewToggleAria")}
               data-testid="council-view-toggle"
@@ -1382,7 +1382,7 @@ export function CouncilStrategy({
                 aria-pressed={view === "chain"}
                 className={cn(
                   "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs transition-colors",
-                  view === "chain" ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+                  view === "chain" ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
                 )}
               >
                 <ListTree className="size-3.5 flip-rtl" aria-hidden /> {t("header.viewChain")}
@@ -1392,7 +1392,7 @@ export function CouncilStrategy({
                 aria-pressed={view === "results"}
                 className={cn(
                   "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs transition-colors",
-                  view === "results" ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+                  view === "results" ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
                 )}
               >
                 <Layers className="size-3.5" aria-hidden /> {t("header.viewResults")}
@@ -1402,7 +1402,7 @@ export function CouncilStrategy({
             <Link
               href={`/ask?q=${encodeURIComponent(askQuestion)}` as never}
               data-testid="council-brief"
-              className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-sand-300 bg-white px-4 text-sm font-medium text-ink-900 transition-colors hover:border-maroon-300 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700"
+              className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-mist-300 bg-white px-4 text-sm font-medium text-ink-900 transition-colors hover:border-navy-300 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700"
             >
               <MessageCircleQuestion className="size-4" aria-hidden /> {t("header.briefMe")}
             </Link>
@@ -1430,7 +1430,7 @@ export function CouncilStrategy({
               }
               aria-label={t("header.listenAria", { title: listenTopic })}
               data-testid="council-listen"
-              className="inline-flex h-9.5 items-center gap-2 rounded-lg px-4 text-sm font-medium text-ink-600 transition-colors hover:bg-maroon-100/60 hover:text-maroon-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700"
+              className="inline-flex h-9.5 items-center gap-2 rounded-lg px-4 text-sm font-medium text-ink-600 transition-colors hover:bg-navy-100/60 hover:text-navy-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700"
             >
               <Headphones className="size-4" aria-hidden /> {t("header.listen")}
             </Link>
@@ -1478,7 +1478,7 @@ export function CouncilStrategy({
             {/* the period switch, recomputed rings without a round trip */}
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <span
-                className="inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5"
+                className="inline-flex items-center gap-0.5 rounded-lg bg-mist-100 p-0.5"
                 role="group"
                 aria-label={t("scorecard.periodSwitchAria")}
                 data-testid="period-switch"
@@ -1490,7 +1490,7 @@ export function CouncilStrategy({
                     aria-pressed={period === c}
                     className={cn(
                       "cursor-pointer rounded-md px-3 py-1.5 text-xs transition-colors",
-                      period === c ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+                      period === c ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
                     )}
                   >
                     {t(`scorecard.${CADENCE_LABEL[c]}` as never)}
@@ -1520,10 +1520,10 @@ export function CouncilStrategy({
                 }}
               >
                 <span
-                  className="block size-6 rotate-45 rounded-[3px] bg-sand-100"
+                  className="block size-6 rotate-45 rounded-[3px] bg-mist-100"
                   style={{
-                    borderTop: "1px solid var(--color-sand-300)",
-                    borderLeft: "1px solid var(--color-sand-300)",
+                    borderTop: "1px solid var(--color-mist-300)",
+                    borderLeft: "1px solid var(--color-mist-300)",
                   }}
                 />
               </span>
@@ -1576,11 +1576,11 @@ export function CouncilStrategy({
                 data-testid="council-rail"
               >
                 <div
-                  className="flex items-center gap-2 rounded-b-2xl border border-t-0 border-sand-300 bg-white/95 px-4 py-2 shadow-[var(--shadow-paper)] backdrop-blur"
+                  className="flex items-center gap-2 rounded-b-2xl border border-t-0 border-mist-300 bg-white/95 px-4 py-2 shadow-[var(--shadow-paper)] backdrop-blur"
                   role="toolbar"
                   aria-label={t("chain.railAria")}
                 >
-                  <Chip tone="maroon">{t("header.internal")}</Chip>
+                  <Chip tone="navy">{t("header.internal")}</Chip>
                   {goals.map((g) => {
                     const card = cardByGoal.get(g.id);
                     const isSel = goal?.id === g.id;
@@ -1606,8 +1606,8 @@ export function CouncilStrategy({
                             cx={20}
                             cy={20}
                             r={r}
-                            fill={isSel ? "var(--color-maroon-700)" : "none"}
-                            stroke="var(--color-sand-300)"
+                            fill={isSel ? "var(--color-navy-700)" : "none"}
+                            stroke="var(--color-mist-300)"
                             strokeWidth={3}
                           />
                           <circle
@@ -1615,7 +1615,7 @@ export function CouncilStrategy({
                             cy={20}
                             r={r}
                             fill="none"
-                            stroke={isSel ? "var(--color-maroon-700)" : "var(--color-maroon-500)"}
+                            stroke={isSel ? "var(--color-navy-700)" : "var(--color-navy-500)"}
                             strokeWidth={3}
                             strokeLinecap="round"
                             strokeDasharray={c}
@@ -1626,7 +1626,7 @@ export function CouncilStrategy({
                         <span
                           className={cn(
                             "absolute inset-0 flex items-center justify-center text-xs font-semibold tnum",
-                            isSel ? "text-white" : "text-maroon-900"
+                            isSel ? "text-white" : "text-navy-900"
                           )}
                         >
                           {levelNumber(g.code)}

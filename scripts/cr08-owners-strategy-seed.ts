@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-// CR08 9.1 (strategy and council owner placement): the one piece of data the
+// CR08 9.1 (strategy and Programme Strategy owner placement): the one piece of data the
 // placement pass needs and the base seed does not carry, a custodian on the
 // strategy KPIs. No column and no table is added: `kpis.owner_user_id` has
 // existed since CR02 and was simply never filled.

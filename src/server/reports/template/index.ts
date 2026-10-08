@@ -17,7 +17,7 @@ import { C, FONT, LINE, SIZE, isAr, pick } from "./theme";
 export { renderDocxPreviews, previewDir } from "./preview";
 export { closePngRenderer, pngAvailable, svgToPng } from "./png";
 export { chartSvg } from "./charts";
-export { coverBandSvg, kpiRowSvg, keyFigureSvg, numeralSvg, closingSvg, saduPattern } from "./svg";
+export { coverBandSvg, kpiRowSvg, keyFigureSvg, numeralSvg, closingSvg, ascentPattern } from "./svg";
 
 export async function renderReportDocx(model: ReportDocumentModel, opts: RenderOptions): Promise<Buffer> {
   const lang = opts.lang;
@@ -40,7 +40,7 @@ export async function renderReportDocx(model: ReportDocumentModel, opts: RenderO
   const bodyFont = isAr(lang) ? FONT.arBody : FONT.enBody;
   const headFont = isAr(lang) ? FONT.arBody : FONT.enHead;
   const doc = new Document({
-    creator: "SiaNexus",
+    creator: "EnviroAI",
     title: pick(model.title, lang),
     description: pick(model.typeName, lang),
     features: { updateFields: true },
@@ -54,7 +54,7 @@ export async function renderReportDocx(model: ReportDocumentModel, opts: RenderO
               format: LevelFormat.BULLET,
               text: "•",
               alignment: AlignmentType.START,
-              style: { paragraph: { indent: { left: 420, hanging: 260 } }, run: { color: C.maroon, font: FONT.enBody } },
+              style: { paragraph: { indent: { left: 420, hanging: 260 } }, run: { color: C.navy, font: FONT.enBody } },
             },
           ],
         },
@@ -66,7 +66,7 @@ export async function renderReportDocx(model: ReportDocumentModel, opts: RenderO
               format: LevelFormat.DECIMAL,
               text: "%1.",
               alignment: AlignmentType.START,
-              style: { paragraph: { indent: { left: 460, hanging: 300 } }, run: { color: C.maroon, bold: true, font: FONT.enBody } },
+              style: { paragraph: { indent: { left: 460, hanging: 300 } }, run: { color: C.navy, bold: true, font: FONT.enBody } },
             },
           ],
         },
@@ -79,11 +79,11 @@ export async function renderReportDocx(model: ReportDocumentModel, opts: RenderO
           paragraph: { spacing: { line: LINE[lang], after: 120 } },
         },
         heading1: {
-          run: { font: headFont, size: SIZE.h1[lang], bold: true, color: C.maroon },
+          run: { font: headFont, size: SIZE.h1[lang], bold: true, color: C.navy },
           paragraph: { spacing: { before: 0, after: 200 }, keepNext: true, outlineLevel: 0 },
         },
         heading2: {
-          run: { font: headFont, size: SIZE.h2[lang], bold: true, color: C.maroon },
+          run: { font: headFont, size: SIZE.h2[lang], bold: true, color: C.navy },
           paragraph: { spacing: { before: 260, after: 80 }, keepNext: true, outlineLevel: 1 },
         },
         heading3: {

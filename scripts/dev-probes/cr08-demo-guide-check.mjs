@@ -4,14 +4,14 @@ const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/n
 const q = async (sql, args = []) => (await db.execute({ sql, args })).rows;
 
 const emails = [
-  "admin@npc.qa",
-  "knowledge@npc.qa",
-  "hr@npc.qa",
-  "head.stats@npc.qa",
-  "analyst@npc.qa",
-  "reader@npc.qa",
-  "verifier@npc.qa",
-  "mohammed.alsulaiti@npc.qa",
+  "admin@enviroai.demo",
+  "knowledge@enviroai.demo",
+  "hr@enviroai.demo",
+  "head.stats@enviroai.demo",
+  "analyst@enviroai.demo",
+  "reader@enviroai.demo",
+  "verifier@enviroai.demo",
+  "mohammed.alqarni@enviroai.demo",
 ];
 console.log("accounts named in the guide:");
 for (const e of emails) {

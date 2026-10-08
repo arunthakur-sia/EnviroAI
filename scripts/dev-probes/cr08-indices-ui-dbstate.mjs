@@ -6,7 +6,7 @@
 //   node scripts/dev-probes/cr08-indices-ui-dbstate.mjs [--clean]
 import { createClient } from "@libsql/client";
 
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const q = async (sql, args = []) => (await db.execute({ sql, args })).rows;
 const clean = process.argv.includes("--clean");
 
@@ -39,7 +39,7 @@ const defs = (await q("select count(*) c from indices"))[0];
 console.log(`\nindices: ${totals.c} active of ${defs.c}`);
 
 // a drag left mid-run shows as a member count that does not match the seed
-const EXPECTED = { sdg: 18, national: 12, competitiveness: 8, gallup: 5, governance: 9, human: 6, environment: 2, peace: 3, digital: 5 };
+const EXPECTED = { sdg: 18, national: 11, environment: 8, climate: 7, water: 5, agriculture: 5, governance: 7, human: 2 };
 let drift = 0;
 for (const [code, want] of Object.entries(EXPECTED)) {
   const row = (await q(

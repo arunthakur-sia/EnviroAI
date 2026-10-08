@@ -12,7 +12,7 @@ import type { HandoverKind } from "@/server/services/handover";
 
 type Item = { id: string; kind: HandoverKind; nameEn: string; nameAr: string; avatarColor: string; lastWorkingDay: string | null; pct: number | null; items: number };
 
-const KEY = "sianexus.handover.banner.dismissed";
+const KEY = "enviroai.handover.banner.dismissed";
 
 export function HandoverBannerClient({ items }: { items: Item[] }) {
   const t = useTranslations("handover.banner");
@@ -50,7 +50,7 @@ export function HandoverBannerClient({ items }: { items: Item[] }) {
   return (
     <div className="flex flex-col gap-2" data-testid="handover-banner">
       {visible.map((h) => (
-        <div key={h.id} className="flex flex-wrap items-center gap-3 rounded-xl border border-gold-300 bg-gold-100/50 px-4 py-3" role="status">
+        <div key={h.id} className="flex flex-wrap items-center gap-3 rounded-xl border border-aqua-300 bg-aqua-100/50 px-4 py-3" role="status">
           <Avatar name={h.nameEn} color={h.avatarColor} size={32} />
           <p className="min-w-0 flex-1 text-sm text-ink-900">
             <span className="font-medium">{t("title")}</span>{" "}
@@ -62,7 +62,7 @@ export function HandoverBannerClient({ items }: { items: Item[] }) {
           </p>
           <Link
             href={`/handover/${h.id}` as never}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-maroon-700 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-maroon-900 focus-visible:outline-2 focus-visible:outline-gold-500"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-navy-700 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-navy-900 focus-visible:outline-2 focus-visible:outline-aqua-500"
             data-testid="handover-banner-open"
           >
             {t("open")} <ArrowRight className="size-3.5 flip-rtl" aria-hidden />
@@ -70,7 +70,7 @@ export function HandoverBannerClient({ items }: { items: Item[] }) {
           <button
             type="button"
             onClick={() => dismiss(h.id)}
-            className="cursor-pointer rounded-md p-1 text-ink-400 hover:bg-sand-100 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-gold-500"
+            className="cursor-pointer rounded-md p-1 text-ink-400 hover:bg-mist-100 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-aqua-500"
             aria-label={t("dismiss")}
             data-testid="handover-banner-dismiss"
           >

@@ -334,7 +334,7 @@ export async function recomputeHrRisks(): Promise<number> {
   const nowStr = nowIso();
   const userById = new Map(ctx.users.map((u) => [u.id, u]));
   const deptHead = new Map(ctx.departments.map((d) => [d.id, d.headUserId]));
-  const hrAdmin = ctx.users.find((u) => u.email === "hr@npc.qa") ?? null;
+  const hrAdmin = ctx.users.find((u) => u.email === "hr@enviroai.demo") ?? null;
 
   type NewRisk = {
     kind: string;
@@ -480,7 +480,7 @@ export async function recomputeHrRisks(): Promise<number> {
   }
 
   /* missing knowledge */
-  const nds3Nodes = nodes.filter((n) => n.nodeType === "initiative" || n.nodeType === "project");
+  const nes3Nodes = nodes.filter((n) => n.nodeType === "initiative" || n.nodeType === "project");
   const deliverablesByNode = new Map<string, number>();
   for (const d of deliverables) {
     deliverablesByNode.set(d.nodeId, (deliverablesByNode.get(d.nodeId) ?? 0) + 1);
@@ -507,7 +507,7 @@ export async function recomputeHrRisks(): Promise<number> {
     for (const c of childrenOf.get(id) ?? []) if (subtreeHasDocs(c)) return true;
     return false;
   };
-  for (const n of nds3Nodes) {
+  for (const n of nes3Nodes) {
     const started = n.startDate ? new Date(n.startDate) : null;
     const sixMonthsIn = started
       ? new Date(started.getTime() + 182 * 86400000)
@@ -568,7 +568,7 @@ export async function recomputeHrRisks(): Promise<number> {
     const cur = lastUpdate.get(u.nodeId);
     if (!cur || u.createdAt > cur) lastUpdate.set(u.nodeId, u.createdAt);
   }
-  for (const n of nds3Nodes) {
+  for (const n of nes3Nodes) {
     if (n.nodeType !== "project" || n.status === "completed" || n.status === "not_started") continue;
     const last = lastUpdate.get(n.id);
     const ref = last ?? n.updatedAt;

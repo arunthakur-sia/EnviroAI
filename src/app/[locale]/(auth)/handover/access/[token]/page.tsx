@@ -15,7 +15,7 @@ export default async function HandoverAccessPage({ params }: { params: Promise<{
   const workspace = await getTokenWorkspace(token);
   if (!workspace) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-sand-50 px-6">
+      <div className="flex min-h-screen items-center justify-center bg-mist-50 px-6">
         <div className="card w-full max-w-md px-8 py-10">
           <div className="mb-6 flex flex-col items-center gap-3 text-center">
             <SiaLogo variant="full" height={36} />

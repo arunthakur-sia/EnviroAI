@@ -172,7 +172,7 @@ export async function POST(req: NextRequest) {
       source: "human",
       createdAt: nowIso(),
     });
-    // NDS3 links with points per accepted link (cap 5 per item)
+    // NES links with points per accepted link (cap 5 per item)
     for (const link of item.outcome_links.slice(0, 5)) {
       const nodeId = nodeMap.get(link.code);
       if (!nodeId) continue;
@@ -189,7 +189,7 @@ export async function POST(req: NextRequest) {
       });
       const game = await record({
         userId: user.id,
-        type: "knowledge_linked_to_nds",
+        type: "knowledge_linked_to_nes",
         resourceType,
         resourceId: `${resourceId}:${link.code}`,
         meta: { departmentId: user.departmentId },
@@ -267,7 +267,7 @@ export async function POST(req: NextRequest) {
           id: newId(),
           lessonId: id,
           nodeId: lessonNodeIds[i],
-          nodeKind: "nds",
+          nodeKind: "nes",
           isPrimary: i === 0 ? 1 : 0,
           linkedBy: user.id,
           linkedAt: nowIso(),
@@ -402,7 +402,7 @@ export async function POST(req: NextRequest) {
         ownerUserId: user.id,
         languageOriginal: item.cleaned_ar && !item.cleaned_en ? "ar" : "en",
         status: "draft",
-        sourceOrigin: "npc",
+        sourceOrigin: "org",
         originalFilename: filename,
         mime,
         sizeBytes,
@@ -500,7 +500,7 @@ export async function POST(req: NextRequest) {
         ownerUserId: user.id,
         languageOriginal: "en",
         status: "published",
-        sourceOrigin: "npc",
+        sourceOrigin: "org",
         originalFilename: audioRef.filename,
         mime: audioRef.mime,
         sizeBytes: audioRef.sizeBytes,

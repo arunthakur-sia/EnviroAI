@@ -53,7 +53,7 @@ export default async function ReportDetailPage({
   }
   return (
     <Reveal>
-      {/* CR08 2.3: the Ask NPC launcher knows this report */}
+      {/* CR08 2.3: the Ask EnviroAI launcher knows this report */}
       <AskContextItem item={{ kind: "report", id, titleEn: detail.report.titleEn, titleAr: detail.report.titleAr, href: `/reports/${id}` }} />
       {/* CR08 8: the Knowledge of the Week control needs a server answer */}
       <ReportPage

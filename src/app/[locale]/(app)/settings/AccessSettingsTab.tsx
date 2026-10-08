@@ -59,7 +59,7 @@ export function AccessSettingsTab({
     const s = await settingsRes.json().catch(() => null);
     const inv = await invitesRes.json().catch(() => null);
     setDomains(
-      Array.isArray(s?.data?.allowedDomains) ? s.data.allowedDomains : ["npc.qa"]
+      Array.isArray(s?.data?.allowedDomains) ? s.data.allowedDomains : ["enviroai.demo"]
     );
     setInvites(inv?.data ?? []);
   }, []);
@@ -120,7 +120,7 @@ export function AccessSettingsTab({
         <p className="mb-3 text-xs text-ink-600">{t("domainsHint")}</p>
         <div className="flex flex-wrap items-center gap-1.5">
           {domains.map((d) => (
-            <Chip key={d} tone="sand" className="gap-1.5">
+            <Chip key={d} tone="mist" className="gap-1.5">
               <span dir="ltr">{d}</span>
               {domains.length > 1 ? (
                 <button
@@ -166,7 +166,7 @@ export function AccessSettingsTab({
               value={form.email}
               onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
               dir="ltr"
-              placeholder="name@npc.qa"
+              placeholder="name@enviroai.demo"
               className="w-56"
             />
           </div>
@@ -282,8 +282,8 @@ export function AccessSettingsTab({
           </Button>
         </div>
         {lastLinks.length ? (
-          <div className="mt-3 rounded-lg bg-gold-100 p-3" data-testid="invite-links">
-            <p className="mb-1.5 text-xs font-semibold text-maroon-900">{t("linksTitle")}</p>
+          <div className="mt-3 rounded-lg bg-aqua-100 p-3" data-testid="invite-links">
+            <p className="mb-1.5 text-xs font-semibold text-navy-900">{t("linksTitle")}</p>
             <ul className="flex flex-col gap-1 text-xs">
               {lastLinks.map((l) => (
                 <li key={l.email} className="flex items-center gap-2">
@@ -296,7 +296,7 @@ export function AccessSettingsTab({
                       void navigator.clipboard?.writeText(`${window.location.origin}/${locale}${l.link}`);
                       toast(t("linkCopied"), "success");
                     }}
-                    className="text-maroon-700 cursor-pointer"
+                    className="text-navy-700 cursor-pointer"
                     aria-label={tc("copy")}
                   >
                     <Copy className="size-3.5" />
@@ -312,7 +312,7 @@ export function AccessSettingsTab({
       <div className="card overflow-x-auto" data-testid="invite-list">
         <table className="w-full min-w-[640px] text-sm">
           <thead>
-            <tr className="bg-sand-50 text-xs font-semibold text-ink-600">
+            <tr className="bg-mist-50 text-xs font-semibold text-ink-600">
               <th className="px-4 py-2.5 text-start">{t("inviteEmail")}</th>
               <th className="px-4 py-2.5 text-start">{t("inviteName")}</th>
               <th className="px-4 py-2.5 text-start">{t("status")}</th>
@@ -322,7 +322,7 @@ export function AccessSettingsTab({
           </thead>
           <tbody>
             {invites.map((i) => (
-              <tr key={i.id} className="border-t border-sand-100">
+              <tr key={i.id} className="border-t border-mist-100">
                 <td className="px-4 py-2 text-xs" dir="ltr">{i.email}</td>
                 <td className="px-4 py-2 text-xs">{i.nameEn ?? "-"}</td>
                 <td className="px-4 py-2">
@@ -331,7 +331,7 @@ export function AccessSettingsTab({
                       i.status === "accepted"
                         ? "ok"
                         : i.status === "pending"
-                          ? "sand"
+                          ? "mist"
                           : "ghost"
                     }
                   >
@@ -346,7 +346,7 @@ export function AccessSettingsTab({
                         void navigator.clipboard?.writeText(`${window.location.origin}/${locale}${i.link}`);
                         toast(t("linkCopied"), "success");
                       }}
-                      className="me-2 text-xs font-medium text-maroon-700 cursor-pointer"
+                      className="me-2 text-xs font-medium text-navy-700 cursor-pointer"
                     >
                       {t("copyLink")}
                     </button>

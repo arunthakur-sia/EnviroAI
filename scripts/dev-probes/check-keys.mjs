@@ -1,7 +1,7 @@
 // Prints only boolean facts about key formats. Never prints key material.
 import { readFileSync } from "node:fs";
 const env = {};
-for (const l of readFileSync("C:/npckms/.env.local", "utf8").split(/\r?\n/)) {
+for (const l of readFileSync("C:/enviroai/.env.local", "utf8").split(/\r?\n/)) {
   const m = /^([A-Z_]+)=(.*)$/.exec(l);
   if (m) env[m[1]] = m[2];
 }

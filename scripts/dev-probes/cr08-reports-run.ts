@@ -89,9 +89,9 @@ async function main() {
   const { upsertReportTypes, exampleScopeFor, examplePeriodFor } = await import("../cr08-reports-seed");
 
   await upsertReportTypes();
-  const [adminRow] = await db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.email, "admin@npc.qa")).limit(1);
+  const [adminRow] = await db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.email, "admin@enviroai.demo")).limit(1);
   const admin = adminRow ? await getUserById(adminRow.id) : null;
-  if (!admin) throw new Error("admin@npc.qa missing");
+  if (!admin) throw new Error("admin@enviroai.demo missing");
 
   const problems: Problem[] = [];
   const created: string[] = [];

@@ -1,4 +1,4 @@
-// Ask SiaNexus: streams the grounded answer as SSE events.
+// Ask EnviroAI: streams the grounded answer as SSE events.
 // Events: sources, delta, final (see src/server/ai/ask.ts).
 import { NextRequest } from "next/server";
 import { z } from "zod";

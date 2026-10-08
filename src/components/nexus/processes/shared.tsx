@@ -25,13 +25,13 @@ export const CLOTH_FOR: Record<PolicyTab, string> = {
   service: "report",
 };
 
-export const SCOPE_TONE: Record<string, "gulf" | "sand" | "warn"> = {
-  all_staff: "gulf",
-  unit_only: "sand",
+export const SCOPE_TONE: Record<string, "teal" | "mist" | "warn"> = {
+  all_staff: "teal",
+  unit_only: "mist",
   restricted: "warn",
 };
 
-/** The display face, Fraunces in English and Noto Kufi in Arabic. */
+/** The display face, Sora in English and Noto Kufi in Arabic. */
 export function displayFont(locale: string): string {
   return locale === "ar" ? "var(--font-kufi)" : "var(--font-display)";
 }
@@ -63,7 +63,7 @@ export function SubHeading({ children, className }: { children: React.ReactNode;
 
 export function LevelChip({ level }: { level: ProcessLevel }) {
   const t = useTranslations("processes");
-  return <Chip tone={level === 0 ? "maroon" : level === 1 ? "gulf" : "sand"}>{t(`levelName.${level}` as never)}</Chip>;
+  return <Chip tone={level === 0 ? "navy" : level === 1 ? "teal" : "mist"}>{t(`levelName.${level}` as never)}</Chip>;
 }
 
 /** A unit as a small chip; a link to the Organisation unless it sits inside a button. */
@@ -79,8 +79,8 @@ export function UnitChip({
   const locale = useLocale();
   const name = bi(locale, unit.nameEn, unit.nameAr);
   const classes = cn(
-    "inline-flex max-w-full items-center gap-1 rounded-md bg-white px-1.5 py-0.5 text-[11px] font-medium leading-4 text-maroon-700 shadow-sm",
-    link && "link-draw hover:text-maroon-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500",
+    "inline-flex max-w-full items-center gap-1 rounded-md bg-white px-1.5 py-0.5 text-[11px] font-medium leading-4 text-navy-700 shadow-sm",
+    link && "link-draw hover:text-navy-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500",
     className
   );
   const body = (

@@ -1,9 +1,9 @@
 "use client";
-// CR08 2.3: the Ask NPC panel. Slides in from the end side (480px, full width
+// CR08 2.3: the Ask EnviroAI panel. Slides in from the end side (480px, full width
 // under 640px) over the page content behind a scrim that leaves the rail
 // usable. It stays mounted in the shell and its thread lives in panel-store,
 // so route changes, Escape and Ctrl+K never lose the conversation. Contents:
-// the header (Ask NPC, Expand, close), the current page item as a removable
+// the header (Ask EnviroAI, Expand, close), the current page item as a removable
 // chip, three first suggestions about that item, the same answer workspace as
 // /ask/c/[id] in its compact layout, recent conversations while no thread is
 // open, and the composer. Sending goes through the analyst stream exactly as
@@ -301,14 +301,14 @@ export function AskPanel() {
         data-testid="ask-panel"
         data-state={open ? "open" : "closed"}
         data-conversation-id={conversationId ?? ""}
-        className="pointer-events-auto absolute inset-y-0 end-0 z-10 flex w-full flex-col bg-white shadow-[var(--shadow-pop)] sm:w-[480px] sm:border-s sm:border-sand-200"
+        className="pointer-events-auto absolute inset-y-0 end-0 z-10 flex w-full flex-col bg-white shadow-[var(--shadow-pop)] sm:w-[480px] sm:border-s sm:border-mist-200"
         initial={false}
         animate={{ x: open ? "0%" : closedX }}
         transition={reduced ? { duration: 0 } : { duration: 0.24, ease: EASE }}
       >
         {/* header */}
-        <div className="flex items-center gap-2 border-b border-sand-100 px-4 py-3">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-maroon-700 text-gold-300">
+        <div className="flex items-center gap-2 border-b border-mist-100 px-4 py-3">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-navy-700 text-aqua-300">
             <Sparkles className="size-4" aria-hidden />
           </span>
           <div className="min-w-0 flex-1">
@@ -325,7 +325,7 @@ export function AskPanel() {
               onClick={() => askPanel.newConversation()}
               aria-label={t("newConversation")}
               title={t("newConversation")}
-              className="rounded-lg p-2 text-ink-600 transition-colors hover:bg-sand-100 hover:text-ink-900 cursor-pointer"
+              className="rounded-lg p-2 text-ink-600 transition-colors hover:bg-mist-100 hover:text-ink-900 cursor-pointer"
               data-testid="ask-new"
             >
               <Plus className="size-4" aria-hidden />
@@ -335,7 +335,7 @@ export function AskPanel() {
             type="button"
             onClick={expand}
             aria-label={t("expandAria")}
-            className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-sand-300 px-2.5 text-xs font-medium text-ink-900 transition-colors hover:border-maroon-300 hover:text-maroon-700 cursor-pointer"
+            className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-mist-300 px-2.5 text-xs font-medium text-ink-900 transition-colors hover:border-navy-300 hover:text-navy-700 cursor-pointer"
             data-testid="ask-expand"
           >
             <Maximize2 className="size-3.5" aria-hidden /> {t("expand")}
@@ -344,7 +344,7 @@ export function AskPanel() {
             type="button"
             onClick={() => askPanel.close()}
             aria-label={t("close")}
-            className="rounded-lg p-2 text-ink-600 transition-colors hover:bg-sand-100 hover:text-ink-900 cursor-pointer"
+            className="rounded-lg p-2 text-ink-600 transition-colors hover:bg-mist-100 hover:text-ink-900 cursor-pointer"
             data-testid="ask-close"
           >
             <X className="size-4" aria-hidden />
@@ -354,12 +354,12 @@ export function AskPanel() {
         {/* the page item, removable */}
         {attached && AttachedIcon ? (
           <div
-            className="flex items-center gap-2 border-b border-sand-100 bg-sand-50 px-4 py-2"
+            className="flex items-center gap-2 border-b border-mist-100 bg-mist-50 px-4 py-2"
             data-testid="ask-context-chip"
           >
             <Eyebrow className="shrink-0 text-ink-600">{t("askingAbout")}</Eyebrow>
-            <span className="inline-flex min-w-0 items-center gap-1.5 rounded-lg border border-maroon-100 bg-white py-1 pe-1 ps-2 text-xs text-maroon-900">
-              <AttachedIcon className="size-3.5 shrink-0 text-maroon-500" />
+            <span className="inline-flex min-w-0 items-center gap-1.5 rounded-lg border border-navy-100 bg-white py-1 pe-1 ps-2 text-xs text-navy-900">
+              <AttachedIcon className="size-3.5 shrink-0 text-navy-500" />
               <span className="truncate">
                 {attached.code ? <span className="tnum font-semibold">{attached.code} </span> : null}
                 {attachedTitle}
@@ -368,7 +368,7 @@ export function AskPanel() {
                 type="button"
                 onClick={() => askPanel.detach(attached)}
                 aria-label={t("removeContext", { title: attachedTitle })}
-                className="rounded p-0.5 text-ink-400 transition-colors hover:bg-maroon-100 hover:text-maroon-900 cursor-pointer"
+                className="rounded p-0.5 text-ink-400 transition-colors hover:bg-navy-100 hover:text-navy-900 cursor-pointer"
                 data-testid="ask-context-remove"
               >
                 <X className="size-3" aria-hidden />
@@ -394,7 +394,7 @@ export function AskPanel() {
                         key={i}
                         type="button"
                         onClick={() => send(s)}
-                        className="rounded-xl border border-sand-200 bg-white px-3 py-2 text-start text-sm leading-snug text-ink-900 transition-colors hover:border-maroon-300 hover:bg-maroon-50 hover:text-maroon-900 cursor-pointer"
+                        className="rounded-xl border border-mist-200 bg-white px-3 py-2 text-start text-sm leading-snug text-ink-900 transition-colors hover:border-navy-300 hover:bg-navy-50 hover:text-navy-900 cursor-pointer"
                       >
                         {s}
                       </button>
@@ -428,19 +428,19 @@ export function AskPanel() {
                     </button>
                   </div>
                 ) : recent.status === "ready" && recent.rows.length ? (
-                  <div className="card divide-y divide-sand-100" data-testid="ask-recent">
+                  <div className="card divide-y divide-mist-100" data-testid="ask-recent">
                     {recent.rows.slice(0, 8).map((row) => (
                       <button
                         key={row.id}
                         type="button"
                         onClick={() => openConversation(row)}
                         disabled={Boolean(opening)}
-                        className="flex w-full items-center gap-3 px-3.5 py-2.5 text-start transition-colors first:rounded-t-[var(--radius-card)] last:rounded-b-[var(--radius-card)] hover:bg-maroon-50 disabled:opacity-60 cursor-pointer"
+                        className="flex w-full items-center gap-3 px-3.5 py-2.5 text-start transition-colors first:rounded-t-[var(--radius-card)] last:rounded-b-[var(--radius-card)] hover:bg-navy-50 disabled:opacity-60 cursor-pointer"
                         data-testid="ask-recent-row"
                       >
                         <MessageCircleQuestion
                           className={cn(
-                            "size-4 shrink-0 text-maroon-500",
+                            "size-4 shrink-0 text-navy-500",
                             opening === row.id && "animate-pulse"
                           )}
                           aria-hidden
@@ -475,7 +475,7 @@ export function AskPanel() {
                 turn.role === "user" ? (
                   <div key={i} className="flex justify-end">
                     <p
-                      className="max-w-[88%] rounded-2xl rounded-ee-md bg-maroon-100 px-3.5 py-2 text-[15px] leading-relaxed text-maroon-900"
+                      className="max-w-[88%] rounded-2xl rounded-ee-md bg-navy-100 px-3.5 py-2 text-[15px] leading-relaxed text-navy-900"
                       data-testid="ask-turn-user"
                     >
                       {turn.content}
@@ -484,7 +484,7 @@ export function AskPanel() {
                 ) : (
                   <div key={i} className="card p-4" data-testid="ask-turn-assistant">
                     <Eyebrow className="mb-2 flex items-center gap-1.5">
-                      <Sparkles className="size-3 text-gold-500" aria-hidden /> {t("byline")}
+                      <Sparkles className="size-3 text-aqua-500" aria-hidden /> {t("byline")}
                     </Eyebrow>
                     <AnalystAnswer
                       compact
@@ -498,7 +498,7 @@ export function AskPanel() {
               {liveTurn ? (
                 <div className="card p-4" data-testid="ask-turn-live">
                   <Eyebrow className="mb-2 flex items-center gap-1.5">
-                    <Sparkles className="size-3 text-gold-500" aria-hidden /> {t("byline")}
+                    <Sparkles className="size-3 text-aqua-500" aria-hidden /> {t("byline")}
                   </Eyebrow>
                   <AnalystAnswer compact turn={liveTurn} streaming chips={analyst.chips} />
                 </div>
@@ -530,7 +530,7 @@ export function AskPanel() {
             e.preventDefault();
             send(draft);
           }}
-          className="border-t border-sand-100 bg-white p-3"
+          className="border-t border-mist-100 bg-white p-3"
         >
           <div className="relative">
             <Textarea
@@ -552,7 +552,7 @@ export function AskPanel() {
             <button
               type="submit"
               disabled={analyst.streaming || !draft.trim()}
-              className="absolute bottom-2 end-2 rounded-lg bg-maroon-700 p-2 text-white transition-colors hover:bg-maroon-900 disabled:opacity-40 cursor-pointer"
+              className="absolute bottom-2 end-2 rounded-lg bg-navy-700 p-2 text-white transition-colors hover:bg-navy-900 disabled:opacity-40 cursor-pointer"
               aria-label={t("send")}
               data-testid="ask-send"
             >
@@ -561,7 +561,7 @@ export function AskPanel() {
           </div>
           <p className="mt-2 flex items-center justify-between gap-3 text-[11px] leading-snug text-ink-600">
             <span>{t("disclaimer")}</span>
-            <kbd className="shrink-0 rounded border border-sand-300 bg-sand-50 px-1.5 py-0.5 font-sans text-[11px] text-ink-600 tnum">
+            <kbd className="shrink-0 rounded border border-mist-300 bg-mist-50 px-1.5 py-0.5 font-sans text-[11px] text-ink-600 tnum">
               {shortcut}
             </kbd>
           </p>

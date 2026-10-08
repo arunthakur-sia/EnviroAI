@@ -1,6 +1,6 @@
-// CR08 4: index group tools for Ask NPC. get_index_groups lists the nine
+// CR08 4: index group tools for Ask EnviroAI. get_index_groups lists the nine
 // groups with their counts and summary strips, query_index_group lists one
-// group's members with Qatar's latest values, get_sdg_scores returns the 17
+// group's members with Saudi Arabia's latest values, get_sdg_scores returns the 17
 // goal scores and the SDG Index headline. Every line registers a source the
 // way tools.ts's get_index does (resource_type "index", resource_id = code),
 // groups register as "index_group".
@@ -12,9 +12,9 @@ import { SDG_GOALS } from "@/lib/sdg-colours";
 const PORTAL = "indices";
 
 function registerIndex(ctx: ToolContext, c: BoardCard): number {
-  const excerpt = c.qatar
-    ? `Qatar ${c.qatar.year}: ${c.qatar.rank != null ? `rank ${c.qatar.rank}${c.qatar.total ? ` of ${c.qatar.total}` : ""}` : ""}${
-        c.qatar.score != null ? ` score ${c.qatar.score}` : ""
+  const excerpt = c.home
+    ? `Saudi Arabia ${c.home.year}: ${c.home.rank != null ? `rank ${c.home.rank}${c.home.total ? ` of ${c.home.total}` : ""}` : ""}${
+        c.home.score != null ? ` score ${c.home.score}` : ""
       }`.trim()
     : "no published value";
   return ctx.state.addSource({
@@ -39,10 +39,10 @@ function registerGroup(ctx: ToolContext, g: BoardGroup): number {
 }
 
 function valueLine(c: BoardCard): string {
-  if (!c.qatar) return "no published value";
-  const parts: string[] = [`${c.qatar.year}`];
-  if (c.qatar.rank != null) parts.push(`#${c.qatar.rank}${c.qatar.total ? `/${c.qatar.total}` : ""}`);
-  if (c.qatar.score != null) parts.push(`score ${c.qatar.score}${c.statistics?.unit ? ` ${c.statistics.unit}` : ""}`);
+  if (!c.home) return "no published value";
+  const parts: string[] = [`${c.home.year}`];
+  if (c.home.rank != null) parts.push(`#${c.home.rank}${c.home.total ? `/${c.home.total}` : ""}`);
+  if (c.home.score != null) parts.push(`score ${c.home.score}${c.statistics?.unit ? ` ${c.statistics.unit}` : ""}`);
   if (c.change != null && c.change !== 0) {
     parts.push(
       c.changeKind === "rank"
@@ -58,13 +58,13 @@ function valueLine(c: BoardCard): string {
       }`
     );
   }
-  if (c.forecastDirection) parts.push(`SiaNexus 3y forecast direction ${c.forecastDirection}`);
+  if (c.forecastDirection) parts.push(`EnviroAI 3y forecast direction ${c.forecastDirection}`);
   else if (!c.forecastEnabled) parts.push("forecast off");
   return parts.join(", ");
 }
 
 function summaryLine(g: BoardGroup): string {
-  return `${g.cards.length} indices: ${g.summary.improving} improving, ${g.summary.stable} stable, ${g.summary.declining} declining, Qatar leads the GCC in ${g.summary.gccLead}`;
+  return `${g.cards.length} indices: ${g.summary.improving} improving, ${g.summary.stable} stable, ${g.summary.declining} declining, Saudi Arabia leads the GCC in ${g.summary.gccLead}`;
 }
 
 function findGroup(groups: BoardGroup[], needle: string): BoardGroup | null {
@@ -93,7 +93,7 @@ async function toolGetIndexGroups(ctx: ToolContext): Promise<string> {
   ];
   if (board.sdgHeadline) {
     head.push(
-      `SDG Index headline (${board.sdgHeadline.year}): Qatar score ${board.sdgHeadline.score ?? "-"}${
+      `SDG Index headline (${board.sdgHeadline.year}): Saudi Arabia score ${board.sdgHeadline.score ?? "-"}${
         board.sdgHeadline.rank != null ? `, rank ${board.sdgHeadline.rank}${board.sdgHeadline.total ? ` of ${board.sdgHeadline.total}` : ""}` : ""
       }.`
     );
@@ -118,12 +118,12 @@ async function toolQueryIndexGroup(
   if (sort === "change") cards.sort((a, b) => (b.change ?? -999) - (a.change ?? -999));
   else if (sort === "name") cards.sort((a, b) => a.nameEn.localeCompare(b.nameEn));
   else if (sort === "goal") cards.sort((a, b) => (a.sdgGoal ?? 99) - (b.sdgGoal ?? 99));
-  else cards.sort((a, b) => (a.qatar?.rank ?? 9999) - (b.qatar?.rank ?? 9999));
+  else cards.sort((a, b) => (a.home?.rank ?? 9999) - (b.home?.rank ?? 9999));
   if (!cards.length) return `[${gn}] Group ${group.nameEn} has no indices yet.`;
   const lines = cards.map((c) => {
     const n = registerIndex(ctx, c);
     const goal = c.sdgGoal != null ? `SDG ${c.sdgGoal} ` : "";
-    return `[${n}] ${goal}${c.code}: ${c.nameEn} (${c.statistics ? "Statistics Hub" : c.publisher ?? "-"}) Qatar ${valueLine(c)}${
+    return `[${n}] ${goal}${c.code}: ${c.nameEn} (${c.statistics ? "Statistics Hub" : c.publisher ?? "-"}) Saudi Arabia ${valueLine(c)}${
       c.groupCodes.length > 1 ? `; also in ${c.groupCodes.filter((x) => x !== group.code).join(", ")}` : ""
     }`;
   });
@@ -149,13 +149,13 @@ async function toolGetSdgScores(ctx: ToolContext): Promise<string> {
       resource_id: board.sdgHeadline.code,
       title: "SDG Index (Sustainable Development Report, SDSN)",
       page: null,
-      excerpt: `Qatar ${board.sdgHeadline.year}: score ${board.sdgHeadline.score ?? "-"}${
+      excerpt: `Saudi Arabia ${board.sdgHeadline.year}: score ${board.sdgHeadline.score ?? "-"}${
         board.sdgHeadline.rank != null ? `, rank ${board.sdgHeadline.rank}${board.sdgHeadline.total ? ` of ${board.sdgHeadline.total}` : ""}` : ""
       }`,
       verified: true,
     });
     lines.push(
-      `[${n}] SDG Index ${board.sdgHeadline.year}: Qatar overall score ${board.sdgHeadline.score ?? "-"} of 100${
+      `[${n}] SDG Index ${board.sdgHeadline.year}: Saudi Arabia overall score ${board.sdgHeadline.score ?? "-"} of 100${
         board.sdgHeadline.rank != null ? `, rank ${board.sdgHeadline.rank}${board.sdgHeadline.total ? ` of ${board.sdgHeadline.total}` : ""}` : ""
       }.${board.sdgHeadline.sourceUrl ? ` Source: ${board.sdgHeadline.sourceUrl}` : ""}`
     );
@@ -163,20 +163,20 @@ async function toolGetSdgScores(ctx: ToolContext): Promise<string> {
   for (const c of goals) {
     const n = registerIndex(ctx, c);
     const g = SDG_GOALS.find((x) => x.n === c.sdgGoal);
-    lines.push(`[${n}] Goal ${c.sdgGoal} ${g?.shortEn ?? c.nameEn}: Qatar ${valueLine(c)}`);
+    lines.push(`[${n}] Goal ${c.sdgGoal} ${g?.shortEn ?? c.nameEn}: Saudi Arabia ${valueLine(c)}`);
   }
-  const scored = goals.filter((c) => c.qatar?.score != null);
+  const scored = goals.filter((c) => c.home?.score != null);
   if (scored.length) {
-    const best = [...scored].sort((a, b) => (b.qatar!.score ?? 0) - (a.qatar!.score ?? 0));
+    const best = [...scored].sort((a, b) => (b.home!.score ?? 0) - (a.home!.score ?? 0));
     lines.push(
-      `Strongest goals: ${best.slice(0, 3).map((c) => `SDG ${c.sdgGoal} (${c.qatar!.score})`).join(", ")}. Weakest: ${best
+      `Strongest goals: ${best.slice(0, 3).map((c) => `SDG ${c.sdgGoal} (${c.home!.score})`).join(", ")}. Weakest: ${best
         .slice(-3)
         .reverse()
-        .map((c) => `SDG ${c.sdgGoal} (${c.qatar!.score})`)
+        .map((c) => `SDG ${c.sdgGoal} (${c.home!.score})`)
         .join(", ")}.`
     );
   }
-  lines.push("Goal scores are published figures from the Sustainable Development Report; forecast directions are SiaNexus model outputs.");
+  lines.push("Goal scores are published figures from the Sustainable Development Report; forecast directions are EnviroAI model outputs.");
   return lines.join("\n");
 }
 
@@ -191,7 +191,7 @@ const mod: ToolModule = {
     {
       name: "query_index_group",
       description:
-        "The members of one index group with Qatar's latest published value, change, GCC standing, target and forecast direction. Pass the group code (sdg, national, competitiveness, gallup, governance, human, environment, peace, digital) or its name.",
+        "The members of one index group with Saudi Arabia's latest published value, change, GCC standing, target and forecast direction. Pass the group code (sdg, national, competitiveness, gallup, governance, human, environment, peace, digital) or its name.",
       input_schema: {
         type: "object",
         properties: {
@@ -204,7 +204,7 @@ const mod: ToolModule = {
     {
       name: "get_sdg_scores",
       description:
-        "Qatar's 17 Sustainable Development Goal scores from the Sustainable Development Report with the overall SDG Index score and rank, strongest and weakest goals.",
+        "Saudi Arabia's 17 Sustainable Development Goal scores from the Sustainable Development Report with the overall SDG Index score and rank, strongest and weakest goals.",
       input_schema: { type: "object", properties: {} },
     },
   ],

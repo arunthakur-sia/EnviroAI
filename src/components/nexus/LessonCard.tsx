@@ -30,11 +30,11 @@ export type LessonCardData = {
 };
 
 /* CR02 3.1: one tone per category, consistent everywhere. */
-export const CATEGORY_TONES: Record<string, "maroon" | "gulf" | "gold" | "sand"> = {
-  delivery: "maroon",
-  external: "gulf",
-  expert: "gold",
-  institutional: "sand",
+export const CATEGORY_TONES: Record<string, "navy" | "teal" | "aqua" | "mist"> = {
+  delivery: "navy",
+  external: "teal",
+  expert: "aqua",
+  institutional: "mist",
 };
 
 export function LessonCard({
@@ -52,20 +52,20 @@ export function LessonCard({
   const category = lesson.category ?? null;
   /* CR03 4.3: the category chip fills with its colour on hover */
   const chipFill: Record<string, string> = {
-    delivery: "group-hover/lesson:bg-maroon-700 group-hover/lesson:text-white",
-    external: "group-hover/lesson:bg-gulf-600 group-hover/lesson:text-white",
-    expert: "group-hover/lesson:bg-gold-500 group-hover/lesson:text-white",
-    institutional: "group-hover/lesson:bg-sand-300 group-hover/lesson:text-ink-900",
+    delivery: "group-hover/lesson:bg-navy-700 group-hover/lesson:text-white",
+    external: "group-hover/lesson:bg-teal-600 group-hover/lesson:text-white",
+    expert: "group-hover/lesson:bg-aqua-500 group-hover/lesson:text-white",
+    institutional: "group-hover/lesson:bg-mist-300 group-hover/lesson:text-ink-900",
   };
   return (
     <Link href={`/lessons/${lesson.id}` as never} className="group/lesson card card-hover flex h-full flex-col gap-2 p-4">
       <div className="flex items-center gap-2">
-        <Lightbulb className="size-4 shrink-0 text-gold-500" />
+        <Lightbulb className="size-4 shrink-0 text-aqua-500" />
         <p className="line-clamp-2 flex-1 font-medium leading-snug text-ink-900">
           {bi(locale, lesson.titleEn, lesson.titleAr)}
         </p>
         {lesson.status === "verified" ? (
-          <BadgeCheck className="size-4 shrink-0 text-gulf-600" />
+          <BadgeCheck className="size-4 shrink-0 text-teal-600" />
         ) : null}
       </div>
       {(lesson.learningEn || lesson.learningAr) ? (
@@ -77,7 +77,7 @@ export function LessonCard({
             <p className="text-sm leading-relaxed text-ink-600">
               {long ? full.slice(0, 240).trimEnd() + "…" : full}
               {long ? (
-                <span className="ms-1.5 whitespace-nowrap font-medium text-maroon-700">
+                <span className="ms-1.5 whitespace-nowrap font-medium text-navy-700">
                   {t("readMore")}
                 </span>
               ) : null}
@@ -88,18 +88,18 @@ export function LessonCard({
       {/* the clamp sits on an inner span: on the padded box it cuts at the
           padding edge and leaves a sliver of the third line showing */}
       {(lesson.recommendationEn || lesson.recommendationAr) ? (
-        <p className="rounded-lg bg-gulf-100/50 px-2.5 py-1.5 text-xs leading-relaxed text-gulf-600">
+        <p className="rounded-lg bg-teal-100/50 px-2.5 py-1.5 text-xs leading-relaxed text-teal-600">
           <span className="line-clamp-2 block">
             {bi(locale, lesson.recommendationEn ?? "", lesson.recommendationAr ?? "")}
           </span>
         </p>
       ) : null}
       <div className="mt-auto flex flex-wrap items-center gap-2 pt-1">
-        {/* CR08 8: the gold ribbon on this week's pick */}
+        {/* CR08 8: the aqua ribbon on this week's pick */}
         <KowRibbon resourceType="lesson" resourceId={lesson.id} active={kow ?? lesson.kow} />
         {showCategory && category ? (
           <Chip
-            tone={CATEGORY_TONES[category] ?? "sand"}
+            tone={CATEGORY_TONES[category] ?? "mist"}
             className={`transition-colors duration-200 ${chipFill[category] ?? ""}`}
           >
             {t(`categories.${category}` as never)}
@@ -108,12 +108,12 @@ export function LessonCard({
         {/* CR03 4.3: the outcome dot pulses once on hover */}
         <span
           aria-hidden
-          className="inline-block size-2 rounded-full bg-maroon-500 group-hover/lesson:[animation:dot-once_600ms_ease-out]"
+          className="inline-block size-2 rounded-full bg-navy-500 group-hover/lesson:[animation:dot-once_600ms_ease-out]"
         />
         {lesson.nodeCode ? (
-          <Chip tone="sand">{lesson.nodeCode}</Chip>
+          <Chip tone="mist">{lesson.nodeCode}</Chip>
         ) : lesson.outcomeNameEn ? (
-          <Chip tone="maroon">{bi(locale, lesson.outcomeNameEn, lesson.outcomeNameAr ?? "")}</Chip>
+          <Chip tone="navy">{bi(locale, lesson.outcomeNameEn, lesson.outcomeNameAr ?? "")}</Chip>
         ) : null}
         {lesson.reuseCount ? (
           <span className="ms-auto flex items-center gap-1 text-[11px] text-ink-400 tnum">

@@ -48,7 +48,7 @@ export type BoardCard = {
   higherIsBetter: boolean;
   scale: string;
   latestYear: number | null;
-  qatar: { year: number; rank: number | null; score: number | null; total: number | null } | null;
+  home: { year: number; rank: number | null; score: number | null; total: number | null } | null;
   previous: { year: number; rank: number | null; score: number | null } | null;
   /** positive = improved (rank moved toward 1, or score moved the good way) */
   change: number | null;
@@ -129,9 +129,9 @@ export type IndexGroupRow = {
   memberIds: string[];
 };
 
-const GCC = ["QAT", "SAU", "ARE", "KWT", "BHR", "OMN"];
+const GCC = ["SAU", "ARE", "KWT", "BHR", "OMN"];
 
-/** The record that carries Qatar's overall SDG Index score and rank. */
+/** The record that carries Saudi Arabia's overall SDG Index score and rank. */
 const SDG_INDEX_CODES = ["sdg_index", "sdg-index", "sdgindex", "sdg"];
 
 function gccStanding(
@@ -140,7 +140,7 @@ function gccStanding(
   higherIsBetter: boolean
 ): { position: number | null; count: number; leader: { country: string; rank: number | null; score: number | null } | null } {
   const rows = GCC.map((c) => {
-    // the country's observation for the index's latest Qatar year, or its own
+    // the country's observation for the index's latest Saudi Arabia year, or its own
     // latest within 2 years so biennial editions still compare
     const mine = obs
       .filter((o) => o.country === c && o.year <= year && o.year >= year - 2)
@@ -154,7 +154,7 @@ function gccStanding(
       return higherIsBetter ? b.score - a.score : a.score - b.score;
     return a.rank != null ? -1 : 1;
   });
-  const position = sorted.findIndex((r) => r.country === "QAT");
+  const position = sorted.findIndex((r) => r.country === "SAU");
   return {
     position: position === -1 ? null : position + 1,
     count: rows.length,
@@ -373,7 +373,7 @@ export async function getIndicesBoard(_user: CurrentUser): Promise<{
       ? statById.get(idx.linkedStatisticsIndicatorId) ?? null
       : null;
     // a linked series stands in for observations when none were published
-    if (stat && !obs.some((o) => o.country === "QAT")) {
+    if (stat && !obs.some((o) => o.country === "SAU")) {
       const points = annualise(
         statValues
           .filter((v) => v.indicatorId === stat.id)
@@ -381,7 +381,7 @@ export async function getIndicesBoard(_user: CurrentUser): Promise<{
       );
       obs = obs.concat(
         points.map((p) => ({
-          country: "QAT",
+          country: "SAU",
           year: p.year,
           rank: null,
           score: p.value,
@@ -391,11 +391,11 @@ export async function getIndicesBoard(_user: CurrentUser): Promise<{
         }))
       );
     }
-    const qatSeries = obs
-      .filter((o) => o.country === "QAT")
+    const homeSeries = obs
+      .filter((o) => o.country === "SAU")
       .sort((a, b) => a.year - b.year);
-    const latest = qatSeries[qatSeries.length - 1] ?? null;
-    const previous = qatSeries[qatSeries.length - 2] ?? null;
+    const latest = homeSeries[homeSeries.length - 1] ?? null;
+    const previous = homeSeries[homeSeries.length - 2] ?? null;
     let change: number | null = null;
     let changeKind: "rank" | "score" | null = null;
     if (latest && previous) {
@@ -411,7 +411,7 @@ export async function getIndicesBoard(_user: CurrentUser): Promise<{
     const standing = latest
       ? gccStanding(obs, latest.year, idx.higherIsBetter === 1)
       : { position: null, count: 0, leader: null };
-    const sparkline = qatSeries
+    const sparkline = homeSeries
       .filter((o) => o.rank != null && (latest ? o.year > latest.year - 11 : true))
       .map((o) => ({ year: o.year, rank: o.rank as number }));
     const f3 = forecasts.find((f) => f.indexId === idx.id && f.horizonYears === 3);
@@ -450,7 +450,7 @@ export async function getIndicesBoard(_user: CurrentUser): Promise<{
       higherIsBetter: idx.higherIsBetter === 1,
       scale: idx.scale,
       latestYear: idx.latestYear,
-      qatar: latest
+      home: latest
         ? { year: latest.year, rank: latest.rank, score: latest.score, total: latest.total }
         : null,
       previous: previous
@@ -484,8 +484,8 @@ export async function getIndicesBoard(_user: CurrentUser): Promise<{
     };
   });
 
-  // ranked by Qatar's latest rank (unranked last)
-  cards.sort((a, b) => (a.qatar?.rank ?? 9999) - (b.qatar?.rank ?? 9999));
+  // ranked by Saudi Arabia's latest rank (unranked last)
+  cards.sort((a, b) => (a.home?.rank ?? 9999) - (b.home?.rank ?? 9999));
   const cardById = new Map(cards.map((c) => [c.id, c]));
 
   /* the SDG headline lives on the SDG Index record, which is never a card
@@ -494,7 +494,7 @@ export async function getIndicesBoard(_user: CurrentUser): Promise<{
   const sdgIndex = indices.find((i) => SDG_INDEX_CODES.includes(i.code) && i.sdgGoal == null);
   if (sdgIndex) {
     const latest = allObs
-      .filter((o) => o.indexId === sdgIndex.id && o.countryCode === "QAT")
+      .filter((o) => o.indexId === sdgIndex.id && o.countryCode === "SAU")
       .sort((a, b) => b.year - a.year)[0];
     if (latest) {
       sdgHeadline = {
@@ -518,7 +518,7 @@ export async function getIndicesBoard(_user: CurrentUser): Promise<{
       .sort((a, b) => {
         if (a.sort !== b.sort) return a.sort - b.sort;
         if (g.code === "sdg") return (a.card!.sdgGoal ?? 99) - (b.card!.sdgGoal ?? 99);
-        return (a.card!.qatar?.rank ?? 9999) - (b.card!.qatar?.rank ?? 9999);
+        return (a.card!.home?.rank ?? 9999) - (b.card!.home?.rank ?? 9999);
       })
       .map((x) => x.card!);
     return {
@@ -571,7 +571,7 @@ export async function getIndicesBoard(_user: CurrentUser): Promise<{
       code: idx.code,
       nameEn: idx.nameEn,
       nameAr: idx.nameAr,
-      latest: card.qatar,
+      latest: card.home,
       horizons: rows,
       confidence,
     };

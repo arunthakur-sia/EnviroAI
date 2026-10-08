@@ -29,7 +29,7 @@ export function ForecastSummary({ rows }: { rows: BoardData["forecastTable"] }) 
       <div className="card overflow-x-auto">
         <div role="table" aria-label={t("forecastSummary")} className="min-w-[860px] text-sm">
           <div role="rowgroup">
-            <div role="row" className={cn("grid border-b border-sand-100", COLS)}>
+            <div role="row" className={cn("grid border-b border-mist-100", COLS)}>
               {head(t("colIndex"))}
               {head(t("colLatest"))}
               {head("+1")}
@@ -80,7 +80,7 @@ export function ForecastSummary({ rows }: { rows: BoardData["forecastTable"] }) 
                       }
                     }}
                     className={cn(
-                      "grid cursor-pointer items-center border-b border-sand-100 hover:bg-maroon-50/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-gold-500",
+                      "grid cursor-pointer items-center border-b border-mist-100 hover:bg-navy-50/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-aqua-500",
                       COLS
                     )}
                     data-testid="forecast-row"
@@ -102,7 +102,7 @@ export function ForecastSummary({ rows }: { rows: BoardData["forecastTable"] }) 
                     </div>
                     <div role="cell" className="px-3 py-2.5">
                       {f.confidence ? (
-                        <Chip tone={f.confidence === "narrow" ? "ok" : f.confidence === "medium" ? "sand" : "warn"}>
+                        <Chip tone={f.confidence === "narrow" ? "ok" : f.confidence === "medium" ? "mist" : "warn"}>
                           {t(`confidence.${f.confidence}` as never)}
                         </Chip>
                       ) : (
@@ -114,14 +114,14 @@ export function ForecastSummary({ rows }: { rows: BoardData["forecastTable"] }) 
                     </div>
                   </div>
                   {isOpen && f3 ? (
-                    <div role="row" className="grid border-b border-sand-100 bg-sand-50/60">
+                    <div role="row" className="grid border-b border-mist-100 bg-mist-50/60">
                       <div role="cell" className="px-4 py-3">
                         <p className="max-w-3xl whitespace-pre-line text-xs leading-relaxed text-ink-600">
                           {bi(locale, f3.explanationEn ?? "", f3.explanationAr ?? "")}
                         </p>
                         <Link
                           href={`/indices/${f.code}` as never}
-                          className="link-draw mt-2 inline-block text-xs font-medium text-maroon-700"
+                          className="link-draw mt-2 inline-block text-xs font-medium text-navy-700"
                         >
                           {t("openMethod")}
                         </Link>

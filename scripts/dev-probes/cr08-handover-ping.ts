@@ -10,7 +10,7 @@ async function main() {
   const res = await fetch(`${BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email: "hr@npc.qa", password: "Nexus!2026" }),
+    body: JSON.stringify({ email: "hr@enviroai.demo", password: "EnviroAI!2026" }),
   });
   const body = await res.text();
   console.log("login status", res.status, `${Date.now() - t0}ms`, body.slice(0, 300));
@@ -37,7 +37,7 @@ async function main() {
   const recRes = await fetch(`${BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email: "mohammed.alsulaiti@npc.qa", password: "Nexus!2026" }),
+    body: JSON.stringify({ email: "mohammed.alqarni@enviroai.demo", password: "EnviroAI!2026" }),
   });
   const recCookie = (recRes.headers.get("set-cookie") ?? "").split(";")[0];
   for (const p of ["/en/home", "/ar/home", "/en/handover", "/ar/handover"]) {

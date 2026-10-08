@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     passwordHash: await hashPassword(password),
     nameEn: invite.nameEn ?? invite.email.split("@")[0],
     nameAr: invite.nameAr ?? invite.nameEn ?? invite.email.split("@")[0],
-    avatarColor: "maroon",
+    avatarColor: "navy",
     departmentId: invite.departmentId,
     roleId: invite.roleId,
     clearanceLevel: invite.clearanceLevel,

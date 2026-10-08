@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
   // CR05 6.3: only allowed domains may sign in; the message stays neutral so
   // the domain policy is not probed through the login form
   const { getSetting } = await import("@/server/settings");
-  const allowed = await getSetting<string[]>("allowed_domains", ["npc.qa"]);
+  const allowed = await getSetting<string[]>("allowed_domains", ["enviroai.demo"]);
   const domain = normalized.split("@")[1] ?? "";
   if (!allowed.includes(domain)) {
     await audit(null, "login_rejected_domain", "user", undefined, { email: normalized });

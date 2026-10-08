@@ -427,7 +427,7 @@ export async function toolSearchKnowledge(
       }
     }
   }
-  return lines.length ? lines.join("\n") : "No results found in SiaNexus for that query.";
+  return lines.length ? lines.join("\n") : "No results found in EnviroAI for that query.";
 }
 
 /* ---- get_document ---- */
@@ -522,7 +522,7 @@ export async function toolQueryStrategy(
   const structureN = ctx.state.addSource({
     resource_type: "node",
     resource_id: edition.id,
-    title: `SiaNexus strategy structure (${edition.nameEn})`,
+    title: `EnviroAI strategy structure (${edition.nameEn})`,
     page: null,
     excerpt: `Seeded from the ${edition.code.toUpperCase()} document; counts computed over strategy_nodes.`,
     edition: edition.code,
@@ -617,7 +617,7 @@ export async function toolGetNode(
     edition: edition?.code,
     verified: node.verified === 1,
   });
-  dedupePush(ctx.state.workspace.strategy, await nodeCard(ctx.state, node, edition?.code ?? "nds3"), 8);
+  dedupePush(ctx.state.workspace.strategy, await nodeCard(ctx.state, node, edition?.code ?? "nes3"), 8);
 
   const kpisRows = await db.select().from(schema.kpis).where(eq(schema.kpis.nodeId, node.id));
   const kpiLines: string[] = [];
@@ -1322,7 +1322,7 @@ export async function toolGetIndex(
     .select()
     .from(schema.indexObservations)
     .where(
-      and(eq(schema.indexObservations.indexId, idx.id), eq(schema.indexObservations.countryCode, "QAT"))
+      and(eq(schema.indexObservations.indexId, idx.id), eq(schema.indexObservations.countryCode, "SAU"))
     )
     .orderBy(asc(schema.indexObservations.year));
   const latest = obs[obs.length - 1];
@@ -1330,7 +1330,7 @@ export async function toolGetIndex(
     ctx,
     idx,
     latest
-      ? `Qatar ${latest.year}: ${latest.rank != null ? `rank ${latest.rank}${latest.totalCountries ? ` of ${latest.totalCountries}` : ""}` : ""} ${latest.score != null ? `score ${latest.score}` : ""}`
+      ? `Saudi Arabia ${latest.year}: ${latest.rank != null ? `rank ${latest.rank}${latest.totalCountries ? ` of ${latest.totalCountries}` : ""}` : ""} ${latest.score != null ? `score ${latest.score}` : ""}`
       : idx.methodologySummaryEn ?? ""
   );
   const entity = idx.responsibleEntityId
@@ -1342,7 +1342,7 @@ export async function toolGetIndex(
     `[${n}] ${idx.nameEn} / ${idx.nameAr} (${idx.publisher ?? "-"}, ${idx.frequency}, category ${idx.category}, ${idx.higherIsBetter ? "higher is better" : "LOWER is better"}).`,
     `Methodology: ${(idx.methodologySummaryEn ?? "").slice(0, 300)}`,
     entity ? `Responsible entity: ${entity.nameEn}.` : "",
-    `Qatar series: ${obs
+    `Saudi Arabia series: ${obs
       .map((o) => `${o.year}: ${o.rank != null ? `#${o.rank}` : ""}${o.score != null ? ` ${o.score}` : ""}`.trim())
       .join("; ")}`,
     latest?.sourceUrl ? `Latest source: ${latest.sourceUrl}` : "",
@@ -1371,7 +1371,7 @@ export async function toolQueryIndices(
   const obs = await db
     .select()
     .from(schema.indexObservations)
-    .where(eq(schema.indexObservations.countryCode, "QAT"));
+    .where(eq(schema.indexObservations.countryCode, "SAU"));
   const lines = rows.map((idx) => {
     const mine = obs
       .filter((o) => o.indexId === idx.id)
@@ -1381,10 +1381,10 @@ export async function toolQueryIndices(
     const n = registerIndexSource(
       ctx,
       idx,
-      mine ? `Qatar ${mine.year}: rank ${mine.rank ?? "-"} score ${mine.score ?? "-"}` : ""
+      mine ? `Saudi Arabia ${mine.year}: rank ${mine.rank ?? "-"} score ${mine.score ?? "-"}` : ""
     );
-    return `[${n}] ${idx.code}: ${idx.nameEn} (${idx.publisher ?? "-"}) Qatar ${mine ? `${mine.year} ${mine.rank != null ? `#${mine.rank}${mine.totalCountries ? `/${mine.totalCountries}` : ""}` : ""} ${mine.score != null ? `score ${mine.score}` : ""}` : "no data"}${
-      f ? `; SiaNexus 3y forecast direction: ${f.direction}` : ""
+    return `[${n}] ${idx.code}: ${idx.nameEn} (${idx.publisher ?? "-"}) Saudi Arabia ${mine ? `${mine.year} ${mine.rank != null ? `#${mine.rank}${mine.totalCountries ? `/${mine.totalCountries}` : ""}` : ""} ${mine.score != null ? `score ${mine.score}` : ""}` : "no data"}${
+      f ? `; EnviroAI 3y forecast direction: ${f.direction}` : ""
     }`;
   });
   const kept = lines.filter(Boolean) as string[];
@@ -1408,7 +1408,7 @@ export async function toolGetIndexForecast(
   const n = ctx.state.addSource({
     resource_type: "index_forecast",
     resource_id: idx.code,
-    title: `SiaNexus forecast: ${idx.nameEn}`,
+    title: `EnviroAI forecast: ${idx.nameEn}`,
     page: null,
     excerpt: `Method ${rows[0].methodVersion}, generated ${gen}. A model output, not a published figure.`,
     verified: false,
@@ -1420,7 +1420,7 @@ export async function toolGetIndexForecast(
       }, direction ${r.direction}`
   );
   return [
-    `[${n}] SiaNexus forecast for ${idx.nameEn}, method ${rows[0].methodVersion}, generated on ${gen}. ALWAYS cite as "SiaNexus forecast, method ${rows[0].methodVersion}, generated on ${gen}", never as a fact.`,
+    `[${n}] EnviroAI forecast for ${idx.nameEn}, method ${rows[0].methodVersion}, generated on ${gen}. ALWAYS cite as "EnviroAI forecast, method ${rows[0].methodVersion}, generated on ${gen}", never as a fact.`,
     ...lines,
     rows[0].explanationEn ? `Explanation: ${rows[0].explanationEn.slice(0, 600)}` : "",
   ]
@@ -1436,7 +1436,7 @@ export async function toolBenchmarkIndex(
   if (!idx) return "Unknown index.";
   const set = [
     ...new Set([
-      "QAT",
+      "SAU",
       ...(input.countries?.length
         ? input.countries.map((c) => c.toUpperCase())
         : ["SAU", "ARE", "KWT", "BHR", "OMN"]),
@@ -1467,15 +1467,15 @@ export async function toolBenchmarkIndex(
     (r, i) =>
       `${i + 1}. ${r.c} ${r.o.year}: ${r.o.rank != null ? `#${r.o.rank}` : ""}${r.o.score != null ? ` score ${r.o.score}` : ""}`.trim()
   );
-  const qatPos = rows.findIndex((r) => r.c === "QAT") + 1;
+  const homePos = rows.findIndex((r) => r.c === "SAU") + 1;
   return [
-    `[${n}] ${idx.nameEn}: Qatar stands ${qatPos} of ${rows.length} in this group (latest published values; edition years may differ).`,
+    `[${n}] ${idx.nameEn}: Saudi Arabia stands ${homePos} of ${rows.length} in this group (latest published values; edition years may differ).`,
     ...lines,
   ].join("\n");
 }
 
 /* ------------------------------------------------------------------ */
-/* CR05 7: HR continuity for Ask NPC (portal-gated)                     */
+/* CR05 7: HR continuity for Ask EnviroAI (portal-gated)                     */
 /* ------------------------------------------------------------------ */
 
 export async function toolGetHrContinuity(ctx: ToolContext): Promise<string> {
@@ -1511,7 +1511,7 @@ export const TOOL_DEFINITIONS = [
   {
     name: "search_knowledge",
     description:
-      "Hybrid search over SiaNexus documents, lessons, decisions, verified answers, and accepted signals. Returns numbered citable passages.",
+      "Hybrid search over EnviroAI documents, lessons, decisions, verified answers, and accepted signals. Returns numbered citable passages.",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -1541,11 +1541,11 @@ export const TOOL_DEFINITIONS = [
   {
     name: "query_strategy",
     description:
-      "Query the Living Strategy tables (editions nds3, nds2, nds1). Filter by node_type (outcome|target|cluster|enabler|sector_strategy|initiative|project), outcome_code, text, status. Use count_by for aggregations, e.g. how many targets exist (node_type=target, count_by=outcome).",
+      "Query the Living Strategy tables (editions nes3, nes2, nes1). Filter by node_type (outcome|target|cluster|enabler|sector_strategy|initiative|project), outcome_code, text, status. Use count_by for aggregations, e.g. how many targets exist (node_type=target, count_by=outcome).",
     input_schema: {
       type: "object" as const,
       properties: {
-        edition: { type: "string", enum: ["nds3", "nds2", "nds1"] },
+        edition: { type: "string", enum: ["nes3", "nes2", "nes1"] },
         node_type: { type: "string" },
         outcome_code: {
           type: "string",
@@ -1608,7 +1608,7 @@ export const TOOL_DEFINITIONS = [
   },
   {
     name: "find_experts",
-    description: "Match NPC experts to a question or domain, with reasons from their stored profiles.",
+    description: "Match Programme Office experts to a question or domain, with reasons from their stored profiles.",
     input_schema: {
       type: "object" as const,
       properties: { question: { type: "string" }, limit: { type: "number" } },
@@ -1669,7 +1669,7 @@ export const TOOL_DEFINITIONS = [
   },
   {
     name: "compare_editions",
-    description: "Find nodes about a theme across NDS1, NDS2, and NDS3, aligned by lineage links, for comparisons.",
+    description: "Find nodes about a theme across every edition of the National Environment Strategy, aligned by lineage links, for comparisons.",
     input_schema: {
       type: "object" as const,
       properties: { theme: { type: "string" } },
@@ -1679,7 +1679,7 @@ export const TOOL_DEFINITIONS = [
   {
     name: "get_index",
     description:
-      "One international index (HDI, GII, CPI, EGDI, GPI, IMD, LPI, NRI, TTDI, EPI, GTCI, WJP) with its methodology, responsible entity, and Qatar's full published series with sources.",
+      "One international index (HDI, GII, CPI, EGDI, GPI, IMD, LPI, NRI, TTDI, EPI, GTCI, WJP) with its methodology, responsible entity, and Saudi Arabia's full published series with sources.",
     input_schema: {
       type: "object" as const,
       properties: { code: { type: "string", description: "Index code or name" } },
@@ -1689,7 +1689,7 @@ export const TOOL_DEFINITIONS = [
   {
     name: "query_indices",
     description:
-      "List the tracked international indices with Qatar's latest published standing and the SiaNexus 3-year forecast direction. Filter by category or text.",
+      "List the tracked international indices with Saudi Arabia's latest published standing and the EnviroAI 3-year forecast direction. Filter by category or text.",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -1705,7 +1705,7 @@ export const TOOL_DEFINITIONS = [
   {
     name: "get_index_forecast",
     description:
-      "The current SiaNexus forecast for one index (+1, +3, +5 years with ranges and direction). A model output: cite it as 'SiaNexus forecast, method v1, generated on <date>', never as a fact.",
+      "The current EnviroAI forecast for one index (+1, +3, +5 years with ranges and direction). A model output: cite it as 'EnviroAI forecast, method v1, generated on <date>', never as a fact.",
     input_schema: {
       type: "object" as const,
       properties: { code: { type: "string" } },
@@ -1715,7 +1715,7 @@ export const TOOL_DEFINITIONS = [
   {
     name: "benchmark_index",
     description:
-      "Compare Qatar with other countries (ISO3 codes; default the GCC) on one index using the latest published values.",
+      "Compare Saudi Arabia with other countries (ISO3 codes; default the GCC) on one index using the latest published values.",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -1731,7 +1731,7 @@ export const TOOL_DEFINITIONS = [
       "Knowledge continuity from the HR dashboard: readiness and continuity scores, risk counts, department heat, and top risks. Only for users who can see the HR portal; never returns points or badges.",
     input_schema: { type: "object" as const, properties: {} },
   },
-  // CR07 2.5 and 3.7: the Council Strategy, the Organisation, lesson roll-up
+  // CR07 2.5 and 3.7: the Programme Strategy, the Organisation, lesson roll-up
   ...CR07_TOOLS,
   // CR08 11: every new module's tools, aggregated in tools-cr08.ts
   ...CR08_TOOLS,
@@ -1822,7 +1822,7 @@ export async function runTool(
       case "get_hr_continuity":
         return await toolGetHrContinuity(ctx);
       default: {
-        // CR07: the Council Strategy, Organisation and lesson roll-up tools
+        // CR07: the Programme Strategy, Organisation and lesson roll-up tools
         const { runCr07Tool } = await import("./tools-cr07");
         const result = await runCr07Tool(ctx, name, input);
         if (result !== null) return result;

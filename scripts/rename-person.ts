@@ -9,12 +9,12 @@
  * each one.
  *
  * Match the FULL name, never a first name on its own. This database holds the
- * verbatim text of published documents, the real names of unit heads fetched
- * from npc.qa, and country names in trade data, and a short match will hit all
- * three. A seeded person has been renamed here before where their given name
- * also appeared inside a head of state's name in Qatar National Vision 2030 and
- * inside a country name in the customs tables; only the full-name match left
- * those alone.
+ * verbatim text of published documents, the names of officials who appear in
+ * fetched public sources, and country names in trade data, and a short match
+ * will hit all three. A seeded person has been renamed here before where their
+ * given name also appeared inside the name of a public figure in a source
+ * document and inside a country name in the trade tables; only the full-name
+ * match left those alone.
  *
  * Give the full names as `old=new` pairs, one per language, and start with a
  * dry run:

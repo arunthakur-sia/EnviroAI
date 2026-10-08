@@ -20,7 +20,7 @@ async function main() {
   const heads = units.filter((u) => u.headUserId).map((u) => `${u.code}:${users.find((x) => x.id === u.headUserId)?.email}`);
   console.log("heads:", heads.join(", "));
 
-  const externals = await db.select().from(schema.experts).where(ne(schema.experts.type, "npc_employee"));
+  const externals = await db.select().from(schema.experts).where(ne(schema.experts.type, "org_employee"));
   console.log("external experts:", externals.length);
   const stake = await db.select().from(schema.nodeStakeholders);
   const nodes = await db.select().from(schema.strategyNodes);

@@ -3,7 +3,7 @@
 // Super Admin in system Edge, captures console errors and warnings, page
 // errors, failed requests and 404 assets, and writes docs/qc/console-sweep.md.
 // Exit code 1 when anything was captured. Requires a running server.
-//   npx tsx scripts/qc/console-sweep.ts [--role reader@npc.qa] [--only /vault]
+//   npx tsx scripts/qc/console-sweep.ts [--role reader@enviroai.demo] [--only /vault]
 import { loadEnv } from "../../src/lib/load-env";
 loadEnv();
 
@@ -15,7 +15,7 @@ import { createClient } from "@libsql/client";
 const BASE = process.env.SMOKE_BASE ?? "http://localhost:3000";
 const ROOT = process.cwd();
 const args = process.argv.slice(2);
-const role = args.includes("--role") ? args[args.indexOf("--role") + 1] : "admin@npc.qa";
+const role = args.includes("--role") ? args[args.indexOf("--role") + 1] : "admin@enviroai.demo";
 const only = args.includes("--only") ? args[args.indexOf("--only") + 1] : null;
 
 /** Console noise that is not ours: browser extension chatter, Next dev HMR. */
@@ -87,7 +87,7 @@ async function main() {
   // sign in through the API: clicking a submit button whose handler has not
   // hydrated does nothing, and the login screen is not what is being swept
   const auth = await ctx.request.post(`${BASE}/api/v1/auth/login`, {
-    data: { email: role, password: "Nexus!2026" },
+    data: { email: role, password: "EnviroAI!2026" },
     timeout: 120000,
   });
   if (!auth.ok()) throw new Error(`login failed: ${auth.status()}`);
@@ -110,7 +110,7 @@ async function main() {
       await page.waitForTimeout(600);
       // a raw translation key on screen is a defect
       const raw = await page.evaluate(
-        "(() => { const t = document.body.innerText; const m = t.match(/\\b[a-z][a-zA-Z]+\\.[a-zA-Z]+(\\.[a-zA-Z]+)+\\b/g) || []; return m.filter(x => !/^(npc|www|data|api|e\\.g)\\./.test(x) && !x.endsWith('.qa') && !x.includes('.com') && !x.includes('.org')).slice(0, 5); })()"
+        "(() => { const t = document.body.innerText; const m = t.match(/\\b[a-z][a-zA-Z]+\\.[a-zA-Z]+(\\.[a-zA-Z]+)+\\b/g) || []; return m.filter(x => !/^(www|data|api|e\\.g)\\./.test(x) && !x.endsWith('.qa') && !x.includes('.com') && !x.includes('.org')).slice(0, 5); })()"
       );
       for (const key of raw as string[]) findings.push({ url: current, kind: "rawKey", text: key });
       console.log(`${current}: ${findings.filter((f) => f.url === current).length} findings`);

@@ -26,10 +26,10 @@ type CsvRow = {
 type CsvPreview = { rows: CsvRow[]; counts: { new: number; update: number; unchanged: number; error: number }; columns: string[] };
 
 const HEADER = "code,parent_code,level,name_en,name_ar,head_name,head_title";
-const STATUS_TONE: Record<CsvRow["status"], "ok" | "info" | "sand" | "danger"> = {
+const STATUS_TONE: Record<CsvRow["status"], "ok" | "info" | "mist" | "danger"> = {
   new: "ok",
   update: "info",
-  unchanged: "sand",
+  unchanged: "mist",
   error: "danger",
 };
 
@@ -103,7 +103,7 @@ export function OrganisationCsvImport({
   return (
     <div className="card flex flex-col gap-3 p-4" data-testid="org-csv">
       <div className="flex flex-wrap items-center gap-2">
-        <label className={cn("inline-flex cursor-pointer items-center gap-2 rounded-lg border border-sand-300 bg-white px-3 py-1.5 text-xs font-medium text-ink-900 hover:border-maroon-300 hover:text-maroon-700", !canEdit && "pointer-events-none opacity-50")}>
+        <label className={cn("inline-flex cursor-pointer items-center gap-2 rounded-lg border border-mist-300 bg-white px-3 py-1.5 text-xs font-medium text-ink-900 hover:border-navy-300 hover:text-navy-700", !canEdit && "pointer-events-none opacity-50")}>
           <FileUp className="size-4" aria-hidden />
           {t("csvFile")}
           <input type="file" accept=".csv,text/csv" onChange={onFile} className="sr-only" disabled={!canEdit} data-testid="org-csv-file" />
@@ -114,7 +114,7 @@ export function OrganisationCsvImport({
             void navigator.clipboard?.writeText(HEADER + "\n");
             toast(t("csvTemplateCopied"), "success");
           }}
-          className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs text-ink-600 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs text-ink-600 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
         >
           <Copy className="size-3.5" aria-hidden /> {t("csvCopyTemplate")}
         </button>
@@ -149,9 +149,9 @@ export function OrganisationCsvImport({
         </Button>
       </div>
       {preview && preview.rows.length ? (
-        <div className="overflow-x-auto rounded-xl border border-sand-200">
+        <div className="overflow-x-auto rounded-xl border border-mist-200">
           <div role="table" aria-label={t("csvTitle")} className="min-w-[720px] text-xs">
-            <div role="row" className="grid grid-cols-[3rem_5rem_6rem_6rem_1fr_1fr_1fr] gap-2 bg-sand-50 px-3 py-2 font-semibold text-ink-600">
+            <div role="row" className="grid grid-cols-[3rem_5rem_6rem_6rem_1fr_1fr_1fr] gap-2 bg-mist-50 px-3 py-2 font-semibold text-ink-600">
               <span role="columnheader">{t("csvLine")}</span>
               <span role="columnheader">{t("csvStatusHeader")}</span>
               <span role="columnheader" dir="ltr">code</span>
@@ -166,7 +166,7 @@ export function OrganisationCsvImport({
                 role="row"
                 data-testid="org-csv-row"
                 data-status={row.status}
-                className={cn("grid grid-cols-[3rem_5rem_6rem_6rem_1fr_1fr_1fr] items-start gap-2 border-t border-sand-100 px-3 py-2", row.status === "error" && "bg-danger-light/40")}
+                className={cn("grid grid-cols-[3rem_5rem_6rem_6rem_1fr_1fr_1fr] items-start gap-2 border-t border-mist-100 px-3 py-2", row.status === "error" && "bg-danger-light/40")}
               >
                 <span role="cell" className="text-ink-400 tnum">
                   {row.line}

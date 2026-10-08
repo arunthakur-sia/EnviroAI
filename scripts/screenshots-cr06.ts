@@ -14,7 +14,7 @@ const OUT = path.join(process.cwd(), "data", "screenshots", "cr06");
 async function login(page: Page, email: string) {
   await page.goto(`${BASE}/en/login`);
   await page.fill("#email", email);
-  await page.fill("#password", "Nexus!2026");
+  await page.fill("#password", "EnviroAI!2026");
   await page.click("button[type=submit]");
   await page.waitForURL("**/home", { timeout: 60000 });
 }
@@ -54,7 +54,7 @@ async function main() {
   const browser = await chromium.launch({ channel: "msedge" }).catch(() => chromium.launch());
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await ctx.newPage();
-  await login(page, "admin@npc.qa");
+  await login(page, "admin@enviroai.demo");
 
   console.log("the outcome panel section, EN + AR:");
   await go(page, "/en/strategy?o=o1", 3000);

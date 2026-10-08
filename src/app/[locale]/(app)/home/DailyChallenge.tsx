@@ -1,6 +1,6 @@
 "use client";
 // CR03 4.4.3: the Daily challenge, now its own compact card. Question in
-// Fraunces, three answer chips, and a 500ms Y-flip to the answer with the
+// Sora, three answer chips, and a 500ms Y-flip to the answer with the
 // explanation, the points in gold, and a link to the source indicator.
 // Answered state persists for the day; streak counter in the corner.
 import * as React from "react";
@@ -119,7 +119,7 @@ export function DailyChallenge({
                     key={i}
                     onClick={() => answer(i)}
                     disabled={busy}
-                    className="rounded-lg border border-sand-300 bg-white px-2.5 py-1.5 text-xs text-ink-900 transition-colors hover:border-maroon-300 hover:text-maroon-900 cursor-pointer disabled:cursor-default"
+                    className="rounded-lg border border-mist-300 bg-white px-2.5 py-1.5 text-xs text-ink-900 transition-colors hover:border-navy-300 hover:text-navy-900 cursor-pointer disabled:cursor-default"
                   >
                     {bi(locale, option.en, option.ar)}
                   </button>
@@ -152,7 +152,7 @@ export function DailyChallenge({
           <p className="line-clamp-4 text-sm leading-relaxed text-ink-900">{result?.explanation}</p>
           <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-3">
             {result?.points && !quiet ? (
-              <span className="font-semibold text-gold-500 tnum" style={{ fontFamily: "var(--font-display)", fontSize: 20 }}>
+              <span className="font-semibold text-aqua-500 tnum" style={{ fontFamily: "var(--font-display)", fontSize: 20 }}>
                 +{result.points}
               </span>
             ) : (
@@ -163,7 +163,7 @@ export function DailyChallenge({
             {card?.indicator ? (
               <Link
                 href={`/statistics/${card.indicator.id}` as never}
-                className="link-draw text-xs font-medium text-maroon-700"
+                className="link-draw text-xs font-medium text-navy-700"
               >
                 {t("openIndicator", { name: bi(locale, card.indicator.nameEn, card.indicator.nameAr) })}
               </Link>

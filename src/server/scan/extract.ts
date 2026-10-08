@@ -1,4 +1,4 @@
-// Shared persistence for scan candidates: dedupe, store, link to NDS3 nodes and
+// Shared persistence for scan candidates: dedupe, store, link to NES nodes and
 // indicators, and index accepted signals for retrieval.
 import crypto from "node:crypto";
 import { and, eq } from "drizzle-orm";
@@ -72,13 +72,13 @@ export function candidateHash(c: {
     .digest("hex");
 }
 
-/** Maps taxonomy outcome codes to the NDS3 outcome node ids (by sort order). */
+/** Maps taxonomy outcome codes to the NES themes node ids (by sort order). */
 export async function outcomeNodeMap(): Promise<Map<string, string>> {
   const map = new Map<string, string>();
   const [edition] = await db
     .select()
     .from(schema.strategyEditions)
-    .where(eq(schema.strategyEditions.code, "nds3"))
+    .where(eq(schema.strategyEditions.code, "nes3"))
     .limit(1);
   if (!edition) return map;
   const outcomes = await db

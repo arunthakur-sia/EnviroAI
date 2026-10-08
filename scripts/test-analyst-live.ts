@@ -7,12 +7,12 @@ loadEnv();
 const BASE = process.env.SMOKE_BASE ?? "http://localhost:3000";
 
 const CASES = [
-  "How are we doing in Qatarization?",
-  "How many targets are in NDS3?",
+  "How are we doing in Saudization?",
+  "How many targets are in NES3?",
   "Which outcomes are at risk?",
   "What changed in fiscal sustainability this quarter?",
   "Who should I talk to about census methodology?",
-  "Compare NDS2 and NDS3 on labour market targets",
+  "Compare NES2 and NES3 on labour market targets",
   "What did we learn from the data policy rollout?",
   "ما هو معدل التضخم الحالي؟",
   "Is the FDI target realistic?",
@@ -51,7 +51,7 @@ async function main() {
   const login = await client("/api/v1/auth/login", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email: "analyst@npc.qa", password: "Nexus!2026" }),
+    body: JSON.stringify({ email: "analyst@enviroai.demo", password: "EnviroAI!2026" }),
   });
   if (login.status !== 200) throw new Error("login failed");
 

@@ -34,16 +34,16 @@ export const email = {
   // TODO: ingestInbox(): turn flagged emails into draft Institutional Memory documents
 };
 
-export const qinsights = {
+export const gastat = {
   status(): IntegrationStatus {
     return {
-      code: "qinsights",
-      name: "Q Insights",
+      code: "gastat",
+      name: "GASTAT Statistics Portal",
       status: "not_configured",
       description: "Will stream the 119 central indicators directly into the Statistics Hub.",
     };
   },
-  // TODO: syncIndicators(): map Q Insights series onto indicator codes
+  // TODO: syncIndicators(): map the GASTAT statistics portal series onto indicator codes
 };
 
 export const opendata = {
@@ -52,12 +52,12 @@ export const opendata = {
       code: "opendata",
       name: "Open Data Portal",
       status: "not_configured",
-      description: "Will publish approved indicators to data.gov.qa and track dataset usage.",
+      description: "Will publish approved indicators to the Saudi open data portal and track dataset usage.",
     };
   },
   // TODO: publishDataset(indicatorId: string)
 };
 
 export function allIntegrations(): IntegrationStatus[] {
-  return [sharepoint.status(), email.status(), qinsights.status(), opendata.status()];
+  return [sharepoint.status(), email.status(), gastat.status(), opendata.status()];
 }

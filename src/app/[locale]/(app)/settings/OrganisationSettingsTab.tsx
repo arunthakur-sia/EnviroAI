@@ -5,7 +5,7 @@
 // delete through the risk dialog that reassigns everything first), the levels
 // editor, the snapshots with restore, the CSV import, the change requests from
 // unit heads, and the CR07 sections kept as they were: bulk member assignment,
-// the website re-sync diff, and the Council Strategy Office. The last ten
+// the website re-sync diff, and the Programme Strategy Office. The last ten
 // mutations of the session can be undone: every mutation answers with its
 // inverse, which is applied through the same API.
 import * as React from "react";
@@ -65,7 +65,7 @@ export function OrganisationSettingsTab() {
   const [sync, setSync] = React.useState<{ changes: SyncChange[]; fetchedAt: string | null } | null>(null);
   const [ticked, setTicked] = React.useState<number[]>([]);
 
-  // Council Strategy Office (CR07)
+  // Programme Strategy Office (CR07)
   const [officeCode, setOfficeCode] = React.useState("");
 
   const load = React.useCallback(async () => {
@@ -269,7 +269,7 @@ export function OrganisationSettingsTab() {
     }
   }
 
-  /* --------------------------- Council Strategy --------------------------- */
+  /* --------------------------- Programme Strategy --------------------------- */
 
   const councilValue = officeCode || (units.some((u) => u.code === DEFAULT_STRATEGY_OFFICE) ? DEFAULT_STRATEGY_OFFICE : "");
 
@@ -382,7 +382,7 @@ export function OrganisationSettingsTab() {
             </Button>
           </div>
           {assignResult ? (
-            <div className="rounded-xl border border-sand-200 bg-sand-50 p-3" data-testid="org-members-result">
+            <div className="rounded-xl border border-mist-200 bg-mist-50 p-3" data-testid="org-members-result">
               <p className="text-sm text-ink-900">{t("assignResult", { matched: assignResult.matched, added: assignResult.added })}</p>
               {assignResult.unknown.length ? (
                 <>
@@ -437,8 +437,8 @@ export function OrganisationSettingsTab() {
                 const indexes = group.items.map((entry) => entry.index);
                 const allOn = indexes.every((i) => ticked.includes(i));
                 return (
-                  <div key={group.kind} className="rounded-xl border border-sand-200">
-                    <div className="flex items-center gap-3 border-b border-sand-100 bg-sand-50 px-3 py-2">
+                  <div key={group.kind} className="rounded-xl border border-mist-200">
+                    <div className="flex items-center gap-3 border-b border-mist-100 bg-mist-50 px-3 py-2">
                       <span className="text-sm font-medium text-ink-900">{t(`syncKinds.${group.kind}` as never)}</span>
                       <span className="text-[11px] text-ink-400 tnum">{group.items.length}</span>
                       <label className="ms-auto flex cursor-pointer items-center gap-1.5 text-[11px] text-ink-600">
@@ -446,13 +446,13 @@ export function OrganisationSettingsTab() {
                           type="checkbox"
                           checked={allOn}
                           onChange={(e) => toggleGroup(indexes, e.target.checked)}
-                          className="size-3.5 cursor-pointer accent-maroon-700"
+                          className="size-3.5 cursor-pointer accent-navy-700"
                           aria-label={t("selectAllIn", { group: t(`syncKinds.${group.kind}` as never) })}
                         />
                         {t("selectAll")}
                       </label>
                     </div>
-                    <ul className="divide-y divide-sand-100">
+                    <ul className="divide-y divide-mist-100">
                       {group.items.map(({ change, index }) => (
                         <li key={`${change.kind}:${change.code}:${index}`} className="px-3 py-2">
                           <label className="flex cursor-pointer items-start gap-2.5">
@@ -460,7 +460,7 @@ export function OrganisationSettingsTab() {
                               type="checkbox"
                               checked={ticked.includes(index)}
                               onChange={() => toggleTick(index)}
-                              className="mt-1 size-3.5 cursor-pointer accent-maroon-700"
+                              className="mt-1 size-3.5 cursor-pointer accent-navy-700"
                               aria-label={t("selectChange", { unit: bi(locale, change.nameEn, change.nameAr) || change.code })}
                               data-testid="org-sync-change"
                             />
@@ -500,7 +500,7 @@ export function OrganisationSettingsTab() {
         </div>
       </section>
 
-      {/* 8. Council Strategy (CR07) */}
+      {/* 8. Programme Strategy (CR07) */}
       <section data-testid="org-settings-council">
         <SectionTitle>{t("councilTitle")}</SectionTitle>
         <div className="card flex flex-col gap-4 p-4">
@@ -521,12 +521,12 @@ export function OrganisationSettingsTab() {
             </Button>
           </div>
           <p className="text-xs text-ink-600">{t("strategyOfficeHint")}</p>
-          <div className="border-t border-sand-100 pt-4">
+          <div className="border-t border-mist-100 pt-4">
             <p className="mb-2 text-sm font-medium text-ink-900">{t("knowledgeTypesTitle")}</p>
             <ul className="flex flex-wrap gap-1.5" data-testid="org-council-types">
               {POLICY_KNOWLEDGE_TYPES.map((type) => (
                 <li key={type}>
-                  <Chip tone="maroon">{t(`knowledgeTypes.${type}` as never)}</Chip>
+                  <Chip tone="navy">{t(`knowledgeTypes.${type}` as never)}</Chip>
                 </li>
               ))}
             </ul>
@@ -545,7 +545,7 @@ export function OrganisationSettingsTab() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 8 }}
               transition={{ duration: 0.2 }}
-              className={cn("pointer-events-auto flex items-center gap-3 rounded-full border border-sand-300 bg-white py-1.5 pe-2 ps-4 shadow-[var(--shadow-lift)]")}
+              className={cn("pointer-events-auto flex items-center gap-3 rounded-full border border-mist-300 bg-white py-1.5 pe-2 ps-4 shadow-[var(--shadow-lift)]")}
               role="status"
               data-testid="org-undo-bar"
             >

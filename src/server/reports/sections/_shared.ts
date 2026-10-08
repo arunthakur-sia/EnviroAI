@@ -425,7 +425,7 @@ export function proseBlocks(prose: Prose): Block[] {
   const blocks: Block[] = prose.paragraphs.map((text) => ({ kind: "paragraph", text }));
   if (prose.bullets?.length) blocks.push({ kind: "bullets", items: prose.bullets });
   if (prose.callout) {
-    blocks.push({ kind: "callout", title: prose.callout.title, text: prose.callout.text, tone: "maroon" });
+    blocks.push({ kind: "callout", title: prose.callout.title, text: prose.callout.text, tone: "navy" });
   }
   return blocks;
 }
@@ -454,34 +454,34 @@ export function makeSources(items: SourceInput[]): SourceItem[] {
   return out;
 }
 
-/** The SiaNexus module citation lines, kept identical across sections. */
+/** The EnviroAI module citation lines, kept identical across sections. */
 export const SRC = {
   strategy: (edition: string): SourceInput => ({
-    title: "SiaNexus Living Strategy",
+    title: "EnviroAI Living Strategy",
     detail: `edition ${edition}, nodes, KPIs and status updates`,
   }),
   council: (illustrative: boolean): SourceInput => ({
-    title: illustrative ? "SiaNexus Council Strategy, illustrative data" : "SiaNexus Council Strategy",
+    title: illustrative ? "EnviroAI Programme Strategy, illustrative data" : "EnviroAI Programme Strategy",
     detail: "Internal",
   }),
   statistics: (): SourceInput => ({
-    title: "National Statistics Center, official series",
-    detail: "as held in the SiaNexus Statistics Hub",
+    title: "General Authority for Statistics (GASTAT), official series",
+    detail: "as held in the EnviroAI Statistics Hub",
   }),
   indices: (publisher: string, name: string, year?: number | null): SourceInput => ({
     title: `${publisher}: ${name}`,
     detail: year ? `${year} edition` : undefined,
   }),
   forecasts: (): SourceInput => ({
-    title: "SiaNexus index forecasts",
+    title: "EnviroAI index forecasts",
     detail: "method v1, Monte Carlo over the index's own history; an estimate, not a published value",
   }),
-  signals: (): SourceInput => ({ title: "SiaNexus Signals Radar", detail: "accepted signals" }),
-  lessons: (): SourceInput => ({ title: "SiaNexus Learning Room", detail: "published and verified lessons" }),
-  hr: (): SourceInput => ({ title: "SiaNexus HR Knowledge Dashboard", detail: "ownership inventory and continuity risks" }),
-  organisation: (): SourceInput => ({ title: "NPC organisational structure", detail: "npc.qa, as recorded in SiaNexus" }),
-  vault: (): SourceInput => ({ title: "SiaNexus Institutional Memory", detail: "documents and deliverables" }),
-  podcast: (): SourceInput => ({ title: "NPC Knowledge Cast", detail: "published episodes" }),
+  signals: (): SourceInput => ({ title: "EnviroAI Signals Radar", detail: "accepted signals" }),
+  lessons: (): SourceInput => ({ title: "EnviroAI Learning Room", detail: "published and verified lessons" }),
+  hr: (): SourceInput => ({ title: "EnviroAI HR Knowledge Dashboard", detail: "ownership inventory and continuity risks" }),
+  organisation: (): SourceInput => ({ title: "Programme Office organisational structure", detail: "enviroai.demo, as recorded in EnviroAI" }),
+  vault: (): SourceInput => ({ title: "EnviroAI Institutional Memory", detail: "documents and deliverables" }),
+  podcast: (): SourceInput => ({ title: "EnviroAI Briefing Cast", detail: "published episodes" }),
 };
 
 export function section(

@@ -6,7 +6,7 @@ import contents from "./contents";
 import foreword from "./foreword";
 import yearAtAGlance from "./year_at_a_glance";
 import mandateGovernance from "./mandate_governance";
-import nds3OutcomesOverview from "./nds3_outcomes_overview";
+import nes3OutcomesOverview from "./nes3_outcomes_overview";
 import outcomeDeepDive from "./outcome_deep_dive";
 import targetsScorecard from "./targets_scorecard";
 import initiativesProgress from "./initiatives_progress";
@@ -36,7 +36,7 @@ export const SECTION_LIBRARY: Record<SectionCode, AnyDefinition> = {
   foreword,
   year_at_a_glance: yearAtAGlance,
   mandate_governance: mandateGovernance,
-  nds3_outcomes_overview: nds3OutcomesOverview,
+  nes3_outcomes_overview: nes3OutcomesOverview,
   outcome_deep_dive: outcomeDeepDive,
   targets_scorecard: targetsScorecard,
   initiatives_progress: initiativesProgress,

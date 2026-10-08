@@ -18,7 +18,7 @@ const want = (s: string) => only.length === 0 || only.includes(s);
 async function login(page: Page, email: string) {
   await page.goto(`${BASE}/en/login`);
   await page.fill("#email", email);
-  await page.fill("#password", "Nexus!2026");
+  await page.fill("#password", "EnviroAI!2026");
   await page.click("button[type=submit]");
   await page.waitForURL("**/home", { timeout: 60000 });
 }
@@ -66,13 +66,13 @@ async function main() {
       [1280, 800],
       [1024, 768],
     ] as const) {
-      await withViewport(browser, w, h, "admin@npc.qa", async (page) => {
+      await withViewport(browser, w, h, "admin@enviroai.demo", async (page) => {
         console.log(`home ${w}px:`);
         await shoot(page, "/en/home", `home-en-${w}`);
         await shoot(page, "/ar/home", `home-ar-${w}`);
       });
     }
-    await withViewport(browser, 390, 844, "admin@npc.qa", async (page) => {
+    await withViewport(browser, 390, 844, "admin@enviroai.demo", async (page) => {
       console.log("home 390px:");
       await shoot(page, "/en/home", "home-en-390");
       await shoot(page, "/ar/home", "home-ar-390");
@@ -80,27 +80,27 @@ async function main() {
   }
 
   if (want("strategy")) {
-    await withViewport(browser, 1440, 900, "admin@npc.qa", async (page) => {
+    await withViewport(browser, 1440, 900, "admin@enviroai.demo", async (page) => {
       console.log("strategy:");
       await shoot(page, "/en/strategy", "strategy-en", 1800);
       await shoot(page, "/ar/strategy", "strategy-ar", 1800);
-      await shoot(page, "/en/strategy/nds3/o3", "strategy-outcome-en", 1800);
-      await shoot(page, "/en/strategy/nds3/o3/o3-t1", "strategy-target-en", 1800);
-      await shoot(page, "/ar/strategy/nds3/o3/o3-t1", "strategy-target-ar", 1800);
+      await shoot(page, "/en/strategy/nes3/o3", "strategy-outcome-en", 1800);
+      await shoot(page, "/en/strategy/nes3/o3/o3-t1", "strategy-target-en", 1800);
+      await shoot(page, "/ar/strategy/nes3/o3/o3-t1", "strategy-target-ar", 1800);
       await shoot(page, "/en/strategy?view=map", "strategy-map-en", 2400);
       if (projectId) {
         await shoot(page, `/en/strategy/${projectId}`, "project-detail-en", 1800);
         await shoot(page, `/ar/strategy/${projectId}`, "project-detail-ar", 1800);
       }
     });
-    await withViewport(browser, 900, 800, "admin@npc.qa", async (page) => {
+    await withViewport(browser, 900, 800, "admin@enviroai.demo", async (page) => {
       console.log("strategy stacked:");
-      await shoot(page, "/en/strategy/nds3/o3", "strategy-stacked-en", 1800);
+      await shoot(page, "/en/strategy/nes3/o3", "strategy-stacked-en", 1800);
     });
   }
 
   if (want("lessons")) {
-    await withViewport(browser, 1440, 900, "admin@npc.qa", async (page) => {
+    await withViewport(browser, 1440, 900, "admin@enviroai.demo", async (page) => {
       console.log("lessons:");
       await shoot(page, "/en/lessons", "lessons-en", 1800);
       await shoot(page, "/ar/lessons", "lessons-ar", 1800);
@@ -109,7 +109,7 @@ async function main() {
   }
 
   if (want("podcast")) {
-    await withViewport(browser, 1440, 900, "admin@npc.qa", async (page) => {
+    await withViewport(browser, 1440, 900, "admin@enviroai.demo", async (page) => {
       console.log("podcast:");
       await shoot(page, "/en/podcast", "podcast-en", 1800);
       await shoot(page, "/ar/podcast", "podcast-ar", 1800);
@@ -122,7 +122,7 @@ async function main() {
   }
 
   if (want("add")) {
-    await withViewport(browser, 1440, 900, "admin@npc.qa", async (page) => {
+    await withViewport(browser, 1440, 900, "admin@enviroai.demo", async (page) => {
       console.log("add knowledge:");
       await shoot(page, "/en/add", "add-en", 1600);
       await shoot(page, "/ar/add", "add-ar", 1600);
@@ -132,7 +132,7 @@ async function main() {
   }
 
   if (want("trends")) {
-    await withViewport(browser, 1440, 900, "admin@npc.qa", async (page) => {
+    await withViewport(browser, 1440, 900, "admin@enviroai.demo", async (page) => {
       console.log("trends:");
       await shoot(page, "/en/trends", "trends-en", 1800);
       await shoot(page, "/ar/trends", "trends-ar", 1800);

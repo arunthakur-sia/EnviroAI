@@ -22,7 +22,7 @@ function StatusIcon({ status }: { status: string }) {
 function timeOf(iso: string, locale: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
-  return new Intl.DateTimeFormat(locale === "ar" ? "ar-QA" : "en-QA", { hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(d);
+  return new Intl.DateTimeFormat(locale === "ar" ? "ar-SA" : "en-SA", { hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(d);
 }
 
 export function ProgressList({
@@ -75,9 +75,9 @@ export function ProgressList({
           </span>
         </ProgressRing>
       </div>
-      <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-sand-200" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={done}>
+      <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-mist-200" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={done}>
         <div
-          className={cn("h-full rounded-full transition-[width] duration-300 ease-[var(--ease-paper)]", failed ? "bg-danger" : "bg-maroon-700")}
+          className={cn("h-full rounded-full transition-[width] duration-300 ease-[var(--ease-paper)]", failed ? "bg-danger" : "bg-navy-700")}
           style={{ width: `${Math.round((done / total) * 100)}%` }}
         />
       </div>
@@ -100,7 +100,7 @@ export function ProgressList({
         ))}
       </ol>
       {notes.length ? (
-        <div className="mt-4 rounded-xl bg-sand-50 p-3">
+        <div className="mt-4 rounded-xl bg-mist-50 p-3">
           <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal">{t("report.notes")}</p>
           <ul className="mt-1.5 space-y-1 text-xs text-ink-600" data-testid="progress-notes">
             {notes.slice(-6).map((n, i) => (

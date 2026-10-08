@@ -148,7 +148,7 @@ export function TrendsToolbar({ canScan, canAdd }: { canScan: boolean; canAdd: b
     <NativeSelect
       value={sp.get(key) ?? ""}
       onChange={(e) => setParam(key, e.target.value || null)}
-      className={cn("w-auto min-w-28", sp.get(key) && "border-maroon-300 text-maroon-900")}
+      className={cn("w-auto min-w-28", sp.get(key) && "border-navy-300 text-navy-900")}
       aria-label={placeholder}
     >
       <option value="">{placeholder}</option>
@@ -176,7 +176,7 @@ export function TrendsToolbar({ canScan, canAdd }: { canScan: boolean; canAdd: b
       <NativeSelect
         value={sp.get("days") ?? ""}
         onChange={(e) => setParam("days", e.target.value || null)}
-        className={cn("w-auto", sp.get("days") && "border-maroon-300")}
+        className={cn("w-auto", sp.get("days") && "border-navy-300")}
         aria-label={t("filterDays")}
       >
         <option value="">{t("filterDays")}</option>
@@ -254,19 +254,19 @@ export function TrendsToolbar({ canScan, canAdd }: { canScan: boolean; canAdd: b
     {/* CR02 6: inline progress card, live while the run is going */}
     {progress ? (
       <div
-        className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 rounded-xl border border-gold-300 bg-gold-100/40 px-4 py-2.5 text-sm text-ink-900"
+        className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 rounded-xl border border-aqua-300 bg-aqua-100/40 px-4 py-2.5 text-sm text-ink-900"
         data-testid="scan-progress"
         aria-live="polite"
       >
         <RefreshCw
-          className={cn("size-4 text-maroon-700", progress.status === "running" && "animate-spin")}
+          className={cn("size-4 text-navy-700", progress.status === "running" && "animate-spin")}
           aria-hidden
         />
         <span className="tnum">
           {t("progressBriefs", { done: progress.briefsRun, total: progress.totalBriefs })}
         </span>
         <span className="tnum">{t("progressCandidates", { count: progress.candidates })}</span>
-        <span className="font-medium text-maroon-900 tnum">
+        <span className="font-medium text-navy-900 tnum">
           {t("progressNew", { count: progress.acceptedNew })}
         </span>
         <span className="text-ink-600 tnum">

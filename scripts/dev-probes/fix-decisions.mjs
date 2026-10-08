@@ -1,5 +1,5 @@
 import fs from "node:fs";
-const f = "C:/npckms/DECISIONS.md";
+const f = "C:/enviroai/DECISIONS.md";
 let s = fs.readFileSync(f, "utf8");
 const marker = "\n19. Ask NPC retrieves from the Statistics Hub as first-class sources: `retrieveIndicatorSources()`";
 const i = s.lastIndexOf(marker);

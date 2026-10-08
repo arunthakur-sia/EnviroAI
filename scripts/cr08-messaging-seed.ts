@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 // CR08 9: one delegate relationship (head.stats delegates to a member of the
-// Statistics unit for the current month) and six conversations across the
-// item kinds (a project, a document, an indicator, a council node, a unit and
+// Data unit for the current month) and six conversations across the
+// item kinds (a project, a document, an indicator, a Programme Strategy node, a unit and
 // one with no item) between seeded accounts: two to four messages each, one
 // done, one with an attachment from Institutional Memory, one landing with
 // the delegate. Notifications for the unread ones.
@@ -66,12 +66,12 @@ export default async function seedCr08Messaging(): Promise<void> {
     if (!u) throw new Error(`cr08 messaging: seeded user ${email} is missing`);
     return u;
   };
-  const admin = need("admin@npc.qa");
-  const knowledge = need("knowledge@npc.qa");
-  const head = need("head.stats@npc.qa");
-  const verifier = need("verifier@npc.qa");
-  const analyst = need("analyst@npc.qa");
-  const reader = need("reader@npc.qa");
+  const admin = need("admin@enviroai.demo");
+  const knowledge = need("knowledge@enviroai.demo");
+  const head = need("head.stats@enviroai.demo");
+  const verifier = need("verifier@enviroai.demo");
+  const analyst = need("analyst@enviroai.demo");
+  const reader = need("reader@enviroai.demo");
   const named = new Set([admin, knowledge, head, verifier, analyst, reader].map((p) => p.id));
 
   /* ---- 1. the delegate: a member of head.stats's own unit, this month ---- */
@@ -170,8 +170,8 @@ export default async function seedCr08Messaging(): Promise<void> {
       resource: { type: "document", id: doc.id, titleEn: doc.titleEn, titleAr: doc.titleAr, link: `/vault/${doc.id}` },
       messages: [
         { from: verifier, daysAgo: 3, hour: 9, body: `Regarding ${doc.titleEn}\n\nBefore I verify the new version, could you check the figures in section 3 against the source tables? I have attached the guidance we use for verification so the checks line up.`, attach: attachDoc },
-        { from: analyst, daysAgo: 3, hour: 11, body: "Will do. The 2024 baseline came from the annual bulletin; I will re-run the totals against the published tables and note any difference in the version history." },
-        { from: verifier, daysAgo: 2, hour: 16, body: "Thank you. If the totals match, add a line in the summary saying the figures were reconciled with the bulletin, then I can sign it off tomorrow morning." },
+        { from: analyst, daysAgo: 3, hour: 11, body: "Will do. The 2024 baseline came from the annual digest; I will re-run the totals against the published tables and note any difference in the version history." },
+        { from: verifier, daysAgo: 2, hour: 16, body: "Thank you. If the totals match, add a line in the summary saying the figures were reconciled with the digest, then I can sign it off tomorrow morning." },
       ],
       read: [verifier],
     },
@@ -182,7 +182,7 @@ export default async function seedCr08Messaging(): Promise<void> {
       subject: `About: ${indicator.nameEn}`,
       resource: { type: "indicator", id: indicator.id, titleEn: indicator.nameEn, titleAr: indicator.nameAr, link: `/statistics/${indicator.id}` },
       messages: [
-        { from: reader, daysAgo: 2, hour: 8, body: `Regarding ${indicator.nameEn}\n\nIs the latest value on the indicator page final or provisional? A ministry colleague is quoting a different figure from an earlier release.` },
+        { from: reader, daysAgo: 2, hour: 8, body: `Regarding ${indicator.nameEn}\n\nIs the latest value on the indicator page final or provisional? A colleague at MEWA is quoting a different figure from an earlier release.` },
         { from: head, daysAgo: 1, hour: 9, body: "It is the final release; the earlier figure was the flash estimate. The page shows the revision note under the chart." },
         { from: reader, daysAgo: 0, hour: 7, minute: 30, body: "Thank you. One more question: will the next release change the methodology note? We would like to reference it in a policy brief." } as MessageSpec,
       ],
@@ -223,7 +223,7 @@ export default async function seedCr08Messaging(): Promise<void> {
       subject: "Welcome to the Inbox",
       resource: null,
       messages: [
-        { from: admin, daysAgo: 8, hour: 9, body: "Welcome to in-app messaging. Every conversation about an item stays next to that item, and you can turn a conversation into an Ask NPC question when the answer deserves a wider audience." },
+        { from: admin, daysAgo: 8, hour: 9, body: "Welcome to in-app messaging. Every conversation about an item stays next to that item, and you can turn a conversation into an Ask EnviroAI question when the answer deserves a wider audience." },
         { from: analyst, daysAgo: 7, hour: 9, body: "Thanks. Does a delegate see everything I receive, or only new messages?" },
         { from: admin, daysAgo: 7, hour: 12, body: "Only new conversations that start while the delegation is active. The delegate is added as a participant and sees the thread marked as delegate." },
       ],

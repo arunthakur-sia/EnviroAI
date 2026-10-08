@@ -1,8 +1,8 @@
 // CR03 4: the Home that wins the decision. A disciplined bento on a 12-column
 // grid (24px gutters, 1240px max width) over the knowledge constellation:
-// Row A greeting + Ask hero, Row B the leadership quote band, Row C Qatar in
-// numbers + Daily challenge + Podcast with What changed beneath, Row D the
-// four lessons, Row E the mini library beside Your progress. One staggered
+// Row A greeting + Ask hero, Row B Saudi Arabia in
+// numbers (the scorecard) + Daily challenge + Podcast with What changed beneath, Row D the
+// leadership quote band, four lessons, Row E the mini library beside Your progress. One staggered
 // entrance; the constellation fades in last.
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -21,7 +21,7 @@ import { HomeAsk } from "./HomeAsk";
 import { HomeBoard } from "./HomeBoard";
 import { Connected } from "./connections";
 import { QuoteBand } from "./QuoteBand";
-import { QatarNumbers } from "./QatarNumbers";
+import { HomeNumbers } from "./HomeNumbers";
 import { DailyChallenge } from "./DailyChallenge";
 import { ChangedTimeline } from "./ChangedTimeline";
 import { PodcastCard } from "./PodcastCard";
@@ -42,6 +42,7 @@ export default async function HomePage({
   const user = await getCurrentUser();
   if (!user) redirect(`/${locale}/login`);
   const t = await getTranslations("home");
+  const tShell = await getTranslations("shell");
 
   const data = await getHomeData(user);
   const now = new Date();
@@ -68,6 +69,10 @@ export default async function HomePage({
         {/* Row A: greeting (4) + Ask hero (8) */}
         <section className="grid grid-cols-12 items-center gap-6">
           <div className="col-span-12 lg:col-span-4">
+            {/* the page reads as the Scorecard landing */}
+            <p className="mb-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-teal-700 rtl:tracking-normal">
+              {tShell("primary.home.en")} · {tShell("primary.home.ar")}
+            </p>
             <h1 style={{ fontSize: 36, lineHeight: 1.15 }}>
               {t(`greeting.${greetingKey}`, { name: firstName })}
             </h1>
@@ -86,15 +91,12 @@ export default async function HomePage({
           </div>
         </section>
 
-        {/* Row B: Words that guide us */}
-        <QuoteBand quotes={data.quotes} />
-
-        {/* Row C: Qatar in numbers (5, tall) + quiz (3) + podcast (4), What changed (7) beneath */}
+        {/* Row B (scorecard): Saudi Arabia in numbers (5, tall) + quiz (3) + podcast (4), What changed (7) beneath */}
         <section className="grid grid-cols-12 gap-6">
           <div className="col-span-12 lg:col-span-5 lg:row-span-2">
-            {data.qatarNumber ? (
+            {data.homeNumber ? (
               <Connected outcome={null} className="h-full">
-                <QatarNumbers data={data.qatarNumber} />
+                <HomeNumbers data={data.homeNumber} />
               </Connected>
             ) : (
               <EmptyState title={t("factEmpty")} className="h-full" />
@@ -114,6 +116,9 @@ export default async function HomePage({
             <ChangedTimeline rows={data.changedTimeline} />
           </div>
         </section>
+
+        {/* Row B: Words that guide us, below the scorecard numbers */}
+        <QuoteBand quotes={data.quotes} />
 
         {/* Row D: Lessons learned */}
         <section data-testid="home-lessons">
@@ -153,7 +158,7 @@ export default async function HomePage({
             />
           )}
           <div className="mt-2 text-end">
-            <Link href="/lessons" className="link-draw text-xs font-medium text-maroon-700">
+            <Link href="/lessons" className="link-draw text-xs font-medium text-navy-700">
               {t("seeAll")}
             </Link>
           </div>
@@ -165,7 +170,7 @@ export default async function HomePage({
             <SectionEyebrow
               label={t("newestShelf")}
               action={
-                <Link href="/vault" className="link-draw text-xs font-medium text-maroon-700">
+                <Link href="/vault" className="link-draw text-xs font-medium text-navy-700">
                   {t("openVault")}
                 </Link>
               }

@@ -47,7 +47,7 @@ export function LoginForm() {
           type="email"
           dir="ltr"
           autoComplete="email"
-          placeholder="name@npc.qa"
+          placeholder="name@enviroai.demo"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required

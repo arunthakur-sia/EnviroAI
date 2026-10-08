@@ -18,10 +18,10 @@ export function useClassificationLabels(): [string, string, string, string] {
 /** The designed stand-in when a report has no rendered previews yet. */
 export function PlaceholderCover({ title, period, className }: { title: string; period: string; className?: string }) {
   return (
-    <div className={cn("flex h-full w-full flex-col justify-between bg-maroon-900 p-4 text-white", className)} aria-hidden>
-      <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/70 rtl:tracking-normal">SiaNexus</span>
+    <div className={cn("flex h-full w-full flex-col justify-between bg-navy-900 p-4 text-white", className)} aria-hidden>
+      <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/70 rtl:tracking-normal">EnviroAI</span>
       <span className="font-display text-lg leading-snug">{title}</span>
-      <span className="font-display text-3xl text-gold-300 tnum">{period}</span>
+      <span className="font-display text-3xl text-aqua-300 tnum">{period}</span>
     </div>
   );
 }
@@ -34,7 +34,7 @@ export function CoverCard({ report, index = 0 }: { report: ReportListItem; index
   const title = bi(locale, report.titleEn, report.titleAr);
   const period = bi(locale, report.period.label.en, report.period.label.ar);
   const scope =
-    report.scope.kind === "npc" || report.scope.kind === "period"
+    report.scope.kind === "org" || report.scope.kind === "period"
       ? t(`scopeKinds.${report.scope.kind}`)
       : bi(locale, report.scope.label.en, report.scope.label.ar);
   const hasCover = report.previewCount > 0 && !broken;
@@ -43,7 +43,7 @@ export function CoverCard({ report, index = 0 }: { report: ReportListItem; index
   return (
     <Link
       href={`/reports/${report.id}`}
-      className="card card-hover group/cover flex flex-col overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+      className="card card-hover group/cover flex flex-col overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
       data-testid="cover-card"
       data-report-id={report.id}
       data-family={report.family}
@@ -53,7 +53,7 @@ export function CoverCard({ report, index = 0 }: { report: ReportListItem; index
          which leaves the name and the visible text disagreeing. The card's own
          text is the name. */
     >
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-maroon-900">
+      <div className="relative aspect-[3/4] w-full overflow-hidden bg-navy-900">
         {hasCover ? (
           // the preview is a PNG served by the module's own API (private, per user)
           // eslint-disable-next-line @next/next/no-img-element
@@ -79,7 +79,7 @@ export function CoverCard({ report, index = 0 }: { report: ReportListItem; index
         <div className="flex flex-wrap items-center gap-1.5">
           {/* the family chip only when it says something the classification does not */}
           {familyLabel !== labels[Math.min(3, Math.max(0, report.classification - 1))] ? (
-            <Chip tone={FAMILY_TONE[report.family] ?? "sand"}>{familyLabel}</Chip>
+            <Chip tone={FAMILY_TONE[report.family] ?? "mist"}>{familyLabel}</Chip>
           ) : null}
           <ClassificationChip level={report.classification} labels={labels} />
         </div>

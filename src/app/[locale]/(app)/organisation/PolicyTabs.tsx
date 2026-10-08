@@ -28,9 +28,9 @@ const CLOTH_FOR: Record<PolicyTab, string> = {
   service: "report",
 };
 
-const SCOPE_TONE: Record<string, "gulf" | "sand" | "warn"> = {
-  all_staff: "gulf",
-  unit_only: "sand",
+const SCOPE_TONE: Record<string, "teal" | "mist" | "warn"> = {
+  all_staff: "teal",
+  unit_only: "mist",
   restricted: "warn",
 };
 
@@ -162,8 +162,8 @@ export function PolicyTabs({
                 onKeyDown={(e) => onTabKeyDown(e, i)}
                 data-testid="policy-tab"
                 className={cn(
-                  "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700",
-                  active ? "bg-maroon-100 font-medium text-maroon-900" : "text-ink-600"
+                  "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700",
+                  active ? "bg-navy-100 font-medium text-navy-900" : "text-ink-600"
                 )}
               >
                 {tabLabel[key]}
@@ -189,13 +189,13 @@ export function PolicyTabs({
           data-testid="policy-bulk-bar"
           role="group"
           aria-label={t("policies.applyTo")}
-          className="mb-3 flex flex-wrap items-center gap-2 rounded-xl border border-maroon-300 bg-white px-3 py-2 shadow-[var(--shadow-paper)]"
+          className="mb-3 flex flex-wrap items-center gap-2 rounded-xl border border-navy-300 bg-white px-3 py-2 shadow-[var(--shadow-paper)]"
         >
-          <span className="text-xs font-medium text-maroon-900 tnum">
+          <span className="text-xs font-medium text-navy-900 tnum">
             {t("policies.selectedCount", { count: picked.size })}
           </span>
           <span className="text-xs text-ink-600">{t("policies.applyTo")}</span>
-          <span className="inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5">
+          <span className="inline-flex items-center gap-0.5 rounded-lg bg-mist-100 p-0.5">
             {SCOPES.map((scope) => (
               <button
                 key={scope}
@@ -204,7 +204,7 @@ export function PolicyTabs({
                 onClick={() =>
                   patchVisibility({ documentIds: [...picked], visibilityScope: scope })
                 }
-                className="cursor-pointer rounded-md px-2 py-0.5 text-[11px] text-ink-600 transition-colors hover:bg-white hover:text-maroon-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700 disabled:opacity-50"
+                className="cursor-pointer rounded-md px-2 py-0.5 text-[11px] text-ink-600 transition-colors hover:bg-white hover:text-navy-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700 disabled:opacity-50"
               >
                 {scopeLabel[scope]}
               </button>
@@ -213,7 +213,7 @@ export function PolicyTabs({
           <button
             type="button"
             onClick={() => setPicked(new Set())}
-            className="link-draw ms-auto cursor-pointer text-xs text-ink-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700"
+            className="link-draw ms-auto cursor-pointer text-xs text-ink-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700"
           >
             {t("policies.clearSelection")}
           </button>
@@ -273,8 +273,8 @@ export function PolicyTabs({
                       checked={picked.has(item.id)}
                       onChange={() => togglePick(item.id)}
                       aria-label={t("policies.select", { title })}
-                      className="mt-1 size-4 shrink-0 cursor-pointer rounded border-sand-300"
-                      style={{ accentColor: "var(--color-maroon-700)" }}
+                      className="mt-1 size-4 shrink-0 cursor-pointer rounded border-mist-300"
+                      style={{ accentColor: "var(--color-navy-700)" }}
                     />
                   ) : null}
                   {/* a short book on its own plank, the Vault link on the spine */}
@@ -292,14 +292,14 @@ export function PolicyTabs({
                   <div className="min-w-0 flex-1">
                     <Link
                       href={`/vault/${item.id}`}
-                      className="link-draw block text-sm font-medium leading-snug text-ink-900 hover:text-maroon-700"
+                      className="link-draw block text-sm font-medium leading-snug text-ink-900 hover:text-navy-700"
                     >
                       {title}
                     </Link>
                     <p className="line-clamp-1 text-[11px] text-ink-400">{alt}</p>
                     <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                       {item.versionLabel ? (
-                        <Chip tone="sand">
+                        <Chip tone="mist">
                           {t("policies.version", { version: item.versionLabel })}
                         </Chip>
                       ) : null}
@@ -310,7 +310,7 @@ export function PolicyTabs({
                           })}
                         </span>
                       ) : null}
-                      <Chip tone={SCOPE_TONE[item.visibilityScope] ?? "sand"}>
+                      <Chip tone={SCOPE_TONE[item.visibilityScope] ?? "mist"}>
                         {scopeLabel[item.visibilityScope] ?? item.visibilityScope}
                       </Chip>
                       {item.reviewDue ? (
@@ -339,7 +339,7 @@ export function PolicyTabs({
                         data-testid="visibility-control"
                         role="group"
                         aria-label={t("policies.visibility.label")}
-                        className="mt-2 inline-flex flex-wrap items-center gap-0.5 rounded-lg bg-sand-100 p-0.5"
+                        className="mt-2 inline-flex flex-wrap items-center gap-0.5 rounded-lg bg-mist-100 p-0.5"
                       >
                         {SCOPES.map((scope) => {
                           const active = item.visibilityScope === scope;
@@ -353,10 +353,10 @@ export function PolicyTabs({
                                 patchVisibility({ documentId: item.id, visibilityScope: scope })
                               }
                               className={cn(
-                                "cursor-pointer rounded-md px-2 py-0.5 text-[11px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700 disabled:opacity-50",
+                                "cursor-pointer rounded-md px-2 py-0.5 text-[11px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700 disabled:opacity-50",
                                 active
-                                  ? "bg-white font-medium text-maroon-900 shadow-sm"
-                                  : "text-ink-600 hover:text-maroon-900"
+                                  ? "bg-white font-medium text-navy-900 shadow-sm"
+                                  : "text-ink-600 hover:text-navy-900"
                               )}
                             >
                               {scopeLabel[scope]}

@@ -1,5 +1,5 @@
 "use client";
-// Minimal quiet toaster. Gold tone for points, maroon for info, danger for errors.
+// Minimal quiet toaster. Gold tone for points, navy for info, danger for errors.
 import * as React from "react";
 import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
@@ -36,7 +36,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
   const icons = {
     info: <Info className="size-4 text-info" />,
-    points: <Sparkles className="size-4 text-gold-500" />,
+    points: <Sparkles className="size-4 text-aqua-500" />,
     error: <AlertTriangle className="size-4 text-danger" />,
     success: <Check className="size-4 text-ok" />,
   };
@@ -53,7 +53,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                   role="status"
                   className={cn(
                     "reveal pointer-events-auto flex items-center gap-2.5 rounded-xl border bg-white px-4 py-2.5 text-sm shadow-[var(--shadow-pop)]",
-                    t.tone === "points" ? "border-gold-300" : "border-sand-300"
+                    t.tone === "points" ? "border-aqua-300" : "border-mist-300"
                   )}
                 >
                   {icons[t.tone]}

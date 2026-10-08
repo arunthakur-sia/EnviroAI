@@ -26,7 +26,7 @@ function expect(name: string, ok: boolean, detail = "") {
 async function login(page: Page) {
   for (let i = 0; i < 12; i++) {
     try {
-      const res = await page.request.post(`${BASE}/api/v1/auth/login`, { data: { email: "admin@npc.qa", password: "Nexus!2026" }, timeout: 120000 });
+      const res = await page.request.post(`${BASE}/api/v1/auth/login`, { data: { email: "admin@enviroai.demo", password: "EnviroAI!2026" }, timeout: 120000 });
       if (res.ok()) return;
       console.log(`  login: ${res.status()}, retrying`);
     } catch (e) {

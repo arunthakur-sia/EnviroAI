@@ -39,9 +39,9 @@ async function main() {
   await req("/api/v1/auth/login", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email: "analyst@npc.qa", password: "Nexus!2026" }),
+    body: JSON.stringify({ email: "analyst@enviroai.demo", password: "EnviroAI!2026" }),
   });
-  await ask("What is the GDP growth target in NDS3?", "en");
+  await ask("What is the GDP growth target in NES3?", "en");
   await ask("ما هي مستهدفات النمو الاقتصادي في استراتيجية التنمية الوطنية الثالثة؟", "ar");
   await ask("What is the annual budget of the Ministry of Magic?", "en");
 }

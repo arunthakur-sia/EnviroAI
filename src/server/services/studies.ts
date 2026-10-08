@@ -186,7 +186,7 @@ export function applyStudyFilters(docs: StudyDoc[], filters: StudyFilters): Stud
   return filters.limit ? out.slice(0, filters.limit) : out;
 }
 
-/** The API and the Ask NPC tool read through this. */
+/** The API and the Ask EnviroAI tool read through this. */
 export async function listStudies(user: CurrentUser, filters: StudyFilters = {}): Promise<StudyDoc[]> {
   return applyStudyFilters(await loadStudies(user), filters);
 }

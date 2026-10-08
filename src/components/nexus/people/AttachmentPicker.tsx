@@ -21,14 +21,14 @@ export function AttachmentChips({
   return (
     <div className="flex flex-wrap gap-1.5" data-testid="attachment-chips">
       {value.map((d) => (
-        <Chip key={d.id} tone="gulf" className="max-w-full">
+        <Chip key={d.id} tone="teal" className="max-w-full">
           <FileText className="size-3 shrink-0" aria-hidden />
           <span className="truncate">{bi(locale, d.titleEn, d.titleAr)}</span>
           {onRemove ? (
             <button
               type="button"
               onClick={() => onRemove(d.id)}
-              className="ms-0.5 rounded p-0.5 hover:bg-white/60 focus-visible:outline-2 focus-visible:outline-gold-500 cursor-pointer"
+              className="ms-0.5 rounded p-0.5 hover:bg-white/60 focus-visible:outline-2 focus-visible:outline-aqua-500 cursor-pointer"
               aria-label={t("remove", { name: bi(locale, d.titleEn, d.titleAr) })}
             >
               <X className="size-3" />
@@ -105,7 +105,7 @@ export function AttachmentPicker({
           />
           <ul
             role="listbox"
-            className="mt-1 max-h-56 overflow-y-auto rounded-xl border border-sand-300 bg-white p-1 shadow-[var(--shadow-paper)]"
+            className="mt-1 max-h-56 overflow-y-auto rounded-xl border border-mist-300 bg-white p-1 shadow-[var(--shadow-paper)]"
           >
             {q.trim().length < 2 ? (
               <li className="px-3 py-2 text-xs text-ink-400">{t("docHint")}</li>
@@ -127,7 +127,7 @@ export function AttachmentPicker({
                         setQ("");
                       }}
                       className={cn(
-                        "flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-start text-sm text-ink-900 hover:bg-maroon-100/60 focus-visible:outline-2 focus-visible:outline-gold-500 cursor-pointer disabled:cursor-default disabled:opacity-50"
+                        "flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-start text-sm text-ink-900 hover:bg-navy-100/60 focus-visible:outline-2 focus-visible:outline-aqua-500 cursor-pointer disabled:cursor-default disabled:opacity-50"
                       )}
                       data-testid={`${testId}-option`}
                     >
@@ -145,8 +145,8 @@ export function AttachmentPicker({
           type="button"
           onClick={() => setOpen(true)}
           className={cn(
-            "inline-flex w-fit items-center gap-1.5 rounded-lg text-xs font-medium text-maroon-700 hover:text-maroon-900 focus-visible:outline-2 focus-visible:outline-gold-500 cursor-pointer",
-            compact ? "px-1.5 py-1" : "border border-dashed border-sand-300 px-2.5 py-1.5 hover:border-maroon-300"
+            "inline-flex w-fit items-center gap-1.5 rounded-lg text-xs font-medium text-navy-700 hover:text-navy-900 focus-visible:outline-2 focus-visible:outline-aqua-500 cursor-pointer",
+            compact ? "px-1.5 py-1" : "border border-dashed border-mist-300 px-2.5 py-1.5 hover:border-navy-300"
           )}
           data-testid={`${testId}-open`}
         >

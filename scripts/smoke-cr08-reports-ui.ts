@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 // CR08 5 (Reports UI agent): smoke checks over the rendered HTML of the
 // Reports pages, wired into scripts/smoke.ts by the coordinator. `cookie` is
-// a Contributor session (analyst@npc.qa), `adminCookie` the Super Admin.
+// a Contributor session (analyst@enviroai.demo), `adminCookie` the Super Admin.
 type Check = (name: string, ok: boolean, detail?: string) => void;
 type Ctx = { base: string; cookie: string; adminCookie: string; db: import("@libsql/client").Client };
 
@@ -35,7 +35,7 @@ async function loginCookie(base: string, email: string): Promise<string | null> 
       const res = await fetch(`${base}/api/v1/auth/login`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email, password: "Nexus!2026" }),
+        body: JSON.stringify({ email, password: "EnviroAI!2026" }),
       });
       if (!res.ok) {
         await new Promise((r) => setTimeout(r, 2000));
@@ -67,7 +67,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   const hub = await page("/en/reports", ctx.cookie);
   const covers = count(hub.html, 'data-testid="cover-card"');
   const expected = await ctx.db.execute(
-    "select count(*) n from reports where type_id is not null and status = 'published' and classification_level <= (select clearance_level from users where email = 'analyst@npc.qa')"
+    "select count(*) n from reports where type_id is not null and status = 'published' and classification_level <= (select clearance_level from users where email = 'analyst@enviroai.demo')"
   );
   const expectedCovers = Number(expected.rows[0]?.n ?? 0);
   check("reports ui: a contributor sees the gallery and their requests", hub.status === 200 && covers === expectedCovers && covers > 0 && hub.html.includes('data-testid="my-requests"'), `status ${hub.status}, covers ${covers}, expected ${expectedCovers}`);
@@ -87,7 +87,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
     const report = await page(`/en/reports/${seededId}`, ctx.adminCookie);
     const sections = count(report.html, 'data-testid="report-section"');
     check("reports ui: the report page renders its sections", report.status === 200 && sections >= 5, `status ${report.status}, sections ${sections}`);
-    check("reports ui: the report page carries the Ask NPC context marker", report.html.includes(`data-ask-context="report:${seededId}"`));
+    check("reports ui: the report page carries the Ask EnviroAI context marker", report.html.includes(`data-ask-context="report:${seededId}"`));
     check("reports ui: the report page renders KPI tiles, a chart and the filmstrip", report.html.includes('data-testid="kpi-grid"') && report.html.includes('data-testid="report-chart"') && report.html.includes('data-testid="filmstrip"'));
     check("reports ui: the report page uses no <table> element", !/<table[\s>]/.test(report.html));
     const reader = await page(`/en/reports/${seededId}`, ctx.cookie);
@@ -119,7 +119,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
     `status ${missing.status}`
   );
   const foreign = await ctx.db.execute(
-    "select id from reports where type_id is not null and status != 'published' and requested_by != (select id from users where email = 'analyst@npc.qa') limit 1"
+    "select id from reports where type_id is not null and status != 'published' and requested_by != (select id from users where email = 'analyst@enviroai.demo') limit 1"
   );
   if (foreign.rows[0]?.id) {
     const hidden = await page(`/en/reports/${foreign.rows[0].id}`, ctx.cookie);
@@ -127,8 +127,8 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   }
 
   /* a person without the Reports portal gets the friendly 404 */
-  const readerCookie = await loginCookie(ctx.base, "reader@npc.qa");
-  const readerRow = await ctx.db.execute("select id from users where email = 'reader@npc.qa'");
+  const readerCookie = await loginCookie(ctx.base, "reader@enviroai.demo");
+  const readerRow = await ctx.db.execute("select id from users where email = 'reader@enviroai.demo'");
   const readerId = readerRow.rows[0]?.id ? String(readerRow.rows[0].id) : null;
   if (readerCookie && readerId) {
     const before = await page("/en/reports", readerCookie);

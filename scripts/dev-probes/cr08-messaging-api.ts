@@ -12,7 +12,7 @@ async function loginCookie(email: string): Promise<string> {
   const res = await fetch(BASE + "/api/v1/auth/login", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email, password: "EnviroAI!2026" }),
     redirect: "manual",
   });
   const jar = new Map<string, string>();
@@ -26,10 +26,10 @@ async function loginCookie(email: string): Promise<string> {
 }
 
 async function main() {
-  const cookie = await loginCookie(process.env.WARM_EMAIL ?? "analyst@npc.qa");
+  const cookie = await loginCookie(process.env.WARM_EMAIL ?? "analyst@enviroai.demo");
   const { db, schema } = await import("../../src/server/db/client");
   const { eq } = await import("drizzle-orm");
-  const [head] = await db.select().from(schema.users).where(eq(schema.users.email, "head.stats@npc.qa")).limit(1);
+  const [head] = await db.select().from(schema.users).where(eq(schema.users.email, "head.stats@enviroai.demo")).limit(1);
   const paths = [
     "/api/v1/profile/delegate",
     "/api/v1/people?q=al",

@@ -302,7 +302,7 @@ function headOf(node: OrgUnitNode, locale: string): { name: string; title: strin
   return {
     name,
     title: bi(locale, node.headTitleEn ?? "", node.headTitleAr ?? ""),
-    color: node.head?.avatarColor ?? "maroon",
+    color: node.head?.avatarColor ?? "navy",
   };
 }
 
@@ -353,9 +353,9 @@ const UnitCard = React.memo(function UnitCard({ node, ctx }: { node: OrgUnitNode
         data-node-id={node.id}
         data-unit-code={node.code}
         className={cn(
-          "card flex h-full w-full cursor-pointer flex-col px-3 py-2 text-start transition-[box-shadow,transform,opacity] duration-200 ease-[var(--ease-paper)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500",
-          selected && "ring-2 ring-maroon-700",
-          matched && !selected && "ring-2 ring-maroon-500",
+          "card flex h-full w-full cursor-pointer flex-col px-3 py-2 text-start transition-[box-shadow,transform,opacity] duration-200 ease-[var(--ease-paper)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500",
+          selected && "ring-2 ring-navy-700",
+          matched && !selected && "ring-2 ring-navy-500",
           dimmed && "opacity-35",
           !node.isActive && "border-dashed opacity-70"
         )}
@@ -374,7 +374,7 @@ const UnitCard = React.memo(function UnitCard({ node, ctx }: { node: OrgUnitNode
           {head.name ? (
             <Avatar name={head.name} color={head.color} size={20} />
           ) : (
-            <span className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-sand-200 text-ink-400" aria-hidden>
+            <span className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-mist-200 text-ink-400" aria-hidden>
               <UserRound className="size-3" />
             </span>
           )}
@@ -383,7 +383,7 @@ const UnitCard = React.memo(function UnitCard({ node, ctx }: { node: OrgUnitNode
           </span>
           {node.policyCount > 0 ? (
             <span
-              className="inline-flex shrink-0 items-center gap-0.5 rounded-md bg-maroon-100 px-1.5 text-[10px] font-medium text-maroon-900 tnum"
+              className="inline-flex shrink-0 items-center gap-0.5 rounded-md bg-navy-100 px-1.5 text-[10px] font-medium text-navy-900 tnum"
               title={t("policyChip", { count: node.policyCount })}
             >
               <FileText className="size-2.5" aria-hidden />
@@ -402,7 +402,7 @@ const UnitCard = React.memo(function UnitCard({ node, ctx }: { node: OrgUnitNode
           }}
           aria-expanded={!collapsed}
           aria-label={collapsed ? t("expandBranch", { unit: name }) : t("collapseBranch", { unit: name })}
-          className="absolute -bottom-3 left-1/2 z-10 flex min-h-6 min-w-6 -translate-x-1/2 cursor-pointer items-center justify-center gap-1 rounded-full border border-sand-300 bg-white px-2 py-1 text-[10px] text-ink-600 shadow-sm transition-colors hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+          className="absolute -bottom-3 left-1/2 z-10 flex min-h-6 min-w-6 -translate-x-1/2 cursor-pointer items-center justify-center gap-1 rounded-full border border-mist-300 bg-white px-2 py-1 text-[10px] text-ink-600 shadow-sm transition-colors hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
         >
           <ChevronDown className={cn("size-3 transition-transform", collapsed && "-rotate-90")} aria-hidden />
           {collapsed && hidden ? <span className="tnum">{t("hiddenUnits", { count: hidden })}</span> : null}
@@ -815,7 +815,7 @@ const ChartCanvas = React.forwardRef<
   };
 
   const controlClass =
-    "flex size-8 cursor-pointer items-center justify-center rounded-lg border border-sand-300 bg-white text-ink-600 shadow-[var(--shadow-paper)] transition-colors hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500";
+    "flex size-8 cursor-pointer items-center justify-center rounded-lg border border-mist-300 bg-white text-ink-600 shadow-[var(--shadow-paper)] transition-colors hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500";
 
   return (
     <div
@@ -825,7 +825,7 @@ const ChartCanvas = React.forwardRef<
       aria-label={t("chartAria")}
       aria-describedby="org-chart-keys"
       onKeyDown={onKeyDown}
-      className="relative overflow-hidden rounded-2xl bg-sand-100"
+      className="relative overflow-hidden rounded-2xl bg-mist-100"
       style={{ height: height ? `${height}px` : "max(480px, 70vh)" }}
     >
       <p id="org-chart-keys" className="sr-only">
@@ -851,8 +851,8 @@ const ChartCanvas = React.forwardRef<
           insetInlineStart: 0,
           width: RAIL_W,
           background: isRtl
-            ? "linear-gradient(270deg, var(--color-sand-100) 55%, rgba(0,0,0,0) 100%)"
-            : "linear-gradient(90deg, var(--color-sand-100) 55%, rgba(0,0,0,0) 100%)",
+            ? "linear-gradient(270deg, var(--color-mist-100) 55%, rgba(0,0,0,0) 100%)"
+            : "linear-gradient(90deg, var(--color-mist-100) 55%, rgba(0,0,0,0) 100%)",
         }}
       >
         {layout.bands.map((band) => {
@@ -872,11 +872,11 @@ const ChartCanvas = React.forwardRef<
                 {band.levels.map((code) => ctx.levelLabel(code)).join(" / ")}
               </span>
               <span
-                className="absolute bottom-0 top-0 w-px bg-sand-300"
+                className="absolute bottom-0 top-0 w-px bg-mist-300"
                 style={{ insetInlineEnd: 0 }}
               />
-              <span className="absolute top-0 h-px w-2 bg-sand-300" style={{ insetInlineEnd: 0 }} />
-              <span className="absolute bottom-0 h-px w-2 bg-sand-300" style={{ insetInlineEnd: 0 }} />
+              <span className="absolute top-0 h-px w-2 bg-mist-300" style={{ insetInlineEnd: 0 }} />
+              <span className="absolute bottom-0 h-px w-2 bg-mist-300" style={{ insetInlineEnd: 0 }} />
             </div>
           );
         })}
@@ -919,7 +919,7 @@ const ChartCanvas = React.forwardRef<
             transition={{ duration: 0.2 }}
             className="pointer-events-none absolute inset-x-0 top-3 z-10 flex justify-center"
           >
-            <span className="rounded-full border border-sand-300 bg-white/95 px-3 py-1 text-xs text-ink-900 shadow-[var(--shadow-paper)]">
+            <span className="rounded-full border border-mist-300 bg-white/95 px-3 py-1 text-xs text-ink-900 shadow-[var(--shadow-paper)]">
               {isMac ? t("chart.zoomHintMac") : t("chart.zoomHint")}
             </span>
           </motion.div>
@@ -930,7 +930,7 @@ const ChartCanvas = React.forwardRef<
       {wider && layout.nodes.length ? (
         <div
           data-testid="org-minimap"
-          className="absolute bottom-5 z-10 hidden h-24 w-36 rounded-lg border border-sand-300 bg-white/90 p-1 shadow-[var(--shadow-paper)] sm:block"
+          className="absolute bottom-5 z-10 hidden h-24 w-36 rounded-lg border border-mist-300 bg-white/90 p-1 shadow-[var(--shadow-paper)] sm:block"
           style={{ insetInlineEnd: 12 }}
         >
           <svg
@@ -952,7 +952,7 @@ const ChartCanvas = React.forwardRef<
                 width={NODE_W}
                 height={NODE_H}
                 rx={8}
-                fill={selectedId === n.id ? "var(--color-maroon-700)" : "var(--color-sand-300)"}
+                fill={selectedId === n.id ? "var(--color-navy-700)" : "var(--color-mist-300)"}
               />
             ))}
             <rect
@@ -960,8 +960,8 @@ const ChartCanvas = React.forwardRef<
               y={viewportWorld.y}
               width={Math.max(1, viewportWorld.w)}
               height={Math.max(1, viewportWorld.h)}
-              fill="rgba(138, 21, 56, 0.05)"
-              stroke="var(--color-maroon-500)"
+              fill="rgba(23, 48, 68, 0.05)"
+              stroke="var(--color-navy-500)"
               strokeWidth={Math.max(2, (treeW + 2 * PAD) / 140)}
             />
           </svg>
@@ -983,10 +983,10 @@ const ChartCanvas = React.forwardRef<
         onPointerCancel={onResizeUp}
         onKeyDown={onResizeKey}
         data-testid="org-resize-handle"
-        className="group absolute inset-x-0 bottom-0 z-10 flex h-4 cursor-row-resize items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-gold-500"
+        className="group absolute inset-x-0 bottom-0 z-10 flex h-4 cursor-row-resize items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-aqua-500"
         title={t("chart.resizeHint", { height: Math.round(currentHeight) })}
       >
-        <span className="flex h-2.5 w-12 items-center justify-center rounded-full bg-white/90 text-ink-400 shadow-[var(--shadow-paper)] transition-colors group-hover:text-maroon-700">
+        <span className="flex h-2.5 w-12 items-center justify-center rounded-full bg-white/90 text-ink-400 shadow-[var(--shadow-paper)] transition-colors group-hover:text-navy-700">
           <GripHorizontal className="size-3" aria-hidden />
         </span>
       </div>
@@ -1019,7 +1019,7 @@ function ListRow({ node, depth, ctx }: { node: OrgUnitNode; depth: number; ctx: 
             onClick={() => ctx.onToggle(node.id)}
             aria-expanded={!collapsed}
             aria-label={collapsed ? t("expandBranch", { unit: name }) : t("collapseBranch", { unit: name })}
-            className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-ink-400 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+            className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-ink-400 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
           >
             <ChevronDown className={cn("size-3.5 transition-transform", collapsed && "-rotate-90 rtl:rotate-90")} aria-hidden />
           </button>
@@ -1034,9 +1034,9 @@ function ListRow({ node, depth, ctx }: { node: OrgUnitNode; depth: number; ctx: 
           data-testid="org-unit-card"
           data-unit-code={node.code}
           className={cn(
-            "card flex min-w-0 flex-1 cursor-pointer flex-wrap items-center gap-x-3 gap-y-1 px-3 py-2 text-start transition-colors hover:border-maroon-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500",
-            selected && "ring-2 ring-maroon-700",
-            matched && !selected && "ring-2 ring-maroon-500",
+            "card flex min-w-0 flex-1 cursor-pointer flex-wrap items-center gap-x-3 gap-y-1 px-3 py-2 text-start transition-colors hover:border-navy-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500",
+            selected && "ring-2 ring-navy-700",
+            matched && !selected && "ring-2 ring-navy-500",
             dimmed && "opacity-35"
           )}
         >
@@ -1048,15 +1048,15 @@ function ListRow({ node, depth, ctx }: { node: OrgUnitNode; depth: number; ctx: 
             {head.name ? (
               <Avatar name={head.name} color={head.color} size={20} />
             ) : (
-              <span className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-sand-200 text-ink-400" aria-hidden>
+              <span className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-mist-200 text-ink-400" aria-hidden>
                 <UserRound className="size-3" />
               </span>
             )}
             <span className="max-w-40 truncate text-[11px] text-ink-600">{head.name || t("headVacant")}</span>
           </span>
           <span className="text-[11px] text-ink-600 tnum">{t("staff", { count: node.headcountTotal })}</span>
-          <Chip tone="sand">{ctx.levelLabel(node.level)}</Chip>
-          {node.policyCount > 0 ? <Chip tone="maroon">{t("policyChip", { count: node.policyCount })}</Chip> : null}
+          <Chip tone="mist">{ctx.levelLabel(node.level)}</Chip>
+          {node.policyCount > 0 ? <Chip tone="navy">{t("policyChip", { count: node.policyCount })}</Chip> : null}
         </button>
       </div>
     </li>
@@ -1403,7 +1403,7 @@ export function OrgChart({
               type="button"
               onClick={() => setQuery("")}
               aria-label={t("clearSearch")}
-              className="absolute top-1/2 flex size-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-md text-ink-400 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+              className="absolute top-1/2 flex size-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-md text-ink-400 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
               style={{ insetInlineEnd: 6 }}
             >
               <X className="size-3.5" />
@@ -1411,21 +1411,21 @@ export function OrgChart({
           ) : null}
         </div>
         {matches ? (
-          <span className={cn("text-xs tnum", matchCount ? "text-maroon-700" : "text-ink-600")} role="status">
+          <span className={cn("text-xs tnum", matchCount ? "text-navy-700" : "text-ink-600")} role="status">
             {matchCount ? t("matches", { count: matchCount }) : t("noMatches")}
           </span>
         ) : (
           <span className="text-xs text-ink-600 tnum">{t("unitsCount", { count: units.length })}</span>
         )}
-        <span className="ms-auto inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5" role="group" aria-label={t("viewToggle")}>
+        <span className="ms-auto inline-flex items-center gap-0.5 rounded-lg bg-mist-100 p-0.5" role="group" aria-label={t("viewToggle")}>
           <button
             type="button"
             onClick={() => setView("chart")}
             aria-pressed={view === "chart"}
             data-testid="org-view-chart"
             className={cn(
-              "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500",
-              view === "chart" ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+              "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500",
+              view === "chart" ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
             )}
           >
             <Network className="size-3.5" aria-hidden /> {t("chartView")}
@@ -1436,8 +1436,8 @@ export function OrgChart({
             aria-pressed={view === "list"}
             data-testid="org-view-list"
             className={cn(
-              "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500",
-              view === "list" ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+              "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500",
+              view === "list" ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
             )}
           >
             <Rows3 className="size-3.5" aria-hidden /> {t("listView")}
@@ -1446,7 +1446,7 @@ export function OrgChart({
       </div>
 
       {units.length === 0 ? (
-        <p className="rounded-2xl bg-sand-100 px-6 py-10 text-center text-sm text-ink-600">{t("emptyTree")}</p>
+        <p className="rounded-2xl bg-mist-100 px-6 py-10 text-center text-sm text-ink-600">{t("emptyTree")}</p>
       ) : view === "chart" ? (
         <div ref={chartWrapRef}>
           <ChartCanvas
@@ -1485,7 +1485,7 @@ export function OrgChart({
                 if (selectedNode) setTimeout(() => canvasRef.current?.focusNode(selectedNode.id), 400);
               }}
               data-testid="org-back-to-chart"
-              className="pointer-events-auto mt-2 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-sand-300 bg-white px-3.5 py-1.5 text-xs font-medium text-maroon-900 shadow-[var(--shadow-lift)] hover:border-maroon-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+              className="pointer-events-auto mt-2 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-mist-300 bg-white px-3.5 py-1.5 text-xs font-medium text-navy-900 shadow-[var(--shadow-lift)] hover:border-navy-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
             >
               <ArrowUp className="size-3.5" aria-hidden /> {t("chart.backToChart")}
             </motion.button>
@@ -1503,8 +1503,8 @@ export function OrgChart({
           style={{ left: 40, display: "none", transition: reduced ? undefined : "left 260ms var(--ease-paper)" }}
         >
           <span
-            className="block size-6 rotate-45 rounded-[3px] bg-sand-100"
-            style={{ borderTop: "1px solid var(--color-sand-300)", borderLeft: "1px solid var(--color-sand-300)" }}
+            className="block size-6 rotate-45 rounded-[3px] bg-mist-100"
+            style={{ borderTop: "1px solid var(--color-mist-300)", borderLeft: "1px solid var(--color-mist-300)" }}
           />
         </span>
         <AnimatePresence initial={false}>
@@ -1524,7 +1524,7 @@ export function OrgChart({
               {panelData ? (
                 <UnitPanel data={panelData} onClose={closePanel} onSelectUnit={selectCode} />
               ) : pending || requestedRef.current !== selected ? (
-                <div className="rounded-2xl bg-sand-100 px-7 py-6" aria-busy aria-label={t("loadingPanel")}>
+                <div className="rounded-2xl bg-mist-100 px-7 py-6" aria-busy aria-label={t("loadingPanel")}>
                   <Skeleton className="h-7 w-64" />
                   <Skeleton className="mt-3 h-4 w-40" />
                   <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -1533,7 +1533,7 @@ export function OrgChart({
                   </div>
                 </div>
               ) : (
-                <p className="rounded-2xl bg-sand-100 px-7 py-6 text-sm text-ink-600">{tc("notFound")}</p>
+                <p className="rounded-2xl bg-mist-100 px-7 py-6 text-sm text-ink-600">{tc("notFound")}</p>
               )}
             </motion.div>
           ) : null}

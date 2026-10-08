@@ -77,7 +77,7 @@ export function InternalBoard({
         <button
           type="button"
           onClick={() => setAll(true)}
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-ink-600 transition-colors hover:bg-sand-100 hover:text-maroon-700 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+          className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-ink-600 transition-colors hover:bg-mist-100 hover:text-navy-700 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
           data-testid="expand-all"
         >
           <UnfoldVertical className="size-3.5" aria-hidden /> {t("expandAll")}
@@ -85,7 +85,7 @@ export function InternalBoard({
         <button
           type="button"
           onClick={() => setAll(false)}
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-ink-600 transition-colors hover:bg-sand-100 hover:text-maroon-700 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+          className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-ink-600 transition-colors hover:bg-mist-100 hover:text-navy-700 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
           data-testid="collapse-all"
         >
           <FoldVertical className="size-3.5" aria-hidden /> {t("collapseAll")}
@@ -104,23 +104,23 @@ export function InternalBoard({
               onClick={() => toggle(g.key)}
               aria-expanded={isOpen}
               aria-controls={panelId}
-              className="group/header flex w-full items-center gap-3 rounded-lg px-1.5 py-2 text-start transition-colors hover:bg-sand-100/70 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+              className="group/header flex w-full items-center gap-3 rounded-lg px-1.5 py-2 text-start transition-colors hover:bg-mist-100/70 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
             >
-              <span aria-hidden className="h-6 w-1 shrink-0 rounded-full bg-maroon-700" />
+              <span aria-hidden className="h-6 w-1 shrink-0 rounded-full bg-navy-700" />
               <span className="min-w-0">
                 {sector ? (
                   <span className="block truncate text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal">
                     {sector}
                   </span>
                 ) : null}
-                <h2 className="truncate font-display text-base font-semibold text-ink-900 group-hover/header:text-maroon-900">
+                <h2 className="truncate font-display text-base font-semibold text-ink-900 group-hover/header:text-navy-900">
                   {label}
                 </h2>
               </span>
-              <span className="rounded-full bg-sand-100 px-2 py-0.5 text-xs text-ink-600 tnum">
+              <span className="rounded-full bg-mist-100 px-2 py-0.5 text-xs text-ink-600 tnum">
                 {formatNumber(g.experts.length, locale, { decimals: 0 })}
               </span>
-              <span className="mx-2 h-px flex-1 bg-sand-300/70" aria-hidden />
+              <span className="mx-2 h-px flex-1 bg-mist-300/70" aria-hidden />
               <ChevronDown
                 className={cn("size-4 shrink-0 text-ink-400 transition-transform duration-200", !isOpen && "-rotate-90 rtl:rotate-90")}
                 aria-hidden

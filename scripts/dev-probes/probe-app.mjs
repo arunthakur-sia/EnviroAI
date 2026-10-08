@@ -23,7 +23,7 @@ async function main() {
   let res = await req("/api/v1/auth/login", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email: "analyst@npc.qa", password: "Nexus!2026" }),
+    body: JSON.stringify({ email: "analyst@enviroai.demo", password: "EnviroAI!2026" }),
   });
   console.log("login:", res.status);
   if (res.status !== 200) {
@@ -37,7 +37,7 @@ async function main() {
     "/en/vault",
     "/en/vault/collections",
     "/en/strategy",
-    "/en/strategy?edition=nds2",
+    "/en/strategy?edition=nes2",
     "/en/statistics",
     "/en/statistics/releases",
     "/en/experts",
@@ -72,7 +72,7 @@ async function main() {
   res = await req("/api/v1/ai/ask", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ query: "What is the GDP growth target in NDS3?", locale: "en" }),
+    body: JSON.stringify({ query: "What is the GDP growth target in NES3?", locale: "en" }),
   });
   console.log("ask:", res.status, res.headers.get("content-type"));
   if (res.ok) {

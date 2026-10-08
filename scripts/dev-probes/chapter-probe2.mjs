@@ -1,13 +1,13 @@
-// Probe 2: token-overlap scoring to find each outcome's pages in the NDS3 doc.
+// Probe 2: token-overlap scoring to find each outcome's pages in the NES3 doc.
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const q = async (sql, args = []) => (await db.execute({ sql, args })).rows;
 
-const STOP = new Set(["the","of","and","a","an","to","in","for","with","into","through","qatar","qatari","national","development","strategy"]);
+const STOP = new Set(["the","of","and","a","an","to","in","for","with","into","through","saudi","national","development","strategy"]);
 const tokens = (s) => [...new Set((s ?? "").toLowerCase().replace(/[^a-z\u0600-\u06ff\s]/g, " ").split(/\s+/).filter((w) => w.length > 3 && !STOP.has(w)))];
 
 const docs = await q("select id, language_original from documents where title_en like 'Third National Development Strategy%' and deleted_at is null");
-const outcomes = await q("select code, title_en, title_ar, description_en, description_ar from strategy_nodes where node_type='outcome' and edition_id=(select id from strategy_editions where code='nds3') order by sort");
+const outcomes = await q("select code, title_en, title_ar, description_en, description_ar from strategy_nodes where node_type='outcome' and edition_id=(select id from strategy_editions where code='nes3') order by sort");
 
 for (const d of docs) {
   console.log(`\n-- ${d.language_original} --`);

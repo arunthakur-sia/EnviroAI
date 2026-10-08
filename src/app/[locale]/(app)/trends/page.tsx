@@ -168,7 +168,7 @@ export default async function TrendsPage({
       <div className="mt-10">
         <Link
           href="/indices"
-          className="link-draw inline-flex items-center gap-1.5 text-sm font-medium text-maroon-700"
+          className="link-draw inline-flex items-center gap-1.5 text-sm font-medium text-navy-700"
           data-testid="see-indices-link"
         >
           <Globe2 className="size-4" /> {t("seeIndices")}

@@ -1,6 +1,6 @@
 // CR08 5.5: the SVG designs the template rasterises through png.ts so exact
-// typography (Fraunces, Noto Kufi Arabic, Inter, IBM Plex Sans Arabic) survives
-// Word: the cover band with its Sadu-inspired pattern, section numerals, KPI
+// typography (Sora, Noto Kufi Arabic, IBM Plex Sans Arabic) survives
+// Word: the cover band with its Ascent Line pattern, section numerals, KPI
 // tile rows, key figures, trend glyphs and the closing page. Text that wraps
 // sits in <foreignObject> so the browser measures and wraps it; numbers and
 // axes are plain SVG text. Every builder returns an SVG string sized in CSS px.
@@ -15,10 +15,10 @@ import { pngSize as readPngSize } from "./png";
 /* ------------------------------------------------------------------ */
 
 export type Assets = {
-  npcWhite: Buffer | null; // white mono NPC logo on transparent
-  npcColour: Buffer | null; // colour NPC logo on transparent
-  wordmark: Buffer | null; // SiaNexus wordmark, ink on transparent
-  wordmarkWhite: Buffer | null; // SiaNexus wordmark, white on transparent
+  siaWhite: Buffer | null; // Sia logo, white lettering on a navy ground
+  siaColour: Buffer | null; // Sia logo, colour on transparent
+  wordmark: Buffer | null; // EnviroAI wordmark, ink on transparent
+  wordmarkWhite: Buffer | null; // EnviroAI wordmark, white on transparent
 };
 
 function readBrand(file: string): Buffer | null {
@@ -33,10 +33,10 @@ let assetsCache: Assets | null = null;
 export function loadAssets(): Assets {
   if (!assetsCache) {
     assetsCache = {
-      npcWhite: readBrand("NPC_logo_white_mono.png"),
-      npcColour: readBrand("NPC_logo_transparent.png"),
-      wordmark: readBrand("SiaNexus_logo_transparent.png"),
-      wordmarkWhite: readBrand("SiaNexus_logo_white.png"),
+      siaWhite: readBrand("Sia_logo_white.png"),
+      siaColour: readBrand("Sia_logo_transparent.png"),
+      wordmark: readBrand("EnviroAI_logo_transparent.png"),
+      wordmarkWhite: readBrand("EnviroAI_logo_white.png"),
     };
   }
   return assetsCache;
@@ -56,25 +56,19 @@ const dataUri = (buf: Buffer | null): string => (buf ? `data:image/png;base64,${
 
 // Font stacks use single quotes: they are interpolated into double-quoted
 // style and font-family attributes.
-const SANS = (lang: Lang) => (isAr(lang) ? "'IBM Plex Sans Arabic', 'Inter', sans-serif" : "'Inter', 'Segoe UI', sans-serif");
+const SANS = (lang: Lang) => (isAr(lang) ? "'IBM Plex Sans Arabic', 'Sora', sans-serif" : "'Sora', 'Segoe UI', sans-serif");
 const DISPLAY = (lang: Lang) =>
-  isAr(lang) ? "'Noto Kufi Arabic', 'IBM Plex Sans Arabic', sans-serif" : "'Fraunces', 'Georgia', serif";
-/** Numerals always set in Fraunces: the digits are the brand element. */
-const NUMERAL = "'Fraunces', 'Georgia', serif";
+  isAr(lang) ? "'Noto Kufi Arabic', 'IBM Plex Sans Arabic', sans-serif" : "'Sora', 'Segoe UI', sans-serif";
+/** Numerals always set in Sora: the digits are the brand element. */
+const NUMERAL = "'Sora', 'Segoe UI', sans-serif";
 
 const XHTML = 'xmlns="http://www.w3.org/1999/xhtml"';
 
-/** A Sadu-inspired lattice: nested diamonds joined by chevron ticks, thin
-    white lines on a 64px tile. Used at 8 percent opacity over maroon. */
-export function saduPattern(id = "sadu", colour = "#FFFFFF"): string {
-  return `<pattern id="${id}" width="64" height="64" patternUnits="userSpaceOnUse">
-  <g fill="none" stroke="${colour}" stroke-width="1" stroke-linejoin="miter">
-    <path d="M32 1 L63 32 L32 63 L1 32 Z"/>
-    <path d="M32 13 L51 32 L32 51 L13 32 Z"/>
-    <path d="M32 23 L41 32 L32 41 L23 32 Z"/>
-    <path d="M0 0 L9 9 M64 0 L55 9 M0 64 L9 55 M64 64 L55 55"/>
-    <path d="M32 0 L32 6 M32 58 L32 64 M0 32 L6 32 M58 32 L64 32"/>
-  </g>
+/** The Sia Ascent Line: thin slashes at 64 degrees on a 36px tile. Used at 8
+    percent opacity over navy. */
+export function ascentPattern(id = "ascent", colour = "#FFFFFF"): string {
+  return `<pattern id="${id}" width="36" height="36" patternUnits="userSpaceOnUse" patternTransform="rotate(26)">
+  <path d="M0 0 V36" fill="none" stroke="${colour}" stroke-width="1.2"/>
 </pattern>`;
 }
 
@@ -102,7 +96,7 @@ export function coverBandSvg(o: {
   const ar = isAr(o.lang);
   const pad = 60;
   const logoW = 190;
-  const logoH = Math.round(logoW / aspect(o.assets.npcWhite));
+  const logoH = Math.round(logoW / aspect(o.assets.siaWhite));
   const logoX = ar ? w - pad - logoW : pad;
   const mark = o.yearMark.trim();
   const markSize = mark.length <= 4 ? 176 : mark.length <= 7 ? 118 : 92;
@@ -111,10 +105,10 @@ export function coverBandSvg(o: {
   const textTop = 168;
   const textH = h - textTop - Math.round(markSize * 0.78) - 18;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
-<defs>${saduPattern("sadu")}</defs>
-<rect width="${w}" height="${h}" fill="${hex(C.maroon)}"/>
-<rect width="${w}" height="${h}" fill="url(#sadu)" opacity="0.08"/>
-${o.assets.npcWhite ? `<image href="${dataUri(o.assets.npcWhite)}" x="${logoX}" y="52" width="${logoW}" height="${logoH}"/>` : ""}
+<defs>${ascentPattern("ascent")}</defs>
+<rect width="${w}" height="${h}" fill="${hex(C.navy)}"/>
+<rect width="${w}" height="${h}" fill="url(#ascent)" opacity="0.08"/>
+${o.assets.siaWhite ? `<image href="${dataUri(o.assets.siaWhite)}" x="${logoX}" y="52" width="${logoW}" height="${logoH}"/>` : ""}
 <foreignObject x="${pad}" y="${textTop}" width="${w - pad * 2}" height="${textH}">
   <div ${XHTML} dir="${ar ? "rtl" : "ltr"}" style="font-family:${SANS(o.lang)};color:#FFFFFF;height:${textH}px;display:flex;flex-direction:column;justify-content:flex-start;overflow:hidden">
     <div style="font-family:${DISPLAY(o.lang)};font-weight:600;font-size:${tSize}px;line-height:${ar ? 1.45 : 1.1};letter-spacing:${ar ? 0 : "-0.01em"};max-width:${ar ? 620 : 600}px">${esc(o.title)}</div>
@@ -122,12 +116,12 @@ ${o.assets.npcWhite ? `<image href="${dataUri(o.assets.npcWhite)}" x="${logoX}" 
     <div style="font-size:${ar ? 15 : 12.5}px;line-height:1.3;margin-top:${o.subtitle ? 14 : 22}px;letter-spacing:${ar ? 0 : "0.16em"};text-transform:uppercase;font-weight:500;opacity:0.78">${esc(o.period)}</div>
   </div>
 </foreignObject>
-<text x="${markX}" y="${h - 16}" text-anchor="${ar ? "start" : "end"}" font-family="${NUMERAL}" font-weight="700" font-size="${markSize}" fill="${hex(C.gold)}" letter-spacing="-0.02em">${esc(mark)}</text>
+<text x="${markX}" y="${h - 16}" text-anchor="${ar ? "start" : "end"}" font-family="${NUMERAL}" font-weight="700" font-size="${markSize}" fill="${hex(C.aqua)}" letter-spacing="-0.02em">${esc(mark)}</text>
 </svg>`;
 }
 
 /* ------------------------------------------------------------------ */
-/* Section numeral (maroon-100, beside the title)                      */
+/* Section numeral (navy-100, beside the title)                      */
 /* ------------------------------------------------------------------ */
 
 export const NUMERAL_IMG = { w: 236, h: 176 } as const;
@@ -136,7 +130,7 @@ export function numeralSvg(numeral: string): string {
   const { w, h } = NUMERAL_IMG;
   const size = numeral.length <= 2 ? 196 : 150;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
-<text x="-4" y="${h - 14}" font-family="${NUMERAL}" font-weight="700" font-size="${size}" fill="${hex(C.maroon100)}" letter-spacing="-0.04em">${esc(numeral)}</text>
+<text x="-4" y="${h - 14}" font-family="${NUMERAL}" font-weight="700" font-size="${size}" fill="${hex(C.navy100)}" letter-spacing="-0.04em">${esc(numeral)}</text>
 </svg>`;
 }
 
@@ -176,7 +170,7 @@ export function kpiRowSvg(tiles: KpiTile[], lang: Lang): string {
     const vSize = vLen <= 5 ? 30 : vLen <= 8 ? 25 : vLen <= 11 ? 20 : 16;
     const kind = deltaKind(tile.delta);
     return `<g transform="translate(${x},0)">
-<rect x="0.5" y="0.5" width="${tileW - 1}" height="${h - 1}" rx="8" fill="#FFFFFF" stroke="${hex(C.sandLine)}"/>
+<rect x="0.5" y="0.5" width="${tileW - 1}" height="${h - 1}" rx="8" fill="#FFFFFF" stroke="${hex(C.mistLine)}"/>
 <foreignObject x="0" y="0" width="${tileW}" height="${h}">
   <div ${XHTML} dir="${ar ? "rtl" : "ltr"}" style="box-sizing:border-box;width:${tileW}px;height:${h}px;padding:11px 12px 10px;font-family:${SANS(lang)};display:flex;flex-direction:column;justify-content:space-between">
     <div style="font-size:${ar ? 11 : 10.5}px;line-height:1.25;font-weight:500;color:${hex(C.ink600)};max-height:27px;overflow:hidden">${esc(label)}</div>
@@ -200,7 +194,7 @@ export function keyFigureSvg(value: string, label: string, lang: Lang, width: nu
   const ar = isAr(lang);
   const h = 96;
   const vSize = value.length <= 4 ? 54 : value.length <= 7 ? 46 : value.length <= 10 ? 38 : 30;
-  const colour = opts.onMaroon ? "#FFFFFF" : hex(C.maroon);
+  const colour = opts.onMaroon ? "#FFFFFF" : hex(C.navy);
   const labelColour = opts.onMaroon ? "rgba(255,255,255,0.82)" : hex(C.ink600);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${h}" viewBox="0 0 ${width} ${h}">
 <foreignObject x="0" y="0" width="${width}" height="${h}">
@@ -229,7 +223,7 @@ export function trendGlyphSvg(trend: Trend, colour: string): string {
 }
 
 /* ------------------------------------------------------------------ */
-/* Closing page: full maroon page                                      */
+/* Closing page: full navy page                                      */
 /* ------------------------------------------------------------------ */
 
 export const CLOSING = { w: PX.pageW, h: PX.pageH - 3 } as const;
@@ -245,21 +239,21 @@ export function closingSvg(o: {
   const ar = isAr(o.lang);
   const pad = 60;
   const logoW = 190;
-  const logoH = Math.round(logoW / aspect(o.assets.npcWhite));
+  const logoH = Math.round(logoW / aspect(o.assets.siaWhite));
   const logoX = ar ? w - pad - logoW : pad;
   const wmW = 220;
-  // the wordmark on maroon is the transparent mark turned white through a
+  // the wordmark on navy is the transparent mark turned white through a
   // colour matrix (the "white" PNG asset is the ink mark on a white ground)
   const wm = o.assets.wordmark ?? o.assets.wordmarkWhite;
   const wmH = Math.round(wmW / aspect(wm, 6.63));
   const chipW = Math.max(96, o.classification.length * (ar ? 9 : 8) + 36);
   const chipX = ar ? w - pad - chipW : pad;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
-<defs>${saduPattern("sadu2")}<filter id="toWhite" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0"/></filter></defs>
-<rect width="${w}" height="${h}" fill="${hex(C.maroon)}"/>
-<rect width="${w}" height="${h}" fill="url(#sadu2)" opacity="0.08"/>
-<rect x="0" y="${h - 220}" width="${w}" height="220" fill="${hex(C.maroonDark)}" opacity="0.55"/>
-${o.assets.npcWhite ? `<image href="${dataUri(o.assets.npcWhite)}" x="${logoX}" y="56" width="${logoW}" height="${logoH}"/>` : ""}
+<defs>${ascentPattern("ascent2")}<filter id="toWhite" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0"/></filter></defs>
+<rect width="${w}" height="${h}" fill="${hex(C.navy)}"/>
+<rect width="${w}" height="${h}" fill="url(#ascent2)" opacity="0.08"/>
+<rect x="0" y="${h - 220}" width="${w}" height="220" fill="${hex(C.navyDark)}" opacity="0.55"/>
+${o.assets.siaWhite ? `<image href="${dataUri(o.assets.siaWhite)}" x="${logoX}" y="56" width="${logoW}" height="${logoH}"/>` : ""}
 ${wm ? `<image href="${dataUri(wm)}" x="${(w - wmW) / 2}" y="${Math.round(h * 0.44)}" width="${wmW}" height="${wmH}" filter="url(#toWhite)"/>` : ""}
 <foreignObject x="${(w - 480) / 2}" y="${Math.round(h * 0.44) + wmH + 26}" width="480" height="90">
   <div ${XHTML} dir="${ar ? "rtl" : "ltr"}" style="font-family:${SANS(o.lang)};font-size:${ar ? 16 : 15}px;line-height:1.5;color:rgba(255,255,255,0.86);text-align:center">${esc(o.line)}</div>

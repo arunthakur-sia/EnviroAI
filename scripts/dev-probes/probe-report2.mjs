@@ -19,7 +19,7 @@ async function req(path, opts = {}) {
 await req("/api/v1/auth/login", {
   method: "POST",
   headers: { "content-type": "application/json" },
-  body: JSON.stringify({ email: "analyst@npc.qa", password: "Nexus!2026" }),
+  body: JSON.stringify({ email: "analyst@enviroai.demo", password: "EnviroAI!2026" }),
 });
 const adminJar = new Map(jar);
 await req("/api/v1/settings", {
@@ -46,7 +46,7 @@ async function reqAdmin(path, opts = {}) {
 await reqAdmin("/api/v1/auth/login", {
   method: "POST",
   headers: { "content-type": "application/json" },
-  body: JSON.stringify({ email: "admin@npc.qa", password: "Nexus!2026" }),
+  body: JSON.stringify({ email: "admin@enviroai.demo", password: "EnviroAI!2026" }),
 });
 await reqAdmin("/api/v1/settings", {
   method: "PATCH",
@@ -56,10 +56,10 @@ await reqAdmin("/api/v1/settings", {
 await new Promise((r) => setTimeout(r, 400));
 
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const conv = (
   await db.execute(
-    "select c.id, c.title from ai_conversations c join users u on u.id=c.user_id where u.email='analyst@npc.qa' limit 1"
+    "select c.id, c.title from ai_conversations c join users u on u.id=c.user_id where u.email='analyst@enviroai.demo' limit 1"
   )
 ).rows[0];
 db.close();

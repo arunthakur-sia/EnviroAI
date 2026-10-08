@@ -14,7 +14,7 @@ async function main() {
   const [analystUser] = await db
     .select()
     .from(schema.users)
-    .where(eq(schema.users.email, "analyst@npc.qa"))
+    .where(eq(schema.users.email, "analyst@enviroai.demo"))
     .limit(1);
   const [role] = await db.select().from(schema.roles).where(eq(schema.roles.id, analystUser.roleId)).limit(1);
   const fullUser = { ...analystUser, role, department: null } as never;
@@ -29,11 +29,11 @@ async function main() {
   }
 
   const questions = [
-    "How are we doing in Qatarization?",
-    "How many targets are in NDS3?",
+    "How are we doing on Saudization in the Office?",
+    "How many targets are in NES3?",
     "Which outcomes are at risk?",
     "ما هو معدل التضخم الحالي؟",
-    "Compare NDS2 and NDS3 on labour market targets",
+    "Compare NES2 and NES3 on labour market targets",
   ];
   for (const question of questions) {
     const convId = newId();

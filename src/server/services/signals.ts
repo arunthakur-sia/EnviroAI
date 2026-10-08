@@ -255,7 +255,7 @@ export async function convertSignal(
         id: newId(),
         lessonId: resourceId,
         nodeId,
-        nodeKind: "nds",
+        nodeKind: "nes",
         isPrimary: 1,
         linkedBy: user.id,
         linkedAt: nowIso(),

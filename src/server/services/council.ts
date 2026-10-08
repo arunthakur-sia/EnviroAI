@@ -1,4 +1,4 @@
-// CR07 2: the Council Strategy, NPC's own institutional strategy, read as a
+// CR07 2: the Programme Strategy, Programme Office's own institutional strategy, read as a
 // results chain: goals, intermediate outcomes, outputs, projects, activities,
 // with an indicator card at every level. Labels follow the results-based
 // planning manual (sources/manual/manual-structure.md); the deviations are
@@ -134,9 +134,9 @@ export type CouncilAlignmentView = {
   labelAr: string | null;
   noteEn: string | null;
   noteAr: string | null;
-  /** resolved NDS node, when the target is one */
-  ndsNodeId: string | null;
-  ndsSlug: string | null;
+  /** resolved NES node, when the target is one */
+  nesNodeId: string | null;
+  nesSlug: string | null;
 };
 
 export type CouncilPageData = {
@@ -408,22 +408,22 @@ export async function getCouncilPageData(
     };
   });
 
-  /* alignment, resolved to the NDS node so the chip can open it */
-  const ndsTargets = alignmentRows.filter((a) => a.targetKind === "nds_node").map((a) => a.targetId);
-  const ndsNodes = ndsTargets.length
+  /* alignment, resolved to the NES node so the chip can open it */
+  const nesTargets = alignmentRows.filter((a) => a.targetKind === "nes_node").map((a) => a.targetId);
+  const nesNodes = nesTargets.length
     ? await db
         .select({
           id: schema.strategyNodes.id,
           code: schema.strategyNodes.code,
         })
         .from(schema.strategyNodes)
-        .where(inArray(schema.strategyNodes.id, ndsTargets))
+        .where(inArray(schema.strategyNodes.id, nesTargets))
     : [];
-  const ndsById = new Map(ndsNodes.map((n) => [n.id, n]));
+  const nesById = new Map(nesNodes.map((n) => [n.id, n]));
   const alignment: CouncilAlignmentView[] = alignmentRows
     .filter((a) => nodeIds.has(a.councilNodeId))
     .map((a) => {
-      const nds = a.targetKind === "nds_node" ? ndsById.get(a.targetId) : undefined;
+      const nes = a.targetKind === "nes_node" ? nesById.get(a.targetId) : undefined;
       return {
         id: a.id,
         councilNodeId: a.councilNodeId,
@@ -433,8 +433,8 @@ export async function getCouncilPageData(
         labelAr: a.labelAr,
         noteEn: a.noteEn,
         noteAr: a.noteAr,
-        ndsNodeId: nds?.id ?? null,
-        ndsSlug: nds?.code ? nds.code.toLowerCase().replace(/\./g, "-") : null,
+        nesNodeId: nes?.id ?? null,
+        nesSlug: nes?.code ? nes.code.toLowerCase().replace(/\./g, "-") : null,
       };
     });
 

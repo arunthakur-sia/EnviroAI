@@ -1,4 +1,4 @@
-// CR08 5.3: the Council Strategy scorecard for the report period: the five
+// CR08 5.3: the Programme Strategy scorecard for the report period: the five
 // strategic goals with their indicators reported, on target, at risk and
 // behind, the share on target as a RAG cell, and the indicators of another
 // cadence stated rather than hidden (CR07 2.4.3). Internal; illustrative
@@ -20,14 +20,14 @@ function ragOfShare(share: number | null): "on_target" | "at_risk" | "behind" | 
 
 const def: SectionDefinition<CouncilData> = {
   code: "council_scorecard",
-  name: bi("Council Strategy scorecard", "بطاقة أداء استراتيجية المجلس"),
+  name: bi("Programme Strategy scorecard", "بطاقة أداء استراتيجية المكتب"),
   description: bi(
-    "The Council's strategic goals for the period: indicators reported, on target, at risk and behind, with the share on target as a RAG cell.",
-    "الأهداف الاستراتيجية للمجلس في الفترة: المؤشرات المبلغ عنها، وما هو ضمن المستهدف، والمعرض للخطر، والمتأخر، مع نسبة ما هو ضمن المستهدف كخلية أداء."
+    "The Office's strategic goals for the period: indicators reported, on target, at risk and behind, with the share on target as a RAG cell.",
+    "الأهداف الاستراتيجية للمكتب في الفترة: المؤشرات المبلغ عنها، وما هو ضمن المستهدف، والمعرض للخطر، والمتأخر، مع نسبة ما هو ضمن المستهدف كخلية أداء."
   ),
   layout: "scorecard",
   estimatedPages: 2,
-  appliesTo: ["npc", "period"],
+  appliesTo: ["org", "period"],
   async load(ctx) {
     const data = await memo(ctx, "council", () => getCouncilPageData(ctx.user).catch(() => null));
     if (!data) return { strategy: null, scorecard: null, indicatorsTotal: 0 };
@@ -63,13 +63,13 @@ const def: SectionDefinition<CouncilData> = {
                 ]
               : []),
           ]
-        : [bi("No Council Strategy has been recorded, so there is no scorecard to report.", "لم تُسجل أي استراتيجية للمجلس، ولذلك لا توجد بطاقة أداء للإبلاغ عنها.")],
+        : [bi("No Programme Strategy has been recorded, so there is no scorecard to report.", "لم تُسجل أي استراتيجية للمكتب، ولذلك لا توجد بطاقة أداء للإبلاغ عنها.")],
     });
     const { prose, live } = await writeProse(
       ctx,
       "council_scorecard",
       {
-        purpose: "Read the Council's own strategy scorecard for the period: how the goals performed on their indicators.",
+        purpose: "Read the Office's own strategy scorecard for the period: how the goals performed on their indicators.",
         structure: "Two paragraphs: the totals with the cadence caveat; the leading and lowest goals by code. Say plainly if the data is illustrative.",
         paragraphs: 2,
       },
@@ -78,7 +78,7 @@ const def: SectionDefinition<CouncilData> = {
     );
     const blocks: Block[] = [...proseBlocks(prose)];
     if (!goals.length) {
-      blocks.push(noteBlock("The Council Strategy scorecard is empty for this period.", "بطاقة أداء استراتيجية المجلس فارغة لهذه الفترة."));
+      blocks.push(noteBlock("The Programme Strategy scorecard is empty for this period.", "بطاقة أداء استراتيجية المكتب فارغة لهذه الفترة."));
     } else {
       blocks.push({
         kind: "scorecard",
@@ -95,7 +95,7 @@ const def: SectionDefinition<CouncilData> = {
             { text: fmt(g.otherCadence.monthly + g.otherCadence.quarterly + g.otherCadence.yearly) },
           ],
         })),
-        source: bi(data.strategy?.illustrative ? "SiaNexus Council Strategy, illustrative data" : "SiaNexus Council Strategy", data.strategy?.illustrative ? "استراتيجية المجلس في سيا نكسس، بيانات استرشادية" : "استراتيجية المجلس في سيا نكسس"),
+        source: bi(data.strategy?.illustrative ? "EnviroAI Programme Strategy, illustrative data" : "EnviroAI Programme Strategy", data.strategy?.illustrative ? "استراتيجية المكتب في EnviroAI، بيانات استرشادية" : "استراتيجية المكتب في EnviroAI"),
       });
       blocks.push({
         kind: "chart",
@@ -110,7 +110,7 @@ const def: SectionDefinition<CouncilData> = {
         },
       });
     }
-    return section("council_scorecard", bi("Council Strategy scorecard", "بطاقة أداء استراتيجية المجلس"), "scorecard", {
+    return section("council_scorecard", bi("Programme Strategy scorecard", "بطاقة أداء استراتيجية المكتب"), "scorecard", {
       lead: data.strategy ? bi(`${data.strategy.nameEn}, ${period.en}.`, `${data.strategy.nameAr}، ${period.ar}.`) : undefined,
       keyFigure: totals.reported ? { value: pct(totals.onTarget / totals.reported), label: bi("of reported indicators on target", "من المؤشرات المبلغ عنها ضمن المستهدف") } : undefined,
       blocks,

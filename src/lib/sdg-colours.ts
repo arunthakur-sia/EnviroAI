@@ -3,6 +3,7 @@
 // the group colour tokens mapped onto the theme utilities. Nothing else in the
 // module carries a raw colour; the SDG hexes are the one sanctioned exception
 // because they are the published identity of each goal.
+import { colourKey } from "@/lib/colour-keys";
 
 export type SdgGoal = {
   n: number;
@@ -49,7 +50,7 @@ export function sdgTextOn(n: number): string {
 /* group colour tokens                                                  */
 /* ------------------------------------------------------------------ */
 
-export const GROUP_COLOUR_TOKENS = ["maroon", "gulf", "gold", "ink", "ok", "info"] as const;
+export const GROUP_COLOUR_TOKENS = ["navy", "teal", "aqua", "ink", "ok", "info"] as const;
 export type GroupColourToken = (typeof GROUP_COLOUR_TOKENS)[number];
 
 export type GroupTokenStyle = {
@@ -58,7 +59,7 @@ export type GroupTokenStyle = {
   /** eyebrow text; every pair reads AA on white (gold uses the warn ink) */
   text: string;
   /** the Chip tone that belongs to the token */
-  chip: "maroon" | "gulf" | "gold" | "sand" | "ok" | "info";
+  chip: "navy" | "teal" | "aqua" | "mist" | "ok" | "info";
   /** a faint wash for the active switcher pill and drop targets */
   soft: string;
   /** ring for the active switcher pill */
@@ -66,32 +67,32 @@ export type GroupTokenStyle = {
 };
 
 export const GROUP_TOKEN_STYLES: Record<GroupColourToken, GroupTokenStyle> = {
-  maroon: {
-    bar: "bg-maroon-700",
-    text: "text-maroon-700",
-    chip: "maroon",
-    soft: "bg-maroon-50",
-    ring: "ring-maroon-300",
+  navy: {
+    bar: "bg-navy-700",
+    text: "text-navy-700",
+    chip: "navy",
+    soft: "bg-navy-50",
+    ring: "ring-navy-300",
   },
-  gulf: {
-    bar: "bg-gulf-600",
-    text: "text-gulf-600",
-    chip: "gulf",
-    soft: "bg-gulf-100/60",
-    ring: "ring-gulf-400",
+  teal: {
+    bar: "bg-teal-600",
+    text: "text-teal-600",
+    chip: "teal",
+    soft: "bg-teal-100/60",
+    ring: "ring-teal-400",
   },
-  gold: {
-    bar: "bg-gold-500",
+  aqua: {
+    bar: "bg-aqua-500",
     text: "text-warn",
-    chip: "gold",
-    soft: "bg-gold-100/70",
-    ring: "ring-gold-300",
+    chip: "aqua",
+    soft: "bg-aqua-100/70",
+    ring: "ring-aqua-300",
   },
   ink: {
     bar: "bg-ink-600",
     text: "text-ink-600",
-    chip: "sand",
-    soft: "bg-sand-100",
+    chip: "mist",
+    soft: "bg-mist-100",
     ring: "ring-ink-200",
   },
   ok: {
@@ -111,5 +112,5 @@ export const GROUP_TOKEN_STYLES: Record<GroupColourToken, GroupTokenStyle> = {
 };
 
 export function groupStyle(token: string | null | undefined): GroupTokenStyle {
-  return GROUP_TOKEN_STYLES[(token ?? "maroon") as GroupColourToken] ?? GROUP_TOKEN_STYLES.maroon;
+  return GROUP_TOKEN_STYLES[colourKey(token) as GroupColourToken] ?? GROUP_TOKEN_STYLES.navy;
 }

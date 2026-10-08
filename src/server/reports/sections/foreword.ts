@@ -25,7 +25,7 @@ import { navigator, reportType, resolveScope } from "./_scope";
 type ForewordData = {
   typeName: { en: string; ar: string };
   scopeLabel: { en: string; ar: string };
-  isNpc: boolean;
+  isOrg: boolean;
   outcomes: number;
   targetsOnTrack: number;
   targetsTotal: number;
@@ -61,7 +61,7 @@ const def: SectionDefinition<ForewordData> = {
     return {
       typeName: type ? { en: type.nameEn, ar: type.nameAr } : { en: "Report", ar: "تقرير" },
       scopeLabel: scope.label,
-      isNpc: scope.kind === "npc" || scope.kind === "period",
+      isOrg: scope.kind === "org" || scope.kind === "period",
       outcomes: nav?.outcomes.length ?? 0,
       targetsOnTrack: nav?.glance.targetsOnTrack ?? 0,
       targetsTotal: nav?.glance.targetsTotal ?? 0,
@@ -81,22 +81,22 @@ const def: SectionDefinition<ForewordData> = {
     const mock = (): Prose => {
       const paragraphs = [
         bi(
-          `It is my pleasure to present the ${data.typeName.en} for ${period.en}. ${data.isNpc ? "The National Planning Council" : data.scopeLabel.en} carried ${fmt(data.initiatives)} initiatives and ${fmt(data.projects)} projects through ${word.en}, and ${fmt(data.targetsOnTrack)} of the ${fmt(data.targetsTotal)} national targets we track stand on track today.`,
-          `يسرني أن أقدم ${data.typeName.ar} عن ${period.ar}. لقد حمل ${data.isNpc ? "المجلس الوطني للتخطيط" : data.scopeLabel.ar} ${fmt(data.initiatives)} مبادرة و${fmt(data.projects)} مشروعاً عبر ${word.ar}، ويقف اليوم ${fmt(data.targetsOnTrack)} من أصل ${fmt(data.targetsTotal)} مستهدفاً وطنياً نتابعه على المسار الصحيح.`
+          `It is my pleasure to present the ${data.typeName.en} for ${period.en}. ${data.isOrg ? "The Programme Office" : data.scopeLabel.en} carried ${fmt(data.initiatives)} initiatives and ${fmt(data.projects)} projects through ${word.en}, and ${fmt(data.targetsOnTrack)} of the ${fmt(data.targetsTotal)} national targets we track stand on track today.`,
+          `يسرني أن أقدم ${data.typeName.ar} عن ${period.ar}. لقد حمل ${data.isOrg ? "مكتب البرنامج" : data.scopeLabel.ar} ${fmt(data.initiatives)} مبادرة و${fmt(data.projects)} مشروعاً عبر ${word.ar}، ويقف اليوم ${fmt(data.targetsOnTrack)} من أصل ${fmt(data.targetsTotal)} مستهدفاً وطنياً نتابعه على المسار الصحيح.`
         ),
       ];
       if (data.indices) {
         paragraphs.push(
           bi(
-            `Across the ${fmt(data.indices.tracked)} international indices we follow, Qatar improved in ${fmt(data.indices.improving)}, held steady in ${fmt(data.indices.stable)} and declined in ${fmt(data.indices.declining)}, leading the Gulf Cooperation Council in ${fmt(data.indices.gccLead)} of them. Each movement is read in this report against the evidence behind it, not as a headline.`,
-            `وفي المؤشرات الدولية الـ${fmt(data.indices.tracked)} التي نتابعها، تحسنت قطر في ${fmt(data.indices.improving)} منها، وحافظت على موقعها في ${fmt(data.indices.stable)}، وتراجعت في ${fmt(data.indices.declining)}، وتصدرت دول مجلس التعاون الخليجي في ${fmt(data.indices.gccLead)} منها. ويقرأ هذا التقرير كل تحرك في ضوء الشواهد الكامنة وراءه، لا بوصفه عنواناً.`
+            `Across the ${fmt(data.indices.tracked)} international indices we follow, Saudi Arabia improved in ${fmt(data.indices.improving)}, held steady in ${fmt(data.indices.stable)} and declined in ${fmt(data.indices.declining)}, leading the Gulf Cooperation Office in ${fmt(data.indices.gccLead)} of them. Each movement is read in this report against the evidence behind it, not as a headline.`,
+            `وفي المؤشرات الدولية الـ${fmt(data.indices.tracked)} التي نتابعها، تحسنت السعودية في ${fmt(data.indices.improving)} منها، وحافظت على موقعها في ${fmt(data.indices.stable)}، وتراجعت في ${fmt(data.indices.declining)}، وتصدرت دول مجلس التعاون الخليجي في ${fmt(data.indices.gccLead)} منها. ويقرأ هذا التقرير كل تحرك في ضوء الشواهد الكامنة وراءه، لا بوصفه عنواناً.`
           )
         );
       }
       paragraphs.push(
         bi(
-          `${data.updatesInPeriod ? `The ${fmt(data.updatesInPeriod)} status updates recorded during ${word.en} and the ${fmt(data.lessonsInPeriod)} lessons our teams documented are` : `The lessons our teams documented are`} the institutional memory this Council builds on. I thank every directorate and partner whose work these pages record, and I commend the report to its readers.`,
-          `${data.updatesInPeriod ? `إن تحديثات الحالة الـ${fmt(data.updatesInPeriod)} المسجلة خلال ${word.ar} والدروس الـ${fmt(data.lessonsInPeriod)} التي وثقتها فرقنا هي` : `إن الدروس التي وثقتها فرقنا هي`} الذاكرة المؤسسية التي يبني عليها هذا المجلس. وأشكر كل إدارة وشريك سجلت هذه الصفحات عملهم، وأوصي القراء بهذا التقرير.`
+          `${data.updatesInPeriod ? `The ${fmt(data.updatesInPeriod)} status updates recorded during ${word.en} and the ${fmt(data.lessonsInPeriod)} lessons our teams documented are` : `The lessons our teams documented are`} the institutional memory this Office builds on. I thank every directorate and partner whose work these pages record, and I commend the report to its readers.`,
+          `${data.updatesInPeriod ? `إن تحديثات الحالة الـ${fmt(data.updatesInPeriod)} المسجلة خلال ${word.ar} والدروس الـ${fmt(data.lessonsInPeriod)} التي وثقتها فرقنا هي` : `إن الدروس التي وثقتها فرقنا هي`} الذاكرة المؤسسية التي يبني عليها هذا المكتب. وأشكر كل إدارة وشريك سجلت هذه الصفحات عملهم، وأوصي القراء بهذا التقرير.`
         )
       );
       return {
@@ -112,9 +112,9 @@ const def: SectionDefinition<ForewordData> = {
       "foreword",
       {
         purpose:
-          "A foreword the Secretary General of the National Planning Council will sign, opening the report. It frames the period, names the headline facts once each, and thanks the teams.",
+          "A foreword the Secretary General of the Programme Office will sign, opening the report. It frames the period, names the headline facts once each, and thanks the teams.",
         structure:
-          "Three short paragraphs: the period and the Council's role; two or three headline facts from the data; a closing that commends the report. A one-sentence lead.",
+          "Three short paragraphs: the period and the Office's role; two or three headline facts from the data; a closing that commends the report. A one-sentence lead.",
         tone: "First person plural where institutional, first person singular for the closing thanks; formal, warm, no superlatives; a draft a human will edit.",
         paragraphs: 3,
         lead: true,
@@ -130,14 +130,14 @@ const def: SectionDefinition<ForewordData> = {
           kind: "paragraph",
           style: "note",
           text: bi(
-            "Draft prepared by SiaNexus for the Secretary General's review; the signed text replaces this page.",
-            "مسودة أعدها سيا نكسس لمراجعة الأمين العام؛ ويحل النص الموقّع محل هذه الصفحة."
+            "Draft prepared by EnviroAI for the Secretary General's review; the signed text replaces this page.",
+            "مسودة أعدها EnviroAI لمراجعة الأمين العام؛ ويحل النص الموقّع محل هذه الصفحة."
           ),
         },
       ],
       sources: makeSources([
         ...(data.editionCode ? [SRC.strategy(data.editionCode)] : []),
-        ...(data.indices ? [SRC.forecasts(), { title: "SiaNexus Indices board", detail: "Qatar's latest movements" }] : []),
+        ...(data.indices ? [SRC.forecasts(), { title: "EnviroAI Indices board", detail: "Saudi Arabia's latest movements" }] : []),
         SRC.lessons(),
       ]),
       needsEditing: true,

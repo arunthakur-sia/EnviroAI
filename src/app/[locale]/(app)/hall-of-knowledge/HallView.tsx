@@ -17,7 +17,7 @@ import type { KowCard, KowHall } from "@/server/services/knowledge-of-week";
 function monthLabel(key: string, locale: string, numerals?: string): string {
   const d = new Date(key + "-01T12:00:00Z");
   const nu = numerals === "eastern" ? "arab" : "latn";
-  return new Intl.DateTimeFormat(locale === "ar" ? `ar-QA-u-nu-${nu}` : `en-QA-u-nu-${nu}`, { month: "long", year: "numeric" }).format(d);
+  return new Intl.DateTimeFormat(locale === "ar" ? `ar-SA-u-nu-${nu}` : `en-SA-u-nu-${nu}`, { month: "long", year: "numeric" }).format(d);
 }
 
 function HallCard({ card, numerals }: { card: KowCard; numerals?: string }) {
@@ -28,15 +28,15 @@ function HallCard({ card, numerals }: { card: KowCard; numerals?: string }) {
   return (
     <article className="card card-hover flex h-full flex-col gap-3 p-5" data-testid="hall-card" data-week={card.weekStart}>
       <div className="flex flex-wrap items-center gap-2">
-        <Chip tone="sand" className="tnum">
+        <Chip tone="mist" className="tnum">
           {t("weekOf", { date: formatDate(card.weekStart, locale, { style: "medium", numerals }) })}
         </Chip>
-        <Chip tone="gold">{t(`kinds.${card.resourceType}`)}</Chip>
-        {card.illustrative ? <Chip tone="sand">{t("hall.illustrative")}</Chip> : null}
+        <Chip tone="aqua">{t(`kinds.${card.resourceType}`)}</Chip>
+        {card.illustrative ? <Chip tone="mist">{t("hall.illustrative")}</Chip> : null}
       </div>
       <Link
         href={card.href as never}
-        className="font-display text-lg leading-snug text-ink-900 transition-colors hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500"
+        className="font-display text-lg leading-snug text-ink-900 transition-colors hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500"
         style={{ fontWeight: 550 }}
       >
         {bi(locale, card.titleEn, card.titleAr)}
@@ -51,14 +51,14 @@ function HallCard({ card, numerals }: { card: KowCard; numerals?: string }) {
         </div>
       ) : null}
       {note ? (
-        <p className="line-clamp-3 border-s-2 border-gold-300 ps-3 text-sm leading-relaxed text-ink-600">{note}</p>
+        <p className="line-clamp-3 border-s-2 border-aqua-300 ps-3 text-sm leading-relaxed text-ink-600">{note}</p>
       ) : null}
       <div className="mt-auto flex items-center justify-between gap-3 pt-1 text-xs text-ink-600">
         <span className="flex items-center gap-1.5 tnum" data-testid="hall-card-reads">
           <Users className="size-3.5 text-ink-400" aria-hidden />
           {t("readCount", { count: card.readCount, n: formatNumber(card.readCount, locale, { decimals: 0, numerals }) })}
         </span>
-        <Link href={card.href as never} className="link-draw inline-flex items-center gap-1 font-medium text-maroon-700">
+        <Link href={card.href as never} className="link-draw inline-flex items-center gap-1 font-medium text-navy-700">
           {t("hall.openItem")} <ArrowRight className="size-3 flip-rtl" aria-hidden />
         </Link>
       </div>
@@ -89,22 +89,22 @@ export function HallView({ hall, numerals }: { hall: KowHall; numerals?: string 
           <h1 className="mt-1 text-3xl">{t("hall.title")}</h1>
           <p className="mt-1.5 max-w-2xl text-sm text-ink-600">{t("hall.subtitle")}</p>
         </div>
-        <Chip tone="gold" className="tnum">
-          <Star className="size-3 text-gold-500" fill="currentColor" aria-hidden />
+        <Chip tone="aqua" className="tnum">
+          <Star className="size-3 text-aqua-500" fill="currentColor" aria-hidden />
           {t("hall.count", { count: hall.total, n: formatNumber(hall.total, locale, { decimals: 0, numerals }) })}
         </Chip>
       </div>
 
       {current ? (
         <section
-          className="relative mb-8 overflow-hidden rounded-[var(--radius-card)] border border-gold-300 bg-white p-6 shadow-[var(--shadow-pop)] sm:p-8"
+          className="relative mb-8 overflow-hidden rounded-[var(--radius-card)] border border-aqua-300 bg-white p-6 shadow-[var(--shadow-pop)] sm:p-8"
           data-testid="hall-current"
           aria-label={t("hall.current")}
         >
-          <span aria-hidden className="absolute inset-x-8 top-0 h-1 rounded-b-full bg-gold-500" />
+          <span aria-hidden className="absolute inset-x-8 top-0 h-1 rounded-b-full bg-aqua-500" />
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
             <div>
-              <Chip tone="maroon" className="mb-3">
+              <Chip tone="navy" className="mb-3">
                 {t("hall.current")}
               </Chip>
               <KowCardBody card={current} size="featured" numerals={numerals} />
@@ -135,7 +135,7 @@ export function HallView({ hall, numerals }: { hall: KowHall; numerals?: string 
               <li key={s.id} className="min-w-0 max-w-full">
                 <Link
                   href={s.href as never}
-                  className="inline-flex max-w-full items-center gap-2 rounded-lg border border-sand-300 bg-white px-3 py-1.5 text-sm text-ink-900 transition-colors hover:border-maroon-300 hover:text-maroon-700"
+                  className="inline-flex max-w-full items-center gap-2 rounded-lg border border-mist-300 bg-white px-3 py-1.5 text-sm text-ink-900 transition-colors hover:border-navy-300 hover:text-navy-700"
                 >
                   <span className="shrink-0 text-xs text-ink-600 tnum">
                     {t("weekOf", { date: formatDate(s.weekStart, locale, { style: "medium", numerals }) })}
@@ -156,7 +156,7 @@ export function HallView({ hall, numerals }: { hall: KowHall; numerals?: string 
                 <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-600 rtl:tracking-normal" style={{ fontFamily: "inherit" }}>
                   {monthLabel(m.key, locale, numerals)}
                 </h2>
-                <span className="h-px min-w-6 flex-1 bg-sand-300" aria-hidden />
+                <span className="h-px min-w-6 flex-1 bg-mist-300" aria-hidden />
                 <span className="text-xs text-ink-400 tnum">{formatNumber(m.items.length, locale, { decimals: 0, numerals })}</span>
               </div>
               <Stagger className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" step={0.04}>

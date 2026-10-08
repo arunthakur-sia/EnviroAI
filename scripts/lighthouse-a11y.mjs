@@ -20,7 +20,7 @@ if (!edge) {
 const login = await fetch(`${BASE}/api/v1/auth/login`, {
   method: "POST",
   headers: { "content-type": "application/json" },
-  body: JSON.stringify({ email: "admin@npc.qa", password: "Nexus!2026" }),
+  body: JSON.stringify({ email: "admin@enviroai.demo", password: "EnviroAI!2026" }),
 });
 const setCookie = login.headers.getSetCookie?.() ?? [];
 const cookie = setCookie.map((c) => c.split(";")[0]).join("; ");
@@ -64,7 +64,7 @@ const targets = [
   ["/en/handover/mine", "handover-mine", true],
   ["/en/hall-of-knowledge", "hall-of-knowledge", true],
   ["/en/statistics", "statistics", true],
-  ["/en/search?q=qatar", "search", true],
+  ["/en/search?q=water", "search", true],
   ["/en/settings", "settings", true],
   ["/en/profile", "profile", true],
 ];

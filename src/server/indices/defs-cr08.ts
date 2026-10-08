@@ -1,8 +1,9 @@
-// CR08 4.1: the index definitions added by the two research agents, merged
-// into one list the fetcher appends to the CR05 twelve, plus the group
-// memberships of those twelve. The group codes are fixed (see
-// scripts/cr08-indices-seed.ts INDEX_GROUPS): sdg, national, competitiveness,
-// gallup, governance, human, environment, peace, digital.
+// CR08 4.1: the index definitions added by the research agents and the Saudi
+// water, agriculture and climate additions (defs-ksa.ts), merged into one
+// list the fetcher appends to the CR05 indices, plus the group memberships of
+// those. The group codes are fixed (see scripts/cr08-indices-seed.ts
+// INDEX_GROUPS): sdg, national, environment, climate, water, agriculture,
+// governance, human.
 //
 // Keep this module free of runtime imports from ./fetcher (fetcher imports it
 // at module load, so a value import back would form a cycle); the IndexDef
@@ -10,6 +11,7 @@
 import type { IndexDef } from "./fetcher";
 import { CR08_INDEX_DEFS_A } from "./defs-cr08-a";
 import { CR08_INDEX_DEFS_B } from "./defs-cr08-b";
+import { KSA_INDEX_DEFS } from "./defs-ksa";
 
 export type Cr08IndexDef = IndexDef & {
   /** group codes the index belongs to (an index may sit in several groups) */
@@ -27,27 +29,11 @@ export type Cr08IndexDef = IndexDef & {
   researchFile?: string;
 };
 
-export const CR08_INDEX_DEFS: Cr08IndexDef[] = [...CR08_INDEX_DEFS_A, ...CR08_INDEX_DEFS_B];
+export const CR08_INDEX_DEFS: Cr08IndexDef[] = [...CR08_INDEX_DEFS_A, ...CR08_INDEX_DEFS_B, ...KSA_INDEX_DEFS];
 
-/** Group memberships of the twelve CR05 indices. */
+/** Group memberships of the CR05 indices that remain in the register. */
 export const EXISTING_INDEX_GROUPS: Record<string, string[]> = {
   hdi: ["human"],
-  gii: ["competitiveness"],
   cpi: ["governance"],
-  egdi: ["governance", "digital"],
-  gpi: ["peace"],
-  imd: ["competitiveness"],
-  lpi: ["competitiveness"],
-  nri: ["competitiveness", "digital"],
-  ttdi: ["competitiveness"],
-  epi: ["environment"],
-  gtci: ["competitiveness", "human"],
-  wjp: ["governance"],
+  epi: ["environment", "climate"],
 };
-
-/** Every def's groups plus the CR05 memberships, keyed by index code. */
-export function groupsOfIndexCode(code: string): string[] {
-  const def = CR08_INDEX_DEFS.find((d) => d.code === code);
-  if (def) return def.groups;
-  return EXISTING_INDEX_GROUPS[code] ?? [];
-}

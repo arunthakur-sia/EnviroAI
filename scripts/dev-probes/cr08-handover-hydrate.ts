@@ -26,7 +26,7 @@ async function main() {
   page.on("requestfailed", (r) => log(`REQFAIL ${r.url().slice(0, 140)} ${r.failure()?.errorText ?? ""}`));
 
   const t0 = Date.now();
-  const res = await page.request.post(`${BASE}/api/v1/auth/login`, { data: { email: "hr@npc.qa", password: "Nexus!2026" }, timeout: 180000 });
+  const res = await page.request.post(`${BASE}/api/v1/auth/login`, { data: { email: "hr@enviroai.demo", password: "EnviroAI!2026" }, timeout: 180000 });
   log(`login ${res.status()} ${Date.now() - t0}ms`);
 
   const t1 = Date.now();

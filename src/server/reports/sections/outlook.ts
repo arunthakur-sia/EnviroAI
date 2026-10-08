@@ -71,8 +71,8 @@ const def: SectionDefinition<OutlookData> = {
       .toISOString()
       .slice(0, 10);
     const releases = (await releaseCalendar(120).catch(() => [])).slice(0, 6);
-    const isNpc = scope.kind === "npc" || scope.kind === "period";
-    const board = isNpc
+    const isOrg = scope.kind === "org" || scope.kind === "period";
+    const board = isOrg
       ? await memo(ctx, "indices-board", () => getIndicesBoard(ctx.user).catch(() => null))
       : null;
     const tracked = board ? internationalCards(board.cards) : [];
@@ -153,8 +153,8 @@ const def: SectionDefinition<OutlookData> = {
         const d = data.forecastDirections;
         paragraphs.push(
           bi(
-            `Assessment: the current SiaNexus forecasts point upward for ${fmt(d.up)} tracked indices, downward for ${fmt(d.down)} and sideways for ${fmt(d.stable)}; these are model estimates, not published values.`,
-            `تقدير: تشير تنبؤات سيا نكسس الحالية إلى الصعود في ${fmt(d.up)} مؤشراً متابعاً، والهبوط في ${fmt(d.down)}، والاستقرار في ${fmt(d.stable)}؛ وهذه تقديرات نموذجية لا قيماً منشورة.`
+            `Assessment: the current EnviroAI forecasts point upward for ${fmt(d.up)} tracked indices, downward for ${fmt(d.down)} and sideways for ${fmt(d.stable)}; these are model estimates, not published values.`,
+            `تقدير: تشير تنبؤات EnviroAI الحالية إلى الصعود في ${fmt(d.up)} مؤشراً متابعاً، والهبوط في ${fmt(d.down)}، والاستقرار في ${fmt(d.stable)}؛ وهذه تقديرات نموذجية لا قيماً منشورة.`
           )
         );
       }
@@ -216,7 +216,7 @@ const def: SectionDefinition<OutlookData> = {
       sources: makeSources([
         ...(data.editionCode ? [SRC.strategy(data.editionCode)] : []),
         ...(data.forecastDirections ? [SRC.forecasts()] : []),
-        ...(data.releases.length ? [{ title: "National Statistics Center release calendar", detail: "as held in SiaNexus" }] : []),
+        ...(data.releases.length ? [{ title: "General Authority for Statistics (GASTAT) release calendar", detail: "as held in EnviroAI" }] : []),
       ]),
       meta: { live, horizonEnd: data.horizonEnd, endingSoon: data.endingSoon.length, releases: data.releases.length },
     });

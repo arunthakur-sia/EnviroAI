@@ -13,7 +13,7 @@ async function cookieFor(email: string): Promise<string> {
   const res = await fetch(`${BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email, password: "EnviroAI!2026" }),
     redirect: "manual",
   });
   const raw = res.headers.get("set-cookie") ?? "";
@@ -26,7 +26,7 @@ async function cookieFor(email: string): Promise<string> {
 async function main() {
   const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
   await db.execute("PRAGMA busy_timeout = 8000");
-  const [cookie, adminCookie] = await Promise.all([cookieFor("analyst@npc.qa"), cookieFor("admin@npc.qa")]);
+  const [cookie, adminCookie] = await Promise.all([cookieFor("analyst@enviroai.demo"), cookieFor("admin@enviroai.demo")]);
   let pass = 0;
   let fail = 0;
   await run(

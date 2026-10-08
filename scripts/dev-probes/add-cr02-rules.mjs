@@ -1,7 +1,7 @@
 // Insert the CR02 game rules if missing (seed gains them in Section 8).
 import { createClient } from "@libsql/client";
 import { ulid } from "ulid";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const rules = [
   ["knowledge_by_voice", 10],
   ["podcast_created", 30],

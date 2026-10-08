@@ -86,7 +86,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
       "select u.email from org_change_requests r join users u on u.id = r.requested_by where r.status = 'resolved' limit 1"
     )
   ).rows;
-  check("the sample requests come from the seeded department head", String(requester?.email) === "head.stats@npc.qa");
+  check("the sample requests come from the seeded department head", String(requester?.email) === "head.stats@enviroai.demo");
 
   /* 3. the editor API: Super Admin only for mutations */
   const refused = await post(user, { action: "snapshots.take", note: "smoke" });
@@ -97,8 +97,8 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   check("an invalid body is rejected with 400", invalid.status === 400, `status ${invalid.status}`);
 
   /* 4. impact counts and a move with its undo */
-  const [is] = (await db.execute("select id, parent_id from org_units where code = 'IS' limit 1")).rows;
-  const [ca] = (await db.execute("select id from org_units where code = 'CA' limit 1")).rows;
+  const [is] = (await db.execute("select id, parent_id from org_units where code = 'DIG' limit 1")).rows;
+  const [ca] = (await db.execute("select id from org_units where code = 'COM' limit 1")).rows;
   if (is && ca) {
     const impact = await admin(`/api/v1/organisation/editor?view=impact&id=${String(is.id)}`);
     const impactJson = await impact.json();
@@ -122,8 +122,8 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
         undo.status === 200 && String(back?.parent_id) === String(is.parent_id)
       );
     }
-    // IS sits under SS: moving SS under IS would make SS its own ancestor
-    const [ssUnit] = (await db.execute("select id from org_units where code = 'SS' limit 1")).rows;
+    // DIG sits under CSS: moving CSS under DIG would make CSS its own ancestor
+    const [ssUnit] = (await db.execute("select id from org_units where code = 'CSS' limit 1")).rows;
     const cycle = ssUnit
       ? await post(admin, { action: "unit.move", id: String(ssUnit.id), parentId: String(is.id) })
       : null;
@@ -136,11 +136,11 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
       `status ${cycle?.status}`
     );
   } else {
-    check("the IS and CA units exist for the move check", false);
+    check("the DIG and COM units exist for the move check", false);
   }
 
   /* 5. delete with reassignment and its undo, on a throwaway unit */
-  const [ss] = (await db.execute("select id from org_units where code = 'SS' limit 1")).rows;
+  const [ss] = (await db.execute("select id from org_units where code = 'CSS' limit 1")).rows;
   if (ss) {
     const add = await post(admin, {
       action: "unit.add",
@@ -168,7 +168,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
         await post(admin, { action: "unit.retire", id: String(addJson.data.id), mode: "delete", reassignTo: null });
       }
     }
-    const [ssd] = (await db.execute("select id from org_units where code = 'SSD' limit 1")).rows;
+    const [ssd] = (await db.execute("select id from org_units where code = 'DSY' limit 1")).rows;
     if (ssd) {
       const needs = await post(admin, { action: "unit.retire", id: String(ssd.id), mode: "deactivate", reassignTo: null });
       check("a unit with people beneath cannot be retired without a reassignment", needs.status === 400, `status ${needs.status}`);
@@ -178,7 +178,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   /* 6. the CSV preview validates */
   const csv = await post(admin, {
     action: "csv.preview",
-    text: "code,parent_code,level,name_en,name_ar\nSMK2,SS,department,Smoke Dept,إدارة الفحص\nBAD,NOPE,department,Broken,مكسور",
+    text: "code,parent_code,level,name_en,name_ar\nSMK2,CSS,department,Smoke Dept,إدارة الفحص\nBAD,NOPE,department,Broken,مكسور",
   });
   const csvJson = await csv.json();
   check(
@@ -215,14 +215,14 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
       chartSrc.includes('data-testid="org-list-view"') &&
       chartSrc.includes("scaleExtent([MIN_Z, MAX_Z])")
   );
-  const unitHtml = await (await admin("/en/organisation?unit=SSD")).text();
+  const unitHtml = await (await admin("/en/organisation?unit=DSY")).text();
   check(
     "the unit panel carries its tab strip and the policy tabs",
     unitHtml.includes('data-testid="org-panel-tabs"') && unitHtml.includes('data-testid="policy-tabs"')
   );
   /* the change request is the unit head's: a Contributor who is not the head
      is refused, and nothing is written */
-  const [ssdUnit] = (await db.execute("select id from org_units where code = 'SSD' limit 1")).rows;
+  const [ssdUnit] = (await db.execute("select id from org_units where code = 'DSY' limit 1")).rows;
   if (ssdUnit) {
     const before = (await db.execute("select count(*) c from org_change_requests")).rows[0];
     const asked = await post(user, { action: "requests.create", unitId: String(ssdUnit.id), what: "smoke: not the head" });
@@ -239,13 +239,13 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   /* 9. the analyst tools */
   const { runTool, AnalystState } = await import("../src/server/ai/analyst/tools");
   const { getUserById } = await import("../src/server/auth/session");
-  const [adminRow] = (await db.execute("select id from users where email = 'admin@npc.qa' limit 1")).rows;
-  const [readerRow] = (await db.execute("select id from users where email = 'reader@npc.qa' limit 1")).rows;
+  const [adminRow] = (await db.execute("select id from users where email = 'admin@enviroai.demo' limit 1")).rows;
+  const [readerRow] = (await db.execute("select id from users where email = 'reader@enviroai.demo' limit 1")).rows;
   const askAdmin = adminRow ? await getUserById(String(adminRow.id)) : null;
   const askReader = readerRow ? await getUserById(String(readerRow.id)) : null;
   if (askAdmin) {
     const levelsAnswer = await runTool({ user: askAdmin, state: new AnalystState() } as never, "get_org_levels", {});
-    check("get_org_levels lists the levels from the top", /1\. Secretary General/.test(levelsAnswer) && /Section/.test(levelsAnswer));
+    check("get_org_levels lists the levels from the top", /1\. Programme Director/.test(levelsAnswer) && /Section/.test(levelsAnswer));
     const openAnswer = await runTool({ user: askAdmin, state: new AnalystState() } as never, "get_org_change_requests", { status: "open" });
     check("get_org_change_requests answers the Super Admin with the open requests", /OPEN \|/.test(openAnswer));
   } else {

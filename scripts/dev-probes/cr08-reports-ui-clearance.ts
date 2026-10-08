@@ -12,7 +12,7 @@ async function main() {
   )).rows;
   console.log("published module reports by classification:", levels.map((r) => `L${r.c}=${r.n}`).join(", "));
   const users = (await db.execute(
-    "select u.email, u.clearance_level, r.name_en role from users u join roles r on r.id = u.role_id where u.email in ('admin@npc.qa','analyst@npc.qa','reader@npc.qa','knowledge@npc.qa','head.stats@npc.qa')"
+    "select u.email, u.clearance_level, r.name_en role from users u join roles r on r.id = u.role_id where u.email in ('admin@enviroai.demo','analyst@enviroai.demo','reader@enviroai.demo','knowledge@enviroai.demo','head.stats@enviroai.demo')"
   )).rows;
   for (const u of users) {
     const visible = (await db.execute({

@@ -1,0 +1,3285 @@
+{
+ "sources": [
+  {
+   "id": "ksa-src-regulatory-01",
+   "category": "regulatory",
+   "sortOrder": 1,
+   "name": "MEWA Official Portal",
+   "organization": "Ministry of Environment, Water and Agriculture (MEWA)",
+   "subCategory": "Main Portal",
+   "mainUrl": "https://www.mewa.gov.sa/en",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "HTML, PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Central ministry portal for environment, water and agriculture policy."
+  },
+  {
+   "id": "ksa-src-regulatory-02",
+   "category": "regulatory",
+   "sortOrder": 2,
+   "name": "MEWA Open Data Platform",
+   "organization": "MEWA",
+   "subCategory": "Open Data",
+   "mainUrl": "https://www.mewa.gov.sa/en/InformationCenter/Researchs/OpenDataSite/Pages/default.aspx",
+   "dataUrl": "https://www.mewa.gov.sa/en/InformationCenter/OpenData/OpenSourceLibrary/Pages/OpenDataLibrary.aspx",
+   "dataHint": "",
+   "formats": "CSV, XLSX, machine-readable",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Links out to the national Open Data Portal; some sub-pages require manual navigation."
+  },
+  {
+   "id": "ksa-src-regulatory-03",
+   "category": "regulatory",
+   "sortOrder": 3,
+   "name": "MEWA Rules & Regulations Library",
+   "organization": "MEWA",
+   "subCategory": "Guidelines / Technical Regulations",
+   "mainUrl": "https://www.mewa.gov.sa/en",
+   "dataUrl": "https://mewa.gov.sa/en/InformationCenter/DocsCenter/RulesLibrary/Pages/default.aspx",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Agriculture, fisheries, animal resources, water and environment laws, executive regulations and decisions."
+  },
+  {
+   "id": "ksa-src-regulatory-04",
+   "category": "regulatory",
+   "sortOrder": 4,
+   "name": "MEWA National Environment Strategy (NES)",
+   "organization": "MEWA",
+   "subCategory": "Strategy / Reports",
+   "mainUrl": "https://www.mewa.gov.sa/en/Ministry/initiatives/SectorStratigy/Pages/default.aspx",
+   "dataUrl": "https://www.mewa.gov.sa/en/Ministry/initiatives/SectorStratigy/Documents/6.%20BAH-MEWA-KSA%20NES-CEDA%20Executive%20Summary%20v3%2020180221%20ENG.pdf",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Executive summary of the National Environment Strategy."
+  },
+  {
+   "id": "ksa-src-regulatory-05",
+   "category": "regulatory",
+   "sortOrder": 5,
+   "name": "MEWA Statistics & Indicators",
+   "organization": "MEWA",
+   "subCategory": "Statistics",
+   "mainUrl": "https://www.mewa.gov.sa/en",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF, HTML tables",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Statistical reports / yearbooks referenced in site navigation; no single stable URL isolated \u2014 browse Data & Statistics section."
+  },
+  {
+   "id": "ksa-src-regulatory-06",
+   "category": "regulatory",
+   "sortOrder": 6,
+   "name": "National Center for Environmental Compliance (NCEC)",
+   "organization": "NCEC",
+   "subCategory": "Compliance, Standards, Enforcement",
+   "mainUrl": "https://ncec.gov.sa",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF, HTML, dashboard",
+   "languages": "AR (limited EN)",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Regulations/guides library, environmental inspection, violation-reporting channel, open data section."
+  },
+  {
+   "id": "ksa-src-regulatory-07",
+   "category": "regulatory",
+   "sortOrder": 7,
+   "name": "NCEC Air Quality Index Dashboard",
+   "organization": "NCEC",
+   "subCategory": "Open Data / Air Quality",
+   "mainUrl": "https://ncec.gov.sa",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "Real-time web dashboard",
+   "languages": "AR",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Live air-quality monitoring from a national station network."
+  },
+  {
+   "id": "ksa-src-regulatory-08",
+   "category": "regulatory",
+   "sortOrder": 8,
+   "name": "National Center for Wildlife (NCW)",
+   "organization": "NCW",
+   "subCategory": "Biodiversity, Protected Areas",
+   "mainUrl": "https://ncw.gov.sa/en/about_NCW",
+   "dataUrl": "https://www.ncw.gov.sa/en/terrestrial-wildlife",
+   "dataHint": "",
+   "formats": "PDF, HTML",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Protected-area coverage targets, species reintroduction data."
+  },
+  {
+   "id": "ksa-src-regulatory-09",
+   "category": "regulatory",
+   "sortOrder": 9,
+   "name": "NCW Annual Report",
+   "organization": "NCW",
+   "subCategory": "Reports",
+   "mainUrl": "https://ncw.gov.sa",
+   "dataUrl": "https://ncw.gov.sa/assets/img/open-data/NCW_Annual_Report_2023.pdf",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "2023 edition confirmed live."
+  },
+  {
+   "id": "ksa-src-regulatory-10",
+   "category": "regulatory",
+   "sortOrder": 10,
+   "name": "National Center for Vegetation Cover & Combating Desertification (NCVC)",
+   "organization": "NCVC",
+   "subCategory": "Vegetation Cover, Desertification",
+   "mainUrl": "https://ncvc.gov.sa/en/AboutCenter/Pages/default.aspx",
+   "dataUrl": "https://ncvc.gov.sa/en/digitalKnowledge/NationalParks/Pages/default.aspx",
+   "dataHint": "",
+   "formats": "PDF, GIS (implied), HTML",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "\"Digital Knowledge\", Data Access & Sharing, GeoParks and Plant Diversity sections."
+  },
+  {
+   "id": "ksa-src-regulatory-11",
+   "category": "regulatory",
+   "sortOrder": 11,
+   "name": "NCVC x KAUST SAUDINet",
+   "organization": "NCVC / KAUST",
+   "subCategory": "Joint Research Data Initiative",
+   "mainUrl": "https://ncvc.gov.sa",
+   "dataUrl": "https://ncvc.gov.sa/en/MediaCenter/News/Pages/NCVC-KAUST-Launch-SAUDINet.aspx",
+   "dataHint": "",
+   "formats": "Not specified",
+   "languages": "AR/EN",
+   "access": "Unclear",
+   "accessTags": [],
+   "unverified": true,
+   "notes": "Joint remote-sensing / vegetation-monitoring network; public-access status not confirmed."
+  },
+  {
+   "id": "ksa-src-regulatory-12",
+   "category": "regulatory",
+   "sortOrder": 12,
+   "name": "Saudi Water Authority (SWA)",
+   "organization": "SWA",
+   "subCategory": "Water, Desalination, Wastewater",
+   "mainUrl": "https://swa.gov.sa",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF, HTML",
+   "languages": "AR/EN",
+   "access": "Unclear",
+   "accessTags": [],
+   "unverified": true,
+   "notes": "Automated fetch blocked (403) \u2014 verify manually before relying on this domain."
+  },
+  {
+   "id": "ksa-src-regulatory-13",
+   "category": "regulatory",
+   "sortOrder": 13,
+   "name": "GASTAT Statistics Portal",
+   "organization": "General Authority for Statistics (GASTAT)",
+   "subCategory": "Statistics",
+   "mainUrl": "https://www.stats.gov.sa/en",
+   "dataUrl": "https://stats.gov.sa/en/statistics",
+   "dataHint": "",
+   "formats": "XLSX, PDF, CSV",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Agriculture census, livestock, fishing, water accounts, waste accounts, environment & climate statistics."
+  },
+  {
+   "id": "ksa-src-regulatory-14",
+   "category": "regulatory",
+   "sortOrder": 14,
+   "name": "GASTAT Data Tables",
+   "organization": "GASTAT",
+   "subCategory": "Statistics",
+   "mainUrl": "https://stats.gov.sa",
+   "dataUrl": "https://stats.gov.sa/en/datatables",
+   "dataHint": "",
+   "formats": "XLSX, CSV",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Environment, agriculture and energy statistics categories."
+  },
+  {
+   "id": "ksa-src-regulatory-15",
+   "category": "regulatory",
+   "sortOrder": 15,
+   "name": "GASTAT Household Environment Statistics",
+   "organization": "GASTAT",
+   "subCategory": "Statistics Report",
+   "mainUrl": "https://stats.gov.sa",
+   "dataUrl": "https://stats.gov.sa/en/w/news/124",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual publication."
+  },
+  {
+   "id": "ksa-src-regulatory-16",
+   "category": "regulatory",
+   "sortOrder": 16,
+   "name": "GASTAT Water Accounts Methodology Report",
+   "organization": "GASTAT",
+   "subCategory": "Methodology",
+   "mainUrl": "https://stats.gov.sa",
+   "dataUrl": "https://stats.gov.sa/en/w/methodology-and-quality-report-of-water-accounts-system-of-environmental-economic-accounting-",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "System of Environmental-Economic Accounting (SEEA) methodology."
+  },
+  {
+   "id": "ksa-src-regulatory-17",
+   "category": "regulatory",
+   "sortOrder": 17,
+   "name": "GASTAT Renewable Energy Statistics Methodology",
+   "organization": "GASTAT",
+   "subCategory": "Methodology",
+   "mainUrl": "https://stats.gov.sa",
+   "dataUrl": "https://www.stats.gov.sa/en/w/methodology-and-quality-report-for-renewable-energy-statistics",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": ""
+  },
+  {
+   "id": "ksa-src-regulatory-18",
+   "category": "regulatory",
+   "sortOrder": 18,
+   "name": "Saudi Open Data Portal (National Data Bank)",
+   "organization": "SDAIA / data.gov.sa",
+   "subCategory": "Open Data (cross-agency)",
+   "mainUrl": "https://data.gov.sa",
+   "dataUrl": "https://data.gov.sa/en",
+   "dataHint": "",
+   "formats": "CSV, JSON, XLSX, API",
+   "languages": "AR/EN",
+   "access": "Free (some registration)",
+   "accessTags": [
+    "free",
+    "registration"
+   ],
+   "unverified": false,
+   "notes": "15,500+ datasets; aggregation point for agency open data including environment."
+  },
+  {
+   "id": "ksa-src-regulatory-19",
+   "category": "regulatory",
+   "sortOrder": 19,
+   "name": "Saudi Geological Survey (SGS)",
+   "organization": "SGS",
+   "subCategory": "Geology, Minerals, Groundwater",
+   "mainUrl": "https://sgs.gov.sa/en",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF, GIS, maps",
+   "languages": "AR/EN",
+   "access": "Free (some products sold via e-shop)",
+   "accessTags": [
+    "free",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Hydrogeology, engineering geology, seismic/volcanic monitoring, \"Rawasi\" hazards platform."
+  },
+  {
+   "id": "ksa-src-regulatory-20",
+   "category": "regulatory",
+   "sortOrder": 20,
+   "name": "National Geological Database (NGD) Portal",
+   "organization": "SGS",
+   "subCategory": "Open Data / Geoscience",
+   "mainUrl": "https://sgs.gov.sa",
+   "dataUrl": "https://ngd.sgs.gov.sa/en",
+   "dataHint": "",
+   "formats": "GIS/shapefiles, borehole/well data, geochemical surveys, PDF",
+   "languages": "AR/EN",
+   "access": "Free (access terms unclear)",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": true,
+   "notes": "Subdomain naming inconsistent (ngd. vs ngp.) \u2014 re-verify working URL."
+  },
+  {
+   "id": "ksa-src-regulatory-21",
+   "category": "regulatory",
+   "sortOrder": 21,
+   "name": "SGS Mineral Occurrence Database",
+   "organization": "SGS",
+   "subCategory": "Open Data",
+   "mainUrl": "https://ngd.sgs.gov.sa",
+   "dataUrl": "https://ngd.sgs.gov.sa/en/mineral-occurrence",
+   "dataHint": "",
+   "formats": "Database / GIS",
+   "languages": "AR/EN",
+   "access": "Free (unclear)",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": true,
+   "notes": ""
+  },
+  {
+   "id": "ksa-src-regulatory-22",
+   "category": "regulatory",
+   "sortOrder": 22,
+   "name": "National Center for Meteorology (NCM)",
+   "organization": "NCM (formerly PME)",
+   "subCategory": "Climate, Weather, Air Quality",
+   "mainUrl": "https://ncm.gov.sa",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF, API, dashboard, mobile app",
+   "languages": "AR (limited EN)",
+   "access": "Free (API needs registration)",
+   "accessTags": [
+    "free",
+    "registration"
+   ],
+   "unverified": false,
+   "notes": "\"Kingdom Climate\" section, seasonal forecasts, drought monitoring, Regional Center for Dust and Sand Storms."
+  },
+  {
+   "id": "ksa-src-regulatory-23",
+   "category": "regulatory",
+   "sortOrder": 23,
+   "name": "SASO Main Portal",
+   "organization": "Saudi Standards, Metrology and Quality Organization (SASO)",
+   "subCategory": "Standards",
+   "mainUrl": "https://saso.gov.sa/en",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "AR/EN",
+   "access": "Free (purchase for some full standards)",
+   "accessTags": [
+    "free",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "33,800+ approved standards; Technical Regulations library, Open Data link."
+  },
+  {
+   "id": "ksa-src-regulatory-24",
+   "category": "regulatory",
+   "sortOrder": 24,
+   "name": "SASO Technical Regulations Library",
+   "organization": "SASO",
+   "subCategory": "Technical Regulations",
+   "mainUrl": "https://saso.gov.sa/en",
+   "dataUrl": "https://saso.gov.sa/en/Laws-And-Regulations/Technical_regulations/",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Water-rationalization, hazardous-substances and energy-efficiency technical regulations."
+  },
+  {
+   "id": "ksa-src-regulatory-25",
+   "category": "regulatory",
+   "sortOrder": 25,
+   "name": "Royal Commission for Jubail and Yanbu (RCJY)",
+   "organization": "RCJY",
+   "subCategory": "Industrial Environmental Regulation",
+   "mainUrl": "https://www.rcjy.gov.sa/en",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF, HTML",
+   "languages": "AR/EN",
+   "access": "Free (limited detail)",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Environmental-impact commitments stated; dedicated monitoring-data sub-page not located."
+  },
+  {
+   "id": "ksa-src-regulatory-26",
+   "category": "regulatory",
+   "sortOrder": 26,
+   "name": "Royal Commission for AlUla (RCU) \u2014 Open Data Library",
+   "organization": "RCU",
+   "subCategory": "Open Data",
+   "mainUrl": "https://www.rcu.gov.sa",
+   "dataUrl": "https://www.rcu.gov.sa/en/open-data-library",
+   "dataHint": "",
+   "formats": "Reports, datasets",
+   "languages": "AR/EN/FR",
+   "access": "Free (some via request form)",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Some datasets self-service, others via formal data request."
+  },
+  {
+   "id": "ksa-src-regulatory-27",
+   "category": "regulatory",
+   "sortOrder": 27,
+   "name": "RCU Reports & Data",
+   "organization": "RCU",
+   "subCategory": "Reports",
+   "mainUrl": "https://www.rcu.gov.sa",
+   "dataUrl": "https://www.rcu.gov.sa/en/media-resources/reports-data",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual and sustainability reports (Sharaan Nature Reserve, Arabian Leopard Programme, AlUla agriculture)."
+  },
+  {
+   "id": "ksa-src-regulatory-28",
+   "category": "regulatory",
+   "sortOrder": 28,
+   "name": "Royal Commission for Riyadh City \u2014 Environmental Protection",
+   "organization": "Royal Commission for Riyadh City",
+   "subCategory": "Environmental Regulation",
+   "mainUrl": "https://alriyadh.gov.sa/en/content/environmental-protection",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "HTML, PDF",
+   "languages": "AR/EN",
+   "access": "Unclear",
+   "accessTags": [],
+   "unverified": true,
+   "notes": "Dedicated data/regulations content not fully verified."
+  },
+  {
+   "id": "ksa-src-regulatory-29",
+   "category": "regulatory",
+   "sortOrder": 29,
+   "name": "Ministry of Municipal, Rural Affairs and Housing (MOMRAH)",
+   "organization": "MOMRAH",
+   "subCategory": "Municipal / Waste Regulation",
+   "mainUrl": "https://momrah.gov.sa/en",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF, HTML, dashboard",
+   "languages": "AR/EN",
+   "access": "Free (open-data request mechanism)",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Open Data Dashboard, Studies Library, Laws & Regulations, Annual Housing Report."
+  },
+  {
+   "id": "ksa-src-regulatory-30",
+   "category": "regulatory",
+   "sortOrder": 30,
+   "name": "Balady Platform",
+   "organization": "MOMRAH (Balady)",
+   "subCategory": "Municipal Statistics",
+   "mainUrl": "https://www.balady.gov.sa/ar/about-balady",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "HTML dashboards",
+   "languages": "AR",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Arabic-only municipal-services platform."
+  },
+  {
+   "id": "ksa-src-regulatory-31",
+   "category": "regulatory",
+   "sortOrder": 31,
+   "name": "National Center for Waste Management (MWAN)",
+   "organization": "MWAN",
+   "subCategory": "Waste Management",
+   "mainUrl": "https://mwan.gov.sa/en",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF, HTML",
+   "languages": "AR/EN",
+   "access": "Free (limited public data)",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "2040 National Waste Management Strategy targets published; dataset library not confirmed."
+  },
+  {
+   "id": "ksa-src-regulatory-32",
+   "category": "regulatory",
+   "sortOrder": 32,
+   "name": "Ministry of Energy",
+   "organization": "Ministry of Energy",
+   "subCategory": "Energy Regulation, Renewables",
+   "mainUrl": "https://www.moenergy.gov.sa/en",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "HTML, PDF",
+   "languages": "AR/EN",
+   "access": "Free (e-services need registration)",
+   "accessTags": [
+    "free",
+    "registration"
+   ],
+   "unverified": false,
+   "notes": "\"Energy in Numbers\" section; links to renewable-energy project pages."
+  },
+  {
+   "id": "ksa-src-regulatory-33",
+   "category": "regulatory",
+   "sortOrder": 33,
+   "name": "Saudi Energy Efficiency Center (SEEC)",
+   "organization": "SEEC",
+   "subCategory": "Energy Efficiency Data",
+   "mainUrl": "https://seec.gov.sa",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF, HTML",
+   "languages": "AR/EN",
+   "access": "Free (unclear)",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": true,
+   "notes": ""
+  },
+  {
+   "id": "ksa-src-regulatory-34",
+   "category": "regulatory",
+   "sortOrder": 34,
+   "name": "National Renewable and Recyclable Energy Commission",
+   "organization": "NRRC",
+   "subCategory": "Renewable Energy Regulation",
+   "mainUrl": "https://nrrc.gov.sa",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF, HTML",
+   "languages": "AR/EN",
+   "access": "Free (unclear)",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": true,
+   "notes": ""
+  },
+  {
+   "id": "ksa-src-regulatory-35",
+   "category": "regulatory",
+   "sortOrder": 35,
+   "name": "Ministry of Industry and Mineral Resources (MIM)",
+   "organization": "MIM",
+   "subCategory": "Mining Regulation, Statistics",
+   "mainUrl": "https://mim.gov.sa/en",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "HTML, PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Live stats on industrial facilities and mining licences; standalone reports library not found."
+  },
+  {
+   "id": "ksa-src-regulatory-36",
+   "category": "regulatory",
+   "sortOrder": 36,
+   "name": "Water and Electricity Regulatory Authority (WERA)",
+   "organization": "WERA (formerly ECRA)",
+   "subCategory": "Utility Regulation",
+   "mainUrl": "https://wera.gov.sa",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "AR/EN",
+   "access": "Unclear",
+   "accessTags": [],
+   "unverified": true,
+   "notes": "Working domain could not be confirmed (DNS error) \u2014 verify manually."
+  },
+  {
+   "id": "ksa-src-regulatory-37",
+   "category": "regulatory",
+   "sortOrder": 37,
+   "name": "Estidamah (National R&D Center for Sustainable Agriculture)",
+   "organization": "Estidamah",
+   "subCategory": "Agriculture R&D",
+   "mainUrl": "https://estidamah.gov.sa/en",
+   "dataUrl": "https://estidamah.gov.sa/en/media-center",
+   "dataHint": "",
+   "formats": "HTML, PDF, news",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Agriculture-sector partnership announcements (ADF, Saudi Irrigation Organization)."
+  },
+  {
+   "id": "ksa-src-regulatory-38",
+   "category": "regulatory",
+   "sortOrder": 38,
+   "name": "Saudi Food and Drug Authority (SFDA) \u2014 Pesticides & Chemical Safety",
+   "organization": "SFDA",
+   "subCategory": "Pesticides, Chemical Safety",
+   "mainUrl": "https://www.sfda.gov.sa/en",
+   "dataUrl": "https://www.sfda.gov.sa/en/licensed-establishments-list",
+   "dataHint": "",
+   "formats": "PDF, searchable lists",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Runs national pesticide-residue monitoring; licensed-establishment lists."
+  },
+  {
+   "id": "ksa-src-regulatory-39",
+   "category": "regulatory",
+   "sortOrder": 39,
+   "name": "Saudi Green Initiative (SGI) \u2014 Official Tracker",
+   "organization": "SGI (chaired by the Prime Minister)",
+   "subCategory": "Strategy / Targets Tracking",
+   "mainUrl": "https://sgi.gov.sa",
+   "dataUrl": "https://sgi.gov.sa/sgi-initiatives/",
+   "dataHint": "",
+   "formats": "HTML tracker, PDF factsheets",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "85+ initiatives across 13 themes, target years 2021\u20132040, 40+ implementing entities."
+  },
+  {
+   "id": "ksa-src-regulatory-40",
+   "category": "regulatory",
+   "sortOrder": 40,
+   "name": "ZATCA Open Data",
+   "organization": "ZATCA (customs/tax authority)",
+   "subCategory": "Trade Data",
+   "mainUrl": "https://zatca.gov.sa/en",
+   "dataUrl": "https://zatca.gov.sa/en/PublicData/Pages/Datasets-in-Saudi-Open-Data-Portal.aspx",
+   "dataHint": "",
+   "formats": "CSV, XLSX",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Republishes datasets via the Saudi Open Data Portal; relevant for environmental-goods trade."
+  },
+  {
+   "id": "ksa-src-scientific-01",
+   "category": "scientific",
+   "sortOrder": 1,
+   "name": "KAUST Research Repository",
+   "organization": "King Abdullah University of Science and Technology (KAUST)",
+   "subCategory": "Data / Publication Repository",
+   "mainUrl": "https://www.kaust.edu.sa",
+   "dataUrl": "https://library.kaust.edu.sa/repository",
+   "dataHint": "",
+   "formats": "PDF, datasets, software, theses, preprints, images",
+   "languages": "English",
+   "access": "Free (Open Access)",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "All KAUST research output incl. environment/water/agriculture; DOIs via DataCite."
+  },
+  {
+   "id": "ksa-src-scientific-02",
+   "category": "scientific",
+   "sortOrder": 2,
+   "name": "Red Sea Research Center (RSRC)",
+   "organization": "KAUST",
+   "subCategory": "Research Center",
+   "mainUrl": "https://rsrc.kaust.edu.sa",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF (journal articles); some raw marine data archived via NOAA",
+   "languages": "English",
+   "access": "Free / mixed",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Coral reefs, mangroves, seagrasses, brine pools; no dedicated open-data portal found."
+  },
+  {
+   "id": "ksa-src-scientific-03",
+   "category": "scientific",
+   "sortOrder": 3,
+   "name": "KAUST Climate and Livability Initiative (KCLI)",
+   "organization": "KAUST",
+   "subCategory": "Research Center",
+   "mainUrl": "https://cli.kaust.edu.sa",
+   "dataUrl": "https://cli.kaust.edu.sa/research",
+   "dataHint": "",
+   "formats": "PDF reports, climate model outputs",
+   "languages": "English",
+   "access": "Free (mostly)",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Regional climate modelling, urban climate, Red Sea / desert livability."
+  },
+  {
+   "id": "ksa-src-scientific-04",
+   "category": "scientific",
+   "sortOrder": 4,
+   "name": "KAUST Center for Desert Agriculture (CDA)",
+   "organization": "KAUST",
+   "subCategory": "Research Center",
+   "mainUrl": "https://www.kaust.edu.sa/en/research/sustainable-food-security",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF articles, project pages",
+   "languages": "English",
+   "access": "Free (mostly)",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Legacy cda.kaust.edu.sa URLs now folded into this consolidated research hub \u2014 confirm before use."
+  },
+  {
+   "id": "ksa-src-scientific-05",
+   "category": "scientific",
+   "sortOrder": 5,
+   "name": "KAUST Coastal and Marine Resources Core Lab",
+   "organization": "KAUST",
+   "subCategory": "Research Center / Core Lab",
+   "mainUrl": "https://corelabs.kaust.edu.sa/labs/coastal-and-marine-resources-core-lab",
+   "dataUrl": "https://hydrography-corelabs.kaust.edu.sa",
+   "dataHint": "",
+   "formats": "Imagery, bathymetric/hydrographic survey data, 3D reef maps",
+   "languages": "English",
+   "access": "Institutional / on request",
+   "accessTags": [
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Red Sea bathymetry and reef mapping."
+  },
+  {
+   "id": "ksa-src-scientific-06",
+   "category": "scientific",
+   "sortOrder": 6,
+   "name": "KAUST marifa Impact Portal",
+   "organization": "KAUST",
+   "subCategory": "Research / Impact Database",
+   "mainUrl": "https://marifa.kaust.edu.sa",
+   "dataUrl": "https://marifa.kaust.edu.sa/impactmain/InitiativesProjects",
+   "dataHint": "",
+   "formats": "Project summaries, PDF",
+   "languages": "English",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": ""
+  },
+  {
+   "id": "ksa-src-scientific-07",
+   "category": "scientific",
+   "sortOrder": 7,
+   "name": "KAPSARC Energy Data Portal",
+   "organization": "King Abdullah Petroleum Studies and Research Center (KAPSARC)",
+   "subCategory": "Data Repository / Database",
+   "mainUrl": "https://www.kapsarc.org",
+   "dataUrl": "https://www.kapsarc.org/our-offerings/kapsarc-energy-data-portal/",
+   "dataHint": "",
+   "formats": "CSV, API, interactive dashboards, maps",
+   "languages": "English/Arabic",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "~272 datasets, 50M+ records; includes a dedicated Water & Agriculture theme plus climate/sustainability."
+  },
+  {
+   "id": "ksa-src-scientific-08",
+   "category": "scientific",
+   "sortOrder": 8,
+   "name": "KAPSARC Publications & Research",
+   "organization": "KAPSARC",
+   "subCategory": "Research Center / Reports",
+   "mainUrl": "https://www.kapsarc.org",
+   "dataUrl": "https://www.kapsarc.org/research/",
+   "dataHint": "",
+   "formats": "PDF reports, policy briefs",
+   "languages": "English/Arabic",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Regular output on KSA energy transition, climate policy and the water-energy nexus."
+  },
+  {
+   "id": "ksa-src-scientific-09",
+   "category": "scientific",
+   "sortOrder": 9,
+   "name": "King Abdulaziz City for Science and Technology (KACST)",
+   "organization": "KACST",
+   "subCategory": "Government Research / Funding Body",
+   "mainUrl": "https://www.kacst.gov.sa",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF reports, project pages",
+   "languages": "Arabic/English",
+   "access": "Mixed / institutional",
+   "accessTags": [
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Functions mainly as a national R&D funder/coordinator; no dedicated public dataset portal identified."
+  },
+  {
+   "id": "ksa-src-scientific-10",
+   "category": "scientific",
+   "sortOrder": 10,
+   "name": "National Science, Technology and Innovation Plan (NSTIP) Program Pages",
+   "organization": "KACST / King Saud University",
+   "subCategory": "Funding Body / Project Database",
+   "mainUrl": "https://npst.ksu.edu.sa",
+   "dataUrl": "https://npst.ksu.edu.sa/en/node/311",
+   "dataHint": "",
+   "formats": "PDF project lists / reports",
+   "languages": "Arabic/English",
+   "access": "Institutional",
+   "accessTags": [
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "KSU's National Plan for Science & Technology unit administers NSTIP-funded agri/env/water projects."
+  },
+  {
+   "id": "ksa-src-scientific-11",
+   "category": "scientific",
+   "sortOrder": 11,
+   "name": "Journal of King Saud University \u2013 Science",
+   "organization": "King Saud University",
+   "subCategory": "Journal",
+   "mainUrl": "https://jksus.org",
+   "dataUrl": "https://jksus.org/current-issue/",
+   "dataHint": "",
+   "formats": "PDF, HTML",
+   "languages": "English",
+   "access": "Open Access (APC ~USD 800\u20131,000)",
+   "accessTags": [
+    "free",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Earth Sciences and Life & Environmental Sciences sections; Scopus CiteScore 10.2."
+  },
+  {
+   "id": "ksa-src-scientific-12",
+   "category": "scientific",
+   "sortOrder": 12,
+   "name": "Journal of King Abdulaziz University: Marine Science",
+   "organization": "King Abdulaziz University",
+   "subCategory": "Journal",
+   "mainUrl": "https://kauj.researchcommons.org/jmars",
+   "dataUrl": "https://kauj.researchcommons.org/jmars/aimsandscope.html",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "English",
+   "access": "Mixed (check per issue)",
+   "accessTags": [],
+   "unverified": false,
+   "notes": "Red Sea, Arabian Gulf and adjacent-seas marine environment focus."
+  },
+  {
+   "id": "ksa-src-scientific-13",
+   "category": "scientific",
+   "sortOrder": 13,
+   "name": "Scientific Journal of King Faisal University: Basic and Applied Sciences",
+   "organization": "King Faisal University (Al-Ahsa)",
+   "subCategory": "Journal",
+   "mainUrl": "https://www.kfu.edu.sa",
+   "dataUrl": "https://www.kfu.edu.sa/en/Departments/Sjournal/Pages/aim.aspx",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "Arabic/English",
+   "access": "Free (institutional Open Access)",
+   "accessTags": [
+    "free",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Al-Ahsa region is a key date-palm / agriculture research area."
+  },
+  {
+   "id": "ksa-src-scientific-14",
+   "category": "scientific",
+   "sortOrder": 14,
+   "name": "King Saud University \u2013 College of Food and Agriculture Sciences",
+   "organization": "King Saud University",
+   "subCategory": "Faculty / Research Center",
+   "mainUrl": "https://cfas.ksu.edu.sa",
+   "dataUrl": "https://cfas.ksu.edu.sa/en",
+   "dataHint": "",
+   "formats": "PDF (department/faculty research pages)",
+   "languages": "Arabic/English",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Departments: Soil Science, Plant Protection, Food Science."
+  },
+  {
+   "id": "ksa-src-scientific-15",
+   "category": "scientific",
+   "sortOrder": 15,
+   "name": "Prince Sultan Research Center for Environment, Water and Desert",
+   "organization": "King Saud University",
+   "subCategory": "Research Center",
+   "mainUrl": "https://hesr.ksu.edu.sa",
+   "dataUrl": "https://hesr.ksu.edu.sa/en/content/prince-sultan-institute-environmental-water-and-desert-research",
+   "dataHint": "",
+   "formats": "PDF reports",
+   "languages": "Arabic/English",
+   "access": "Institutional",
+   "accessTags": [
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Linked to the Prince Sultan Bin Abdulaziz International Prize for Water."
+  },
+  {
+   "id": "ksa-src-scientific-16",
+   "category": "scientific",
+   "sortOrder": 16,
+   "name": "Prince Sultan Bin Abdulaziz International Prize for Water (PSIPW)",
+   "organization": "Independent prize body (KSU-affiliated)",
+   "subCategory": "Award Archive / Database",
+   "mainUrl": "https://psipw.org",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "Arabic/English",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Archives award-winning water research; useful to trace leading researchers/projects."
+  },
+  {
+   "id": "ksa-src-scientific-17",
+   "category": "scientific",
+   "sortOrder": 17,
+   "name": "King Abdulaziz University \u2013 Faculty of Marine Sciences",
+   "organization": "King Abdulaziz University (Jeddah)",
+   "subCategory": "Faculty / Research Center",
+   "mainUrl": "https://kau.edu.sa/faculty/marine-sciences",
+   "dataUrl": "https://kau.edu.sa/faculty/en/marine-sciences",
+   "dataHint": "",
+   "formats": "PDF (faculty/department research pages)",
+   "languages": "Arabic/English",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Red Sea-focused marine science; parent faculty of JKAU: Marine Science journal."
+  },
+  {
+   "id": "ksa-src-scientific-18",
+   "category": "scientific",
+   "sortOrder": 18,
+   "name": "King Abdulaziz University \u2013 Faculty of Meteorology, Environment and Arid Land Agriculture",
+   "organization": "King Abdulaziz University (Jeddah)",
+   "subCategory": "Faculty / Research Center",
+   "mainUrl": "https://fens.kau.edu.sa",
+   "dataUrl": "https://agr.kau.edu.sa",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "Arabic/English",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "One of few Saudi faculties combining meteorology and arid-land agriculture research."
+  },
+  {
+   "id": "ksa-src-scientific-19",
+   "category": "scientific",
+   "sortOrder": 19,
+   "name": "KFUPM Research Institute (incl. former Center for Environment and Water)",
+   "organization": "King Fahd University of Petroleum and Minerals",
+   "subCategory": "Research Center",
+   "mainUrl": "https://ri.kfupm.edu.sa",
+   "dataUrl": "https://ri.kfupm.edu.sa/vp-for-research-innovation/research-highlights",
+   "dataHint": "",
+   "formats": "PDF reports, research highlights",
+   "languages": "English",
+   "access": "Institutional",
+   "accessTags": [
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Historic Center for Environment and Water now folded into the Research Institute structure."
+  },
+  {
+   "id": "ksa-src-scientific-20",
+   "category": "scientific",
+   "sortOrder": 20,
+   "name": "Arabian Journal for Science and Engineering (AJSE)",
+   "organization": "KFUPM / Springer",
+   "subCategory": "Journal",
+   "mainUrl": "https://www.springer.com/journal/13369",
+   "dataUrl": "https://link.springer.com/journal/13369",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "English",
+   "access": "Subscription (hybrid Open Access option)",
+   "accessTags": [
+    "free",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Regularly publishes KSA environmental/water/geoscience engineering papers."
+  },
+  {
+   "id": "ksa-src-scientific-21",
+   "category": "scientific",
+   "sortOrder": 21,
+   "name": "Qassim University \u2013 College of Agriculture and Food Sciences",
+   "organization": "Qassim University",
+   "subCategory": "Faculty / Research Center",
+   "mainUrl": "https://www.qu.edu.sa",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "Arabic/English",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Food security and arid-agriculture research focus."
+  },
+  {
+   "id": "ksa-src-scientific-22",
+   "category": "scientific",
+   "sortOrder": 22,
+   "name": "King Khalid University Research Hub (Abha / Asir region)",
+   "organization": "King Khalid University",
+   "subCategory": "Faculty / Research Center",
+   "mainUrl": "https://kku.edu.sa",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "Arabic/English",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Asir-region highland agriculture/biodiversity; no single consolidated environment centre page found."
+  },
+  {
+   "id": "ksa-src-scientific-23",
+   "category": "scientific",
+   "sortOrder": 23,
+   "name": "Saudi Digital Library (SDL)",
+   "organization": "Ministry of Education / SDL Consortium",
+   "subCategory": "Database (theses, journals, e-resources)",
+   "mainUrl": "https://sdl.edu.sa",
+   "dataUrl": "https://drepo.sdl.edu.sa",
+   "dataHint": "",
+   "formats": "PDF, full-text theses/journals",
+   "languages": "Arabic/English",
+   "access": "Institutional (Saudi university login; some items open)",
+   "accessTags": [
+    "registration",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Aggregates Saudi university theses/dissertations incl. agriculture/environment/water."
+  },
+  {
+   "id": "ksa-src-scientific-24",
+   "category": "scientific",
+   "sortOrder": 24,
+   "name": "Arabian Journal of Geosciences",
+   "organization": "Saudi Society for Geosciences / Springer",
+   "subCategory": "Journal",
+   "mainUrl": "https://www.springer.com/journal/12517",
+   "dataUrl": "https://link.springer.com/journal/12517",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "English",
+   "access": "Subscription (hybrid Open Access option)",
+   "accessTags": [
+    "free",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Frequently publishes KSA groundwater, geology, desertification and environmental geoscience studies."
+  },
+  {
+   "id": "ksa-src-scientific-25",
+   "category": "scientific",
+   "sortOrder": 25,
+   "name": "Saudi Journal of Biological Sciences",
+   "organization": "King Saud University / Elsevier",
+   "subCategory": "Journal",
+   "mainUrl": "https://www.journals.elsevier.com/saudi-journal-of-biological-sciences",
+   "dataUrl": "https://www.sciencedirect.com/journal/saudi-journal-of-biological-sciences",
+   "dataHint": "",
+   "formats": "PDF, HTML",
+   "languages": "English",
+   "access": "Open Access",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "KSA/Gulf biodiversity, ecology, microbiology and agri-biology research."
+  },
+  {
+   "id": "ksa-src-scientific-26",
+   "category": "scientific",
+   "sortOrder": 26,
+   "name": "ScienceDirect (Elsevier)",
+   "organization": "Elsevier",
+   "subCategory": "International Database",
+   "mainUrl": "https://www.sciencedirect.com",
+   "dataUrl": "",
+   "dataHint": "Search filter: \"Saudi Arabia\" + environment/water/agriculture",
+   "formats": "PDF, HTML",
+   "languages": "English",
+   "access": "Subscription/institutional (some Open Access)",
+   "accessTags": [
+    "free",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Strong coverage of KSU/KAU/KFUPM co-published Elsevier-partnered journals."
+  },
+  {
+   "id": "ksa-src-scientific-27",
+   "category": "scientific",
+   "sortOrder": 27,
+   "name": "Web of Science",
+   "organization": "Clarivate",
+   "subCategory": "International Database",
+   "mainUrl": "https://www.webofscience.com",
+   "dataUrl": "",
+   "dataHint": "Advanced search: affiliation + topic filters",
+   "formats": "Citation records, PDF links",
+   "languages": "English",
+   "access": "Subscription/institutional",
+   "accessTags": [
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Best for citation analysis and benchmarking KSA research impact."
+  },
+  {
+   "id": "ksa-src-scientific-28",
+   "category": "scientific",
+   "sortOrder": 28,
+   "name": "Scopus",
+   "organization": "Elsevier",
+   "subCategory": "International Database",
+   "mainUrl": "https://www.scopus.com",
+   "dataUrl": "",
+   "dataHint": "Affiliation Search: KAUST, KSU, KAU, KFUPM, KACST",
+   "formats": "Citation records, abstracts, PDF links",
+   "languages": "English",
+   "access": "Subscription/institutional",
+   "accessTags": [
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Use Affiliation Search to pull complete KSA institutional output lists."
+  },
+  {
+   "id": "ksa-src-scientific-29",
+   "category": "scientific",
+   "sortOrder": 29,
+   "name": "Google Scholar",
+   "organization": "Google",
+   "subCategory": "International Database",
+   "mainUrl": "https://scholar.google.com",
+   "dataUrl": "",
+   "dataHint": "Search operators: site:kaust.edu.sa OR \"Saudi Arabia\" + topic",
+   "formats": "PDF (where open), citation links",
+   "languages": "Multi-language",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Broadest coverage incl. grey literature/theses; use author profile pages to trace full output."
+  },
+  {
+   "id": "ksa-src-scientific-30",
+   "category": "scientific",
+   "sortOrder": 30,
+   "name": "ResearchGate",
+   "organization": "ResearchGate GmbH",
+   "subCategory": "International Database / Repository",
+   "mainUrl": "https://www.researchgate.net",
+   "dataUrl": "",
+   "dataHint": "Institution pages: \"KAUST\", \"King Saud University\", \"KFUPM\"",
+   "formats": "PDF (author-uploaded), preprints",
+   "languages": "Multi-language",
+   "access": "Free (account required)",
+   "accessTags": [
+    "free",
+    "registration"
+   ],
+   "unverified": false,
+   "notes": "Useful to request full-text PDFs directly from Saudi-based authors when paywalled elsewhere."
+  },
+  {
+   "id": "ksa-src-scientific-31",
+   "category": "scientific",
+   "sortOrder": 31,
+   "name": "NASA Earthdata",
+   "organization": "NASA",
+   "subCategory": "Satellite / Remote Sensing Data Repository",
+   "mainUrl": "https://www.earthdata.nasa.gov",
+   "dataUrl": "https://search.earthdata.nasa.gov",
+   "dataHint": "",
+   "formats": "HDF, NetCDF, GeoTIFF",
+   "languages": "English",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Filter by KSA bounding box for MODIS/VIIRS land cover, dust, SST and precipitation data."
+  },
+  {
+   "id": "ksa-src-scientific-32",
+   "category": "scientific",
+   "sortOrder": 32,
+   "name": "Copernicus Data Space Ecosystem (Sentinel data)",
+   "organization": "European Space Agency / EU Copernicus Programme",
+   "subCategory": "Satellite / Remote Sensing Data Repository",
+   "mainUrl": "https://dataspace.copernicus.eu",
+   "dataUrl": "https://browser.dataspace.copernicus.eu",
+   "dataHint": "",
+   "formats": "GeoTIFF, SAFE/JP2, NetCDF",
+   "languages": "English",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Sentinel-1/2/3/5P imagery for air quality, land cover and Red Sea coastal change."
+  },
+  {
+   "id": "ksa-src-scientific-33",
+   "category": "scientific",
+   "sortOrder": 33,
+   "name": "USGS EarthExplorer",
+   "organization": "United States Geological Survey (USGS)",
+   "subCategory": "Satellite / Remote Sensing Data Repository",
+   "mainUrl": "https://earthexplorer.usgs.gov",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "GeoTIFF, Landsat scenes",
+   "languages": "English",
+   "access": "Free (account required)",
+   "accessTags": [
+    "free",
+    "registration"
+   ],
+   "unverified": false,
+   "notes": "Landsat archive since 1972 \u2014 valuable for historical desertification/land-use change analysis."
+  },
+  {
+   "id": "ksa-src-scientific-34",
+   "category": "scientific",
+   "sortOrder": 34,
+   "name": "GBIF (Global Biodiversity Information Facility)",
+   "organization": "GBIF Secretariat",
+   "subCategory": "Biodiversity Data Repository",
+   "mainUrl": "https://www.gbif.org",
+   "dataUrl": "https://www.gbif.org/country/SA/about",
+   "dataHint": "",
+   "formats": "CSV, Darwin Core Archive",
+   "languages": "English",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Aggregates species-occurrence records relevant to KSA biodiversity/conservation research."
+  },
+  {
+   "id": "ksa-src-initiatives-01",
+   "category": "initiatives",
+   "sortOrder": 1,
+   "name": "Saudi Green Initiative (SGI) \u2014 Factsheet / Forum",
+   "organization": "Saudi Green Initiative (chaired by the Prime Minister)",
+   "subCategory": "Government Initiative",
+   "mainUrl": "https://www.greeninitiatives.gov.sa",
+   "dataUrl": "https://sgi.gov.sa/media/v4pllu0w/about_saudi_green_initiative_factsheet_en.pdf",
+   "dataHint": "",
+   "formats": "PDF, web",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual SGI Forum (October); see also the Official Tracker on the Regulatory tab. No dedicated public report archive located."
+  },
+  {
+   "id": "ksa-src-initiatives-02",
+   "category": "initiatives",
+   "sortOrder": 2,
+   "name": "Middle East Green Initiative (MGI)",
+   "organization": "MGI Secretariat / Vision 2030",
+   "subCategory": "Government Initiative",
+   "mainUrl": "https://www.vision2030.gov.sa/en/projects/middle-east-green-initiative/",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "Web",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "No standalone MGI site or reports portal identified."
+  },
+  {
+   "id": "ksa-src-initiatives-03",
+   "category": "initiatives",
+   "sortOrder": 3,
+   "name": "Vision 2030 (Official Site)",
+   "organization": "Ministry of Economy and Planning / Vision 2030",
+   "subCategory": "National Strategy",
+   "mainUrl": "https://www.vision2030.gov.sa/en",
+   "dataUrl": "https://www.vision2030.gov.sa/media/uxhfb5if/ntp_en_annual_report_2025.pdf",
+   "dataHint": "",
+   "formats": "PDF, web",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Hosts Vision Realization Programme documents and National Transformation Program annual reports."
+  },
+  {
+   "id": "ksa-src-initiatives-04",
+   "category": "initiatives",
+   "sortOrder": 4,
+   "name": "National Transformation Program (NTP)",
+   "organization": "NTP / Vision 2030",
+   "subCategory": "National Strategy (VRP)",
+   "mainUrl": "https://na.vision2030.gov.sa/en/explore/programs/national-transformation-program",
+   "dataUrl": "https://vision2030.gov.sa/media/p21jxnk1/english-ntp-anuual-report-2023.pdf",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual; earlier editions (e.g. 2021) also available."
+  },
+  {
+   "id": "ksa-src-initiatives-05",
+   "category": "initiatives",
+   "sortOrder": 5,
+   "name": "National Industrial Development & Logistics Program (NIDLP)",
+   "organization": "NIDLP / Vision 2030",
+   "subCategory": "National Strategy (VRP)",
+   "mainUrl": "https://vision2030.gov.sa/en/explore/programs/national-industrial-development-and-logistics-program",
+   "dataUrl": "https://daleel.gov.sa/wp-content/uploads/2025/07/nidlp_annual_report-2024_-en.pdf",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Covers industrial, energy and mining environmental footprint."
+  },
+  {
+   "id": "ksa-src-initiatives-06",
+   "category": "initiatives",
+   "sortOrder": 6,
+   "name": "NEOM \u2014 Social Responsibility / Newsroom",
+   "organization": "NEOM",
+   "subCategory": "Corporate Sustainability",
+   "mainUrl": "https://www.neom.com",
+   "dataUrl": "https://www.neom.com/en-us/about/social-responsibility",
+   "dataHint": "",
+   "formats": "PDF, web",
+   "languages": "AR/EN",
+   "access": "Free (where published)",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "No single NEOM-wide annual sustainability report confirmed; see ENOWA below for a subsidiary example."
+  },
+  {
+   "id": "ksa-src-initiatives-07",
+   "category": "initiatives",
+   "sortOrder": 7,
+   "name": "ENOWA Water Inaugural ESG Report",
+   "organization": "ENOWA (NEOM water/energy arm)",
+   "subCategory": "Corporate Sustainability Report",
+   "mainUrl": "https://enowa.neom.com",
+   "dataUrl": "https://enowa.neom.com/ENOWA_Water_Inaugural_ESG_Report.pdf",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "English",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Inaugural edition confirmed; later editions not yet verified."
+  },
+  {
+   "id": "ksa-src-initiatives-08",
+   "category": "initiatives",
+   "sortOrder": 8,
+   "name": "Public Investment Fund (PIF) Annual Reports",
+   "organization": "PIF",
+   "subCategory": "Sovereign Corporate Report",
+   "mainUrl": "https://www.pif.gov.sa",
+   "dataUrl": "https://www.pif.gov.sa/en/investors/annual-reports",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual; ESG/sustainability integrated into the Annual Report rather than a standalone ESG report."
+  },
+  {
+   "id": "ksa-src-initiatives-09",
+   "category": "initiatives",
+   "sortOrder": 9,
+   "name": "Saudi Aramco Sustainability Report",
+   "organization": "Saudi Aramco",
+   "subCategory": "Corporate Sustainability Report",
+   "mainUrl": "https://www.aramco.com",
+   "dataUrl": "https://www.aramco.com/en/investors/environmental-social-and-governance/sustainability-report",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual; full report plus executive summary."
+  },
+  {
+   "id": "ksa-src-initiatives-10",
+   "category": "initiatives",
+   "sortOrder": 10,
+   "name": "SABIC Reports Center",
+   "organization": "SABIC",
+   "subCategory": "Corporate Sustainability Report",
+   "mainUrl": "https://www.sabic.com",
+   "dataUrl": "https://www.sabic.com/en/reports/",
+   "dataHint": "",
+   "formats": "PDF, web",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual Integrated Annual Report; archive back to 1978."
+  },
+  {
+   "id": "ksa-src-initiatives-11",
+   "category": "initiatives",
+   "sortOrder": 11,
+   "name": "ACWA Power Sustainability",
+   "organization": "ACWA Power",
+   "subCategory": "Corporate Sustainability Report",
+   "mainUrl": "https://acwapower.com",
+   "dataUrl": "https://acwapower.com/en/sustainability/",
+   "dataHint": "",
+   "formats": "PDF, web",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual; relevant to renewable energy and desalination/water."
+  },
+  {
+   "id": "ksa-src-initiatives-12",
+   "category": "initiatives",
+   "sortOrder": 12,
+   "name": "Red Sea Global \u2014 Responsible Development Reports",
+   "organization": "Red Sea Global (PIF)",
+   "subCategory": "Corporate Sustainability Report",
+   "mainUrl": "https://redseaglobal.com",
+   "dataUrl": "https://redseaglobal.com/en/responsible-development/reports/",
+   "dataHint": "",
+   "formats": "PDF, web",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual since 2020; strong marine/environmental conservation content."
+  },
+  {
+   "id": "ksa-src-initiatives-13",
+   "category": "initiatives",
+   "sortOrder": 13,
+   "name": "National Water Strategy 2030",
+   "organization": "Ministry of Environment, Water and Agriculture (MEWA)",
+   "subCategory": "National Strategy",
+   "mainUrl": "https://www.mewa.gov.sa/en/Ministry/Agencies/TheWaterAgency/Topics/Pages/Strategy.aspx",
+   "dataUrl": "https://leap.unep.org/countries/sa/national-legislation/national-water-strategy-2030",
+   "dataHint": "",
+   "formats": "Web (PDF not confirmed live on official page)",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Full PDF not confirmed live on the official MEWA page; mirrored via UNEP LEAP / Ecolex \u2014 re-verify."
+  },
+  {
+   "id": "ksa-src-initiatives-14",
+   "category": "initiatives",
+   "sortOrder": 14,
+   "name": "National Environment Strategy (mirror copy)",
+   "organization": "MEWA",
+   "subCategory": "National Strategy",
+   "mainUrl": "https://www.mewa.gov.sa",
+   "dataUrl": "https://www.jetro.go.jp/ext_images/world/middle_east/sa/law/pdf/National_Environmental_Strategy_ENG.pdf",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "AR (original)/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Official MEWA-hosted English copy not located; third-party mirror (JETRO) used \u2014 re-verify."
+  },
+  {
+   "id": "ksa-src-initiatives-15",
+   "category": "initiatives",
+   "sortOrder": 15,
+   "name": "Circular Carbon Economy (CCE) National Program",
+   "organization": "Ministry of Energy / G20 CCE Initiative",
+   "subCategory": "National Strategy",
+   "mainUrl": "",
+   "dataUrl": "https://www.climate-laws.org/geographies/saudi-arabia/policies/circular-carbon-economy-national-program",
+   "dataHint": "",
+   "formats": "PDF (aggregator)",
+   "languages": "EN/AR",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "No dedicated official programme reports portal found."
+  },
+  {
+   "id": "ksa-src-initiatives-16",
+   "category": "initiatives",
+   "sortOrder": 16,
+   "name": "National Renewable Energy Program (NREP) / REPDO",
+   "organization": "Ministry of Energy \u2013 Renewable Energy Project Development Office",
+   "subCategory": "National Strategy",
+   "mainUrl": "",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "",
+   "languages": "AR/EN",
+   "access": "Unverified",
+   "accessTags": [],
+   "unverified": true,
+   "notes": "Official reports-portal URL could not be confirmed this session \u2014 follow up directly with the Ministry of Energy."
+  },
+  {
+   "id": "ksa-src-initiatives-17",
+   "category": "initiatives",
+   "sortOrder": 17,
+   "name": "Mostadam \u2014 Saudi Green Building Rating System",
+   "organization": "Ministry of Municipal, Rural Affairs and Housing (MOMRAH)",
+   "subCategory": "Rating / Certification Scheme",
+   "mainUrl": "https://momrah.gov.sa/en/news/14584",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "Web/PDF",
+   "languages": "AR/EN",
+   "access": "Free (certification portal may be restricted)",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Programme domain (mostadam.sa) not independently verified."
+  },
+  {
+   "id": "ksa-src-initiatives-18",
+   "category": "initiatives",
+   "sortOrder": 18,
+   "name": "Saudi Green Building Forum (SGBF)",
+   "organization": "SGBF",
+   "subCategory": "Government Initiative",
+   "mainUrl": "",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "",
+   "languages": "AR/EN",
+   "access": "Unverified",
+   "accessTags": [],
+   "unverified": true,
+   "notes": "No official reports portal identified."
+  },
+  {
+   "id": "ksa-src-initiatives-19",
+   "category": "initiatives",
+   "sortOrder": 19,
+   "name": "General Food Security Authority (GFSA) / Saudi Food Security Strategy",
+   "organization": "GFSA",
+   "subCategory": "National Strategy",
+   "mainUrl": "https://gfsa.gov.sa/en",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "Web/PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Strategy document not directly linked on checked pages."
+  },
+  {
+   "id": "ksa-src-initiatives-20",
+   "category": "initiatives",
+   "sortOrder": 20,
+   "name": "SALIC Sustainability",
+   "organization": "Saudi Agricultural and Livestock Investment Company (SALIC, PIF portfolio)",
+   "subCategory": "Corporate Sustainability",
+   "mainUrl": "https://salic.com",
+   "dataUrl": "https://salic.com/sustainability",
+   "dataHint": "",
+   "formats": "Web (narrative only)",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "No downloadable sustainability report found."
+  },
+  {
+   "id": "ksa-src-initiatives-21",
+   "category": "initiatives",
+   "sortOrder": 21,
+   "name": "NADEC ESG Report",
+   "organization": "National Agricultural Development Company (NADEC, Tadawul-listed)",
+   "subCategory": "Corporate Sustainability Report",
+   "mainUrl": "https://www.nadec.com.sa",
+   "dataUrl": "https://www.saudiexchange.sa/Resources/fsPdf/31893_472_2026-07-25_19-56-39_en.pdf",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual ESG/sustainability report since ~2023, filed via the Saudi Exchange disclosure system."
+  },
+  {
+   "id": "ksa-src-initiatives-22",
+   "category": "initiatives",
+   "sortOrder": 22,
+   "name": "Sustainable Land Management Report",
+   "organization": "NCVC / MEWA",
+   "subCategory": "Government Initiative",
+   "mainUrl": "https://ncvc.gov.sa",
+   "dataUrl": "https://www.mewa.gov.sa/en/Ministry/Agencies/AgencyForInnovation/Topics/Documents/SlmReport-En.pdf",
+   "dataHint": "",
+   "formats": "Web/PDF",
+   "languages": "AR/EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Dedicated NCVC annual-report portal not found."
+  },
+  {
+   "id": "ksa-src-initiatives-23",
+   "category": "initiatives",
+   "sortOrder": 23,
+   "name": "Saudi Investment Recycling Company (SIRC) Sustainability Report",
+   "organization": "SIRC (PIF portfolio)",
+   "subCategory": "Corporate Sustainability Report",
+   "mainUrl": "https://sirc.sa",
+   "dataUrl": "https://sirc.sa/SIRC_2024_Sustainability_Report_English.pdf",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "English",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual; covers circular economy and waste management."
+  },
+  {
+   "id": "ksa-src-initiatives-24",
+   "category": "initiatives",
+   "sortOrder": 24,
+   "name": "National Water Company (NWC) Sustainability Report",
+   "organization": "NWC (PIF portfolio)",
+   "subCategory": "Corporate Sustainability Report",
+   "mainUrl": "https://www.nwc.com.sa",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF (expected)",
+   "languages": "AR/EN",
+   "access": "Free (expected)",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "First sustainability report recently issued per press coverage; direct PDF link not located \u2014 re-verify."
+  },
+  {
+   "id": "ksa-src-initiatives-25",
+   "category": "initiatives",
+   "sortOrder": 25,
+   "name": "Saudi Arabia NDC / Long-Term Climate Strategy",
+   "organization": "Ministry of Energy, submitted to UNFCCC",
+   "subCategory": "National Strategy (international reporting)",
+   "mainUrl": "https://unfccc.int",
+   "dataUrl": "https://unfccc.int/sites/default/files/2026-01/2nd%20KSA%20NDC%20Document%20Final%20Document%20%2828122025%29_DNA.pdf",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "EN/AR",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Latest (2nd) NDC filed December 2025."
+  },
+  {
+   "id": "ksa-src-initiatives-26",
+   "category": "initiatives",
+   "sortOrder": 26,
+   "name": "Saudi Arabia UNCCD National Report (Desertification)",
+   "organization": "MEWA / NCVC, submitted to UNCCD Secretariat",
+   "subCategory": "National Strategy (international reporting)",
+   "mainUrl": "https://www.unccd.int",
+   "dataUrl": "https://saudiarabia.un.org/en/node/223548",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "EN/AR",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Periodic UNCCD reporting cycle."
+  },
+  {
+   "id": "ksa-src-portals-01",
+   "category": "portals",
+   "sortOrder": 1,
+   "name": "World Bank Open Data",
+   "organization": "World Bank",
+   "subCategory": "Statistical Database",
+   "mainUrl": "https://data.worldbank.org",
+   "dataUrl": "https://data.worldbank.org/country/saudi-arabia",
+   "dataHint": "",
+   "formats": "CSV, XML, Excel, API",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Environment, energy, water-withdrawal, emissions and land/forest indicators."
+  },
+  {
+   "id": "ksa-src-portals-02",
+   "category": "portals",
+   "sortOrder": 2,
+   "name": "World Development Indicators (WDI) DataBank",
+   "organization": "World Bank",
+   "subCategory": "Statistical Database",
+   "mainUrl": "https://databank.worldbank.org/source/world-development-indicators",
+   "dataUrl": "https://databank.worldbank.org/reports.aspx?source=2&country=SAU",
+   "dataHint": "",
+   "formats": "Excel, CSV, tab-delimited, API",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "~1,500 indicators; annual update."
+  },
+  {
+   "id": "ksa-src-portals-03",
+   "category": "portals",
+   "sortOrder": 3,
+   "name": "World Bank Climate Change Knowledge Portal (CCKP)",
+   "organization": "World Bank",
+   "subCategory": "Climate Data Portal / Country Profile",
+   "mainUrl": "https://climateknowledgeportal.worldbank.org",
+   "dataUrl": "https://climateknowledgeportal.worldbank.org/country/saudi-arabia",
+   "dataHint": "",
+   "formats": "Interactive charts; CSV/NetCDF download tool",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Historical data 1995\u20132014 plus CMIP6 projections to 2059; risk layers for PM2.5, population, infrastructure."
+  },
+  {
+   "id": "ksa-src-portals-04",
+   "category": "portals",
+   "sortOrder": 4,
+   "name": "IEA Country Profile \u2013 Saudi Arabia",
+   "organization": "International Energy Agency (IEA)",
+   "subCategory": "Energy Statistics / Country Profile",
+   "mainUrl": "https://www.iea.org",
+   "dataUrl": "https://www.iea.org/countries/saudi-arabia",
+   "dataHint": "",
+   "formats": "Charts; links to Data Browser",
+   "languages": "EN",
+   "access": "Free (summary) / Paid (full data)",
+   "accessTags": [
+    "free",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Annual/ad hoc updates."
+  },
+  {
+   "id": "ksa-src-portals-05",
+   "category": "portals",
+   "sortOrder": 5,
+   "name": "IEA Energy Statistics Data Browser",
+   "organization": "IEA",
+   "subCategory": "Statistical Database",
+   "mainUrl": "https://www.iea.org/data-and-statistics/data-tools/energy-statistics-data-browser",
+   "dataUrl": "",
+   "dataHint": "Filter by \"Saudi Arabia\"",
+   "formats": "CSV, Excel (paid for bulk export)",
+   "languages": "EN",
+   "access": "Free (limited) / Paid (full)",
+   "accessTags": [
+    "free",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Annual."
+  },
+  {
+   "id": "ksa-src-portals-06",
+   "category": "portals",
+   "sortOrder": 6,
+   "name": "IRENA Statistical Profiles \u2013 Saudi Arabia",
+   "organization": "International Renewable Energy Agency (IRENA)",
+   "subCategory": "Statistical Database / Country Profile",
+   "mainUrl": "https://www.irena.org/Data",
+   "dataUrl": "https://www.irena.org/-/media/Files/IRENA/Agency/Statistics/Statistical_Profiles/Middle%20East/Saudi%20Arabia_Middle%20East_RE_SP.pdf",
+   "dataHint": "",
+   "formats": "PDF statistical profile; underlying data via IRENASTAT",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Interactive \"Energy Profiles\" page blocked automated access \u2014 confirm deep link manually."
+  },
+  {
+   "id": "ksa-src-portals-07",
+   "category": "portals",
+   "sortOrder": 7,
+   "name": "IRENASTAT",
+   "organization": "IRENA",
+   "subCategory": "Statistical Database",
+   "mainUrl": "https://pxweb.irena.org",
+   "dataUrl": "",
+   "dataHint": "Filter country = Saudi Arabia",
+   "formats": "CSV, Excel, PxWeb API",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual."
+  },
+  {
+   "id": "ksa-src-portals-08",
+   "category": "portals",
+   "sortOrder": 8,
+   "name": "FAO AQUASTAT \u2013 Saudi Arabia",
+   "organization": "FAO",
+   "subCategory": "Water Statistics / Country Profile",
+   "mainUrl": "https://www.fao.org/aquastat",
+   "dataUrl": "https://www.fao.org/aquastat/en/countries-and-basins/country-profiles/country/SAU",
+   "dataHint": "",
+   "formats": "PDF, Excel, interactive query tool",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Narrative country profile is dated (2008); use the interactive query tool for current figures."
+  },
+  {
+   "id": "ksa-src-portals-09",
+   "category": "portals",
+   "sortOrder": 9,
+   "name": "FAOSTAT \u2013 Saudi Arabia",
+   "organization": "FAO",
+   "subCategory": "Agriculture Statistical Database",
+   "mainUrl": "https://www.fao.org/faostat/en",
+   "dataUrl": "",
+   "dataHint": "Country code 194 (Saudi Arabia)",
+   "formats": "CSV, XML, API, bulk downloads",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual."
+  },
+  {
+   "id": "ksa-src-portals-10",
+   "category": "portals",
+   "sortOrder": 10,
+   "name": "FAO Country Profiles (land & food security)",
+   "organization": "FAO",
+   "subCategory": "Country Profile / GIS Tool",
+   "mainUrl": "https://www.fao.org/countryprofiles",
+   "dataUrl": "https://www.fao.org/countryprofiles/index/en/?iso3=SAU",
+   "dataHint": "",
+   "formats": "Maps, project listings",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Ongoing."
+  },
+  {
+   "id": "ksa-src-portals-11",
+   "category": "portals",
+   "sortOrder": 11,
+   "name": "FAO GIEWS Country Brief \u2013 Saudi Arabia",
+   "organization": "FAO",
+   "subCategory": "Early Warning / Food Security",
+   "mainUrl": "https://www.fao.org/giews/countrybrief",
+   "dataUrl": "https://www.fao.org/giews/countrybrief/country.jsp?code=SAU",
+   "dataHint": "",
+   "formats": "PDF briefs, CSV (NDVI/precipitation), EO indicator maps",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Covers cereal production/imports and food-price inflation; updated periodically through the year."
+  },
+  {
+   "id": "ksa-src-portals-12",
+   "category": "portals",
+   "sortOrder": 12,
+   "name": "UNFCCC NDC Registry",
+   "organization": "UNFCCC",
+   "subCategory": "GHG Policy / NDC Registry",
+   "mainUrl": "https://unfccc.int/NDCREG",
+   "dataUrl": "",
+   "dataHint": "Search \"Saudi Arabia\"",
+   "formats": "PDF",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "KSA has 1st and 2nd NDC on file (2nd dated December 2025)."
+  },
+  {
+   "id": "ksa-src-portals-13",
+   "category": "portals",
+   "sortOrder": 13,
+   "name": "UNFCCC National Communications & Biennial Update Reports (Non-Annex I)",
+   "organization": "UNFCCC",
+   "subCategory": "GHG Inventory / National Communications",
+   "mainUrl": "https://unfccc.int/process-and-meetings/transparency-and-reporting",
+   "dataUrl": "",
+   "dataHint": "Individual KSA NC/BUR PDFs (e.g. NC3, BUR2)",
+   "formats": "PDF",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Reporting is infrequent and dated; treat as the official but lagging GHG-inventory source."
+  },
+  {
+   "id": "ksa-src-portals-14",
+   "category": "portals",
+   "sortOrder": 14,
+   "name": "UNFCCC GHG Data Interface",
+   "organization": "UNFCCC",
+   "subCategory": "GHG Inventory Database",
+   "mainUrl": "https://di.unfccc.int",
+   "dataUrl": "",
+   "dataHint": "Filter Party = Saudi Arabia",
+   "formats": "CSV, XLS",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Sparse time series for KSA as a Non-Annex I Party."
+  },
+  {
+   "id": "ksa-src-portals-15",
+   "category": "portals",
+   "sortOrder": 15,
+   "name": "UNdata",
+   "organization": "UN Statistics Division",
+   "subCategory": "Statistical Database (meta-aggregator)",
+   "mainUrl": "https://data.un.org",
+   "dataUrl": "https://data.un.org/CountryProfile.aspx?crName=SAUDI%20ARABIA",
+   "dataHint": "",
+   "formats": "CSV, XML; underlying source APIs",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Service has had reliability/migration issues \u2014 re-verify in-browser."
+  },
+  {
+   "id": "ksa-src-portals-16",
+   "category": "portals",
+   "sortOrder": 16,
+   "name": "UN Comtrade (Comtrade Plus)",
+   "organization": "UN Statistics Division / UN Trade and Development",
+   "subCategory": "Trade Statistics Database",
+   "mainUrl": "https://comtradeplus.un.org",
+   "dataUrl": "",
+   "dataHint": "Reporter = Saudi Arabia (country code 682)",
+   "formats": "CSV, Excel, API (subscription for bulk)",
+   "languages": "EN",
+   "access": "Free (limited queries) / Registration for API",
+   "accessTags": [
+    "free",
+    "registration"
+   ],
+   "unverified": false,
+   "notes": "Monthly/annual; relevant for environmental-goods trade (HS codes)."
+  },
+  {
+   "id": "ksa-src-portals-17",
+   "category": "portals",
+   "sortOrder": 17,
+   "name": "UN SDG Indicators Global Database",
+   "organization": "UN Statistics Division (UNSD)",
+   "subCategory": "SDG Indicators Database",
+   "mainUrl": "https://unstats.un.org/sdgs/dataportal",
+   "dataUrl": "",
+   "dataHint": "Filter Country = Saudi Arabia",
+   "formats": "CSV, Excel, API",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual (varies by indicator)."
+  },
+  {
+   "id": "ksa-src-portals-18",
+   "category": "portals",
+   "sortOrder": 18,
+   "name": "UNICEF SDG Country Profile \u2013 Saudi Arabia",
+   "organization": "UNICEF",
+   "subCategory": "SDG Country Profile",
+   "mainUrl": "https://data.unicef.org/sdgs",
+   "dataUrl": "https://data.unicef.org/sdgs/country/sau/",
+   "dataHint": "",
+   "formats": "Web dashboard, PDF",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Practical front-end when the main UNSD portal is hard to query directly."
+  },
+  {
+   "id": "ksa-src-portals-19",
+   "category": "portals",
+   "sortOrder": 19,
+   "name": "Global Nature Watch (formerly Global Forest Watch)",
+   "organization": "World Resources Institute",
+   "subCategory": "Land Cover / Forest Monitoring",
+   "mainUrl": "https://globalnaturewatch.org",
+   "dataUrl": "https://globalnaturewatch.org/dashboards/country/SAU/",
+   "dataHint": "",
+   "formats": "Interactive dashboard; GIS/CSV downloads",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Platform rebranded from Global Forest Watch. KSA has minimal natural forest (~15 kha, <0.1% land area, 2020 baseline)."
+  },
+  {
+   "id": "ksa-src-portals-20",
+   "category": "portals",
+   "sortOrder": 20,
+   "name": "Climate Watch",
+   "organization": "World Resources Institute",
+   "subCategory": "GHG Emissions Database",
+   "mainUrl": "https://www.climatewatchdata.org",
+   "dataUrl": "https://www.climatewatchdata.org/ghg-emissions (filter Saudi Arabia)",
+   "dataHint": "",
+   "formats": "CSV, Excel, API",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual."
+  },
+  {
+   "id": "ksa-src-portals-21",
+   "category": "portals",
+   "sortOrder": 21,
+   "name": "WHO data.who.int \u2013 Saudi Arabia",
+   "organization": "World Health Organization",
+   "subCategory": "Health & Environment Database",
+   "mainUrl": "https://data.who.int",
+   "dataUrl": "https://data.who.int/countries/682",
+   "dataHint": "",
+   "formats": "CSV, OData/GHO API",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "PM2.5 exposure and air-pollution mortality indicators."
+  },
+  {
+   "id": "ksa-src-portals-22",
+   "category": "portals",
+   "sortOrder": 22,
+   "name": "Global Environment Facility (GEF) Country Profiles",
+   "organization": "Global Environment Facility",
+   "subCategory": "Project Database / Country Profile",
+   "mainUrl": "https://www.thegef.org/country",
+   "dataUrl": "https://www.thegef.org/country/saudi-arabia",
+   "dataHint": "",
+   "formats": "Web summary stats, project-level PDFs",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Ongoing, updated as new projects are approved."
+  },
+  {
+   "id": "ksa-src-portals-23",
+   "category": "portals",
+   "sortOrder": 23,
+   "name": "GEF Project Database",
+   "organization": "Global Environment Facility",
+   "subCategory": "Project Database",
+   "mainUrl": "https://www.thegef.org/projects-operations/database",
+   "dataUrl": "",
+   "dataHint": "Filter Country = Saudi Arabia",
+   "formats": "Web table; individual project PDFs",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "6,000+ projects globally, filterable by country."
+  },
+  {
+   "id": "ksa-src-portals-24",
+   "category": "portals",
+   "sortOrder": 24,
+   "name": "IAEA Power Reactor Information System (PRIS)",
+   "organization": "International Atomic Energy Agency",
+   "subCategory": "Nuclear / Energy Database",
+   "mainUrl": "https://pris.iaea.org/PRIS",
+   "dataUrl": "",
+   "dataHint": "Filter Saudi Arabia",
+   "formats": "Web tables; CSV export",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Relevant to any future nuclear-desalination capacity; KSA has no operating reactors yet."
+  },
+  {
+   "id": "ksa-src-portals-25",
+   "category": "portals",
+   "sortOrder": 25,
+   "name": "WMO Climate Normals (NOAA NCEI mirror)",
+   "organization": "World Meteorological Organization / NOAA NCEI",
+   "subCategory": "Climate Normals Database",
+   "mainUrl": "https://ncei.noaa.gov/products/wmo-climate-normals",
+   "dataUrl": "",
+   "dataHint": "Search KSA stations (Riyadh, Jeddah, etc.)",
+   "formats": "CSV, station data files",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Decennial (1991\u20132020 Climate Normals)."
+  },
+  {
+   "id": "ksa-src-portals-26",
+   "category": "portals",
+   "sortOrder": 26,
+   "name": "Copernicus Climate Data Store (CDS)",
+   "organization": "EU Copernicus / ECMWF",
+   "subCategory": "Climate Data Portal (reanalysis/satellite)",
+   "mainUrl": "https://cds.climate.copernicus.eu",
+   "dataUrl": "",
+   "dataHint": "No dedicated KSA page \u2014 extract ERA5 and other grids by bounding box",
+   "formats": "NetCDF, GRIB, CSV; full API (cdsapi)",
+   "languages": "EN",
+   "access": "Free (registration required)",
+   "accessTags": [
+    "free",
+    "registration"
+   ],
+   "unverified": false,
+   "notes": "Continuous (ERA5 updated roughly monthly with a ~5-day lag)."
+  },
+  {
+   "id": "ksa-src-portals-27",
+   "category": "portals",
+   "sortOrder": 27,
+   "name": "NASA Earthdata / GES DISC",
+   "organization": "NASA",
+   "subCategory": "Satellite & Climate Data Portal",
+   "mainUrl": "https://www.earthdata.nasa.gov",
+   "dataUrl": "",
+   "dataHint": "No dedicated KSA page \u2014 subset global datasets by region",
+   "formats": "NetCDF, HDF, GeoTIFF; API",
+   "languages": "EN",
+   "access": "Free (Earthdata Login required)",
+   "accessTags": [
+    "free",
+    "registration"
+   ],
+   "unverified": false,
+   "notes": "Continuous; varies by product (daily to monthly)."
+  },
+  {
+   "id": "ksa-src-portals-28",
+   "category": "portals",
+   "sortOrder": 28,
+   "name": "US EIA \u2013 Saudi Arabia Country Analysis",
+   "organization": "U.S. Energy Information Administration",
+   "subCategory": "Energy Statistics / Country Analysis",
+   "mainUrl": "https://www.eia.gov/international",
+   "dataUrl": "https://www.eia.gov/international/analysis/country/SAU",
+   "dataHint": "",
+   "formats": "Web page, PDF Country Analysis Brief, downloadable XLS tables",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Brief updated every 1\u20133 years; underlying data more frequent."
+  },
+  {
+   "id": "ksa-src-portals-29",
+   "category": "portals",
+   "sortOrder": 29,
+   "name": "US EIA International Energy Data",
+   "organization": "U.S. Energy Information Administration",
+   "subCategory": "Statistical Database",
+   "mainUrl": "https://www.eia.gov/international/data/world",
+   "dataUrl": "",
+   "dataHint": "Filter Country = Saudi Arabia",
+   "formats": "CSV, Excel, API",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Monthly/annual depending on series."
+  },
+  {
+   "id": "ksa-src-portals-30",
+   "category": "portals",
+   "sortOrder": 30,
+   "name": "UNEP World Environment Situation Room (WESR)",
+   "organization": "UN Environment Programme",
+   "subCategory": "Environmental Data / Document Portal",
+   "mainUrl": "https://wesr.unep.org",
+   "dataUrl": "",
+   "dataHint": "Search \"Saudi Arabia\"",
+   "formats": "PDF (older reports), dashboards/maps",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "KSA-specific holdings are comparatively sparse/dated versus other sources; replaced the former \"Environmental Data Explorer\"."
+  },
+  {
+   "id": "ksa-src-indices-01",
+   "category": "indices",
+   "sortOrder": 1,
+   "name": "Environmental Performance Index (EPI)",
+   "organization": "Yale Center for Environmental Law & Policy / Columbia University",
+   "subCategory": "Index / Ranking",
+   "mainUrl": "https://epi.yale.edu",
+   "dataUrl": "https://epi.yale.edu/country/2024/all",
+   "dataHint": "",
+   "formats": "Interactive dashboard, PDF, downloadable dataset",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Biennial (latest 2024); exact KSA individual-profile URL slug not confirmed \u2014 use the ranking table."
+  },
+  {
+   "id": "ksa-src-indices-02",
+   "category": "indices",
+   "sortOrder": 2,
+   "name": "ND-GAIN Country Index",
+   "organization": "University of Notre Dame Global Adaptation Initiative",
+   "subCategory": "Index / Ranking",
+   "mainUrl": "https://gain.nd.edu",
+   "dataUrl": "https://gain-new.crc.nd.edu/country/saudi-arabia",
+   "dataHint": "",
+   "formats": "Interactive dashboard, downloadable data, technical PDF",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "KSA ranked 41st globally (2023 data); vulnerability/readiness scores, 1995\u20132023 trend."
+  },
+  {
+   "id": "ksa-src-indices-03",
+   "category": "indices",
+   "sortOrder": 3,
+   "name": "Global Climate Risk Index (CRI)",
+   "organization": "Germanwatch",
+   "subCategory": "Index / Ranking",
+   "mainUrl": "https://www.germanwatch.org/en/cri",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF report",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Publication cadence has slowed/changed since 2021 \u2014 confirm the current edition includes KSA."
+  },
+  {
+   "id": "ksa-src-indices-04",
+   "category": "indices",
+   "sortOrder": 4,
+   "name": "Sustainable Development Report / SDG Index",
+   "organization": "UN Sustainable Development Solutions Network (SDSN)",
+   "subCategory": "Index / Ranking",
+   "mainUrl": "https://www.sdgindex.org",
+   "dataUrl": "https://dashboards.sdgindex.org/profiles/saudi-arabia",
+   "dataHint": "",
+   "formats": "Interactive dashboard, PDF, data explorer",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual; covers all 17 SDGs incl. environmental goals 6, 7, 12\u201315 with MENA regional context."
+  },
+  {
+   "id": "ksa-src-indices-05",
+   "category": "indices",
+   "sortOrder": 5,
+   "name": "Global Carbon Atlas",
+   "organization": "Global Carbon Project",
+   "subCategory": "Statistical Review / Dataset",
+   "mainUrl": "https://globalcarbonatlas.org",
+   "dataUrl": "https://globalcarbonatlas.org/emissions/carbon-emissions/",
+   "dataHint": "",
+   "formats": "Interactive dashboard, downloadable dataset",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual, released alongside the Global Carbon Budget."
+  },
+  {
+   "id": "ksa-src-indices-06",
+   "category": "indices",
+   "sortOrder": 6,
+   "name": "Statistical Review of World Energy",
+   "organization": "Energy Institute (formerly BP Statistical Review)",
+   "subCategory": "Statistical Review",
+   "mainUrl": "https://www.energyinst.org/statistical-review",
+   "dataUrl": "https://energyinst.org/statistical-review/resources-and-data-downloads",
+   "dataHint": "",
+   "formats": "XLSX, CSV, PDF, interactive charting tool",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual (June release); no registration required. Saudi oil/gas production, reserves, consumption, emissions."
+  },
+  {
+   "id": "ksa-src-indices-07",
+   "category": "indices",
+   "sortOrder": 7,
+   "name": "GCC-STAT \u2014 Water Statistics Bulletin",
+   "organization": "Statistical Center for the GCC (GCC-STAT)",
+   "subCategory": "Regional Report / Statistical Review",
+   "mainUrl": "https://gccstat.org/en",
+   "dataUrl": "https://gccstat.org/en/statistic/publications/water-statistics-bulletin-in-gcc-countries",
+   "dataHint": "",
+   "formats": "PDF bulletins, statistical tables",
+   "languages": "EN/AR",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Covers water statistics across GCC incl. KSA; environment/agriculture-specific bulletins worth a follow-up check."
+  },
+  {
+   "id": "ksa-src-indices-08",
+   "category": "indices",
+   "sortOrder": 8,
+   "name": "Arab Environment (AFED Annual Report Series)",
+   "organization": "Arab Forum for Environment and Development (AFED)",
+   "subCategory": "Regional Report",
+   "mainUrl": "http://www.afedonline.org",
+   "dataUrl": "https://wedocs.unep.org/bitstream/handle/20.500.11822/9639/",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "EN/AR",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual series since 2008; latest edition link on the live domain not directly confirmed \u2014 legacy/UNEP mirrors used."
+  },
+  {
+   "id": "ksa-src-indices-09",
+   "category": "indices",
+   "sortOrder": 9,
+   "name": "WEF Fostering Effective Energy Transition / Energy Transition Index",
+   "organization": "World Economic Forum",
+   "subCategory": "Index / Ranking + Report",
+   "mainUrl": "https://www.weforum.org",
+   "dataUrl": "https://www.weforum.org/reports/fostering-effective-energy-transition-2024",
+   "dataHint": "",
+   "formats": "PDF, interactive report",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual; KSA/GCC covered, cited as a leading GCC performer in the 2024 edition."
+  },
+  {
+   "id": "ksa-src-indices-10",
+   "category": "indices",
+   "sortOrder": 10,
+   "name": "WEF Global Risks Report",
+   "organization": "World Economic Forum",
+   "subCategory": "Index / Ranking (comparative)",
+   "mainUrl": "https://www.weforum.org/publications/global-risks-report-2025",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF, interactive",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual; environmental risks ranked globally with regional breakdowns, no standalone KSA page."
+  },
+  {
+   "id": "ksa-src-indices-11",
+   "category": "indices",
+   "sortOrder": 11,
+   "name": "S&P Global ESG Scores (Sustainable1)",
+   "organization": "S&P Global",
+   "subCategory": "ESG Rating",
+   "mainUrl": "https://www.spglobal.com/esg/scores/results",
+   "dataUrl": "",
+   "dataHint": "Search by company (e.g. Saudi Aramco, SABIC)",
+   "formats": "Interactive search tool; downloadable scorecards (paid tier)",
+   "languages": "EN",
+   "access": "Free (basic scores) / Paid (full data via Sustainable1/MI)",
+   "accessTags": [
+    "free",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Annual Corporate Sustainability Assessment (CSA) cycle."
+  },
+  {
+   "id": "ksa-src-indices-12",
+   "category": "indices",
+   "sortOrder": 12,
+   "name": "S&P Global Commodity Insights (Platts) \u2014 Saudi/MENA energy coverage",
+   "organization": "S&P Global Commodity Insights",
+   "subCategory": "Market Research Report",
+   "mainUrl": "https://www.spglobal.com/commodity-insights/en",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "Dataset, price assessments, PDF reports",
+   "languages": "EN",
+   "access": "Subscription / Paid",
+   "accessTags": [
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Covers Saudi crude pricing (OSP tracking), gas and petrochemicals; full access needs a Platts subscription."
+  },
+  {
+   "id": "ksa-src-indices-13",
+   "category": "indices",
+   "sortOrder": 13,
+   "name": "S&P Global Market Intelligence \u2014 Country Risk / Credit Research",
+   "organization": "S&P Global Market Intelligence",
+   "subCategory": "Market Research Report / ESG Rating",
+   "mainUrl": "https://www.spglobal.com/marketintelligence",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF, dataset, platform access",
+   "languages": "EN",
+   "access": "Subscription / Paid (client login)",
+   "accessTags": [
+    "registration",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Saudi credit and sustainability-linked research available to subscribers."
+  },
+  {
+   "id": "ksa-src-indices-14",
+   "category": "indices",
+   "sortOrder": 14,
+   "name": "Euromonitor International \u2014 \"Sustainability in Saudi Arabia\"",
+   "organization": "Euromonitor International (Passport platform)",
+   "subCategory": "Market Research Report",
+   "mainUrl": "https://www.euromonitor.com",
+   "dataUrl": "https://www.euromonitor.com/sustainability-in-saudi-arabia/report",
+   "dataHint": "",
+   "formats": "PDF (delivered post-purchase)",
+   "languages": "EN",
+   "access": "Paid (~USD 2,300, Aug 2025 edition)",
+   "accessTags": [
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Covers consumer sustainability behaviour across 11 sectors in KSA."
+  },
+  {
+   "id": "ksa-src-indices-15",
+   "category": "indices",
+   "sortOrder": 15,
+   "name": "Euromonitor International \u2014 Saudi Arabia sector reports",
+   "organization": "Euromonitor International",
+   "subCategory": "Market Research Report",
+   "mainUrl": "https://www.euromonitor.com",
+   "dataUrl": "",
+   "dataHint": "Passport platform (e.g. Packaging, Retail Tissue titles)",
+   "formats": "PDF, Passport database access",
+   "languages": "EN",
+   "access": "Paid / Subscription",
+   "accessTags": [
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Adjacent reports on packaging/tissue relevant to resource-use angles; full catalogue needs a Passport subscription."
+  },
+  {
+   "id": "ksa-src-indices-16",
+   "category": "indices",
+   "sortOrder": 16,
+   "name": "MSCI ESG Ratings & Climate Search Tool",
+   "organization": "MSCI",
+   "subCategory": "ESG Rating",
+   "mainUrl": "https://www.msci.com/our-solutions/esg-investing/esg-ratings-climate-search-tool",
+   "dataUrl": "",
+   "dataHint": "Search ~2,900 companies incl. Saudi-listed names",
+   "formats": "Interactive search tool; full dataset via MSCI ONE (paid)",
+   "languages": "EN",
+   "access": "Free (basic search) / Paid (full data)",
+   "accessTags": [
+    "free",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Also publishes MSCI Saudi Arabia financial indexes, distinct from ESG ratings."
+  },
+  {
+   "id": "ksa-src-indices-17",
+   "category": "indices",
+   "sortOrder": 17,
+   "name": "Moody's Ratings \u2014 Sovereign & ESG-related coverage",
+   "organization": "Moody's",
+   "subCategory": "ESG Rating / Credit Rating",
+   "mainUrl": "https://www.moodys.com",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF reports, ratings platform",
+   "languages": "EN",
+   "access": "Subscription / Paid (summary rating actions sometimes free)",
+   "accessTags": [
+    "free",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Assigns ESG Credit Impact Scores (CIS) and Issuer Profile Scores (IPS) to rated entities incl. sovereigns."
+  },
+  {
+   "id": "ksa-src-indices-18",
+   "category": "indices",
+   "sortOrder": 18,
+   "name": "Fitch Ratings \u2014 ESG Relevance Scores",
+   "organization": "Fitch Ratings",
+   "subCategory": "ESG Rating / Credit Rating",
+   "mainUrl": "https://www.fitchratings.com",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF, ratings platform, data brochure",
+   "languages": "EN",
+   "access": "Free (summary) / Subscription (full ESG Relevance Score detail)",
+   "accessTags": [
+    "free",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Saudi sovereign rated A+ (Fitch); ESG Relevance Scores are a distinct overlay product."
+  },
+  {
+   "id": "ksa-src-indices-19",
+   "category": "indices",
+   "sortOrder": 19,
+   "name": "CDP (Carbon Disclosure Project)",
+   "organization": "CDP Worldwide",
+   "subCategory": "Statistical Review / Disclosure Database",
+   "mainUrl": "https://www.cdp.net",
+   "dataUrl": "https://www.cdp.net/en/data",
+   "dataHint": "",
+   "formats": "Interactive database, downloadable reports (paid tiers), PDF",
+   "languages": "EN",
+   "access": "Free (search) / Paid (full benchmarking)",
+   "accessTags": [
+    "free",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "22,000+ organisations globally; Gulf/Saudi corporate disclosure still nascent."
+  },
+  {
+   "id": "ksa-src-indices-20",
+   "category": "indices",
+   "sortOrder": 20,
+   "name": "Global Water Intelligence (GWI) / DesalData",
+   "organization": "Global Water Intelligence",
+   "subCategory": "Market Research Report / Dataset",
+   "mainUrl": "https://www.globalwaterintelligence.com",
+   "dataUrl": "",
+   "dataHint": "DesalData database (plant-level desalination data)",
+   "formats": "Database, PDF market reports, newsletters",
+   "languages": "EN",
+   "access": "Subscription / Paid",
+   "accessTags": [
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Reference commercial source for Saudi desalination capacity \u2014 the world's largest single-country market."
+  },
+  {
+   "id": "ksa-src-indices-21",
+   "category": "indices",
+   "sortOrder": 21,
+   "name": "Statista \u2014 Saudi Arabia Energy & Environment",
+   "organization": "Statista",
+   "subCategory": "Statistical Review / Aggregator",
+   "mainUrl": "https://www.statista.com",
+   "dataUrl": "https://www.statista.com/map/asia/saudi-arabia/energy-environment",
+   "dataHint": "",
+   "formats": "Interactive statistics pages, downloadable charts (paid)",
+   "languages": "EN",
+   "access": "Freemium",
+   "accessTags": [
+    "free",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "Aggregates ~100+ statistics from primary sources (government, IEA, etc.); not a primary source itself."
+  },
+  {
+   "id": "ksa-src-indices-22",
+   "category": "indices",
+   "sortOrder": 22,
+   "name": "PwC Middle East \u2014 Saudi Economy Watch",
+   "organization": "PwC Middle East",
+   "subCategory": "Market Research Report",
+   "mainUrl": "https://www.pwc.com/m1/en",
+   "dataUrl": "https://www.pwc.com/m1/en/media-centre/2024/saudi-arabia-integrates-economic-diversification-with-sustainability-priorities-pwc-middle-east-saudi-economy-watch-ar.html",
+   "dataHint": "",
+   "formats": "PDF, web article",
+   "languages": "EN/AR",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Periodic (quarterly Economy Watch series, ad hoc sustainability reports)."
+  },
+  {
+   "id": "ksa-src-indices-23",
+   "category": "indices",
+   "sortOrder": 23,
+   "name": "Deloitte Middle East \u2014 CxO Sustainability Report",
+   "organization": "Deloitte Middle East",
+   "subCategory": "Market Research Report",
+   "mainUrl": "https://www.deloitte.com/middle-east/en/issues/climate/cxo-sustainability-report",
+   "dataUrl": "https://www.deloitte.com/content/dam/assets-zone2/middle-east/en/docs/about/2024/CxO-Sustainability-Report24_Middle-East.pdf",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "EN",
+   "access": "Free",
+   "accessTags": [
+    "free"
+   ],
+   "unverified": false,
+   "notes": "Annual; survey-based, covers Middle East C-suite (incl. Saudi respondents) climate/sustainability priorities."
+  },
+  {
+   "id": "ksa-src-indices-24",
+   "category": "indices",
+   "sortOrder": 24,
+   "name": "McKinsey / BCG / EY \u2014 ad hoc Saudi sustainability & water publications",
+   "organization": "Various (McKinsey Global Institute, BCG, EY)",
+   "subCategory": "Market Research Report",
+   "mainUrl": "https://www.mckinsey.com",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF, web article",
+   "languages": "EN",
+   "access": "Free (most thought-leadership) / Paid (proprietary studies)",
+   "accessTags": [
+    "free",
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "No single flagship recurring KSA environment report confirmed \u2014 treat as firms to monitor rather than a fixed source."
+  },
+  {
+   "id": "ksa-src-indices-25",
+   "category": "indices",
+   "sortOrder": 25,
+   "name": "Economist Intelligence Unit (EIU) \u2014 Saudi Arabia reports",
+   "organization": "Economist Intelligence Unit",
+   "subCategory": "Market Research Report",
+   "mainUrl": "https://www.researchandmarkets.com/reports/224904/saudi_arabia_country_report",
+   "dataUrl": "",
+   "dataHint": "",
+   "formats": "PDF",
+   "languages": "EN",
+   "access": "Subscription / Paid",
+   "accessTags": [
+    "paid"
+   ],
+   "unverified": false,
+   "notes": "No free public landing page found; accessed mainly via resellers (e.g. ResearchAndMarkets)."
+  }
+ ],
+ "verification": [
+  {
+   "id": "ksa-ver-01",
+   "sortOrder": 1,
+   "item": "Saudi Water Authority (SWA)",
+   "tab": "Regulatory & Government",
+   "category": "regulatory",
+   "issue": "Official domain returned a 403 (bot-blocked) on automated fetch; a staging-looking \"atit.sa\" subdomain also appeared in search.",
+   "action": "Open swa.gov.sa manually in a browser and confirm it is the production site before citing.",
+   "sourceIds": [
+    "ksa-src-regulatory-12"
+   ]
+  },
+  {
+   "id": "ksa-ver-02",
+   "sortOrder": 2,
+   "item": "Water and Electricity Regulatory Authority (WERA)",
+   "tab": "Regulatory & Government",
+   "category": "regulatory",
+   "issue": "Could not resolve a working domain (DNS failure on wera.gov.sa).",
+   "action": "Search for the current official URL (may have changed name/domain since ECRA/SERA) and confirm.",
+   "sourceIds": [
+    "ksa-src-regulatory-36"
+   ]
+  },
+  {
+   "id": "ksa-ver-03",
+   "sortOrder": 3,
+   "item": "Royal Commission for Makkah City and Holy Sites",
+   "tab": "Regulatory & Government",
+   "category": "regulatory",
+   "issue": "No dedicated public environmental-data page could be located (not included as a row \u2014 flagged as a gap).",
+   "action": "Contact the Commission directly or check for a newer gov.sa domain.",
+   "sourceIds": []
+  },
+  {
+   "id": "ksa-ver-04",
+   "sortOrder": 4,
+   "item": "Royal Commission for Riyadh City \u2014 Environmental Protection",
+   "tab": "Regulatory & Government",
+   "category": "regulatory",
+   "issue": "Page found but depth of content/data access not fully verified.",
+   "action": "Browse the page directly to confirm what is actually published there.",
+   "sourceIds": [
+    "ksa-src-regulatory-28"
+   ]
+  },
+  {
+   "id": "ksa-ver-05",
+   "sortOrder": 5,
+   "item": "Saudi Irrigation Organization",
+   "tab": "Regulatory & Government",
+   "category": "regulatory",
+   "issue": "No standalone official website found; appears only as an MEWA-affiliated partner (not included as its own row).",
+   "action": "Confirm via MEWA's Partners page whether a dedicated portal exists.",
+   "sourceIds": []
+  },
+  {
+   "id": "ksa-ver-06",
+   "sortOrder": 6,
+   "item": "National Geological Database (SGS)",
+   "tab": "Regulatory & Government",
+   "category": "regulatory",
+   "issue": "Subdomain naming inconsistent between \"ngd.\" and \"ngp.\" \u2014 unclear which is the live portal.",
+   "action": "Test both subdomains and confirm the working one before sharing the link.",
+   "sourceIds": [
+    "ksa-src-regulatory-20"
+   ]
+  },
+  {
+   "id": "ksa-ver-07",
+   "sortOrder": 7,
+   "item": "NCVC x KAUST SAUDINet",
+   "tab": "Regulatory & Government",
+   "category": "regulatory",
+   "issue": "Public-access status of this joint vegetation/desertification monitoring network is unconfirmed.",
+   "action": "Check with NCVC or KAUST directly on data-sharing terms.",
+   "sourceIds": [
+    "ksa-src-regulatory-11"
+   ]
+  },
+  {
+   "id": "ksa-ver-08",
+   "sortOrder": 8,
+   "item": "KACST",
+   "tab": "Scientific & Academic",
+   "category": "scientific",
+   "issue": "No dedicated public environment/water/agriculture dataset portal identified under its own domain.",
+   "action": "Treat KACST as a funding/coordination body; look for outputs via partner universities instead.",
+   "sourceIds": [
+    "ksa-src-scientific-09"
+   ]
+  },
+  {
+   "id": "ksa-ver-09",
+   "sortOrder": 9,
+   "item": "Saudi Space Agency",
+   "tab": "Scientific & Academic",
+   "category": "scientific",
+   "issue": "No standalone open-data platform identified (not included as its own row); EO commercialization appears to be moving through NEOM's Neo Space Group.",
+   "action": "Monitor Neo Space Group / Saudi Space Agency announcements for a future public data offering.",
+   "sourceIds": []
+  },
+  {
+   "id": "ksa-ver-10",
+   "sortOrder": 10,
+   "item": "KAUST Center for Desert Agriculture (CDA)",
+   "tab": "Scientific & Academic",
+   "category": "scientific",
+   "issue": "Original cda.kaust.edu.sa pages now redirect into a consolidated KAUST research hub page.",
+   "action": "Re-confirm the live URL periodically; KAUST restructures sub-centre pages from time to time.",
+   "sourceIds": [
+    "ksa-src-scientific-04"
+   ]
+  },
+  {
+   "id": "ksa-ver-11",
+   "sortOrder": 11,
+   "item": "NEOM (corporate-wide sustainability report)",
+   "tab": "National Initiatives",
+   "category": "initiatives",
+   "issue": "No single NEOM-wide annual sustainability report confirmed.",
+   "action": "Check NEOM's newsroom periodically; ENOWA's report is the only confirmed subsidiary example so far.",
+   "sourceIds": [
+    "ksa-src-initiatives-06"
+   ]
+  },
+  {
+   "id": "ksa-ver-12",
+   "sortOrder": 12,
+   "item": "National Water Strategy 2030",
+   "tab": "National Initiatives",
+   "category": "initiatives",
+   "issue": "Full PDF not confirmed live on the official MEWA page; relying on UNEP LEAP / Ecolex mirrors.",
+   "action": "Re-check the MEWA Water Agency strategy page directly for an official PDF.",
+   "sourceIds": [
+    "ksa-src-initiatives-13"
+   ]
+  },
+  {
+   "id": "ksa-ver-13",
+   "sortOrder": 13,
+   "item": "National Environment Strategy",
+   "tab": "National Initiatives",
+   "category": "initiatives",
+   "issue": "Official MEWA-hosted English copy not located; using a third-party JETRO mirror.",
+   "action": "Request the authoritative copy from MEWA directly if this document is to be cited externally.",
+   "sourceIds": [
+    "ksa-src-initiatives-14"
+   ]
+  },
+  {
+   "id": "ksa-ver-14",
+   "sortOrder": 14,
+   "item": "National Renewable Energy Program (NREP) / REPDO",
+   "tab": "National Initiatives",
+   "category": "initiatives",
+   "issue": "Official reports-portal URL could not be confirmed.",
+   "action": "Follow up directly with the Ministry of Energy / REPDO.",
+   "sourceIds": [
+    "ksa-src-initiatives-16"
+   ]
+  },
+  {
+   "id": "ksa-ver-15",
+   "sortOrder": 15,
+   "item": "Mostadam (Saudi Green Building Rating System)",
+   "tab": "National Initiatives",
+   "category": "initiatives",
+   "issue": "Domain (mostadam.sa) not independently verified this session.",
+   "action": "Confirm the live domain and certification-portal access before use.",
+   "sourceIds": [
+    "ksa-src-initiatives-17"
+   ]
+  },
+  {
+   "id": "ksa-ver-16",
+   "sortOrder": 16,
+   "item": "Saudi Green Building Forum (SGBF)",
+   "tab": "National Initiatives",
+   "category": "initiatives",
+   "issue": "No official reports portal identified.",
+   "action": "Check for an event-specific site closer to the next forum date.",
+   "sourceIds": [
+    "ksa-src-initiatives-18"
+   ]
+  },
+  {
+   "id": "ksa-ver-17",
+   "sortOrder": 17,
+   "item": "National Water Company (NWC) sustainability report",
+   "tab": "National Initiatives",
+   "category": "initiatives",
+   "issue": "First sustainability report referenced only in press coverage; direct PDF link not located.",
+   "action": "Check nwc.com.sa directly for the published report.",
+   "sourceIds": [
+    "ksa-src-initiatives-24"
+   ]
+  },
+  {
+   "id": "ksa-ver-18",
+   "sortOrder": 18,
+   "item": "IRENA Statistical Profiles / Energy Profiles",
+   "tab": "Global Data Portals",
+   "category": "portals",
+   "issue": "Interactive \"Energy Profiles\" page blocked automated access (403); functional in a normal browser.",
+   "action": "Open irena.org/Data manually and capture the final KSA deep link.",
+   "sourceIds": [
+    "ksa-src-portals-06"
+   ]
+  },
+  {
+   "id": "ksa-ver-19",
+   "sortOrder": 19,
+   "item": "UNdata country profile",
+   "tab": "Global Data Portals",
+   "category": "portals",
+   "issue": "Direct country URL returned 404; UNdata has had known reliability/migration issues.",
+   "action": "Re-verify in-browser; consider using World Bank or UNSD portals as primary alternatives.",
+   "sourceIds": [
+    "ksa-src-portals-15"
+   ]
+  },
+  {
+   "id": "ksa-ver-20",
+   "sortOrder": 20,
+   "item": "UN Comtrade / UN SDG Data Portal / Climate Watch country page / IAEA PRIS",
+   "tab": "Global Data Portals",
+   "category": "portals",
+   "issue": "These are JavaScript single-page apps; top-level domains are live but exact per-country deep-link URLs could not be fully rendered by automated fetch.",
+   "action": "Spot-check each deep link manually before publishing as a final reference.",
+   "sourceIds": [
+    "ksa-src-portals-16",
+    "ksa-src-portals-20",
+    "ksa-src-portals-24"
+   ]
+  },
+  {
+   "id": "ksa-ver-21",
+   "sortOrder": 21,
+   "item": "Copernicus CDS / NASA Earthdata",
+   "tab": "Global Data Portals",
+   "category": "portals",
+   "issue": "No pre-built \"Saudi Arabia\" country page exists; KSA data must be extracted manually by bounding box or shapefile.",
+   "action": "Document a reusable KSA bounding box / query template once, as an internal asset.",
+   "sourceIds": [
+    "ksa-src-portals-26",
+    "ksa-src-portals-27"
+   ]
+  },
+  {
+   "id": "ksa-ver-22",
+   "sortOrder": 22,
+   "item": "UNEP World Environment Situation Room (WESR)",
+   "tab": "Global Data Portals",
+   "category": "portals",
+   "issue": "KSA-specific holdings are comparatively sparse and dated versus other sources (mostly older PDFs).",
+   "action": "Treat as a secondary rather than primary source for current KSA data.",
+   "sourceIds": [
+    "ksa-src-portals-30"
+   ]
+  },
+  {
+   "id": "ksa-ver-23",
+   "sortOrder": 23,
+   "item": "Yale EPI \u2014 Saudi Arabia country-profile URL",
+   "tab": "Global Indices & Market Research",
+   "category": "indices",
+   "issue": "Exact per-country profile URL slug for the 2024 edition was not confirmed (only the full ranking table URL was verified).",
+   "action": "Navigate from the ranking table to confirm the live KSA profile link.",
+   "sourceIds": [
+    "ksa-src-indices-01"
+   ]
+  },
+  {
+   "id": "ksa-ver-24",
+   "sortOrder": 24,
+   "item": "Germanwatch Global Climate Risk Index",
+   "tab": "Global Indices & Market Research",
+   "category": "indices",
+   "issue": "Publication cadence has slowed/changed since 2021; unclear whether the latest edition still ranks Saudi Arabia.",
+   "action": "Check germanwatch.org for the most recent edition before citing a specific rank or score.",
+   "sourceIds": [
+    "ksa-src-indices-03"
+   ]
+  },
+  {
+   "id": "ksa-ver-25",
+   "sortOrder": 25,
+   "item": "AFED \u2014 Arab Environment Annual Report",
+   "tab": "Global Indices & Market Research",
+   "category": "indices",
+   "issue": "Latest edition / URL on the current afedonline.org domain not directly confirmed; archive copies found on a legacy subdomain and UNEP mirror.",
+   "action": "Visit afedonline.org directly to confirm the newest edition and its link.",
+   "sourceIds": [
+    "ksa-src-indices-08"
+   ]
+  },
+  {
+   "id": "ksa-ver-26",
+   "sortOrder": 26,
+   "item": "Economist Intelligence Unit (EIU)",
+   "tab": "Global Indices & Market Research",
+   "category": "indices",
+   "issue": "No free, publicly accessible Saudi Arabia environment/sustainability report landing page found; access is via paid resellers only.",
+   "action": "Treat as a subscription-only source; confirm current access terms with EIU directly.",
+   "sourceIds": [
+    "ksa-src-indices-25"
+   ]
+  },
+  {
+   "id": "ksa-ver-27",
+   "sortOrder": 27,
+   "item": "McKinsey / BCG / EY",
+   "tab": "Global Indices & Market Research",
+   "category": "indices",
+   "issue": "No single flagship recurring Saudi Arabia environment report could be verified for any of the three firms.",
+   "action": "Monitor each firm's publications page periodically rather than relying on a fixed URL.",
+   "sourceIds": [
+    "ksa-src-indices-24"
+   ]
+  }
+ ],
+ "generatedFrom": "KSA_Environmental_Data_Source_Databank.xlsx"
+}

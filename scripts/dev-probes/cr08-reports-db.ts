@@ -43,7 +43,7 @@ async function main() {
   console.log(
     "users:",
     await q(
-      "select u.id, u.email, r.name_en role, u.department_id from users u join roles r on r.id = u.role_id where u.email in ('admin@npc.qa', 'analyst@npc.qa', 'head.stats@npc.qa')"
+      "select u.id, u.email, r.name_en role, u.department_id from users u join roles r on r.id = u.role_id where u.email in ('admin@enviroai.demo', 'analyst@enviroai.demo', 'head.stats@enviroai.demo')"
     )
   );
   console.log("settings keys:", await q("select key from settings"));

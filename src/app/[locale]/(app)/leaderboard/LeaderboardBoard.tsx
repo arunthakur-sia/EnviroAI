@@ -91,7 +91,7 @@ function TrendMark({
     ) : trend === "down" ? (
       <ArrowDown className="size-4 text-danger" />
     ) : trend === "new" ? (
-      <Sparkles className="size-4 text-gold-500" />
+      <Sparkles className="size-4 text-aqua-500" />
     ) : (
       <Minus className="size-4 text-ink-400" />
     );
@@ -117,7 +117,7 @@ function LevelChip({ row }: { row: PersonRow }) {
   const label = t("level", { n: row.levelOrder });
   const descriptor = bi(locale, row.descriptorEn, row.descriptorAr);
   const chip = (
-    <Chip tone="maroon" className="tnum">
+    <Chip tone="navy" className="tnum">
       {label}
     </Chip>
   );
@@ -167,7 +167,7 @@ function PodiumCard({
       transition={{ duration: 0.28, delay: place * 0.06, ease: EASE }}
       className={cn(
         "relative flex min-w-0 flex-col items-center gap-1.5 rounded-2xl border bg-white px-3 pb-4 pt-5 text-center shadow-paper",
-        place === 1 ? "border-gold-300 lg:-translate-y-2" : "border-sand-200",
+        place === 1 ? "border-aqua-300 lg:-translate-y-2" : "border-mist-200",
         order,
         empty && "opacity-70"
       )}
@@ -193,7 +193,7 @@ function PodiumCard({
           <span className="line-clamp-1 w-full text-xs text-ink-600">
             {bi(locale, person.unitEn, person.unitAr) || " "}
           </span>
-          <span className="font-display text-2xl font-semibold leading-none text-maroon-900 tnum">
+          <span className="font-display text-2xl font-semibold leading-none text-navy-900 tnum">
             {fmt(person.points)}
           </span>
           <TrendMark trend={person.trend} previousRank={person.previousRank} />
@@ -204,7 +204,7 @@ function PodiumCard({
             className={cn(
               "mt-1 flex size-13 items-center justify-center rounded-full font-display text-2xl font-semibold ring-[3px] ring-offset-2 ring-offset-white",
               MEDAL_BG[place],
-              place === 1 ? "ring-gold-500" : place === 2 ? "ring-ink-400" : "ring-warn"
+              place === 1 ? "ring-aqua-500" : place === 2 ? "ring-ink-400" : "ring-warn"
             )}
             aria-hidden
           >
@@ -213,7 +213,7 @@ function PodiumCard({
           <span className="mt-1 line-clamp-2 w-full text-sm font-medium leading-snug text-ink-900">
             {bi(locale, unit.nameEn, unit.nameAr)}
           </span>
-          <span className="font-display text-2xl font-semibold leading-none text-maroon-900 tnum">
+          <span className="font-display text-2xl font-semibold leading-none text-navy-900 tnum">
             {fmt(unit.pointsPerMember)}
           </span>
           <span className="text-xs text-ink-600">{t("perMemberShort")}</span>
@@ -221,7 +221,7 @@ function PodiumCard({
         </>
       ) : (
         <>
-          <span className="mt-1 flex size-13 items-center justify-center rounded-full border border-dashed border-sand-300 text-ink-400">
+          <span className="mt-1 flex size-13 items-center justify-center rounded-full border border-dashed border-mist-300 text-ink-400">
             <Trophy className="size-5" />
           </span>
           <span className="text-xs text-ink-400">{t("podium.empty")}</span>
@@ -261,8 +261,8 @@ function PersonLine({
       className={cn(
         "grid items-center gap-3 px-4 py-2.5 transition-colors",
         PEOPLE_COLS,
-        !pinned && "hover:bg-sand-50",
-        !pinned && row.isMe && "bg-maroon-50/70"
+        !pinned && "hover:bg-mist-50",
+        !pinned && row.isMe && "bg-navy-50/70"
       )}
       data-testid={pinned ? "own-row" : "board-row"}
       data-rank={row.rank}
@@ -285,9 +285,9 @@ function PersonLine({
           <span className="truncate text-sm font-medium text-ink-900">
             {bi(locale, row.nameEn, row.nameAr)}
           </span>
-          {row.isMe ? <Chip tone="gold">{t("you")}</Chip> : null}
+          {row.isMe ? <Chip tone="aqua">{t("you")}</Chip> : null}
           {showUnitMark && row.inViewerUnit && !row.isMe ? (
-            <Chip tone="sand" className="hidden md:inline-flex">
+            <Chip tone="mist" className="hidden md:inline-flex">
               {t("yourUnit")}
             </Chip>
           ) : null}
@@ -332,8 +332,8 @@ function UnitLine({
       className={cn(
         "grid items-center gap-3 px-4 py-2.5 transition-colors",
         UNIT_COLS,
-        !pinned && "hover:bg-sand-50",
-        !pinned && row.isMine && "bg-maroon-50/70"
+        !pinned && "hover:bg-mist-50",
+        !pinned && row.isMine && "bg-navy-50/70"
       )}
       data-testid={pinned ? "own-unit-row" : "board-row"}
       data-rank={row.rank}
@@ -354,7 +354,7 @@ function UnitLine({
           <span className="truncate text-sm font-medium text-ink-900">
             {bi(locale, row.nameEn, row.nameAr)}
           </span>
-          {row.isMine ? <Chip tone="gold">{t("yourUnit")}</Chip> : null}
+          {row.isMine ? <Chip tone="aqua">{t("yourUnit")}</Chip> : null}
         </span>
         <span className="block text-xs text-ink-400 tnum" dir="ltr">
           {row.code}
@@ -372,11 +372,11 @@ function UnitLine({
       </span>
       <span role="cell" className="hidden min-w-0 items-center gap-2 md:flex">
         <span
-          className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-sand-200"
+          className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-mist-200"
           aria-hidden
         >
           <span
-            className="block h-full rounded-full bg-gulf-600 transition-[width] duration-500"
+            className="block h-full rounded-full bg-teal-600 transition-[width] duration-500"
             style={{ width: `${pct}%` }}
           />
         </span>
@@ -396,7 +396,7 @@ function HeaderRow({ board }: { board: BoardKind }) {
   const head = "text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal";
   if (board === "departments") {
     return (
-      <div role="row" className={cn("grid items-center gap-3 border-b border-sand-200 px-4 py-2", UNIT_COLS)}>
+      <div role="row" className={cn("grid items-center gap-3 border-b border-mist-200 px-4 py-2", UNIT_COLS)}>
         <span role="columnheader" className={head}>{t("columns.rank")}</span>
         <span role="columnheader" className={head}>{t("columns.unit")}</span>
         <span role="columnheader" className={cn(head, "text-end")}>{t("columns.perMember")}</span>
@@ -407,7 +407,7 @@ function HeaderRow({ board }: { board: BoardKind }) {
     );
   }
   return (
-    <div role="row" className={cn("grid items-center gap-3 border-b border-sand-200 px-4 py-2", PEOPLE_COLS)}>
+    <div role="row" className={cn("grid items-center gap-3 border-b border-mist-200 px-4 py-2", PEOPLE_COLS)}>
       <span role="columnheader" className={head}>{t("columns.rank")}</span>
       {/* the monogram column keeps its grid cell; only the label is visually hidden */}
       <span role="columnheader">
@@ -424,7 +424,7 @@ function HeaderRow({ board }: { board: BoardKind }) {
 
 function RowsSkeleton({ board }: { board: BoardKind }) {
   return (
-    <div className="divide-y divide-sand-100" aria-busy data-testid="board-skeleton">
+    <div className="divide-y divide-mist-100" aria-busy data-testid="board-skeleton">
       {Array.from({ length: 8 }).map((_, i) => (
         <div
           key={i}
@@ -603,7 +603,7 @@ export function LeaderboardBoard({
         data-board={query.board}
       >
         <HeaderRow board={query.board} />
-        <div role="rowgroup" className="divide-y divide-sand-100">
+        <div role="rowgroup" className="divide-y divide-mist-100">
           {isPeople
             ? view.people.map((row) => (
                 <PersonLine key={row.subjectId} row={row} fmt={fmt} showUnitMark={view.scope === "unit"} />
@@ -615,7 +615,7 @@ export function LeaderboardBoard({
             it is invalid, so the role goes with the row. */}
         <div
           role={(isPeople ? view.mine : view.mineUnit) ? "rowgroup" : undefined}
-          className="sticky bottom-0 border-t-2 border-maroon-300 bg-maroon-50/95 backdrop-blur-sm"
+          className="sticky bottom-0 border-t-2 border-navy-300 bg-navy-50/95 backdrop-blur-sm"
         >
           {isPeople ? (
             view.mine ? (
@@ -649,7 +649,7 @@ export function LeaderboardBoard({
     <div className="flex flex-col gap-6" data-testid="leaderboard-page">
       {/* the hero strip: period, refresh, podium */}
       <section
-        className="card overflow-hidden bg-[linear-gradient(135deg,var(--color-maroon-50),white_58%)]"
+        className="card overflow-hidden bg-[linear-gradient(135deg,var(--color-navy-50),white_58%)]"
         data-testid="leaderboard-hero"
       >
         <div className="grid gap-6 p-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] lg:items-center lg:p-8">
@@ -657,13 +657,13 @@ export function LeaderboardBoard({
             <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal">
               {t("eyebrow")}
             </p>
-            <h1 className="mt-1 font-display text-3xl font-semibold text-maroon-900">{t("title")}</h1>
+            <h1 className="mt-1 font-display text-3xl font-semibold text-navy-900">{t("title")}</h1>
             <p className="mt-2 max-w-md text-sm text-ink-600">{t("subtitle")}</p>
             <div className="mt-4 flex flex-wrap items-center gap-2">
-              <Chip tone="maroon" data-testid="period-label">
+              <Chip tone="navy" data-testid="period-label">
                 <CalendarDays className="size-3" /> {label}
               </Chip>
-              <Chip tone="sand">{t(`categories.${query.category}`)}</Chip>
+              <Chip tone="mist">{t(`categories.${query.category}`)}</Chip>
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-ink-400">
               <RefreshedCaption at={view.refreshedAt} locale={locale} />
@@ -702,7 +702,7 @@ export function LeaderboardBoard({
         <div
           role="group"
           aria-label={t("boardSwitch")}
-          className="inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-xl bg-sand-100 p-1"
+          className="inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-xl bg-mist-100 p-1"
         >
           {BOARDS.map((b) => (
             <button
@@ -711,8 +711,8 @@ export function LeaderboardBoard({
               aria-pressed={query.board === b}
               onClick={() => setQuery((q) => ({ ...q, board: b }))}
               className={cn(
-                "flex shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-lg px-3.5 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500",
-                query.board === b ? "bg-white text-maroon-900 shadow-sm" : "text-ink-600 hover:text-ink-900"
+                "flex shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-lg px-3.5 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500",
+                query.board === b ? "bg-white text-navy-900 shadow-sm" : "text-ink-600 hover:text-ink-900"
               )}
               data-testid={`board-${b}`}
             >
@@ -729,10 +729,10 @@ export function LeaderboardBoard({
               aria-pressed={query.window === w}
               onClick={() => setQuery((q) => ({ ...q, window: w }))}
               className={cn(
-                "cursor-pointer rounded-full border px-3 py-1 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500",
+                "cursor-pointer rounded-full border px-3 py-1 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500",
                 query.window === w
-                  ? "border-maroon-700 bg-maroon-700 text-white"
-                  : "border-sand-300 bg-white text-ink-600 hover:border-maroon-300 hover:text-maroon-700"
+                  ? "border-navy-700 bg-navy-700 text-white"
+                  : "border-mist-300 bg-white text-ink-600 hover:border-navy-300 hover:text-navy-700"
               )}
               data-testid={`window-${w}`}
             >

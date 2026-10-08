@@ -21,7 +21,7 @@ export function KowEyebrow({ className, children }: { className?: string; childr
         className
       )}
     >
-      <Star className="size-3 text-gold-500" fill="currentColor" aria-hidden />
+      <Star className="size-3 text-aqua-500" fill="currentColor" aria-hidden />
       {children}
     </p>
   );
@@ -88,10 +88,10 @@ export function KowCardBody({
     <div className={cn("flex flex-col", big ? "gap-5" : "gap-3.5", className)} data-testid={`kow-card-${size}`}>
       <div className="flex flex-wrap items-center gap-2">
         <KowEyebrow>{t("eyebrow")}</KowEyebrow>
-        <span aria-hidden className="h-px min-w-4 flex-1 bg-gold-300/70" />
-        <Chip tone="gold">{t(`kinds.${card.resourceType}`)}</Chip>
-        <Chip tone="sand" className="tnum">{week}</Chip>
-        {card.illustrative ? <Chip tone="sand">{t("hall.illustrative")}</Chip> : null}
+        <span aria-hidden className="h-px min-w-4 flex-1 bg-aqua-300/70" />
+        <Chip tone="aqua">{t(`kinds.${card.resourceType}`)}</Chip>
+        <Chip tone="mist" className="tnum">{week}</Chip>
+        {card.illustrative ? <Chip tone="mist">{t("hall.illustrative")}</Chip> : null}
       </div>
 
       <h2
@@ -116,12 +116,12 @@ export function KowCardBody({
       {note ? (
         <figure
           className={cn(
-            "relative rounded-lg border border-gold-300/70 bg-gold-100/50 ps-4 pe-4",
+            "relative rounded-lg border border-aqua-300/70 bg-aqua-100/50 ps-4 pe-4",
             big ? "py-4" : "py-3"
           )}
           data-testid="kow-note"
         >
-          <Quote aria-hidden className="absolute end-3 top-2.5 size-4 text-gold-300 flip-rtl" />
+          <Quote aria-hidden className="absolute end-3 top-2.5 size-4 text-aqua-300 flip-rtl" />
           <figcaption className="mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-600 rtl:tracking-normal">
             {setBy ? t("note", { name: setBy }) : t("noteAdmin")}
           </figcaption>

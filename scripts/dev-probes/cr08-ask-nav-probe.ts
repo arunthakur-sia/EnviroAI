@@ -17,7 +17,7 @@ async function main() {
     if (f === page.mainFrame()) console.log(`  [navigated] ${f.url()}`);
   });
   const login = await page.request.post(`${BASE}/api/v1/auth/login`, {
-    data: { email: "analyst@npc.qa", password: "Nexus!2026" },
+    data: { email: "analyst@enviroai.demo", password: "EnviroAI!2026" },
   });
   console.log("login:", login.status());
 

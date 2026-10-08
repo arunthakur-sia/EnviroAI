@@ -81,6 +81,6 @@ writeResearch(
   obs,
   {
     notes:
-      "2025: full ranking (170 countries) read from Figure 39 of the publisher's 2025 report PDF. 2026: the publisher shows the ranking as an image and sells the dataset through premium access; only the ranks stated in the 15 January 2026 press release are stored (rank only, scores not openly published except Norway's), so Qatar and the other GCC states have no 2026 row. Editions before 2025 sit behind the publisher's premium access and are not stored (the countryeconomy.com compiler carries them but is a secondary source).",
+      "2025: full ranking (170 countries) read from Figure 39 of the publisher's 2025 report PDF. 2026: the publisher shows the ranking as an image and sells the dataset through premium access; only the ranks stated in the 15 January 2026 press release are stored (rank only, scores not openly published except Norway's), so the GCC states have no 2026 row. Editions before 2025 sit behind the publisher's premium access and are not stored (the countryeconomy.com compiler carries them but is a secondary source).",
   }
 );

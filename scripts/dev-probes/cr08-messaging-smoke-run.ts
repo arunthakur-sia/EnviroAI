@@ -12,7 +12,7 @@ async function loginCookie(email: string): Promise<string> {
   const res = await fetch(BASE + "/api/v1/auth/login", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email, password: "EnviroAI!2026" }),
     redirect: "manual",
   });
   const jar = new Map<string, string>();
@@ -30,8 +30,8 @@ async function main() {
   const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
   const ctx = {
     base: BASE,
-    cookie: await loginCookie("analyst@npc.qa"),
-    adminCookie: await loginCookie("admin@npc.qa"),
+    cookie: await loginCookie("analyst@enviroai.demo"),
+    adminCookie: await loginCookie("admin@enviroai.demo"),
     db,
   };
   let passed = 0;

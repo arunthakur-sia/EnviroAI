@@ -94,7 +94,7 @@ async function toolFindExpertsGrouped(
   const internal = keep(groups.internal);
   const external = keep(groups.external);
   if (!internal.length && !external.length) {
-    return "No matching experts in either group (internal NPC staff or external experts).";
+    return "No matching experts in either group (internal Programme Office staff or external experts).";
   }
 
   for (const e of [...internal, ...external]) {
@@ -126,7 +126,7 @@ async function toolFindExpertsGrouped(
     .join(", ");
   return [
     `Experts for "${input.query}"${scopeNote ? ` (${scopeNote})` : ""}, in two groups. Present them under separate headings, internal first; never merge the groups.`,
-    `INTERNAL EXPERTS (NPC staff): ${internal.length}`,
+    `INTERNAL EXPERTS (Programme Office staff): ${internal.length}`,
     ...(internal.length ? internal.map(line) : ["(none)"]),
     `EXTERNAL EXPERTS (other entities, academia, consultants, international advisors): ${external.length}`,
     ...(external.length ? external.map(line) : ["(none)"]),
@@ -190,7 +190,7 @@ const mod: ToolModule = {
     {
       name: FIND_EXPERTS_GROUPED,
       description:
-        "Find experts for a question, returned in two labelled groups: internal (NPC staff) first, then external (other government entities, academia, consultants, international advisors). Optional domain (taxonomy code or name) and unit (organisation unit code or name, internal only). Never blend the groups in the answer.",
+        "Find experts for a question, returned in two labelled groups: internal (Programme Office staff) first, then external (other government entities, academia, consultants, international advisors). Optional domain (taxonomy code or name) and unit (organisation unit code or name, internal only). Never blend the groups in the answer.",
       input_schema: {
         type: "object",
         properties: {
@@ -210,7 +210,7 @@ const mod: ToolModule = {
         type: "object",
         properties: {
           topic: { type: "string", description: "topic or sector code or name" },
-          outcome: { type: "string", description: "NDS3 outcome code or name" },
+          outcome: { type: "string", description: "NES themes code or name" },
           year: { type: "number", description: "publication year" },
           type: { type: "string", description: "study | research | evaluation" },
           text: { type: "string", description: "words to match in the title or summary" },

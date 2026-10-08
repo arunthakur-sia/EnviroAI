@@ -47,7 +47,7 @@ async function login(page: Page, locale: string, email: string) {
   let status = 0;
   for (let attempt = 0; attempt < 14; attempt++) {
     try {
-      const res = await page.request.post(`${BASE}/api/v1/auth/login`, { data: { email, password: "Nexus!2026" }, timeout: 120000 });
+      const res = await page.request.post(`${BASE}/api/v1/auth/login`, { data: { email, password: "EnviroAI!2026" }, timeout: 120000 });
       status = res.status();
       if (res.ok()) break;
       console.log(`  login ${email}: ${status}, retrying`);
@@ -89,7 +89,7 @@ async function rawKeys(page: Page): Promise<string[]> {
 }
 
 /** A signed-in page with error capture armed on this agent's pages only. */
-async function newPage(browser: Browser, locale: string, tag: string, email = "admin@npc.qa", viewport = { width: 1440, height: 900 }): Promise<Page> {
+async function newPage(browser: Browser, locale: string, tag: string, email = "admin@enviroai.demo", viewport = { width: 1440, height: 900 }): Promise<Page> {
   const ctx = await browser.newContext({ viewport, locale: locale === "ar" ? "ar-QA" : "en-QA" });
   const page = await ctx.newPage();
   page.setDefaultTimeout(120000);
@@ -332,14 +332,14 @@ async function main() {
     expect("AR hub: no raw i18n keys", (await rawKeys(ar)).length === 0, (await rawKeys(ar)).slice(0, 3).join(", "));
     await shot(ar, "reports-hub-ar");
     await open(ar, `${BASE}/ar/reports/new`, '[data-testid="report-builder"]');
-    await ar.click('[data-testid="type-card"][data-type-code="nds3_delivery_monthly"]');
+    await ar.click('[data-testid="type-card"][data-type-code="nes3_delivery_monthly"]');
     await ar.click('[data-testid="builder-next"]');
     await ar.waitForSelector('[data-testid="builder-step-periodScope"]');
     expect("AR builder: the outcome picker lists outcomes", (await ar.locator('[data-testid="scope-option"]').count()) >= 7);
     await ar.locator('[data-testid="scope-option"]').first().click();
     expect("AR builder: no raw i18n keys", (await rawKeys(ar)).length === 0, (await rawKeys(ar)).slice(0, 3).join(", "));
     await shot(ar, "reports-builder-ar");
-    const seeded = await publishedId(ar, "npc_annual_report");
+    const seeded = await publishedId(ar, "org_annual_report");
     if (seeded) {
       await open(ar, `${BASE}/ar/reports/${seeded}`, '[data-testid="report-page"]');
       await ar.waitForSelector('[data-testid="report-section"]');
@@ -358,7 +358,7 @@ async function main() {
   /* ---------------- Contributor ---------------- */
   if (stage("contrib")) {
     console.log("EN contributor");
-    const c = await newPage(browser, "en", "contrib", "analyst@npc.qa");
+    const c = await newPage(browser, "en", "contrib", "analyst@enviroai.demo");
     await open(c, `${BASE}/en/reports`, '[data-testid="reports-hub"]');
     await c.waitForSelector('[data-testid="cover-card"]');
     // eleven, not twelve: the Confidential Leadership Briefing Pack is above
@@ -389,7 +389,7 @@ async function main() {
   /* ---------------- 390px ---------------- */
   if (stage("mobile")) {
     console.log("EN admin: 390px");
-    const m = await newPage(browser, "en", "mobile", "admin@npc.qa", { width: 390, height: 844 });
+    const m = await newPage(browser, "en", "mobile", "admin@enviroai.demo", { width: 390, height: 844 });
     await open(m, `${BASE}/en/reports`, '[data-testid="reports-hub"]');
     await m.waitForSelector('[data-testid="cover-card"]');
     const overflowHub = await m.evaluate("document.documentElement.scrollWidth > document.documentElement.clientWidth + 1");

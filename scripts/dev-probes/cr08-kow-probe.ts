@@ -39,7 +39,7 @@ async function login(page: Page, email: string) {
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const res = await page.context().request.post(`${BASE}/api/v1/auth/login`, {
-        data: { email, password: "Nexus!2026" },
+        data: { email, password: "EnviroAI!2026" },
         timeout: 120000,
       });
       status = res.status();
@@ -128,7 +128,7 @@ async function noOverflow(page: Page, label: string) {
   if (wide) problems.push(`${label}: page scrolls horizontally`);
 }
 
-/** The gold bookmark on the spine of this week's pick, framed. A viewport
+/** The aqua bookmark on the spine of this week's pick, framed. A viewport
     screenshot after a scroll can land on an empty stretch of the shelves, so
     the shot is clipped to a window around the ribbon itself. */
 async function shelfRibbon(page: Page, locale: string) {
@@ -160,10 +160,10 @@ async function shelfRibbon(page: Page, locale: string) {
 /** The administrator pass: the set dialog with its live preview in both
     locales and the replace confirmation for a week that is already taken. */
 async function adminPass(page: Page, context: BrowserContext) {
-  console.log("admin@npc.qa");
+  console.log("admin@enviroai.demo");
   await page.goto("about:blank");
   await context.clearCookies();
-  await login(page, "admin@npc.qa");
+  await login(page, "admin@enviroai.demo");
   for (const locale of ["en", "ar"] as const) {
     await open(page, `${BASE}/${locale}/hall-of-knowledge/preview`, "[data-testid=kow-set-button]");
     // the administrator has not seen this week's reveal either, and it covers
@@ -259,7 +259,7 @@ async function main() {
     return;
   }
   if (only === "shelf") {
-    await login(page, "reader@npc.qa");
+    await login(page, "reader@enviroai.demo");
     for (const locale of ["en", "ar"] as const) {
       await open(page, `${BASE}/${locale}/vault`, "[data-testid=book]");
       await shelfRibbon(page, locale);
@@ -267,8 +267,8 @@ async function main() {
     await browser.close();
     return;
   }
-  console.log("reader@npc.qa");
-  await login(page, "reader@npc.qa");
+  console.log("reader@enviroai.demo");
+  await login(page, "reader@enviroai.demo");
   for (const locale of ["en", "ar"] as const) {
     await open(page, `${BASE}/${locale}/hall-of-knowledge/preview?force=1`, "[data-testid=kow-reveal]");
     await page.waitForTimeout(600);
@@ -334,7 +334,7 @@ async function main() {
   }
   if (!opened) problems.push("Read now did not open the item");
   const readRow = await rawClient.execute({
-    sql: "select count(*) as n from knowledge_of_week_reads r join users u on u.id = r.user_id where r.kow_id = ? and u.email = 'reader@npc.qa'",
+    sql: "select count(*) as n from knowledge_of_week_reads r join users u on u.id = r.user_id where r.kow_id = ? and u.email = 'reader@enviroai.demo'",
     args: [String(pick.id)],
   });
   if (Number(readRow.rows[0].n) !== 1) problems.push("Read now did not record the read");

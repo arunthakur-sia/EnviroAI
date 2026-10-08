@@ -1,7 +1,7 @@
 "use client";
 // CR04 3.7 + 2.2: Settings > Lessons and Strategy. Lesson of the week
 // schedule, theme re-clustering (run now, nightly on/off), Learn mode on/off,
-// the reflection prompts editor, and the QNV pillar mapping used by the
+// the reflection prompts editor, and the Vision pillar mapping used by the
 // Strategy Canvas. Self-contained: loads and saves through /api/v1/settings.
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
@@ -42,7 +42,7 @@ export function LessonsSettingsTab() {
     ])
       .then(([settings, lessonList]) => {
         if (!alive) return;
-        setPillars(settings.data?.qnvPillars ?? []);
+        setPillars(settings.data?.visionPillars ?? []);
         setSchedule(settings.data?.lessonOfWeek?.schedule ?? []);
         setPrompts(settings.data?.reflectionPrompts ?? []);
         setLearnModeEnabled(settings.data?.lessonsSettings?.learnModeEnabled !== false);
@@ -62,7 +62,7 @@ export function LessonsSettingsTab() {
         method: "PATCH",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          qnvPillars: pillars,
+          visionPillars: pillars,
           lessonsSettings: { learnModeEnabled, reclusterNightly },
           lessonOfWeek: { schedule: schedule.filter((s) => s.weekStart && s.lessonId) },
           reflectionPrompts: prompts.filter((p) => p.en.trim() && p.ar.trim()),
@@ -90,7 +90,7 @@ export function LessonsSettingsTab() {
   if (loading) {
     return (
       <div className="flex h-40 items-center justify-center" aria-busy>
-        <Loader2 className="size-5 animate-spin text-maroon-700" />
+        <Loader2 className="size-5 animate-spin text-navy-700" />
       </div>
     );
   }
@@ -131,7 +131,7 @@ export function LessonsSettingsTab() {
               <button
                 onClick={() => setSchedule((prev) => prev.filter((_, j) => j !== i))}
                 aria-label={tc("delete")}
-                className="rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 cursor-pointer"
+                className="rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 cursor-pointer"
               >
                 <X className="size-4" />
               </button>
@@ -196,7 +196,7 @@ export function LessonsSettingsTab() {
               <button
                 onClick={() => setPrompts((prev) => prev.filter((_, j) => j !== i))}
                 aria-label={tc("delete")}
-                className="mt-6 rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 cursor-pointer"
+                className="mt-6 rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 cursor-pointer"
               >
                 <X className="size-4" />
               </button>
@@ -208,7 +208,7 @@ export function LessonsSettingsTab() {
         </div>
       </div>
 
-      {/* QNV pillar mapping (CR04 2.2) */}
+      {/* Vision pillar mapping (CR04 2.2) */}
       <div className="card p-5">
         <h3 className="text-base font-medium">{t("lessonsTab.pillarsTitle")}</h3>
         <p className="mt-0.5 text-xs text-ink-600">{t("lessonsTab.pillarsHint")}</p>
@@ -242,8 +242,8 @@ export function LessonsSettingsTab() {
                         className={cn(
                           "size-8 rounded-full border text-xs font-semibold transition-colors cursor-pointer tnum",
                           on
-                            ? "border-maroon-700 bg-maroon-700 text-white"
-                            : "border-sand-300 bg-white text-ink-600 hover:border-maroon-300"
+                            ? "border-navy-700 bg-navy-700 text-white"
+                            : "border-mist-300 bg-white text-ink-600 hover:border-navy-300"
                         )}
                       >
                         {n}

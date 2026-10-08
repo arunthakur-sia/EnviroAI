@@ -1,5 +1,5 @@
-// CR08 5.3: Qatar in the international indices: the movements since the
-// previous edition, the GCC benchmark, and the bar of Qatar's latest ranks.
+// CR08 5.3: Saudi Arabia in the international indices: the movements since the
+// previous edition, the GCC benchmark, and the bar of Saudi Arabia's latest ranks.
 // For an outcome report the cards are those linked to the outcome's targets.
 import { getIndicesBoard, type BoardCard } from "@/server/services/indices";
 import { bi, type Block, type KpiTile, type SectionDefinition } from "../spec";
@@ -9,14 +9,14 @@ import { resolveScope } from "./_scope";
 type Card = { code: string; nameEn: string; nameAr: string; publisher: string | null; year: number | null; rank: number | null; total: number | null; score: number | null; change: number | null; changeKind: "rank" | "score" | null; gccPosition: number | null; gccCount: number; forecastDirection: string | null; category: string };
 type IndicesData = { cards: Card[]; summary: { improving: number; stable: number; declining: number; gccLead: number }; scoped: boolean; lastRefresh: string | null };
 
-const cardOf = (c: BoardCard): Card => ({ code: c.code, nameEn: c.nameEn, nameAr: c.nameAr, publisher: c.publisher, year: c.qatar?.year ?? c.latestYear, rank: c.qatar?.rank ?? null, total: c.qatar?.total ?? null, score: c.qatar?.score ?? null, change: c.change, changeKind: c.changeKind, gccPosition: c.gccPosition, gccCount: c.gccCount, forecastDirection: c.forecastDirection, category: c.category });
+const cardOf = (c: BoardCard): Card => ({ code: c.code, nameEn: c.nameEn, nameAr: c.nameAr, publisher: c.publisher, year: c.home?.year ?? c.latestYear, rank: c.home?.rank ?? null, total: c.home?.total ?? null, score: c.home?.score ?? null, change: c.change, changeKind: c.changeKind, gccPosition: c.gccPosition, gccCount: c.gccCount, forecastDirection: c.forecastDirection, category: c.category });
 
 const def: SectionDefinition<IndicesData> = {
   code: "international_indices",
   name: bi("International indices", "المؤشرات الدولية"),
   description: bi(
-    "Qatar's movements across the tracked international indices and its position among the GCC.",
-    "تحركات قطر في المؤشرات الدولية المتابعة وموقعها بين دول مجلس التعاون."
+    "Saudi Arabia's movements across the tracked international indices and its position among the GCC.",
+    "تحركات السعودية في المؤشرات الدولية المتابعة وموقعها بين دول مجلس التعاون."
   ),
   layout: "body",
   estimatedPages: 3,
@@ -46,8 +46,8 @@ const def: SectionDefinition<IndicesData> = {
       paragraphs: data.cards.length
         ? [
             bi(
-              `Across the ${fmt(data.cards.length)} international indices ${data.scoped ? "linked to this scope" : "tracked"}, Qatar improved in ${fmt(data.summary.improving)}, held steady in ${fmt(data.summary.stable)} and declined in ${fmt(data.summary.declining)} at the latest editions, leading the GCC in ${fmt(data.summary.gccLead)}.`,
-              `عبر المؤشرات الدولية الـ${fmt(data.cards.length)} ${data.scoped ? "المرتبطة بهذا النطاق" : "المتابعة"}، تحسنت قطر في ${fmt(data.summary.improving)} منها، وحافظت على موقعها في ${fmt(data.summary.stable)}، وتراجعت في ${fmt(data.summary.declining)} في أحدث الإصدارات، وتصدرت دول مجلس التعاون في ${fmt(data.summary.gccLead)} منها.`
+              `Across the ${fmt(data.cards.length)} international indices ${data.scoped ? "linked to this scope" : "tracked"}, Saudi Arabia improved in ${fmt(data.summary.improving)}, held steady in ${fmt(data.summary.stable)} and declined in ${fmt(data.summary.declining)} at the latest editions, leading the GCC in ${fmt(data.summary.gccLead)}.`,
+              `عبر المؤشرات الدولية الـ${fmt(data.cards.length)} ${data.scoped ? "المرتبطة بهذا النطاق" : "المتابعة"}، تحسنت السعودية في ${fmt(data.summary.improving)} منها، وحافظت على موقعها في ${fmt(data.summary.stable)}، وتراجعت في ${fmt(data.summary.declining)} في أحدث الإصدارات، وتصدرت دول مجلس التعاون في ${fmt(data.summary.gccLead)} منها.`
             ),
             ...(climbers.length
               ? [
@@ -64,7 +64,7 @@ const def: SectionDefinition<IndicesData> = {
       ctx,
       "international_indices",
       {
-        purpose: "Read Qatar's standing and movements in the international indices, and its position among the GCC.",
+        purpose: "Read Saudi Arabia's standing and movements in the international indices, and its position among the GCC.",
         structure: "Two paragraphs: the summary counts; the largest gains and declines naming the index, the year, the rank or score and the movement. Ranks: lower is better.",
         paragraphs: 2,
       },
@@ -72,10 +72,10 @@ const def: SectionDefinition<IndicesData> = {
       mock
     );
     const tiles: KpiTile[] = [
-      { label: bi("Improving", "في تحسن"), value: fmt(data.summary.improving), tone: "maroon" },
+      { label: bi("Improving", "في تحسن"), value: fmt(data.summary.improving), tone: "navy" },
       { label: bi("Stable", "مستقرة"), value: fmt(data.summary.stable), tone: "ink" },
-      { label: bi("Declining", "في تراجع"), value: fmt(data.summary.declining), tone: "gold" },
-      { label: bi("Leading the GCC", "متصدرة خليجياً"), value: fmt(data.summary.gccLead), tone: "gulf" },
+      { label: bi("Declining", "في تراجع"), value: fmt(data.summary.declining), tone: "aqua" },
+      { label: bi("Leading the GCC", "متصدرة خليجياً"), value: fmt(data.summary.gccLead), tone: "teal" },
     ];
     const blocks: Block[] = [{ kind: "kpis", items: tiles }, ...proseBlocks(prose)];
     if (!data.cards.length) {
@@ -83,7 +83,7 @@ const def: SectionDefinition<IndicesData> = {
     } else {
       blocks.push({
         kind: "table",
-        caption: bi("Qatar in the tracked indices, latest editions", "قطر في المؤشرات المتابعة، أحدث الإصدارات"),
+        caption: bi("Saudi Arabia in the tracked indices, latest editions", "السعودية في المؤشرات المتابعة، أحدث الإصدارات"),
         columns: [bi("Index", "المؤشر"), T.publisher, T.year, T.rank, T.score, T.change, T.gcc],
         rows: data.cards.map((c) => [
           bi(c.nameEn, c.nameAr),
@@ -95,7 +95,7 @@ const def: SectionDefinition<IndicesData> = {
           bi(c.gccPosition ? `${c.gccPosition} of ${c.gccCount}` : "", c.gccPosition ? `${c.gccPosition} من ${c.gccCount}` : ""),
         ]),
         align: ["start", "start", "end", "end", "end", "end", "end"],
-        source: bi("Publishers' latest editions, as held in SiaNexus", "أحدث إصدارات الناشرين، كما هي محفوظة في سيا نكسس"),
+        source: bi("Publishers' latest editions, as held in EnviroAI", "أحدث إصدارات الناشرين، كما هي محفوظة في EnviroAI"),
       });
       const ranked = data.cards.filter((c) => c.rank != null);
       if (ranked.length >= 3) {
@@ -103,7 +103,7 @@ const def: SectionDefinition<IndicesData> = {
           kind: "chart",
           chart: {
             type: "bar",
-            title: bi("Qatar's latest rank by index (lower is better)", "أحدث مرتبة لقطر بحسب المؤشر (الأقل أفضل)"),
+            title: bi("Saudi Arabia's latest rank by index (lower is better)", "أحدث مرتبة للسعودية بحسب المؤشر (الأقل أفضل)"),
             unit: "rank",
             series: [{ name: bi("Rank", "المرتبة"), role: "primary", points: ranked.map((c) => ({ x: c.code, y: c.rank })) }],
             source: bi("Publishers' latest editions", "أحدث إصدارات الناشرين"),
@@ -112,8 +112,8 @@ const def: SectionDefinition<IndicesData> = {
       }
     }
     return section("international_indices", bi("International indices", "المؤشرات الدولية"), "body", {
-      lead: bi(`Qatar in ${fmt(data.cards.length)} indices: ${fmt(data.summary.improving)} up, ${fmt(data.summary.declining)} down.`, `قطر في ${fmt(data.cards.length)} مؤشراً: ${fmt(data.summary.improving)} صاعداً و${fmt(data.summary.declining)} هابطاً.`),
-      keyFigure: data.cards.length ? { value: `${data.summary.gccLead}/${data.cards.length}`, label: bi("indices where Qatar leads the GCC", "مؤشرات تتصدر فيها قطر الخليج") } : undefined,
+      lead: bi(`Saudi Arabia in ${fmt(data.cards.length)} indices: ${fmt(data.summary.improving)} up, ${fmt(data.summary.declining)} down.`, `السعودية في ${fmt(data.cards.length)} مؤشراً: ${fmt(data.summary.improving)} صاعداً و${fmt(data.summary.declining)} هابطاً.`),
+      keyFigure: data.cards.length ? { value: `${data.summary.gccLead}/${data.cards.length}`, label: bi("indices where Saudi Arabia leads the GCC", "مؤشرات تتصدر فيها السعودية الخليج") } : undefined,
       blocks,
       sources: makeSources(data.cards.map((c) => SRC.indices(c.publisher ?? "Publisher", c.nameEn, c.year))),
       meta: { live, scoped: data.scoped, cards: data.cards.length, lastRefresh: data.lastRefresh },

@@ -127,17 +127,17 @@ export function LessonReader({
       className="overflow-hidden"
       data-testid="lesson-reader"
     >
-      <div className="card relative mt-3 border-s-2 border-maroon-100 p-6">
+      <div className="card relative mt-3 border-s-2 border-navy-100 p-6">
         <div className="flex flex-wrap items-start gap-3">
           <div className="min-w-0 flex-1">
             <p className="flex flex-wrap items-center gap-2">
-              <Chip tone={CATEGORY_TONES[lesson.category] ?? "sand"}>
+              <Chip tone={CATEGORY_TONES[lesson.category] ?? "mist"}>
                 {t(`categories.${lesson.category}` as never)}
               </Chip>
               {lesson.status === "verified" ? (
-                <BadgeCheck className="size-4 text-gulf-600" aria-label={tc("verified")} />
+                <BadgeCheck className="size-4 text-teal-600" aria-label={tc("verified")} />
               ) : null}
-              {lesson.topReuse ? <Chip tone="gold">{t("room.goldMark")}</Chip> : null}
+              {lesson.topReuse ? <Chip tone="aqua">{t("room.goldMark")}</Chip> : null}
               <span className="text-[11px] text-ink-600 tnum">
                 {formatDate(lesson.createdAt, locale, { style: "short" })}
               </span>
@@ -150,7 +150,7 @@ export function LessonReader({
               aria-pressed={both}
               className={cn(
                 "flex items-center gap-1 rounded-lg border px-2 py-1.5 text-xs cursor-pointer",
-                both ? "border-maroon-300 bg-maroon-50 text-maroon-900" : "border-sand-300 text-ink-600"
+                both ? "border-navy-300 bg-navy-50 text-navy-900" : "border-mist-300 text-ink-600"
               )}
             >
               <Languages className="size-3.5" /> {t("room.bothLanguages")}
@@ -158,7 +158,7 @@ export function LessonReader({
             <button
               onClick={onClose}
               aria-label={t("room.close")}
-              className="rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 cursor-pointer"
+              className="rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 cursor-pointer"
             >
               <X className="size-4" />
             </button>
@@ -183,8 +183,8 @@ export function LessonReader({
             </div>
           ) : null}
           {(lesson.recommendationEn || lesson.recommendationAr) ? (
-            <div className="rounded-xl bg-gulf-100/50 p-3.5">
-              <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-gulf-600" style={{ fontFamily: "inherit" }}>
+            <div className="rounded-xl bg-teal-100/50 p-3.5">
+              <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-teal-600" style={{ fontFamily: "inherit" }}>
                 {t("room.recommendation")}
               </p>
               <p className="text-ink-900">{field(lesson.recommendationEn, lesson.recommendationAr)}</p>
@@ -194,7 +194,7 @@ export function LessonReader({
 
         {/* CR07 1.3: every node this lesson links to, with the control to add
             another, promote one to primary, or unlink */}
-        <div className="mt-4 border-t border-sand-100 pt-3.5">
+        <div className="mt-4 border-t border-mist-100 pt-3.5">
           <LessonLinksSection
             lessonId={lesson.id}
             links={lesson.links}
@@ -203,13 +203,13 @@ export function LessonReader({
         </div>
 
         {/* outcome, documents, author */}
-        <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-sand-100 pt-3.5">
+        <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-mist-100 pt-3.5">
           {lesson.outcomeNameEn ? (
-            <Chip tone="maroon">{bi(locale, lesson.outcomeNameEn, lesson.outcomeNameAr ?? "")}</Chip>
+            <Chip tone="navy">{bi(locale, lesson.outcomeNameEn, lesson.outcomeNameAr ?? "")}</Chip>
           ) : null}
           {lesson.documentIds.slice(0, 3).map((docId) => (
             <Link key={docId} href={`/vault/${docId}` as never}>
-              <Chip tone="ghost" className="border border-sand-300 hover:text-maroon-700">doc</Chip>
+              <Chip tone="ghost" className="border border-mist-300 hover:text-navy-700">doc</Chip>
             </Link>
           ))}
           <span className="ms-auto flex min-w-0 items-center gap-1.5 text-[11px] text-ink-600">
@@ -220,14 +220,14 @@ export function LessonReader({
                   id: lesson.authorId,
                   nameEn: lesson.authorNameEn,
                   nameAr: lesson.authorNameAr ?? lesson.authorNameEn,
-                  avatarColor: lesson.authorColor ?? "maroon",
+                  avatarColor: lesson.authorColor ?? "navy",
                 }}
                 item={{ type: "lesson", id: lesson.id, titleEn: lesson.titleEn, titleAr: lesson.titleAr, href: `/lessons/${lesson.id}` }}
                 align="end"
               />
             ) : lesson.authorNameEn ? (
               <>
-                <Avatar name={lesson.authorNameEn} color={lesson.authorColor ?? "maroon"} size={18} />
+                <Avatar name={lesson.authorNameEn} color={lesson.authorColor ?? "navy"} size={18} />
                 {bi(locale, lesson.authorNameEn, lesson.authorNameAr ?? lesson.authorNameEn)}
               </>
             ) : null}

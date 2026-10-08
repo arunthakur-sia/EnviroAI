@@ -91,7 +91,7 @@ export default async function ExpertProfilePage({
         data-testid="expert-header"
         data-kind={card.kind}
       >
-        <span aria-hidden className={cn("absolute inset-y-0 start-0 w-1.5", internal ? "bg-maroon-700" : "bg-gulf-600")} />
+        <span aria-hidden className={cn("absolute inset-y-0 start-0 w-1.5", internal ? "bg-navy-700" : "bg-teal-600")} />
         <Avatar name={expert.nameEn} color={expert.avatarColor} size={76} />
         <div className="min-w-0 flex-1">
           <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal">
@@ -100,7 +100,7 @@ export default async function ExpertProfilePage({
           <h1 className="flex flex-wrap items-center gap-2 text-2xl">
             {name}
             {expert.isVerified ? (
-              <BadgeCheck className="size-5 text-gulf-600" role="img" aria-label={t("verified")} />
+              <BadgeCheck className="size-5 text-teal-600" role="img" aria-label={t("verified")} />
             ) : null}
           </h1>
           <p className="mt-1 text-sm text-ink-600">
@@ -115,7 +115,7 @@ export default async function ExpertProfilePage({
               {card.unitPath.map((u, i) => (
                 <span key={u.id} className="flex items-center gap-1">
                   {i > 0 ? <ChevronRight className="size-3 text-ink-400 flip-rtl" aria-hidden /> : null}
-                  <Link href={`/organisation?unit=${u.code}` as never} className="hover:text-maroon-700">
+                  <Link href={`/organisation?unit=${u.code}` as never} className="hover:text-navy-700">
                     {bi(locale, u.nameEn, u.nameAr)}
                   </Link>
                 </span>
@@ -123,7 +123,7 @@ export default async function ExpertProfilePage({
             </p>
           ) : null}
           <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs">
-            {!internal ? <Chip tone="gulf">{t(`types.${expert.type}` as never)}</Chip> : null}
+            {!internal ? <Chip tone="teal">{t(`types.${expert.type}` as never)}</Chip> : null}
             <span className="flex items-center gap-1.5 text-ink-600">
               <span className={cn("h-2 w-2 rounded-full", AVAILABILITY_DOT[expert.availability])} aria-hidden />
               {t(`availability.${expert.availability}` as never)}
@@ -136,16 +136,16 @@ export default async function ExpertProfilePage({
             ) : null}
             {languages.length ? <span className="text-ink-600">{languages.join(" · ")}</span> : null}
             {expert.contactProtocol ? (
-              <Chip tone="gold">{expert.contactProtocol}</Chip>
+              <Chip tone="aqua">{expert.contactProtocol}</Chip>
             ) : null}
             {internal ? (
               <span className="flex items-center gap-1 text-ink-600 tnum" data-testid="profile-projects">
-                <FolderKanban className="size-3.5 text-maroon-700" aria-hidden />
+                <FolderKanban className="size-3.5 text-navy-700" aria-hidden />
                 {t("projectsCount", { count: card.projectCount })}
               </span>
             ) : (
               <span className="flex items-center gap-1 text-ink-600 tnum" data-testid="profile-engagements">
-                <Handshake className="size-3.5 text-gulf-600" aria-hidden />
+                <Handshake className="size-3.5 text-teal-600" aria-hidden />
                 {t("engagementsCount", { count: card.engagementCount })}
                 {card.lastEngagementYear ? ` · ${t("lastEngagement", { year: String(card.lastEngagementYear) })}` : ""}
               </span>
@@ -175,7 +175,7 @@ export default async function ExpertProfilePage({
               <SectionTitle>{t("engagements")}</SectionTitle>
               <div className="card overflow-x-auto">
                 <div role="table" className="min-w-[640px] text-sm">
-                  <div role="row" className="grid grid-cols-[64px_minmax(0,1.4fr)_minmax(0,0.8fr)_minmax(0,1.2fr)_80px] bg-sand-50">
+                  <div role="row" className="grid grid-cols-[64px_minmax(0,1.4fr)_minmax(0,0.8fr)_minmax(0,1.2fr)_80px] bg-mist-50">
                     {["engYear", "engTitle", "engRole", "engOutcome", "engRating"].map((k) => (
                       <div key={k} role="columnheader" className="px-4 py-2 text-start text-xs font-semibold text-ink-600">
                         {t(k as never)}
@@ -186,7 +186,7 @@ export default async function ExpertProfilePage({
                     <div
                       key={e.id}
                       role="row"
-                      className="grid grid-cols-[64px_minmax(0,1.4fr)_minmax(0,0.8fr)_minmax(0,1.2fr)_80px] border-t border-sand-100"
+                      className="grid grid-cols-[64px_minmax(0,1.4fr)_minmax(0,0.8fr)_minmax(0,1.2fr)_80px] border-t border-mist-100"
                     >
                       <div role="cell" className="px-4 py-2.5 text-ink-600 tnum">{e.year ?? "-"}</div>
                       <div role="cell" className="px-4 py-2.5 font-medium text-ink-900">{e.title}</div>
@@ -194,7 +194,7 @@ export default async function ExpertProfilePage({
                       <div role="cell" className="px-4 py-2.5 text-xs text-ink-600">
                         {bi(locale, e.outcomeEn ?? "", e.outcomeAr ?? "")}
                       </div>
-                      <div role="cell" className="px-4 py-2.5 text-gold-500 tnum" aria-label={e.rating ? `${e.rating}/5` : undefined}>
+                      <div role="cell" className="px-4 py-2.5 text-aqua-500 tnum" aria-label={e.rating ? `${e.rating}/5` : undefined}>
                         {e.rating ? "★".repeat(e.rating) : "-"}
                       </div>
                     </div>
@@ -208,12 +208,12 @@ export default async function ExpertProfilePage({
           {projectRoles.length ? (
             <section data-testid="expert-projects">
               <SectionTitle>{t("projects")}</SectionTitle>
-              <div className="card divide-y divide-sand-100">
+              <div className="card divide-y divide-mist-100">
                 {projectRoles.map((r) => (
                   <Link
                     key={r.id}
                     href={`/strategy/${r.nodeId}` as never}
-                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-maroon-50"
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-navy-50"
                   >
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-sm font-medium text-ink-900">
@@ -226,7 +226,7 @@ export default async function ExpertProfilePage({
                         </span>
                       ) : null}
                     </span>
-                    <Chip tone="gulf">{ts(`roles.${r.role}` as never)}</Chip>
+                    <Chip tone="teal">{ts(`roles.${r.role}` as never)}</Chip>
                   </Link>
                 ))}
               </div>
@@ -283,10 +283,10 @@ export default async function ExpertProfilePage({
                             {endorsed ? ` · ${t("endorsements", { count: endorsed })}` : ""}
                           </span>
                         </div>
-                        <div className="h-1.5 rounded-full bg-sand-100">
+                        <div className="h-1.5 rounded-full bg-mist-100">
                           <div
                             className={cn(
-                              "h-full rounded-full bg-gradient-to-r from-maroon-500 to-maroon-700",
+                              "h-full rounded-full bg-gradient-to-r from-navy-500 to-navy-700",
                               levelWidth[d.level] ?? "w-2/4"
                             )}
                           />
@@ -304,7 +304,7 @@ export default async function ExpertProfilePage({
               <SectionTitle>{t("skills")}</SectionTitle>
               <div className="flex flex-wrap gap-1.5">
                 {skills.map((s) => (
-                  <Chip key={s.id} tone="gulf">
+                  <Chip key={s.id} tone="teal">
                     {s.skill}
                   </Chip>
                 ))}
@@ -316,7 +316,7 @@ export default async function ExpertProfilePage({
           {contributions ? (
             <div>
               <SectionTitle>{t("contributions")}</SectionTitle>
-              <div className="card grid grid-cols-3 divide-x divide-sand-100 rtl:divide-x-reverse text-center">
+              <div className="card grid grid-cols-3 divide-x divide-mist-100 rtl:divide-x-reverse text-center">
                 {(
                   [
                     ["documents", contributions.documents],
@@ -325,7 +325,7 @@ export default async function ExpertProfilePage({
                   ] as const
                 ).map(([k, v]) => (
                   <div key={k} className="px-2 py-3">
-                    <p className="font-display text-xl font-semibold text-maroon-900 tnum">
+                    <p className="font-display text-xl font-semibold text-navy-900 tnum">
                       {v}
                     </p>
                     <p className="text-[11px] text-ink-600">{t(`contrib.${k}` as never)}</p>
@@ -341,7 +341,7 @@ export default async function ExpertProfilePage({
               <SectionTitle>{t("badges")}</SectionTitle>
               <div className="flex flex-wrap gap-1.5">
                 {badges.map((b) => (
-                  <Chip key={b.code} tone="gold">
+                  <Chip key={b.code} tone="aqua">
                     <Medal className="size-3" aria-hidden /> {bi(locale, b.nameEn, b.nameAr)}
                   </Chip>
                 ))}

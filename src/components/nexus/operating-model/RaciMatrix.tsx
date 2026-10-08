@@ -169,7 +169,7 @@ export function RaciMatrix({
       hint={t("raci.hint")}
       testId="om-raci"
       aside={
-        <Chip tone="sand" className="tnum">
+        <Chip tone="mist" className="tnum">
           {t("raci.count", { count: raci.processes.length, units: raci.units.length })}
         </Chip>
       }
@@ -214,7 +214,7 @@ export function RaciMatrix({
               setGroup("all");
               setUnit("all");
             }}
-            className="h-9.5 cursor-pointer text-xs font-medium text-maroon-700 underline-offset-4 hover:underline"
+            className="h-9.5 cursor-pointer text-xs font-medium text-navy-700 underline-offset-4 hover:underline"
           >
             {t("raci.clear")}
           </button>
@@ -235,7 +235,7 @@ export function RaciMatrix({
         <EmptyState title={t("raci.empty")} hint={t("raci.emptyHint")} />
       ) : (
         <div
-          className="relative max-h-[600px] overflow-auto rounded-xl border border-sand-300 bg-white"
+          className="relative max-h-[600px] overflow-auto rounded-xl border border-mist-300 bg-white"
           style={{ overscrollBehaviorX: "contain" }}
           data-testid="raci-scroll"
         >
@@ -252,7 +252,7 @@ export function RaciMatrix({
               <div role="row" className="grid" style={{ gridTemplateColumns: gridTemplate }}>
                 <div
                   role="columnheader"
-                  className="sticky start-0 top-0 z-30 border-b border-e border-sand-300 bg-sand-50 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-600 rtl:tracking-normal"
+                  className="sticky start-0 top-0 z-30 border-b border-e border-mist-300 bg-mist-50 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-600 rtl:tracking-normal"
                 >
                   {t("raci.processHeader")}
                 </div>
@@ -265,8 +265,8 @@ export function RaciMatrix({
                       aria-label={name}
                       title={name}
                       className={cn(
-                        "sticky top-0 z-20 flex items-end justify-center border-b border-sand-300 bg-sand-50 px-1 pb-2 pt-2 text-[10px] font-semibold text-ink-600 tnum",
-                        unit === u.id && "bg-maroon-50 text-maroon-900"
+                        "sticky top-0 z-20 flex items-end justify-center border-b border-mist-300 bg-mist-50 px-1 pb-2 pt-2 text-[10px] font-semibold text-ink-600 tnum",
+                        unit === u.id && "bg-navy-50 text-navy-900"
                       )}
                     >
                       <span className="truncate">{u.code}</span>
@@ -282,7 +282,7 @@ export function RaciMatrix({
                     <div
                       role="cell"
                       aria-colspan={columns.length + 1}
-                      className="sticky start-0 z-10 col-span-full border-b border-sand-200 bg-maroon-50/70 px-3 py-1.5 text-[11px] font-semibold text-maroon-900"
+                      className="sticky start-0 z-10 col-span-full border-b border-mist-200 bg-navy-50/70 px-3 py-1.5 text-[11px] font-semibold text-navy-900"
                       style={{ gridColumn: `1 / span ${columns.length + 1}` }}
                       data-testid="raci-group-row"
                     >
@@ -296,7 +296,7 @@ export function RaciMatrix({
                       <div key={p.id} role="row" className="group/raci-row grid" style={{ gridTemplateColumns: gridTemplate }} data-testid="raci-row">
                         <div
                           role="rowheader"
-                          className="sticky start-0 z-10 flex min-w-0 items-center gap-2 border-b border-e border-sand-200 bg-white px-3 py-1.5 group-hover/raci-row:bg-sand-50"
+                          className="sticky start-0 z-10 flex min-w-0 items-center gap-2 border-b border-e border-mist-200 bg-white px-3 py-1.5 group-hover/raci-row:bg-mist-50"
                           title={pName}
                         >
                           <span className="shrink-0 text-[10px] font-semibold text-ink-400 tnum">{p.code}</span>
@@ -317,8 +317,8 @@ export function RaciMatrix({
                               key={u.id}
                               role="cell"
                               className={cn(
-                                "flex items-center justify-center border-b border-sand-200 group-hover/raci-row:bg-sand-50",
-                                unit === u.id && "bg-maroon-50/50"
+                                "flex items-center justify-center border-b border-mist-200 group-hover/raci-row:bg-mist-50",
+                                unit === u.id && "bg-navy-50/50"
                               )}
                             >
                               <button
@@ -338,8 +338,8 @@ export function RaciMatrix({
                                    cycle() ignores a second call while busy. */
                                 aria-busy={busy === key || undefined}
                                 className={cn(
-                                  "flex h-8 w-full items-center justify-center outline-none transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-gold-500",
-                                  canEdit ? "cursor-pointer hover:bg-maroon-100/50" : "cursor-default",
+                                  "flex h-8 w-full items-center justify-center outline-none transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-aqua-500",
+                                  canEdit ? "cursor-pointer hover:bg-navy-100/50" : "cursor-default",
                                   busy === key && "opacity-50"
                                 )}
                               >

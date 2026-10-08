@@ -71,12 +71,12 @@ export default async function StatisticsPage({
                   {bi(locale, cat.nameEn, cat.nameAr)}
                   <span className="text-xs text-ink-400 tnum">{cat.indicators.length}</span>
                 </p>
-                <div className="card divide-y divide-sand-100">
+                <div className="card divide-y divide-mist-100">
                   {cat.indicators.map((ind) => (
                     <Link
                       key={ind.id}
                       href={`/statistics/${ind.id}` as never}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-maroon-50"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-navy-50"
                     >
                       <span className="min-w-0 flex-1 truncate text-ink-900">
                         {bi(locale, ind.nameEn, ind.nameAr)}
@@ -103,11 +103,11 @@ export default async function StatisticsPage({
           {upcoming.length === 0 ? (
             <p className="text-sm text-ink-400">{t("noUpcoming")}</p>
           ) : (
-            <ol className="relative ms-2 space-y-4 border-s-2 border-sand-200 ps-4">
+            <ol className="relative ms-2 space-y-4 border-s-2 border-mist-200 ps-4">
               {upcoming.map((r) => (
                 <li key={r.id} className="relative">
-                  <span className="absolute -start-[21px] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-gulf-600" />
-                  <p className="text-xs font-medium text-gulf-600 tnum">
+                  <span className="absolute -start-[21px] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-teal-600" />
+                  <p className="text-xs font-medium text-teal-600 tnum">
                     {formatDate(r.releaseDate, locale)}
                   </p>
                   <p className="text-sm text-ink-900">{bi(locale, r.titleEn, r.titleAr)}</p>

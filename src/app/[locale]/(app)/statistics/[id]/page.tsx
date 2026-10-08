@@ -36,7 +36,7 @@ export default async function IndicatorPage({
 
   const canEnter = can(user, "create", "statistics");
   // CR08 9.1: an indicator records no owner of its own, so the person shown is
-  // the head of its own department, the fallback the Ask NPC owner tool uses.
+  // the head of its own department, the fallback the Ask EnviroAI owner tool uses.
   // No department, or a head with no account, shows nothing at all.
   const owner = await resolveOwner("indicator", id);
   // CR01 2.8: accepted signals linked to this indicator, last 90 days
@@ -48,7 +48,7 @@ export default async function IndicatorPage({
 
   return (
     <Reveal>
-      {/* CR08 2.3: the Ask NPC launcher knows this indicator */}
+      {/* CR08 2.3: the Ask EnviroAI launcher knows this indicator */}
       <AskContextItem item={{ kind: "indicator", id, code: ind.code, titleEn: ind.nameEn, titleAr: ind.nameAr, href: `/statistics/${id}` }} />
       <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
         <div className="max-w-2xl">
@@ -57,8 +57,8 @@ export default async function IndicatorPage({
             {bi(locale, ind.definitionEn ?? "", ind.definitionAr ?? "")}
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-ink-400">
-            <Chip tone="sand">{t(`frequency.${ind.frequency}` as never)}</Chip>
-            {ind.unit ? <Chip tone="sand">{ind.unit}</Chip> : null}
+            <Chip tone="mist">{t(`frequency.${ind.frequency}` as never)}</Chip>
+            {ind.unit ? <Chip tone="mist">{ind.unit}</Chip> : null}
             <span>{bi(locale, ind.sourceEn ?? "", ind.sourceAr ?? "")}</span>
           </div>
         </div>
@@ -120,12 +120,12 @@ export default async function IndicatorPage({
             <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-400">
               {t("linkedKpis")}
             </p>
-            <div className="card divide-y divide-sand-100">
+            <div className="card divide-y divide-mist-100">
               {kpiLinks.map((k) => (
                 <Link
                   key={k.kpiId}
                   href={`/strategy/${k.nodeId}` as never}
-                  className="flex items-center justify-between gap-3 px-4 py-3 text-sm hover:bg-maroon-50"
+                  className="flex items-center justify-between gap-3 px-4 py-3 text-sm hover:bg-navy-50"
                 >
                   <span className="min-w-0">
                     <span className="block truncate font-medium text-ink-900">
@@ -136,7 +136,7 @@ export default async function IndicatorPage({
                     </span>
                   </span>
                   {k.targetValue !== null ? (
-                    <span className="shrink-0 text-xs text-gold-500 tnum">
+                    <span className="shrink-0 text-xs text-aqua-500 tnum">
                       {t("target")}: {k.targetValue}
                       {k.targetYear ? ` (${k.targetYear})` : ""}
                     </span>
@@ -152,7 +152,7 @@ export default async function IndicatorPage({
             <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-400">
               {t("linkedReleases")}
             </p>
-            <div className="card divide-y divide-sand-100">
+            <div className="card divide-y divide-mist-100">
               {linkedReleases.slice(0, 8).map((r) => (
                 <div key={r.id} className="flex items-center justify-between gap-3 px-4 py-3 text-sm">
                   <span className="min-w-0 truncate text-ink-900">

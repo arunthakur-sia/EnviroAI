@@ -29,21 +29,21 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
   /* Public                                                             */
   /* ---------------------------------------------------------------- */
   {
-    code: "npc_annual_report",
+    code: "org_annual_report",
     family: "public",
-    nameEn: "NPC Annual Report",
-    nameAr: "التقرير السنوي للمجلس الوطني للتخطيط",
+    nameEn: "Annual Environment Report",
+    nameAr: "التقرير البيئي السنوي",
     descriptionEn:
-      "The Council's year in one designed volume: the mandate, the NDS3 outcomes, delivery progress, the statistical picture, Qatar's standing in international indices, partnerships and the outlook.",
+      "The Office's year in one designed volume: the mandate, the NES themes, delivery progress, the statistical picture, Saudi Arabia's standing in international indices, partnerships and the outlook.",
     descriptionAr:
-      "عام المجلس في مجلد واحد مصمم: الولاية، ونتائج استراتيجية التنمية الوطنية الثالثة، وتقدم التنفيذ، والصورة الإحصائية، ومكانة قطر في المؤشرات الدولية، والشراكات، والآفاق المقبلة.",
+      "عام المكتب في مجلد واحد مصمم: الولاية، ونتائج الاستراتيجية الوطنية للبيئة، وتقدم التنفيذ، والصورة الإحصائية، ومكانة السعودية في المؤشرات الدولية، والشراكات، والآفاق المقبلة.",
     defaultSections: [
       "cover",
       "contents",
       "foreword",
       "year_at_a_glance",
       "mandate_governance",
-      "nds3_outcomes_overview",
+      "nes3_outcomes_overview",
       "initiatives_progress",
       "statistics_highlights",
       "international_indices",
@@ -60,17 +60,17 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
       "signals_implications",
       "lessons_themes",
     ],
-    scopeKind: "npc",
+    scopeKind: "org",
     classificationDefault: 1,
     audienceDefault: "public",
     cadence: "annual",
     sort: 10,
   },
   {
-    code: "nds3_progress_public",
+    code: "nes3_progress_public",
     family: "public",
-    nameEn: "NDS3 Progress Report (public edition)",
-    nameAr: "تقرير التقدم في استراتيجية التنمية الوطنية الثالثة (النسخة العامة)",
+    nameEn: "National Environment Strategy Progress Report (public edition)",
+    nameAr: "تقرير التقدم في الاستراتيجية الوطنية للبيئة (النسخة العامة)",
     descriptionEn:
       "Progress against the seven national outcomes and their targets, written for the public: where delivery stands, what moved, and what comes next.",
     descriptionAr:
@@ -80,7 +80,7 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
       "contents",
       "foreword",
       "year_at_a_glance",
-      "nds3_outcomes_overview",
+      "nes3_outcomes_overview",
       "targets_scorecard",
       "initiatives_progress",
       "outlook",
@@ -93,7 +93,7 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
       "international_indices",
       "lessons_themes",
     ],
-    scopeKind: "npc",
+    scopeKind: "org",
     classificationDefault: 1,
     audienceDefault: "public",
     cadence: "annual",
@@ -102,12 +102,12 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
   {
     code: "indices_annual",
     family: "public",
-    nameEn: "Qatar in International Indices",
-    nameAr: "قطر في المؤشرات الدولية",
+    nameEn: "Saudi Arabia in International Indices",
+    nameAr: "السعودية في المؤشرات الدولية",
     descriptionEn:
-      "The annual reading of Qatar's movements across the tracked international indices, the GCC benchmark, the SiaNexus forecasts with their method note, and the signals behind them.",
+      "The annual reading of Saudi Arabia's movements across the tracked international indices, the GCC benchmark, the EnviroAI forecasts with their method note, and the signals behind them.",
     descriptionAr:
-      "القراءة السنوية لتحركات قطر في المؤشرات الدولية المتابعة، والمقارنة الخليجية، وتنبؤات سيا نكسس مع ملاحظة المنهجية، والإشارات الكامنة وراءها.",
+      "القراءة السنوية لتحركات السعودية في المؤشرات الدولية المتابعة، والمقارنة الخليجية، وتنبؤات EnviroAI مع ملاحظة المنهجية، والإشارات الكامنة وراءها.",
     defaultSections: [
       "cover",
       "contents",
@@ -121,7 +121,7 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
       "closing",
     ],
     optionalSections: ["statistics_highlights", "lessons_themes"],
-    scopeKind: "npc",
+    scopeKind: "org",
     classificationDefault: 1,
     audienceDefault: "public",
     cadence: "annual",
@@ -160,12 +160,12 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
   {
     code: "council_performance",
     family: "internal",
-    nameEn: "Council Strategy Performance Report",
-    nameAr: "تقرير أداء استراتيجية المجلس",
+    nameEn: "Programme Office Strategy Performance Report",
+    nameAr: "تقرير أداء استراتيجية المكتب",
     descriptionEn:
-      "The quarterly scorecard of the Council's own institutional strategy: goals by RAG, the outputs behind, the decisions the leadership needs to take, and the lessons of the quarter.",
+      "The quarterly scorecard of the Office's own institutional strategy: goals by RAG, the outputs behind, the decisions the leadership needs to take, and the lessons of the quarter.",
     descriptionAr:
-      "بطاقة الأداء الربع سنوية لاستراتيجية المجلس المؤسسية: الأهداف بحسب حالة الأداء، والمخرجات المتأخرة، والقرارات المطلوبة من القيادة، ودروس الربع.",
+      "بطاقة الأداء الربع سنوية لاستراتيجية المكتب المؤسسية: الأهداف بحسب حالة الأداء، والمخرجات المتأخرة، والقرارات المطلوبة من القيادة، ودروس الربع.",
     defaultSections: [
       "cover",
       "contents",
@@ -178,17 +178,17 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
       "closing",
     ],
     optionalSections: ["foreword", "knowledge_continuity", "signals_implications"],
-    scopeKind: "npc",
+    scopeKind: "org",
     classificationDefault: 2,
     audienceDefault: "working",
     cadence: "quarterly",
     sort: 50,
   },
   {
-    code: "nds3_delivery_monthly",
+    code: "nes3_delivery_monthly",
     family: "internal",
-    nameEn: "NDS3 Delivery Report",
-    nameAr: "تقرير تنفيذ استراتيجية التنمية الوطنية الثالثة",
+    nameEn: "NES Delivery Report",
+    nameAr: "تقرير تنفيذ الاستراتيجية الوطنية للبيئة",
     descriptionEn:
       "The monthly delivery view of one national outcome: its targets, the initiatives and projects with their status updates, the deliverables received, and the signals and lessons that touch it.",
     descriptionAr:
@@ -219,14 +219,14 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
     nameEn: "Leadership Briefing Pack",
     nameAr: "حزمة الإحاطة القيادية",
     descriptionEn:
-      "The confidential pack for the Secretary General and the leadership: the state of NDS3 and the Council strategy, what is behind, the indices, the signals, and the decisions ahead.",
+      "The confidential pack for the Secretary General and the leadership: the state of NES and the Office strategy, what is behind, the indices, the signals, and the decisions ahead.",
     descriptionAr:
-      "الحزمة السرية للأمين العام والقيادة: حالة استراتيجية التنمية الوطنية الثالثة واستراتيجية المجلس، وما تأخر، والمؤشرات، والإشارات، والقرارات المقبلة.",
+      "الحزمة السرية للأمين العام والقيادة: حالة الاستراتيجية الوطنية للبيئة واستراتيجية المكتب، وما تأخر، والمؤشرات، والإشارات، والقرارات المقبلة.",
     defaultSections: [
       "cover",
       "contents",
       "year_at_a_glance",
-      "nds3_outcomes_overview",
+      "nes3_outcomes_overview",
       "council_scorecard",
       "outputs_behind",
       "international_indices",
@@ -243,7 +243,7 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
       "knowledge_continuity",
       "statistics_highlights",
     ],
-    scopeKind: "npc",
+    scopeKind: "org",
     classificationDefault: 3,
     audienceDefault: "leadership",
     cadence: "quarterly",
@@ -257,7 +257,7 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
     descriptionEn:
       "The month's accepted signals with their implications for the outcomes, the current index forecasts, and the outlook the foresight team should carry into planning.",
     descriptionAr:
-      "الإشارات المقبولة خلال الشهر ودلالاتها على النتائج، وتنبؤات المؤشرات الحالية، والآفاق التي ينبغي لفريق الاستشراف حملها إلى التخطيط.",
+      "الإشارات المقبولة خلال الشهر ودلالاتها على النتائج، وتنبؤات المؤشرات الحالية، والآفاق التي ينبغي لفريق الاستشراف حملها إلى مكتب البرنامج.",
     defaultSections: [
       "cover",
       "contents",
@@ -268,7 +268,7 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
       "closing",
     ],
     optionalSections: ["year_at_a_glance", "international_indices", "lessons_themes"],
-    scopeKind: "npc",
+    scopeKind: "org",
     classificationDefault: 2,
     audienceDefault: "working",
     cadence: "monthly",
@@ -282,7 +282,7 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
     descriptionEn:
       "The quarter's lessons grouped by theme and outcome, the recommendations that recur, and where they should land in the next planning cycle.",
     descriptionAr:
-      "دروس الربع مصنفة بحسب المحور والنتيجة، والتوصيات المتكررة، وأين ينبغي أن تستقر في دورة التخطيط المقبلة.",
+      "دروس الربع مصنفة بحسب المحور والنتيجة، والتوصيات المتكررة، وأين ينبغي أن تستقر في دورة التخطيط الاستراتيجي المقبلة.",
     defaultSections: [
       "cover",
       "contents",
@@ -293,7 +293,7 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
       "closing",
     ],
     optionalSections: ["foreword", "outcome_deep_dive", "initiatives_progress"],
-    scopeKind: "npc",
+    scopeKind: "org",
     classificationDefault: 2,
     audienceDefault: "working",
     cadence: "quarterly",
@@ -305,9 +305,9 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
     nameEn: "Index Forecast Report",
     nameAr: "تقرير تنبؤات المؤشرات",
     descriptionEn:
-      "The SiaNexus forecasts for every tracked index at one, three and five years, the ranges and confidence, the method note, and the signals that moved the numbers.",
+      "The EnviroAI forecasts for every tracked index at one, three and five years, the ranges and confidence, the method note, and the signals that moved the numbers.",
     descriptionAr:
-      "تنبؤات سيا نكسس لكل مؤشر متابع على آفاق سنة وثلاث وخمس سنوات، والنطاقات ودرجة الثقة، وملاحظة المنهجية، والإشارات التي حركت الأرقام.",
+      "تنبؤات EnviroAI لكل مؤشر متابع على آفاق سنة وثلاث وخمس سنوات، والنطاقات ودرجة الثقة، وملاحظة المنهجية، والإشارات التي حركت الأرقام.",
     defaultSections: [
       "cover",
       "contents",
@@ -319,7 +319,7 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
       "closing",
     ],
     optionalSections: ["foreword", "year_at_a_glance"],
-    scopeKind: "npc",
+    scopeKind: "org",
     classificationDefault: 2,
     audienceDefault: "working",
     cadence: "annual",
@@ -399,7 +399,7 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
       "foreword",
       "year_at_a_glance",
       "mandate_governance",
-      "nds3_outcomes_overview",
+      "nes3_outcomes_overview",
       "outcome_deep_dive",
       "targets_scorecard",
       "initiatives_progress",
@@ -417,7 +417,7 @@ export const REPORT_TYPES: ReportTypeSpec[] = [
       "outlook",
       "sources_appendix",
     ],
-    scopeKind: "npc",
+    scopeKind: "org",
     classificationDefault: 2,
     audienceDefault: "working",
     cadence: "on_demand",

@@ -144,7 +144,7 @@ export function ProfileForm({ initial }: { initial: Initial }) {
           <Switch checked={form.quietMode} onCheckedChange={(v) => set("quietMode", v)} aria-label={t("quietMode")} />
         </label>
         {/* CR05 6.3: sessions end after 12 hours idle and 7 days absolute */}
-        <div className="flex items-center justify-between gap-3 border-t border-sand-100 pt-4">
+        <div className="flex items-center justify-between gap-3 border-t border-mist-100 pt-4">
           <span>
             <span className="block text-sm text-ink-900">{t("signOutAll")}</span>
             <span className="block text-xs text-ink-600">{t("signOutAllHint")}</span>

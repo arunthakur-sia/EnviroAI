@@ -30,7 +30,7 @@ async function login(page: Page, email: string, locale = "en") {
   void locale;
   for (let attempt = 0; attempt < 2; attempt++) {
     const res = await page.request.post(`${BASE}/api/v1/auth/login`, {
-      data: { email, password: "Nexus!2026" },
+      data: { email, password: "EnviroAI!2026" },
       timeout: NAV,
     });
     if (res.ok()) return;
@@ -117,7 +117,7 @@ async function main() {
   for (const locale of locales) {
     /* ---- the administrator ---- */
     if (!want("admin")) break;
-    await login(page, "hr@npc.qa", locale);
+    await login(page, "hr@enviroai.demo", locale);
     await page.goto(`${BASE}/${locale}/hr/handovers`, { timeout: NAV, waitUntil: "domcontentloaded" });
     await waitPainted(page, '[data-testid="handover-row"]');
     await settle(page);
@@ -172,7 +172,7 @@ async function main() {
   for (const locale of locales) {
     /* ---- the leaving person ---- */
     if (!want("person")) break;
-    await login(page, "ahmed.fathy@npc.qa", locale);
+    await login(page, "abdulrahman.albalawi@enviroai.demo", locale);
     await page.goto(`${BASE}/${locale}/handover/mine`, { timeout: NAV, waitUntil: "domcontentloaded" });
     await waitPainted(page, '[data-testid="my-handover"]');
     await settle(page);
@@ -189,7 +189,7 @@ async function main() {
     await logout(page);
 
     /* ---- the recipient ---- */
-    await login(page, "mohammed.alsulaiti@npc.qa", locale);
+    await login(page, "mohammed.alqarni@enviroai.demo", locale);
     // 6.3: "A handover has started for you" on Home, and /handover sends the
     // recipient straight to their learning path
     await page.goto(`${BASE}/${locale}/home`, { timeout: NAV, waitUntil: "domcontentloaded" });
@@ -234,7 +234,7 @@ async function main() {
   let token = want("token") ? process.env.HANDOVER_TOKEN ?? "" : "skip";
   if (!token) {
     const { getUserById } = await import("../../src/server/auth/session");
-    const [adminRow] = await db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.email, "admin@npc.qa")).limit(1);
+    const [adminRow] = await db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.email, "admin@enviroai.demo")).limit(1);
     const superAdmin = adminRow ? await getUserById(adminRow.id) : null;
     if (superAdmin) {
       const { createAccessLink } = await import("../../src/server/services/handover");

@@ -39,7 +39,7 @@ export type ReportScopeInput = {
     | "collection"
     | "indices"
     | "hr"
-    /* CR07 2.5: any level of the Council Strategy */
+    /* CR07 2.5: any level of the Programme Strategy */
     | "council_node";
   ids: string[];
   labelEn: string;
@@ -410,8 +410,8 @@ export async function gatherReportItems(
         items.push({
           type: "answer",
           id: a.id,
-          titleEn: `${conv.title ?? "Ask NPC"} (answer ${i + 1})`,
-          titleAr: `${conv.title ?? "اسأل المجلس"} (إجابة ${i + 1})`,
+          titleEn: `${conv.title ?? "Ask EnviroAI"} (answer ${i + 1})`,
+          titleAr: `${conv.title ?? "اسأل EnviroAI"} (إجابة ${i + 1})`,
           date: a.createdAt,
           metaEn: `confidence ${a.confidence ?? "medium"}`,
           metaAr: `الثقة ${a.confidence ?? "متوسطة"}`,
@@ -455,7 +455,7 @@ export async function gatherReportItems(
     }
   } else if (scope.kind === "indices") {
     // CR05 4.4/4.7: the benchmark and board export. One item per index with
-    // Qatar's standing and the current forecast (cited as a SiaNexus
+    // Saudi Arabia's standing and the current forecast (cited as a EnviroAI
     // forecast, never as a fact), plus rank-history charts.
     const rows = scope.ids.length
       ? await db.select().from(schema.indices).where(inArray(schema.indices.id, scope.ids))
@@ -467,7 +467,7 @@ export async function gatherReportItems(
           .where(
             and(
               inArray(schema.indexObservations.indexId, rows.map((r) => r.id)),
-              eq(schema.indexObservations.countryCode, "QAT")
+              eq(schema.indexObservations.countryCode, "SAU")
             )
           )
       : [];
@@ -490,12 +490,12 @@ export async function gatherReportItems(
       const latest = series[series.length - 1];
       const f3 = forecasts.find((f) => f.indexId === idx.id);
       const forecastEn = f3
-        ? ` SiaNexus forecast (method ${f3.methodVersion}, generated ${f3.generatedAt.slice(0, 10)}): three-year central ${
+        ? ` EnviroAI forecast (method ${f3.methodVersion}, generated ${f3.generatedAt.slice(0, 10)}): three-year central ${
             f3.centralRank != null ? `rank ${Math.round(f3.centralRank)}` : f3.centralScore?.toFixed(2) ?? "-"
           }, direction ${f3.direction}.`
         : "";
       const forecastAr = f3
-        ? ` تنبؤ سيا نكسس (المنهجية ${f3.methodVersion}، بتاريخ ${f3.generatedAt.slice(0, 10)}): القيمة المركزية بعد ثلاث سنوات ${
+        ? ` تنبؤ EnviroAI (المنهجية ${f3.methodVersion}، بتاريخ ${f3.generatedAt.slice(0, 10)}): القيمة المركزية بعد ثلاث سنوات ${
             f3.centralRank != null ? `المرتبة ${Math.round(f3.centralRank)}` : f3.centralScore?.toFixed(2) ?? "-"
           }، والاتجاه ${f3.direction === "up" ? "صاعد" : f3.direction === "down" ? "هابط" : "مستقر"}.`
         : "";
@@ -513,13 +513,13 @@ export async function gatherReportItems(
           .join(" · "),
         textEn: `${
           latest
-            ? `Qatar ${latest.rank != null ? `ranks ${latest.rank}${latest.totalCountries ? ` of ${latest.totalCountries}` : ""}` : `scores ${latest.score}`} in ${latest.year}.`
-            : "No published Qatar value."
+            ? `Saudi Arabia ${latest.rank != null ? `ranks ${latest.rank}${latest.totalCountries ? ` of ${latest.totalCountries}` : ""}` : `scores ${latest.score}`} in ${latest.year}.`
+            : "No published Saudi Arabia value."
         }${forecastEn}`,
         textAr: `${
           latest
-            ? `قطر ${latest.rank != null ? `في المرتبة ${latest.rank}${latest.totalCountries ? ` من ${latest.totalCountries}` : ""}` : `بدرجة ${latest.score}`} عام ${latest.year}.`
-            : "لا توجد قيمة منشورة لقطر."
+            ? `السعودية ${latest.rank != null ? `في المرتبة ${latest.rank}${latest.totalCountries ? ` من ${latest.totalCountries}` : ""}` : `بدرجة ${latest.score}`} عام ${latest.year}.`
+            : "لا توجد قيمة منشورة للسعودية."
         }${forecastAr}`,
         outcomeCodes: [],
       });
@@ -529,8 +529,8 @@ export async function gatherReportItems(
         .map((o) => ({ period: String(o.year), value: o.rank as number }));
       if (rankPoints.length >= 3) {
         charts.push({
-          labelEn: `${idx.nameEn}: Qatar's rank`,
-          labelAr: `${idx.nameAr}: مرتبة قطر`,
+          labelEn: `${idx.nameEn}: Saudi Arabia's rank`,
+          labelAr: `${idx.nameAr}: مرتبة السعودية`,
           unit: "rank",
           points: rankPoints,
           target: null,

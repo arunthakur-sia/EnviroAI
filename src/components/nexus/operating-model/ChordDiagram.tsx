@@ -155,7 +155,7 @@ export function ChordDiagram({
                   d={roundPath(layout.groupArc(g) ?? "")}
                   fill={colour(g.index)}
                   fillOpacity={dim ? 0.25 : 1}
-                  stroke={isFocus ? "var(--color-gold-500)" : "#ffffff"}
+                  stroke={isFocus ? "var(--color-aqua-500)" : "#ffffff"}
                   strokeWidth={isFocus ? 2.5 : 1}
                   style={{ transition }}
                 />
@@ -183,7 +183,7 @@ export function ChordDiagram({
           start-1/2 to the right edge and push the caption off centre. */}
       {focusIndex >= 0 && units[focusIndex] ? (
         <div
-          className="pointer-events-none absolute start-1/2 top-1/2 w-44 -translate-x-1/2 -translate-y-1/2 rounded-xl border border-sand-200 bg-white/90 px-2.5 py-2 text-center shadow-[var(--shadow-paper)]"
+          className="pointer-events-none absolute start-1/2 top-1/2 w-44 -translate-x-1/2 -translate-y-1/2 rounded-xl border border-mist-200 bg-white/90 px-2.5 py-2 text-center shadow-[var(--shadow-paper)]"
           data-testid="chord-focus"
         >
           <div dir={locale === "ar" ? "rtl" : "ltr"}>

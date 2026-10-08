@@ -81,7 +81,7 @@ export default async function DepartmentPage({
           <p className="mt-3 flex items-center gap-2 text-sm text-ink-900">
             <Avatar name={head.nameEn} color={head.avatarColor} size={26} />
             {bi(locale, head.nameEn, head.nameAr)}
-            <Chip tone="maroon">{t("head")}</Chip>
+            <Chip tone="navy">{t("head")}</Chip>
           </p>
         ) : null}
       </div>
@@ -96,7 +96,7 @@ export default async function DepartmentPage({
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div>
           <SectionTitle>{t("members", { count: members.length })}</SectionTitle>
-          <div className="card divide-y divide-sand-100">
+          <div className="card divide-y divide-mist-100">
             {members.map((m) => (
               <div key={m.id} className="flex items-center gap-2.5 px-4 py-2.5">
                 <Avatar name={m.nameEn} color={m.avatarColor} size={28} />
@@ -114,12 +114,12 @@ export default async function DepartmentPage({
         <div>
           <SectionTitle>{t("nodes")}</SectionTitle>
           {nodes.length ? (
-            <div className="card divide-y divide-sand-100">
+            <div className="card divide-y divide-mist-100">
               {nodes.map((n) => (
                 <Link
                   key={n.id}
                   href={`/strategy/${n.id}` as never}
-                  className="flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-maroon-50"
+                  className="flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-navy-50"
                 >
                   <RagDot status={n.status} />
                   <span className="min-w-0 truncate text-ink-900">

@@ -29,7 +29,7 @@ export function StatusTimeline({ updates }: { updates: Update[] }) {
   }
 
   return (
-    <ol className="relative ms-2 space-y-5 border-s-2 border-sand-200 ps-5">
+    <ol className="relative ms-2 space-y-5 border-s-2 border-mist-200 ps-5">
       {updates.map((u) => {
         let risks: { text_en: string; text_ar?: string }[] = [];
         let steps: { text_en: string; text_ar?: string }[] = [];
@@ -41,7 +41,7 @@ export function StatusTimeline({ updates }: { updates: Update[] }) {
         } catch { /* skip */ }
         return (
           <li key={u.id} className="relative">
-            <span className="absolute -start-[27px] top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-sand-100">
+            <span className="absolute -start-[27px] top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-mist-100">
               <RagDot status={u.status} />
             </span>
             <div className="card p-4">
@@ -50,7 +50,7 @@ export function StatusTimeline({ updates }: { updates: Update[] }) {
                 <span className="text-sm font-medium text-ink-900">
                   {bi(locale, u.authorNameEn, u.authorNameAr)}
                 </span>
-                <Chip tone="sand">{tc(`status.${u.status}` as never)}</Chip>
+                <Chip tone="mist">{tc(`status.${u.status}` as never)}</Chip>
                 <span className="text-xs text-ink-600 tnum">{u.progressPct}%</span>
                 <span className="ms-auto text-xs text-ink-400 tnum">
                   {u.period ?? formatDate(u.createdAt, locale, { style: "short" })}
@@ -75,7 +75,7 @@ export function StatusTimeline({ updates }: { updates: Update[] }) {
               ) : null}
               {steps.length ? (
                 <div className="mt-2">
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-gulf-600">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-teal-600">
                     {t("nextSteps")}
                   </p>
                   <ul className="mt-0.5 text-xs text-ink-600">

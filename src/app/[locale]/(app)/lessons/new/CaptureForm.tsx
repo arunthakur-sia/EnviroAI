@@ -44,10 +44,10 @@ export function CaptureForm({
   React.useEffect(() => {
     // reader panel handoff
     try {
-      const draft = sessionStorage.getItem("nexus-lesson-draft");
+      const draft = sessionStorage.getItem("enviroai-lesson-draft");
       if (draft) {
         setRough(draft);
-        sessionStorage.removeItem("nexus-lesson-draft");
+        sessionStorage.removeItem("enviroai-lesson-draft");
       }
     } catch { /* skip */ }
   }, []);
@@ -113,7 +113,7 @@ export function CaptureForm({
           placeholder={t("roughPlaceholder")}
         />
         <Button className="mt-3" variant="secondary" loading={structuring} onClick={structure} disabled={rough.trim().length < 10}>
-          <Sparkles className="text-gold-500" /> {t("structureCta")}
+          <Sparkles className="text-aqua-500" /> {t("structureCta")}
         </Button>
       </div>
 
@@ -208,8 +208,8 @@ export function CaptureForm({
                     className={cn(
                       "rounded-lg border px-2.5 py-1 text-xs transition-colors cursor-pointer",
                       active
-                        ? "border-maroon-700 bg-maroon-100 font-medium text-maroon-900"
-                        : "border-sand-300 bg-white text-ink-600 hover:border-maroon-300"
+                        ? "border-navy-700 bg-navy-100 font-medium text-navy-900"
+                        : "border-mist-300 bg-white text-ink-600 hover:border-navy-300"
                     )}
                   >
                     {bi(locale, topic.nameEn, topic.nameAr)}

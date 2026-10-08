@@ -1,6 +1,6 @@
 // CR07 3: the Organisation module. One structure for the whole product: the
 // org chart, the unit panel (mandate as published, people, what the unit owns,
-// its policies and procedures), and the re-sync diff against npc.qa.
+// its policies and procedures), and the re-sync diff against enviroai.demo.
 // CR08 1: the levels live in org_levels, the structure editor's mutations
 // (move, add, rename, edit, deactivate and delete with reassignment) each
 // return the inverse operation for the undo stack, every save takes an
@@ -72,7 +72,7 @@ export type OrgUnitNode = {
   sort: number;
   isActive: boolean;
   head: { id: string; nameEn: string; nameAr: string; avatarColor: string } | null;
-  /** the published head when they hold no SiaNexus account */
+  /** the published head when they hold no EnviroAI account */
   headNameEn: string | null;
   headNameAr: string | null;
   headTitleEn: string | null;
@@ -216,7 +216,7 @@ export type UnitPolicy = {
 
 export type UnitOwns = {
   councilNodes: { id: string; code: string | null; titleEn: string; titleAr: string; level: string; status: string }[];
-  ndsNodes: { id: string; code: string | null; titleEn: string; titleAr: string; nodeType: string; status: string }[];
+  nesNodes: { id: string; code: string | null; titleEn: string; titleAr: string; nodeType: string; status: string }[];
   documentsByType: { code: string; nameEn: string; nameAr: string; count: number }[];
   indicators: { id: string; code: string; nameEn: string; nameAr: string }[];
   lessons: number;
@@ -347,7 +347,7 @@ export async function getUnitPanel(
   /* what the unit owns */
   const subtreeIds = [unit.id, ...collectSubtree(unit.id, tree.units)];
   const memberIds = staff.filter((s) => subtreeIds.includes(s.departmentId ?? "")).map((s) => s.id);
-  const [councilNodes, ndsLeads, unitDocs, indicators, expertRows, handovers] = await Promise.all([
+  const [councilNodes, nesLeads, unitDocs, indicators, expertRows, handovers] = await Promise.all([
     db
       .select({
         id: schema.councilNodes.id,
@@ -368,7 +368,7 @@ export async function getUnitPanel(
         and(
           eq(schema.nodeLeads.departmentId, unit.id),
           eq(schema.nodeLeads.role, "lead"),
-          eq(schema.nodeLeads.nodeKind, "nds")
+          eq(schema.nodeLeads.nodeKind, "nes")
         )
       ),
     db
@@ -412,8 +412,8 @@ export async function getUnitPanel(
       .limit(40),
   ]);
 
-  const ndsNodeIds = ndsLeads.map((l) => l.nodeId);
-  const ndsNodes = ndsNodeIds.length
+  const nesNodeIds = nesLeads.map((l) => l.nodeId);
+  const nesNodes = nesNodeIds.length
     ? await db
         .select({
           id: schema.strategyNodes.id,
@@ -424,7 +424,7 @@ export async function getUnitPanel(
           status: schema.strategyNodes.status,
         })
         .from(schema.strategyNodes)
-        .where(inArray(schema.strategyNodes.id, ndsNodeIds))
+        .where(inArray(schema.strategyNodes.id, nesNodeIds))
         .limit(40)
     : [];
 
@@ -464,7 +464,7 @@ export async function getUnitPanel(
     .map((i) => ({ id: i.id, code: i.code ?? "", nameEn: i.nameEn, nameAr: i.nameAr }));
 
   // lessons on anything the unit owns or leads
-  const ownedNodeIds = [...councilNodes.map((n) => n.id), ...ndsNodeIds];
+  const ownedNodeIds = [...councilNodes.map((n) => n.id), ...nesNodeIds];
   const lessonCount = ownedNodeIds.length
     ? (
         await db
@@ -554,7 +554,7 @@ export async function getUnitPanel(
   const mandateDoc = await db
     .select({ id: schema.documents.id })
     .from(schema.documents)
-    .where(eq(schema.documents.sourceRef, `npc.qa organisational structure: ${unit.code}`))
+    .where(eq(schema.documents.sourceRef, `enviroai.demo organisational structure: ${unit.code}`))
     .limit(1);
 
   const isHead = row.headUserId === user.id;
@@ -585,7 +585,7 @@ export async function getUnitPanel(
     subUnits,
     owns: {
       councilNodes,
-      ndsNodes,
+      nesNodes,
       documentsByType,
       indicators: unitIndicators,
       lessons: Number(lessonCount),
@@ -608,7 +608,7 @@ function collectSubtree(id: string, units: OrgUnitNode[], depth = 0): string[] {
   return [...direct, ...direct.flatMap((d) => collectSubtree(d, units, depth + 1))];
 }
 
-/** Resolves a unit by code, id, or a loose name match (for Ask NPC). */
+/** Resolves a unit by code, id, or a loose name match (for Ask EnviroAI). */
 export async function findUnit(nameOrCode: string) {
   const needle = nameOrCode.trim().toLowerCase();
   const units = await db.select().from(schema.orgUnits);

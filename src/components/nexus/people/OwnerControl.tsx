@@ -129,7 +129,7 @@ export function PersonPopover({
               initial={reduced ? false : { opacity: 0, y: -4, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="rounded-2xl border border-sand-300 bg-white shadow-[var(--shadow-pop)]"
+              className="rounded-2xl border border-mist-300 bg-white shadow-[var(--shadow-pop)]"
             >
               <PersonCard
                 personId={viewingId}
@@ -147,7 +147,7 @@ export function PersonPopover({
                 onBack={viewingId === person.id ? undefined : () => setViewingId(person.id)}
               />
             </motion.div>
-            <Popover.Arrow className="fill-white stroke-sand-300" width={14} height={7} />
+            <Popover.Arrow className="fill-white stroke-mist-300" width={14} height={7} />
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>
@@ -165,7 +165,7 @@ export function PersonPopover({
 /* ------------------------------------------------------------------ */
 
 const NAME_BUTTON =
-  "group inline-flex min-w-0 items-center gap-2.5 rounded-lg text-start transition-colors hover:bg-sand-100/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500 cursor-pointer";
+  "group inline-flex min-w-0 items-center gap-2.5 rounded-lg text-start transition-colors hover:bg-mist-100/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500 cursor-pointer";
 
 export function OwnerControl({
   owner,
@@ -232,7 +232,7 @@ export function OwnerControl({
             <Avatar name={owner.nameEn} color={owner.avatarColor} size={avatar} className="ring-2 ring-white transition-transform group-hover:scale-[1.04]" />
             <span className="min-w-0">
               {eyebrow}
-              <span className={cn("block truncate font-medium text-ink-900 group-hover:text-maroon-900", size === "sm" ? "text-[13px] leading-tight" : "text-sm leading-tight")}>
+              <span className={cn("block truncate font-medium text-ink-900 group-hover:text-navy-900", size === "sm" ? "text-[13px] leading-tight" : "text-sm leading-tight")}>
                 {bi(locale, owner.nameEn, owner.nameAr)}
               </span>
               {unit ? (
@@ -246,8 +246,8 @@ export function OwnerControl({
             type="button"
             onClick={() => others?.length && setExpanded((x) => !x)}
             className={cn(
-              "inline-flex h-6 min-w-6 items-center justify-center rounded-full border border-sand-300 bg-sand-50 px-1.5 text-[11px] font-semibold text-ink-600 tnum focus-visible:outline-2 focus-visible:outline-gold-500",
-              others?.length ? "cursor-pointer hover:border-maroon-300 hover:text-maroon-700" : "cursor-default"
+              "inline-flex h-6 min-w-6 items-center justify-center rounded-full border border-mist-300 bg-mist-50 px-1.5 text-[11px] font-semibold text-ink-600 tnum focus-visible:outline-2 focus-visible:outline-aqua-500",
+              others?.length ? "cursor-pointer hover:border-navy-300 hover:text-navy-700" : "cursor-default"
             )}
             aria-label={t("moreLeadsLabel", { count: more })}
             aria-expanded={others?.length ? expanded : undefined}
@@ -294,7 +294,7 @@ export function OwnerControlCompact({
         data-testid="owner-control-compact"
       >
         <Avatar name={owner.nameEn} color={owner.avatarColor} size={size === "sm" ? 22 : 28} />
-        <span className={cn("truncate text-ink-900 group-hover:text-maroon-900", size === "sm" ? "text-xs" : "text-sm")}>
+        <span className={cn("truncate text-ink-900 group-hover:text-navy-900", size === "sm" ? "text-xs" : "text-sm")}>
           {bi(locale, owner.nameEn, owner.nameAr)}
         </span>
       </button>

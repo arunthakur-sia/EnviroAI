@@ -4,7 +4,7 @@ import { getCurrentUser } from "@/server/auth/session";
 import { can } from "@/server/auth/permissions";
 import { getAiSettings, getFlags, getSetting, setSetting, DEFAULT_AI_SETTINGS, DEFAULT_FLAGS } from "@/server/settings";
 import { getTrendsSettings, DEFAULT_TRENDS_SETTINGS } from "@/server/scan";
-import { DEFAULT_QNV_PILLARS } from "@/server/services/strategy";
+import { DEFAULT_VISION_PILLARS } from "@/server/services/strategy";
 import { audit } from "@/server/auth/audit";
 
 export async function GET() {
@@ -16,7 +16,7 @@ export async function GET() {
     ai,
     flags,
     trends,
-    qnvPillars,
+    visionPillars,
     lessonsSettings,
     lessonOfWeek,
     reflectionPrompts,
@@ -26,11 +26,11 @@ export async function GET() {
     getAiSettings(),
     getFlags(),
     getTrendsSettings(),
-    getSetting("qnv_pillars", DEFAULT_QNV_PILLARS),
+    getSetting("vision_pillars", DEFAULT_VISION_PILLARS),
     getSetting("lessons_settings", { learnModeEnabled: true, reclusterNightly: true }),
     getSetting("lesson_of_week", { schedule: [] }),
     getSetting("reflection_prompts", []),
-    getSetting("allowed_domains", ["npc.qa"]),
+    getSetting("allowed_domains", ["enviroai.demo"]),
     // CR07 2.1
     getSetting("council_strategy_office", { unitCode: "IDP" }),
   ]);
@@ -39,7 +39,7 @@ export async function GET() {
       ai,
       flags,
       trends,
-      qnvPillars,
+      visionPillars,
       lessonsSettings,
       lessonOfWeek,
       reflectionPrompts,
@@ -81,8 +81,8 @@ const Body = z.object({
     })
     .partial()
     .optional(),
-  /* CR04 2.2: the QNV pillar mapping (Settings > Lessons and Strategy) */
-  qnvPillars: z
+  /* CR04 2.2: the Vision pillar mapping (Settings > Lessons and Strategy) */
+  visionPillars: z
     .array(
       z.object({
         key: z.enum(["human", "social", "economic", "environmental"]),
@@ -113,7 +113,7 @@ const Body = z.object({
     .optional(),
   /* CR05 6.3: allowed sign-in domains */
   allowedDomains: z.array(z.string().min(3).max(60)).max(10).optional(),
-  /* CR07 2.1: the unit whose members may edit the Council Strategy */
+  /* CR07 2.1: the unit whose members may edit the Programme Strategy */
   councilStrategyOffice: z.object({ unitCode: z.string().min(1).max(40) }).optional(),
 });
 
@@ -136,8 +136,8 @@ export async function PATCH(req: NextRequest) {
     const current = await getTrendsSettings();
     await setSetting("trends", { ...DEFAULT_TRENDS_SETTINGS, ...current, ...parsed.data.trends });
   }
-  if (parsed.data.qnvPillars) {
-    await setSetting("qnv_pillars", parsed.data.qnvPillars);
+  if (parsed.data.visionPillars) {
+    await setSetting("vision_pillars", parsed.data.visionPillars);
   }
   if (parsed.data.lessonsSettings) {
     const current = await getSetting("lessons_settings", {

@@ -20,7 +20,7 @@ async function login(page: Page, email: string) {
   for (let attempt = 0; attempt < 5; attempt++) {
     try {
       const res = await page.context().request.post(`${BASE}/api/v1/auth/login`, {
-        data: { email, password: "Nexus!2026" },
+        data: { email, password: "EnviroAI!2026" },
         timeout: 120000,
       });
       if (res.status() === 200) return;
@@ -76,7 +76,7 @@ async function main() {
   });
 
   /* ---- the reader: the Arabic ribbons ---- */
-  await login(page, "reader@npc.qa");
+  await login(page, "reader@enviroai.demo");
   for (const locale of ["en", "ar"] as const) {
     if (!(await openRetry(page, `${BASE}/${locale}/vault`, "[data-testid=book-kow-ribbon]"))) continue;
     const book = page.locator("[data-testid=book]:has([data-testid=book-kow-ribbon])").first();
@@ -99,7 +99,7 @@ async function main() {
 
   /* ---- the administrator: the set dialog and the replace confirmation ---- */
   await context.clearCookies();
-  await login(page, "admin@npc.qa");
+  await login(page, "admin@enviroai.demo");
   // the reveal is modal and would intercept the click on the button beneath.
   // Marking it seen through the API is deterministic, where waiting for the
   // overlay to mount and pressing Escape races hydration.

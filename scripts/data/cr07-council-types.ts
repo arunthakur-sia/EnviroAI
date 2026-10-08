@@ -1,4 +1,4 @@
-// CR07 2.6: the shape of the illustrative Council Strategy content. The content
+// CR07 2.6: the shape of the illustrative Programme Strategy content. The content
 // modules carry the words (bilingual, hand written); scripts/cr07-council-seed.ts
 // generates the mechanical parts (period targets, actuals, milestone dates,
 // budgets, stakeholders) deterministically from them.
@@ -93,9 +93,9 @@ export type RiskItem = {
 /* ---------- the results chain ---------- */
 
 export type AlignmentRef = {
-  /** nds_node | nds_kpi | data_strategy_initiative */
+  /** nes_node | nes_kpi | data_strategy_initiative (the stored values keep their legacy names; nes_node points at a National Environment Strategy theme) */
   targetKind: string;
-  /** for nds_node: the NDS3 outcome code such as "O7"; for the data strategy: a slug */
+  /** for nes_node: the theme code such as "O7"; for the data strategy: a slug */
   targetCode: string;
   labelEn: string;
   labelAr: string;
@@ -154,7 +154,7 @@ export type ProjectSeed = {
   priorityImpact: number;
   /** 1 to 5, ease of delivery */
   priorityFeasibility: number;
-  /** rough budget in QAR, 0 for a no-cost project */
+  /** rough budget in SAR (the field keeps its stored name), 0 for a no-cost project */
   budgetQar: number;
   inputsEn: string;
   inputsAr: string;
@@ -177,7 +177,7 @@ export type IndicatorSeed = {
   definitionAr: string;
   formulaEn: string;
   formulaAr: string;
-  /** percent | number | days | score | QAR million | ratio */
+  /** percent | number | days | score | SAR million | ratio */
   unit: string;
   /** up_good | down_good */
   direction: string;

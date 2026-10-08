@@ -1,8 +1,8 @@
-// CR08 4.1 (agent B) planning probe: headline indicators with their Qatar
-// series, the NDS3 KPI targets that link to them, the current indices rows
+// CR08 4.1 (agent B) planning probe: headline indicators with their home-country
+// series, the strategy KPI targets that link to them, the current indices rows
 // and the group tables. Read-only.
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const q = async (sql, args = []) => (await db.execute({ sql, args })).rows;
 
 console.log("-- headline indicators --");
@@ -50,9 +50,9 @@ for (const r of await q(`select g.code, g.sort, (select count(*) from index_grou
 console.log("-- strategy editions --");
 for (const r of await q(`select code, name_en, period_from, period_to from strategy_editions`)) console.log(r.code, "|", r.name_en, r.period_from, r.period_to);
 
-console.log("-- nds3 targets sample (with numbers in title) --");
+console.log("-- strategy targets sample (with numbers in title) --");
 for (const r of await q(
-  `select n.code, n.title_en, n.status from strategy_nodes n join strategy_editions e on e.id=n.edition_id and e.code='nds3' where n.node_type='target' and (n.title_en glob '*[0-9]*') order by n.code limit 60`
+  `select n.code, n.title_en, n.status from strategy_nodes n join strategy_editions e on e.id=n.edition_id and e.is_default=1 where n.node_type='target' and (n.title_en glob '*[0-9]*') order by n.code limit 60`
 )) console.log(r.code, "|", r.title_en, "|", r.status);
 
 console.log("-- entities count --");

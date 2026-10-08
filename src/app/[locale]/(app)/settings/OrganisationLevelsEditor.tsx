@@ -142,10 +142,10 @@ export function OrganisationLevelsEditor({
   }
 
   const iconButton =
-    "flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg text-ink-400 transition-colors hover:bg-sand-100 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500 disabled:cursor-default disabled:opacity-40";
+    "flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg text-ink-400 transition-colors hover:bg-mist-100 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500 disabled:cursor-default disabled:opacity-40";
 
   return (
-    <div className="card divide-y divide-sand-100" data-testid="org-levels">
+    <div className="card divide-y divide-mist-100" data-testid="org-levels">
       {ordered.map((level, i) => {
         const used = usage.get(level.code) ?? 0;
         const isEditing = editing?.id === level.id;
@@ -155,7 +155,7 @@ export function OrganisationLevelsEditor({
             data-testid="org-level-row"
             data-level-id={level.id}
             data-level-code={level.code}
-            className={cn("flex flex-wrap items-center gap-2 px-3 py-2", dragId && "select-none", dragId === level.id && "bg-gold-100/50")}
+            className={cn("flex flex-wrap items-center gap-2 px-3 py-2", dragId && "select-none", dragId === level.id && "bg-aqua-100/50")}
           >
             <span
               onPointerDown={(e) => !isEditing && onHandleDown(e, level.id)}
@@ -276,7 +276,7 @@ export function OrganisationLevelsEditor({
       </div>
       {!levels.length ? (
         <p className="px-3 py-3 text-sm text-ink-600">
-          <Chip tone="sand">{t("levelUnused")}</Chip>
+          <Chip tone="mist">{t("levelUnused")}</Chip>
         </p>
       ) : null}
     </div>

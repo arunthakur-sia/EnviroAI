@@ -32,11 +32,11 @@ type BoardSettings = {
 
 const RULE_COLS = "grid-cols-[minmax(0,1fr)_5.5rem_3rem_3.5rem] sm:grid-cols-[minmax(0,1fr)_7rem_5.5rem_4rem_5rem]";
 
-const CATEGORY_TONE: Record<string, "maroon" | "gulf" | "gold" | "sand" | "ghost"> = {
-  contributors: "maroon",
-  guardians: "gulf",
-  learners: "gold",
-  unit: "sand",
+const CATEGORY_TONE: Record<string, "navy" | "teal" | "aqua" | "mist" | "ghost"> = {
+  contributors: "navy",
+  guardians: "teal",
+  learners: "aqua",
+  unit: "mist",
 };
 
 export function GamificationSettingsTab() {
@@ -221,15 +221,15 @@ export function GamificationSettingsTab() {
                       className={cn(
                         "flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1 text-xs transition-colors",
                         on
-                          ? "border-maroon-700 bg-maroon-100 text-maroon-900"
-                          : "border-sand-300 bg-white text-ink-600 hover:border-maroon-300"
+                          ? "border-navy-700 bg-navy-100 text-navy-900"
+                          : "border-mist-300 bg-white text-ink-600 hover:border-navy-300"
                       )}
                     >
                       <input
                         type="checkbox"
                         checked={on}
                         onChange={() => toggleRole(role.nameEn)}
-                        className="size-3.5 cursor-pointer accent-maroon-700"
+                        className="size-3.5 cursor-pointer accent-navy-700"
                         disabled={busy === "board"}
                         data-testid={`exclude-role-${role.nameEn.toLowerCase().replace(/\s+/g, "-")}`}
                       />
@@ -240,7 +240,7 @@ export function GamificationSettingsTab() {
               })}
             </ul>
           </fieldset>
-          <label className="flex items-center justify-between gap-3 border-t border-sand-100 pt-4">
+          <label className="flex items-center justify-between gap-3 border-t border-mist-100 pt-4">
             <span>
               <span className="block text-sm font-medium text-ink-900">{tg("quietHides")}</span>
               <span className="block text-xs text-ink-600">{tg("quietHidesHint")}</span>
@@ -263,14 +263,14 @@ export function GamificationSettingsTab() {
         </SectionTitle>
         <p className="mb-3 text-sm text-ink-600">{tg("rulesHint")}</p>
         <div className="card overflow-hidden" role="table" aria-label={tg("rulesTitle")}>
-          <div role="row" className={cn("grid items-center gap-3 border-b border-sand-200 px-4 py-2", RULE_COLS)}>
+          <div role="row" className={cn("grid items-center gap-3 border-b border-mist-200 px-4 py-2", RULE_COLS)}>
             <span role="columnheader" className={head}>{tg("colRule")}</span>
             <span role="columnheader" className={cn(head, "hidden sm:block")}>{tg("colCategory")}</span>
             <span role="columnheader" className={cn(head, "text-end")}>{tg("colPoints")}</span>
             <span role="columnheader" className={cn(head, "text-center")}>{tg("colActive")}</span>
             <span role="columnheader" className={cn(head, "text-center")}>{tg("colBoards")}</span>
           </div>
-          <div role="rowgroup" className="max-h-[560px] divide-y divide-sand-100 overflow-y-auto">
+          <div role="rowgroup" className="max-h-[560px] divide-y divide-mist-100 overflow-y-auto">
             {rules.map((r) => (
               <div
                 key={r.id}

@@ -2,7 +2,7 @@
 // counts, page counts coverage, word_of_day rows, headline indicators,
 // signals horizon/type spread, status updates per month.
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const q = async (sql, args = []) => (await db.execute({ sql, args })).rows;
 
 console.log("-- knowledge types --");
@@ -34,11 +34,11 @@ for (const r of await q(`select horizon, signal_type, impact, sentiment, count(*
 const sigTot = await q(`select triage_status, count(*) c from signals group by triage_status`);
 console.log("triage:", sigTot.map(r => `${r.triage_status}:${r.c}`).join(" "));
 
-console.log("-- status updates per month (nds3) --");
-for (const r of await q(`select substr(su.created_at,1,7) m, count(*) c from status_updates su join strategy_nodes n on n.id=su.node_id join strategy_editions e on e.id=n.edition_id and e.code='nds3' group by m order by m`)) console.log(r.m, r.c);
+console.log("-- status updates per month (nes3) --");
+for (const r of await q(`select substr(su.created_at,1,7) m, count(*) c from status_updates su join strategy_nodes n on n.id=su.node_id join strategy_editions e on e.id=n.edition_id and e.code='nes3' group by m order by m`)) console.log(r.m, r.c);
 
 console.log("-- outcomes with descriptions --");
-for (const r of await q(`select code, substr(description_en,1,50) d from strategy_nodes where node_type='outcome' and edition_id=(select id from strategy_editions where code='nds3') order by sort`)) console.log(r.code, "|", r.d);
+for (const r of await q(`select code, substr(description_en,1,50) d from strategy_nodes where node_type='outcome' and edition_id=(select id from strategy_editions where code='nes3') order by sort`)) console.log(r.code, "|", r.d);
 
 console.log("-- indicator with most values --");
 for (const r of await q(`select i.code, i.name_en, count(v.id) c from indicators i join indicator_values v on v.indicator_id=i.id and v.dimension_key='total' group by i.id order by c desc limit 5`)) console.log(r.code, "|", r.name_en, "|", r.c);

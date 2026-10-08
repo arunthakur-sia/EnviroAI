@@ -1,5 +1,5 @@
 "use client";
-// CR03 4.4.5 + CR04 4.3: the NPC Knowledge Cast card. Soft maroon corner
+// CR03 4.4.5 + CR04 4.3: the EnviroAI Briefing Cast card. Soft navy corner
 // wash, the wordmark beside the waveform glyph (dancing while an episode
 // plays), the latest episode, the hosts line, a large circular play button
 // with a slow breathing halo while an unplayed episode exists, and Make an
@@ -44,13 +44,13 @@ export function PodcastCard({ episode }: { episode: HomeEpisode }) {
       <span
         aria-hidden
         className="pointer-events-none absolute -end-10 -top-10 size-40 rounded-full"
-        style={{ background: "radial-gradient(circle, var(--color-maroon-100), transparent 70%)" }}
+        style={{ background: "radial-gradient(circle, var(--color-navy-100), transparent 70%)" }}
       />
       {/* CR04 4.3: the wordmark beside the glyph */}
       <p className="mb-3 flex items-center gap-2">
         <WaveformMark className={cn("h-5 w-10 shrink-0", playing && "wave-playing")} />
         <span
-          className="truncate font-semibold text-maroon-900"
+          className="truncate font-semibold text-navy-900"
           style={{
             fontFamily: locale === "ar" ? "var(--font-kufi)" : "var(--font-display)",
             fontSize: 15,
@@ -77,7 +77,7 @@ export function PodcastCard({ episode }: { episode: HomeEpisode }) {
               }
               aria-label={t("podcastPlay")}
               className={cn(
-                "card-action flex size-12 items-center justify-center rounded-full bg-maroon-700 text-white transition-colors hover:bg-maroon-900 cursor-pointer",
+                "card-action flex size-12 items-center justify-center rounded-full bg-navy-700 text-white transition-colors hover:bg-navy-900 cursor-pointer",
                 !episode.listened && !playing && "podcast-halo"
               )}
               data-testid="podcast-play"
@@ -86,7 +86,7 @@ export function PodcastCard({ episode }: { episode: HomeEpisode }) {
             </button>
             <Link
               href={"/podcast/new" as never}
-              className="link-draw text-sm font-medium text-maroon-700"
+              className="link-draw text-sm font-medium text-navy-700"
             >
               {t("podcastMake")}
             </Link>
@@ -98,7 +98,7 @@ export function PodcastCard({ episode }: { episode: HomeEpisode }) {
           <div className="mt-auto pt-4">
             <Link
               href={"/podcast/new" as never}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-maroon-700 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-maroon-900"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-navy-700 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-navy-900"
             >
               {t("podcastMake")}
             </Link>

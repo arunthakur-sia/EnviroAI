@@ -2,7 +2,7 @@
 // Search results, Ask citations, the Statistics Hub indicators and the
 // international indices that mirror a national series all know what an item is
 // and never who stands behind it. This resolves both in one bulk pass through
-// getOwnerRefs, with the same fallbacks the Ask NPC owner tool uses
+// getOwnerRefs, with the same fallbacks the Ask EnviroAI owner tool uses
 // (src/server/ai/analyst/cr08/messaging.ts): a document is held by its
 // custodian, a strategy node by its owner (a project or an initiative by its
 // project owner), a lesson by its author, an indicator by the head of its own

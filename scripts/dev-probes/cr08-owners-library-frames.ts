@@ -17,7 +17,7 @@ fs.mkdirSync(OUT, { recursive: true });
 async function login(page: Page, email: string) {
   for (let attempt = 0; attempt < 3; attempt++) {
     const res = await page.context().request.post(`${BASE}/api/v1/auth/login`, {
-      data: { email, password: "Nexus!2026" },
+      data: { email, password: "EnviroAI!2026" },
       timeout: 120000,
     });
     if (res.status() === 200) return;
@@ -57,7 +57,7 @@ async function main() {
   const browser = await chromium.launch({ channel: "msedge" });
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
-  await login(page, "admin@npc.qa");
+  await login(page, "admin@enviroai.demo");
   for (const locale of ["en", "ar"] as const) {
     await page.goto(`${BASE}/${locale}/reports`, { waitUntil: "domcontentloaded", timeout: 120000 });
     await page.waitForSelector("[data-testid=all-reports-table]", { timeout: 120000 });

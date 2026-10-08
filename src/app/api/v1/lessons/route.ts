@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
       id: newId(),
       lessonId: id,
       nodeId: b.node_id,
-      nodeKind: "nds",
+      nodeKind: "nes",
       isPrimary: 1,
       linkedBy: user.id,
       linkedAt: nowIso(),

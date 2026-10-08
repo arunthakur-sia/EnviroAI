@@ -117,7 +117,7 @@ export function AddToHandoverPanel({ handoverId, onAdded }: { handoverId: string
           <h2 className="font-display text-lg text-ink-900">{t("title")}</h2>
           <p className="mt-0.5 max-w-xl text-sm text-ink-600">{t("subtitle")}</p>
         </div>
-        <div className="inline-flex items-center gap-1 rounded-xl bg-sand-100 p-1" role="tablist" aria-label={t("modes")}>
+        <div className="inline-flex items-center gap-1 rounded-xl bg-mist-100 p-1" role="tablist" aria-label={t("modes")}>
           {modes.map((m) => (
             <button
               key={m.key}
@@ -129,8 +129,8 @@ export function AddToHandoverPanel({ handoverId, onAdded }: { handoverId: string
                 setItems(null);
               }}
               className={cn(
-                "inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-gold-500",
-                mode === m.key ? "bg-white text-maroon-900 shadow-sm" : "text-ink-600 hover:text-ink-900"
+                "inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-aqua-500",
+                mode === m.key ? "bg-white text-navy-900 shadow-sm" : "text-ink-600 hover:text-ink-900"
               )}
               data-testid={`add-mode-${m.key}`}
             >
@@ -171,10 +171,10 @@ export function AddToHandoverPanel({ handoverId, onAdded }: { handoverId: string
           <p className="mb-2 text-sm text-ink-600">{t("reviewHint", { count: items.length })}</p>
           <ul className="flex flex-col gap-2">
             {items.map((item, i) => (
-              <li key={i} className="flex items-start gap-3 rounded-lg border border-sand-200 px-3 py-2">
+              <li key={i} className="flex items-start gap-3 rounded-lg border border-mist-200 px-3 py-2">
                 <input
                   type="checkbox"
-                  className="mt-1 size-4 cursor-pointer accent-maroon-700"
+                  className="mt-1 size-4 cursor-pointer accent-navy-700"
                   checked={selected.has(i)}
                   onChange={(e) => {
                     const next = new Set(selected);

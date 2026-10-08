@@ -373,7 +373,7 @@ export function CalendarSection({
         <p className="flex flex-wrap items-center gap-1.5">
           <span className="inline-block size-2.5 rounded-full" style={{ background: CALENDAR_KIND_VAR[e.kind] }} aria-hidden />
           <span className="text-[11px] font-semibold text-ink-600">{kindLabel(e.kind)}</span>
-          {e.recurrence !== "none" ? <Chip tone="sand">{t(`calendar.recurrence.${e.recurrence}` as never)}</Chip> : null}
+          {e.recurrence !== "none" ? <Chip tone="mist">{t(`calendar.recurrence.${e.recurrence}` as never)}</Chip> : null}
         </p>
         <p className="mt-1 text-sm font-semibold leading-snug text-ink-900">{bi(locale, e.titleEn, e.titleAr)}</p>
         <p className="mt-0.5 text-xs text-ink-600 tnum">{dateLine(e)}</p>
@@ -387,7 +387,7 @@ export function CalendarSection({
           <p className="mt-1.5 text-xs">
             <span className="text-ink-400">{t("calendar.linked")}: </span>
             {href ? (
-              <Link href={href as never} className="link-draw inline-flex items-center gap-1 font-medium text-maroon-700" data-testid="calendar-linked-link">
+              <Link href={href as never} className="link-draw inline-flex items-center gap-1 font-medium text-navy-700" data-testid="calendar-linked-link">
                 {bi(locale, e.linked.titleEn, e.linked.titleAr)}
                 <ExternalLink className="size-3" aria-hidden />
               </Link>
@@ -410,23 +410,23 @@ export function CalendarSection({
       testId="om-calendar"
       aside={
         <>
-          <span className="inline-flex items-center gap-1 rounded-lg bg-sand-100 p-0.5" role="group" aria-label={t("calendar.yearAria")} data-testid="calendar-year-switch">
+          <span className="inline-flex items-center gap-1 rounded-lg bg-mist-100 p-0.5" role="group" aria-label={t("calendar.yearAria")} data-testid="calendar-year-switch">
             <button
               type="button"
               onClick={() => void load(year - 1)}
               aria-label={t("calendar.prevYear")}
-              className="flex size-8 cursor-pointer items-center justify-center rounded-md text-ink-600 hover:bg-white hover:text-maroon-900 focus-visible:outline-2 focus-visible:outline-gold-500"
+              className="flex size-8 cursor-pointer items-center justify-center rounded-md text-ink-600 hover:bg-white hover:text-navy-900 focus-visible:outline-2 focus-visible:outline-aqua-500"
             >
               <ChevronLeft className="size-4 flip-rtl" aria-hidden />
             </button>
-            <span className="min-w-14 text-center text-sm font-semibold text-maroon-900 tnum" data-testid="calendar-year">
+            <span className="min-w-14 text-center text-sm font-semibold text-navy-900 tnum" data-testid="calendar-year">
               {fmt.year(year)}
             </span>
             <button
               type="button"
               onClick={() => void load(year + 1)}
               aria-label={t("calendar.nextYear")}
-              className="flex size-8 cursor-pointer items-center justify-center rounded-md text-ink-600 hover:bg-white hover:text-maroon-900 focus-visible:outline-2 focus-visible:outline-gold-500"
+              className="flex size-8 cursor-pointer items-center justify-center rounded-md text-ink-600 hover:bg-white hover:text-navy-900 focus-visible:outline-2 focus-visible:outline-aqua-500"
             >
               <ChevronRight className="size-4 flip-rtl" aria-hidden />
             </button>
@@ -476,10 +476,10 @@ export function CalendarSection({
                     <path
                       d={roundPath(monthArc({ start: mo.start, end: mo.end }) ?? "")}
                       transform={`translate(${C} ${C})`}
-                      fill={isSel ? "var(--color-maroon-700)" : isNow ? "var(--color-maroon-100)" : "var(--color-sand-100)"}
-                      stroke={isNow && !isSel ? "var(--color-maroon-300)" : "var(--color-sand-300)"}
+                      fill={isSel ? "var(--color-navy-700)" : isNow ? "var(--color-navy-100)" : "var(--color-mist-100)"}
+                      stroke={isNow && !isSel ? "var(--color-navy-300)" : "var(--color-mist-300)"}
                       strokeWidth={isNow && !isSel ? 1.5 : 1}
-                      className="cursor-pointer outline-none transition-colors duration-200 focus-visible:stroke-gold-500 focus-visible:[stroke-width:3]"
+                      className="cursor-pointer outline-none transition-colors duration-200 focus-visible:stroke-aqua-500 focus-visible:[stroke-width:3]"
                       role="button"
                       tabIndex={0}
                       aria-pressed={isSel}
@@ -501,7 +501,7 @@ export function CalendarSection({
                       textAnchor="middle"
                       fontSize={12}
                       fontWeight={isSel || isNow ? 600 : 500}
-                      fill={isSel ? "var(--color-maroon-900)" : isNow ? "var(--color-maroon-700)" : "var(--color-ink-600)"}
+                      fill={isSel ? "var(--color-navy-900)" : isNow ? "var(--color-navy-700)" : "var(--color-ink-600)"}
                       className="pointer-events-none select-none"
                       style={{ fontFamily: locale === "ar" ? "var(--font-arabic)" : "var(--font-sans)" }}
                     >
@@ -526,7 +526,7 @@ export function CalendarSection({
 
               {/* the lanes */}
               {KINDS.map((k) => (
-                <circle key={k} cx={C} cy={C} r={laneOf(k)} fill="none" stroke="var(--color-sand-200)" strokeWidth={0.75} strokeDasharray="1 3" />
+                <circle key={k} cx={C} cy={C} r={laneOf(k)} fill="none" stroke="var(--color-mist-200)" strokeWidth={0.75} strokeDasharray="1 3" />
               ))}
 
               {/* today */}
@@ -536,7 +536,7 @@ export function CalendarSection({
                   y1={point(LANE_TOP - KINDS.length * LANE_STEP + 2, todayAngle)[1]}
                   x2={point(R_OUT + 3, todayAngle)[0]}
                   y2={point(R_OUT + 3, todayAngle)[1]}
-                  stroke="var(--color-maroon-700)"
+                  stroke="var(--color-navy-700)"
                   strokeWidth={1.5}
                   strokeLinecap="round"
                   data-testid="calendar-today"
@@ -586,7 +586,7 @@ export function CalendarSection({
                       cy={y}
                       r={active ? 7 : inMonth ? 5 : 4}
                       fill={CALENDAR_KIND_VAR[e.kind]}
-                      stroke={active ? "var(--color-gold-500)" : "#ffffff"}
+                      stroke={active ? "var(--color-aqua-500)" : "#ffffff"}
                       strokeWidth={active ? 2.5 : 1.5}
                       style={{ transition: reduced ? undefined : "r 150ms var(--ease-paper)" }}
                     />
@@ -599,14 +599,14 @@ export function CalendarSection({
               })}
 
               {/* the centre */}
-              <text x={C} y={C - 8} textAnchor="middle" fontSize={44} fontWeight={600} fill="var(--color-maroon-900)" className="select-none tnum" style={{ fontFamily: displayFont(locale) }}>
+              <text x={C} y={C - 8} textAnchor="middle" fontSize={44} fontWeight={600} fill="var(--color-navy-900)" className="select-none tnum" style={{ fontFamily: displayFont(locale) }}>
                 {fmt.year(year)}
               </text>
               <text x={C} y={C + 16} textAnchor="middle" fontSize={11} fill="var(--color-ink-600)" className="select-none tnum" style={{ fontFamily: locale === "ar" ? "var(--font-arabic)" : "var(--font-sans)" }}>
                 {t("calendar.eventsInYear", { count: events.length, year: String(year) })}
               </text>
               {todayAngle != null ? (
-                <text x={C} y={C + 34} textAnchor="middle" fontSize={10} fill="var(--color-maroon-700)" className="select-none tnum" style={{ fontFamily: locale === "ar" ? "var(--font-arabic)" : "var(--font-sans)" }}>
+                <text x={C} y={C + 34} textAnchor="middle" fontSize={10} fill="var(--color-navy-700)" className="select-none tnum" style={{ fontFamily: locale === "ar" ? "var(--font-arabic)" : "var(--font-sans)" }}>
                   {t("calendar.today")}: {fmt.d(today, "medium")}
                 </text>
               ) : null}
@@ -616,7 +616,7 @@ export function CalendarSection({
             {hovered ? (
               <div
                 className={cn(
-                  "absolute z-20 w-64 rounded-xl border border-sand-300 bg-white p-3 shadow-[var(--shadow-pop)]",
+                  "absolute z-20 w-64 rounded-xl border border-mist-300 bg-white p-3 shadow-[var(--shadow-pop)]",
                   popover ? "pointer-events-auto" : "pointer-events-none"
                 )}
                 style={{
@@ -640,7 +640,7 @@ export function CalendarSection({
                     type="button"
                     onClick={() => setPopover(null)}
                     aria-label={t("calendar.closePopover")}
-                    className="absolute end-2 top-2 cursor-pointer rounded-md p-1 text-ink-400 hover:bg-sand-100 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-gold-500"
+                    className="absolute end-2 top-2 cursor-pointer rounded-md p-1 text-ink-400 hover:bg-mist-100 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-aqua-500"
                   >
                     <X className="size-3.5" aria-hidden />
                   </button>
@@ -649,12 +649,12 @@ export function CalendarSection({
                   <EventDetails e={hovered.e} />
                 </div>
                 {popover && canEdit ? (
-                  <div className="mt-2.5 flex items-center gap-1 border-t border-sand-100 pt-2">
+                  <div className="mt-2.5 flex items-center gap-1 border-t border-mist-100 pt-2">
                     <button
                       type="button"
                       onClick={() => setDraft(draftOf(hovered.e, year))}
                       aria-label={t("calendar.editAria", { title: bi(locale, hovered.e.titleEn, hovered.e.titleAr) })}
-                      className="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-medium text-ink-600 hover:bg-sand-100 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500"
+                      className="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-medium text-ink-600 hover:bg-mist-100 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500"
                       data-testid="calendar-edit"
                     >
                       <Pencil className="size-3" aria-hidden /> {t("actions.edit")}
@@ -663,7 +663,7 @@ export function CalendarSection({
                       type="button"
                       onClick={() => void remove(hovered.e)}
                       aria-label={t("calendar.deleteAria", { title: bi(locale, hovered.e.titleEn, hovered.e.titleAr) })}
-                      className="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-medium text-ink-600 hover:bg-sand-100 hover:text-danger focus-visible:outline-2 focus-visible:outline-gold-500"
+                      className="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-medium text-ink-600 hover:bg-mist-100 hover:text-danger focus-visible:outline-2 focus-visible:outline-aqua-500"
                       data-testid="calendar-delete"
                     >
                       <Trash2 className="size-3" aria-hidden /> {t("actions.delete")}
@@ -690,7 +690,7 @@ export function CalendarSection({
             ))}
             {todayAngle != null ? (
               <span className="flex items-center gap-1.5 text-[11px] text-ink-600">
-                <span className="inline-block h-3 w-0.5 rounded bg-maroon-700" aria-hidden />
+                <span className="inline-block h-3 w-0.5 rounded bg-navy-700" aria-hidden />
                 {t("calendar.today")}
               </span>
             ) : null}
@@ -714,7 +714,7 @@ export function CalendarSection({
           ) : events.length === 0 ? (
             <EmptyState icon={<CalendarDays />} title={t("calendar.empty")} hint={t("calendar.emptyHint")} />
           ) : byMonth[month].length === 0 ? (
-            <p className="rounded-lg border border-dashed border-sand-300 bg-sand-50 px-3 py-6 text-center text-xs text-ink-600">{t("calendar.listEmpty")}</p>
+            <p className="rounded-lg border border-dashed border-mist-300 bg-mist-50 px-3 py-6 text-center text-xs text-ink-600">{t("calendar.listEmpty")}</p>
           ) : (
             <ol className="max-h-[520px] space-y-1.5 overflow-y-auto pe-1">
               {byMonth[month].map((e) => {
@@ -725,7 +725,7 @@ export function CalendarSection({
                     key={e.occurrenceKey}
                     className={cn(
                       "flex items-start gap-3 rounded-lg border px-3 py-2 transition-colors",
-                      isOpen ? "border-maroon-300 bg-maroon-50/60" : "border-sand-200 hover:bg-sand-50"
+                      isOpen ? "border-navy-300 bg-navy-50/60" : "border-mist-200 hover:bg-mist-50"
                     )}
                     onMouseEnter={() => setHover(e.occurrenceKey)}
                     onMouseLeave={() => setHover((cur) => (cur === e.occurrenceKey ? null : cur))}
@@ -738,7 +738,7 @@ export function CalendarSection({
                         type="button"
                         onClick={() => setPopover((cur) => (cur === e.occurrenceKey ? null : e.occurrenceKey))}
                         aria-expanded={isOpen}
-                        className="block w-full cursor-pointer text-start text-sm font-medium leading-snug text-ink-900 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500"
+                        className="block w-full cursor-pointer text-start text-sm font-medium leading-snug text-ink-900 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500"
                       >
                         {bi(locale, e.titleEn, e.titleAr)}
                       </button>
@@ -747,7 +747,7 @@ export function CalendarSection({
                         {e.ownerUnit ? <span className="text-ink-400">{e.ownerUnit.code}</span> : null}
                         {e.dateTo && e.dateTo !== e.dateFrom ? <span className="tnum">{t("calendar.dateRange", { from: fmt.d(e.dateFrom, "short"), to: fmt.d(e.dateTo, "short") })}</span> : null}
                         {href && e.linked ? (
-                          <Link href={href as never} className="link-draw font-medium text-maroon-700" aria-label={t("calendar.openLinked", { title: bi(locale, e.linked.titleEn, e.linked.titleAr) })}>
+                          <Link href={href as never} className="link-draw font-medium text-navy-700" aria-label={t("calendar.openLinked", { title: bi(locale, e.linked.titleEn, e.linked.titleAr) })}>
                             {bi(locale, e.linked.titleEn, e.linked.titleAr)}
                           </Link>
                         ) : null}
@@ -759,7 +759,7 @@ export function CalendarSection({
                           type="button"
                           onClick={() => setDraft(draftOf(e, year))}
                           aria-label={t("calendar.editAria", { title: bi(locale, e.titleEn, e.titleAr) })}
-                          className="cursor-pointer rounded-md p-1 text-ink-400 hover:bg-white hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500"
+                          className="cursor-pointer rounded-md p-1 text-ink-400 hover:bg-white hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500"
                         >
                           <Pencil className="size-3.5" aria-hidden />
                         </button>
@@ -767,7 +767,7 @@ export function CalendarSection({
                           type="button"
                           onClick={() => void remove(e)}
                           aria-label={t("calendar.deleteAria", { title: bi(locale, e.titleEn, e.titleAr) })}
-                          className="cursor-pointer rounded-md p-1 text-ink-400 hover:bg-white hover:text-danger focus-visible:outline-2 focus-visible:outline-gold-500"
+                          className="cursor-pointer rounded-md p-1 text-ink-400 hover:bg-white hover:text-danger focus-visible:outline-2 focus-visible:outline-aqua-500"
                         >
                           <Trash2 className="size-3.5" aria-hidden />
                         </button>

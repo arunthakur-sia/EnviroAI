@@ -28,7 +28,7 @@ export async function LeaderboardHomePanel({ user }: { user: CurrentUser }) {
           <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal">
             {t("home.eyebrow")}
           </p>
-          <h2 className="font-display text-lg text-maroon-900">{t("home.title")}</h2>
+          <h2 className="font-display text-lg text-navy-900">{t("home.title")}</h2>
         </div>
         <span className="shrink-0 text-xs text-ink-400">
           {periodLabel("month", data.periodKey, locale)}
@@ -40,13 +40,13 @@ export async function LeaderboardHomePanel({ user }: { user: CurrentUser }) {
       ) : data.top.length === 0 ? (
         <p className="text-sm text-ink-600">{t("home.empty")}</p>
       ) : (
-        <ol className="flex flex-col divide-y divide-sand-100" data-testid="home-leaderboard-list">
+        <ol className="flex flex-col divide-y divide-mist-100" data-testid="home-leaderboard-list">
           {data.top.map((row) => (
             <li
               key={row.subjectId}
               className={cn(
                 "flex items-center gap-3 py-2",
-                row.isMe && "-mx-2 rounded-lg bg-maroon-50/70 px-2"
+                row.isMe && "-mx-2 rounded-lg bg-navy-50/70 px-2"
               )}
             >
               <span className="w-5 shrink-0 font-display text-base font-semibold text-ink-900 tnum">
@@ -61,19 +61,19 @@ export async function LeaderboardHomePanel({ user }: { user: CurrentUser }) {
                   {bi(locale, row.unitEn, row.unitAr)}
                 </span>
               </span>
-              <span className="shrink-0 text-sm font-semibold text-maroon-900 tnum">{fmt(row.points)}</span>
+              <span className="shrink-0 text-sm font-semibold text-navy-900 tnum">{fmt(row.points)}</span>
             </li>
           ))}
         </ol>
       )}
 
-      <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-sand-100 pt-3">
+      <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-mist-100 pt-3">
         <span className="flex items-center gap-1.5 text-xs text-ink-600" data-testid="home-leaderboard-mine">
-          <Trophy className="size-3.5 text-gold-500" aria-hidden />
+          <Trophy className="size-3.5 text-aqua-500" aria-hidden />
           {data.mine ? (
             <>
               {t("home.yourRank", { rank: fmt(data.mine.rank) })}
-              <Chip tone="gold" className="tnum">
+              <Chip tone="aqua" className="tnum">
                 {t("points", { count: data.mine.points })}
               </Chip>
             </>
@@ -85,7 +85,7 @@ export async function LeaderboardHomePanel({ user }: { user: CurrentUser }) {
         </span>
         <Link
           href={boardHref as never}
-          className="link-draw flex items-center gap-1 text-xs font-medium text-maroon-700"
+          className="link-draw flex items-center gap-1 text-xs font-medium text-navy-700"
           data-testid="home-leaderboard-open"
         >
           {t("home.open")} <ArrowUpRight className="size-3.5 flip-rtl" aria-hidden />

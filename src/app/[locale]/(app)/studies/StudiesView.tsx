@@ -19,13 +19,13 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 /* the cover cloth per type, in tokens */
 const COVER: Record<string, string> = {
-  study: "bg-gulf-600",
-  research: "bg-maroon-900",
+  study: "bg-teal-600",
+  research: "bg-navy-900",
   evaluation: "bg-ink-900",
 };
 
 const LINK_BUTTON =
-  "inline-flex h-9.5 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 text-sm font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700 [&_svg]:size-4 [&_svg]:shrink-0";
+  "inline-flex h-9.5 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 text-sm font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700 [&_svg]:size-4 [&_svg]:shrink-0";
 
 export function StudiesView({
   data,
@@ -63,7 +63,7 @@ export function StudiesView({
         {canAdd ? (
           <Link
             href={"/vault/upload?type=study" as never}
-            className={cn(LINK_BUTTON, "bg-maroon-700 text-white shadow-sm hover:bg-maroon-900")}
+            className={cn(LINK_BUTTON, "bg-navy-700 text-white shadow-sm hover:bg-navy-900")}
             data-testid="add-study"
           >
             <FilePlus2 /> {t("addStudy")}
@@ -80,7 +80,7 @@ export function StudiesView({
             canAdd ? (
               <Link
                 href={"/vault/upload?type=study" as never}
-                className={cn(LINK_BUTTON, "bg-maroon-700 text-white shadow-sm hover:bg-maroon-900")}
+                className={cn(LINK_BUTTON, "bg-navy-700 text-white shadow-sm hover:bg-navy-900")}
               >
                 <FilePlus2 /> {t("addStudy")}
               </Link>
@@ -133,7 +133,7 @@ export function StudiesView({
                 <button
                   type="button"
                   onClick={() => router.push(pathname as never, { scroll: false })}
-                  className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium text-maroon-700 transition-colors hover:bg-maroon-50 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+                  className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium text-navy-700 transition-colors hover:bg-navy-50 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
                   data-testid="studies-clear"
                 >
                   <X className="size-3.5" aria-hidden /> {t("clear")}
@@ -224,14 +224,14 @@ function FacetChip({
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        "inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500",
+        "inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500",
         active
-          ? "border-maroon-700 bg-maroon-100 font-medium text-maroon-900"
-          : "border-sand-300 bg-white text-ink-600 hover:border-maroon-300 hover:text-ink-900"
+          ? "border-navy-700 bg-navy-100 font-medium text-navy-900"
+          : "border-mist-300 bg-white text-ink-600 hover:border-navy-300 hover:text-ink-900"
       )}
     >
       {label}
-      {count ? <span className={cn("tnum", active ? "text-maroon-700" : "text-ink-400")}>{count}</span> : null}
+      {count ? <span className={cn("tnum", active ? "text-navy-700" : "text-ink-400")}>{count}</span> : null}
     </button>
   );
 }
@@ -256,8 +256,8 @@ function FeaturedStudy({ doc, reduced }: { doc: StudyDoc; reduced: boolean }) {
         <Link
           href={`/vault/${doc.id}` as never}
           className={cn(
-            "relative flex min-h-[220px] flex-col justify-between p-5 text-white transition-opacity hover:opacity-95 focus-visible:outline-2 focus-visible:outline-gold-500",
-            COVER[doc.typeCode ?? "study"] ?? "bg-gulf-600"
+            "relative flex min-h-[220px] flex-col justify-between p-5 text-white transition-opacity hover:opacity-95 focus-visible:outline-2 focus-visible:outline-aqua-500",
+            COVER[doc.typeCode ?? "study"] ?? "bg-teal-600"
           )}
           aria-label={bi(locale, doc.titleEn, doc.titleAr)}
         >
@@ -275,18 +275,18 @@ function FeaturedStudy({ doc, reduced }: { doc: StudyDoc; reduced: boolean }) {
         </Link>
         <div className="flex min-w-0 flex-col gap-3 p-5">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-gold-500 rtl:tracking-normal">
+            <span className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-aqua-500 rtl:tracking-normal">
               <Sparkles className="size-3.5" aria-hidden /> {t("featuredEyebrow")}
             </span>
             {doc.status === "verified" ? (
-              <Chip tone="gulf">
+              <Chip tone="teal">
                 <BadgeCheck className="size-3" aria-hidden /> {t("verified")}
               </Chip>
             ) : null}
-            {doc.illustrative ? <Chip tone="sand">{t("illustrative")}</Chip> : null}
+            {doc.illustrative ? <Chip tone="mist">{t("illustrative")}</Chip> : null}
           </div>
           <h2 id="featured-title" className="font-display text-xl font-semibold text-ink-900">
-            <Link href={`/vault/${doc.id}` as never} className="hover:text-maroon-900">
+            <Link href={`/vault/${doc.id}` as never} className="hover:text-navy-900">
               {bi(locale, doc.titleEn, doc.titleAr)}
             </Link>
           </h2>
@@ -297,7 +297,7 @@ function FeaturedStudy({ doc, reduced }: { doc: StudyDoc; reduced: boolean }) {
                 id: doc.ownerUserId,
                 nameEn: doc.ownerName,
                 nameAr: doc.ownerNameAr ?? doc.ownerName,
-                avatarColor: doc.ownerColor ?? "maroon",
+                avatarColor: doc.ownerColor ?? "navy",
               }}
               item={{ type: "study", id: doc.id, titleEn: doc.titleEn, titleAr: doc.titleAr, href: `/vault/${doc.id}` }}
               size="md"
@@ -313,7 +313,7 @@ function FeaturedStudy({ doc, reduced }: { doc: StudyDoc; reduced: boolean }) {
             <ul className="flex flex-col gap-1 text-sm text-ink-900">
               {doc.keyFacts.slice(0, 3).map((f, i) => (
                 <li key={i} className="flex gap-2">
-                  <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-maroon-700" />
+                  <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-navy-700" />
                   <span>{bi(locale, f.text_en, f.text_ar)}</span>
                 </li>
               ))}
@@ -321,18 +321,18 @@ function FeaturedStudy({ doc, reduced }: { doc: StudyDoc; reduced: boolean }) {
           ) : null}
           <div className="mt-auto flex flex-wrap items-center gap-1.5">
             {doc.outcomes.slice(0, 2).map((o) => (
-              <Chip key={o.code} tone="maroon">
+              <Chip key={o.code} tone="navy">
                 {bi(locale, o.nameEn, o.nameAr)}
               </Chip>
             ))}
             {doc.topics.slice(0, 3).map((o) => (
-              <Chip key={o.code} tone="sand">
+              <Chip key={o.code} tone="mist">
                 {bi(locale, o.nameEn, o.nameAr)}
               </Chip>
             ))}
             <Link
               href={`/vault/${doc.id}` as never}
-              className="ms-auto text-sm font-medium text-maroon-700 underline-offset-4 hover:underline"
+              className="ms-auto text-sm font-medium text-navy-700 underline-offset-4 hover:underline"
               data-testid="featured-open"
             >
               {t("read")}

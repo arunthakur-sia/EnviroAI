@@ -23,12 +23,12 @@ import type { HrPeople } from "@/server/services/hr";
 
 type Person = HrPeople["people"][number];
 
-const ROLE_TONE: Record<string, "maroon" | "gulf" | "gold" | "sand" | "ghost"> = {
-  sponsor: "maroon",
-  owner: "gulf",
-  manager: "gold",
-  team: "sand",
-  expert: "gulf",
+const ROLE_TONE: Record<string, "navy" | "teal" | "aqua" | "mist" | "ghost"> = {
+  sponsor: "navy",
+  owner: "teal",
+  manager: "aqua",
+  team: "mist",
+  expert: "teal",
   external_partner: "ghost",
 };
 
@@ -165,7 +165,7 @@ export function HrPeopleClient({ data, focusId }: { data: HrPeople; focusId: str
               <button
                 onClick={() => setOpen(isOpen ? null : p.id)}
                 aria-expanded={isOpen}
-                className="flex w-full items-center gap-3 px-4 py-3 text-start cursor-pointer hover:bg-sand-50"
+                className="flex w-full items-center gap-3 px-4 py-3 text-start cursor-pointer hover:bg-mist-50"
               >
                 <Avatar name={p.nameEn} color={p.avatarColor} size={36} />
                 <span className="min-w-0 flex-1">
@@ -184,7 +184,7 @@ export function HrPeopleClient({ data, focusId }: { data: HrPeople; focusId: str
                 </span>
                 <span className="hidden items-center gap-1 sm:flex">
                   {p.expertise.slice(0, 2).map((e) => (
-                    <Chip key={e.id} tone="gulf">{bi(locale, e.nameEn, e.nameAr)}</Chip>
+                    <Chip key={e.id} tone="teal">{bi(locale, e.nameEn, e.nameAr)}</Chip>
                   ))}
                 </span>
                 <ProgressRing
@@ -195,7 +195,7 @@ export function HrPeopleClient({ data, focusId }: { data: HrPeople; focusId: str
                     p.readiness.score >= 80
                       ? "var(--color-ok)"
                       : p.readiness.score >= 55
-                        ? "var(--color-gold-500)"
+                        ? "var(--color-aqua-500)"
                         : "var(--color-danger)"
                   }
                 >
@@ -212,7 +212,7 @@ export function HrPeopleClient({ data, focusId }: { data: HrPeople; focusId: str
                     transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
                     className="overflow-hidden"
                   >
-                    <div className="grid grid-cols-1 gap-5 border-t border-sand-100 px-4 py-4 lg:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-5 border-t border-mist-100 px-4 py-4 lg:grid-cols-3">
                       <div>
                         <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-ink-600">
                           {t("projectRoles")}
@@ -221,7 +221,7 @@ export function HrPeopleClient({ data, focusId }: { data: HrPeople; focusId: str
                           <ul className="flex flex-col gap-1">
                             {p.roles.map((r, i) => (
                               <li key={`${r.nodeId}:${i}`} className="flex items-center gap-2 text-sm">
-                                <Chip tone={ROLE_TONE[r.role] ?? "sand"} className="shrink-0">
+                                <Chip tone={ROLE_TONE[r.role] ?? "mist"} className="shrink-0">
                                   {ts(`roles.${r.role}` as never)}
                                 </Chip>
                                 <Link href={`/strategy/${r.nodeId}` as never} className="link-draw min-w-0 truncate text-ink-900">
@@ -241,7 +241,7 @@ export function HrPeopleClient({ data, focusId }: { data: HrPeople; focusId: str
                             </p>
                             <span className="flex flex-wrap gap-1">
                               {p.expertise.map((e) => (
-                                <Chip key={e.id} tone="gulf">{bi(locale, e.nameEn, e.nameAr)}</Chip>
+                                <Chip key={e.id} tone="teal">{bi(locale, e.nameEn, e.nameAr)}</Chip>
                               ))}
                             </span>
                           </>
@@ -286,9 +286,9 @@ export function HrPeopleClient({ data, focusId }: { data: HrPeople; focusId: str
                           {t("handoverState")}
                         </p>
                         {p.handover ? (
-                          <Link href={`/hr/handovers/${p.handover.id}` as never} className="block rounded-lg bg-sand-50 px-3 py-2 hover:bg-sand-100">
+                          <Link href={`/hr/handovers/${p.handover.id}` as never} className="block rounded-lg bg-mist-50 px-3 py-2 hover:bg-mist-100">
                             <span className="flex items-center justify-between text-sm">
-                              <Chip tone={p.handover.status === "complete" ? "ok" : p.handover.status === "overdue" ? "danger" : "sand"}>
+                              <Chip tone={p.handover.status === "complete" ? "ok" : p.handover.status === "overdue" ? "danger" : "mist"}>
                                 {t(`handoverStatus.${p.handover.status}` as never)}
                               </Chip>
                               <span className="tnum text-ink-600">{p.handover.completionPct}%</span>
@@ -314,13 +314,13 @@ export function HrPeopleClient({ data, focusId }: { data: HrPeople; focusId: str
                           </Button>
                           <Link
                             href={`/add?mode=speak${p.handover ? `&handover=${p.handover.id}` : ""}` as never}
-                            className="inline-flex h-8 items-center rounded-lg border border-sand-300 bg-white px-3 text-xs font-medium text-ink-600 hover:border-maroon-300 hover:text-maroon-700"
+                            className="inline-flex h-8 items-center rounded-lg border border-mist-300 bg-white px-3 text-xs font-medium text-ink-600 hover:border-navy-300 hover:text-navy-700"
                           >
                             {t("requestCapture")}
                           </Link>
                           <a
                             href={`mailto:${p.email}`}
-                            className="inline-flex h-8 items-center gap-1 rounded-lg border border-sand-300 bg-white px-3 text-xs font-medium text-ink-600 hover:border-maroon-300 hover:text-maroon-700"
+                            className="inline-flex h-8 items-center gap-1 rounded-lg border border-mist-300 bg-white px-3 text-xs font-medium text-ink-600 hover:border-navy-300 hover:text-navy-700"
                           >
                             <Mail className="size-3.5" /> {t("email")}
                           </a>

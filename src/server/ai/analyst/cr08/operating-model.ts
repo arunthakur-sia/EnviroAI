@@ -2,7 +2,7 @@
 // Each tool reads through the operating-model service (so document visibility
 // and portal rules hold), registers its sources for citations and returns
 // compact text. While the seeded content is illustrative the source line says
-// "SiaNexus Operating Model, illustrative data", the way the Council tools do.
+// "EnviroAI Operating Model, illustrative data", the way the Office tools do.
 import type { ToolContext } from "../tools";
 import type { ToolModule } from "./types";
 import {
@@ -20,8 +20,8 @@ import {
 } from "@/server/services/operating-model";
 import { findUnit } from "@/server/services/organisation";
 
-const ILLUSTRATIVE = "SiaNexus Operating Model, illustrative data";
-const REAL = "SiaNexus Operating Model";
+const ILLUSTRATIVE = "EnviroAI Operating Model, illustrative data";
+const REAL = "EnviroAI Operating Model";
 
 function sourceLabel(illustrative: boolean): string {
   return illustrative ? ILLUSTRATIVE : REAL;
@@ -64,7 +64,7 @@ async function toolGetOperatingModel(ctx: ToolContext, input: { section?: string
     const l1 = model.chain.reduce((s, c) => s + c.children.length, 0);
     const l2 = model.chain.reduce((s, c) => s + c.children.reduce((t, k) => t + k.children.length, 0), 0);
     return [
-      `[${n}] Internal | NPC Operating Model. Source: ${sourceLabel(model.isIllustrative)}.`,
+      `[${n}] Internal | Programme Office Operating Model. Source: ${sourceLabel(model.isIllustrative)}.`,
       `Principles: ${model.principles.length} (${model.principles.map((p) => p.titleEn).join("; ")}).`,
       `Governance: ${model.governance.bodies.length} bodies (${model.governance.bodies.map((b) => b.nameEn).join("; ")}), ${model.governance.connectors.length} decision flows.`,
       `Process landscape: ${model.chain.length} Level 0 processes, ${l1} Level 1 processes, ${l2} Level 2 procedures: ${model.chain.map((c) => `${c.code} ${c.nameEn}`).join("; ")}.`,
@@ -94,10 +94,10 @@ async function toolGetOperatingModel(ctx: ToolContext, input: { section?: string
     const byId = new Map(g.bodies.map((b) => [b.id, b]));
     const n = sectionSource(ctx, "governance", "Governance and decision rights", g.bodies.map((b) => b.nameEn).join("; "), illustrative);
     return [
-      `[${n}] Internal | Governance: ${g.bodies.length} bodies. Source: ${sourceLabel(illustrative)}. Council Strategy bodies are reused from the Council Strategy governance table.`,
+      `[${n}] Internal | Governance: ${g.bodies.length} bodies. Source: ${sourceLabel(illustrative)}. Programme Strategy bodies are reused from the Programme Strategy governance table.`,
       ...g.bodies.map(
         (b) =>
-          `${b.nameEn} / ${b.nameAr} (${b.source === "council" ? "Council Strategy body" : "operating model body"}, cadence ${b.cadence ?? "-"}): decides ${b.decisionsEn.length ? b.decisionsEn.join("; ") : (b.roleEn ?? "").slice(0, 200)}. Members: ${b.members.map((m) => m.en).join("; ") || "-"}. Escalates to: ${b.escalatesToId ? byId.get(b.escalatesToId)?.nameEn ?? "-" : "none"}.`
+          `${b.nameEn} / ${b.nameAr} (${b.source === "council" ? "Programme Strategy body" : "operating model body"}, cadence ${b.cadence ?? "-"}): decides ${b.decisionsEn.length ? b.decisionsEn.join("; ") : (b.roleEn ?? "").slice(0, 200)}. Members: ${b.members.map((m) => m.en).join("; ") || "-"}. Escalates to: ${b.escalatesToId ? byId.get(b.escalatesToId)?.nameEn ?? "-" : "none"}.`
       ),
       `Decision flows: ${g.connectors.map((c) => `${byId.get(c.fromId)?.nameEn} ${c.kind.replace("_", " ")} ${byId.get(c.toId)?.nameEn}`).join("; ")}.`,
     ].join("\n");
@@ -148,7 +148,7 @@ async function toolGetOperatingModel(ctx: ToolContext, input: { section?: string
     const top = [...chord].sort((a, b) => b.count - a.count).slice(0, 8);
     return [
       `[${n}] Internal | Interfaces. Source: ${sourceLabel(model.isIllustrative)}.`,
-      `External (${external.length}): ${external.map((e) => `${e.entity.shortNameEn ?? e.entity.nameEn} (${e.cadence ?? "-"}; NPC provides ${(e.providesEn ?? "").slice(0, 80)}; receives ${(e.receivesEn ?? "").slice(0, 80)})`).join("; ")}`,
+      `External (${external.length}): ${external.map((e) => `${e.entity.shortNameEn ?? e.entity.nameEn} (${e.cadence ?? "-"}; Programme Office provides ${(e.providesEn ?? "").slice(0, 80)}; receives ${(e.receivesEn ?? "").slice(0, 80)})`).join("; ")}`,
       `Internal (${internal.length} flows across ${units.length} units). Busiest pairs: ${top.map((c) => `${codeOf.get(c.fromUnitId)} to ${codeOf.get(c.toUnitId)} (${c.count})`).join("; ")}.`,
       "Use get_interfaces with a unit code for one unit's flows and focal points.",
     ].join("\n");
@@ -217,7 +217,7 @@ async function toolGetInterfaces(ctx: ToolContext, input: { unit?: string }): Pr
     data.gives.length ? `Gives (${data.gives.length}): ${data.gives.map((i) => line(i, "to")).join("; ")}` : "Gives nothing recorded.",
     data.receives.length ? `Receives (${data.receives.length}): ${data.receives.map((i) => line(i, "from")).join("; ")}` : "Receives nothing recorded.",
     data.external.length
-      ? `External entities (${data.external.length}): ${data.external.map((e) => `${e.entity.nameEn} (${e.cadence ?? "-"}; legal basis ${e.legalBasisEn ?? "-"}; NPC focal ${e.focalNpc?.nameEn ?? "-"}, entity focal ${e.focalEntityName ?? "-"})`).join("; ")}`
+      ? `External entities (${data.external.length}): ${data.external.map((e) => `${e.entity.nameEn} (${e.cadence ?? "-"}; legal basis ${e.legalBasisEn ?? "-"}; Programme Office focal ${e.focalOrg?.nameEn ?? "-"}, entity focal ${e.focalEntityName ?? "-"})`).join("; ")}`
       : "",
   ]
     .filter(Boolean)
@@ -229,7 +229,7 @@ const mod: ToolModule = {
     {
       name: "get_operating_model",
       description:
-        "The National Planning Council's operating model: pass section = principles | governance | processes | raci | calendar | interfaces | kpis, or omit it for an overview. Governance reuses the Council Strategy's bodies plus the Council, the Secretary General, the Executive Committee, the National Statistics Committee and the Data Governance Board. All content is Internal and, while seeded, illustrative.",
+        "The Programme Office's operating model: pass section = principles | governance | processes | raci | calendar | interfaces | kpis, or omit it for an overview. Governance reuses the Programme Strategy's bodies plus the Council, the Secretary General, the Executive Committee, the National Statistics Committee and the Data Governance Board. All content is Internal and, while seeded, illustrative.",
       input_schema: {
         type: "object",
         properties: {
@@ -240,7 +240,7 @@ const mod: ToolModule = {
     {
       name: "get_process",
       description:
-        "One process of the NPC process architecture by code (Level 0 P1 to P8, Level 1 such as P4.1, Level 2 procedures such as P4.3.1) with its purpose, owner unit, numbered steps naming the unit and the system, inputs and outputs, systems, KPIs, governing policies and SOPs the user may see, RACI, interfaces and children.",
+        "One process of the Programme Office process architecture by code (Level 0 P1 to P8, Level 1 such as P4.1, Level 2 procedures such as P4.3.1) with its purpose, owner unit, numbered steps naming the unit and the system, inputs and outputs, systems, KPIs, governing policies and SOPs the user may see, RACI, interfaces and children.",
       input_schema: { type: "object", properties: { code: { type: "string" } }, required: ["code"] },
     },
     {

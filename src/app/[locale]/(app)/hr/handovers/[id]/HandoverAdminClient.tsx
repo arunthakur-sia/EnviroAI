@@ -82,15 +82,15 @@ export function HandoverAdminClient({ initial, users }: { initial: HandoverDetai
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <KindChip kind={detail.kind} />
-              <Chip tone="sand">{th(`personKinds.${detail.personKind}`)}</Chip>
+              <Chip tone="mist">{th(`personKinds.${detail.personKind}`)}</Chip>
               <StatusChip status={detail.status} />
-              {detail.interviewRequired ? <Chip tone="gold">{th("interview.mandatory")}</Chip> : null}
+              {detail.interviewRequired ? <Chip tone="aqua">{th("interview.mandatory")}</Chip> : null}
               {detail.cutOffAt ? (
                 <Chip tone="danger">
                   <Lock className="size-3" aria-hidden /> {t("cutOffChip", { date: formatDate(detail.cutOffAt, locale) })}
                 </Chip>
               ) : null}
-              {illustrative ? <Chip tone="sand">{tc("illustrative")}</Chip> : null}
+              {illustrative ? <Chip tone="mist">{tc("illustrative")}</Chip> : null}
             </div>
             <div className="mt-3">
               <PersonLine person={detail.person} size={48} />
@@ -121,22 +121,22 @@ export function HandoverAdminClient({ initial, users }: { initial: HandoverDetai
               </p>
             ) : null}
           </div>
-          <div className="flex w-full shrink-0 items-center gap-4 rounded-xl bg-sand-50 p-4 lg:w-96">
-            <ProgressRing value={readyChecks / detail.readiness.checks.length} size={72} stroke={7} color={detail.readiness.ok ? "var(--color-ok)" : "var(--color-gold-500)"}>
+          <div className="flex w-full shrink-0 items-center gap-4 rounded-xl bg-mist-50 p-4 lg:w-96">
+            <ProgressRing value={readyChecks / detail.readiness.checks.length} size={72} stroke={7} color={detail.readiness.ok ? "var(--color-ok)" : "var(--color-aqua-500)"}>
               <span className="text-sm font-semibold text-ink-900 tnum">{readyChecks}/{detail.readiness.checks.length}</span>
             </ProgressRing>
             <div className="flex min-w-0 flex-1 flex-col gap-2.5">
               <ProgressBar value={detail.progress.items.pct} label={th("progress.items")} detail={`${detail.progress.items.done}/${detail.progress.items.total}`} testId="admin-progress-items" />
-              <ProgressBar value={detail.progress.interviews.pct} label={th("progress.interviews")} detail={`${detail.progress.interviews.complete}/${detail.progress.interviews.total}`} tone="gulf" testId="admin-progress-interviews" />
-              <ProgressBar value={detail.progress.paths.total ? Math.round((100 * detail.progress.paths.signedOff) / detail.progress.paths.total) : 0} label={th("progress.paths")} detail={`${detail.progress.paths.signedOff}/${detail.progress.paths.total}`} tone="gold" />
+              <ProgressBar value={detail.progress.interviews.pct} label={th("progress.interviews")} detail={`${detail.progress.interviews.complete}/${detail.progress.interviews.total}`} tone="teal" testId="admin-progress-interviews" />
+              <ProgressBar value={detail.progress.paths.total ? Math.round((100 * detail.progress.paths.signedOff) / detail.progress.paths.total) : 0} label={th("progress.paths")} detail={`${detail.progress.paths.signedOff}/${detail.progress.paths.total}`} tone="aqua" />
             </div>
           </div>
         </div>
         {detail.required.length && !closed ? (
-          <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-sand-100 pt-3" data-testid="admin-required">
+          <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-mist-100 pt-3" data-testid="admin-required">
             <span className="text-xs font-medium text-ink-600">{t("stillRequired")}</span>
             {detail.required.map((code) => (
-              <Chip key={code} tone="sand">
+              <Chip key={code} tone="mist">
                 {requiredLabel(code)}
               </Chip>
             ))}
@@ -208,7 +208,7 @@ function InventoryTab({ detail, users, closed, busy, act, onNote }: { detail: Ha
     <>
       <input
         type="checkbox"
-        className="size-4 cursor-pointer accent-maroon-700 disabled:cursor-default"
+        className="size-4 cursor-pointer accent-navy-700 disabled:cursor-default"
         checked={item.inScope}
         disabled={closed}
         onChange={(e) => act(`scope-${item.id}`, { action: "scope", itemId: item.id, inScope: e.target.checked })}
@@ -278,7 +278,7 @@ function InventoryTab({ detail, users, closed, busy, act, onNote }: { detail: Ha
               <Button loading={busy === "add"} disabled={!add.title.trim()} onClick={async () => { const ok = await act("add", { action: "add_item", title: add.title, category: add.category, note: add.note || null }, t("added")); if (ok) setAdd({ title: "", category: add.category, note: "" }); }} data-testid="admin-add-submit">
                 <Plus /> {t("addItem")}
               </Button>
-              <Button variant="gold" loading={busy === "add-topic"} disabled={!add.title.trim()} onClick={async () => { const ok = await act("add-topic", { action: "add_item", title: add.title, category: "tacit_topic", note: add.note || null }, t("added")); if (ok) setAdd({ title: "", category: add.category, note: "" }); }} data-testid="admin-add-topic">
+              <Button variant="aqua" loading={busy === "add-topic"} disabled={!add.title.trim()} onClick={async () => { const ok = await act("add-topic", { action: "add_item", title: add.title, category: "tacit_topic", note: add.note || null }, t("added")); if (ok) setAdd({ title: "", category: add.category, note: "" }); }} data-testid="admin-add-topic">
                 <Sparkles /> {t("addTacitTopic")}
               </Button>
             </div>
@@ -330,11 +330,11 @@ function FilingTab({ detail, closed, busy, act }: { detail: HandoverDetail; clos
       </div>
       {proposedIds.length && !closed ? (
         <label className="flex cursor-pointer items-center gap-2 text-xs text-ink-600">
-          <input type="checkbox" className="size-4 accent-maroon-700" checked={proposedIds.every((id) => selected.has(id))} onChange={(e) => setSelected(e.target.checked ? new Set(proposedIds) : new Set())} data-testid="select-all-proposed" />
+          <input type="checkbox" className="size-4 accent-navy-700" checked={proposedIds.every((id) => selected.has(id))} onChange={(e) => setSelected(e.target.checked ? new Set(proposedIds) : new Set())} data-testid="select-all-proposed" />
           {t("selectAllProposed", { count: proposedIds.length })}
         </label>
       ) : null}
-      <div className="card divide-y divide-sand-100" role="table" aria-label={t("title")}>
+      <div className="card divide-y divide-mist-100" role="table" aria-label={t("title")}>
         <div role="row" className="hidden grid-cols-[28px_minmax(180px,1.3fr)_minmax(160px,1fr)_minmax(140px,0.8fr)_minmax(200px,1.4fr)_110px] gap-3 px-4 py-2 text-[11px] font-semibold uppercase text-ink-400 md:grid">
           {/* the cell must exist in the grid; only its label is hidden, or
               every header shifts one column to the start */}
@@ -353,7 +353,7 @@ function FilingTab({ detail, closed, busy, act }: { detail: HandoverDetail; clos
             <div key={i.id} role="row" className="grid grid-cols-1 gap-2 px-4 py-3 md:grid-cols-[28px_minmax(180px,1.3fr)_minmax(160px,1fr)_minmax(140px,0.8fr)_minmax(200px,1.4fr)_110px] md:items-center md:gap-3" data-testid="filing-row" data-filing={i.filingStatus}>
               <span role="cell">
                 {i.filingStatus === "proposed" && !closed ? (
-                  <input type="checkbox" className="size-4 cursor-pointer accent-maroon-700" checked={selected.has(i.id)} onChange={(e) => { const n = new Set(selected); if (e.target.checked) n.add(i.id); else n.delete(i.id); setSelected(n); }} aria-label={t("selectFor", { title: i.title })} data-testid="filing-select" />
+                  <input type="checkbox" className="size-4 cursor-pointer accent-navy-700" checked={selected.has(i.id)} onChange={(e) => { const n = new Set(selected); if (e.target.checked) n.add(i.id); else n.delete(i.id); setSelected(n); }} aria-label={t("selectFor", { title: i.title })} data-testid="filing-select" />
                 ) : null}
               </span>
               <span role="cell" className="min-w-0">
@@ -401,7 +401,7 @@ function InterviewsTab({ detail, closed, onChange }: { detail: HandoverDetail; c
   return (
     <div className="flex flex-col gap-4">
       {detail.personKind === "external" && !closed ? (
-        <div className="rounded-xl border border-gulf-100 bg-gulf-100/40 px-4 py-3 text-sm text-ink-900">{t("interviewOnBehalf")}</div>
+        <div className="rounded-xl border border-teal-100 bg-teal-100/40 px-4 py-3 text-sm text-ink-900">{t("interviewOnBehalf")}</div>
       ) : null}
       {detail.personKind === "external" ? (
         <InterviewPanel mode={{ kind: "user", handoverId: detail.id }} topics={detail.topics} interviews={detail.interviews} required={detail.interviewRequired} readOnly={closed} onChange={onChange} />
@@ -409,7 +409,7 @@ function InterviewsTab({ detail, closed, onChange }: { detail: HandoverDetail; c
       {!detail.interviews.length ? (
         detail.personKind === "external" ? null : <EmptyState title={th("noneYet")} hint={th("noneYetHint")} />
       ) : (
-        <div className="card divide-y divide-sand-100" data-testid="admin-interviews">
+        <div className="card divide-y divide-mist-100" data-testid="admin-interviews">
           {detail.interviews.map((iv: InterviewView) => (
             <div key={iv.id} className="px-4 py-3">
               <div className="flex flex-wrap items-center gap-3">
@@ -418,19 +418,19 @@ function InterviewsTab({ detail, closed, onChange }: { detail: HandoverDetail; c
                   <span className="block text-xs text-ink-600 tnum">{th("answersCount", { count: iv.answers })} · {formatDate(iv.updatedAt, locale)}</span>
                 </span>
                 {iv.insightLessonId ? (
-                  <Link href={`/lessons?lesson=${iv.insightLessonId}` as never} className="link-draw text-xs font-medium text-maroon-700">
+                  <Link href={`/lessons?lesson=${iv.insightLessonId}` as never} className="link-draw text-xs font-medium text-navy-700">
                     {th("openInsight")}
                   </Link>
                 ) : null}
-                <Chip tone={iv.status === "complete" ? "ok" : iv.status === "in_progress" ? "gulf" : "sand"}>{th(`state.${iv.status}` as never)}</Chip>
-                <button type="button" onClick={() => setOpen(open === iv.id ? null : iv.id)} className="cursor-pointer text-xs font-medium text-ink-600 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-gold-500" aria-expanded={open === iv.id} data-testid="admin-transcript-toggle">
+                <Chip tone={iv.status === "complete" ? "ok" : iv.status === "in_progress" ? "teal" : "mist"}>{th(`state.${iv.status}` as never)}</Chip>
+                <button type="button" onClick={() => setOpen(open === iv.id ? null : iv.id)} className="cursor-pointer text-xs font-medium text-ink-600 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-aqua-500" aria-expanded={open === iv.id} data-testid="admin-transcript-toggle">
                   {th("transcript")}
                 </button>
               </div>
               {open === iv.id && iv.transcript ? (
                 <ol className="mt-3 flex flex-col gap-1.5" data-testid="admin-transcript">
                   {iv.transcript.map((e, i) => (
-                    <li key={i} className={cn("max-w-[92%] rounded-lg px-3 py-2 text-sm leading-relaxed", e.role === "ai" ? "bg-sand-50 text-ink-900" : "ms-auto bg-maroon-100/60 text-maroon-900")} dir="auto">
+                    <li key={i} className={cn("max-w-[92%] rounded-lg px-3 py-2 text-sm leading-relaxed", e.role === "ai" ? "bg-mist-50 text-ink-900" : "ms-auto bg-navy-100/60 text-navy-900")} dir="auto">
                       {e.role === "ai" ? questionText(e) : e.text}
                     </li>
                   ))}
@@ -467,7 +467,7 @@ function PathsTab({ detail, closed, busy, act }: { detail: HandoverDetail; close
                 <p className="truncate font-medium text-ink-900">{bi(locale, r.user.nameEn, r.user.nameAr)}</p>
                 <p className="text-xs text-ink-600 tnum">{t("itemsUnderstood", { understood: r.understood, items: r.items })}</p>
               </div>
-              <ProgressRing value={pct / 100} size={48} stroke={5} color={pct === 100 ? "var(--color-ok)" : "var(--color-maroon-700)"}>
+              <ProgressRing value={pct / 100} size={48} stroke={5} color={pct === 100 ? "var(--color-ok)" : "var(--color-navy-700)"}>
                 <span className="text-[11px] font-semibold text-ink-900 tnum">{pct}%</span>
               </ProgressRing>
             </div>
@@ -479,14 +479,14 @@ function PathsTab({ detail, closed, busy, act }: { detail: HandoverDetail; close
                       <CheckCircle2 className="size-3" aria-hidden /> {t("signedOff", { date: formatDate(r.path.signedOffAt, locale) })}
                     </Chip>
                   ) : (
-                    <Chip tone="sand">{t("notSigned")}</Chip>
+                    <Chip tone="mist">{t("notSigned")}</Chip>
                   )}
                   <span className="text-xs text-ink-600 tnum">{t("modules", { count: r.path.modules.length })}</span>
                 </div>
                 <ul className="flex flex-col gap-1">
                   {r.path.modules.map((m) => (
                     <li key={m.id} className="flex items-center gap-2 text-sm text-ink-900">
-                      <span className={cn("flex size-4 shrink-0 items-center justify-center rounded-full", m.understoodAt ? "bg-ok text-white" : "border border-sand-300")} aria-hidden>
+                      <span className={cn("flex size-4 shrink-0 items-center justify-center rounded-full", m.understoodAt ? "bg-ok text-white" : "border border-mist-300")} aria-hidden>
                         {m.understoodAt ? <Check className="size-3" /> : null}
                       </span>
                       <span className="truncate">{bi(locale, m.topic, m.topicAr)}</span>
@@ -533,14 +533,14 @@ function AccessTab({ detail, closed, busy, act }: { detail: HandoverDetail; clos
   return (
     <div className="card max-w-2xl p-5" data-testid="access-card">
       <div className="flex items-start gap-3">
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-gulf-100 text-gulf-600">
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-teal-100 text-teal-600">
           <KeyRound className="size-5" aria-hidden />
         </span>
         <div className="min-w-0 flex-1">
           <h3 className="font-display text-lg text-ink-900">{t("title")}</h3>
           <p className="mt-1 text-sm text-ink-600">{t("hint")}</p>
           <div className="mt-3 flex flex-wrap items-center gap-2">
-            <Chip tone={status === "active" ? "ok" : status === "revoked" ? "danger" : status === "expired" ? "warn" : "sand"} data-testid="access-status">
+            <Chip tone={status === "active" ? "ok" : status === "revoked" ? "danger" : status === "expired" ? "warn" : "mist"} data-testid="access-status">
               {t(`status.${status}`)}
             </Chip>
             {detail.access.expiresAt ? (
@@ -552,7 +552,7 @@ function AccessTab({ detail, closed, busy, act }: { detail: HandoverDetail; clos
             ) : null}
           </div>
           {link ? (
-            <div className="mt-3 rounded-lg border border-gold-300 bg-gold-100/40 p-3" data-testid="access-link">
+            <div className="mt-3 rounded-lg border border-aqua-300 bg-aqua-100/40 p-3" data-testid="access-link">
               <p className="text-xs font-medium text-ink-900">{t("shownOnce")}</p>
               <div className="mt-1 flex items-center gap-2">
                 <Input readOnly value={link.url} dir="ltr" className="font-mono text-xs" aria-label={t("title")} data-testid="access-link-url" />
@@ -635,7 +635,7 @@ function CloseTab({ detail, busy, act, onClosed }: { detail: HandoverDetail; bus
       <div className="flex flex-col gap-4">
         <section className="card p-5" data-testid="cut-off-card">
           <h3 className="flex items-center gap-2 font-display text-lg text-ink-900">
-            <Lock className="size-4 text-maroon-700" aria-hidden /> {t("cutOffTitle")}
+            <Lock className="size-4 text-navy-700" aria-hidden /> {t("cutOffTitle")}
           </h3>
           <p className="mt-1 text-sm text-ink-600">{detail.personKind === "external" ? t("cutOffHintExternal") : t("cutOffHintEmployee")}</p>
           {detail.cutOffAt ? (
@@ -663,16 +663,16 @@ function CloseTab({ detail, busy, act, onClosed }: { detail: HandoverDetail; bus
 
         <section className="card p-5" data-testid="report-card">
           <h3 className="flex items-center gap-2 font-display text-lg text-ink-900">
-            <FileText className="size-4 text-maroon-700" aria-hidden /> {t("reportTitle")}
+            <FileText className="size-4 text-navy-700" aria-hidden /> {t("reportTitle")}
           </h3>
           {detail.reportDocumentId ? (
             <div className="mt-2 flex flex-col gap-2 text-sm">
-              <Link href={`/vault/${detail.reportDocumentId}` as never} className="link-draw font-medium text-maroon-700" data-testid="report-vault-link">
+              <Link href={`/vault/${detail.reportDocumentId}` as never} className="link-draw font-medium text-navy-700" data-testid="report-vault-link">
                 {t("openInVault")}
               </Link>
               <div className="flex flex-wrap gap-2">
                 {(["en", "ar"] as const).map((lang) => (
-                  <a key={lang} href={`/api/v1/handover/${detail.id}/report?lang=${lang}`} className="inline-flex items-center gap-1.5 rounded-lg border border-sand-300 px-3 py-1.5 text-xs font-medium text-ink-900 transition-colors hover:border-maroon-300 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500" data-testid={`report-download-${lang}`}>
+                  <a key={lang} href={`/api/v1/handover/${detail.id}/report?lang=${lang}`} className="inline-flex items-center gap-1.5 rounded-lg border border-mist-300 px-3 py-1.5 text-xs font-medium text-ink-900 transition-colors hover:border-navy-300 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500" data-testid={`report-download-${lang}`}>
                     <Download className="size-3.5" aria-hidden /> {t(`download.${lang}`)}
                   </a>
                 ))}

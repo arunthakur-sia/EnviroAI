@@ -11,7 +11,7 @@ async function loginCookie(email: string): Promise<string> {
   const res = await fetch(`${BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email, password: "EnviroAI!2026" }),
     redirect: "manual",
   });
   if (res.status !== 200) throw new Error(`login ${email} -> ${res.status}`);
@@ -28,8 +28,8 @@ async function main() {
   const db = createClient({
     url: `file:${path.resolve(process.cwd(), "data", "nexus.db").replace(/\\/g, "/")}`,
   });
-  const cookie = await loginCookie("analyst@npc.qa");
-  const adminCookie = await loginCookie("admin@npc.qa");
+  const cookie = await loginCookie("analyst@enviroai.demo");
+  const adminCookie = await loginCookie("admin@enviroai.demo");
   let passed = 0;
   let failed = 0;
   const check = (name: string, ok: boolean, detail = "") => {

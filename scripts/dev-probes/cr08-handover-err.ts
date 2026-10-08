@@ -20,7 +20,7 @@ async function main() {
   await show("/api/v1/auth/login", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email: "hr@npc.qa", password: "Nexus!2026" }),
+    body: JSON.stringify({ email: "hr@enviroai.demo", password: "EnviroAI!2026" }),
   });
   await show("/api/v1/notifications");
   await show("/en/login");

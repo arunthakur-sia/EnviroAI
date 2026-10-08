@@ -1,6 +1,6 @@
 // Inspect strategy node structure for the CR02 2.1 migration plan.
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 
 const editions = (await db.execute("select id, code from strategy_editions")).rows;
 for (const e of editions) {
@@ -30,14 +30,14 @@ for (const e of editions) {
   ).rows;
   console.log("  roots:", roots.map((t) => `${t.node_type}:${t.c}`).join("  "));
 }
-// sample codes per type for nds3
-const nds3 = editions.find((e) => e.code === "nds3");
-if (nds3) {
+// sample codes per type for nes3
+const nes3 = editions.find((e) => e.code === "nes3");
+if (nes3) {
   for (const t of ["outcome", "target", "sector_strategy", "initiative", "project", "enabler", "cluster"]) {
     const rows = (
       await db.execute({
         sql: "select code, title_en from strategy_nodes where edition_id=? and node_type=? order by sort limit 4",
-        args: [nds3.id, t],
+        args: [nes3.id, t],
       })
     ).rows;
     if (rows.length) console.log(t, "codes:", rows.map((r) => r.code).join(", "));

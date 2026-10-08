@@ -293,7 +293,7 @@ export async function loadStakeholdersFor(
       organisationAr:
         dep?.nameAr ?? e?.organisationAr ?? r.organisation ?? null,
       email: u?.email ?? e?.email ?? r.email ?? null,
-      avatarColor: u?.avatarColor ?? e?.avatarColor ?? "maroon",
+      avatarColor: u?.avatarColor ?? e?.avatarColor ?? "navy",
       role: r.role,
       roleNoteEn: r.roleNoteEn,
       roleNoteAr: r.roleNoteAr,
@@ -433,10 +433,10 @@ export async function getNavigator(editionId: string): Promise<NavigatorData> {
   }
 
   // Archives keep their historical shape: pane 1 shows the edition's top
-  // level (sector strategies for NDS2, outcome areas for NDS1) and the
+  // level (sector strategies for NES edition 2, outcome areas for NES edition 1) and the
   // deeper panes show whatever levels exist (DECISIONS 39).
-  const isNds3Shape = nodes.some((n) => n.nodeType === "target");
-  const paneOneTypes = isNds3Shape
+  const isNes3Shape = nodes.some((n) => n.nodeType === "target");
+  const paneOneTypes = isNes3Shape
     ? ["outcome"]
     : [...new Set(nodes.filter((n) => !n.parentId).map((n) => n.nodeType))];
 
@@ -674,14 +674,14 @@ export async function getNavigator(editionId: string): Promise<NavigatorData> {
 /* CR04 2: the Strategy Canvas extras                                   */
 /* ------------------------------------------------------------------ */
 
-export type QnvPillar = {
+export type VisionPillar = {
   key: "human" | "social" | "economic" | "environmental";
   outcomes: number[]; // outcome numbers (O1..O7)
 };
 
 /* CR04 2.2 seed mapping: Economic 1+2, Human 3, Social 4+5,
    Environmental 6, and outcome 7 is driven by all four. */
-export const DEFAULT_QNV_PILLARS: QnvPillar[] = [
+export const DEFAULT_VISION_PILLARS: VisionPillar[] = [
   { key: "human", outcomes: [3, 7] },
   { key: "social", outcomes: [4, 5, 7] },
   { key: "economic", outcomes: [1, 2, 7] },
@@ -698,7 +698,7 @@ export type ChapterInfo = {
 };
 
 export type CanvasExtras = {
-  pillars: QnvPillar[];
+  pillars: VisionPillar[];
   /* outcome node code (O1..O7) -> */
   kpiTiles: Record<
     string,
@@ -936,7 +936,7 @@ async function computeOutcomeStakeholders(
 export async function getCanvasExtras(editionId: string): Promise<CanvasExtras> {
   const { getSetting } = await import("@/server/settings");
   const { outcomeNodeMap } = await import("@/server/scan/extract");
-  const pillars = await getSetting<QnvPillar[]>("qnv_pillars", DEFAULT_QNV_PILLARS);
+  const pillars = await getSetting<VisionPillar[]>("vision_pillars", DEFAULT_VISION_PILLARS);
   const chapters = await getSetting<Record<string, ChapterInfo>>("outcome_chapters", {});
 
   const outcomes = await db

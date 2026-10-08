@@ -30,7 +30,7 @@ export async function seedPodcastCr02(): Promise<number> {
   const [adminRow] = await db
     .select()
     .from(schema.users)
-    .where(eq(schema.users.email, "admin@npc.qa"))
+    .where(eq(schema.users.email, "admin@enviroai.demo"))
     .limit(1);
   const admin = adminRow ? await getUserById(adminRow.id) : null;
   if (!admin) {
@@ -86,7 +86,7 @@ export async function seedPodcastCr02(): Promise<number> {
         ids: [prj8.id],
         labelEn: `${prj8.code} ${prj8.titleEn}`,
         labelAr: `${prj8.code} ${prj8.titleAr}`,
-        outcomeCode: "workforce",
+        outcomeCode: "fiscal_sust",
       },
       language: "ar",
       focus: "lessons",
@@ -96,9 +96,9 @@ export async function seedPodcastCr02(): Promise<number> {
     scope: {
       kind: "topic",
       ids: [],
-      labelEn: "Fiscal sustainability",
-      labelAr: "الاستدامة المالية",
-      query: "fiscal sustainability non-hydrocarbon revenue",
+      labelEn: "Agriculture and Food Security",
+      labelAr: "الأمن الغذائي والزراعة",
+      query: "agriculture food security irrigation efficiency",
       outcomeCode: "fiscal_sust",
     },
     language: "en",
@@ -108,9 +108,9 @@ export async function seedPodcastCr02(): Promise<number> {
     scope: {
       kind: "topic",
       ids: [],
-      labelEn: "Quality of life",
-      labelAr: "جودة الحياة",
-      query: "quality of life health services",
+      labelEn: "Air quality",
+      labelAr: "جودة الهواء",
+      query: "air quality monitoring PM10 emissions",
       outcomeCode: "quality_life",
     },
     language: "ar",

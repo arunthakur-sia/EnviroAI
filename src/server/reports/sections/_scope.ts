@@ -1,5 +1,5 @@
 // CR08 5.3: what "the scope" means for the loaders. One resolution per
-// build (memoised on the request): the default NDS3 edition and its nodes,
+// build (memoised on the request): the default NES edition and its nodes,
 // the outcome or project the request names, the organisational unit for a
 // department report, and the set of node ids that fall inside the scope.
 import { eq, inArray } from "drizzle-orm";
@@ -29,7 +29,7 @@ export type ResolvedScope = {
   project: NodeLite | null;
   /** the unit of a department report */
   unit: OrgUnitRow | null;
-  /** node ids inside the scope; every node of the edition for npc and period */
+  /** node ids inside the scope; every node of the edition for org and period */
   scopeNodeIds: Set<string>;
   /** true when the scope named something that does not exist */
   missing: boolean;

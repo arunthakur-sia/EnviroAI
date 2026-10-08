@@ -27,7 +27,7 @@ for (const row of rows) {
   const login = await req("/api/v1/auth/login", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email: String(row.email), password: "Nexus!2026" }),
+    body: JSON.stringify({ email: String(row.email), password: "EnviroAI!2026" }),
   });
   if (login.status !== 200) {
     console.log(`${row.email}: login ${login.status}`);

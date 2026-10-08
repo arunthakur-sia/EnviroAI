@@ -55,14 +55,14 @@ export function MyHandoverClient({ initial }: { initial: HandoverDetail }) {
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <KindChip kind={detail.kind} />
               <StatusChip status={detail.status} />
-              {detail.interviewRequired ? <Chip tone="gold">{t("interview.mandatory")}</Chip> : null}
-              {illustrative ? <Chip tone="sand">{tc("illustrative")}</Chip> : null}
+              {detail.interviewRequired ? <Chip tone="aqua">{t("interview.mandatory")}</Chip> : null}
+              {illustrative ? <Chip tone="mist">{tc("illustrative")}</Chip> : null}
             </div>
             <p className="mt-3 max-w-xl text-sm leading-relaxed text-ink-600">{closed ? t("mine.closedIntro") : t("mine.intro")}</p>
             {detail.reason ? <p className="mt-2 text-sm text-ink-900">{t("reason")}: {detail.reason}</p> : null}
           </div>
           <div className="w-full shrink-0 md:w-80">
-            <div className="rounded-xl bg-sand-50 p-4">
+            <div className="rounded-xl bg-mist-50 p-4">
               <Eyebrow>{t("lastWorkingDay")}</Eyebrow>
               <div className="mt-1">
                 <Countdown days={detail.daysToLastWorkingDay} lastWorkingDay={detail.lastWorkingDay} />
@@ -74,21 +74,21 @@ export function MyHandoverClient({ initial }: { initial: HandoverDetail }) {
               ) : null}
               <div className="mt-4 flex flex-col gap-3">
                 <ProgressBar value={detail.progress.items.pct} label={t("progress.items")} detail={`${detail.progress.items.done}/${detail.progress.items.total}`} testId="progress-items" />
-                <ProgressBar value={detail.progress.interviews.pct} label={t("progress.interviews")} detail={`${detail.progress.interviews.complete}/${detail.progress.interviews.total}`} tone="gulf" testId="progress-interviews" />
+                <ProgressBar value={detail.progress.interviews.pct} label={t("progress.interviews")} detail={`${detail.progress.interviews.complete}/${detail.progress.interviews.total}`} tone="teal" testId="progress-interviews" />
               </div>
             </div>
           </div>
         </div>
         {/* still required: only what this person can act on, so the strip
             never says "still required" with nothing beside it */}
-        <div className={cn("border-t border-sand-100 px-6 py-4", mineRequired.length ? "bg-gold-100/40" : "bg-ok-light/40")} data-testid="still-required">
+        <div className={cn("border-t border-mist-100 px-6 py-4", mineRequired.length ? "bg-aqua-100/40" : "bg-ok-light/40")} data-testid="still-required">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <span className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-900">
               {mineRequired.length ? <AlertCircle className="size-4 text-warn" aria-hidden /> : <CheckCircle2 className="size-4 text-ok" aria-hidden />}
               {mineRequired.length ? t("mine.stillRequired") : t("mine.nothingRequired")}
             </span>
             {mineRequired.map((code) => (
-              <Chip key={code} tone="sand">
+              <Chip key={code} tone="mist">
                 <ListChecks className="size-3" aria-hidden /> {requiredLabel(code)}
               </Chip>
             ))}

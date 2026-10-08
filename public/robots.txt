@@ -1,4 +1,4 @@
-# SiaNexus holds the National Planning Council's internal knowledge. Nothing
+# EnviroAI holds the Programme Office's internal knowledge. Nothing
 # here is for a search engine, so nothing here is crawlable. The same refusal
 # goes out as an X-Robots-Tag header on every response (next.config.mjs), which
 # is what a crawler that ignores this file still receives.

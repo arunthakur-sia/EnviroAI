@@ -87,7 +87,7 @@ export function HrRisksClient({ data }: { data: Data }) {
           {data.weeks.map((w) => (
             <span
               key={w.week}
-              className="flex-1 rounded-t bg-maroon-300/70"
+              className="flex-1 rounded-t bg-navy-300/70"
               style={{ height: `${(w.open / maxOpen) * 100}%` }}
               title={`${w.week}: ${w.open}`}
             />
@@ -128,18 +128,18 @@ export function HrRisksClient({ data }: { data: Data }) {
             type="checkbox"
             checked={showResolved}
             onChange={(e) => setShowResolved(e.target.checked)}
-            className="accent-maroon-700"
+            className="accent-navy-700"
           />
           {t("showResolved")}
         </label>
-        <span className="ms-auto inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5">
+        <span className="ms-auto inline-flex items-center gap-0.5 rounded-lg bg-mist-100 p-0.5">
           {(["severity", "kind"] as const).map((g) => (
             <button
               key={g}
               onClick={() => setGroupBy(g)}
               className={cn(
                 "rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
-                groupBy === g ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+                groupBy === g ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
               )}
             >
               {t(`groupBy.${g}`)}
@@ -156,7 +156,7 @@ export function HrRisksClient({ data }: { data: Data }) {
                 {groupBy === "severity" ? t(`severity.${g}` as never) : t(`riskKinds.${g}` as never)}
                 <span className="tnum font-medium">{rows.length}</span>
               </p>
-              <div className="card divide-y divide-sand-100">
+              <div className="card divide-y divide-mist-100">
                 {rows.map((r) => (
                   <div key={r.id} className={cn("flex items-center gap-3 px-4 py-2.5", r.resolvedAt && "opacity-60")} data-testid="hr-risk-row">
                     <Chip tone={SEVERITY_TONE[r.severity]} className="shrink-0">
@@ -179,7 +179,7 @@ export function HrRisksClient({ data }: { data: Data }) {
                       <>
                         <Link
                           href={riskLink(r) as never}
-                          className="flex shrink-0 items-center gap-1 rounded-lg border border-sand-300 px-2.5 py-1.5 text-xs font-medium text-ink-600 hover:border-maroon-300 hover:text-maroon-700"
+                          className="flex shrink-0 items-center gap-1 rounded-lg border border-mist-300 px-2.5 py-1.5 text-xs font-medium text-ink-600 hover:border-navy-300 hover:text-navy-700"
                         >
                           {t("actOn")} <ArrowUpRight className="size-3 flip-rtl" />
                         </Link>

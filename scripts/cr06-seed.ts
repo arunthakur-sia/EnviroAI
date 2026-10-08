@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
-// CR06 4 seeds: one department owner per NDS3 outcome (a department-kind
+// CR06 4 seeds: one department owner per NES theme (a department-kind
 // lead row on the outcome node, from the CR05 department pools) and two
 // directly assigned experts per outcome (node_stakeholders rows with the
-// outcome as node_id), preferring experts whose domains match the outcome's
+// theme as node_id), preferring experts whose domains match the theme's
 // taxonomy term. Deterministic and idempotent; run standalone
 // (npx tsx scripts/cr06-seed.ts) or from seed.ts block 12f.
 import { loadEnv } from "../src/lib/load-env";
@@ -11,6 +11,7 @@ loadEnv();
 import { and, asc, eq, inArray } from "drizzle-orm";
 import { ulid } from "ulid";
 import { OUTCOME_DEPTS, EXPERT_NOTES } from "./cr05-seed";
+import { findHomeEdition } from "./data/edition";
 
 const now = () => new Date().toISOString();
 
@@ -27,12 +28,9 @@ export async function seedCr06OutcomeStakeholders(): Promise<void> {
   const { db, schema } = await import("../src/server/db/client");
   const { outcomeNodeMap } = await import("../src/server/scan/extract");
 
-  const [nds3] = await db
-    .select()
-    .from(schema.strategyEditions)
-    .where(eq(schema.strategyEditions.code, "nds3"));
-  if (!nds3) {
-    console.log("cr06: no NDS3 edition; skipping");
+  const edition = await findHomeEdition(db, schema);
+  if (!edition) {
+    console.log("cr06: no strategy edition; skipping");
     return;
   }
   const outcomes = await db
@@ -40,7 +38,7 @@ export async function seedCr06OutcomeStakeholders(): Promise<void> {
     .from(schema.strategyNodes)
     .where(
       and(
-        eq(schema.strategyNodes.editionId, nds3.id),
+        eq(schema.strategyNodes.editionId, edition.id),
         eq(schema.strategyNodes.nodeType, "outcome")
       )
     )
@@ -60,12 +58,12 @@ export async function seedCr06OutcomeStakeholders(): Promise<void> {
   const users = await db.select().from(schema.users);
   const alive = users.filter((u) => !u.deletedAt);
   const ROLE_LOGINS = new Set([
-    "admin@npc.qa",
-    "knowledge@npc.qa",
-    "verifier@npc.qa",
-    "analyst@npc.qa",
-    "reader@npc.qa",
-    "hr@npc.qa",
+    "admin@enviroai.demo",
+    "knowledge@enviroai.demo",
+    "verifier@enviroai.demo",
+    "analyst@enviroai.demo",
+    "reader@enviroai.demo",
+    "hr@enviroai.demo",
   ]);
   let headsSet = 0;
   for (const d of departments) {
@@ -136,7 +134,7 @@ export async function seedCr06OutcomeStakeholders(): Promise<void> {
     (domainsOf.get(d.expertId) ?? domainsOf.set(d.expertId, []).get(d.expertId)!).push(d.termId);
   }
   const expertsWithDomains = experts.filter((e) => domainsOf.has(e.id));
-  // the outcome's taxonomy term, for domain-matched picks
+  // the theme's taxonomy term, for domain-matched picks
   const taxMap = await outcomeNodeMap(); // tax code -> node id
   const taxOfNode = new Map<string, string>();
   for (const [tax, nodeId] of taxMap) taxOfNode.set(nodeId, tax);

@@ -1,5 +1,5 @@
 "use client";
-// CR08 2.3: the floating Ask NPC launcher. A maroon pill at the bottom end
+// CR08 2.3: the floating Ask EnviroAI launcher. A navy pill at the bottom end
 // corner of every page with a slow gold halo (3s breath, still under reduced
 // motion), lifted above the mini-player while an episode plays, a round
 // button under 640px, hidden while the panel is open. When the page declares
@@ -72,7 +72,7 @@ export function AskLauncher() {
       {/* the gold halo: transform and opacity only, a 3 second breath */}
       <motion.span
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-full bg-gold-500"
+        className="pointer-events-none absolute inset-0 rounded-full bg-aqua-500"
         animate={
           reduced
             ? { scale: 1.14, opacity: 0.35 }
@@ -91,11 +91,11 @@ export function AskLauncher() {
         aria-keyshortcuts="Control+K Meta+K"
         data-testid="ask-launcher-button"
         className={cn(
-          "relative flex items-center justify-center gap-2 rounded-full bg-maroon-700 text-white shadow-[var(--shadow-lift)] transition-colors hover:bg-maroon-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500 cursor-pointer",
+          "relative flex items-center justify-center gap-2 rounded-full bg-navy-700 text-white shadow-[var(--shadow-lift)] transition-colors hover:bg-navy-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500 cursor-pointer",
           "size-14 sm:h-12 sm:w-auto sm:px-5"
         )}
       >
-        <Sparkles className="size-5 shrink-0 text-gold-300" aria-hidden />
+        <Sparkles className="size-5 shrink-0 text-aqua-300" aria-hidden />
         <span className="hidden overflow-hidden sm:block">
           <AnimatePresence mode="wait" initial={false}>
             <motion.span

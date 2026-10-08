@@ -7,7 +7,7 @@ export default function ExpertsLoading() {
     <div aria-busy>
       <Skeleton className="h-8 w-56" />
       <Skeleton className="mt-2 h-4 w-72" />
-      <div className="mt-5 grid grid-cols-1 gap-2 rounded-2xl bg-sand-100 p-1.5 sm:grid-cols-2">
+      <div className="mt-5 grid grid-cols-1 gap-2 rounded-2xl bg-mist-100 p-1.5 sm:grid-cols-2">
         <Skeleton className="h-20 rounded-xl" />
         <Skeleton className="h-20 rounded-xl" />
       </div>

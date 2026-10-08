@@ -1,5 +1,5 @@
 "use client";
-// Streams an Ask SiaNexus answer: breathing caret, citation chips as they arrive,
+// Streams an Ask EnviroAI answer: breathing caret, citation chips as they arrive,
 // confidence meter, source list, feedback and routing actions.
 import * as React from "react";
 import { useTranslations } from "next-intl";
@@ -73,7 +73,7 @@ export type SuggestedExpert = {
   availability: string;
   reasonEn: string;
   reasonAr: string;
-  /* CR08 3: NPC staff are internal, everyone else external */
+  /* CR08 3: Office staff are internal, everyone else external */
   kind?: "internal" | "external";
 };
 
@@ -185,7 +185,7 @@ export function CitationChip({ n, citation }: { n: number; citation?: Citation }
   const chip = (
     <Link
       href={citation ? (citationHref(citation) as never) : ("#" as never)}
-      className="mx-0.5 inline-flex h-4.5 min-w-4.5 translate-y-[-1px] cursor-pointer items-center justify-center rounded bg-maroon-100 px-1 align-middle text-[10px] font-semibold text-maroon-900 transition-colors hover:bg-maroon-700 hover:text-white tnum"
+      className="mx-0.5 inline-flex h-4.5 min-w-4.5 translate-y-[-1px] cursor-pointer items-center justify-center rounded bg-navy-100 px-1 align-middle text-[10px] font-semibold text-navy-900 transition-colors hover:bg-navy-700 hover:text-white tnum"
     >
       {n}
     </Link>
@@ -216,7 +216,7 @@ export function ConfidenceMeter({ level }: { level: "high" | "medium" | "low" })
         {[0, 1, 2].map((i) => (
           <span
             key={i}
-            className={cn("h-2 w-4 rounded-sm", i < filled ? color : "bg-sand-200")}
+            className={cn("h-2 w-4 rounded-sm", i < filled ? color : "bg-mist-200")}
           />
         ))}
       </span>
@@ -243,27 +243,27 @@ export function SourceList({ citations }: { citations: Citation[] }) {
                person card opens from a button */
             <div
               key={c.n}
-              className="group relative flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-maroon-50"
+              className="group relative flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-navy-50"
               data-testid="citation-row"
             >
-              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-maroon-100 text-[10px] font-semibold text-maroon-900 tnum">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-navy-100 text-[10px] font-semibold text-navy-900 tnum">
                 {c.n}
               </span>
               <Icon
                 className={
-                  isIndicator ? "size-3.5 shrink-0 text-gulf-600" : "size-3.5 shrink-0 text-ink-400"
+                  isIndicator ? "size-3.5 shrink-0 text-teal-600" : "size-3.5 shrink-0 text-ink-400"
                 }
               />
               <Link
                 href={citationHref(c) as never}
                 /* flex-1: the title takes the free space, so every tag and the
                    person chip keep to the end of the row */
-                className="min-w-0 flex-1 truncate rounded text-ink-900 after:absolute after:inset-0 after:content-[''] group-hover:text-maroon-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+                className="min-w-0 flex-1 truncate rounded text-ink-900 after:absolute after:inset-0 after:content-[''] group-hover:text-navy-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
               >
                 {c.title}
               </Link>
-              {c.edition && c.edition !== "nds3" ? (
-                <span className="shrink-0 rounded bg-sand-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-ink-600">
+              {c.edition && c.edition !== "nes3" ? (
+                <span className="shrink-0 rounded bg-mist-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-ink-600">
                   {c.edition}
                 </span>
               ) : null}
@@ -273,19 +273,19 @@ export function SourceList({ citations }: { citations: Citation[] }) {
                 </span>
               ) : null}
               {isIndicator ? (
-                <span className="ms-auto shrink-0 text-[10px] font-medium uppercase tracking-wide text-gulf-600">
+                <span className="ms-auto shrink-0 text-[10px] font-medium uppercase tracking-wide text-teal-600">
                   {t("statisticTag")}
                 </span>
               ) : c.resource_type === "index" || c.resource_type === "index_forecast" ? (
-                <span className="ms-auto shrink-0 rounded bg-gulf-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-gulf-600">
+                <span className="ms-auto shrink-0 rounded bg-teal-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-teal-600">
                   {c.resource_type === "index_forecast" ? t("forecastTag") : t("indexTag")}
                 </span>
               ) : c.resource_type === "podcast_episode" ? (
-                <span className="ms-auto shrink-0 rounded bg-maroon-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-maroon-900">
+                <span className="ms-auto shrink-0 rounded bg-navy-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-navy-900">
                   {t("podcastTag")}
                 </span>
               ) : c.title.startsWith("Deliverable ") ? (
-                <span className="ms-auto shrink-0 rounded bg-maroon-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-maroon-900">
+                <span className="ms-auto shrink-0 rounded bg-navy-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-navy-900">
                   {t("deliverableTag")}
                 </span>
               ) : c.page ? (
@@ -348,7 +348,7 @@ export function AnswerFooter({
     ] as { key: "internal" | "external"; items: SuggestedExpert[] }[]
   ).filter((g) => g.items.length);
   return (
-    <div className="mt-4 border-t border-sand-100 pt-3">
+    <div className="mt-4 border-t border-mist-100 pt-3">
       <div className="flex flex-wrap items-center gap-3">
         <ConfidenceMeter level={final.confidence} />
         {final.includesSecret ? (
@@ -387,7 +387,7 @@ export function AnswerFooter({
       </div>
 
       {expertGroups.length ? (
-        <div className="mt-3 rounded-xl bg-sand-50 p-3" data-testid="suggested-experts">
+        <div className="mt-3 rounded-xl bg-mist-50 p-3" data-testid="suggested-experts">
           <p className="mb-2 text-sm font-medium text-ink-900">
             {final.confidence === "low" ? t("routePrimary") : t("routeSecondary")}
           </p>
@@ -397,7 +397,7 @@ export function AnswerFooter({
                 <p className="flex items-center gap-2">
                   <span
                     aria-hidden
-                    className={cn("h-3 w-1 rounded-full", g.key === "internal" ? "bg-maroon-700" : "bg-gulf-600")}
+                    className={cn("h-3 w-1 rounded-full", g.key === "internal" ? "bg-navy-700" : "bg-teal-600")}
                   />
                   <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-600 rtl:tracking-normal">
                     {te(`groups.${g.key}`)}
@@ -405,7 +405,7 @@ export function AnswerFooter({
                 </p>
                 {g.items.map((e) => (
                   <div key={e.id} className="flex items-center gap-3">
-                    <Avatar name={e.nameEn} color={g.key === "internal" ? "maroon" : "gulf"} size={30} />
+                    <Avatar name={e.nameEn} color={g.key === "internal" ? "navy" : "teal"} size={30} />
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium text-ink-900">
                         {locale === "ar" ? e.nameAr : e.nameEn}

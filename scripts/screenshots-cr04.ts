@@ -17,7 +17,7 @@ const want = (s: string) => only.length === 0 || only.includes(s);
 async function login(page: Page, email: string) {
   await page.goto(`${BASE}/en/login`);
   await page.fill("#email", email);
-  await page.fill("#password", "Nexus!2026");
+  await page.fill("#password", "EnviroAI!2026");
   await page.click("button[type=submit]");
   await page.waitForURL("**/home", { timeout: 60000 });
 }
@@ -53,7 +53,7 @@ async function withViewport(
 ) {
   const ctx = await browser.newContext({ viewport: { width, height } });
   const page = await ctx.newPage();
-  await login(page, "admin@npc.qa");
+  await login(page, "admin@enviroai.demo");
   await fn(page);
   await ctx.close();
 }

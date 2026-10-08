@@ -1,5 +1,5 @@
 import fs from "node:fs";
-const f = "C:/npckms/src/server/ai/mock.ts";
+const f = "C:/enviroai/src/server/ai/mock.ts";
 const lines = fs.readFileSync(f, "utf8").split("\n");
 const idx = lines.findIndex((l) => l.includes("strip control chars"));
 if (idx < 0) {

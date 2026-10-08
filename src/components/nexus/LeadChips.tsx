@@ -1,6 +1,6 @@
 "use client";
 // CR05 2.2: lead and supporting chips for initiatives and projects. The kind
-// glyph: an NPC mark for internal departments, a building for ministries, and
+// glyph: the Sia mark for internal departments, a building for ministries, and
 // close cousins for the other register kinds.
 import * as React from "react";
 import { useLocale } from "next-intl";
@@ -11,13 +11,13 @@ import type { LeadChip as LeadChipData } from "@/server/services/strategy";
 export function KindGlyph({ lead }: { lead: LeadChipData }) {
   if (lead.kind === "department") {
     return (
-      // the NPC emblem sits at the right edge of the transparent lockup
+      // the Sia slash mark
       // eslint-disable-next-line @next/next/no-img-element
       <img
-        src="/brand/NPC_logo_transparent.png"
+        src="/brand/EnviroAI_mark.svg"
         alt=""
         aria-hidden
-        className="size-3 shrink-0 select-none object-cover object-right"
+        className="size-3 shrink-0 select-none object-contain"
         draggable={false}
       />
     );
@@ -52,8 +52,8 @@ export function LeadChipPill({
       className={cn(
         "inline-flex max-w-full items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-medium leading-4",
         lead.role === "lead"
-          ? "border-gulf-100 bg-gulf-100 text-gulf-600"
-          : "border-sand-300 bg-sand-100 text-ink-600",
+          ? "border-teal-100 bg-teal-100 text-teal-600"
+          : "border-mist-300 bg-mist-100 text-ink-600",
         className
       )}
       title={name}

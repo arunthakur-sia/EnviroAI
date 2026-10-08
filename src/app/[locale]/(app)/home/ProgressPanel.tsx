@@ -1,6 +1,6 @@
 "use client";
-// CR02 1.5 + CR03 4.4.6: the Your Progress panel. One large maroon ring
-// (level progress) with a thin gold inner ring (weekly streak), seven outcome
+// CR02 1.5 + CR03 4.4.6: the Your Progress panel. One large navy ring
+// (level progress) with a thin aqua inner ring (weekly streak), seven outcome
 // dots filled by knowledge-footprint depth, one caption line. CR03: the ring
 // draws in on first view, glows briefly when points change during the
 // session, and the dots answer the constellation's connection hovers.
@@ -30,11 +30,11 @@ export type ProgressData = {
 };
 
 function depthColor(depth: number, max: number): string {
-  if (depth <= 0) return "var(--color-sand-200)";
+  if (depth <= 0) return "var(--color-mist-200)";
   const ratio = Math.min(1, depth / Math.max(1, max));
-  if (ratio < 0.34) return "var(--color-maroon-300)";
-  if (ratio < 0.67) return "var(--color-maroon-500)";
-  return "var(--color-maroon-700)";
+  if (ratio < 0.34) return "var(--color-navy-300)";
+  if (ratio < 0.67) return "var(--color-navy-500)";
+  return "var(--color-navy-700)";
 }
 
 function Ring({
@@ -100,11 +100,11 @@ function FootprintDots({
               onMouseEnter={() => conn?.setHovered(o.code)}
               onMouseLeave={() => conn?.setHovered(null)}
               className={cn(
-                "block size-3 rounded-full transition-all duration-300 hover:scale-125 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700",
-                lit && "scale-125 ring-2 ring-maroon-300 ring-offset-1"
+                "block size-3 rounded-full transition-all duration-300 hover:scale-125 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700",
+                lit && "scale-125 ring-2 ring-navy-300 ring-offset-1"
               )}
               style={{
-                background: lit ? "var(--color-maroon-700)" : depthColor(o.depth, maxDepth),
+                background: lit ? "var(--color-navy-700)" : depthColor(o.depth, maxDepth),
               }}
               aria-label={`${bi(locale, o.nameEn, o.nameAr)}: ${o.depth}`}
               data-testid="outcome-dot"
@@ -166,22 +166,22 @@ export function ProgressPanel({
   return (
     <div className="bento-card flex h-full flex-col items-center gap-4 p-5" data-testid="progress-panel">
       <div
-        className={cn("relative rounded-full transition-shadow duration-500", glow && "shadow-[0_0_0_8px_var(--color-gold-100)]")}
+        className={cn("relative rounded-full transition-shadow duration-500", glow && "shadow-[0_0_0_8px_var(--color-aqua-100)]")}
         style={{ width: size, height: size }}
       >
         <Ring
           size={size}
           stroke={11}
           value={drawn ? levelValue : 0}
-          color="var(--color-maroon-700)"
-          track="var(--color-sand-200)"
+          color="var(--color-navy-700)"
+          track="var(--color-mist-200)"
         />
         <Ring
           size={size - 32}
           stroke={4}
           value={drawn ? weeklyValue : 0}
-          color="var(--color-gold-500)"
-          track="var(--color-sand-100)"
+          color="var(--color-aqua-500)"
+          track="var(--color-mist-100)"
         />
         <span
           className="absolute inset-0 flex flex-col items-center justify-center"
@@ -189,8 +189,8 @@ export function ProgressPanel({
             weeklyValue >= 1 ? t("weeklyRing") : t("weeklyRingPending")
           }
         >
-          <span className="font-[family-name:var(--font-display)] text-[26px] font-semibold leading-none text-maroon-900 tnum">
-            {progress.points.toLocaleString(locale === "ar" ? "ar-QA-u-nu-latn" : "en-US")}
+          <span className="font-[family-name:var(--font-display)] text-[26px] font-semibold leading-none text-navy-900 tnum">
+            {progress.points.toLocaleString(locale === "ar" ? "ar-SA-u-nu-latn" : "en-US")}
           </span>
           {(() => {
             const levelName = bi(locale, progress.levelNameEn, progress.levelNameAr);

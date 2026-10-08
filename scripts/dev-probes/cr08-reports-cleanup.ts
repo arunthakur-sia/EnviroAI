@@ -8,7 +8,7 @@ loadEnv();
 import { createClient } from "@libsql/client";
 
 async function main() {
-  const email = process.argv[2] ?? "analyst@npc.qa";
+  const email = process.argv[2] ?? "analyst@enviroai.demo";
   const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
   const user = await db.execute({ sql: "select u.id, u.department_scope, r.name_en role from users u join roles r on r.id = u.role_id where u.email = ?", args: [email] });
   console.log("account:", user.rows[0]);

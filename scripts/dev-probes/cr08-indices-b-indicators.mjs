@@ -1,7 +1,7 @@
-// CR08 4.1 (agent B): the full indicator catalogue with its Qatar series
-// shape and any NDS3 KPI target, to choose the national indicator set.
+// CR08 4.1 (agent B): the full indicator catalogue with its home-country series
+// shape and any strategy KPI target, to choose the national indicator set.
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const q = async (sql, args = []) => (await db.execute({ sql, args })).rows;
 
 for (const r of await q(

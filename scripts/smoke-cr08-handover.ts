@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 // CR08 6: smoke checks for the rebuilt handover. Wired into scripts/smoke.ts
 // by the coordinator (section 19 auto-discovers smoke-cr08-*.ts).
-//   ctx.cookie is a Contributor session (analyst@npc.qa), ctx.adminCookie the
+//   ctx.cookie is a Contributor session (analyst@enviroai.demo), ctx.adminCookie the
 //   Super Admin, ctx.db a raw libsql client.
 import type { Client } from "@libsql/client";
 
@@ -36,7 +36,7 @@ async function loginCookie(ctx: Ctx, email: string): Promise<string> {
   const res = await fetchRetry(`${ctx.base}/api/v1/auth/login`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email, password: "EnviroAI!2026" }),
   });
   const set = res.headers.get("set-cookie") ?? "";
   return set.split(";")[0];
@@ -86,11 +86,11 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   /* ---- the APIs and permissions ---- */
   const list = await call<{ rows: { id: string; readiness: boolean }[] }>(ctx, ctx.adminCookie, "/api/v1/handover");
   check("GET /api/v1/handover lists the handovers for the Super Admin with readiness", list.status === 200 && (list.data?.rows.length ?? 0) >= 3);
-  const readerCookie = await loginCookie(ctx, "reader@npc.qa");
+  const readerCookie = await loginCookie(ctx, "reader@enviroai.demo");
   const readerStart = await call(ctx, readerCookie, "/api/v1/handover", { method: "POST", body: JSON.stringify({ person: { userId: "x" }, kind: "leaving", recipient: { mode: "per_item" } }) });
   check("a reader cannot start a handover", readerStart.status === 403 || readerStart.status === 404, `${readerStart.status}`);
-  const headCookie = await loginCookie(ctx, "head.stats@npc.qa");
-  const other = await ctx.db.execute("select id from users where email = 'lina.haddad@npc.qa'");
+  const headCookie = await loginCookie(ctx, "head.stats@enviroai.demo");
+  const other = await ctx.db.execute("select id from users where email = 'lina.alhazmi@enviroai.demo'");
   const headStart = await call(ctx, headCookie, "/api/v1/handover", { method: "POST", body: JSON.stringify({ person: { userId: String(other.rows[0]?.id) }, kind: "leaving", recipient: { mode: "per_item" } }) });
   check("a department head cannot start a handover for another unit", headStart.status === 403, `${headStart.status} ${headStart.error}`);
   const contributorList = await call(ctx, ctx.cookie, "/api/v1/handover");
@@ -136,22 +136,22 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   const gaps = await ctx.db.execute("select count(*) as n from hr_risks where kind = 'incomplete_handover' and resolved_at is null");
   check("the HR risk register carries the handover rules (incomplete or gaps)", Number(gaps.rows[0].n) >= 1, `${gaps.rows[0].n}`);
 
-  /* ---- Ask NPC tools ---- */
+  /* ---- Ask EnviroAI tools ---- */
   try {
     const { runTool, AnalystState } = await import("../src/server/ai/analyst/tools");
     const { getUserById } = await import("../src/server/auth/session");
-    const adminRow = await ctx.db.execute("select id from users where email = 'hr@npc.qa'");
+    const adminRow = await ctx.db.execute("select id from users where email = 'hr@enviroai.demo'");
     const hrUser = await getUserById(String(adminRow.rows[0]?.id));
     const text = hrUser ? await runTool({ user: hrUser, state: new AnalystState() } as never, "get_handovers_in_scope", {}) : "";
     check("get_handovers_in_scope answers for the HR Admin with readiness", /handover\(s\) in your scope/.test(text) && /READY|not ready/.test(text), text.slice(0, 100));
-    const personRow = await ctx.db.execute("select id from users where email = 'ahmed.fathy@npc.qa'");
+    const personRow = await ctx.db.execute("select id from users where email = 'abdulrahman.albalawi@enviroai.demo'");
     const person = await getUserById(String(personRow.rows[0]?.id));
     const mineText = person ? await runTool({ user: person, state: new AnalystState() } as never, "get_my_handover", {}) : "";
     check("get_my_handover answers for the leaving person", /Your handover/.test(mineText), mineText.slice(0, 100));
-    const recipientRow = await ctx.db.execute("select id from users where email = 'mohammed.alsulaiti@npc.qa'");
+    const recipientRow = await ctx.db.execute("select id from users where email = 'mohammed.alqarni@enviroai.demo'");
     const recipient = await getUserById(String(recipientRow.rows[0]?.id));
     const pathText = recipient ? await runTool({ user: recipient, state: new AnalystState() } as never, "get_learning_path", {}) : "";
-    check("get_learning_path answers for the recipient without transcripts", /modules understood/.test(pathText) && !/SiaNexus asks/.test(pathText), pathText.slice(0, 100));
+    check("get_learning_path answers for the recipient without transcripts", /modules understood/.test(pathText) && !/EnviroAI asks/.test(pathText), pathText.slice(0, 100));
   } catch (e) {
     check("handover tools run", false, (e as Error).message);
   }

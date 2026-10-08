@@ -73,7 +73,7 @@ export function HandoversListClient({ rows, scopeAll }: { rows: HandoverListRow[
       {!filtered.length ? (
         <EmptyState icon={<Users />} title={rows.length ? t("noMatch") : t("empty")} hint={rows.length ? t("noMatchHint") : t("emptyHint")} action={rows.length ? null : <Button onClick={() => setOpen(true)}>{t("start")}</Button>} />
       ) : (
-        <div className="card divide-y divide-sand-100" role="table" aria-label={t("title")} data-testid="handover-table">
+        <div className="card divide-y divide-mist-100" role="table" aria-label={t("title")} data-testid="handover-table">
           <div role="row" className="hidden grid-cols-[minmax(220px,1.4fr)_minmax(150px,1fr)_minmax(200px,1.2fr)_minmax(150px,1fr)_120px] gap-4 px-4 py-2 text-[11px] font-semibold uppercase text-ink-400 md:grid">
             <span role="columnheader">{t("columns.person")}</span>
             <span role="columnheader">{t("columns.recipients")}</span>
@@ -86,7 +86,7 @@ export function HandoversListClient({ rows, scopeAll }: { rows: HandoverListRow[
               key={h.id}
               href={`/hr/handovers/${h.id}` as never}
               role="row"
-              className="grid grid-cols-1 gap-3 px-4 py-3 transition-colors hover:bg-maroon-50/50 focus-visible:outline-2 focus-visible:outline-gold-500 md:grid-cols-[minmax(220px,1.4fr)_minmax(150px,1fr)_minmax(200px,1.2fr)_minmax(150px,1fr)_120px] md:items-center md:gap-4"
+              className="grid grid-cols-1 gap-3 px-4 py-3 transition-colors hover:bg-navy-50/50 focus-visible:outline-2 focus-visible:outline-aqua-500 md:grid-cols-[minmax(220px,1.4fr)_minmax(150px,1fr)_minmax(200px,1.2fr)_minmax(150px,1fr)_120px] md:items-center md:gap-4"
               data-testid="handover-row"
               data-kind={h.kind}
             >
@@ -96,7 +96,7 @@ export function HandoversListClient({ rows, scopeAll }: { rows: HandoverListRow[
                   <span className="flex flex-wrap items-center gap-2">
                     <span className="truncate text-sm font-medium text-ink-900">{bi(locale, h.person.nameEn, h.person.nameAr)}</span>
                     <KindChip kind={h.kind} />
-                    {h.illustrative ? <Chip tone="sand">{tc("illustrative")}</Chip> : null}
+                    {h.illustrative ? <Chip tone="mist">{tc("illustrative")}</Chip> : null}
                   </span>
                   <span className="block truncate text-xs text-ink-600">
                     {h.personKind === "external" ? bi(locale, h.person.organisationEn ?? "", h.person.organisationAr ?? "") || th("personKinds.external") : bi(locale, h.person.departmentNameEn ?? "", h.person.departmentNameAr ?? "")}
@@ -114,12 +114,12 @@ export function HandoversListClient({ rows, scopeAll }: { rows: HandoverListRow[
                     <span className="truncate">{h.recipients.length === 1 ? bi(locale, h.recipients[0].nameEn, h.recipients[0].nameAr) : t("recipientsCount", { count: h.recipients.length })}</span>
                   </>
                 ) : (
-                  <Chip tone="gulf">{th("recipientKinds.system")}</Chip>
+                  <Chip tone="teal">{th("recipientKinds.system")}</Chip>
                 )}
               </span>
               <span role="cell" className="flex flex-col gap-1.5">
                 <ProgressBar value={h.items.pct} label={th("progress.items")} detail={`${h.items.done}/${h.items.total}`} />
-                <ProgressBar value={h.interviews.pct} label={th("progress.interviews")} detail={`${h.interviews.complete}/${h.interviews.total}`} tone="gulf" />
+                <ProgressBar value={h.interviews.pct} label={th("progress.interviews")} detail={`${h.interviews.complete}/${h.interviews.total}`} tone="teal" />
               </span>
               <span role="cell" className="flex flex-col gap-0.5 text-xs text-ink-600">
                 <Countdown days={h.daysToLastWorkingDay} lastWorkingDay={h.lastWorkingDay} compact />

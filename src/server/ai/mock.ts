@@ -112,10 +112,10 @@ export function mockEnrich(input: MockEnrichInput): EnrichResult {
     outcome_codes: match("outcome", 2),
     sector_codes: match("sector", 2),
     topic_codes: match("topic", 5),
-    classification_level: input.sourceOrigin === "npc" ? 1 : 2,
+    classification_level: input.sourceOrigin === "org" ? 1 : 2,
     classification_reason:
-      input.sourceOrigin === "npc"
-        ? "Publicly released NPC material"
+      input.sourceOrigin === "org"
+        ? "Publicly released Programme Office material"
         : "Working material, internal by default",
     language_original: input.lang,
     publish_year: yearMatch ? Number(yearMatch[0]) : null,
@@ -150,8 +150,8 @@ export function mockAnswer(
   if (!chunks.length || topSimilarity < 0.3) {
     return {
       markdown: ar
-        ? "لم أجد مصدراً موثوقاً من المجلس الوطني للتخطيط لهذه المسألة. هل ترغب في توجيه السؤال إلى خبير؟"
-        : "I could not find a reliable NPC source for this. Route it to an expert?",
+        ? "لم أجد مصدراً موثوقاً من مكتب البرنامج لهذه المسألة. هل ترغب في توجيه السؤال إلى خبير؟"
+        : "I could not find a reliable EnviroAI source for this. Route it to an expert?",
       citations: [],
       confidence: "low",
     };
@@ -168,8 +168,8 @@ export function mockAnswer(
     lang: c.lang,
   }));
   const intro = ar
-    ? `وفق مصادر المجلس الوطني للتخطيط، إليك أبرز ما ورد حول "${query}":`
-    : `From NPC sources, here is what the knowledge base holds on "${query}":`;
+    ? `وفق مصادر مكتب البرنامج، إليك أبرز ما ورد حول "${query}":`
+    : `From Programme Office sources, here is what the knowledge base holds on "${query}":`;
   const bullets = top.map((c, i) => {
     const excerpt = sentences(c.text).slice(0, 2).join(" ").slice(0, 320) || c.text.slice(0, 320);
     return `- ${excerpt} [${i + 1}]`;
@@ -215,7 +215,7 @@ export function mockNarrate(
   const prev = sorted.length > 1 ? sorted[sorted.length - 2] : null;
   const unit = ind.unit ?? "";
   const fmt = (v: number) => v.toLocaleString("en-US", { maximumFractionDigits: ind.decimals });
-  const fmtAr = (v: number) => v.toLocaleString("ar-QA-u-nu-latn", { maximumFractionDigits: ind.decimals });
+  const fmtAr = (v: number) => v.toLocaleString("ar-SA-u-nu-latn", { maximumFractionDigits: ind.decimals });
   let trendEn = `${ind.nameEn} stands at ${fmt(latest.value)} ${unit} for ${latest.period}.`;
   let trendAr = `بلغ ${ind.nameAr} ${fmtAr(latest.value)} ${unit} في ${latest.period}.`;
   if (prev) {
@@ -483,8 +483,8 @@ export function mockManualSignal(
     title_ar: isAr ? cleanTitle : "",
     summary_en: isAr ? "" : summary,
     summary_ar: isAr ? summary : "",
-    why_en: "Submitted manually for triage against NDS3 relevance.",
-    why_ar: "أُدرجت يدوياً للفرز وفق صلتها باستراتيجية التنمية الوطنية الثالثة.",
+    why_en: "Submitted manually for triage against NES relevance.",
+    why_ar: "أُدرجت يدوياً للفرز وفق صلتها بالاستراتيجية الوطنية للبيئة.",
     url,
     publisher: publisher || (url ? new URL(url).hostname.replace(/^www\./, "") : "manual"),
     published_at: new Date().toISOString().slice(0, 10),
@@ -505,8 +505,8 @@ export type MockPlannedTool = { name: string; input: Record<string, unknown> };
 
 const OUTCOME_HINTS: [RegExp, string][] = [
   [/fiscal|budget|revenue|مالي|الموازنة|إيراد/i, "fiscal_sust"],
-  [/qatariz|labou?r|workforce|employ|skills|توطين|تقطير|عمل|قوى عاملة|مهارات/i, "workforce"],
-  [/environment|emission|renewable|solar|climate|بيئ|انبعاث|شمسي|مناخ/i, "env_sust"],
+  [/labou?r|workforce|employ|skills|توطين|عمل|قوى عاملة|مهارات/i, "workforce"],
+  [/environment|emission|renewable|solar|climate|water|agricultur|desertif|waste|مياه|زراع|تصحر|نفايات|بيئ|انبعاث|شمسي|مناخ/i, "env_sust"],
   [/health|education|quality of life|housing|صحة|تعليم|جودة الحياة|إسكان/i, "quality_life"],
   [/social|family|cohesi|culture|مجتمع|أسرة|تماسك|ثقافة/i, "cohesive_society"],
   [/government|digital service|e-gov|حكوم|خدمات رقمية/i, "gov_excellence"],
@@ -548,7 +548,7 @@ export function mockAnalystPlan(
   const wantsCount = /how many|count of|كم عدد|عدد ال/i.test(q);
   const strategyNoun = /target|initiative|project|outcome|node|مستهدف|هدف|مبادر|مشروع|نتيجة/i.test(q);
   const performance =
-    /how are we doing|how is .* going|progress on|on track for|كيف نسير|كيف أداؤنا|أين وصلنا|qatariz|توطين|تقطير/i.test(q);
+    /how are we doing|how is .* going|progress on|on track for|كيف نسير|كيف أداؤنا|أين وصلنا|توطين/i.test(q);
   const numberish =
     performance ||
     /rate|inflation|population|gdp|unemployment|percent|latest|current|by sector|كم بلغ|معدل|نسبة|سكان|تضخم|بطالة|ناتج|حالي|حسب القطاع/i.test(q);
@@ -568,7 +568,7 @@ export function mockAnalystPlan(
   } else if (compare) {
     complexity = "complex";
     const theme = rewritten
-      .replace(/compare|nds\d|and|on|versus|قارن|مقارنة|بين/gi, " ")
+      .replace(/compare|nes\d|and|on|versus|قارن|مقارنة|بين/gi, " ")
       .replace(/\s+/g, " ")
       .trim()
       .slice(0, 60);
@@ -581,10 +581,10 @@ export function mockAnalystPlan(
         : /outcome|نتيجة/i.test(q)
           ? "outcome"
           : "target";
-    tools.push({ name: "query_strategy", input: { edition: "nds3", node_type: nodeType, count_by: "outcome" } });
+    tools.push({ name: "query_strategy", input: { edition: "nes3", node_type: nodeType, count_by: "outcome" } });
   } else if (risk) {
     complexity = "complex";
-    tools.push({ name: "query_strategy", input: { edition: "nds3", status: "at_risk" } });
+    tools.push({ name: "query_strategy", input: { edition: "nes3", status: "at_risk" } });
     tools.push({ name: "what_changed", input: { days: 90 } });
   } else if (changed) {
     tools.push({
@@ -613,7 +613,7 @@ export function mockAnalystPlan(
     tools.push({ name: "query_indicators", input: { text: topic || rewritten.slice(0, 40) } });
     tools.push({ name: "search_knowledge", input: { query: rewritten, limit: 3 } });
     if (performance || outcome === "workforce") {
-      tools.push({ name: "query_strategy", input: { edition: "nds3", text: topic.split(" ")[0] ?? "", node_type: "target" } });
+      tools.push({ name: "query_strategy", input: { edition: "nes3", text: topic.split(" ")[0] ?? "", node_type: "target" } });
       tools.push({ name: "get_lessons", input: { text: topic.split(" ")[0] ?? "" } });
       tools.push({ name: "find_experts", input: { question: rewritten, limit: 3 } });
       tools.push({ name: "get_signals", input: { text: topic.split(" ")[0] ?? "", days: 90 } });
@@ -648,13 +648,13 @@ export function mockAnalystAnswer(
   }
   if (!lines.length) {
     return lang === "ar"
-      ? "لم أجد في سيا نكسس ما يجيب عن هذا السؤال مباشرة. جرب إعادة الصياغة أو وجّه السؤال إلى خبير."
-      : "I could not find anything in SiaNexus that answers this directly. Try rephrasing, or route it to an expert.";
+      ? "لم أجد في EnviroAI ما يجيب عن هذا السؤال مباشرة. جرب إعادة الصياغة أو وجّه السؤال إلى خبير."
+      : "I could not find anything in EnviroAI that answers this directly. Try rephrasing, or route it to an expert.";
   }
   const intro =
     lang === "ar"
-      ? "وفق بيانات سيا نكسس، هذا أبرز ما وجدته:"
-      : "From SiaNexus data, here is what I found:";
+      ? "وفق بيانات EnviroAI، هذا أبرز ما وجدته:"
+      : "From EnviroAI data, here is what I found:";
   const outro =
     lang === "ar"
       ? "التفاصيل الكاملة في الأقسام أدناه."
@@ -681,7 +681,7 @@ export function mockAnalystFollowUps(
     out.push(ar ? "أرسل السؤال إلى الخبير الأقرب" : "Send this to the closest expert");
   }
   if (toolsUsed.includes("compare_editions")) {
-    out.push(ar ? "ما الذي استمر إلى الاستراتيجية الثالثة؟" : "What carried through into NDS3?");
+    out.push(ar ? "ما الذي استمر إلى الاستراتيجية الوطنية للبيئة؟" : "What carried through into NES?");
     out.push(ar ? "أرني روابط النسب بين النسختين" : "Show me the lineage links between the editions");
   }
   if (toolsUsed.includes("what_changed")) {
@@ -701,7 +701,7 @@ export function mockAnalystFollowUps(
 
 /**
  * Mock structurer: splits text by paragraphs, first sentence becomes the title,
- * keyword-matches tags and NDS3 outcomes, returns one Lesson item per paragraph.
+ * keyword-matches tags and NES themes, returns one Lesson item per paragraph.
  * Image and file inputs each become one item from their filename.
  */
 export function mockKnowledgeStructure(input: {
@@ -874,7 +874,7 @@ export function mockPodcastScript(input: {
     if (ar) {
       push(
         "hamad",
-        `أهلاً بكم في بودكاست المعرفة من المجلس الوطني للتخطيط. حلقة قصيرة اليوم عن درس واحد يستحق دقيقتين من وقتكم: ${input.labelAr || input.labelEn}. دكتورة مريم، ما القصة؟`
+        `أهلاً بكم في البودكاست المعرفي من مكتب البرنامج. حلقة قصيرة اليوم عن درس واحد يستحق دقيقتين من وقتكم: ${input.labelAr || input.labelEn}. دكتورة مريم، ما القصة؟`
       );
       if (first) {
         push("mariam", clean(first.text, 300), `كما سُجل في ${first.title}`);
@@ -885,12 +885,12 @@ export function mockPodcastScript(input: {
       );
       push(
         "hamad",
-        `أين ينطبق هذا؟ في كل مشروع يمر بالمرحلة نفسها. ستجدون الدرس وروابطه في غرفة التعلم في سيا نكسس. كان هذا بودكاست المعرفة. إلى اللقاء.`
+        `أين ينطبق هذا؟ في كل مشروع يمر بالمرحلة نفسها. ستجدون الدرس وروابطه في غرفة التعلم في EnviroAI. كان هذا البودكاست المعرفي. إلى اللقاء.`
       );
     } else {
       push(
         "hamad",
-        `Welcome to NPC Knowledge Cast, from the National Planning Council. A short one today: a single lesson worth two minutes of your time: ${input.labelEn}. Dr. Mariam, what is the story?`
+        `Welcome to EnviroAI Briefing Cast, from the Programme Office. A short one today: a single lesson worth two minutes of your time: ${input.labelEn}. Dr. Mariam, what is the story?`
       );
       if (first) {
         push("mariam", clean(first.text, 320), `as recorded in ${first.title}`);
@@ -901,13 +901,13 @@ export function mockPodcastScript(input: {
       );
       push(
         "hamad",
-        `Where does it apply? In every project passing through the same stage. You will find the lesson and its links in the Learning Room in SiaNexus. That was NPC Knowledge Cast. Until next time.`
+        `Where does it apply? In every project passing through the same stage. You will find the lesson and its links in the Learning Room in EnviroAI. That was EnviroAI Briefing Cast. Until next time.`
       );
     }
   } else if (ar) {
     push(
       "hamad",
-      `أهلاً بكم في بودكاست المعرفة من المجلس الوطني للتخطيط. حلقة اليوم عن ${input.labelAr || input.labelEn}، وسبب اهتمامنا بها أنها تمس عملنا اليومي في تنفيذ الاستراتيجية الوطنية. معي الدكتورة مريم. أهلاً دكتورة.`
+      `أهلاً بكم في البودكاست المعرفي من مكتب البرنامج. حلقة اليوم عن ${input.labelAr || input.labelEn}، وسبب اهتمامنا بها أنها تمس عملنا اليومي في تنفيذ الاستراتيجية الوطنية. معي الدكتورة مريم. أهلاً دكتورة.`
     );
     push("mariam", "أهلاً حمد، وأهلاً بمستمعي البودكاست. المادة التي بين أيدينا اليوم غنية، فلنبدأ.");
     for (const s of sourceLines.slice(0, 4)) {
@@ -923,13 +923,13 @@ export function mockPodcastScript(input: {
     }
     push(
       "mariam",
-      "والدرس الذي أرجو أن نحتفظ به: المعرفة الموثقة في وقتها توفر على الفريق القادم شهوراً من إعادة الاكتشاف. سجلوا ما تعلمتم في سيا نكسس قبل أن ينساه المشروع."
+      "والدرس الذي أرجو أن نحتفظ به: المعرفة الموثقة في وقتها توفر على الفريق القادم شهوراً من إعادة الاكتشاف. سجلوا ما تعلمتم في EnviroAI قبل أن ينساه المشروع."
     );
-    push("hamad", "شكراً دكتورة مريم، وشكراً لكم على الاستماع. كان هذا بودكاست المعرفة. إلى اللقاء.");
+    push("hamad", "شكراً دكتورة مريم، وشكراً لكم على الاستماع. كان هذا البودكاست المعرفي. إلى اللقاء.");
   } else {
     push(
       "hamad",
-      `Welcome to NPC Knowledge Cast, from the National Planning Council. Today we are talking about ${input.labelEn}, and it matters because it touches the daily work of delivering the national strategy. With me is Dr. Mariam. Welcome, doctor.`
+      `Welcome to EnviroAI Briefing Cast, from the Programme Office. Today we are talking about ${input.labelEn}, and it matters because it touches the daily work of delivering the national strategy. With me is Dr. Mariam. Welcome, doctor.`
     );
     push("mariam", "Thank you Hamad, and hello to everyone listening to the Cast. The material in front of us today is rich, so let us begin.");
     for (const s of sourceLines.slice(0, 4)) {
@@ -945,16 +945,16 @@ export function mockPodcastScript(input: {
     }
     push(
       "mariam",
-      "And the lesson to keep: knowledge recorded in its moment saves the next team months of rediscovery. Capture what you learned in SiaNexus before the project forgets it."
+      "And the lesson to keep: knowledge recorded in its moment saves the next team months of rediscovery. Capture what you learned in EnviroAI before the project forgets it."
     );
-    push("hamad", "Thank you Dr. Mariam, and thank you for listening. That was NPC Knowledge Cast. Until next time.");
+    push("hamad", "Thank you Dr. Mariam, and thank you for listening. That was EnviroAI Briefing Cast. Until next time.");
   }
 
   return {
     title_en: `${input.labelEn}: what the knowledge says`,
     title_ar: `${input.labelAr || input.labelEn}: ماذا تقول المعرفة`,
-    description_en: `A short two-voice episode on ${input.labelEn}, grounded in the selected SiaNexus content.`,
-    description_ar: `حلقة قصيرة بصوتين عن ${input.labelAr || input.labelEn}، مبنية على المحتوى المختار في سيا نكسس.`,
+    description_en: `A short two-voice episode on ${input.labelEn}, grounded in the selected EnviroAI content.`,
+    description_ar: `حلقة قصيرة بصوتين عن ${input.labelAr || input.labelEn}، مبنية على المحتوى المختار في EnviroAI.`,
     segments: segs,
   };
 }

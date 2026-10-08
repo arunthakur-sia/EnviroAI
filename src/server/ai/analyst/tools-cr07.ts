@@ -1,5 +1,5 @@
-// CR07 analyst tools: the Council Strategy (2.5), the Organisation (3.7), and
-// the lesson roll-up (1.3). Council citations carry the Internal chip and, while
+// CR07 analyst tools: the Programme Strategy (2.5), the Organisation (3.7), and
+// the lesson roll-up (1.3). Office citations carry the Internal chip and, while
 // the seeded strategy is illustrative, say so in the source line.
 import { and, asc, desc, eq, inArray, like, or, sql } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
@@ -19,8 +19,8 @@ import { canSeeDocument } from "@/server/auth/permissions";
 /** CR07 2.5: how a council citation names itself. */
 function councilSourceLabel(data: CouncilPageData): string {
   return data.strategy.isIllustrative
-    ? "SiaNexus Council Strategy, illustrative data"
-    : "SiaNexus Council Strategy";
+    ? "EnviroAI Programme Strategy, illustrative data"
+    : "EnviroAI Programme Strategy";
 }
 
 const LEVEL_WORDS: Record<string, string> = {
@@ -43,7 +43,7 @@ export async function toolQueryCouncilStrategy(
   }
 ): Promise<string> {
   const data = await getCouncilPageData(ctx.user);
-  if (!data) return "No Council Strategy has been recorded yet.";
+  if (!data) return "No Programme Strategy has been recorded yet.";
   const byId = new Map(data.nodes.map((n) => [n.id, n]));
   const goalOf = (nodeId: string): string | null => {
     let cursor = byId.get(nodeId);
@@ -97,12 +97,12 @@ export async function toolQueryCouncilStrategy(
       .sort((a, b) => b[1] - a[1])
       .map(([bucket, count]) => `${bucket}: ${count}`);
     return [
-      `Council Strategy "${data.strategy.nameEn}" counted by ${key} (Internal, ${councilSourceLabel(data)}):`,
+      `Programme Strategy "${data.strategy.nameEn}" counted by ${key} (Internal, ${councilSourceLabel(data)}):`,
       ...lines,
     ].join("\n");
   }
 
-  if (!nodes.length) return "No council nodes matched that scope.";
+  if (!nodes.length) return "No Programme Strategy nodes matched that scope.";
   const lines = nodes.slice(0, 25).map((n) => {
     const indicators = data.indicators.filter((i) => i.nodeId === n.id);
     const sourceN = ctx.state.addSource({
@@ -120,7 +120,7 @@ export async function toolQueryCouncilStrategy(
     return `[${sourceN}] Internal | ${LEVEL_WORDS[n.level] ?? n.level} ${n.code ?? ""} "${n.titleEn}" / "${n.titleAr}" status=${n.status} owner=${owner}${perf}`;
   });
   return [
-    `Council Strategy "${data.strategy.nameEn}" (${data.strategy.periodFrom?.slice(0, 4)} to ${data.strategy.periodTo?.slice(0, 4)}), Internal. Source: ${councilSourceLabel(data)}.`,
+    `Programme Strategy "${data.strategy.nameEn}" (${data.strategy.periodFrom?.slice(0, 4)} to ${data.strategy.periodTo?.slice(0, 4)}), Internal. Source: ${councilSourceLabel(data)}.`,
     ...lines,
     nodes.length > 25 ? `(${nodes.length - 25} more matched)` : "",
   ]
@@ -134,11 +134,11 @@ export async function toolGetCouncilNode(
   input: { id?: string; code?: string }
 ): Promise<string> {
   const data = await getCouncilPageData(ctx.user);
-  if (!data) return "No Council Strategy has been recorded yet.";
+  if (!data) return "No Programme Strategy has been recorded yet.";
   const node =
     data.nodes.find((n) => n.id === input.id) ??
     data.nodes.find((n) => n.code?.toLowerCase() === (input.code ?? "").toLowerCase());
-  if (!node) return "Council node not found. Use query_council_strategy to list the codes.";
+  if (!node) return "Office node not found. Use query_council_strategy to list the codes.";
   const byId = new Map(data.nodes.map((n) => [n.id, n]));
   const children = node.childIds.map((id) => byId.get(id)).filter(Boolean);
   const indicators = data.indicators.filter((i) => i.nodeId === node.id);
@@ -159,7 +159,7 @@ export async function toolGetCouncilNode(
     node.ownerUnit ? `Owner unit: ${node.ownerUnit.nameEn} / ${node.ownerUnit.nameAr}` : "",
     node.ownerUser ? `Owner: ${node.ownerUser.nameEn}` : "",
     node.startDate ? `Runs ${node.startDate} to ${node.endDate ?? "-"}` : "",
-    node.budgetQar != null ? `Budget QAR ${node.budgetQar}` : "",
+    node.budgetQar != null ? `Budget SAR ${node.budgetQar}` : "",
     node.priorityImpact != null
       ? `Priority: impact ${node.priorityImpact} of 5, feasibility ${node.priorityFeasibility ?? "-"} of 5`
       : "",
@@ -175,7 +175,7 @@ export async function toolGetCouncilNode(
       ? `Beneath it: ${children.map((c) => `${c!.code ?? ""} ${c!.titleEn} (${c!.status})`).join("; ")}`
       : "",
     alignment.length
-      ? `Supports in NDS3: ${alignment.map((a) => `${a.labelEn ?? a.targetId}${a.noteEn ? ` (${a.noteEn})` : ""}`).join("; ")}`
+      ? `Supports in NES: ${alignment.map((a) => `${a.labelEn ?? a.targetId}${a.noteEn ? ` (${a.noteEn})` : ""}`).join("; ")}`
       : "",
     risks.length
       ? `Risks: ${risks.map((r) => `${r.code ?? ""} ${r.titleEn} likelihood ${r.likelihood} impact ${r.impact} (${r.status})`).join("; ")}`
@@ -194,11 +194,11 @@ export async function toolGetCouncilIndicator(
   input: { id?: string; code?: string; period?: string }
 ): Promise<string> {
   const data = await getCouncilPageData(ctx.user);
-  if (!data) return "No Council Strategy has been recorded yet.";
+  if (!data) return "No Programme Strategy has been recorded yet.";
   const indicator =
     data.indicators.find((i) => i.id === input.id) ??
     data.indicators.find((i) => i.code.toLowerCase() === (input.code ?? "").toLowerCase());
-  if (!indicator) return "Council indicator not found.";
+  if (!indicator) return "Office indicator not found.";
   const node = data.nodes.find((n) => n.id === indicator.nodeId);
   const n = ctx.state.addSource({
     resource_type: "council_indicator",
@@ -217,7 +217,7 @@ export async function toolGetCouncilIndicator(
     .map((p) => `${p.period}=${p.actual}${p.target != null ? ` of ${p.target}` : ""}`)
     .join(", ");
   return [
-    `[${n}] Internal | Council indicator ${indicator.code} "${indicator.nameEn}" / "${indicator.nameAr}"`,
+    `[${n}] Internal | Office indicator ${indicator.code} "${indicator.nameEn}" / "${indicator.nameAr}"`,
     `Source: ${councilSourceLabel(data)}`,
     node ? `Measures: ${LEVEL_WORDS[node.level] ?? node.level} ${node.code ?? ""} ${node.titleEn}` : "",
     `Definition: ${indicator.definitionEn ?? "-"}`,
@@ -244,7 +244,7 @@ export async function toolGetCouncilScorecard(
   input: { period?: string }
 ): Promise<string> {
   const data = await getCouncilPageData(ctx.user);
-  if (!data) return "No Council Strategy has been recorded yet.";
+  if (!data) return "No Programme Strategy has been recorded yet.";
   const period = input.period ?? periodFor("quarterly");
   const cadence: Cadence = /^\d{4}$/.test(period)
     ? "yearly"
@@ -261,7 +261,7 @@ export async function toolGetCouncilScorecard(
     return `${g.code ?? ""} ${g.titleEn}: ${share} of ${g.reported} reported (${g.onTarget} on target, ${g.atRisk} at risk, ${g.behind} behind)${others.length ? `; ${others.join(", ")}` : ""}`;
   });
   return [
-    `Council Strategy scorecard for ${period} (${cadence} indicators), Internal. Source: ${councilSourceLabel(data)}.`,
+    `Programme Strategy scorecard for ${period} (${cadence} indicators), Internal. Source: ${councilSourceLabel(data)}.`,
     ...lines,
   ].join("\n");
 }
@@ -269,10 +269,10 @@ export async function toolGetCouncilScorecard(
 /* ---- get_council_alignment ---- */
 export async function toolGetCouncilAlignment(
   ctx: ToolContext,
-  input: { node_id?: string; nds_outcome?: string }
+  input: { node_id?: string; nes_outcome?: string }
 ): Promise<string> {
   const data = await getCouncilPageData(ctx.user);
-  if (!data) return "No Council Strategy has been recorded yet.";
+  if (!data) return "No Programme Strategy has been recorded yet.";
   const byId = new Map(data.nodes.map((n) => [n.id, n]));
   let rows = data.alignment;
   if (input.node_id) {
@@ -281,8 +281,8 @@ export async function toolGetCouncilAlignment(
       data.nodes.find((n) => n.code?.toLowerCase() === input.node_id!.toLowerCase());
     if (node) rows = rows.filter((a) => a.councilNodeId === node.id);
   }
-  if (input.nds_outcome) {
-    const needle = input.nds_outcome.toLowerCase();
+  if (input.nes_outcome) {
+    const needle = input.nes_outcome.toLowerCase();
     const [outcome] = await db
       .select({ id: schema.strategyNodes.id, code: schema.strategyNodes.code })
       .from(schema.strategyNodes)
@@ -291,7 +291,7 @@ export async function toolGetCouncilAlignment(
           eq(schema.strategyNodes.nodeType, "outcome"),
           or(
             sql`lower(${schema.strategyNodes.code}) = ${needle}`,
-            like(schema.strategyNodes.titleEn, `%${input.nds_outcome}%`)
+            like(schema.strategyNodes.titleEn, `%${input.nes_outcome}%`)
           )
         )
       )
@@ -303,7 +303,7 @@ export async function toolGetCouncilAlignment(
     const node = byId.get(a.councilNodeId);
     return `Internal | ${node?.code ?? ""} "${node?.titleEn ?? ""}" supports ${a.labelEn ?? a.targetId} (${a.targetKind}): ${a.noteEn ?? ""}`;
   });
-  return [`Council to national alignment. Source: ${councilSourceLabel(data)}.`, ...lines].join("\n");
+  return [`Office to national alignment. Source: ${councilSourceLabel(data)}.`, ...lines].join("\n");
 }
 
 /* ---- get_org_unit ---- */
@@ -322,7 +322,7 @@ export async function toolGetOrgUnit(
   const [doc] = await db
     .select({ id: schema.documents.id, titleEn: schema.documents.titleEn })
     .from(schema.documents)
-    .where(eq(schema.documents.sourceRef, `npc.qa organisational structure: ${unit.code}`))
+    .where(eq(schema.documents.sourceRef, `enviroai.demo organisational structure: ${unit.code}`))
     .limit(1);
   const n = doc
     ? ctx.state.addSource({
@@ -353,9 +353,9 @@ export async function toolGetOrgUnit(
       ? `Sub units: ${panel.subUnits.map((s) => s.nameEn).join("; ")}`
       : "",
     panel.owns.councilNodes.length
-      ? `Owns in the Council Strategy: ${panel.owns.councilNodes.length} items`
+      ? `Owns in the Programme Strategy: ${panel.owns.councilNodes.length} items`
       : "",
-    panel.owns.ndsNodes.length ? `Leads in NDS3: ${panel.owns.ndsNodes.length} items` : "",
+    panel.owns.nesNodes.length ? `Leads in NES: ${panel.owns.nesNodes.length} items` : "",
   ]
     .filter(Boolean)
     .join("\n");
@@ -381,7 +381,7 @@ export async function toolQueryOrg(
   if (!units.length) return "No organisation unit matched.";
   const byId = new Map(rows.map((u) => [u.id, u]));
   return [
-    `NPC organisation, ${units.length} units of ${rows.length}, as published on npc.qa:`,
+    `Programme Office organisation, ${units.length} units of ${rows.length}, as published on enviroai.demo:`,
     ...units
       .slice(0, 40)
       .map(
@@ -460,12 +460,12 @@ export async function toolGetLessonsForNode(
   let nodeId = input.node_id ?? "";
   if (!nodeId && input.code) {
     const needle = input.code.toLowerCase();
-    const [nds] = await db
+    const [nes] = await db
       .select({ id: schema.strategyNodes.id })
       .from(schema.strategyNodes)
       .where(sql`lower(${schema.strategyNodes.code}) = ${needle}`)
       .limit(1);
-    if (nds) nodeId = nds.id;
+    if (nes) nodeId = nes.id;
     else {
       const [council] = await db
         .select({ id: schema.councilNodes.id })
@@ -504,7 +504,7 @@ export const CR07_TOOLS = [
   {
     name: "query_council_strategy",
     description:
-      "Search the Council Strategy, the National Planning Council's own institutional strategy. Results chain levels are goal, intermediate_outcome, output, project and activity. Filter by level, by goal (code such as G2 or a title), by free text, or by status; or pass count_by = status | level | owner_unit | goal for a tally. All council content is Internal.",
+      "Search the Programme Strategy, the Programme Office's own institutional strategy. Results chain levels are goal, intermediate_outcome, output, project and activity. Filter by level, by goal (code such as G2 or a title), by free text, or by status; or pass count_by = status | level | owner_unit | goal for a tally. All council content is Internal.",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -522,7 +522,7 @@ export const CR07_TOOLS = [
   {
     name: "get_council_node",
     description:
-      "One node of the Council Strategy by id or code (for example G2, G1.IO1, G1.IO1.OP1, CP-07) with its indicators, the levels beneath it, its alignment to NDS3, its risks and its lessons.",
+      "One node of the Programme Strategy by id or code (for example G2, G1.IO1, G1.IO1.OP1, CP-07) with its indicators, the levels beneath it, its alignment to NES, its risks and its lessons.",
     input_schema: {
       type: "object" as const,
       properties: { id: { type: "string" }, code: { type: "string" } },
@@ -531,7 +531,7 @@ export const CR07_TOOLS = [
   {
     name: "get_council_indicator",
     description:
-      "One Council Strategy indicator card by id or code (CI-001 style) with its definition, formula, unit, cadence, baseline, data source, means of verification, and the actual against target for a period.",
+      "One Programme Strategy indicator card by id or code (CI-001 style) with its definition, formula, unit, cadence, baseline, data source, means of verification, and the actual against target for a period.",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -544,7 +544,7 @@ export const CR07_TOOLS = [
   {
     name: "get_council_scorecard",
     description:
-      "The Council Strategy scorecard for a period: how each strategic goal performs against its indicators of the matching cadence, and how many of its indicators report on another cadence.",
+      "The Programme Strategy scorecard for a period: how each strategic goal performs against its indicators of the matching cadence, and how many of its indicators report on another cadence.",
     input_schema: {
       type: "object" as const,
       properties: { period: { type: "string", description: "2026, 2026-Q3 or 2026-07" } },
@@ -553,19 +553,19 @@ export const CR07_TOOLS = [
   {
     name: "get_council_alignment",
     description:
-      "How the Council Strategy supports the national strategy: the mapping from council goals and outputs to NDS3 outcomes, targets, KPIs and the National Data and Statistics Strategy.",
+      "How the Programme Strategy supports the national strategy: the mapping from Programme Strategy goals and outputs to NES themes, targets, KPIs and the National Data and Statistics Strategy.",
     input_schema: {
       type: "object" as const,
       properties: {
-        node_id: { type: "string", description: "a council node id or code" },
-        nds_outcome: { type: "string", description: "an NDS3 outcome code such as O7, or its title" },
+        node_id: { type: "string", description: "a Programme Strategy node id or code" },
+        nes_outcome: { type: "string", description: "an NES themes code such as O7, or its title" },
       },
     },
   },
   {
     name: "get_org_unit",
     description:
-      "One organisation unit of the National Planning Council by name or code, with its published mandate (verbatim from npc.qa), its head, its headcount, its sub units, and what it owns.",
+      "One organisation unit of the Programme Office by name or code, with its published mandate (verbatim from enviroai.demo), its head, its headcount, its sub units, and what it owns.",
     input_schema: {
       type: "object" as const,
       properties: { name_or_code: { type: "string" } },
@@ -574,7 +574,7 @@ export const CR07_TOOLS = [
   {
     name: "query_org",
     description:
-      "List the National Planning Council's organisation units, optionally filtered by level (secretary_general, sector, office, department, section) or by text in the name or mandate.",
+      "List the Programme Office's organisation units, optionally filtered by level (secretary_general, sector, office, department, section) or by text in the name or mandate.",
     input_schema: {
       type: "object" as const,
       properties: { level: { type: "string" }, text: { type: "string" } },

@@ -114,7 +114,7 @@ export type RoomLesson = {
   links: {
     id: string;
     nodeId: string;
-    nodeKind: "nds" | "council";
+    nodeKind: "nes" | "council";
     isPrimary: boolean;
     code: string | null;
     titleEn: string;
@@ -177,7 +177,7 @@ async function loadRoomLessons(user: CurrentUser): Promise<RoomLesson[]> {
   const withScore = rows.map(({ lesson, ...author }) => {
     const links = linkMap.get(lesson.id) ?? [];
     const primary = links.find((l) => l.isPrimary) ?? links[0] ?? null;
-    // the card shows the primary link; NDS nodes keep their outcome roll-up
+    // the card shows the primary link; NES nodes keep their outcome roll-up
     const node = primary?.node
       ? {
           id: primary.node.id,
@@ -189,7 +189,7 @@ async function loadRoomLessons(user: CurrentUser): Promise<RoomLesson[]> {
       : lesson.nodeId
         ? nodeById.get(lesson.nodeId) ?? null
         : null;
-    const outcome = outcomeOf(primary?.nodeKind === "nds" ? primary.nodeId : lesson.nodeId);
+    const outcome = outcomeOf(primary?.nodeKind === "nes" ? primary.nodeId : lesson.nodeId);
     const term = outcome ? termByTax.get(outcome.tax) : null;
     let documentIds: string[] = [];
     try {
@@ -248,7 +248,7 @@ async function loadRoomLessons(user: CurrentUser): Promise<RoomLesson[]> {
     };
   });
 
-  // gold mark: top 10 percent by reuse
+  // aqua mark: top 10 percent by reuse
   const reuseSorted = [...withScore].sort((a, b) => b.reuseCount - a.reuseCount);
   const topCut = reuseSorted[Math.max(0, Math.floor(reuseSorted.length * 0.1) - 1)]?.reuseCount ?? Infinity;
   for (const l of withScore) l.topReuse = l.reuseCount > 0 && l.reuseCount >= topCut;
@@ -287,7 +287,7 @@ export type LearningRoomData = {
 /** One node in the By project drill-down, carrying its lesson counts. */
 export type PickerNode = {
   id: string;
-  kind: "nds" | "council";
+  kind: "nes" | "council";
   parentId: string | null;
   code: string | null;
   titleEn: string;
@@ -302,7 +302,7 @@ export type PickerNode = {
 };
 
 export type LessonPicker = {
-  nds: PickerNode[];
+  nes: PickerNode[];
   council: PickerNode[];
   /** lessons with no link at all */
   unlinkedIds: string[];
@@ -393,7 +393,7 @@ export async function getLearningRoomData(user: CurrentUser): Promise<LearningRo
     const entry = contributorMap.get(key) ?? {
       nameEn: l.authorNameEn ?? "",
       nameAr: l.authorNameAr ?? "",
-      color: l.authorColor ?? "maroon",
+      color: l.authorColor ?? "navy",
       count: 0,
     };
     entry.count++;
@@ -506,7 +506,7 @@ async function buildLessonPicker(lessons: RoomLesson[]): Promise<LessonPicker> {
     for (const child of children) parentById.set(child.id, parentId);
   }
 
-  const build = (kind: "nds" | "council"): PickerNode[] => {
+  const build = (kind: "nes" | "council"): PickerNode[] => {
     const nodes: PickerNode[] = [];
     for (const node of byId.values()) {
       if (node.kind !== kind) continue;
@@ -536,7 +536,7 @@ async function buildLessonPicker(lessons: RoomLesson[]): Promise<LessonPicker> {
   };
 
   return {
-    nds: build("nds"),
+    nes: build("nes"),
     council: build("council"),
     unlinkedIds: lessons.filter((l) => !linkedLessonIds.has(l.id)).map((l) => l.id),
   };
@@ -603,7 +603,7 @@ export async function reclusterLessons(): Promise<number> {
       .update(schema.lessons)
       .set({ clusterId: id })
       .where(inArray(schema.lessons.id, members.map((m) => m.id)));
-    // CR04 5: theme syntheses join the unified index for Ask NPC
+    // CR04 5: theme syntheses join the unified index for Ask EnviroAI
     try {
       const { embedStructuredRecords } = await import("@/server/search/records");
       await embedStructuredRecords("lesson_theme", id);

@@ -1,5 +1,5 @@
 // CR02 4.4: podcast script generation. Content is gathered through the same
-// analyst tools as Ask NPC (search_knowledge, get_node, get_lessons,
+// analyst tools as Ask EnviroAI (search_knowledge, get_node, get_lessons,
 // get_indicator_series, get_deliverables), limited to the selected scope,
 // then one model call (Sonnet; Opus for scopes over 10 items) writes the
 // two-voice script. Deterministic mock when AI is not live.
@@ -41,7 +41,7 @@ export type PodcastScope = {
     /* CR04 3.6: one lesson (2 minute episode) or one theme (4 minutes) */
     | "lesson"
     | "theme"
-    /* CR07 2.5: a goal, output or project of the Council Strategy */
+    /* CR07 2.5: a goal, output or project of the Programme Strategy */
     | "council_node";
   ids: string[];
   labelEn: string;
@@ -162,7 +162,7 @@ export async function gatherScopeContent(
     });
   } else if (scope.kind === "conversation") {
     // the Ask answer text arrives via query
-    parts.push(`Ask NPC answer being discussed:\n${(scope.query ?? "").slice(0, 6000)}`);
+    parts.push(`Ask EnviroAI answer being discussed:\n${(scope.query ?? "").slice(0, 6000)}`);
     parts.push(await runTool(ctx, "search_knowledge", { query: scope.labelEn.slice(0, 80), limit: 4 }));
   } else {
     // topic or collection: hybrid search plus indicators

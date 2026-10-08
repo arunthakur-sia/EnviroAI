@@ -1,4 +1,4 @@
-// Nightly daily-card job: builds tomorrow's "Did you know Qatar" card from a random
+// Nightly daily-card job: builds tomorrow's "Did you know Saudi Arabia" card from a random
 // headline indicator. Seeded cards cover the first month even if this never runs.
 import { desc, eq, and } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
@@ -64,8 +64,8 @@ export async function generateDailyCard(date?: string): Promise<void> {
           big_number: fmt,
           fact_en: `${ind.unit ?? ""} recorded for ${ind.nameEn.toLowerCase()} in ${latest.period}`.trim(),
           fact_ar: `${ind.unit ?? ""} سجلت لمؤشر ${ind.nameAr} في ${latest.period}`.trim(),
-          hook_en: `One number from the National Statistics Center, every morning.`,
-          hook_ar: `رقم واحد من المركز الوطني للإحصاء كل صباح.`,
+          hook_en: `One number from the General Authority for Statistics (GASTAT), every morning.`,
+          hook_ar: `رقم واحد من الهيئة العامة للإحصاء كل صباح.`,
           quiz_question_en: `Which period recorded this value of ${ind.nameEn}?`,
           quiz_question_ar: `في أي فترة سجلت هذه القيمة لمؤشر ${ind.nameAr}؟`,
           options: [

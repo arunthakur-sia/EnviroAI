@@ -59,13 +59,13 @@ export function ByPolicyView({
                   {g.unit ? (
                     <Link
                       href={unitHref(g.unit.code)}
-                      className="link-draw text-sm font-medium text-maroon-700 hover:text-maroon-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+                      className="link-draw text-sm font-medium text-navy-700 hover:text-navy-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
                     >
                       <span className="me-1.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-ink-400 tnum rtl:tracking-normal">{g.unit.code}</span>
                       {bi(locale, g.unit.nameEn, g.unit.nameAr)}
                     </Link>
                   ) : null}
-                  <Chip tone="sand">{t("byPolicy.docCount", { count: g.docs.length })}</Chip>
+                  <Chip tone="mist">{t("byPolicy.docCount", { count: g.docs.length })}</Chip>
                 </p>
                 <div className="grid grid-cols-1 gap-2.5 lg:grid-cols-2">
                   {g.docs.map((d, i) => (

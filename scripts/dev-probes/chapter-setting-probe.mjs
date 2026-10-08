@@ -1,5 +1,5 @@
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const r = await db.execute("select value_json from settings where key='outcome_chapters'");
 const v = JSON.parse(r.rows[0].value_json);
 for (const [k, c] of Object.entries(v)) {

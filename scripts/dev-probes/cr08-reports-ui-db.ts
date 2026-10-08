@@ -21,14 +21,14 @@ async function main() {
   console.log("editions:", editions.map((e) => `${e.code}:${e.is_default}`).join(", "));
   const counts = (await db.execute("select node_type, count(*) c from strategy_nodes group by node_type")).rows;
   console.log("nodes:", counts.map((c) => `${c.node_type}=${c.c}`).join(", "));
-  const users = (await db.execute("select u.email, u.department_id, o.code from users u left join org_units o on o.id = u.department_id where u.email in ('analyst@npc.qa','reader@npc.qa','head.stats@npc.qa','admin@npc.qa')")).rows;
+  const users = (await db.execute("select u.email, u.department_id, o.code from users u left join org_units o on o.id = u.department_id where u.email in ('analyst@enviroai.demo','reader@enviroai.demo','head.stats@enviroai.demo','admin@enviroai.demo')")).rows;
   for (const u of users) console.log(`${u.email}: dept=${u.code ?? "none"}`);
-  const analyst = users.find((u) => u.email === "analyst@npc.qa");
+  const analyst = users.find((u) => u.email === "analyst@enviroai.demo");
   if (analyst?.department_id) {
     const led = (await db.execute({ sql: "select count(*) c from node_leads where lead_kind = 'department' and department_id = ?", args: [String(analyst.department_id)] })).rows;
     console.log("projects led by the analyst's department:", led[0]?.c);
   }
-  const stake = (await db.execute("select count(*) c from node_stakeholders s join users u on u.id = s.user_id where u.email = 'analyst@npc.qa'")).rows;
+  const stake = (await db.execute("select count(*) c from node_stakeholders s join users u on u.id = s.user_id where u.email = 'analyst@enviroai.demo'")).rows;
   console.log("analyst stakeholder rows:", stake[0]?.c);
   const published = (await db.execute("select r.id, t.code, r.preview_images_json from reports r join report_types t on t.id = r.type_id where r.status = 'published' order by t.sort limit 3")).rows;
   for (const p of published) console.log(`published: ${p.code} ${p.id} previews=${JSON.parse(String(p.preview_images_json ?? "[]")).length}`);

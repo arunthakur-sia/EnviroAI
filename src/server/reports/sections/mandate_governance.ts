@@ -1,6 +1,6 @@
-// CR08 5.3: Mandate and governance. For the Council: the published mandate
-// of the General Secretariat as recorded from npc.qa, the sectors beneath
-// it, and the vision, mission, values and governance bodies of the Council
+// CR08 5.3: Mandate and governance. For the Office: the published mandate
+// of the General Secretariat as recorded from enviroai.demo, the sectors beneath
+// it, and the vision, mission, values and governance bodies of the Office
 // Strategy. For a department: the unit's own mandate, head, people and sub
 // units. Published mandate text is quoted verbatim.
 import { getCouncilPageData } from "@/server/services/council";
@@ -112,23 +112,23 @@ const def: SectionDefinition<MandateData> = {
         return {
           paragraphs: [
             bi(
-              "The organisational structure has not been recorded in SiaNexus yet, so this section cannot describe the mandate.",
-              "لم يُسجل الهيكل التنظيمي في سيا نكسس بعد، ولذلك لا يمكن لهذا القسم وصف الولاية."
+              "The organisational structure has not been recorded in EnviroAI yet, so this section cannot describe the mandate.",
+              "لم يُسجل الهيكل التنظيمي في EnviroAI بعد، ولذلك لا يمكن لهذا القسم وصف الولاية."
             ),
           ],
         };
       }
       const paragraphs = [
         bi(
-          `${u.nameEn}${u.headEn ? ` is headed by ${u.headEn}${u.headTitleEn ? `, ${u.headTitleEn}` : ""}` : ""}${u.children.length ? ` and comprises ${fmt(u.children.length)} units` : ""}, with ${fmt(u.headcountTotal)} staff recorded in SiaNexus.`,
-          `${u.nameAr}${u.headAr ? ` يرأسها ${u.headAr}${u.headTitleAr ? `، ${u.headTitleAr}` : ""}` : ""}${u.children.length ? ` وتضم ${fmt(u.children.length)} وحدات` : ""}، ويعمل بها ${fmt(u.headcountTotal)} موظفاً مسجلاً في سيا نكسس.`
+          `${u.nameEn}${u.headEn ? ` is headed by ${u.headEn}${u.headTitleEn ? `, ${u.headTitleEn}` : ""}` : ""}${u.children.length ? ` and comprises ${fmt(u.children.length)} units` : ""}, with ${fmt(u.headcountTotal)} staff recorded in EnviroAI.`,
+          `${u.nameAr}${u.headAr ? ` يرأسها ${u.headAr}${u.headTitleAr ? `، ${u.headTitleAr}` : ""}` : ""}${u.children.length ? ` وتضم ${fmt(u.children.length)} وحدات` : ""}، ويعمل بها ${fmt(u.headcountTotal)} موظفاً مسجلاً في EnviroAI.`
         ),
       ];
       if (data.council) {
         paragraphs.push(
           bi(
-            `The Council's institutional strategy, ${data.council.nameEn}, sets out ${fmt(data.council.values.length)} values and is governed through ${fmt(data.council.governance.length)} bodies${data.council.illustrative ? "; the strategy on record is illustrative until the approved text replaces it" : ""}.`,
-            `وتحدد الاستراتيجية المؤسسية للمجلس، ${data.council.nameAr}، ${fmt(data.council.values.length)} قيم، وتُحكم من خلال ${fmt(data.council.governance.length)} هيئات${data.council.illustrative ? "؛ والاستراتيجية المسجلة استرشادية إلى أن يحل النص المعتمد محلها" : ""}.`
+            `The Office's institutional strategy, ${data.council.nameEn}, sets out ${fmt(data.council.values.length)} values and is governed through ${fmt(data.council.governance.length)} bodies${data.council.illustrative ? "; the strategy on record is illustrative until the approved text replaces it" : ""}.`,
+            `وتحدد الاستراتيجية المؤسسية للمكتب، ${data.council.nameAr}، ${fmt(data.council.values.length)} قيم، وتُحكم من خلال ${fmt(data.council.governance.length)} هيئات${data.council.illustrative ? "؛ والاستراتيجية المسجلة استرشادية إلى أن يحل النص المعتمد محلها" : ""}.`
           )
         );
       }
@@ -169,10 +169,10 @@ const def: SectionDefinition<MandateData> = {
     if (data.council) {
       const c = data.council;
       if (c.visionEn || c.visionAr) {
-        blocks.push({ kind: "callout", title: bi("Vision", "الرؤية"), text: bi(c.visionEn ?? "", c.visionAr ?? ""), tone: "maroon" });
+        blocks.push({ kind: "callout", title: bi("Vision", "الرؤية"), text: bi(c.visionEn ?? "", c.visionAr ?? ""), tone: "navy" });
       }
       if (c.missionEn || c.missionAr) {
-        blocks.push({ kind: "callout", title: bi("Mission", "الرسالة"), text: bi(c.missionEn ?? "", c.missionAr ?? ""), tone: "gulf" });
+        blocks.push({ kind: "callout", title: bi("Mission", "الرسالة"), text: bi(c.missionEn ?? "", c.missionAr ?? ""), tone: "teal" });
       }
       if (c.values.length) {
         blocks.push({ kind: "heading", level: 3, text: bi("Values", "القيم") });

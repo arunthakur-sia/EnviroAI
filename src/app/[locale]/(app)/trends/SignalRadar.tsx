@@ -25,7 +25,7 @@ const TYPES = [
 const BANDS = ["near", "mid", "long"] as const;
 
 const SENTIMENT_FILL: Record<string, string> = {
-  positive: "var(--color-gulf-600)",
+  positive: "var(--color-teal-600)",
   negative: "rgba(179, 38, 30, 0.8)",
   neutral: "var(--color-ink-400)",
   mixed: "var(--color-warn)",
@@ -166,7 +166,7 @@ export function SignalRadar({
     onHoverSignal(null);
   };
 
-  const bandFills = ["var(--color-sand-100)", "var(--color-sand-50)", "#ffffff"];
+  const bandFills = ["var(--color-mist-100)", "var(--color-mist-50)", "#ffffff"];
 
   return (
     <div ref={wrapRef} className="relative" data-testid="signal-radar">
@@ -184,7 +184,7 @@ export function SignalRadar({
               key={b.key}
               d={arcPath(cx, cy, b.r0, b.r1, baseAngle, baseAngle + fullAngle - 0.0001)}
               fill={bandFills[i]}
-              stroke="var(--color-sand-300)"
+              stroke="var(--color-mist-300)"
               strokeWidth={1}
             />
           ))}
@@ -199,7 +199,7 @@ export function SignalRadar({
                 y1={cy + R0 * Math.sin(a0)}
                 x2={cx + RMAX * Math.cos(a0)}
                 y2={cy + RMAX * Math.sin(a0)}
-                stroke="var(--color-sand-300)"
+                stroke="var(--color-mist-300)"
                 strokeWidth={1}
               />
             );
@@ -211,7 +211,7 @@ export function SignalRadar({
               y1={cy}
               x2={cx + RMAX}
               y2={cy}
-              stroke="var(--color-sand-300)"
+              stroke="var(--color-mist-300)"
               strokeWidth={1}
             />
           ) : null}
@@ -235,7 +235,7 @@ export function SignalRadar({
                     fontWeight={600}
                     letterSpacing="0.08em"
                     fill="var(--color-ink-600)"
-                    className="cursor-pointer uppercase hover:fill-maroon-700"
+                    className="cursor-pointer uppercase hover:fill-navy-700"
                     role="button"
                     tabIndex={0}
                     aria-label={t("radar.filterWedge", { type: t(`types.${type}` as never) })}
@@ -260,7 +260,7 @@ export function SignalRadar({
                   fontSize={10}
                   fontWeight={600}
                   fill="var(--color-ink-600)"
-                  className="cursor-pointer hover:fill-maroon-700"
+                  className="cursor-pointer hover:fill-navy-700"
                   role="button"
                   tabIndex={0}
                   aria-label={t("radar.filterBand", { band: t(`radar.bands.${b.key}` as never) })}
@@ -296,7 +296,7 @@ export function SignalRadar({
                     cy={b.y}
                     r={b.r + 5}
                     fill="none"
-                    stroke="var(--color-maroon-700)"
+                    stroke="var(--color-navy-700)"
                     strokeWidth={1.5}
                   />
                 ) : null}
@@ -333,7 +333,7 @@ export function SignalRadar({
             >
               <path
                 d={`M ${cx} ${cy} L ${cx + RMAX * Math.cos(baseAngle)} ${cy + RMAX * Math.sin(baseAngle)} A ${RMAX} ${RMAX} 0 0 1 ${cx + RMAX * Math.cos(baseAngle + 0.21)} ${cy + RMAX * Math.sin(baseAngle + 0.21)} Z`}
-                fill="rgba(138, 21, 56, 0.14)"
+                fill="rgba(23, 48, 68, 0.14)"
               />
             </g>
           ) : null}
@@ -388,7 +388,7 @@ export function SignalRadar({
               <button
                 key={type}
                 onClick={() => onFilterWedge(type)}
-                className="flex items-center justify-between gap-2 rounded px-1 py-0.5 text-start text-[11px] text-ink-600 hover:text-maroon-700 cursor-pointer"
+                className="flex items-center justify-between gap-2 rounded px-1 py-0.5 text-start text-[11px] text-ink-600 hover:text-navy-700 cursor-pointer"
               >
                 <span>{t(`types.${type}` as never)}</span>
                 <span className="tnum">{count}</span>
@@ -426,12 +426,12 @@ export function SignalRadar({
               </p>
             ) : null}
             <p className="mt-1.5 flex flex-wrap items-center gap-1.5">
-              <Chip tone={card.signal.impact === "high" ? "danger" : card.signal.impact === "medium" ? "warn" : "sand"}>
+              <Chip tone={card.signal.impact === "high" ? "danger" : card.signal.impact === "medium" ? "warn" : "mist"}>
                 {t(`impact.${card.signal.impact}` as never)}
               </Chip>
-              <Chip tone="sand">{t(`horizon.${card.signal.horizon}` as never)}</Chip>
+              <Chip tone="mist">{t(`horizon.${card.signal.horizon}` as never)}</Chip>
               {card.signal.outcomes.slice(0, 2).map((o) => (
-                <Chip key={o.code} tone="maroon">
+                <Chip key={o.code} tone="navy">
                   {o.code}
                 </Chip>
               ))}

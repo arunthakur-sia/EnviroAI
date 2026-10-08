@@ -35,7 +35,7 @@ async function login(page: Page, email: string) {
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const res = await page.context().request.post(`${BASE}/api/v1/auth/login`, {
-        data: { email, password: "Nexus!2026" },
+        data: { email, password: "EnviroAI!2026" },
         timeout: 120000,
       });
       status = res.status();
@@ -223,7 +223,7 @@ async function main() {
     problems.push(`pageerror: ${text.slice(0, 300)}`);
   });
 
-  await login(page, "admin@npc.qa");
+  await login(page, "admin@enviroai.demo");
 
   for (const locale of ["en", "ar"] as const) {
     const L = (p: string) => `${BASE}/${locale}${p}`;

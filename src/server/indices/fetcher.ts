@@ -16,6 +16,22 @@ import { db, schema } from "@/server/db/client";
 import { DATA_DIR, dataPath } from "@/server/paths";
 import { newId, nowIso } from "@/lib/ids";
 import { CR08_INDEX_DEFS, type Cr08IndexDef } from "./defs-cr08";
+import { HOME_ISO3, HOME_NAME_EN, HOME_SHORT_AR } from "./home";
+import {
+  AQUEDUCT_URL,
+  BROWSER_UA,
+  GAIN_DOWNLOAD_PAGE,
+  GAIN_FALLBACK_URL,
+  NEEDS_BROWSER_UA,
+  WB_COUNTRIES_URL,
+  WDI_SERIES,
+  findGainZipUrl,
+  parseAqueduct,
+  parseNdGain,
+  parseWbCountries,
+  parseWdi,
+  wdiUrl,
+} from "./sources-ksa";
 
 // The corporate proxy re-signs public sites (DECISIONS 8/23): these are
 // read-only public data files, so verification is relaxed for them only.
@@ -40,11 +56,12 @@ export type IndexDef = {
   frequency: string;
   category: "economy" | "governance" | "society" | "environment" | "technology" | "human";
   responsibleEntityName: string; // matched against the entities register
-  linkedTargetKeywords: string[]; // matched against NDS3 target titles
+  linkedTargetKeywords: string[]; // matched against national strategy target titles
   sourceNotes: string;
 };
 
-/** The twelve CR05 indices. */
+/** The CR05 indices kept for the Saudi environment, water and agriculture
+    benchmark (the others of the original twelve were retired). */
 export const CR05_INDEX_DEFS: IndexDef[] = [
   {
     code: "hdi",
@@ -62,30 +79,10 @@ export const CR05_INDEX_DEFS: IndexDef[] = [
     higherIsBetter: true,
     frequency: "annual",
     category: "human",
-    responsibleEntityName: "Ministry of Social Development and Family",
+    responsibleEntityName: "General Authority for Statistics",
     linkedTargetKeywords: ["human", "quality of life", "wellbeing"],
     sourceNotes:
       "Bulk CSV from the HDR data center (HDR25 composite time series). Ranks for non-latest years are derived by sorting the official values.",
-  },
-  {
-    code: "gii",
-    nameEn: "Global Innovation Index",
-    nameAr: "مؤشر الابتكار العالمي",
-    publisher: "WIPO",
-    publisherUrl: "https://www.wipo.int/gii",
-    methodologyEn:
-      "About 80 indicators across seven pillars covering innovation inputs (institutions, human capital, infrastructure, markets, business sophistication) and outputs (knowledge, creative). Score 0-100, annual.",
-    methodologyAr:
-      "نحو 80 مؤشرًا موزعة على سبع ركائز تغطي مدخلات الابتكار (المؤسسات ورأس المال البشري والبنية التحتية والأسواق وتطور الأعمال) ومخرجاته (المعرفة والإبداع). الدرجة من 0 إلى 100، ويصدر سنويًا.",
-    scale: "both",
-    scoreMin: 0,
-    scoreMax: 100,
-    higherIsBetter: true,
-    frequency: "annual",
-    category: "technology",
-    responsibleEntityName: "Qatar Research, Development and Innovation Council",
-    linkedTargetKeywords: ["innovation", "research", "rdi"],
-    sourceNotes: "Values read from the official WIPO report PDFs, 2011-2024.",
   },
   {
     code: "cpi",
@@ -103,134 +100,9 @@ export const CR05_INDEX_DEFS: IndexDef[] = [
     higherIsBetter: true,
     frequency: "annual",
     category: "governance",
-    responsibleEntityName: "Ministry of Justice",
+    responsibleEntityName: "Oversight and Anti-Corruption Authority",
     linkedTargetKeywords: ["governance", "government excellence", "integrity", "transparency"],
     sourceNotes: "Official results workbook (timeseries sheet, 2012 onward).",
-  },
-  {
-    code: "egdi",
-    nameEn: "E-Government Development Index",
-    nameAr: "مؤشر تطور الحكومة الإلكترونية",
-    publisher: "UN DESA",
-    publisherUrl: "https://publicadministration.un.org/egovkb",
-    methodologyEn:
-      "Weighted average of normalized indices for online services, telecommunication infrastructure and human capital. Score 0-1, biennial, 193 member states.",
-    methodologyAr:
-      "متوسط مرجح لمؤشرات معيارية للخدمات الإلكترونية والبنية التحتية للاتصالات ورأس المال البشري. الدرجة من 0 إلى 1، ويصدر كل سنتين ويشمل 193 دولة عضوًا.",
-    scale: "both",
-    scoreMin: 0,
-    scoreMax: 1,
-    higherIsBetter: true,
-    frequency: "biennial",
-    category: "technology",
-    responsibleEntityName: "Ministry of Communications and Information Technology",
-    linkedTargetKeywords: ["digital", "government excellence", "e-government", "services"],
-    sourceNotes:
-      "UN eGov knowledgebase country pages (no stable bulk file URL; the data center export is session-gated).",
-  },
-  {
-    code: "gpi",
-    nameEn: "Global Peace Index",
-    nameAr: "مؤشر السلام العالمي",
-    publisher: "Institute for Economics and Peace",
-    publisherUrl: "https://www.visionofhumanity.org/",
-    methodologyEn:
-      "23 indicators across societal safety, ongoing conflict and militarisation, banded 1 (most peaceful) to 5. Lower is better. Annual, 163 countries.",
-    methodologyAr:
-      "23 مؤشرًا تغطي الأمان المجتمعي والنزاعات القائمة ومستوى العسكرة، على مقياس من 1 (الأكثر سلامًا) إلى 5. الأدنى أفضل. يصدر سنويًا ويغطي 163 دولة.",
-    scale: "both",
-    scoreMin: 1,
-    scoreMax: 5,
-    higherIsBetter: false,
-    frequency: "annual",
-    category: "society",
-    responsibleEntityName: "Ministry of Interior",
-    linkedTargetKeywords: ["security", "safety", "cohesive society"],
-    sourceNotes:
-      "Series compiled from countryeconomy.com (secondary; the IEP PDFs are unparseable on this machine), cross-checked against IEP and press values where available.",
-  },
-  {
-    code: "imd",
-    nameEn: "IMD World Competitiveness Ranking",
-    nameAr: "تصنيف IMD للتنافسية العالمية",
-    publisher: "IMD",
-    publisherUrl: "https://www.imd.org/centers/wcc/world-competitiveness-center/",
-    methodologyEn:
-      "Ranks about 67 economies on economic performance, government efficiency, business efficiency and infrastructure using statistics and an executive survey. Annual; detailed scores are paywalled, ranks are public.",
-    methodologyAr:
-      "يرتب نحو 67 اقتصادًا وفق الأداء الاقتصادي وكفاءة الحكومة وكفاءة الأعمال والبنية التحتية اعتمادًا على الإحصاءات واستطلاع للمديرين التنفيذيين. يصدر سنويًا؛ الدرجات التفصيلية مدفوعة والترتيب علني.",
-    scale: "rank",
-    scoreMin: 0,
-    scoreMax: 100,
-    higherIsBetter: true,
-    frequency: "annual",
-    category: "economy",
-    responsibleEntityName: "Ministry of Commerce and Industry",
-    linkedTargetKeywords: ["competitiveness", "business environment", "economic growth"],
-    sourceNotes:
-      "Ranks from official IMD PDFs and press releases; scores only for editions where IMD published them openly. Qatar 2013 could not be sourced.",
-  },
-  {
-    code: "lpi",
-    nameEn: "Logistics Performance Index",
-    nameAr: "مؤشر الأداء اللوجستي",
-    publisher: "World Bank",
-    publisherUrl: "https://lpi.worldbank.org/",
-    methodologyEn:
-      "Survey of logistics professionals scoring six components (customs, infrastructure, shipments, competence, tracking, timeliness) 1-5, aggregated to an overall score. Roughly biennial; latest survey edition 2023.",
-    methodologyAr:
-      "استطلاع لمتخصصي اللوجستيات يقيّم ستة مكونات (الجمارك والبنية التحتية والشحنات والكفاءة والتتبع والالتزام بالمواعيد) من 1 إلى 5، وتُجمع في درجة كلية. يصدر كل سنتين تقريبًا؛ وآخر نسخة مسحية 2023.",
-    scale: "both",
-    scoreMin: 1,
-    scoreMax: 5,
-    higherIsBetter: true,
-    frequency: "biennial",
-    category: "economy",
-    responsibleEntityName: "Ministry of Transport",
-    linkedTargetKeywords: ["logistics", "transport", "trade"],
-    sourceNotes: "World Bank Data360 bulk CSV (WB_LPI), survey editions 2007-2023.",
-  },
-  {
-    code: "nri",
-    nameEn: "Network Readiness Index",
-    nameAr: "مؤشر الجاهزية الشبكية",
-    publisher: "Portulans Institute",
-    publisherUrl: "https://networkreadinessindex.org/",
-    methodologyEn:
-      "Four pillars (technology, people, governance, impact) over about 130 economies, score 0-100. Published by WEF to 2016 (1-7 scale, noted per row) and by Portulans since 2019.",
-    methodologyAr:
-      "أربع ركائز (التقنية والأفراد والحوكمة والأثر) لنحو 130 اقتصادًا، بدرجة من 0 إلى 100. أصدره المنتدى الاقتصادي العالمي حتى 2016 (بمقياس 1-7 كما هو مدوَّن) وتصدره مؤسسة بورتولانس منذ 2019.",
-    scale: "both",
-    scoreMin: 0,
-    scoreMax: 100,
-    higherIsBetter: true,
-    frequency: "annual",
-    category: "technology",
-    responsibleEntityName: "Ministry of Communications and Information Technology",
-    linkedTargetKeywords: ["digital", "technology", "connectivity"],
-    sourceNotes:
-      "Official report PDFs (WEF GITR era and Portulans). The WEF era used a 1-7 scale; rows keep their published values.",
-  },
-  {
-    code: "ttdi",
-    nameEn: "Travel and Tourism Development Index",
-    nameAr: "مؤشر تنمية السفر والسياحة",
-    publisher: "World Economic Forum",
-    publisherUrl: "https://www.weforum.org/publications/travel-tourism-development-index-2024/",
-    methodologyEn:
-      "Assesses factors enabling sustainable tourism development across about 119 economies, score 1-7. Successor of the TTCI (to 2019); the series break is noted.",
-    methodologyAr:
-      "يقيّم عوامل التنمية السياحية المستدامة في نحو 119 اقتصادًا بدرجة من 1 إلى 7. خليفة مؤشر تنافسية السفر والسياحة (حتى 2019) مع الإشارة إلى انقطاع المنهجية.",
-    scale: "both",
-    scoreMin: 1,
-    scoreMax: 7,
-    higherIsBetter: true,
-    frequency: "biennial",
-    category: "economy",
-    responsibleEntityName: "Qatar Tourism",
-    linkedTargetKeywords: ["tourism", "visitors"],
-    sourceNotes:
-      "Official WEF report PDFs 2011-2024; TTCI values kept as published (methodology break at 2021).",
   },
   {
     code: "epi",
@@ -248,51 +120,10 @@ export const CR05_INDEX_DEFS: IndexDef[] = [
     higherIsBetter: true,
     frequency: "biennial",
     category: "environment",
-    responsibleEntityName: "Ministry of Environment and Climate Change",
+    responsibleEntityName: "Ministry of Environment, Water and Agriculture",
     linkedTargetKeywords: ["environment", "emissions", "sustainability"],
     sourceNotes:
       "2026 edition from the official results workbook (ranks derived by sorting the official scores); earlier editions from the research pass.",
-  },
-  {
-    code: "gtci",
-    nameEn: "Global Talent Competitiveness Index",
-    nameAr: "مؤشر تنافسية المواهب العالمي",
-    publisher: "INSEAD",
-    publisherUrl: "https://www.insead.edu/global-talent-competitiveness-index",
-    methodologyEn:
-      "Measures how countries enable, attract, grow and retain talent across six pillars, score 0-100, about 130 economies. Roughly annual.",
-    methodologyAr:
-      "يقيس قدرة الدول على تمكين المواهب واستقطابها وتنميتها والاحتفاظ بها عبر ست ركائز، بدرجة من 0 إلى 100 لنحو 130 اقتصادًا. يصدر سنويًا تقريبًا.",
-    scale: "both",
-    scoreMin: 0,
-    scoreMax: 100,
-    higherIsBetter: true,
-    frequency: "annual",
-    category: "human",
-    responsibleEntityName: "Ministry of Labour",
-    linkedTargetKeywords: ["workforce", "talent", "skills", "labour"],
-    sourceNotes: "Official INSEAD report PDFs (archived/mirrored copies where INSEAD blocks fetches).",
-  },
-  {
-    code: "wjp",
-    nameEn: "Rule of Law Index",
-    nameAr: "مؤشر سيادة القانون",
-    publisher: "World Justice Project",
-    publisherUrl: "https://worldjusticeproject.org/rule-of-law-index/",
-    methodologyEn:
-      "Household and expert surveys scored 0-1 over eight factors (constraints on government powers, absence of corruption, open government, fundamental rights, order and security, regulatory enforcement, civil and criminal justice). Annual, 143 jurisdictions.",
-    methodologyAr:
-      "استطلاعات للأسر والخبراء بدرجات من 0 إلى 1 عبر ثمانية عوامل (قيود سلطات الحكومة، وغياب الفساد، والحكومة المنفتحة، والحقوق الأساسية، والنظام والأمن، وإنفاذ اللوائح، والعدالة المدنية والجنائية). يصدر سنويًا ويغطي 143 ولاية قضائية.",
-    scale: "both",
-    scoreMin: 0,
-    scoreMax: 1,
-    higherIsBetter: true,
-    frequency: "annual",
-    category: "governance",
-    responsibleEntityName: "Ministry of Justice",
-    linkedTargetKeywords: ["justice", "rule of law", "governance"],
-    sourceNotes:
-      "Official WJP historical data files. Qatar entered the index in the 2025 edition; there is no earlier Qatar series (recorded honestly).",
   },
 ];
 
@@ -301,8 +132,7 @@ export const CR05_INDEX_DEFS: IndexDef[] = [
 export const INDEX_DEFS: IndexDef[] = [...CR05_INDEX_DEFS, ...CR08_INDEX_DEFS];
 
 export const INDEX_COUNTRIES: { iso3: string; en: string; ar: string; region: string }[] = [
-  { iso3: "QAT", en: "Qatar", ar: "قطر", region: "GCC" },
-  { iso3: "SAU", en: "Saudi Arabia", ar: "السعودية", region: "GCC" },
+  { iso3: HOME_ISO3, en: HOME_NAME_EN, ar: HOME_SHORT_AR, region: "GCC" },
   { iso3: "ARE", en: "United Arab Emirates", ar: "الإمارات", region: "GCC" },
   { iso3: "KWT", en: "Kuwait", ar: "الكويت", region: "GCC" },
   { iso3: "BHR", en: "Bahrain", ar: "البحرين", region: "GCC" },
@@ -320,6 +150,7 @@ export const INDEX_COUNTRIES: { iso3: string; en: string; ar: string; region: st
   { iso3: "JPN", en: "Japan", ar: "اليابان", region: "G20" },
   { iso3: "CHN", en: "China", ar: "الصين", region: "G20" },
   { iso3: "IND", en: "India", ar: "الهند", region: "G20" },
+  { iso3: "AUS", en: "Australia", ar: "أستراليا", region: "OECD" },
 ];
 
 type Obs = {
@@ -408,7 +239,11 @@ async function download(
       try {
         const res = await undiciFetch(url, {
           dispatcher: insecureDispatcher,
-          headers: { "user-agent": "SiaNexus-indices/1.0 (research prototype)" },
+          headers: {
+            "user-agent": NEEDS_BROWSER_UA.test(new URL(url).hostname)
+              ? BROWSER_UA
+              : "EnviroAI-indices/1.0 (research prototype)",
+          },
           signal: AbortSignal.timeout(120000),
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -645,8 +480,7 @@ const heritageUrl = (year: number) =>
   `https://static.heritage.org/index/data/${year}/${year}_indexofeconomicfreedom_data.xlsx`;
 const HERITAGE_FIRST_YEAR = 2024; // the data workbook exists from the 2024 edition
 const HERITAGE_NAMES: Record<string, string> = {
-  Qatar: "QAT",
-  "Saudi Arabia": "SAU",
+  "Saudi Arabia": HOME_ISO3,
   "United Arab Emirates": "ARE",
   Kuwait: "KWT",
   Bahrain: "BHR",
@@ -855,7 +689,7 @@ export type FetchReport = {
     observations: number;
     inserted: number;
     countries: number;
-    qatarYears: number[];
+    homeYears: number[];
     pillarValues: number;
   }[];
 };
@@ -953,16 +787,15 @@ export async function runIndicesFetch(
   const registered = await db.select().from(schema.indices);
   const byCode = new Map(registered.map((i) => [i.code, i]));
 
-  /* link NDS3 targets by keyword (plausible, presentation-level) */
-  const [nds3] = await db
-    .select()
-    .from(schema.strategyEditions)
-    .where(eq(schema.strategyEditions.code, "nds3"));
-  if (nds3) {
+  /* link national strategy targets by keyword (plausible, presentation-level);
+     the edition is the default one, whatever its code */
+  const editions = await db.select().from(schema.strategyEditions);
+  const strategyEdition = editions.find((e) => e.isDefault === 1) ?? editions[0];
+  if (strategyEdition) {
     const targets = await db
       .select()
       .from(schema.strategyNodes)
-      .where(eq(schema.strategyNodes.editionId, nds3.id));
+      .where(eq(schema.strategyNodes.editionId, strategyEdition.id));
     const targetRows = targets.filter((t) => t.nodeType === "target");
     for (const def of defs) {
       const id = idOfIndex.get(def.code)!;
@@ -1019,7 +852,7 @@ export async function runIndicesFetch(
         );
         if (buf) obs = obs.concat(parseHeritage(buf, year, heritageUrl(year)));
       }
-      // the research file carries Qatar's published ranks and earlier scores
+      // the research file carries Saudi Arabia's published ranks and earlier scores
       // and wins over the derived rows on the same key
       const research = loadResearch(def);
       obs = obs.concat(research.obs);
@@ -1030,6 +863,38 @@ export async function runIndicesFetch(
       const research = loadResearch(def);
       obs = obs.concat(research.obs);
       pillarRows = research.pillars;
+    } else if (def.code === "nd_gain") {
+      // the zip link changes with each edition: read it off the download page
+      let zipUrl = GAIN_FALLBACK_URL;
+      const page = await download(GAIN_DOWNLOAD_PAGE, "nd-gain-download-page.html", manifest, wantDownload);
+      const found = page ? findGainZipUrl(page.toString("utf8")) : null;
+      if (found) zipUrl = found;
+      const buf = await download(zipUrl, "nd-gain-countryindex.zip", manifest, wantDownload);
+      if (buf) obs = await parseNdGain(buf, zipUrl);
+    } else if (def.code === "aqueduct_bws") {
+      const buf = await download(AQUEDUCT_URL, "aqueduct40-country-rankings.zip", manifest, wantDownload);
+      if (buf) obs = await parseAqueduct(buf);
+    } else if (WDI_SERIES[def.code]) {
+      const spec = WDI_SERIES[def.code];
+      const countriesBuf = await download(WB_COUNTRIES_URL, "wb-countries.json", manifest, wantDownload);
+      const buf = await download(
+        wdiUrl(spec.wb, 2000, thisYear),
+        `wdi-${spec.wb}.json`,
+        manifest,
+        wantDownload
+      );
+      if (buf && countriesBuf) {
+        try {
+          obs = parseWdi(
+            JSON.parse(buf.toString("utf8")),
+            spec.wb,
+            parseWbCountries(JSON.parse(countriesBuf.toString("utf8"))),
+            spec.higherIsBetter
+          );
+        } catch (e) {
+          console.warn(`WDI ${spec.wb}: unreadable response: ${String(e)}`);
+        }
+      }
     } else {
       const research = loadResearch(def);
       obs = research.obs;
@@ -1154,17 +1019,17 @@ export async function runIndicesFetch(
       }
     }
 
-    /* latest year with a Qatar observation */
+    /* latest year with a home-country observation */
     const after = await db
       .select()
       .from(schema.indexObservations)
       .where(eq(schema.indexObservations.indexId, indexId));
-    const qatarYears = after
-      .filter((o) => o.countryCode === "QAT")
+    const homeYears = after
+      .filter((o) => o.countryCode === HOME_ISO3)
       .map((o) => o.year)
       .sort((a, b) => a - b);
-    const latest = qatarYears.length
-      ? qatarYears[qatarYears.length - 1]
+    const latest = homeYears.length
+      ? homeYears[homeYears.length - 1]
       : after.length
         ? Math.max(...after.map((o) => o.year))
         : null;
@@ -1178,7 +1043,7 @@ export async function runIndicesFetch(
       observations: after.length,
       inserted,
       countries: new Set(after.map((o) => o.countryCode)).size,
-      qatarYears,
+      homeYears,
       pillarValues,
     });
   }
@@ -1221,8 +1086,8 @@ export async function writeCoverageReport(): Promise<void> {
   ];
   for (const idx of indices.sort((a, b) => a.code.localeCompare(b.code))) {
     const mine = obs.filter((o) => o.indexId === idx.id);
-    const qat = mine
-      .filter((o) => o.countryCode === "QAT")
+    const home = mine
+      .filter((o) => o.countryCode === HOME_ISO3)
       .map((o) => o.year)
       .sort((a, b) => a - b);
     lines.push(`## ${idx.nameEn} (${idx.code})`);
@@ -1231,7 +1096,7 @@ export async function writeCoverageReport(): Promise<void> {
       `- Observations: ${mine.length} across ${new Set(mine.map((o) => o.countryCode)).size} countries; latest year ${idx.latestYear ?? "-"}.`
     );
     lines.push(
-      `- Qatar: ${qat.length ? `${qat.length} years (${qat[0]}-${qat[qat.length - 1]})` : "no published coverage"}.`
+      `- ${HOME_NAME_EN}: ${home.length ? `${home.length} years (${home[0]}-${home[home.length - 1]})` : "no published coverage"}.`
     );
     const per = focusList
       .map((iso) => {

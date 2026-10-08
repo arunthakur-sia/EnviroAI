@@ -7,12 +7,12 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 const BASE =
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700 [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer";
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700 [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer";
 const VARIANTS = {
-  primary: "bg-maroon-700 text-white shadow-sm hover:bg-maroon-900 active:translate-y-px",
-  secondary: "border border-sand-300 bg-white text-ink-900 hover:border-maroon-300 hover:text-maroon-700",
-  ghost: "text-ink-600 hover:bg-maroon-100/60 hover:text-maroon-900",
-  gold: "bg-gold-100 text-maroon-900 border border-gold-300 hover:bg-gold-300/40",
+  primary: "bg-navy-700 text-white shadow-sm hover:bg-navy-900 active:translate-y-px",
+  secondary: "border border-mist-300 bg-white text-ink-900 hover:border-navy-300 hover:text-navy-700",
+  ghost: "text-ink-600 hover:bg-navy-100/60 hover:text-navy-900",
+  aqua: "bg-aqua-100 text-navy-900 border border-aqua-300 hover:bg-aqua-300/40",
 };
 const SIZES = { sm: "h-8 px-3 text-xs", md: "h-9.5 px-4" };
 

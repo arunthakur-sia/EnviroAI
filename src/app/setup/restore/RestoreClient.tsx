@@ -171,13 +171,13 @@ export function RestoreClient() {
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center gap-6 px-6 py-12">
       <header>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-400">SiaNexus</p>
-        <h1 className="mt-1 font-display text-3xl text-maroon-900">Restore the data</h1>
-        <p className="mt-1 font-display text-2xl text-maroon-900" dir="rtl" lang="ar">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-400">EnviroAI</p>
+        <h1 className="mt-1 font-display text-3xl text-navy-900">Restore the data</h1>
+        <p className="mt-1 font-display text-2xl text-navy-900" dir="rtl" lang="ar">
           استعادة البيانات
         </p>
         <p className="mt-3 text-sm leading-relaxed text-ink-600">
-          Upload <code className="rounded bg-sand-100 px-1">sianexus-data.tar.gz</code>. It is stored on
+          Upload <code className="rounded bg-mist-100 px-1">enviroai-data.tar.gz</code>. It is stored on
           the volume and unpacked the next time the service starts.
         </p>
         <p className="mt-1 text-sm leading-relaxed text-ink-600" dir="rtl" lang="ar">
@@ -187,21 +187,21 @@ export function RestoreClient() {
 
       {phase === "done" ? (
         <section
-          className="rounded-[var(--radius-card)] border border-gulf-600 bg-white p-6"
+          className="rounded-[var(--radius-card)] border border-teal-600 bg-white p-6"
           data-testid="restore-done"
         >
-          <h2 className="font-display text-xl text-gulf-600">Upload complete</h2>
+          <h2 className="font-display text-xl text-teal-600">Upload complete</h2>
           <p className="mt-2 text-sm leading-relaxed text-ink-900">
-            Now go to Railway, delete the <code className="rounded bg-sand-100 px-1">SETUP_TOKEN</code>{" "}
-            variable, and click Deploy. SiaNexus will restart with your data.
+            Now go to Railway, delete the <code className="rounded bg-mist-100 px-1">SETUP_TOKEN</code>{" "}
+            variable, and click Deploy. EnviroAI will restart with your data.
           </p>
           <p className="mt-3 text-sm leading-relaxed text-ink-900" dir="rtl" lang="ar">
-            انتقل الآن إلى Railway، واحذف متغيّر <code className="rounded bg-sand-100 px-1">SETUP_TOKEN</code>،
+            انتقل الآن إلى Railway، واحذف متغيّر <code className="rounded bg-mist-100 px-1">SETUP_TOKEN</code>،
             ثم اضغط Deploy. ستعيد سيا نكسس التشغيل ومعها بياناتك.
           </p>
         </section>
       ) : (
-        <section className="flex flex-col gap-4 rounded-[var(--radius-card)] border border-sand-300 bg-white p-6">
+        <section className="flex flex-col gap-4 rounded-[var(--radius-card)] border border-mist-300 bg-white p-6">
           <div>
             <label htmlFor="setup-token" className="mb-1.5 block text-xs font-medium text-ink-600">
               Setup token · رمز الإعداد
@@ -215,7 +215,7 @@ export function RestoreClient() {
               dir="ltr"
               autoComplete="off"
               data-testid="setup-token"
-              className="h-9.5 w-full rounded-lg border border-sand-300 bg-white px-3 text-sm text-ink-900 focus:border-maroon-500 focus:outline-none focus:ring-2 focus:ring-maroon-100"
+              className="h-9.5 w-full rounded-lg border border-mist-300 bg-white px-3 text-sm text-ink-900 focus:border-navy-500 focus:outline-none focus:ring-2 focus:ring-navy-100"
             />
           </div>
 
@@ -236,7 +236,7 @@ export function RestoreClient() {
                 setMessage(null);
                 setPhase("ready");
               }}
-              className="block w-full text-sm text-ink-900 file:me-3 file:rounded-lg file:border-0 file:bg-maroon-700 file:px-3 file:py-2 file:text-sm file:font-medium file:text-white"
+              className="block w-full text-sm text-ink-900 file:me-3 file:rounded-lg file:border-0 file:bg-navy-700 file:px-3 file:py-2 file:text-sm file:font-medium file:text-white"
             />
             {file ? (
               <p className="mt-1.5 text-xs text-ink-600 tnum">
@@ -261,7 +261,7 @@ export function RestoreClient() {
           ) : null}
 
           {message ? (
-            <div className="rounded-lg border border-sand-300 bg-sand-50 p-3" data-testid="restore-message">
+            <div className="rounded-lg border border-mist-300 bg-mist-50 p-3" data-testid="restore-message">
               <p className="text-sm text-ink-900">{message.en}</p>
               <p className="mt-1 text-sm text-ink-900" dir="rtl" lang="ar">
                 {message.ar}
@@ -275,7 +275,7 @@ export function RestoreClient() {
             onClick={() => void onUpload()}
             disabled={busy || !file || token.length < 32}
             data-testid="setup-upload"
-            className="h-10 rounded-lg bg-maroon-700 px-4 text-sm font-medium text-white disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+            className="h-10 rounded-lg bg-navy-700 px-4 text-sm font-medium text-white disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
           >
             {busy ? "Working…" : "Upload · رفع"}
           </button>
@@ -310,14 +310,14 @@ function Progress({
         </span>
       </div>
       <div
-        className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-sand-200"
+        className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-mist-200"
         role="progressbar"
         aria-valuenow={pct}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-label={label}
       >
-        <div className="h-full bg-maroon-700 transition-[width] duration-200" style={{ width: `${pct}%` }} />
+        <div className="h-full bg-navy-700 transition-[width] duration-200" style={{ width: `${pct}%` }} />
       </div>
     </div>
   );

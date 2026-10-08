@@ -11,7 +11,7 @@ async function cookieFor(email: string): Promise<string> {
     const res = await fetch(`${BASE}/api/v1/auth/login`, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ email, password: "Nexus!2026" }),
+      body: JSON.stringify({ email, password: "EnviroAI!2026" }),
       redirect: "manual",
     });
     if (res.status === 200) {
@@ -28,8 +28,8 @@ async function cookieFor(email: string): Promise<string> {
 }
 
 async function main() {
-  const reader = await cookieFor("reader@npc.qa");
-  const admin = await cookieFor("admin@npc.qa");
+  const reader = await cookieFor("reader@enviroai.demo");
+  const admin = await cookieFor("admin@enviroai.demo");
   const r1 = await fetch(`${BASE}/en/leaderboard/settings`, { headers: { cookie: reader }, redirect: "manual" });
   console.log("reader /en/leaderboard/settings ->", r1.status);
   const r2 = await fetch(`${BASE}/en/leaderboard/settings`, { headers: { cookie: admin }, redirect: "manual" });

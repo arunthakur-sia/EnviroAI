@@ -1,11 +1,8 @@
 [
   {
-    "file": "fraunces-var-latin.woff2",
-    "status": "exists"
-  },
-  {
-    "file": "inter-var-latin.woff2",
-    "status": "exists"
+    "file": "sora-var-latin.woff2",
+    "status": "ok",
+    "bytes": 33652
   },
   {
     "file": "plex-sans-arabic-400.woff2",

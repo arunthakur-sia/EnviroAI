@@ -158,8 +158,8 @@ export function SetKnowledgeOfWeekButton({
       aria-pressed={mode === key}
       data-testid={`kow-week-${key}`}
       className={cn(
-        "flex min-w-0 flex-1 flex-col items-start rounded-lg border px-3 py-2 text-start transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500",
-        mode === key ? "border-maroon-500 bg-maroon-100/60 text-maroon-900" : "border-sand-300 bg-white text-ink-900 hover:border-maroon-300"
+        "flex min-w-0 flex-1 flex-col items-start rounded-lg border px-3 py-2 text-start transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500",
+        mode === key ? "border-navy-500 bg-navy-100/60 text-navy-900" : "border-mist-300 bg-white text-ink-900 hover:border-navy-300"
       )}
     >
       <span className="text-sm font-medium">{label}</span>
@@ -171,7 +171,7 @@ export function SetKnowledgeOfWeekButton({
   return (
     <>
       <Button
-        variant="gold"
+        variant="aqua"
         size={size}
         className={className}
         onClick={() => {
@@ -234,7 +234,7 @@ export function SetKnowledgeOfWeekButton({
                     value={custom}
                     onChange={(e) => onCustom(e.target.value)}
                     onFocus={() => setMode("custom")}
-                    className={cn("tnum", mode === "custom" && "border-maroon-500 ring-2 ring-maroon-100")}
+                    className={cn("tnum", mode === "custom" && "border-navy-500 ring-2 ring-navy-100")}
                     data-testid="kow-week-custom"
                   />
                 </div>
@@ -288,9 +288,9 @@ export function SetKnowledgeOfWeekButton({
             <div>
               <p className="mb-2 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-600 rtl:tracking-normal">
                 {t("set.preview")}
-                <Chip tone="sand">{t("set.previewHint")}</Chip>
+                <Chip tone="mist">{t("set.previewHint")}</Chip>
               </p>
-              <div className="rounded-[var(--radius-card)] border border-gold-300 bg-sand-50 p-3 sm:p-4" data-testid="kow-preview">
+              <div className="rounded-[var(--radius-card)] border border-aqua-300 bg-mist-50 p-3 sm:p-4" data-testid="kow-preview">
                 {previewState === "loading" || !previewCard ? (
                   previewState === "error" ? (
                     <p className="p-4 text-sm text-danger">{t("set.previewError")}</p>
@@ -304,11 +304,11 @@ export function SetKnowledgeOfWeekButton({
                     </div>
                   )
                 ) : (
-                  <div className="rounded-[var(--radius-card)] border border-gold-300/60 bg-white p-4 shadow-[var(--shadow-paper)]">
+                  <div className="rounded-[var(--radius-card)] border border-aqua-300/60 bg-white p-4 shadow-[var(--shadow-paper)]">
                     <KowCardBody card={previewCard} size="preview" numerals={numerals} />
                     <div className="mt-4 flex gap-2" aria-hidden>
-                      <span className="inline-flex h-8 items-center rounded-lg bg-maroon-700 px-3 text-xs font-medium text-white">{t("readNow")}</span>
-                      <span className="inline-flex h-8 items-center rounded-lg border border-sand-300 bg-white px-3 text-xs font-medium text-ink-900">{t("later")}</span>
+                      <span className="inline-flex h-8 items-center rounded-lg bg-navy-700 px-3 text-xs font-medium text-white">{t("readNow")}</span>
+                      <span className="inline-flex h-8 items-center rounded-lg border border-mist-300 bg-white px-3 text-xs font-medium text-ink-900">{t("later")}</span>
                     </div>
                   </div>
                 )}

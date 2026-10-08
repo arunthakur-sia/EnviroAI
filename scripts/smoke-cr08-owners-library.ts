@@ -3,7 +3,7 @@
 // Institutional Memory shelves and list, the document page, collections,
 // Studies, the Learning Room and lessons, Reports, and Ask answers. Wired
 // into scripts/smoke.ts by the coordinator.
-//   ctx.cookie is a Contributor session (analyst@npc.qa), ctx.adminCookie the
+//   ctx.cookie is a Contributor session (analyst@enviroai.demo), ctx.adminCookie the
 //   Super Admin, ctx.db a raw libsql client. Read-only: nothing is written.
 import type { Client } from "@libsql/client";
 
@@ -119,7 +119,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   try {
     const { getLearningRoomData } = await import("../src/server/services/lessons");
     const { getUserById } = await import("../src/server/auth/session");
-    const userRow = await ctx.db.execute("select id from users where email = 'analyst@npc.qa'");
+    const userRow = await ctx.db.execute("select id from users where email = 'analyst@enviroai.demo'");
     const user = await getUserById(String(userRow.rows[0]?.id ?? ""));
     if (!user) throw new Error("analyst user missing");
     const data = await getLearningRoomData(user);

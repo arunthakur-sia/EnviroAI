@@ -36,7 +36,7 @@ async function fetchXml(url: string): Promise<string> {
   const res = await undiciFetch(url, {
     headers: {
       "user-agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) SiaNexus-scan/1.0 (+local prototype)",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) EnviroAI-scan/1.0 (+local prototype)",
       accept: "application/rss+xml, application/atom+xml, application/xml, text/xml, */*",
     },
     redirect: "follow",

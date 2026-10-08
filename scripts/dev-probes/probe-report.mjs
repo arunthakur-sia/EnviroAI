@@ -20,7 +20,7 @@ async function req(path, opts = {}) {
 await req("/api/v1/auth/login", {
   method: "POST",
   headers: { "content-type": "application/json" },
-  body: JSON.stringify({ email: "admin@npc.qa", password: "Nexus!2026" }),
+  body: JSON.stringify({ email: "admin@enviroai.demo", password: "EnviroAI!2026" }),
 });
 await req("/api/v1/settings", {
   method: "PATCH",
@@ -30,7 +30,7 @@ await req("/api/v1/settings", {
 
 // find a project id
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const prj = (await db.execute("select id, code, title_en, title_ar from strategy_nodes where node_type='project' and code like 'PRJ-01%' limit 1")).rows[0];
 db.close();
 
@@ -56,7 +56,7 @@ async function runReport(name, scope, options) {
       const buf = Buffer.from(await dl.arrayBuffer());
       const isZip = buf[0] === 0x50 && buf[1] === 0x4b;
       console.log(name, `download: ${buf.length} bytes, zip=${isZip}`);
-      fs.writeFileSync(`C:/npckms/data/screenshots/cr02/probe-${name}.docx`, buf);
+      fs.writeFileSync(`C:/enviroai/data/screenshots/cr02/probe-${name}.docx`, buf);
       const save = await req(`/api/v1/reports/${id}/save`, { method: "POST" });
       const sj = await save.json();
       console.log(name, "save-to-vault:", save.ok ? sj.data.documentId : sj.error);

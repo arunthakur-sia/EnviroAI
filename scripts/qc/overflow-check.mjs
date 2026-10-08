@@ -75,7 +75,7 @@ const page = await ctx.newPage();
 // sign in through the API: the context shares its cookie jar, and this does
 // not race the login form's hydration on a loaded dev server
 const login = await ctx.request.post(`${BASE}/api/v1/auth/login`, {
-  data: { email: "admin@npc.qa", password: "Nexus!2026" },
+  data: { email: "admin@enviroai.demo", password: "EnviroAI!2026" },
   timeout: 120000,
 });
 if (!login.ok()) {

@@ -44,8 +44,8 @@ for (const file of files) {
   const sectPr = (doc.match(/<w:sectPr/g) ?? []).length;
   check("one docx section per report section (>= 8)", sectPr >= 8, `${sectPr}`);
   check("TOC field", /TOC \\/.test(doc) || doc.includes("w:sdt"), "");
-  check("maroon 8A1538 present", doc.includes("8A1538"));
-  check("maroon-100 F6E7EC callouts", doc.includes("F6E7EC"));
+  check("navy 8A1538 present", doc.includes("8A1538"));
+  check("navy-100 F6E7EC callouts", doc.includes("F6E7EC"));
   check("sand F4F0E8 banding", doc.includes("F4F0E8"));
   check("gold C9A24D rule", doc.includes("C9A24D"));
   check("RAG tints present", doc.includes("E3F1EA") && doc.includes("F9EFDD") && doc.includes("F9E5E4"));
@@ -56,10 +56,10 @@ for (const file of files) {
   for (const f of footers) {
     const xml = await zip.file(f).async("string");
     if (/PAGE/.test(xml)) footerHasPage = true;
-    if (xml.includes("SiaNexus")) footerHasSia = true;
+    if (xml.includes("EnviroAI")) footerHasSia = true;
   }
   check("footer carries a PAGE field", footerHasPage);
-  check("footer carries SiaNexus", footerHasSia);
+  check("footer carries EnviroAI", footerHasSia);
   let headerHasTitle = false;
   for (const h of headers) {
     const xml = await zip.file(h).async("string");

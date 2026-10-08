@@ -1,5 +1,5 @@
 "use client";
-// Hand-tuned Recharts: thin maroon line, gulf comparison, dashed gold target,
+// Hand-tuned Recharts: thin navy line, teal comparison, dashed aqua target,
 // direct end labels, draw-in on first view only.
 import * as React from "react";
 import {
@@ -60,7 +60,7 @@ export function IndicatorChart({
             tickFormatter={(p) => formatPeriod(String(p), locale)}
             tick={{ fontSize: 11, fill: "var(--color-ink-400)" }}
             tickLine={false}
-            axisLine={{ stroke: "var(--color-sand-300)" }}
+            axisLine={{ stroke: "var(--color-mist-300)" }}
             minTickGap={28}
           />
           <YAxis
@@ -75,18 +75,18 @@ export function IndicatorChart({
             formatter={(v: number) => [`${fmt(v)}${unit ? ` ${unit}` : ""}`, ""]}
             labelFormatter={(p) => formatPeriod(String(p), locale)}
             separator=""
-            contentStyle={{ fontSize: 12, borderRadius: 10, borderColor: "var(--color-sand-300)" }}
+            contentStyle={{ fontSize: 12, borderRadius: 10, borderColor: "var(--color-mist-300)" }}
           />
           {target !== null && target !== undefined ? (
             <ReferenceLine
               y={target}
-              stroke="var(--color-gold-500)"
+              stroke="var(--color-aqua-500)"
               strokeDasharray="6 4"
               strokeWidth={1.5}
               label={{
                 value: fmt(target),
                 position: "right",
-                fill: "var(--color-gold-500)",
+                fill: "var(--color-aqua-500)",
                 fontSize: 11,
               }}
             />
@@ -95,7 +95,7 @@ export function IndicatorChart({
           {kind === "bar" ? (
             <Bar
               dataKey="value"
-              fill="var(--color-maroon-700)"
+              fill="var(--color-navy-700)"
               radius={[3, 3, 0, 0]}
               isAnimationActive={animate}
             />
@@ -105,7 +105,7 @@ export function IndicatorChart({
             <Line
               type="monotone"
               dataKey="compare"
-              stroke="var(--color-gulf-600)"
+              stroke="var(--color-teal-600)"
               strokeWidth={1.5}
               dot={false}
               isAnimationActive={animate}
@@ -116,10 +116,10 @@ export function IndicatorChart({
             <Line
               type="monotone"
               dataKey="value"
-              stroke="var(--color-maroon-700)"
+              stroke="var(--color-navy-700)"
               strokeWidth={2}
               dot={false}
-              activeDot={{ r: 3.5, fill: "var(--color-maroon-700)" }}
+              activeDot={{ r: 3.5, fill: "var(--color-navy-700)" }}
               isAnimationActive={animate}
               label={(props: any) => {
                 // direct end label on the last point
@@ -130,7 +130,7 @@ export function IndicatorChart({
                     y={props.y + 4}
                     fontSize={11}
                     fontWeight={600}
-                    fill="var(--color-maroon-900)"
+                    fill="var(--color-navy-900)"
                     className="tnum"
                   >
                     {fmt(props.value)}
@@ -149,7 +149,7 @@ export function Sparkline({
   data,
   width = 96,
   height = 30,
-  stroke = "var(--color-maroon-500)",
+  stroke = "var(--color-navy-500)",
 }: {
   data: number[];
   width?: number;

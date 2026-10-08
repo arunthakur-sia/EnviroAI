@@ -87,7 +87,7 @@ export function GroupSection({
       data-group-code={group?.code ?? "ungrouped"}
       aria-labelledby={`group-${group?.code ?? "ungrouped"}`}
     >
-      <div className={cn("mb-3 h-1 w-full rounded-full", ungrouped ? "bg-sand-300" : style.bar)} aria-hidden />
+      <div className={cn("mb-3 h-1 w-full rounded-full", ungrouped ? "bg-mist-300" : style.bar)} aria-hidden />
       <div className="mb-3 flex flex-wrap items-start gap-x-4 gap-y-2">
         <div className="min-w-0 flex-1">
           <p
@@ -112,7 +112,7 @@ export function GroupSection({
                 type="button"
                 onClick={() => edit.onReorderGroup(group.id, -1)}
                 disabled={!edit.canMoveUp}
-                className="rounded-md p-1 text-ink-600 hover:bg-sand-100 hover:text-maroon-700 disabled:opacity-30 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+                className="rounded-md p-1 text-ink-600 hover:bg-mist-100 hover:text-navy-700 disabled:opacity-30 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
                 aria-label={t("groupUp")}
                 data-testid="group-up"
               >
@@ -122,7 +122,7 @@ export function GroupSection({
                 type="button"
                 onClick={() => edit.onReorderGroup(group.id, 1)}
                 disabled={!edit.canMoveDown}
-                className="rounded-md p-1 text-ink-600 hover:bg-sand-100 hover:text-maroon-700 disabled:opacity-30 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+                className="rounded-md p-1 text-ink-600 hover:bg-mist-100 hover:text-navy-700 disabled:opacity-30 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
                 aria-label={t("groupDown")}
                 data-testid="group-down"
               >
@@ -130,13 +130,13 @@ export function GroupSection({
               </button>
             </span>
           ) : null}
-          <span className="inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5" role="group" aria-label={t("viewToggle")}>
+          <span className="inline-flex items-center gap-0.5 rounded-lg bg-mist-100 p-0.5" role="group" aria-label={t("viewToggle")}>
             <button
               type="button"
               onClick={() => setView("cards")}
               className={cn(
-                "flex items-center gap-1 rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500",
-                view === "cards" ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+                "flex items-center gap-1 rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500",
+                view === "cards" ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
               )}
               aria-pressed={view === "cards"}
             >
@@ -146,8 +146,8 @@ export function GroupSection({
               type="button"
               onClick={() => setView("table")}
               className={cn(
-                "flex items-center gap-1 rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500",
-                view === "table" ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+                "flex items-center gap-1 rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500",
+                view === "table" ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
               )}
               aria-pressed={view === "table"}
               data-testid="indices-table-toggle"
@@ -161,7 +161,7 @@ export function GroupSection({
       {/* the group's summary strip (an empty group has nothing to summarise) */}
       {cards.length > 0 ? (
       <div
-        className="mb-4 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-xl bg-sand-100 px-4 py-2.5 text-sm"
+        className="mb-4 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-xl bg-mist-100 px-4 py-2.5 text-sm"
         data-testid="group-summary"
       >
         <span className="flex items-center gap-1.5">
@@ -193,7 +193,7 @@ export function GroupSection({
               {t("sdgHeadline")} · <span className="tnum">{sdgHeadline.year}</span>
             </p>
             <p className="mt-1 flex items-baseline gap-3">
-              <span className="text-3xl font-semibold text-maroon-900 tnum" style={{ fontFamily: "var(--font-display)" }}>
+              <span className="text-3xl font-semibold text-navy-900 tnum" style={{ fontFamily: "var(--font-display)" }}>
                 {fmtValue(sdgHeadline.score, 1)}
               </span>
               <span className="text-xs text-ink-600">{t("sdgHeadlineScore")}</span>
@@ -211,7 +211,7 @@ export function GroupSection({
             </div>
           ) : null}
           <div className="ms-auto flex items-center gap-3 text-xs">
-            <Link href={`/indices/${sdgHeadline.code}` as never} className="link-draw font-medium text-maroon-700">
+            <Link href={`/indices/${sdgHeadline.code}` as never} className="link-draw font-medium text-navy-700">
               {t("sdgOpen")}
             </Link>
             {sdgHeadline.sourceUrl ? (
@@ -219,7 +219,7 @@ export function GroupSection({
                 href={sdgHeadline.sourceUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-1 text-ink-600 hover:text-maroon-700"
+                className="flex items-center gap-1 text-ink-600 hover:text-navy-700"
               >
                 <ExternalLink className="size-3" aria-hidden /> {t("source")}
               </a>
@@ -238,7 +238,7 @@ export function GroupSection({
           className={cn(
             "grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3",
             edit && "min-h-24 rounded-xl border border-dashed p-2 transition-colors",
-            edit && (isDropHere ? cn("border-gold-500", style.soft) : "border-sand-300")
+            edit && (isDropHere ? cn("border-aqua-500", style.soft) : "border-mist-300")
           )}
           onDragOver={
             edit

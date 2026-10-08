@@ -18,7 +18,7 @@ const want = (s: string) => only.length === 0 || only.includes(s);
 async function login(page: Page, email: string) {
   await page.goto(`${BASE}/en/login`);
   await page.fill("#email", email);
-  await page.fill("#password", "Nexus!2026");
+  await page.fill("#password", "EnviroAI!2026");
   await page.click("button[type=submit]");
   await page.waitForURL("**/home", { timeout: 60000 });
 }
@@ -77,7 +77,7 @@ async function main() {
   const browser = await chromium.launch({ channel: "msedge" }).catch(() => chromium.launch());
 
   if (want("vault")) {
-    await withViewport(browser, 1440, 900, "admin@npc.qa", async (page) => {
+    await withViewport(browser, 1440, 900, "admin@enviroai.demo", async (page) => {
       console.log("vault 1440:");
       await shoot(page, "/en/vault", "vault-en-1440");
       await shoot(page, "/en/vault", "vault-en-1440-hover", {
@@ -87,7 +87,7 @@ async function main() {
       await shoot(page, "/en/vault?view=grid", "vault-grid-en");
       await shoot(page, "/en/vault", "vault-en-full", { full: true });
     });
-    await withViewport(browser, 390, 844, "admin@npc.qa", async (page) => {
+    await withViewport(browser, 390, 844, "admin@enviroai.demo", async (page) => {
       console.log("vault 390:");
       await shoot(page, "/en/vault", "vault-en-390");
       await shoot(page, "/ar/vault", "vault-ar-390");
@@ -95,7 +95,7 @@ async function main() {
   }
 
   if (want("strategy")) {
-    await withViewport(browser, 1440, 900, "admin@npc.qa", async (page) => {
+    await withViewport(browser, 1440, 900, "admin@enviroai.demo", async (page) => {
       console.log("strategy 1440:");
       await shoot(page, "/en/strategy", "strategy-en-1440", { wait: 2400 });
       await shoot(page, "/en/strategy", "strategy-en-1440-hover", {
@@ -103,20 +103,20 @@ async function main() {
         hover: ':nth-match([data-testid="outcome-medallion"], 3)',
       });
       await shoot(page, "/ar/strategy", "strategy-ar-1440", { wait: 2400 });
-      await shoot(page, "/en/strategy/nds3/o3", "strategy-outcome-en", { wait: 2000 });
-      await shoot(page, "/en/strategy/nds3/o3", "strategy-outcome-en-open", {
+      await shoot(page, "/en/strategy/nes3/o3", "strategy-outcome-en", { wait: 2000 });
+      await shoot(page, "/en/strategy/nes3/o3", "strategy-outcome-en-open", {
         wait: 2000,
         click: ':nth-match([data-testid="target-card"] button, 2)',
       });
-      await shoot(page, "/ar/strategy/nds3/o3", "strategy-outcome-ar", { wait: 2000 });
-      await shoot(page, "/en/strategy/nds3/o3/o3-t1", "strategy-target-en", { wait: 2000 });
+      await shoot(page, "/ar/strategy/nes3/o3", "strategy-outcome-ar", { wait: 2000 });
+      await shoot(page, "/en/strategy/nes3/o3/o3-t1", "strategy-target-en", { wait: 2000 });
       await shoot(page, "/en/strategy?view=map", "strategy-map-en", { wait: 2600 });
       if (projectId) {
         await shoot(page, `/en/strategy/${projectId}`, "project-detail-en", { wait: 2000 });
         await shoot(page, `/ar/strategy/${projectId}`, "project-detail-ar", { wait: 2000 });
       }
     });
-    await withViewport(browser, 390, 844, "admin@npc.qa", async (page) => {
+    await withViewport(browser, 390, 844, "admin@enviroai.demo", async (page) => {
       console.log("strategy 390:");
       await shoot(page, "/en/strategy", "strategy-en-390", { wait: 2400 });
       await shoot(page, "/ar/strategy", "strategy-ar-390", { wait: 2400 });
@@ -124,7 +124,7 @@ async function main() {
   }
 
   if (want("trends")) {
-    await withViewport(browser, 1440, 900, "admin@npc.qa", async (page) => {
+    await withViewport(browser, 1440, 900, "admin@enviroai.demo", async (page) => {
       console.log("trends 1440:");
       await shoot(page, "/en/trends", "trends-en-1440", { wait: 2600 });
       await shoot(page, "/en/trends", "trends-en-1440-hover", {
@@ -134,7 +134,7 @@ async function main() {
       await shoot(page, "/ar/trends", "trends-ar-1440", { wait: 2600 });
       await shoot(page, "/en/trends", "trends-en-full", { wait: 2600, full: true });
     });
-    await withViewport(browser, 390, 844, "admin@npc.qa", async (page) => {
+    await withViewport(browser, 390, 844, "admin@enviroai.demo", async (page) => {
       console.log("trends 390:");
       await shoot(page, "/en/trends", "trends-en-390", { wait: 2600 });
       await shoot(page, "/ar/trends", "trends-ar-390", { wait: 2600 });
@@ -142,18 +142,18 @@ async function main() {
   }
 
   if (want("home")) {
-    await withViewport(browser, 1440, 900, "admin@npc.qa", async (page) => {
+    await withViewport(browser, 1440, 900, "admin@enviroai.demo", async (page) => {
       console.log("home 1440:");
       await shoot(page, "/en/home", "home-en-1440", { wait: 2600 });
       await shoot(page, "/en/home", "home-en-1440-hover", {
         wait: 2600,
-        hover: '[data-testid="qatar-numbers"]',
+        hover: '[data-testid="home-numbers"]',
       });
       await shoot(page, "/ar/home", "home-ar-1440", { wait: 2600 });
       await shoot(page, "/en/home", "home-en-full", { wait: 2600, full: true });
       await shoot(page, "/ar/home", "home-ar-full", { wait: 2600, full: true });
     });
-    await withViewport(browser, 390, 844, "admin@npc.qa", async (page) => {
+    await withViewport(browser, 390, 844, "admin@enviroai.demo", async (page) => {
       console.log("home 390:");
       await shoot(page, "/en/home", "home-en-390", { wait: 2600 });
       await shoot(page, "/ar/home", "home-ar-390", { wait: 2600 });

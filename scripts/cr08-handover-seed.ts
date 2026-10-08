@@ -2,14 +2,14 @@
 // CR08 6: sample handovers in every state. Idempotent: each seeded handover
 // carries a marker in its notes ("[Illustrative] cr08-seed:<key>") and is
 // skipped when present.
-//   (a) an internal leaving handover for a statistics contributor, mixed
+//   (a) an internal leaving handover for a data operations contributor, mixed
 //       recipients, one interview complete with an Expert Insights lesson,
 //       one in progress, a learning path with two modules understood;
 //   (b) an external engagement-ending handover for a consultant on a
 //       project, items to the system with filing proposals, one approved,
 //       an access link created (the plain token goes to the seed log only);
 //   (c) a closed handover with the report archived, cut off, points paid
-//       (the CR05 "transferring, complete" handover, closed with a logged
+//       (the earlier "transferring, complete" handover, closed with a logged
 //       override);
 //   (d) the CR05 seeded handovers mapped into the new columns.
 import { loadEnv } from "../src/lib/load-env";
@@ -19,17 +19,17 @@ const MARK = (key: string) => `[Illustrative] cr08-seed:${key}`;
 
 /** The handover note the leaving person writes, per item category. */
 const ITEM_NOTES: Record<string, string> = {
-  document: "Final version in the Vault; the working spreadsheets sit in the SOA shared drive under /operations/2026. Ask the data quality team before re-running the tables.",
+  document: "Final version in the Vault; the working spreadsheets sit in the DOP shared drive under /operations/2026. Ask the data quality team before re-running the tables.",
   deliverable: "Accepted by the project owner; the source files and the review comments are in the project folder, and the next revision is due with the quality review.",
-  report: "Published edition in the Vault; the figures come from the operations round and are refreshed with each release.",
-  lesson: "Written after the 2025 field round; the recommendation still stands and the census team applies it.",
+  report: "Published edition in the Vault; the figures come from the monitoring round and are refreshed with each release.",
+  lesson: "Written after the 2025 field round; the recommendation still stands and the monitoring team applies it.",
   project_role: "Hand the project calendar over in the first week; the milestones and the budget line are in the project folder.",
   stakeholder_role: "Weekly stand-up on Mondays with the project owner; the risk log lives in the project folder. Nothing is blocked today.",
-  indicator: "Values are entered after each operations round; the methodology note sits beside the indicator.",
-  council_indicator: "Values arrive from the NSC monthly release on the 12th; enter them the same week and flag any revision to the owner.",
+  indicator: "Values are entered after each monitoring round; the methodology note sits beside the indicator.",
+  council_indicator: "Values arrive from the DKS monthly release on the 12th; enter them the same week and flag any revision to the owner.",
   tacit_topic: "Covered in the capture interview; the key contacts and the pitfalls are in the Expert Insights lesson.",
   community: "The community meets quarterly; the next agenda is drafted in the community folder.",
-  collection: "A working collection for the operations round; keep it in step with the Vault shelves.",
+  collection: "A working collection for the monitoring round; keep it in step with the Vault shelves.",
   other: "See the handover note on the linked item.",
 };
 
@@ -43,8 +43,8 @@ export default async function seedCr08Handover(): Promise<void> {
 
   const users = await db.select().from(schema.users).where(isNull(schema.users.deletedAt));
   const byEmail = (email: string) => users.find((u) => u.email === email) ?? null;
-  const admin = byEmail("admin@npc.qa");
-  const hr = byEmail("hr@npc.qa");
+  const admin = byEmail("admin@enviroai.demo");
+  const hr = byEmail("hr@enviroai.demo");
   if (!admin || !hr) throw new Error("seeded admin accounts missing");
   const actor = (await getUserById(hr.id))!;
   const superAdmin = (await getUserById(admin.id))!;
@@ -87,7 +87,7 @@ export default async function seedCr08Handover(): Promise<void> {
           recipientKind: recipient ? "person" : null,
           recipientUserId: recipient,
           successorUserId: recipient,
-          note: i.note ?? (i.status !== "pending" ? "Reassigned during the CR05 handover; see the successor for the working files." : null),
+          note: i.note ?? (i.status !== "pending" ? "Reassigned during the earlier handover; see the successor for the working files." : null),
           addedBy: h.createdBy,
           createdAt: h.createdAt,
         })
@@ -97,38 +97,38 @@ export default async function seedCr08Handover(): Promise<void> {
   }
 
   /* ---- (a) the internal leaving handover ---- */
-  const person = byEmail("ahmed.fathy@npc.qa");
-  const recipient = byEmail("mohammed.alsulaiti@npc.qa");
-  const unitHead = byEmail("saud.alshammari@npc.qa");
+  const person = byEmail("abdulrahman.albalawi@enviroai.demo");
+  const recipient = byEmail("mohammed.alqarni@enviroai.demo");
+  const unitHead = byEmail("saud.alshammari@enviroai.demo");
   if (person && recipient && unitHead) {
     let h = await findSeeded("a");
     if (!h) {
       // the person owns a few of the unit's seeded documents and a stakeholder role, so the inventory has substance
-      const soaDocs = await db
+      const opsDocs = await db
         .select()
         .from(schema.documents)
         .where(and(eq(schema.documents.departmentId, person.departmentId ?? ""), eq(schema.documents.isSeeded, 1), isNull(schema.documents.deletedAt)));
-      const ownedAlready = soaDocs.filter((d) => d.ownerUserId === person.id).length;
+      const ownedAlready = opsDocs.filter((d) => d.ownerUserId === person.id).length;
       if (ownedAlready < 3) {
-        const knowledge = byEmail("knowledge@npc.qa");
-        const pool = soaDocs.filter((d) => d.ownerUserId === knowledge?.id || d.ownerUserId === admin.id).slice(0, 3 - ownedAlready);
+        const knowledge = byEmail("knowledge@enviroai.demo");
+        const pool = opsDocs.filter((d) => d.ownerUserId === knowledge?.id || d.ownerUserId === admin.id).slice(0, 3 - ownedAlready);
         for (const d of pool) await db.update(schema.documents).set({ ownerUserId: person.id }).where(eq(schema.documents.id, d.id));
       }
       const projects = await db.select().from(schema.strategyNodes).where(eq(schema.strategyNodes.nodeType, "project"));
       const roles = await db.select().from(schema.nodeStakeholders).where(eq(schema.nodeStakeholders.userId, person.id));
       if (roles.length < 2) {
         for (const p of projects.filter((x) => /PRJ-(1[0-9]|2[0-9])a/.test(x.code ?? "")).slice(0, 2 - roles.length)) {
-          await db.insert(schema.nodeStakeholders).values({ id: newId(), nodeId: p.id, personKind: "employee", userId: person.id, role: "manager", roleNoteEn: "Statistical delivery lead", roleNoteAr: "مسؤول التنفيذ الإحصائي", nodeKind: "nds", sort: 5, createdAt: nowIso() });
+          await db.insert(schema.nodeStakeholders).values({ id: newId(), nodeId: p.id, personKind: "employee", userId: person.id, role: "manager", roleNoteEn: "Data delivery lead", roleNoteAr: "مسؤول تنفيذ البيانات", nodeKind: "nes", sort: 5, createdAt: nowIso() });
         }
       }
       const created = await handover.startHandover2(actor, {
         person: { userId: person.id },
         kind: "leaving",
-        reason: "Moving to the Gulf Cooperation Council statistical centre",
+        reason: "Moving to a regional environmental data centre",
         lastWorkingDay: dateIn(21),
         dueDate: dateIn(18),
         recipient: { mode: "person", defaultRecipientUserId: recipient.id },
-        notes: `${MARK("a")} Statistical operations handover with mixed recipients.`,
+        notes: `${MARK("a")} Environmental data operations handover with mixed recipients.`,
       });
       h = (await db.select().from(schema.handovers).where(eq(schema.handovers.id, created.id)))[0];
       counts.handovers++;
@@ -154,11 +154,11 @@ export default async function seedCr08Handover(): Promise<void> {
       const first = topics[0] ?? { topic: "General handover", refType: "topic" as const, refId: null };
       const iv1 = await handover.startInterview({ userId: person.id }, h.id, { topic: first.topic, refType: first.refType === "topic" && !first.refId ? "general" : first.refType, refId: first.refId });
       const answers = [
-        "The statistical operations round for 2026 is 70 percent complete. The next milestone is the quality review on the 15th of next month, and the field teams already have their schedules.",
-        "We decided in March to move the enumeration to tablets after the 2025 pilot showed a 30 percent drop in re-contacts; the Secretary General approved it and the budget came from the data programme.",
-        "Inside NPC, Saud Al-Shammari owns the operations calendar and Mohammed Al-Sulaiti runs the field teams. Outside, the contact at the Ministry of Municipality is the geospatial unit head, who cares about address quality.",
-        "The 2024 round slipped because the address register arrived late. Lock the register delivery date in writing and never start training before the questionnaire is frozen.",
-        "The working files are in the SOA shared drive under /operations/2026, the final tables in the Vault, and the field logs in the tablet console; the data quality team holds the console admin account.",
+        "The environmental monitoring round for 2026 is 70 percent complete. The next milestone is the quality review on the 15th of next month, and the field teams already have their schedules.",
+        "We decided in March to move field data capture to tablets after the 2025 pilot cut the number of repeat site visits; the Programme Director approved it and the budget came from the data programme.",
+        "Inside the Office, Saud Al-Shammari owns the operations calendar and Mohammed Al-Qarni runs the field teams. Outside, the contact at MEWA is the monitoring unit head, who cares about station location quality.",
+        "The 2024 round slipped because the station register arrived late. Lock the register delivery date in writing and never start training before the data capture form is frozen.",
+        "The working files are in the DOP shared drive under /operations/2026, the final tables in the Vault, and the field logs in the tablet console; the data quality team holds the console admin account.",
         "Walk the field schedule with the team leads in the first week and read the 2025 lessons before touching the questionnaire.",
       ];
       for (const a of answers) await handover.answerInterview({ userId: person.id }, iv1.id, a);
@@ -167,7 +167,7 @@ export default async function seedCr08Handover(): Promise<void> {
       if (done1.insightLessonId) counts.lessons++;
       const second = topics.find((x) => x.key !== first.key) ?? { topic: "Data quality review", refType: "topic" as const, refId: null };
       const iv2 = await handover.startInterview({ userId: person.id }, h.id, { topic: second.topic, refType: second.refType === "topic" && !second.refId ? "general" : second.refType, refId: second.refId });
-      await handover.answerInterview({ userId: person.id }, iv2.id, "The review checklist is versioned in the Vault; the current one is v3 and the next revision waits for the census team's comments.");
+      await handover.answerInterview({ userId: person.id }, iv2.id, "The review checklist is versioned in the Vault; the current one is v3 and the next revision waits for the monitoring team's comments.");
       await handover.answerInterview({ userId: person.id }, iv2.id, "We chose to keep the manual double-entry check for the first two months after the tablet rollout, because the automated rule caught only half of the coding errors in the pilot.");
       counts.interviews++;
       // the learning path for the recipient, two modules understood
@@ -235,14 +235,14 @@ export default async function seedCr08Handover(): Promise<void> {
   }
 
   /* ---- (b) the external engagement-ending handover ---- */
-  const external = (await db.select().from(schema.experts).where(and(eq(schema.experts.type, "consultant"), like(schema.experts.nameEn, "%Tariq Al-Farsi%"))))[0] ?? null;
+  const external = (await db.select().from(schema.experts).where(and(eq(schema.experts.type, "consultant"), like(schema.experts.nameEn, "%Omar Nasser%"))))[0] ?? null;
   if (external) {
     let h = await findSeeded("b");
     if (!h) {
       const created = await handover.startHandover2(superAdmin, {
         person: { expertId: external.id },
         kind: "engagement_ending",
-        reason: "Advisory contract ends with the statistical modernisation phase",
+        reason: "Advisory contract ends with the monitoring modernisation phase",
         lastWorkingDay: dateIn(12),
         dueDate: dateIn(10),
         recipient: { mode: "system", defaultRecipientUserId: null },
@@ -268,7 +268,7 @@ export default async function seedCr08Handover(): Promise<void> {
       await handover.addItemViaToken(token.token, {
         title: "Modernisation advisory: closing memorandum",
         note: "Summarises the recommendations of the advisory phase and where each working paper is filed.",
-        text: "Closing memorandum of the statistical modernisation advisory engagement. The sampling redesign, the tablet enumeration protocol and the quality framework are delivered; the open recommendation is the address register integration, owned by the operations department.",
+        text: "Closing memorandum of the monitoring modernisation advisory engagement. The sampling redesign, the tablet data capture protocol and the quality framework are delivered; the open recommendation is the station register integration, owned by the Data Operations department.",
       });
       counts.items++;
       const items = await db.select().from(schema.handoverItems).where(eq(schema.handoverItems.handoverId, h.id));
@@ -285,7 +285,7 @@ export default async function seedCr08Handover(): Promise<void> {
   }
 
   /* ---- (c) a closed handover with the report archived, cut off, points paid ---- */
-  const transferring = byEmail("nasser.almannai@npc.qa");
+  const transferring = byEmail("nasser.almutlaq@enviroai.demo");
   if (transferring) {
     const rows = await db.select().from(schema.handovers).where(eq(schema.handovers.userId, transferring.id));
     const target = rows.find((r) => (r.notes ?? "").startsWith(MARK("c"))) ?? rows.find((r) => r.kind === "transferring") ?? null;
@@ -293,7 +293,7 @@ export default async function seedCr08Handover(): Promise<void> {
       await db.update(schema.handovers).set({ notes: `${MARK("c")} ${target.notes ?? ""}`.trim(), status: target.completedAt ? "complete" : target.status, completedAt: null, updatedAt: nowIso() }).where(eq(schema.handovers.id, target.id));
       // reopen for the close so the report and the points come through the real path
       await db.update(schema.handovers).set({ status: "in_progress", completedAt: null }).where(eq(schema.handovers.id, target.id));
-      const closed = await handover.closeHandover(superAdmin, target.id, { override: "Legacy CR05 handover: every item was reassigned before the CR08 rebuild; the recipients confirmed by email." });
+      const closed = await handover.closeHandover(superAdmin, target.id, { override: "Legacy handover: every item was reassigned before the rebuild; the recipients confirmed by email." });
       if (closed.reportDocumentId) counts.reports++;
       else console.log(`cr08 handover: (c) report not rendered: ${closed.reportError}`);
       await handover.performCutOff(superAdmin, target.id);

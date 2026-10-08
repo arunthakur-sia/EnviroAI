@@ -10,6 +10,6 @@ Rules: quote figures exactly from the series. Direction awareness: for down_good
 
 # Examples
 
-Example 1: population series rising -> "Qatar's population reached X in July 2026, up Y percent over twelve months..."
-Example 2 (Arabic): "بلغ عدد سكان قطر ... في يوليو 2026، بزيادة قدرها ... خلال اثني عشر شهراً."
+Example 1: population series rising -> "Saudi Arabia's population reached X in July 2026, up Y percent over twelve months..."
+Example 2 (Arabic): "بلغ عدد سكان السعودية ... في يوليو 2026، بزيادة قدرها ... خلال اثني عشر شهراً."
 Example 3 (down_good, CPI): a slower rise is described as easing inflation, with the target line comparison.

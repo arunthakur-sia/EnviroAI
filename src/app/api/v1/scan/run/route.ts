@@ -14,7 +14,7 @@ import { audit } from "@/server/auth/audit";
 async function resolveBriefId(briefId?: string, outcome?: string): Promise<string | null> {
   if (briefId) return briefId;
   if (!outcome) return null;
-  // outcome code (taxonomy) -> NDS3 outcome node -> a brief linked to it
+  // outcome code (taxonomy) -> NES themes node -> a brief linked to it
   const { outcomeNodeMap } = await import("@/server/scan/extract");
   const nodeMap = await outcomeNodeMap();
   const nodeId = nodeMap.get(outcome);

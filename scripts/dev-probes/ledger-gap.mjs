@@ -3,7 +3,7 @@ import { createClient } from "@libsql/client";
 const db = createClient({ url: `file:${process.cwd().replace(/\\/g, "/")}/data/nexus.db` });
 const q = async (sql, args = []) => (await db.execute({ sql, args })).rows;
 
-const [u] = await q("select id, name_en from users where email = 'analyst@npc.qa'");
+const [u] = await q("select id, name_en from users where email = 'analyst@enviroai.demo'");
 console.log(`user: ${u.name_en}`);
 const rows = await q(
   `select e.event_type, count(*) n, sum(e.points) pts, coalesce(r.excluded_from_boards, 0) excluded

@@ -3,7 +3,7 @@
 // example questions letter by letter (35ms per character, 2.5s pause, delete,
 // next), stopping the moment the user types. Two quiet suggestion chips
 // rotate with the placeholder. Focus dims the constellation and draws a soft
-// maroon glow; submitting expands the card into the answer workspace.
+// navy glow; submitting expands the card into the answer workspace.
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, Link } from "@/i18n/navigation";
@@ -122,15 +122,15 @@ export function HomeAsk({
                invisible until the box is focused. */
             className="pointer-events-none absolute -inset-5 rounded-full transition-opacity duration-300"
             style={{
-              background: "radial-gradient(ellipse, var(--color-maroon-100), transparent 65%)",
+              background: "radial-gradient(ellipse, var(--color-navy-100), transparent 65%)",
               opacity: conn?.askFocused ? 1 : 0,
             }}
           />
           <div
-            className="relative flex items-center rounded-2xl border border-sand-300 bg-white shadow-[var(--shadow-paper)] transition-all duration-200 focus-within:border-maroon-500 focus-within:shadow-[var(--shadow-lift)] focus-within:ring-2 focus-within:ring-maroon-100"
+            className="relative flex items-center rounded-2xl border border-mist-300 bg-white shadow-[var(--shadow-paper)] transition-all duration-200 focus-within:border-navy-500 focus-within:shadow-[var(--shadow-lift)] focus-within:ring-2 focus-within:ring-navy-100"
             style={{ height: 64 }}
           >
-            <MessageCircleQuestion className="pointer-events-none ms-5 size-5 shrink-0 text-maroon-500" />
+            <MessageCircleQuestion className="pointer-events-none ms-5 size-5 shrink-0 text-navy-500" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -144,7 +144,7 @@ export function HomeAsk({
             <button
               type="submit"
               disabled={busy || !query.trim()}
-              className="me-3 rounded-xl bg-maroon-700 p-2.5 text-white transition-colors hover:bg-maroon-900 disabled:opacity-40 cursor-pointer"
+              className="me-3 rounded-xl bg-navy-700 p-2.5 text-white transition-colors hover:bg-navy-900 disabled:opacity-40 cursor-pointer"
               aria-label={t("askCta")}
             >
               <CornerDownLeft className="size-4 flip-rtl" />
@@ -160,7 +160,7 @@ export function HomeAsk({
               stopped.current = true;
               setQuery(text);
             }}
-            className="max-w-full truncate rounded-lg border border-sand-200 bg-sand-50/80 px-2.5 py-1 text-xs text-ink-600 transition-colors hover:border-maroon-300 hover:text-maroon-900 cursor-pointer"
+            className="max-w-full truncate rounded-lg border border-mist-200 bg-mist-50/80 px-2.5 py-1 text-xs text-ink-600 transition-colors hover:border-navy-300 hover:text-navy-900 cursor-pointer"
           >
             {text}
           </button>
@@ -168,7 +168,7 @@ export function HomeAsk({
         {continueConversation ? (
           <Link
             href={`/ask/c/${continueConversation.id}` as never}
-            className="link-draw text-xs font-medium text-maroon-700"
+            className="link-draw text-xs font-medium text-navy-700"
           >
             {t("continueConversation", { title: continueConversation.title.slice(0, 40) })}
           </Link>

@@ -1,5 +1,5 @@
 // CR08 5.3: the outcome deep dive. One outcome for an outcome or project
-// report, every outcome for a Council-wide one. Per outcome: the framing
+// report, every outcome for a Office-wide one. Per outcome: the framing
 // paragraph, the targets with their headline KPI, the initiative and project
 // status mix, the status updates of the period, the leads and the lessons.
 import { and, desc, inArray } from "drizzle-orm";
@@ -53,7 +53,7 @@ const def: SectionDefinition<DeepDiveData> = {
   ),
   layout: "opener",
   estimatedPages: 3,
-  appliesTo: ["npc", "outcome", "project"],
+  appliesTo: ["org", "outcome", "project"],
   async load(ctx) {
     const [scope, nav] = await Promise.all([resolveScope(ctx), navigator(ctx)]);
     if (!nav) return { outcomes: [], editionCode: null, single: false };
@@ -188,7 +188,7 @@ const def: SectionDefinition<DeepDiveData> = {
       }
     });
     if (prose.bullets?.length) blocks.push({ kind: "bullets", items: prose.bullets });
-    if (prose.callout) blocks.push({ kind: "callout", title: prose.callout.title, text: prose.callout.text, tone: "maroon" });
+    if (prose.callout) blocks.push({ kind: "callout", title: prose.callout.title, text: prose.callout.text, tone: "navy" });
     const first = data.outcomes[0];
     return section(
       "outcome_deep_dive",

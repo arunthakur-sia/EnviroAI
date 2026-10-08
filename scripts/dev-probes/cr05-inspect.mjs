@@ -1,6 +1,6 @@
 // CR05 planning probe: current owner_entity_name values, departments, node counts.
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const q = async (sql, args = []) => (await db.execute({ sql, args })).rows;
 
 const owners = await q(
@@ -14,7 +14,7 @@ console.log("\ndepartments:");
 for (const r of deps) console.log(` ${r.code}  ${r.name_en}  head=${r.head_user_id ? "y" : "-"}`);
 
 const nodes = await q(
-  "select node_type, count(*) c from strategy_nodes where edition_id=(select id from strategy_editions where code='nds3') group by node_type"
+  "select node_type, count(*) c from strategy_nodes where edition_id=(select id from strategy_editions where code='nes3') group by node_type"
 );
 console.log("\nnds3 node types:", nodes.map((r) => `${r.node_type}=${r.c}`).join(" "));
 

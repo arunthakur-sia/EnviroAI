@@ -4,16 +4,9 @@
 /* Self-hosted fonts (downloaded by scripts/fetch-fonts.mjs)           */
 /* ------------------------------------------------------------------ */
 @font-face {
-  font-family: "Fraunces";
-  src: url("/fonts/fraunces-var-latin.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/inter-var-latin.woff2") format("woff2");
-  font-weight: 100 900;
+  font-family: "Sora";
+  src: url("/fonts/sora-var-latin.woff2") format("woff2");
+  font-weight: 100 800;
   font-style: normal;
   font-display: swap;
 }
@@ -45,57 +38,59 @@
 /* ------------------------------------------------------------------ */
 /* Design tokens (Section 4.2 of the blueprint)                        */
 /* ------------------------------------------------------------------ */
-/* CR05 1.2, Maroon Authority on a bright neutral ground: the warm sand
-   "paper" is retired. The sand-* names are kept to avoid churn, but they now
-   mean a bright neutral with a slight cool cast (page ground, secondary
-   surfaces, borders); ink-* is a cool charcoal scale. Maroon, gulf, gold, and
-   the semantic colours are unchanged. The top bar is NPC maroon and gets its
-   own bar-* tokens; plank-* is the physical library shelf board (an object
-   colour, like the book cloth, not a UI surface). */
+/* Sia brand system. Navy (#173044) anchors the interface, Sia Teal (#00DECC)
+   is an accent only, never a ground, and cool greys carry the surfaces. The
+   scale names: navy-* is the brand primary, teal-* the secondary data colour
+   (Dark and Medium Teal), aqua-* the Sia Teal accent, mist-* the bright
+   cool-grey grounds and borders, ink-* the Cool Black / Cool Gray text scale.
+   The top bar is Sia navy and has its own bar-* tokens; plank-* is the
+   physical library shelf board (an object colour, not a UI surface). */
 @theme {
-  --color-maroon-900: #5a0e24;
-  --color-maroon-700: #8a1538;
-  --color-maroon-500: #a8325a;
-  --color-maroon-300: #cf7d99;
-  --color-maroon-100: #f6e7ec;
-  --color-maroon-50: #fbf2f5;
+  --color-navy-900: #0a151e;
+  --color-navy-700: #173044;
+  --color-navy-500: #455669;
+  --color-navy-300: #8796a9;
+  --color-navy-100: #e6ecf4;
+  --color-navy-50: #f4f6fc;
 
-  --color-sand-50: #f6f7f9;
-  --color-sand-100: #eef0f3;
-  --color-sand-200: #e6e9ee;
-  --color-sand-300: #dde1e6;
+  --color-mist-50: #f4f6fc;
+  --color-mist-100: #ebeff7;
+  --color-mist-200: #e2e7f1;
+  --color-mist-300: #d5dce8;
 
-  --color-ink-900: #1f2328;
-  --color-ink-600: #5b6470;
-  --color-ink-400: #8a93a0;
-  --color-ink-200: #d2d7dd;
+  --color-ink-900: #0a151e;
+  --color-ink-600: #455669;
+  --color-ink-400: #8796a9;
+  --color-ink-200: #d3dae4;
 
-  --color-bar: #8a1538;
+  --color-bar: #173044;
   --color-bar-ink: #ffffff;
   --color-bar-muted: rgba(255, 255, 255, 0.72);
   --color-bar-field: rgba(255, 255, 255, 0.14);
   --color-bar-field-focus: #ffffff;
 
-  --color-plank: #e3e6ea;
-  --color-plank-edge: #cbd1d8;
+  --color-plank: #e3e8f0;
+  --color-plank-edge: #c9d1dd;
 
-  --color-gulf-600: #0f6e76;
-  --color-gulf-400: #3a959c;
-  --color-gulf-100: #dff1f2;
+  --color-teal-700: #056067;
+  --color-teal-600: #067279;
+  --color-teal-500: #00a2a3;
+  --color-teal-400: #2fb3b4;
+  --color-teal-100: #e4f6f6;
 
-  --color-gold-500: #c9a24d;
-  --color-gold-300: #ddc287;
-  --color-gold-100: #f8f0da;
+  --color-aqua-500: #00decc;
+  --color-aqua-300: #9ff3f0;
+  --color-aqua-100: #e3fcfa;
 
-  /* CR03 1.3: Library palette. Book cloth colours only; never used elsewhere. */
-  --color-cloth-maroon: #7a1533;
-  --color-cloth-ink: #23303f;
-  --color-cloth-gulf: #145c63;
-  --color-cloth-olive: #4f5a3a;
-  --color-cloth-plum: #4e2a4c;
-  --color-cloth-umber: #6b4a2e;
-  --color-cloth-slate: #4a5563;
-  --color-cloth-sand: #b9a57f;
+  /* Library palette. Book cloth colours only; never used elsewhere. */
+  --color-cloth-navy: #173044;
+  --color-cloth-ink: #0f2230;
+  --color-cloth-teal: #077c84;
+  --color-cloth-deep: #1f4a5a;
+  --color-cloth-indigo: #2b3f63;
+  --color-cloth-steel: #455669;
+  --color-cloth-slate: #5a6b82;
+  --color-cloth-mist: #9fb3c8;
 
   /* CR05 1.5: ok and warn darkened just enough to clear WCAG AA on their
      light tints (4.29:1 and 3.19:1 before); tints unchanged */
@@ -108,8 +103,8 @@
   --color-info: #2f5f9e;
   --color-info-light: #e6edf7;
 
-  --font-display: "Fraunces", "Georgia", serif;
-  --font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Sora", system-ui, sans-serif;
+  --font-sans: "Sora", "Segoe UI", system-ui, sans-serif;
   --font-arabic: "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
   --font-kufi: "Noto Kufi Arabic", "IBM Plex Sans Arabic", sans-serif;
 
@@ -117,10 +112,10 @@
   --radius-chip: 0.5rem;
 
   /* CR05 1.2: resting cards sit close to the surface; hover keeps the warm
-     maroon-tinted lift */
-  --shadow-paper: 0 1px 2px rgba(31, 35, 40, 0.06), 0 1px 1px rgba(31, 35, 40, 0.04);
-  --shadow-lift: 0 2px 6px rgba(138, 21, 56, 0.08), 0 10px 28px rgba(138, 21, 56, 0.1);
-  --shadow-pop: 0 4px 12px rgba(31, 35, 40, 0.08), 0 16px 40px rgba(31, 35, 40, 0.12);
+     navy-tinted lift */
+  --shadow-paper: 0 1px 2px rgba(10, 21, 30, 0.06), 0 1px 1px rgba(10, 21, 30, 0.04);
+  --shadow-lift: 0 2px 6px rgba(23, 48, 68, 0.08), 0 10px 28px rgba(23, 48, 68, 0.1);
+  --shadow-pop: 0 4px 12px rgba(10, 21, 30, 0.08), 0 16px 40px rgba(10, 21, 30, 0.12);
 
   --ease-paper: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -145,11 +140,11 @@
 }
 
 html {
-  background: var(--color-sand-50);
+  background: var(--color-mist-50);
 }
 
 body {
-  background: var(--color-sand-50);
+  background: var(--color-mist-50);
   color: var(--color-ink-900);
   font-family: var(--font-sans);
   font-size: 0.9375rem;
@@ -181,20 +176,20 @@ html[lang="ar"] h4 {
 }
 
 ::selection {
-  background: var(--color-maroon-100);
-  color: var(--color-maroon-900);
+  background: var(--color-navy-100);
+  color: var(--color-navy-900);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-maroon-700);
+  outline: 2px solid var(--color-navy-700);
   outline-offset: 2px;
   border-radius: 2px;
 }
 
-/* CR05 1.3: on the maroon bar, focus reads in gold (maroon on maroon is
+/* CR05 1.3: on the navy bar, focus reads in gold (navy on navy is
    invisible; gold carries 3.9:1 against the bar) */
 [data-bar] :focus-visible {
-  outline-color: var(--color-gold-500);
+  outline-color: var(--color-aqua-500);
 }
 
 /* Numbers are always tabular in KPIs, charts, tables */
@@ -206,18 +201,18 @@ html[lang="ar"] h4 {
 /* Scrollbars: quiet, sand-toned */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-sand-300) transparent;
+  scrollbar-color: var(--color-mist-300) transparent;
 }
 
 /* ------------------------------------------------------------------ */
 /* Product patterns                                                    */
 /* ------------------------------------------------------------------ */
 
-/* A white card on the bright neutral ground (CR05 1.2: border sand-300 at
+/* A white card on the bright neutral ground (CR05 1.2: border mist-300 at
    60 percent where a border exists) */
 .card {
   background: #ffffff;
-  border: 1px solid color-mix(in srgb, var(--color-sand-300) 60%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-mist-300) 60%, transparent);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-paper);
 }
@@ -232,7 +227,7 @@ html[lang="ar"] h4 {
 
 /* CR06: hovering an expert row lights the lane cards of the items they touch */
 .lane-hl {
-  outline: 2px solid var(--color-gold-500);
+  outline: 2px solid var(--color-aqua-500);
   outline-offset: 2px;
   border-radius: var(--radius-card);
 }
@@ -241,9 +236,9 @@ html[lang="ar"] h4 {
 .skeleton {
   background: linear-gradient(
     90deg,
-    var(--color-sand-100) 25%,
-    var(--color-sand-200) 40%,
-    var(--color-sand-100) 55%
+    var(--color-mist-100) 25%,
+    var(--color-mist-200) 40%,
+    var(--color-mist-100) 55%
   );
   background-size: 800px 100%;
   animation: var(--animate-shimmer);
@@ -256,7 +251,7 @@ html[lang="ar"] h4 {
   width: 2px;
   height: 1.1em;
   vertical-align: text-bottom;
-  background: var(--color-maroon-700);
+  background: var(--color-navy-700);
   animation: var(--animate-breathe);
   margin-inline-start: 2px;
 }
@@ -295,27 +290,57 @@ html[lang="ar"] h4 {
   max-width: 760px;
 }
 
-/* Thin maroon divider with a paper feel */
+/* Thin navy divider with a paper feel */
 .rule {
   border: 0;
   height: 1px;
-  background: linear-gradient(to right, var(--color-sand-300), transparent);
+  background: linear-gradient(to right, var(--color-mist-300), transparent);
 }
 
-/* SiaNexus wordmark crops (CR01 1.2): compact = Sia + slash (viewBox 0 0 1032 400
-   of the 2654x400 wordmark), mark = the teal slash alone on a square canvas
-   (region 700 0 328 328). Background crops so no asset is duplicated. */
-.logo-compact {
-  background-image: url("/brand/SiaNexus_logo.svg");
-  background-repeat: no-repeat;
-  background-size: 257.17% auto;
-  background-position: 0 0;
-}
+/* EnviroAI brand mark: background so no asset is duplicated. */
+.logo-compact,
 .logo-mark {
-  background-image: url("/brand/SiaNexus_mark.png");
+  background-image: url("/brand/EnviroAI_mark.svg");
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
+}
+.logo-mark-white {
+  background-image: url("/brand/EnviroAI_mark_white.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+/* Application chrome: the top bar is white, the sidebar dark navy. The bar
+   tokens are re-pointed inside .topbar so components written for the old navy
+   bar (search field, bell) read correctly on white. */
+.topbar {
+  --color-bar-ink: var(--color-navy-900);
+  --color-bar-muted: var(--color-ink-600);
+  --color-bar-field: var(--color-mist-50);
+  --color-bar-field-focus: #ffffff;
+}
+/* the search field: wide and pill-shaped */
+.topbar [class*="max-w-[560px]"] {
+  max-width: 720px;
+}
+.topbar [class*="max-w-[560px]"] input {
+  border-radius: 9999px;
+  border-color: var(--color-mist-300);
+}
+.topbar input::placeholder {
+  color: var(--color-ink-400);
+}
+.topbar [class*="text-white/7"] {
+  color: var(--color-ink-400);
+}
+.topbar kbd {
+  border-color: var(--color-mist-300);
+  background: #ffffff;
+}
+.topbar button[class*="hover:bg-white/15"]:hover {
+  background: var(--color-mist-100);
 }
 
 /* CR02 2.2: navigator pane slide (180ms) and the map's one-time draw-in */
@@ -348,14 +373,14 @@ html[lang="ar"] h4 {
 
 /* CR03 4.2: the one new token for the Home constellation lines */
 :root {
-  --connection: rgba(138, 21, 56, 0.18);
+  --connection: rgba(23, 48, 68, 0.18);
 }
 
-/* CR03 4.3: bento card hover: 4px lift, warm maroon-tinted shadow, border
-   from transparent to maroon-100, 180ms; the primary action slides in. */
+/* CR03 4.3: bento card hover: 4px lift, warm navy-tinted shadow, border
+   from transparent to navy-100, 180ms; the primary action slides in. */
 .bento-card {
   background: #ffffff;
-  border: 1px solid color-mix(in srgb, var(--color-sand-300) 60%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-mist-300) 60%, transparent);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-paper);
   transition:
@@ -366,10 +391,10 @@ html[lang="ar"] h4 {
 .bento-card:hover,
 .bento-card:focus-within {
   transform: translateY(-4px);
-  border-color: var(--color-maroon-100);
+  border-color: var(--color-navy-100);
   box-shadow:
-    0 3px 8px rgba(138, 21, 56, 0.08),
-    0 14px 32px rgba(138, 21, 56, 0.12);
+    0 3px 8px rgba(23, 48, 68, 0.08),
+    0 14px 32px rgba(23, 48, 68, 0.12);
 }
 .bento-card .card-action {
   transition: transform 180ms var(--ease-paper);
@@ -554,8 +579,8 @@ html[lang="ar"] h4 {
 
 /* CR03 4.4.5: slow breathing halo on the podcast play button */
 @keyframes halo-breathe {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(138, 21, 56, 0.28); }
-  50% { box-shadow: 0 0 0 12px rgba(138, 21, 56, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(23, 48, 68, 0.28); }
+  50% { box-shadow: 0 0 0 12px rgba(23, 48, 68, 0); }
 }
 .podcast-halo {
   animation: halo-breathe 3.2s ease-in-out infinite;
@@ -612,7 +637,7 @@ html[lang="ar"] h4 {
 /* Chart tooltips (recharts) */
 .recharts-default-tooltip {
   border-radius: 10px !important;
-  border-color: var(--color-sand-300) !important;
+  border-color: var(--color-mist-300) !important;
   box-shadow: var(--shadow-paper) !important;
   font-family: inherit !important;
 }

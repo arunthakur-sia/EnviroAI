@@ -1,5 +1,5 @@
 "use client";
-// CR08 8: the small gold ribbon on this week's pick wherever the item shows
+// CR08 8: the small aqua ribbon on this week's pick wherever the item shows
 // (Institutional Memory list rows and cards, the Learning Room, search
 // results). Pass `active` when the server already knows; otherwise the chip
 // looks itself up in the one-per-page cached id set and renders nothing
@@ -44,11 +44,11 @@ export function KowRibbon({
       data-testid="kow-ribbon"
       title={t("ribbonAria")}
       className={cn(
-        "inline-flex shrink-0 items-center gap-1 rounded-md border border-gold-300 bg-gold-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase leading-4 tracking-[0.08em] text-maroon-900 rtl:tracking-normal",
+        "inline-flex shrink-0 items-center gap-1 rounded-md border border-aqua-300 bg-aqua-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase leading-4 tracking-[0.08em] text-navy-900 rtl:tracking-normal",
         className
       )}
     >
-      <Star className="size-2.5 text-gold-500" fill="currentColor" aria-hidden />
+      <Star className="size-2.5 text-aqua-500" fill="currentColor" aria-hidden />
       {t("ribbon")}
     </span>
   );

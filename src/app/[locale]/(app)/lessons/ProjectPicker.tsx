@@ -1,6 +1,6 @@
 "use client";
 // CR07 1.3: the By project tab of the Learning Room becomes a proper picker:
-// a strategy store switch (the NDS editions or the Council Strategy), a search
+// a strategy store switch (the NES editions or the Programme Strategy), a search
 // box, a drill down through the chain with lesson counts at every level, and a
 // "Not linked" group at the end. Selecting a project shows its own lessons and
 // the lessons inherited from its parent, each marked with where it came from.
@@ -12,8 +12,8 @@ import { Chip, RagDot } from "@/components/ui/primitives";
 import type { LessonPicker, PickerNode, RoomLesson } from "@/server/services/lessons";
 
 /** The chain each store drills through, top level first. */
-const LEVELS: Record<"nds" | "council", string[]> = {
-  nds: ["outcome", "target", "initiative", "project"],
+const LEVELS: Record<"nes" | "council", string[]> = {
+  nes: ["outcome", "target", "initiative", "project"],
   council: ["goal", "intermediate_outcome", "output", "project"],
 };
 
@@ -29,13 +29,13 @@ export function ProjectPicker({
 }) {
   const t = useTranslations("lessons.picker");
   const locale = useLocale();
-  const [store, setStore] = React.useState<"nds" | "council">("nds");
+  const [store, setStore] = React.useState<"nes" | "council">("nes");
   const [query, setQuery] = React.useState("");
   /** the selected node at each depth, shortest path first */
   const [path, setPath] = React.useState<string[]>([]);
   const [showUnlinked, setShowUnlinked] = React.useState(false);
 
-  const nodes = store === "nds" ? picker.nds : picker.council;
+  const nodes = store === "nes" ? picker.nes : picker.council;
   const byId = React.useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
   const levels = LEVELS[store];
 
@@ -118,7 +118,7 @@ export function ProjectPicker({
         >
           {t(`levels.${levelName}` as never)}
         </p>
-        <ul className="card max-h-72 divide-y divide-sand-100 overflow-y-auto">
+        <ul className="card max-h-72 divide-y divide-mist-100 overflow-y-auto">
           {list.map((node) => {
             const active = path[depth] === node.id;
             return (
@@ -134,7 +134,7 @@ export function ProjectPicker({
                   aria-pressed={active}
                   className={cn(
                     "flex w-full items-center gap-2 px-3 py-2 text-start text-sm cursor-pointer",
-                    active ? "bg-maroon-100/60 text-maroon-900" : "hover:bg-sand-50 text-ink-900"
+                    active ? "bg-navy-100/60 text-navy-900" : "hover:bg-mist-50 text-ink-900"
                   )}
                   data-testid="picker-node"
                 >
@@ -165,19 +165,19 @@ export function ProjectPicker({
   return (
     <div data-testid="lesson-project-picker">
       <div className="mb-3 flex flex-wrap items-center gap-2">
-        <span className="inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5">
-          {(["nds", "council"] as const).map((key) => (
+        <span className="inline-flex items-center gap-0.5 rounded-lg bg-mist-100 p-0.5">
+          {(["nes", "council"] as const).map((key) => (
             <button
               key={key}
               onClick={() => setStore(key)}
               aria-pressed={store === key}
               className={cn(
                 "rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
-                store === key ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+                store === key ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
               )}
               data-testid={`picker-store-${key}`}
             >
-              {key === "nds" ? t("storeNds") : t("storeCouncil")}
+              {key === "nes" ? t("storeNes") : t("storeCouncil")}
             </button>
           ))}
         </span>
@@ -191,14 +191,14 @@ export function ProjectPicker({
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t("searchPlaceholder")}
             aria-label={t("searchPlaceholder")}
-            className="h-9 w-64 rounded-lg border border-sand-300 bg-white ps-8 pe-3 text-sm placeholder:text-ink-400 focus:border-maroon-500 focus:outline-none focus:ring-2 focus:ring-maroon-100"
+            className="h-9 w-64 rounded-lg border border-mist-300 bg-white ps-8 pe-3 text-sm placeholder:text-ink-400 focus:border-navy-500 focus:outline-none focus:ring-2 focus:ring-navy-100"
             data-testid="picker-search"
           />
         </span>
       </div>
 
       {matches ? (
-        <div className="card divide-y divide-sand-100" data-testid="picker-results">
+        <div className="card divide-y divide-mist-100" data-testid="picker-results">
           {matches.length ? (
             matches.map((node) => (
               <button
@@ -214,13 +214,13 @@ export function ProjectPicker({
                   setPath(chain);
                   setQuery("");
                 }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-start text-sm hover:bg-maroon-50 cursor-pointer"
+                className="flex w-full items-center gap-2 px-3 py-2 text-start text-sm hover:bg-navy-50 cursor-pointer"
               >
                 {node.code ? <span className="text-[11px] text-ink-600 tnum">{node.code}</span> : null}
                 <span className="min-w-0 flex-1 truncate text-ink-900">
                   {bi(locale, node.titleEn, node.titleAr)}
                 </span>
-                <Chip tone="sand">{t(`levels.${node.level}` as never)}</Chip>
+                <Chip tone="mist">{t(`levels.${node.level}` as never)}</Chip>
                 <span className="text-[11px] text-ink-600 tnum">{node.total}</span>
               </button>
             ))
@@ -239,9 +239,9 @@ export function ProjectPicker({
               {selected.code ? <span className="me-1.5 text-xs text-ink-600 tnum">{selected.code}</span> : null}
               {bi(locale, selected.titleEn, selected.titleAr)}
             </span>
-            <Chip tone="sand">{t(`levels.${selected.level}` as never)}</Chip>
-            {selected.edition ? <Chip tone="sand">{selected.edition.toUpperCase()}</Chip> : null}
-            {store === "council" ? <Chip tone="maroon">{t("internal")}</Chip> : null}
+            <Chip tone="mist">{t(`levels.${selected.level}` as never)}</Chip>
+            {selected.edition ? <Chip tone="mist">{selected.edition.toUpperCase()}</Chip> : null}
+            {store === "council" ? <Chip tone="navy">{t("internal")}</Chip> : null}
             <RagDot status="on_track" className="hidden" />
           </p>
           {(() => {
@@ -282,7 +282,7 @@ export function ProjectPicker({
         <button
           onClick={() => setShowUnlinked((v) => !v)}
           aria-expanded={showUnlinked}
-          className="flex w-full items-center gap-2 px-4 py-2.5 text-start cursor-pointer hover:bg-sand-50"
+          className="flex w-full items-center gap-2 px-4 py-2.5 text-start cursor-pointer hover:bg-mist-50"
         >
           <span className="text-sm font-medium text-ink-900">{t("notLinked")}</span>
           <span className="text-xs text-ink-600 tnum">{unlinked.length}</span>
@@ -292,7 +292,7 @@ export function ProjectPicker({
           />
         </button>
         {showUnlinked ? (
-          <div className="border-t border-sand-100 p-3">
+          <div className="border-t border-mist-100 p-3">
             {unlinked.length ? (
               <div className="flex gap-3 overflow-x-auto pb-2">
                 {unlinked.map((lesson) => renderLesson(lesson))}

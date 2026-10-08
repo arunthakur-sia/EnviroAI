@@ -84,12 +84,12 @@ function Workspace({ token, initial, locale }: { token: string; initial: Handove
   const otherLocale = locale === "ar" ? "en" : "ar";
 
   return (
-    <div className="min-h-screen bg-sand-50">
-      <header className="border-b border-sand-200 bg-white">
+    <div className="min-h-screen bg-mist-50">
+      <header className="border-b border-mist-200 bg-white">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-4 px-6 py-3">
           <SiaLogo variant="full" height={26} />
           <span className="text-xs text-ink-400">{t("eyebrow")}</span>
-          <Link href={`/handover/access/${token}` as never} locale={otherLocale} className="ms-auto text-xs font-medium text-maroon-700 hover:underline" data-testid="token-locale">
+          <Link href={`/handover/access/${token}` as never} locale={otherLocale} className="ms-auto text-xs font-medium text-navy-700 hover:underline" data-testid="token-locale">
             {otherLocale === "ar" ? "العربية" : "English"}
           </Link>
         </div>
@@ -102,11 +102,11 @@ function Workspace({ token, initial, locale }: { token: string; initial: Handove
               <h1 className="mt-1 font-display text-3xl text-ink-900">{t("title", { name: locale === "ar" ? ws.person.nameAr : ws.person.nameEn })}</h1>
               <div className="mt-2 flex flex-wrap items-center gap-2">
                 <KindChip kind={ws.kind} />
-                {ws.person.organisationEn ? <Chip tone="sand">{locale === "ar" ? ws.person.organisationAr ?? ws.person.organisationEn : ws.person.organisationEn}</Chip> : null}
+                {ws.person.organisationEn ? <Chip tone="mist">{locale === "ar" ? ws.person.organisationAr ?? ws.person.organisationEn : ws.person.organisationEn}</Chip> : null}
               </div>
               <p className="mt-3 max-w-xl text-sm leading-relaxed text-ink-600">{t("intro")}</p>
             </div>
-            <div className="w-full shrink-0 rounded-xl bg-sand-50 p-4 md:w-72">
+            <div className="w-full shrink-0 rounded-xl bg-mist-50 p-4 md:w-72">
               <Eyebrow>{th("lastWorkingDay")}</Eyebrow>
               <div className="mt-1">
                 <Countdown days={ws.daysToLastWorkingDay} lastWorkingDay={ws.lastWorkingDay} />
@@ -132,7 +132,7 @@ function Workspace({ token, initial, locale }: { token: string; initial: Handove
         <section className="card p-5" data-testid="token-add">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
             <h2 className="font-display text-lg text-ink-900">{t("addTitle")}</h2>
-            <div className="inline-flex items-center gap-1 rounded-xl bg-sand-100 p-1" role="tablist">
+            <div className="inline-flex items-center gap-1 rounded-xl bg-mist-100 p-1" role="tablist">
               {(["text", "upload"] as const).map((m) => (
                 <button
                   key={m}
@@ -140,7 +140,7 @@ function Workspace({ token, initial, locale }: { token: string; initial: Handove
                   role="tab"
                   aria-selected={mode === m}
                   onClick={() => setMode(m)}
-                  className={cn("cursor-pointer rounded-lg px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-gold-500", mode === m ? "bg-white text-maroon-900 shadow-sm" : "text-ink-600 hover:text-ink-900")}
+                  className={cn("cursor-pointer rounded-lg px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-aqua-500", mode === m ? "bg-white text-navy-900 shadow-sm" : "text-ink-600 hover:text-ink-900")}
                   data-testid={`token-mode-${m}`}
                 >
                   {t(`mode.${m}`)}

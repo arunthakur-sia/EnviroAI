@@ -37,7 +37,7 @@ async function main() {
   });
   let status = 0;
   for (let attempt = 0; attempt < 10 && status !== 200; attempt++) {
-    const res = await page.request.post(`${BASE}/api/v1/auth/login`, { data: { email: "admin@npc.qa", password: "Nexus!2026" }, timeout: 120000 });
+    const res = await page.request.post(`${BASE}/api/v1/auth/login`, { data: { email: "admin@enviroai.demo", password: "EnviroAI!2026" }, timeout: 120000 });
     status = res.status();
     if (status !== 200) await page.waitForTimeout(10000);
   }
@@ -84,7 +84,7 @@ async function main() {
     // the source selector vanishes the moment the card moves: never wait on it
     const grabbed = (await page.locator(srcSel).count()) ? await page.getAttribute(srcSel, "aria-grabbed", { timeout: 5000 }) : "(moved)";
     const dstClass = (await page.getAttribute(dstSel, "class", { timeout: 5000 }).catch(() => "")) ?? "";
-    console.log(`  after ${label}: aria-grabbed=${grabbed} target-highlight=${dstClass.includes("border-gold-500")} ${FROM}=${await countIn(FROM)} ${TO}=${await countIn(TO)}`);
+    console.log(`  after ${label}: aria-grabbed=${grabbed} target-highlight=${dstClass.includes("border-aqua-500")} ${FROM}=${await countIn(FROM)} ${TO}=${await countIn(TO)}`);
   };
   const fire = async (type: string, sel: string) => {
     const ret = await evalWith(

@@ -42,7 +42,7 @@ async function login(c: Client) {
   const res = await c("/api/v1/auth/login", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email: c.email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email: c.email, password: "EnviroAI!2026" }),
   });
   if (res.status !== 200) throw new Error(`login failed for ${c.email}: ${res.status}`);
 }
@@ -94,13 +94,13 @@ async function sampleIds(): Promise<Record<string, string>> {
 }
 
 const ROLES = [
-  "admin@npc.qa",
-  "knowledge@npc.qa",
-  "hr@npc.qa",
-  "head.stats@npc.qa",
-  "verifier@npc.qa",
-  "analyst@npc.qa",
-  "reader@npc.qa",
+  "admin@enviroai.demo",
+  "knowledge@enviroai.demo",
+  "hr@enviroai.demo",
+  "head.stats@enviroai.demo",
+  "verifier@enviroai.demo",
+  "analyst@enviroai.demo",
+  "reader@enviroai.demo",
 ];
 
 async function main() {

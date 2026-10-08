@@ -149,7 +149,7 @@ export async function structureKnowledge(input: StructureInput): Promise<{
     `Where is this from: ${input.whereFrom || "not stated"}`,
     `Available topic codes: ${topicList}`,
     `Outcome codes: eco_growth, fiscal_sust, workforce, cohesive_society, quality_life, env_sust, gov_excellence`,
-    `Indicator codes: pop_total, gdp_real_growth, gdp_nonhydro_share, cpi_inflation, unemployment_rate, trade_balance, building_permits, lfpr_qatari, fdi_inflows, ghg_per_capita, solar_capacity, digital_services_share, labour_productivity_growth`,
+    `Indicator codes: pop_total, gdp_real_growth, gdp_nonhydro_share, cpi_inflation, unemployment_rate, trade_balance, building_permits, lfpr_national, fdi_inflows, ghg_per_capita, solar_capacity, digital_services_share, labour_productivity_growth`,
   ];
   if (input.nodeContext) {
     textParts.push(

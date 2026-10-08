@@ -143,11 +143,11 @@ export function ReportButton({
         )}
       </DialogTrigger>
       <DialogContent
-        className="start-auto end-0 top-0 h-full w-[min(480px,94vw)] translate-x-0 translate-y-0 rtl:translate-x-0 overflow-y-auto rounded-none border-s border-sand-300"
+        className="start-auto end-0 top-0 h-full w-[min(480px,94vw)] translate-x-0 translate-y-0 rtl:translate-x-0 overflow-y-auto rounded-none border-s border-mist-300"
         title={t("extract")}
       >
         {/* Scope summary */}
-        <div className="mb-4 rounded-xl bg-sand-50 px-4 py-3">
+        <div className="mb-4 rounded-xl bg-mist-50 px-4 py-3">
           <p className="text-xs font-semibold uppercase tracking-wider text-ink-600">
             {t("scope")}
           </p>
@@ -223,7 +223,7 @@ export function ReportButton({
                     type="checkbox"
                     checked={value}
                     onChange={(e) => setter(e.target.checked)}
-                    className="size-4 accent-[var(--color-maroon-700)]"
+                    className="size-4 accent-[var(--color-navy-700)]"
                   />
                   {t(`include.${key}` as never)}
                 </label>
@@ -237,7 +237,7 @@ export function ReportButton({
 
         {phase === "generating" ? (
           <div className="flex flex-col items-center gap-3 py-10 text-center">
-            <Loader2 className="size-6 animate-spin text-maroon-700" />
+            <Loader2 className="size-6 animate-spin text-navy-700" />
             <p className="text-sm text-ink-600" aria-live="polite">
               {progress}
             </p>

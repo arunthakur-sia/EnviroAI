@@ -1,5 +1,5 @@
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const r = await db.execute(
   "select id, code, title_en, description_en, status, source_ref, owner_entity_name from strategy_nodes where node_type='target' order by sort limit 5"
 );

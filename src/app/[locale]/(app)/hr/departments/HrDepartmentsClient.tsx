@@ -21,7 +21,7 @@ function ScoreRing({ value, label }: { value: number; label: string }) {
         value={value / 100}
         size={54}
         stroke={5}
-        color={value >= 80 ? "var(--color-ok)" : value >= 55 ? "var(--color-gold-500)" : "var(--color-danger)"}
+        color={value >= 80 ? "var(--color-ok)" : value >= 55 ? "var(--color-aqua-500)" : "var(--color-danger)"}
       >
         <span className="text-xs font-semibold tnum">{value}</span>
       </ProgressRing>
@@ -81,7 +81,7 @@ export function HrDepartmentsClient({
             <button
               onClick={() => setOpen(isOpen ? null : d.id)}
               aria-expanded={isOpen}
-              className="flex w-full flex-wrap items-center gap-4 px-5 py-4 text-start cursor-pointer hover:bg-sand-50"
+              className="flex w-full flex-wrap items-center gap-4 px-5 py-4 text-start cursor-pointer hover:bg-mist-50"
             >
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold text-ink-900">
@@ -124,7 +124,7 @@ export function HrDepartmentsClient({
                   transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
                   className="overflow-hidden"
                 >
-                  <div className="grid grid-cols-1 gap-5 border-t border-sand-100 px-5 py-4 lg:grid-cols-3">
+                  <div className="grid grid-cols-1 gap-5 border-t border-mist-100 px-5 py-4 lg:grid-cols-3">
                     {/* responsibilities */}
                     <div>
                       <p className="mb-1.5 flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-ink-600">
@@ -136,7 +136,7 @@ export function HrDepartmentsClient({
                               setRespEn(d.responsibilitiesEn ?? "");
                               setRespAr(d.responsibilitiesAr ?? "");
                             }}
-                            className="flex items-center gap-1 text-maroon-700 cursor-pointer normal-case tracking-normal"
+                            className="flex items-center gap-1 text-navy-700 cursor-pointer normal-case tracking-normal"
                             data-testid="edit-responsibilities"
                           >
                             <Pencil className="size-3" /> {tc("edit")}

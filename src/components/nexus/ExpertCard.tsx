@@ -1,7 +1,7 @@
 "use client";
-// CR08 3: one card, two registers. Internal cards carry a maroon accent, the
+// CR08 3: one card, two registers. Internal cards carry a navy accent, the
 // unit breadcrumb (sector, then the unit), domains, badges and the projects
-// the person is involved in. External cards carry a gulf accent, the
+// the person is involved in. External cards carry a teal accent, the
 // organisation, the type, availability, the last engagement year and the
 // number of engagements, with "Request this expert" as the primary action.
 // The whole card is reachable through one stretched link on the name, so the
@@ -42,16 +42,16 @@ export function ExpertCard({
     <article
       className={cn(
         "card card-hover relative flex h-full flex-col gap-3 overflow-hidden p-4 ps-5",
-        "focus-within:outline-2 focus-within:outline-gold-500"
+        "focus-within:outline-2 focus-within:outline-aqua-500"
       )}
       data-testid="expert-card"
       data-kind={expert.kind}
       data-expert-id={expert.id}
     >
-      {/* the accent stripe: maroon for NPC staff, gulf for externals */}
+      {/* the accent stripe: navy for Office staff, teal for externals */}
       <span
         aria-hidden
-        className={cn("absolute inset-y-0 start-0 w-1", internal ? "bg-maroon-700" : "bg-gulf-600")}
+        className={cn("absolute inset-y-0 start-0 w-1", internal ? "bg-navy-700" : "bg-teal-600")}
       />
 
       <div className="flex items-start gap-3">
@@ -67,7 +67,7 @@ export function ExpertCard({
               {name}
             </Link>
             {expert.isVerified ? (
-              <BadgeCheck className="size-4 shrink-0 text-gulf-600" role="img" aria-label={t("verified")} />
+              <BadgeCheck className="size-4 shrink-0 text-teal-600" role="img" aria-label={t("verified")} />
             ) : null}
           </p>
           {position ? <p className="truncate text-xs text-ink-600">{position}</p> : null}
@@ -77,7 +77,7 @@ export function ExpertCard({
                 {expert.unitPath.map((u, i) => (
                   <span key={u.id} className="flex min-w-0 items-center gap-1">
                     {i > 0 ? <ChevronRight className="size-3 shrink-0 text-ink-400 flip-rtl" aria-hidden /> : null}
-                    <span className={cn("truncate", i === expert.unitPath.length - 1 && "text-maroon-900")}>
+                    <span className={cn("truncate", i === expert.unitPath.length - 1 && "text-navy-900")}>
                       {bi(locale, u.nameEn, u.nameAr)}
                     </span>
                   </span>
@@ -96,15 +96,15 @@ export function ExpertCard({
       </div>
 
       {expert.matchReason ? (
-        <p className="rounded-lg bg-gulf-100/60 px-2.5 py-1.5 text-xs leading-relaxed text-gulf-600">
+        <p className="rounded-lg bg-teal-100/60 px-2.5 py-1.5 text-xs leading-relaxed text-teal-600">
           {expert.matchReason}
         </p>
       ) : null}
 
       <div className="flex flex-wrap gap-1">
-        {!internal ? <Chip tone="gulf">{t(`types.${expert.type}` as never)}</Chip> : null}
+        {!internal ? <Chip tone="teal">{t(`types.${expert.type}` as never)}</Chip> : null}
         {expert.domains.slice(0, MAX_DOMAINS).map((d) => (
-          <Chip key={d.code} tone={internal ? "maroon" : "sand"}>
+          <Chip key={d.code} tone={internal ? "navy" : "mist"}>
             {bi(locale, d.nameEn, d.nameAr)}
           </Chip>
         ))}
@@ -115,27 +115,27 @@ export function ExpertCard({
         ) : null}
         {internal
           ? expert.badges.map((b) => (
-              <Chip key={b.code} tone="gold" title={bi(locale, b.nameEn, b.nameAr)}>
+              <Chip key={b.code} tone="aqua" title={bi(locale, b.nameEn, b.nameAr)}>
                 <Medal className="size-3" aria-hidden /> {bi(locale, b.nameEn, b.nameAr)}
               </Chip>
             ))
           : null}
       </div>
 
-      <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-sand-100 pt-2.5 text-[11px] text-ink-600">
+      <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-mist-100 pt-2.5 text-[11px] text-ink-600">
         <span className="flex items-center gap-1.5">
           <span className={cn("h-2 w-2 rounded-full", AVAILABILITY_DOT[expert.availability])} aria-hidden />
           {t(`availability.${expert.availability}` as never)}
         </span>
         {internal ? (
           <span className="flex items-center gap-1 tnum" data-testid="project-count">
-            <FolderKanban className="size-3 text-maroon-700" aria-hidden />
+            <FolderKanban className="size-3 text-navy-700" aria-hidden />
             {t("projectsCount", { count: expert.projectCount })}
           </span>
         ) : (
           <>
             <span className="flex items-center gap-1 tnum" data-testid="engagement-count">
-              <Handshake className="size-3 text-gulf-600" aria-hidden />
+              <Handshake className="size-3 text-teal-600" aria-hidden />
               {t("engagementsCount", { count: expert.engagementCount })}
             </span>
             {expert.lastEngagementYear ? (

@@ -7,7 +7,7 @@
 export type SignalInput = {
   id: string;
   title: string;
-  /** +1 favourable for Qatar, -1 unfavourable, 0 neutral or mixed */
+  /** +1 favourable for the home country, -1 unfavourable, 0 neutral or mixed */
   sentiment: 1 | -1 | 0;
   impact: "high" | "medium" | "low";
   horizon: "short" | "mid" | "long";
@@ -53,7 +53,7 @@ export type ForecastInputs = {
   /** other countries' forecast values per horizon (peer Holt drift is
       computed once, outside the engine) for rank derivation */
   peerValues: { h1: number[]; h3: number[]; h5: number[]; latest: number[] };
-  /** Qatar's latest published rank, the anchor when the stored peer pool is
+  /** The home country's latest published rank, the anchor when the stored peer pool is
       only a sample of the index (rank movement within the pool is applied to
       the anchor instead of pretending the pool is the whole field) */
   latestRank: number | null;
@@ -74,7 +74,7 @@ export type ForecastInputs = {
 /* CR08 4.1: target_gap mode                                            */
 /* ------------------------------------------------------------------ */
 /*
-  A national indicator carries a numeric target and a target year (NDS3).
+  A national indicator carries a numeric target and a target year (National Environment Strategy).
   The engine keeps the same machinery, Holt or damped baseline on the value
   series, bounded signal adjustment, and the seeded bootstrap Monte Carlo,
   and adds one simulated horizon at the target year. Two things differ:
@@ -84,7 +84,7 @@ export type ForecastInputs = {
      the historical trajectory, not the aspiration.
   2. The scale of the bounded adjustment and of the residual floors is the
      larger of the distance to the target and the observed range of the
-     series, because national indicators have open scales (persons, QAR
+     series, because national indicators have open scales (persons, SAR
      billion, percentage points) rather than a 0-100 score.
 
   The gap is direction-corrected: gap = (target - value) * (higherIsBetter

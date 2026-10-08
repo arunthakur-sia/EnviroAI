@@ -15,7 +15,7 @@ export function PolicyMiniShelf({ policies, sops }: { policies: PolicyDoc[]; sop
   const docs = [...policies, ...sops.filter((s) => !policies.some((p) => p.id === s.id))];
   if (!docs.length) {
     return (
-      <p className="rounded-lg border border-dashed border-sand-300 bg-sand-50 px-3 py-4 text-center text-xs text-ink-600" data-testid="process-docs-empty">
+      <p className="rounded-lg border border-dashed border-mist-300 bg-mist-50 px-3 py-4 text-center text-xs text-ink-600" data-testid="process-docs-empty">
         {t("panel.noDocuments")}
       </p>
     );
@@ -27,7 +27,7 @@ export function PolicyMiniShelf({ policies, sops }: { policies: PolicyDoc[]; sop
         {policies.length ? (
           <div>
             <SubHeading>{t("panel.policies")}</SubHeading>
-            <div className="divide-y divide-sand-100">
+            <div className="divide-y divide-mist-100">
               {policies.map((d, i) => (
                 <PolicyDocRow key={d.id} doc={d} index={i} compact />
               ))}
@@ -37,7 +37,7 @@ export function PolicyMiniShelf({ policies, sops }: { policies: PolicyDoc[]; sop
         {sops.length ? (
           <div>
             <SubHeading>{t("panel.sops")}</SubHeading>
-            <div className="divide-y divide-sand-100">
+            <div className="divide-y divide-mist-100">
               {sops.map((d, i) => (
                 <PolicyDocRow key={d.id} doc={d} index={i} compact />
               ))}

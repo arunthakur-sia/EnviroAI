@@ -1,12 +1,12 @@
 "use client";
 // CR08 10.1: the process panel. 520px from the end side over a scrim, the
-// same motion as the Council's project drawer. Purpose in both languages,
+// same motion as the Office's project drawer. Purpose in both languages,
 // the owner unit with its head (OwnerControl when the head holds an account,
 // a placeholder block otherwise), the numbered steps with unit and system,
 // inputs and outputs as two columns, the governing policies and SOPs as a
 // mini shelf, KPIs, the interfaces linked to it, the RACI row and its editor,
 // the ancestors as breadcrumbs, and "Ask about this process", which opens the
-// Ask NPC panel with the process attached. Escape closes it.
+// Ask EnviroAI panel with the process attached. Escape closes it.
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -57,13 +57,13 @@ function OwnerBlock({ unit, head, item }: { unit: UnitRef | null; head: UnitHead
   const published = head ? bi(locale, head.publishedNameEn ?? "", head.publishedNameAr ?? "") : "";
   const publishedTitle = head ? bi(locale, head.publishedTitleEn ?? "", head.publishedTitleAr ?? "") : "";
   return (
-    <div className="flex flex-wrap items-center gap-x-6 gap-y-3 rounded-xl bg-sand-50 px-3.5 py-3" data-testid="process-owner">
+    <div className="flex flex-wrap items-center gap-x-6 gap-y-3 rounded-xl bg-mist-50 px-3.5 py-3" data-testid="process-owner">
       <span className="min-w-0">
         <span className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal">{t("panel.owner")}</span>
         <Link
           href={unitHref(unit.code)}
           aria-label={t("panel.openUnit")}
-          className="link-draw block text-sm font-medium text-maroon-700 hover:text-maroon-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+          className="link-draw block text-sm font-medium text-navy-700 hover:text-navy-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
         >
           <span className="me-1.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-ink-400 tnum rtl:tracking-normal">{unit.code}</span>
           {bi(locale, unit.nameEn, unit.nameAr)}
@@ -74,7 +74,7 @@ function OwnerBlock({ unit, head, item }: { unit: UnitRef | null; head: UnitHead
       ) : (
         <span className="flex items-center gap-2.5" data-testid="owner-placeholder">
           {published ? (
-            <Avatar name={published} color="maroon" size={28} />
+            <Avatar name={published} color="navy" size={28} />
           ) : (
             <span className="inline-flex size-7 shrink-0 items-center justify-center rounded-full border border-dashed border-ink-200 text-xs text-ink-200" aria-hidden>
               ?
@@ -97,9 +97,9 @@ function IoList({ items, label, empty, icon }: { items: ProcessDetail["inputs"];
   const t = useTranslations("processes");
   const locale = useLocale();
   return (
-    <div className="rounded-xl bg-sand-50 p-3">
+    <div className="rounded-xl bg-mist-50 p-3">
       <SubHeading className="flex items-center gap-1.5">
-        <span className="text-maroon-700 [&_svg]:size-3.5" aria-hidden>
+        <span className="text-navy-700 [&_svg]:size-3.5" aria-hidden>
           {icon}
         </span>
         {label}
@@ -261,12 +261,12 @@ export function ProcessPanel({
         transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
       >
         {/* header bar: the Internal chip travels with the module */}
-        <div className="flex items-center gap-1.5 border-b border-sand-100 px-4 py-3">
-          <Chip tone="maroon" title={t("internalTitle")} data-testid="internal-chip">
+        <div className="flex items-center gap-1.5 border-b border-mist-100 px-4 py-3">
+          <Chip tone="navy" title={t("internalTitle")} data-testid="internal-chip">
             {t("internal")}
           </Chip>
           {detail?.isIllustrative ? (
-            <Chip tone="gold" title={t("illustrativeTitle")} data-testid="illustrative-chip">
+            <Chip tone="aqua" title={t("illustrativeTitle")} data-testid="illustrative-chip">
               {t("illustrative")}
             </Chip>
           ) : null}
@@ -279,7 +279,7 @@ export function ProcessPanel({
                 aria-label={t("panel.edit")}
                 title={t("panel.edit")}
                 data-testid="process-edit"
-                className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+                className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
               >
                 <Pencil className="size-4" />
               </button>
@@ -291,7 +291,7 @@ export function ProcessPanel({
                 aria-disabled={!canDelete}
                 data-testid="process-delete"
                 className={cn(
-                  "cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500",
+                  "cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500",
                   canDelete ? "hover:text-danger" : "opacity-40"
                 )}
               >
@@ -303,7 +303,7 @@ export function ProcessPanel({
             type="button"
             onClick={copyLink}
             aria-label={t("panel.copyLink")}
-            className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+            className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
           >
             <LinkIcon className="size-4" />
           </button>
@@ -312,13 +312,13 @@ export function ProcessPanel({
             onClick={onClose}
             aria-label={t("panel.close")}
             data-testid="process-panel-close"
-            className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+            className="cursor-pointer rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
           >
             <X className="size-4" />
           </button>
         </div>
 
-        {/* pb-16: the floating Ask NPC pill sits over the bottom end corner */}
+        {/* pb-16: the floating Ask EnviroAI pill sits over the bottom end corner */}
         <div ref={bodyRef} className="min-h-0 flex-1 overflow-y-auto pb-16">
           {!detail && !failed ? (
             <PanelSkeleton />
@@ -337,7 +337,7 @@ export function ProcessPanel({
               transition={{ duration: 0.16 }}
               className="flex flex-col gap-5 p-5"
             >
-              {/* CR08 2.3: the Ask NPC launcher knows this process while the panel is open */}
+              {/* CR08 2.3: the Ask EnviroAI launcher knows this process while the panel is open */}
               <AskContextItem
                 item={{ kind: "process", id: detail.id, code: detail.code, titleEn: detail.nameEn, titleAr: detail.nameAr, href: processHref(detail.code) }}
               />
@@ -350,7 +350,7 @@ export function ProcessPanel({
                       <button
                         type="button"
                         onClick={() => onNavigate(a.code)}
-                        className="link-draw cursor-pointer rounded text-ink-600 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+                        className="link-draw cursor-pointer rounded text-ink-600 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
                       >
                         <span className="tnum">{a.code}</span> {bi(locale, a.nameEn, a.nameAr)}
                       </button>
@@ -365,8 +365,8 @@ export function ProcessPanel({
               <div>
                 <p className="flex flex-wrap items-center gap-2 text-xs text-ink-600">
                   <LevelChip level={detail.level} />
-                  <span className="tnum font-semibold text-maroon-700">{detail.code}</span>
-                  <Chip tone={detail.status === "active" ? "ok" : detail.status === "draft" ? "sand" : "ghost"}>
+                  <span className="tnum font-semibold text-navy-700">{detail.code}</span>
+                  <Chip tone={detail.status === "active" ? "ok" : detail.status === "draft" ? "mist" : "ghost"}>
                     {t(`panel.status.${detail.status}` as never)}
                   </Chip>
                 </p>
@@ -385,7 +385,7 @@ export function ProcessPanel({
                         /* text-start: the quoted language governs the block, so
                            its label sits at the start of the quote, not at the
                            start of the page */
-                        className="mt-1.5 rounded-lg bg-sand-50 px-3 py-2 text-start text-[13px] leading-relaxed text-ink-600"
+                        className="mt-1.5 rounded-lg bg-mist-50 px-3 py-2 text-start text-[13px] leading-relaxed text-ink-600"
                       >
                         <span className="mb-0.5 block text-start text-[10px] font-semibold uppercase tracking-[0.1em] text-ink-400">
                           {locale === "ar" ? t("panel.inEnglish") : t("panel.inArabic")}
@@ -402,18 +402,18 @@ export function ProcessPanel({
 
               {/* ask about this process */}
               <Button variant="secondary" onClick={() => ask.open({ focus: true })} data-testid="process-ask" className="self-start">
-                <Sparkles className="text-gold-500" /> {t("panel.ask")}
+                <Sparkles className="text-aqua-500" /> {t("panel.ask")}
               </Button>
 
               {/* steps */}
               <div>
                 <SubHeading>{t("panel.steps")}</SubHeading>
                 {detail.steps.length ? (
-                  <ol className="relative ms-3 flex flex-col gap-3 border-s border-sand-300 ps-5" data-testid="process-steps">
+                  <ol className="relative ms-3 flex flex-col gap-3 border-s border-mist-300 ps-5" data-testid="process-steps">
                     {detail.steps.map((s) => (
                       <li key={s.n} className="relative" data-testid="process-step" aria-label={t("panel.stepAria", { n: s.n })}>
                         <span
-                          className="absolute -start-8 top-0 flex size-6 items-center justify-center rounded-full bg-maroon-700 text-[11px] font-semibold text-white tnum ring-2 ring-white"
+                          className="absolute -start-8 top-0 flex size-6 items-center justify-center rounded-full bg-navy-700 text-[11px] font-semibold text-white tnum ring-2 ring-white"
                           aria-hidden
                         >
                           {s.n}
@@ -421,9 +421,9 @@ export function ProcessPanel({
                         <p className="text-sm leading-relaxed text-ink-900">{bi(locale, s.textEn, s.textAr)}</p>
                         {s.roleUnit || s.system ? (
                           <p className="mt-1 flex flex-wrap items-center gap-1.5">
-                            {s.roleUnit ? <UnitChip unit={s.roleUnit} className="bg-sand-50" /> : null}
+                            {s.roleUnit ? <UnitChip unit={s.roleUnit} className="bg-mist-50" /> : null}
                             {s.system ? (
-                              <Chip tone="gulf" title={t("panel.system")}>
+                              <Chip tone="teal" title={t("panel.system")}>
                                 <Cpu className="size-3" aria-hidden />
                                 {s.system}
                               </Chip>
@@ -434,7 +434,7 @@ export function ProcessPanel({
                     ))}
                   </ol>
                 ) : (
-                  <p className="rounded-lg border border-dashed border-sand-300 bg-sand-50 px-3 py-4 text-center text-xs text-ink-600">{t("panel.noSteps")}</p>
+                  <p className="rounded-lg border border-dashed border-mist-300 bg-mist-50 px-3 py-4 text-center text-xs text-ink-600">{t("panel.noSteps")}</p>
                 )}
               </div>
 
@@ -456,7 +456,7 @@ export function ProcessPanel({
                   <SubHeading>{t("panel.systems")}</SubHeading>
                   <div className="flex flex-wrap gap-1.5">
                     {detail.systems.map((s, i) => (
-                      <Chip key={i} tone="gulf">
+                      <Chip key={i} tone="teal">
                         <Cpu className="size-3" aria-hidden />
                         {bi(locale, s.nameEn, s.nameAr)}
                       </Chip>
@@ -469,10 +469,10 @@ export function ProcessPanel({
                 {detail.kpis.length ? (
                   <div className="grid grid-cols-1 gap-2 sm:grid-cols-2" data-testid="process-kpis">
                     {detail.kpis.map((k, i) => (
-                      <div key={i} className="rounded-xl border border-sand-200 bg-white px-3 py-2.5">
+                      <div key={i} className="rounded-xl border border-mist-200 bg-white px-3 py-2.5">
                         <p className="text-[13px] font-medium leading-snug text-ink-900">{bi(locale, k.nameEn, k.nameAr)}</p>
                         {k.target ? (
-                          <p className="mt-1 text-xs text-maroon-900 tnum">
+                          <p className="mt-1 text-xs text-navy-900 tnum">
                             {t("panel.target", { target: `${k.target}${k.unit ? ` ${vocab.unit(k.unit)}` : ""}` })}
                           </p>
                         ) : null}
@@ -494,12 +494,12 @@ export function ProcessPanel({
                         <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-ink-400 rtl:tracking-normal">{t("panel.internal")}</p>
                         <ul className="flex flex-col gap-1.5">
                           {detail.interfaces.internal.map((i) => (
-                            <li key={i.id} className="rounded-lg bg-sand-50 px-3 py-2 text-[13px] text-ink-900">
+                            <li key={i.id} className="rounded-lg bg-mist-50 px-3 py-2 text-[13px] text-ink-900">
                               <span className="flex flex-wrap items-center gap-1.5">
                                 <span className="font-medium">{i.fromUnit.code}</span>
                                 <ArrowRight className="size-3.5 text-ink-400 flip-rtl" aria-hidden />
                                 <span className="font-medium">{i.toUnit.code}</span>
-                                <Chip tone="sand">{t(`panel.flow.${i.flowKind}` as never)}</Chip>
+                                <Chip tone="mist">{t(`panel.flow.${i.flowKind}` as never)}</Chip>
                                 {i.cadence ? <span className="text-[11px] text-ink-600">{vocab.cadence(i.cadence)}</span> : null}
                               </span>
                               {i.descriptionEn || i.descriptionAr ? (
@@ -515,7 +515,7 @@ export function ProcessPanel({
                         <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-ink-400 rtl:tracking-normal">{t("panel.external")}</p>
                         <ul className="flex flex-col gap-1.5">
                           {detail.interfaces.external.map((e) => (
-                            <li key={e.id} className="rounded-lg bg-sand-50 px-3 py-2 text-[13px] text-ink-900">
+                            <li key={e.id} className="rounded-lg bg-mist-50 px-3 py-2 text-[13px] text-ink-900">
                               <span className="font-medium">
                                 {bi(locale, e.entity.shortNameEn ?? e.entity.nameEn, e.entity.shortNameAr ?? e.entity.nameAr)}
                               </span>
@@ -538,7 +538,7 @@ export function ProcessPanel({
                     ) : null}
                     <Link
                       href="/operating-model?section=interfaces"
-                      className="link-draw inline-flex items-center gap-1 self-start text-[11px] font-medium text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+                      className="link-draw inline-flex items-center gap-1 self-start text-[11px] font-medium text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
                     >
                       <ExternalLink className="size-3" aria-hidden /> {t("panel.openInterfaces")}
                     </Link>
@@ -565,9 +565,9 @@ export function ProcessPanel({
                           <button
                             type="button"
                             onClick={() => onNavigate(c.code)}
-                            className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-start text-[13px] text-ink-900 hover:bg-sand-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+                            className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-start text-[13px] text-ink-900 hover:bg-mist-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
                           >
-                            <span className="shrink-0 text-[11px] font-semibold text-maroon-700 tnum">{c.code}</span>
+                            <span className="shrink-0 text-[11px] font-semibold text-navy-700 tnum">{c.code}</span>
                             <span className="min-w-0 flex-1 truncate">{bi(locale, c.nameEn, c.nameAr)}</span>
                             <ArrowRight className="size-3.5 shrink-0 text-ink-400 flip-rtl" aria-hidden />
                           </button>

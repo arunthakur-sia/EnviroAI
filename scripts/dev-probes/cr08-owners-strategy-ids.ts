@@ -18,9 +18,9 @@ async function main() {
     `select n.id, n.code, e.code edition, (select count(*) from kpis k where k.node_id = n.id and k.owner_user_id is not null) kpis_owned,
             (select count(*) from strategy_nodes c where c.parent_id = n.id) children
        from strategy_nodes n join strategy_editions e on e.id = n.edition_id
-      where n.node_type = 'outcome' and e.code = 'nds3' order by n.sort limit 4`
+      where n.node_type = 'outcome' and e.code = 'nes3' order by n.sort limit 4`
   );
-  console.log("nds3 outcomes:", JSON.stringify(outcome.rows));
+  console.log("nes3 outcomes:", JSON.stringify(outcome.rows));
   const items = await rawClient.execute(
     `select n.id, n.code, n.node_type, p.code parent_code, pp.code grandparent_code, u.name_en owner
        from strategy_nodes n

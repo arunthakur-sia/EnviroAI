@@ -1,7 +1,7 @@
 "use client";
 // CR04 2.3: the outcome panel that opens beneath the arc. Header with the
 // watermark numeral and pillar chips, Read the chapter (AI summary first,
-// then the page-cited full text from the NDS3 document), headline KPI tiles,
+// then the page-cited full text from the NES document), headline KPI tiles,
 // the target cards with in-place lanes, the CR06 Outcome stakeholders
 // section, and the signals link.
 import * as React from "react";
@@ -138,10 +138,10 @@ export function OutcomePanel({
   const headOwner = personOwner ? null : headId ? owners?.[headId] ?? null : null;
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-sand-100" data-testid="outcome-panel">
+    <div className="relative overflow-hidden rounded-2xl bg-mist-100" data-testid="outcome-panel">
       <span
         aria-hidden
-        className="pointer-events-none absolute top-1 start-4 select-none font-semibold text-maroon-100"
+        className="pointer-events-none absolute top-1 start-4 select-none font-semibold text-navy-100"
         style={{ fontFamily: "var(--font-display)", fontSize: 96, lineHeight: 1 }}
       >
         {outcomeNumber(outcome.code)}
@@ -159,16 +159,16 @@ export function OutcomePanel({
             ) : null}
             <div className="mt-3 flex flex-wrap items-center gap-1.5">
               {pillarKeys.map((p) => (
-                <Chip key={p} tone="gold">{t(`canvas.pillars.${p}` as never)}</Chip>
+                <Chip key={p} tone="aqua">{t(`canvas.pillars.${p}` as never)}</Chip>
               ))}
               <LeadChips leads={outcome.leads} max={3} />
-              <Chip tone="maroon">{t("hero.targets", { count: outcome.targetCount })}</Chip>
-              <Chip tone="sand">{t("hero.initiatives", { count: outcome.initiativeCount })}</Chip>
-              <Chip tone="sand">{t("hero.projects", { count: outcome.projectCount })}</Chip>
+              <Chip tone="navy">{t("hero.targets", { count: outcome.targetCount })}</Chip>
+              <Chip tone="mist">{t("hero.initiatives", { count: outcome.initiativeCount })}</Chip>
+              <Chip tone="mist">{t("hero.projects", { count: outcome.projectCount })}</Chip>
               {/* CR07 1.3: the lessons of everything beneath this outcome */}
               {lessons ? (
                 <Link href={`/lessons?outcome=${tax ?? ""}` as never} data-testid="outcome-lessons-chip">
-                  <Chip tone="gold" className="hover:bg-gold-300">
+                  <Chip tone="aqua" className="hover:bg-aqua-300">
                     {t("lessonsRollup", { count: lessons.total })}
                   </Chip>
                 </Link>
@@ -184,7 +184,7 @@ export function OutcomePanel({
             ) : null}
             <div className="flex items-start gap-3">
               <ProgressRing value={outcome.progress} size={120} stroke={9} aria-label={t("hero.progressAria", { pct })}>
-                <span className="text-xl font-semibold text-maroon-900 tnum">{pct}%</span>
+                <span className="text-xl font-semibold text-navy-900 tnum">{pct}%</span>
               </ProgressRing>
               <div className="flex flex-col gap-1">
                 <button
@@ -223,7 +223,7 @@ export function OutcomePanel({
             aria-expanded={chapterOpen}
             className="flex w-full items-center gap-2 text-start cursor-pointer"
           >
-            <BookOpen className="size-4 shrink-0 text-maroon-700" />
+            <BookOpen className="size-4 shrink-0 text-navy-700" />
             <span className="text-sm font-medium text-ink-900">{t("canvas.readChapter")}</span>
             <ChevronDown
               className={cn("ms-auto size-4 text-ink-400 transition-transform", chapterOpen && "rotate-180")}
@@ -251,7 +251,7 @@ export function OutcomePanel({
                       <div className="mt-3 flex flex-wrap items-center gap-3">
                         <button
                           onClick={() => setFullText((v) => !v)}
-                          className="link-draw text-xs font-medium text-maroon-700 cursor-pointer"
+                          className="link-draw text-xs font-medium text-navy-700 cursor-pointer"
                           data-testid="show-full-text"
                         >
                           {fullText ? t("canvas.hideFullText") : t("canvas.showFullText")}
@@ -265,12 +265,12 @@ export function OutcomePanel({
                       </div>
                       {fullText ? (
                         chapter ? (
-                          <div className="mt-3 flex max-h-96 flex-col gap-4 overflow-y-auto rounded-lg bg-sand-50 p-4">
+                          <div className="mt-3 flex max-h-96 flex-col gap-4 overflow-y-auto rounded-lg bg-mist-50 p-4">
                             {chapter.pages.map((p) => (
                               <div key={p.page}>
                                 <Link
                                   href={`/vault/${chapter.documentId}?page=${p.page}` as never}
-                                  className="mb-1 inline-flex items-center rounded-md bg-maroon-100 px-2 py-0.5 text-[10px] font-medium text-maroon-900 hover:bg-maroon-700 hover:text-white tnum"
+                                  className="mb-1 inline-flex items-center rounded-md bg-navy-100 px-2 py-0.5 text-[10px] font-medium text-navy-900 hover:bg-navy-700 hover:text-white tnum"
                                 >
                                   {t("canvas.pageChip", { page: p.page })}
                                 </Link>
@@ -358,7 +358,7 @@ export function OutcomePanel({
                   >
                     <button
                       onClick={() => onOpenItem(i)}
-                      className="flex flex-col gap-1.5 rounded-lg text-start cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+                      className="flex flex-col gap-1.5 rounded-lg text-start cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
                       data-testid="outcome-level-card"
                     >
                       <span className="flex items-center gap-2 text-[10px] text-ink-600 tnum">{i.code}</span>
@@ -394,7 +394,7 @@ export function OutcomePanel({
           <div className="mt-5 flex flex-wrap items-center gap-2">
             <Link
               href={`/trends?outcome=${tax}` as never}
-              className="flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 text-xs font-medium text-gulf-600 shadow-sm hover:text-gulf-600/80 tnum"
+              className="flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 text-xs font-medium text-teal-600 shadow-sm hover:text-teal-600/80 tnum"
               data-testid="panel-signals-link"
             >
               <Radar className="size-3.5" /> {t("canvas.signalsFor", { count: signalsCount })}

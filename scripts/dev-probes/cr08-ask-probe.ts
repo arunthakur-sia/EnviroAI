@@ -232,7 +232,7 @@ async function main() {
   page.on("pageerror", (e) => errors.push(`pageerror: ${String(e).slice(0, 300)}`));
 
   const login = await page.request.post(`${BASE}/api/v1/auth/login`, {
-    data: { email: "analyst@npc.qa", password: "Nexus!2026" },
+    data: { email: "analyst@enviroai.demo", password: "EnviroAI!2026" },
   });
   console.log("login:", login.status());
 

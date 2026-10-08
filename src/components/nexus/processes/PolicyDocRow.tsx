@@ -61,20 +61,20 @@ export function PolicyDocRow({
         <Link
           href={`/vault/${doc.id}`}
           aria-label={t("docs.open", { title })}
-          className="link-draw block text-sm font-medium leading-snug text-ink-900 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+          className="link-draw block text-sm font-medium leading-snug text-ink-900 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
         >
           {title}
         </Link>
         {alt ? <p className="line-clamp-1 text-[11px] text-ink-400">{alt}</p> : null}
         <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-          <Chip tone="maroon">{tabLabels[doc.tab]}</Chip>
-          {doc.versionLabel ? <Chip tone="sand">{t("docs.version", { version: doc.versionLabel })}</Chip> : null}
+          <Chip tone="navy">{tabLabels[doc.tab]}</Chip>
+          {doc.versionLabel ? <Chip tone="mist">{t("docs.version", { version: doc.versionLabel })}</Chip> : null}
           {doc.effectiveFrom ? (
             <span className="text-[11px] text-ink-600 tnum">
               {t("docs.effective", { date: formatDate(doc.effectiveFrom, locale, { style: "medium" }) })}
             </span>
           ) : null}
-          <Chip tone={SCOPE_TONE[doc.visibilityScope] ?? "sand"}>{scopeLabels[doc.visibilityScope] ?? doc.visibilityScope}</Chip>
+          <Chip tone={SCOPE_TONE[doc.visibilityScope] ?? "mist"}>{scopeLabels[doc.visibilityScope] ?? doc.visibilityScope}</Chip>
           {doc.reviewDue ? (
             <Chip tone="warn">
               <AlarmClock className="size-3" aria-hidden />
@@ -85,7 +85,7 @@ export function PolicyDocRow({
           {showUnit && doc.unit ? (
             <Link
               href={unitHref(doc.unit.code)}
-              className="link-draw text-[11px] font-medium text-maroon-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+              className="link-draw text-[11px] font-medium text-navy-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
             >
               {t("docs.linkedFrom", { unit: bi(locale, doc.unit.nameEn, doc.unit.nameAr) })}
             </Link>

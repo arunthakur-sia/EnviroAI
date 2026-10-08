@@ -9,7 +9,7 @@ export function formatNumber(
   // reads as a hyphen (the placeholder the rest of the product already uses)
   if (value === null || value === undefined || Number.isNaN(value)) return "-";
   const numerals = opts.numerals === "eastern" ? "arab" : "latn";
-  const tag = locale === "ar" ? `ar-QA-u-nu-${numerals}` : `en-QA-u-nu-${numerals}`;
+  const tag = locale === "ar" ? `ar-SA-u-nu-${numerals}` : `en-SA-u-nu-${numerals}`;
   return new Intl.NumberFormat(tag, {
     maximumFractionDigits: opts.decimals ?? 1,
     minimumFractionDigits: 0,
@@ -26,7 +26,7 @@ export function formatDate(
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
   const numerals = opts.numerals === "eastern" ? "arab" : "latn";
-  const tag = locale === "ar" ? `ar-QA-u-nu-${numerals}` : `en-QA-u-nu-${numerals}`;
+  const tag = locale === "ar" ? `ar-SA-u-nu-${numerals}` : `en-SA-u-nu-${numerals}`;
   const style = opts.style ?? "medium";
   return new Intl.DateTimeFormat(tag, {
     dateStyle: style,
@@ -35,7 +35,7 @@ export function formatDate(
 
 export function formatHijri(iso: string, locale: string): string {
   const d = new Date(iso);
-  const tag = locale === "ar" ? "ar-QA-u-ca-islamic-umalqura" : "en-QA-u-ca-islamic-umalqura";
+  const tag = locale === "ar" ? "ar-SA-u-ca-islamic-umalqura" : "en-SA-u-ca-islamic-umalqura";
   return new Intl.DateTimeFormat(tag, { dateStyle: "long" }).format(d);
 }
 
@@ -58,7 +58,7 @@ export function formatPeriod(period: string, locale: string): string {
   if (/^\d{4}-\d{2}$/.test(period)) {
     const [y, m] = period.split("-");
     const d = new Date(Number(y), Number(m) - 1, 1);
-    return new Intl.DateTimeFormat(locale === "ar" ? "ar-QA" : "en-QA", {
+    return new Intl.DateTimeFormat(locale === "ar" ? "ar-SA" : "en-SA", {
       month: "short",
       year: "numeric",
     }).format(d);

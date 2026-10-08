@@ -144,7 +144,7 @@ export function ProcessesPage({
     [map.canEdit, editable]
   );
 
-  /* ---- URL state, the way the Council Strategy does it ---- */
+  /* ---- URL state, the way the Programme Strategy does it ---- */
 
   const applyUrl = React.useCallback(
     (next: State, push: boolean) => {
@@ -300,11 +300,11 @@ export function ProcessesPage({
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0 max-w-3xl flex-1">
             <div className="mb-2 flex flex-wrap items-center gap-1.5">
-              <Chip tone="maroon" title={t("internalTitle")} data-testid="internal-chip">
+              <Chip tone="navy" title={t("internalTitle")} data-testid="internal-chip">
                 {t("internal")}
               </Chip>
               {map.totals.illustrative > 0 ? (
-                <Chip tone="gold" title={t("illustrativeTitle")} data-testid="illustrative-chip">
+                <Chip tone="aqua" title={t("illustrativeTitle")} data-testid="illustrative-chip">
                   {t("illustrative")}
                 </Chip>
               ) : null}
@@ -320,7 +320,7 @@ export function ProcessesPage({
 
           <div className="flex flex-wrap items-center gap-2">
             <span
-              className="inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5"
+              className="inline-flex items-center gap-0.5 rounded-lg bg-mist-100 p-0.5"
               role="group"
               aria-label={t("views.aria")}
               data-testid="processes-view-switch"
@@ -333,8 +333,8 @@ export function ProcessesPage({
                   aria-pressed={state.view === v}
                   data-testid={`processes-view-${v}`}
                   className={cn(
-                    "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500",
-                    state.view === v ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600 hover:text-maroon-900"
+                    "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500",
+                    state.view === v ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600 hover:text-navy-900"
                   )}
                 >
                   {VIEW_ICON[v]} {t(`views.${v}` as never)}
@@ -348,7 +348,7 @@ export function ProcessesPage({
             ) : null}
             <Link
               href="/operating-model"
-              className="inline-flex h-9.5 items-center gap-2 rounded-lg px-3 text-sm font-medium text-ink-600 transition-colors hover:bg-maroon-100/60 hover:text-maroon-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+              className="inline-flex h-9.5 items-center gap-2 rounded-lg px-3 text-sm font-medium text-ink-600 transition-colors hover:bg-navy-100/60 hover:text-navy-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
             >
               <Landmark className="size-4" aria-hidden /> {t("openOperatingModel")}
             </Link>

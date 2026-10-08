@@ -1,5 +1,5 @@
 // The Expert Network service. CR08 3 splits the network into Internal
-// (NPC staff, grouped by organisation unit) and External (other entities,
+// (Programme Office staff, grouped by organisation unit) and External (other entities,
 // academia, consultants, international advisors): every card now knows its
 // kind, its unit path, its project involvement and its engagement history,
 // and the page data comes from one call so the two views share one shape.
@@ -45,7 +45,7 @@ export type ExpertCardData = {
   /* CR08 3 */
   country: string | null;
   lastEngagementYear: number | null;
-  workedWithNpc: boolean;
+  workedWithOrg: boolean;
   projectCount: number;
   topLevel: string | null;
   unitId: string | null;
@@ -97,7 +97,7 @@ type UnitRow = Pick<
 >;
 
 export function kindOf(row: Pick<ExpertRow, "type" | "userId">): ExpertKind {
-  return row.userId || row.type === "npc_employee" ? "internal" : "external";
+  return row.userId || row.type === "org_employee" ? "internal" : "external";
 }
 
 function crumb(u: UnitRow): ExpertUnitCrumb {
@@ -249,7 +249,7 @@ async function buildCards(rows: ExpertRow[], units?: UnitRow[]): Promise<ExpertC
   for (const n of owned) {
     if (!n.ownerUserId) continue;
     (nodesByUser.get(n.ownerUserId) ?? nodesByUser.set(n.ownerUserId, new Set()).get(n.ownerUserId)!).add(
-      `nds:${n.id}`
+      `nes:${n.id}`
     );
   }
 
@@ -288,8 +288,8 @@ async function buildCards(rows: ExpertRow[], units?: UnitRow[]): Promise<ExpertC
       country: r.country ?? null,
       lastEngagementYear: eng?.lastYear ?? null,
       // an engagement, a project role, or an answered request all count as
-      // having worked with NPC
-      workedWithNpc:
+      // having worked with Programme Office
+      workedWithOrg:
         engagementCount > 0 || (nodesByExpert.get(r.id)?.size ?? 0) > 0 || (reqMap.get(r.id) ?? 0) > 0,
       projectCount: projectSet.size,
       topLevel,
@@ -301,8 +301,8 @@ async function buildCards(rows: ExpertRow[], units?: UnitRow[]): Promise<ExpertC
 }
 
 function viewCondition(view?: string) {
-  if (view === "internal") return or(eq(schema.experts.type, "npc_employee"), isNotNull(schema.experts.userId))!;
-  if (view === "external") return and(ne(schema.experts.type, "npc_employee"), isNull(schema.experts.userId))!;
+  if (view === "internal") return or(eq(schema.experts.type, "org_employee"), isNotNull(schema.experts.userId))!;
+  if (view === "external") return and(ne(schema.experts.type, "org_employee"), isNull(schema.experts.userId))!;
   return null;
 }
 
@@ -316,7 +316,7 @@ export function applyCardFilters(cards: ExpertCardData[], filters: ExpertFilters
   if (unit) out = out.filter((c) => c.unitId === unit || c.unitPath.some((p) => p.id === unit || p.code === unit));
   if (filters.level) out = out.filter((c) => c.topLevel === filters.level);
   if (filters.projects) out = out.filter((c) => c.projectCount > 0);
-  if (filters.workedWith) out = out.filter((c) => c.workedWithNpc);
+  if (filters.workedWith) out = out.filter((c) => c.workedWithOrg);
   if (filters.organisation) {
     const needle = filters.organisation.toLowerCase();
     out = out.filter(
@@ -389,8 +389,8 @@ export async function listExpertsGrouped(
 export async function expertCounts(user: CurrentUser): Promise<{ internal: number; external: number }> {
   const rows = await db
     .select({
-      internal: sql<number>`sum(case when ${schema.experts.type} = 'npc_employee' or ${schema.experts.userId} is not null then 1 else 0 end)`,
-      external: sql<number>`sum(case when ${schema.experts.type} <> 'npc_employee' and ${schema.experts.userId} is null then 1 else 0 end)`,
+      internal: sql<number>`sum(case when ${schema.experts.type} = 'org_employee' or ${schema.experts.userId} is not null then 1 else 0 end)`,
+      external: sql<number>`sum(case when ${schema.experts.type} <> 'org_employee' and ${schema.experts.userId} is null then 1 else 0 end)`,
     })
     .from(schema.experts)
     .where(sql`${schema.experts.visibilityClassification} <= ${user.clearanceLevel}`);
@@ -511,7 +511,7 @@ export async function getExpertProfile(user: CurrentUser, id: string) {
     .from(schema.expertPublications)
     .where(eq(schema.expertPublications.expertId, id));
 
-  // contributions in SiaNexus for employees
+  // contributions in EnviroAI for employees
   let contributions: { documents: number; answers: number; lessons: number } | null = null;
   let badges: { code: string; nameEn: string; nameAr: string; family: string; tier: string | null }[] = [];
   if (expert.userId) {
@@ -623,7 +623,7 @@ export async function createExternalExpert(
     type: input.type,
     nameEn: input.nameEn,
     nameAr: input.nameAr,
-    avatarColor: "gulf",
+    avatarColor: "teal",
     organisationEn: input.organisationEn ?? null,
     organisationAr: input.organisationAr ?? null,
     positionEn: input.positionEn ?? null,

@@ -67,14 +67,14 @@ export default async function LessonPage({
     can(user, "verify", "lessons", { classificationLevel: lesson.classificationLevel });
 
   const sections = [
-    { key: "context", en: lesson.contextEn, ar: lesson.contextAr, tone: "sand" },
-    { key: "learning", en: lesson.learningEn, ar: lesson.learningAr, tone: "gold" },
-    { key: "recommendation", en: lesson.recommendationEn, ar: lesson.recommendationAr, tone: "gulf" },
+    { key: "context", en: lesson.contextEn, ar: lesson.contextAr, tone: "mist" },
+    { key: "learning", en: lesson.learningEn, ar: lesson.learningAr, tone: "aqua" },
+    { key: "recommendation", en: lesson.recommendationEn, ar: lesson.recommendationAr, tone: "teal" },
   ] as const;
 
   return (
     <Reveal>
-      {/* CR08 2.3: the Ask NPC launcher knows this lesson */}
+      {/* CR08 2.3: the Ask EnviroAI launcher knows this lesson */}
       <AskContextItem item={{ kind: "lesson", id, titleEn: lesson.titleEn, titleAr: lesson.titleAr, href: `/lessons/${id}` }} />
       <div className="mx-auto max-w-2xl">
         <div className="mb-6">
@@ -84,10 +84,10 @@ export default async function LessonPage({
                 <BadgeCheck className="size-3" /> {tc("verified")}
               </Chip>
             ) : (
-              <Chip tone="sand">{tc(`status.${lesson.status}` as never)}</Chip>
+              <Chip tone="mist">{tc(`status.${lesson.status}` as never)}</Chip>
             )}
             {tags.map((tag, i) => (
-              <Chip key={i} tone={tag.dimension === "outcome" ? "maroon" : "sand"}>
+              <Chip key={i} tone={tag.dimension === "outcome" ? "navy" : "mist"}>
                 {bi(locale, tag.nameEn, tag.nameAr)}
               </Chip>
             ))}
@@ -128,10 +128,10 @@ export default async function LessonPage({
               <section
                 key={s.key}
                 className={
-                  s.tone === "gold"
-                    ? "rounded-xl border border-gold-300 bg-gold-100/40 p-5"
-                    : s.tone === "gulf"
-                      ? "rounded-xl border border-gulf-100 bg-gulf-100/40 p-5"
+                  s.tone === "aqua"
+                    ? "rounded-xl border border-aqua-300 bg-aqua-100/40 p-5"
+                    : s.tone === "teal"
+                      ? "rounded-xl border border-teal-100 bg-teal-100/40 p-5"
                       : "card p-5"
                 }
               >

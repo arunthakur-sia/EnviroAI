@@ -5,6 +5,12 @@
 // (cached raw files and research extractions are still loaded).
 // Usage: npx tsx scripts/fetch-indices.ts [--offline] [--only=code,code]
 // (CR08 4.1: --only restricts the run to the listed index codes)
+// The home country is Saudi Arabia (src/server/indices/home.ts). Bulk sources
+// (EPI, CPI, HDI, Heritage, ND-GAIN, WRI Aqueduct, World Bank WDI) download
+// every country; indices backed by research files (SDGs, WGI, Social
+// Progress, GII, IMD, WJP, CCPI) read sources/indices/research/, which the
+// scripts/dev-probes/cr08-indices-a-build-*.mjs scripts rebuild from the
+// publishers' files.
 import { loadEnv } from "../src/lib/load-env";
 loadEnv();
 
@@ -18,9 +24,9 @@ async function main() {
   });
   for (const r of report.perIndex) {
     console.log(
-      `${r.code.padEnd(18)} obs=${String(r.observations).padStart(5)} (+${r.inserted}) countries=${r.countries} pillars=${r.pillarValues} qatar=${
-        r.qatarYears.length
-          ? `${r.qatarYears.length}y ${r.qatarYears[0]}-${r.qatarYears[r.qatarYears.length - 1]}`
+      `${r.code.padEnd(18)} obs=${String(r.observations).padStart(5)} (+${r.inserted}) countries=${r.countries} pillars=${r.pillarValues} home=${
+        r.homeYears.length
+          ? `${r.homeYears.length}y ${r.homeYears[0]}-${r.homeYears[r.homeYears.length - 1]}`
           : "none"
       }`
     );

@@ -1,5 +1,5 @@
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const jobs = (
   await db.execute(
     "select type, status, attempts, substr(coalesce(error,''),1,300) err, created_at from jobs order by created_at desc limit 8"

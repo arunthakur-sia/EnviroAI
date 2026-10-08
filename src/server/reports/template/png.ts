@@ -77,7 +77,7 @@ export async function closePngRenderer(): Promise<void> {
 
 let fontCssCache: string | null = null;
 
-/** @font-face rules for Fraunces, Inter, Noto Kufi Arabic and IBM Plex Sans
+/** @font-face rules for Sora, Noto Kufi Arabic and IBM Plex Sans
     Arabic from public/fonts, so the images carry the app's typography. */
 export function fontCss(): string {
   if (fontCssCache !== null) return fontCssCache;
@@ -91,8 +91,7 @@ export function fontCss(): string {
     }
   };
   fontCssCache = [
-    face("Fraunces", "fraunces-var-latin.woff2", "100 900"),
-    face("Inter", "inter-var-latin.woff2", "100 900"),
+    face("Sora", "sora-var-latin.woff2", "100 800"),
     face("Noto Kufi Arabic", "noto-kufi-arabic-var.woff2", "100 900"),
     face("IBM Plex Sans Arabic", "plex-sans-arabic-400.woff2", "400"),
     face("IBM Plex Sans Arabic", "plex-sans-arabic-500.woff2", "500"),
@@ -123,8 +122,8 @@ html,body{margin:0;padding:0;background:transparent}
       // warm the faces so the first screenshot does not race font loading
       await page.evaluate(
         `(() => Promise.all([
-          document.fonts.load('600 40px "Fraunces"'),
-          document.fonts.load('400 14px "Inter"'),
+          document.fonts.load('600 40px "Sora"'),
+          document.fonts.load('400 14px "Sora"'),
           document.fonts.load('600 40px "Noto Kufi Arabic"'),
           document.fonts.load('400 14px "IBM Plex Sans Arabic"'),
         ]).then(() => document.fonts.ready).then(() => true))()`

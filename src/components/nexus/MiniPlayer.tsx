@@ -120,7 +120,7 @@ export function MiniPlayer() {
         emitSegment(i);
         const seg = ep.segments[i];
         const u = new SpeechSynthesisUtterance(seg.text);
-        u.lang = ep.language === "ar" ? "ar-QA" : "en-US";
+        u.lang = ep.language === "ar" ? "ar-SA" : "en-US";
         const voice = seg.speaker === "mariam" ? voices.mariam : voices.hamad;
         if (voice) u.voice = voice;
         u.rate = speedRef.current;
@@ -250,7 +250,7 @@ export function MiniPlayer() {
 
   return (
     <div
-      className="fixed bottom-0 inset-x-0 z-40 flex h-14 items-center gap-3 border-t border-sand-300 bg-white/95 px-4 backdrop-blur"
+      className="fixed bottom-0 inset-x-0 z-40 flex h-14 items-center gap-3 border-t border-mist-300 bg-white/95 px-4 backdrop-blur"
       data-testid="mini-player"
       role="region"
       aria-label={t("nowPlaying")}
@@ -278,7 +278,7 @@ export function MiniPlayer() {
       ) : null}
       <button
         onClick={toggle}
-        className="flex size-9 shrink-0 items-center justify-center rounded-full bg-maroon-700 text-white hover:bg-maroon-900 cursor-pointer"
+        className="flex size-9 shrink-0 items-center justify-center rounded-full bg-navy-700 text-white hover:bg-navy-900 cursor-pointer"
         aria-label={playing ? t("pauseCta") : t("play")}
       >
         {playing ? <Pause className="size-4 fill-current" /> : <Play className="size-4 fill-current" />}
@@ -286,21 +286,21 @@ export function MiniPlayer() {
       <div className="min-w-0 flex-1">
         <Link
           href={`/podcast/${episode.id}` as never}
-          className="block truncate text-sm font-medium text-ink-900 hover:text-maroon-700"
+          className="block truncate text-sm font-medium text-ink-900 hover:text-navy-700"
         >
           {bi(locale, episode.titleEn, episode.titleAr)}
         </Link>
         <div className="mt-1 flex items-center gap-2">
           {isBrowserVoice ? (
             <span
-              className="h-1 flex-1 overflow-hidden rounded-full bg-sand-200"
+              className="h-1 flex-1 overflow-hidden rounded-full bg-mist-200"
               role="progressbar"
               aria-valuenow={Math.round(progress * 100)}
               aria-valuemin={0}
               aria-valuemax={100}
             >
               <span
-                className="block h-full rounded-full bg-maroon-500 transition-[width]"
+                className="block h-full rounded-full bg-navy-500 transition-[width]"
                 style={{ width: `${Math.round(progress * 100)}%` }}
               />
             </span>
@@ -315,7 +315,7 @@ export function MiniPlayer() {
                 if (audioRef.current) audioRef.current.currentTime = v;
                 setTime(v);
               }}
-              className="h-1 flex-1 cursor-pointer accent-[var(--color-maroon-700)]"
+              className="h-1 flex-1 cursor-pointer accent-[var(--color-navy-700)]"
               aria-label={t("nowPlaying")}
             />
           )}
@@ -328,7 +328,7 @@ export function MiniPlayer() {
       </div>
       <button
         onClick={cycleSpeed}
-        className="shrink-0 rounded-lg border border-sand-300 px-2 py-1 text-xs font-medium text-ink-600 hover:text-maroon-700 cursor-pointer tnum"
+        className="shrink-0 rounded-lg border border-mist-300 px-2 py-1 text-xs font-medium text-ink-600 hover:text-navy-700 cursor-pointer tnum"
         aria-label={`${speed}x`}
       >
         {speed}x
@@ -340,7 +340,7 @@ export function MiniPlayer() {
       ) : null}
       <button
         onClick={close}
-        className="shrink-0 rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 hover:text-ink-900 cursor-pointer"
+        className="shrink-0 rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 hover:text-ink-900 cursor-pointer"
         aria-label={t("closePlayer")}
       >
         <X className="size-4" />

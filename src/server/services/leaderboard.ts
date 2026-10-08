@@ -660,7 +660,7 @@ export async function getHomeLeaderboard(user: CurrentUser): Promise<{
   };
 }
 
-/** A compact text rendering for Ask NPC and the smoke checks. */
+/** A compact text rendering for Ask EnviroAI and the smoke checks. */
 export function describeBoard(view: LeaderboardView, limit = 5): string {
   const label = periodLabel(view.window, view.periodKey, "en");
   if (view.hidden) return "The leaderboard is hidden for this person because quiet mode is on.";

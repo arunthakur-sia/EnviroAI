@@ -1,218 +1,119 @@
-﻿# SiaNexus · سيا نكسس
+# EnviroAI by Sia
 
-**EN** - SiaNexus is the living memory of the National Planning Council of Qatar. It holds every report, strategy, statistic, expert, lesson, signal, and answer NPC produces, makes all of it findable in one bilingual search, and reasons over it with a conversational analyst that cites its sources. It is a complete local prototype: real NDS3, NDS2, and QNV 2030 documents, 64 indicators, an expert network, a continuously scanned signal stream, an Add Knowledge intake that turns rough notes into structured items, and an engagement engine that rewards contribution and verification.
+EnviroAI is a knowledge, regulatory and data platform for the Saudi Arabia environment, water and agriculture sector. It is a white-label of Sia's institutional knowledge system, configured for a Programme Office that works with MEWA, NCEC, NCW, NCVC, MWAN, the Environment Fund and the wider Saudi Green Initiative ecosystem.
 
-**AR** - سيا نكسس هو الذاكرة الحية للمجلس الوطني للتخطيط في دولة قطر. يجمع كل تقرير واستراتيجية وإحصاء وخبير ودرس وإشارة وإجابة ينتجها المجلس، ويجعلها قابلة للعثور عليها في بحث ثنائي اللغة واحد، ويحللها بمحلل حواري يستند إلى مصادره. وهو نموذج أولي محلي كامل: وثائق حقيقية للاستراتيجيات الوطنية ورؤية قطر 2030، و64 مؤشراً إحصائياً، وشبكة خبراء، وتدفق إشارات يُمسح باستمرار، ومدخل "أضف معرفة" يحول الملاحظات الخام إلى عناصر منظمة، ومحرك تحفيز يكافئ المساهمة والتوثيق.
+It holds the reports, strategies, statistics, regulations, experts, lessons and signals a programme produces, makes them findable in one bilingual (English and Arabic, full RTL) search, and reasons over them with a conversational analyst that cites its sources.
 
-> **Change request 01 applied**: SiaNexus branding with the official wordmark and the NPC lockup, **Trends and Signals** (a real scanning module replacing the Foresight preview), an **Ask NPC 2.0** conversational analyst with a rich answer workspace, an **Add Knowledge** universal intake, and the onboarding quest removed from Home in favour of an ask box.
+This is a demo tenant. Seeded content is generic and marked **Illustrative** wherever a real figure or link could not be verified. Public institutions appear as external entities; staff and demo users are fictional.
 
-> **Change request 02 applied**: Home rebuilt around one focal point with an Apple-HIG design review trail (`docs/design-reviews/`), the Living Strategy restructured into an **Outcomes > Targets > Initiatives and Projects** column navigator with a radial map and **Deliverables** on delivery nodes, **lesson categories** with project linking, the **NPC Knowledge Cast (بودكاست المعرفة)** with a two-voice composer, ElevenLabs studio audio and a persistent mini-player, **Add Knowledge by voice**, a live **Refresh signals** flow, and designed **Word report extraction** from anywhere.
+## Modules
 
-> **Change request 08 applied**: the rail became four named groups (**Strategy Hub**, **Data and Insights**, **Knowledge Hub**, **People and Organisation**) whose state is remembered per person, the library was renamed **Institutional Memory (مكتبة المعرفة)**, and **Ask NPC** left the rail for a solid button on the maroon bar and a breathing launcher that follows the reader onto every page, opening a side panel that knows the item they are looking at and keeps its thread across navigation. The **Organisation** chart was rebuilt on a real tree layout in a fixed, resizable frame, with a Super Admin structure editor that moves, renames, deactivates and deletes units without ever orphaning a row, ten-step undo, snapshots with restore, CSV import and unit-head change requests. **Experts** split into **Internal** and **External** registers that search and Ask NPC never blend, and **Studies** became its own page. The **International Indices** grew from twelve to fifty three across **nine groups** (the seventeen SDG goals, national indicators with their NDS3 targets, competitiveness, Gallup, governance, human development, environment, peace, digital), every value still carrying the URL it was read from, with a new **target gap** forecast mode for national indicators. A full **Reports** module arrived: twelve report types, a twenty three section library that writes bilingual prose over real data, a four step builder with live page estimates, section by section generation, review with comments and regeneration, approval, publishing into Institutional Memory, and a designed Word template with a Sadu-inspired cover, two column body, chart pages and full Arabic mirroring. The **Handover** was rebuilt end to end: who may start one, an inventory of everything a person owns, an **AI capture interview**, recipients per item (a person, or the system with AI filing proposals), an **AI Handover Learning Path** with modules, check questions and sign-off, a time limited access link for external people, an explicit cut-off, and an archived handover report. Levels became **Level 1 to Level 10** with a materialised **Leaderboard** for people and departments, **Knowledge of the Week** picks a verified item every week with a reveal, a Home strip, ribbons and a **Hall of Knowledge**, every owner across the product is an **OwnerControl** with a person card and in-app **messaging** with delegates and an **Inbox**, and the **Processes** and **Operating Model** pages document how the Council actually works, from the eight Level 0 processes down to procedures, with a RACI matrix, an annual calendar, internal and external interfaces and operational KPIs. Screenshots under `data/screenshots/cr08/`, reviews under `docs/design-reviews/cr08-*.md`, decisions 81 onward in `DECISIONS.md`. The three quality phases that followed have their own reports: `docs/qc/phase-a-cleaning.md` (static analysis, runtime hygiene, the data layer, permissions, security and dependencies), `docs/qc/phase-b-performance.md` (the dev server measured against the production build, page by page) and `docs/qc/phase-c-final.md` (the gates, the scenarios and what was deliberately left). `CLIENT_DEMO_GUIDE.md` walks a presenter through a thirty minute demo, and `npm run reset-demo` puts the data back afterwards.
+| Area | Modules |
+|---|---|
+| Home | Scorecard, Knowledge of the Week, daily challenge, Ask EnviroAI |
+| Strategy Hub | Programme Strategy, the National Environment Strategy (NES) and its themes, Saudi Vision 2030 alignment |
+| Data and Insights | Statistics (indicators, SDG performance, water security, agriculture and food security, climate and environment), International Indices, Trends and Signals, Regulatory Overview, Source Library |
+| Knowledge Hub | Institutional Memory, Processes, Studies, Lessons Learned, EnviroAI Briefing Cast, Reports |
+| People and Organisation | Experts, Organisation, Operating Model, HR Knowledge, Leaderboard |
+| Everywhere | Ask EnviroAI (Ctrl+K), Add Knowledge (write, upload, speak), Search, Inbox, Handover, Settings |
 
-> **Change request 07 applied**: **lessons that link to the strategy properly** (a lesson now links to as many projects, initiatives, outputs and council projects as it belongs to, one marked primary and shown on the card, the rest in the expanded lesson; targets, outcomes and council goals roll up everything beneath them and say which node each inherited lesson came from; the Learning Room's **By project** tab became a real picker with a strategy-store switch, search, drill-down, counts at every level and a "Not linked" group; linking is limited to the author, the node's owner and verifiers); the **Council Strategy** at `/council-strategy` (NPC's own institutional strategy as a results chain: five strategic goals, twelve intermediate outcomes, thirty outputs, forty five projects, one hundred and forty activities, and **eighty full indicator cards** on mixed monthly, quarterly and yearly cadences with targets to 2030 and actuals through 2026 Q3, all bilingual and marked Illustrative until the real strategy replaces it; a scorecard strip whose rings recompute per period and say plainly when an indicator reports on another cadence, a chain navigator that opens goal panels with alignment chips into NDS3, a project drawer, a results matrix with a narrative written from the figures alone, and six reference sections including the SWOT quadrants, the stakeholder map, the implementation timeline, the 5 by 5 risk heat map, governance, and a **draggable impact-against-feasibility matrix**; every screen carries an **Internal** chip and every citation says so); and the **Organisation module** at `/organisation` (the real NPC structure fetched from npc.qa under Chairman's Decision No. 13 of 2024: thirty nine units across the Secretary General, six sectors and thirty two departments, each with its **verbatim published mandate in both languages**, its source link and fetch date, and its head; a pan-and-zoom org chart with a mini-map, collapsible branches, search and a list view; a unit panel with the mandate, everyone in the unit, what the unit owns across five modules, and four **Policies and Procedures** tabs whose items carry a version, an effective date and a three-way **visibility** control the unit head sets, enforced in one `canSeeDocument()` across search, previews and Ask NPC). The old `departments` table became `org_units` in place, so every existing reference survived. Ask NPC gained nine tools across the three areas. Screenshots under `data/screenshots/cr07/`, reviews under `docs/design-reviews/cr07-*.md`, the sources under `sources/manual/` and `sources/org/`.
-
-> **Change request 05 applied**: **Maroon Authority on a bright neutral ground** (the warm paper retired; a maroon top bar with the white NPC monochrome lockup, a translucent bar search that turns white on focus with a gold ring, cool charcoal ink, and a 25-pair WCAG-AA contrast audit in `scripts/contrast-audit.mjs`); **responsible entities** (a 65-body bilingual register with merge/deactivate, the free-text owner migrated into `node_leads`, lead chips with joint leads everywhere, a Lead filter and a **By lead** view on the Canvas, and Ask NPC answers that name the lead); **stakeholders** on every project (sponsor to external partner in fixed order, expert domains and role notes, inline add, expert-profile Projects sections); the **International Indices** module at `/indices` (12 indices with real published observations - HDI, GII, CPI, EGDI, GPI, IMD, LPI, NRI, TTDI, EPI, GTCI, WJP - every value carrying its source URL, a board with cards/table/Qatar-vs-GCC, index pages with sourced history, pillars vs the GCC average, benchmarking with saved peer groups and an AI narrative, and a fully explained **forecasting engine**: Holt baseline fitted on the published series, bounded signal adjustments, target pull from linked NDS3 targets, a 5,000-run Monte Carlo for the 10/50/90 range, anchored rank derivation, a fan chart, per-signal contributions, and an in-browser **what-if simulator** that never touches the official rows - forecasts always cited as "SiaNexus forecast, method v1"); the **HR Knowledge Dashboard** at `/hr` (readiness and continuity scores with printed formulas, six risk rules materialised nightly, generated handover checklists with Speak-mode knowledge capture, and not a single point or badge on any HR surface); and the **access model** (portals per role with per-user grant/deny overrides in one `can()`, hidden portals that 404, invite-only onboarding on allowed domains with password policy and lockout, 12h/7d sessions, sign-out-everywhere, and a read-only **Preview as**). Screenshots under `data/screenshots/cr05/`, reviews under `docs/design-reviews/cr05-*.md`, index data provenance under `sources/indices/` and `data/indices-report.md`.
-
-> **Change request 04 applied**: the book hover done right (a hinged 3D cover with a paper title plate, parting neighbours, an instant preview card, two-tap touch, 60fps sweeps), the **Strategy Canvas** (one page: QNV pillar threads, the 2024-2030 timeline, outcome panels beneath the arc with page-cited "Read the chapter", target lanes in place, a drawer for initiatives and projects, deep links whose back button unwinds everything), the **Learning Room** (Lesson of the week, AI themes with syntheses, worth-reading lanes, inline reading, and the guided **Learn mode** with reflections and streak credit), and the podcast's official name: **NPC Knowledge Cast (بودكاست المعرفة)**. Screenshots under `data/screenshots/cr04/`, reviews under `docs/design-reviews/cr04-*.md`.
-
-> **Change request 03 applied**: the design-quality pass. The Vault became a **real library** (cloth-bound books with headbands, gold rules, verification seals, and a 3D pull-off-the-shelf hover, on collapsible planks in a fixed shelf order with Projects lowest), the Living Strategy got its beauty back (**outcome medallions in an arc** with a Strategy-at-a-glance band, target cards that expand in place into Initiatives and Projects lanes, hero bands with watermark numerals, milestone timelines and deliverable mini-shelves on project pages), Trends opens with a real **Signals Radar** (horizon bands, type wedges, impact-sized sentiment-coloured blips, a one-time sweep, two-way hover with the new **Signal Briefing**), and Home became a **connected bento** over a knowledge constellation drawn from real relations, with the typing Ask hero, the leadership quote band, Qatar in numbers, the flipping Daily challenge, and the What changed timeline. Screenshots under `data/screenshots/cr03/`, self-critique reviews under `docs/design-reviews/cr03-*.md`.
-
----
+Regulatory Overview (`/regulatory`) and Source Library (`/sources`) are the two modules added for the Saudi environment tenant. The Source Library is built from the KSA Environmental Data Source Databank (`KSA_Environmental_Data_Source_Databank.xlsx`), a list of public data sources, not a copy of their data.
 
 ## Run it
 
-Prerequisites: **Node 20+** and npm. No Docker, no Python, no build tools.
+Prerequisites: Node 22 and npm. No Docker, no Python.
 
 ```bash
-npm run setup     # installs, fetches public NPC sources + fonts, migrates, seeds
-npm run setup:win # Windows only, after npm install: the two WebAssembly shims (below)
-npm run dev       # http://localhost:3000
+npm run setup      # installs, fetches fonts, migrates, seeds
+npm run dev        # http://localhost:3000
 ```
 
-**On Windows**, run `npm run setup:win` after any `npm install`. Application
-Control on this class of machine refuses unsigned native `.node` binaries, so
-Tailwind's scanner and the ESLint resolver run from their WebAssembly builds
-instead. Those builds declare `"cpu": "wasm32"`, which npm refuses to install
-on an x64 host, so they cannot live in `package.json`: `setup:win` installs
-them with `--no-save` and they stay out of the lockfile. On Linux and macOS the
-script does nothing, because the native binaries work there.
+On Windows machines whose policy blocks unsigned native binaries, run `npm run setup:win` after any `npm install`. It installs two WebAssembly shims with `--no-save`. On Linux and macOS it does nothing.
 
-The seed inside `npm run setup` has been timed at **9, 36 and 40 minutes** on
-this machine across four runs. The spread is real and worth knowing before you
-wait on it: the work is embedding the source documents, computing forecasts for
-fifty three indices, and rendering twelve example reports into Word through a
-headless browser, and it competes with whatever else is running. To show the
-product to someone, do not seed at all: restore the frozen demo data, or build
-once and serve the production build.
+Seeding embeds the source documents, computes index forecasts and renders example reports, so it can take tens of minutes. To show the product, serve a production build over frozen data:
 
 ```bash
-npm run start:demo   # builds if needed, then serves the production build with the job worker
-npm run reset-demo   # server stopped: restores the frozen demo data in under two minutes
+npm run start:demo            # builds if needed, then serves with the job worker
+npm run reset-demo            # server stopped: restores the frozen demo data
+npm run reset-demo:snapshot   # freeze the current state as that baseline
 ```
 
-Optional keys in `.env.local` (the app runs fully without them, in **AI Mock Mode**):
+### Optional keys
 
-| Key | Effect when present | Effect when absent |
-|---|---|---|
-| `ANTHROPIC_API_KEY` | Live analyst answers, enrichment, translation, briefs, narration, knowledge structuring, and **web-search scanning** for Trends and Signals | Deterministic mock: extractive answers with real citations, keyword tagging, fixture-based scan results; an "AI mock mode" chip shows in the top bar |
-| `VOYAGE_API_KEY` | `voyage-multilingual-2` embeddings (Arabic + English in one vector space) | Local hashed embedder; search still works, cross-lingual recall is weaker |
-| `ELEVENLABS_API_KEY` | Studio podcast audio (`eleven_multilingual_v2`); the seed renders the first two episodes when the account has credit (a render costs a few hundred credits; on quota exhaustion the seed logs it and falls back cleanly) | Episodes play through the browser's speech synthesis ("Browser voice"), with "Regenerate with studio voice" appearing once a key exists |
-| `ELEVENLABS_VOICE_MARIAM` / `ELEVENLABS_VOICE_HAMAD` | Pins the two host voices by ElevenLabs voice id | Two library voices (one female, one male) are picked once at first render, stored in Settings, and logged |
-| `OPENAI_API_KEY` | Whisper-grade voice transcription for Add Knowledge Speak mode (`gpt-4o-transcribe`, fallback `whisper-1`); best Arabic and mixed-language results | Browser speech recognition (Chrome or Edge) transcribes live; the recording is still saved for later re-transcription |
-| `SESSION_SECRET` | Pins the session cookie secret | Auto-generated once into `data/session-secret.txt` |
+Copy `.env.example` to `.env.local`. Every key is optional. Without them the app runs in **AI Mock Mode**: extractive answers with real citations, keyword tagging and fixture-based scan results, flagged by a chip in the interface.
 
-**Web search note**: the scanner's primary source is Anthropic's server-side web search tool. If the tool is not enabled on the account, the scan logs it and continues with the RSS/Atom feed list (editable in Settings → Trends and Signals).
+| Key | Effect when present |
+|---|---|
+| `ANTHROPIC_API_KEY` | Live analyst answers, enrichment, translation, briefs, narration, web-search scanning |
+| `VOYAGE_API_KEY` | `voyage-multilingual-2` embeddings (Arabic and English in one vector space); otherwise a local hashed embedder |
+| `ELEVENLABS_API_KEY` | Studio audio for the Briefing Cast; otherwise browser speech synthesis |
+| `OPENAI_API_KEY` | Whisper-grade transcription for Add Knowledge Speak mode; otherwise browser recognition |
+| `SESSION_SECRET` | Pins the session cookie secret; otherwise generated into `data/session-secret.txt` |
 
-## Seeded accounts
+### Seeded accounts
 
-All passwords: **`Nexus!2026`**
+Demo accounts use the `enviroai.demo` domain (the allowed sign-up domain is configurable in Settings). Super Admin, Knowledge Admin, Department Head, Expert Verifier, Contributor, Reader and HR Admin accounts are seeded; the full list is in Settings > Users. The shared demo password is in `scripts/seed.ts`. Change it before any shared deployment.
 
-| Email | Role | Department |
-|---|---|---|
-| admin@npc.qa | Super Admin | Office of the Secretary General |
-| knowledge@npc.qa | Knowledge Admin | National Data Affairs |
-| head.stats@npc.qa | Department Head | Statistical Systems |
-| verifier@npc.qa | Expert Verifier | Statistical Operations |
-| analyst@npc.qa | Contributor | Economic Planning · has five seeded analyst conversations |
-| reader@npc.qa | Reader | Monitoring and Evaluation |
-| hr@npc.qa | HR Admin | Human Resources |
+## Brand and design tokens
 
-Plus 34 more contributors and readers with the same password (see Settings → Users).
+Defined in `src/styles/globals.css`.
 
-## Screen-by-screen tour
+| Token | Use |
+|---|---|
+| `navy-*` | Brand primary: top bar, headings, primary buttons |
+| `teal-*` | Secondary: data, links, positive states |
+| `aqua-*` | Sia Teal accent (#00DECC): focus rings, highlights, the ascent line |
+| `mist-*` | Cool neutral grounds |
+| `ink-*` | Text |
+| `cloth-*` | Institutional Memory book covers (navy, ink, teal, deep, indigo, steel, slate, mist) |
 
-Screenshots live in `data/screenshots/` (EN and AR; CR01 screens under `cr01/`, CR02 under `cr02/`, the CR03 redesigns under `cr03/`, the CR04 refinements under `cr04/`). The Apple-HIG design reviews (before/after for Home, review-only reports for every other page, and the `cr03-*.md` / `cr04-*.md` self-critiques) live in `docs/design-reviews/`.
-
-- **Login** (`cr01/login-en.png`) - the SiaNexus wordmark, the Sadu-inspired brand panel, and the NPC lockup.
-- **Home** (`cr03/home-en-1440.png`, `cr03/home-ar-1440.png`, `cr03/home-en-full.png`, 390 widths) - recomposed in CR03 as a disciplined **bento over the knowledge constellation**: the Fraunces greeting with the Hijri line beside the 64px **Ask hero** whose placeholder types real example questions letter by letter (focus dims the constellation and draws a maroon glow); the full-width **Words that guide us** quote band with the speaker's monogram and a crossfading arrow; **Qatar in numbers** (64px count-up, delta chip, AI hook, 24-period sparkline with a pulsing end dot); the **Daily challenge** that flips on its Y axis to reveal the answer and gold points; the **NPC Knowledge Cast** card whose waveform dances during playback and whose play button breathes while an episode is unheard; **What changed in NDS3** as a maroon timeline with outcome chips and hover-out full updates; four lesson cards; the **mini library** of real books on a plank; and **Your progress** with a draw-in ring and connection-aware outcome dots. Hovering any card lights the constellation threads of its outcome; every thread is a real relation in the database.
-- **Add Knowledge** (`cr02/add-en.png`, `cr02/add-speak-en.png`) - the universal intake at `/add` with three modes: **Write**, **Upload**, and **Speak** (CR02). Speak records with a live waveform, pause/resume, a 15-minute cap and a language selector (Arabic, English, Mixed); the transcript appears live and editable (browser recognition by default, Whisper when `OPENAI_API_KEY` exists), the original audio is stored and attached to everything published, and the voice bonus adds 10 points once per submission. **Structure with AI** returns editable bilingual items with the suggested **lesson category** and, when opened from a project ("Add lesson"), the pre-filled node and Delivery category. The rail button is gone; Add Knowledge now lives on Home, the Lessons page, and project Lessons tabs. Points: 15 per item, 5 per accepted NDS3 link, 20 event bonus, 10 voice bonus, 25 more when verified.
-- **Knowledge Vault** (`cr04/vault-en-1440-hover.png`, `cr03/vault-grid-en.png`) - a **real library**: every document is a cloth-bound book (spine width by page count, alternating heights, the last book leaning against the shelf end) in the Library palette by knowledge type, with headbands, twin gold rules, a fore-edge page block, the year and NPC monogram, and a gilt verification seal. CR04 rebuilt the hover as a true pull-turn-preview: after a 40ms intent window the book comes forward and up, turns 22 degrees about its fore-edge so the **hinged cover with its paper title plate** swings into view over a real page slab, its shadow deepens on the plank, the neighbours lean away, and a **preview card** (summary, owner, pages, classification, Open, Save to collection) appears instantly from data already on the page; touch is two-tap, keyboard pulls on focus, and a 37-book sweep holds 60fps. Shelves run in a fixed order (Strategies down to Minutes and Circulars) with **Projects** as the lowest shelf, one sub-shelf per project, collapsed by default with its counts in the header; every shelf header collapses with a height animation and the state persists per user; planks carry brackets, grain, fade masks, and hover arrows. Grid view is the front-cover design at 160x220; list view unchanged. Upload with a live AI enrichment panel, duplicate detection, review dates, collections.
-- **Document reader** (`/vault/[id]`) - three-column reading layout with the sticky Intelligence panel: extract numbers, explain terms, draft a lesson (hands off to Add Knowledge), and **Ask about this document**, which opens the same analyst workspace scoped to the document. **Brief me** exports to .docx.
-- **Living Strategy** (`cr04/canvas-en-1440.png`, `cr04/canvas-en-panel-full.png`, `cr04/canvas-en-drawer.png`, `cr03/strategy-map-en.png`) - since CR04 the **Strategy Canvas**: one page that reads as the plan of a nation. The national frame stacks the **QNV 2030 pillars** with connection threads down to the outcomes they drive, the at-a-glance count-ups, and the **2024-2030 timeline** (today's maroon dot, the 2027 mid-term review, the 2030 horizon, faint per-year project bars with hover lists). Clicking a medallion opens the **outcome panel beneath the arc** (a tapered pointer slides between medallions; a sticky ring rail appears when the arc scrolls away): pillar chips, the 120px ring, **Read the chapter** (a page-cited summary, then the full chapter text served from the real NDS3 document chunks with p. N chips into the reader), headline indicator tiles, the target cards expanding **in place** into Initiatives and Projects lanes, the CR06 **Outcome stakeholders** section (the department owner card with the head and a link to the department page, lead-entity chips with counts that filter the lanes, deduplicated expert rows whose hover lights the lane cards of their items with "Show all" in place, and the collapsed Sponsors / Project owners / Project managers row; direct assignments wear an "Outcome" chip and editors get Add stakeholder and Set owner inline), and the signals link. Initiatives and projects open in a **520px drawer** (timeline with milestone dots, KPIs, the deliverables mini shelf, lessons, experts, signals, updates, lineage, Brief me / Ask about this / Extract report, Previous/Next across the lane). Every panel, target, and drawer has a copy-able deep link (`?o=o3&t=o3-t2&p=prj-09a`), and the back button unwinds drawer, target, panel in order; full detail pages stay reachable, and Ask NPC still cites "Deliverable D3 of Project PRJ-01a".
-- **Statistics** (`statistics-en.png`) - eight headline tiles, the catalog, the release calendar; indicator pages with charts, AI narration, CSV export, linked KPIs, and their own **related signals** section.
-- **Lessons Learned, the Learning Room** (`cr04/lessons-en-1440.png`, `cr04/lessons-en-full.png`, `cr04/learn-mode-en.png`) - since CR04 a page people open to learn: the **Lesson of the week** as a gold-washed editorial card (scheduled in Settings, or the highest "worth reading" suggestion) with inline **Read** and a **Listen** that builds a two-minute NPC Knowledge Cast episode once and replays it forever; **themes** (nightly AI clusters with one-line syntheses, per-month sparklines, and theme episodes) expanding in place; the four category lanes (**Delivery Lessons, External Learning, Expert Insights, Institutional Knowledge**) ordered by the worth-reading score with per-user collapse memory and a gold mark on the most reused; browse tabs (By project, By outcome, By contributor) with instant search; and the full filterable feed. Reading never leaves the page. **Learn mode** turns the page into a guided five-lesson session (progress dots, Got it, arrows, a reflection prompt that saves as a private note, 25+10 points, streak credit, same-day resume).
-- **NPC Knowledge Cast / بودكاست المعرفة** (`cr02/podcast-en.png`, `cr02/podcast-episode-en.png`) - pick any knowledge (a project, outcome, topic, document, collection, lessons, or an Ask answer) and press **Listen**. A three-step composer (choose, options: AR/EN, 3 or 5 minutes, focus; review with per-line editing) writes a grounded two-voice script for **Dr. Mariam** (the expert, answers only from the content, with spoken attributions) and **Hamad** (the moderator). Audio renders through ElevenLabs (`eleven_multilingual_v2`, per-segment with 600ms breaks, stitched by a pure-JS MPEG concatenator) as a background job with live progress, or plays with two browser voices when no key exists. The library filters by outcome, focus, and language; episode pages highlight the line being spoken and list sources; a persistent 56px **mini-player** keeps playing across navigation (play/pause, scrub, 1x/1.25x/1.5x). Points: 30 to create, 5 per full listen (the Pathfinder badge counts them). Six seeded episodes; the first two ship with studio audio.
-- **International Indices** (`cr05/indices-board-en.png`, `cr05/index-page-en-full.png`, `cr05/index-page-ar-full.png`) - CR05's new portal between Statistics and Trends. The board ranks the 12 indices by Qatar's latest published rank with change arrows, GCC positions, inverted 10-year sparklines, forecast direction chips, entity and NDS3-target chips, a category filter, a sortable table with CSV and docx export, a Qatar-vs-GCC 1-to-6 scale mode, and the expanding **forecast summary table** (latest, +1/+3/+5 with ranges and confidence). Each index page: sourced history with the GCC leader as a faint line and a collapsible per-row-sourced table, pillars against the GCC average, related signals, the forecast section (fan chart, evidence/assessment explanation, the full method with fitted parameters, signal contributions, the simulation histogram, sensitivity, and the **what-if sliders** re-running the same engine in the browser at 1,000 runs with Reset to official), and benchmarking (GCC/MENA/G20/Top-10 presets, saved custom groups, rank lines, score bars, gap-to-leader with the widest pillar gaps, and the "Where Qatar leads and lags" narrative). Data: `npm run fetch-indices` (direct publisher files where they exist, the research-pass extractions elsewhere, raw archive + manifest under `sources/indices/`, coverage in `data/indices-report.md`, `SKIP_INDICES_FETCH=1` honoured); refresh, manual corrections, assumptions, and recompute in **Settings → Indices**.
-- **HR Knowledge** (`cr05/hr-overview-en.png`, `cr05/hr-people-en.png`) - the continuity dashboard for HR Admins (all departments) and Department Heads (their own): three rings with their formulas printed (readiness 40/30/20/10, continuity 100 minus 15/8/3/1 per risk), the department heat strip, the top-10 risk list with act-on links, department cards with inline-editable responsibilities and repository summaries, the people list (owned knowledge by kind, backups, readiness components, set status / start handover / assign backup / request capture), generated handover checklists with bulk assignment and Speak-mode capture sessions that publish as handover-linked Expert Insights, and the full risk register with a 12-week trend. Gamification never appears here by design.
-- **Council Strategy / الاستراتيجية المؤسسية** (`cr07/council-en.png`, `cr07/council-goal-ar.png`, `cr07/council-results-en.png`) - CR07's new portal directly under the Living Strategy, at `/council-strategy`. NPC's own institutional strategy read as a results chain, with the labels taken from Qatar's results-based planning manual (`sources/manual/manual-structure.md`): **strategic goals (الأهداف الاستراتيجية) > intermediate outcomes (النتائج الوسيطة) > outputs (المخرجات) > projects and programmes (المشاريع والبرامج) > activities (الأنشطة)**, with inputs (المدخلات) on projects. The page carries an **Internal** chip everywhere and an **Illustrative** chip until the real strategy replaces the seeded one. Vision and mission in the display face with five values that expand in place; a **scorecard strip** of five medallion rings recomputed for this month, this quarter or this year, which says "10 reported monthly, 17 reported quarterly" rather than going blank for indicators on another cadence; a **results chain navigator** where a goal opens a panel beneath the strip with a sliding pointer, its alignment chips into NDS3 outcomes (click to open them in the Living Strategy), its indicator tiles, and its intermediate outcomes expanding in place to outputs and then to projects; a **project drawer** with the timeline and milestones, budget and inputs, indicator charts, activities, dependencies, deliverables, stakeholders, lessons and risks; a **results view** (goals by period as RAG cells with trend arrows and a narrative written from the figures alone, no model in the loop); and six reference accordions: situation analysis (SWOT quadrants, the stakeholder interest-against-influence map, challenges, baseline), the implementation plan timeline by department, the monitoring and evaluation framework with a reporting calendar, the **5 by 5 risk heat map** and register, governance, and the **draggable impact-against-feasibility prioritisation matrix**. Every level carries a full **indicator card (بطاقة المؤشر)**: definition, formula, unit, direction, baseline, cadence, data source, means of verification, responsible person, notes, and the target-against-actual chart. Editing is the Strategy Office (configurable in Settings), Knowledge Admins and Super Admins, with cadence-aware period pickers, bulk actuals import and a change log.
-- **Organisation / الهيكل التنظيمي** (`cr07/org-en.png`, `cr07/org-unit-en.png`) - CR07's new portal under Experts, at `/organisation`. The real structure of the Council as published on npc.qa under **Chairman's Decision No. 13 of 2024**: thirty nine units across the Secretary General, six sectors and thirty two departments, fetched by `npx tsx scripts/fetch-cr07-sources.ts` into `sources/org/org-structure.json` and seeded with each unit's **verbatim mandate in both languages**, its source link, its fetch date and its head. A top-down **org chart** with pan, zoom, fit, a mini-map, collapsible branches (the sectors arrive closed so the first view reads), search that rings matches and dims the rest, and a list view for narrow screens. Selecting a unit opens a panel in place with the pointer tail: the mandate side by side in both languages with the source link, the HR responsibilities, the head and everyone in the unit with sub-unit staff grouped, **what this unit owns** (council goals and projects, NDS3 nodes led, documents by type, indicators, lessons, experts, open handovers for the head), its sub-units, and four **Policies and Procedures** tabs (Policies, Procedures, Forms and templates, Service catalogue) with a version label, an effective date, review-due warnings, and the three-way **visibility** control the unit head sets per item or in bulk: All employees, This unit only, or Confidential. Visibility is enforced once in `canSeeDocument()` and honoured by search, previews and Ask NPC, on top of the classification level. The structure editor, bulk member assignment from a CSV of emails, and **Re-sync from website** (which shows a diff and applies only what is ticked) live in **Settings → Organisation**.
-- **Trends and Signals** (`cr03/trends-en-1440.png`, `cr03/trends-en-1440-hover.png`, `cr03/trends-ar-1440.png`) - since CR03 the page opens with the **Signals Radar**: a semicircular field with three horizon bands (Short, Medium, Long) and one wedge per signal type, where every accepted signal of the last 180 days is a blip sized by impact and coloured by its outlook for Qatar, high-impact blips pulse, and a maroon sweep reveals the field once; hovering a blip raises its card, clicking scrolls to its story, and clicking a band or wedge label filters everything. Below it, the **Signal Briefing**: three **Highest impact this month** feature cards with impact meters and the triage strip (Accept, Dismiss, Convert), then collapsible category lanes ordered by summed impact with a **By outcome** regrouping toggle; hovering any card enlarges its blip on the radar. The CR02 **Refresh signals** button, live progress card, and **Last refreshed** stamp stay on top; the **risk heat map** sits below, and the old index tracker became the Indices module (a "See international indices" link remains; accepted index signals now feed the forecasts). On phones the radar becomes a full 320px circle with its labels listed beneath. Signal pages carry the source excerpt, comments, history, "Ask about this signal", and "Brief me". Manual intake: paste a link or text.
-- **Extract report** (everywhere) - Trends, Lessons, the Vault and collections, outcome/target/initiative/project pages, any Ask answer, and any podcast episode carry an **Extract report** button: a side panel with the scope summary, refine controls, audience (Leadership runs Opus, Working runs Sonnet), language (**Arabic, English, or Both in one file**), and options; generation runs as a job with progress and the result downloads as a designed Word document (dark-maroon cover band with the NPC logo, updating TOC, maroon-ruled headings, numbered findings, banded tables, docx-native bar charts, sand pull quotes, classified footers with page numbers) or saves to the Vault as a searchable `report` document. 15 points, capped at 45 per day.
-- **Ask NPC 2.0** (`cr01/ask-en.png`, `cr01/conversation-en.png`) - a conversational analyst, not a search box. It plans with a fast model, then works with real tools: hybrid knowledge search, strategy queries with aggregations ("how many targets"), indicator series with computed deltas and gaps, safe arithmetic, expert matching, lessons, signals, what-changed, and cross-edition comparison. Progress streams as thinking chips ("Searching the Vault", "Counting NDS3 targets"), then the prose answer streams with numbered citations, followed by a **rich workspace**: strategy cards, indicator tiles, documents, lessons and decisions, signals, people with "Ask them", context-aware follow-up chips, and a sources footer with edition and verification marks. Conversations persist at `/ask/c/[id]`, resume, share read-only with clearance re-filtering ("2 sources hidden by clearance"), export to .docx, pin to collections, and route to experts. Communities, the unanswered board, and bounties remain.
-- **Search** (`search-en.png`) - hybrid keyword + semantic search, grouped suggestions (Ctrl+K), intent banners, cross-lingual retrieval.
-- **Profile / Settings** (`settings-en.png`) - as before, plus **Settings → Trends and Signals** (scan briefs, feeds, schedule, run history), **→ Entities** (the register with create, edit, merge, deactivate), **→ Indices** (register, refresh, manual observations, forecast assumptions, recompute), and **→ Access** (allowed domains, invite-only onboarding with links shown inline). The Users tab opens each user's **Access** dialog (the effective module-action matrix with role/grant/deny sources, portal toggles with reasons and expiries, the audit trail, and Preview as user); the Roles tab carries the portal-visibility grid and **Preview as role**. Profiles gained **Sign out of all devices**.
+- Typeface: **Sora** (self-hosted, `public/fonts/sora-var-latin.woff2`). Arabic uses IBM Plex Sans Arabic with Noto Kufi Arabic for display.
+- Logos: `public/brand/Sia_logo*.{svg,png}`. Use the full-colour logo on light grounds and the white logo on navy. Do not recolour, stretch or crop it, and keep clear space equal to the height of the "S".
+- Colour keys stored in the database (`avatar_color`, `colour_token`, `cover_style`) are `navy`, `teal` and `aqua`. Legacy values are mapped at read time by `src/lib/colour-keys.ts`.
+- Contrast: `node scripts/contrast-audit.mjs` checks token pairs against WCAG AA.
 
 ## Architecture
 
-- **Next.js 15** (App Router, TypeScript strict, React 19), **Tailwind CSS 4**, framer-motion, Recharts, next-intl (full RTL).
-- **SQLite** at `data/nexus.db` via `@libsql/client` + Drizzle ORM. FTS5 for keyword search; embeddings as Float32 BLOBs with brute-force cosine.
-- **AI layer** (`src/server/ai/`): Anthropic SDK, prompt files in `prompts/`, strict grounding, permission-aware retrieval, and a deterministic mock for every capability including the analyst loop (the tools are real; only the model is mocked).
-- **Analyst** (`src/server/ai/analyst/`): a planner + tool loop (12 permission-filtered tools) + streamed answer with server-assembled workspace sections.
-- **Scanner** (`src/server/scan/`): Claude web search per brief, rss-parser feeds, manual URL/PDF intake; URL/title/embedding deduplication; `scan_runs` bookkeeping with per-brief progress; scheduled every N hours by the in-process worker; single-brief rescans.
-- **Podcast** (`src/server/ai/podcast/`): grounded two-voice script generation over the analyst tools (Opus for scopes over 10 items), ElevenLabs rendering with library-voice auto-pick, a minimal MPEG frame concatenator and duration parser, and a per-user daily studio cap.
-- **Reports** (`src/server/reports/`): scope gathering, a grounded narrative writer (extractive mock with the same shape), and a `docx` layout engine in the NPC palette with full RTL and a Both-languages mode.
-- **Jobs**: in-process queue whose worker starts with the server via `src/instrumentation.ts` (ingest, embed, translate, daily card, scan, podcast render, report generate).
-- **Gamification** (`src/server/gamification/engine.ts`): append-only ledger with caps, multipliers, streaks, badges; CR01 adds the knowledge_* and signal_accepted rules; CR02 adds knowledge_by_voice 10, podcast_created 30, podcast_listened_full 5 (cap 20/day, once per episode), report_extracted 15 (cap 45/day).
-- **Indices** (`src/server/indices/`): the pure isomorphic forecast engine (`forecast.ts`, seeded PRNG, unit-tested), the DB-facing compute layer with recompute triggers, and the fetcher (publisher files + the research-pass extractions with per-value sources).
-- **HR** (`src/server/services/hr.ts`): the ownership inventory, readiness and continuity scoring, six risk rules, and the handover engine; risks recompute nightly.
-- **Auth**: bcrypt + iron-session; a single server-side `can()` gate now carrying per-user grant/deny overrides and portal visibility (CR05: invite-only on allowed domains, password policy, 5-attempt lockout, 12h-inactivity/7-day sessions, read-only Preview-as enforced in the middleware).
+- **Next.js 15** (App Router, TypeScript strict, React 19), **Tailwind CSS 4**, framer-motion, Recharts, next-intl with full RTL.
+- **SQLite** at `data/nexus.db` through `@libsql/client` and Drizzle ORM. FTS5 for keyword search, Float32 embeddings with brute-force cosine.
+- **AI layer** (`src/server/ai/`): Anthropic SDK, prompt files in `prompts/`, strict grounding, permission-aware retrieval, and a deterministic mock for every capability.
+- **Analyst** (`src/server/ai/analyst/`): planner, permission-filtered tool loop, streamed answer with server-assembled workspace sections.
+- **Scanner** (`src/server/scan/`): web search per brief, RSS and Atom feeds, manual URL and PDF intake, deduplication.
+- **Reports** (`src/server/reports/`): scope gathering, grounded narrative, a `docx` layout engine with RTL and a Both-languages mode.
+- **Indices** (`src/server/indices/`): forecast engine, compute layer and fetcher, with the Kingdom as the home entity.
+- **Jobs**: in-process queue started by `src/instrumentation.ts`.
+- **Auth**: bcrypt and iron-session, one server-side `can()` gate with per-user overrides and portal visibility, invite-only on allowed domains.
 
-### Deploying it (Railway, one service, one volume)
+Portability: the Drizzle schema uses portable types (switch the dialect in `drizzle.config.ts` for Postgres), vector search sits in `src/server/search/vector.ts`, storage in `src/server/storage/index.ts`, and auth in `src/server/auth/*`.
 
-The app keeps everything it writes in one place, so a deployment is one service
-with one volume and nothing else. `DATA_DIR` points at the volume; locally it is
-unset and everything lives in `./data`. `src/server/paths.ts` is the only module
-that decides where a runtime file goes, and `scripts/lib/paths.mjs` is the same
-rule in plain JavaScript for the scripts that run before the TypeScript build.
+## Deploy on Railway
 
-1. Create the service from this repository, add a volume mounted at `/app/data`.
-2. `npm run railway:variables` writes `railway-variables.txt`: paste it into the
-   service variables and delete the file. It carries a fresh `SESSION_SECRET`,
-   the API keys from `.env.local`, `DATA_DIR=/app/data`, `TZ=Asia/Qatar` and a
-   `SETUP_TOKEN` for step 4.
-3. Deploy. `railway.json` builds with `npm run build` and starts with
-   `npm run start:railway`, which runs `scripts/boot.mjs` first: it creates the
-   folders, restores a bundle if one is waiting, applies any missing migrations
-   and sets the SQLite pragmas. `/api/health` is the health check. The volume
-   is empty at this point, so every page says the app is being set up.
-4. `npm run data:export` writes `sianexus-data.tar.gz` (the database, the
-   uploads and the generated reports). Open `https://<your domain>/setup/restore`,
-   type the `SETUP_TOKEN` and upload it. The page digests the file in the
-   browser, sends it in 8 MB chunks with retries and resume, and the server
-   verifies the whole thing before accepting it.
-5. Delete `SETUP_TOKEN` in Railway and deploy again. The boot step unpacks the
-   bundle and renames it `.done` so a restart never repeats it, and the restore
-   page stops existing.
+One service, one volume mounted at `/app/data`. `DATA_DIR` points at the volume; locally it is unset and everything lives in `./data`. Detailed runbooks: `ENVIROAI_RAILWAY_READINESS.md` and `ENVIROAI_RAILWAY_NO_CLI.md`.
 
-**Why the upload page rather than the CLI.** `railway up` is the normal way to
-put a file on a volume, but the Railway CLI is a native binary and the machine
-this was built on refuses to run it. `/setup/restore` exists only while
-`SETUP_TOKEN` is set, is rate limited, and compares the token in constant time;
-see DECISIONS 136.
-
-Without a bundle the app stays on the waiting screen. `SEED_ON_EMPTY=true`
-seeds from the committed `sources/` folder instead, but the seed is TypeScript
-and needs the development dependencies, so the bundle is the supported path.
-
-### Migration path (Supabase / Vercel later)
-
-- Drizzle schema uses portable types; regenerate for Postgres by switching the dialect in `drizzle.config.ts`.
-- Vector search is encapsulated in `src/server/search/vector.ts`; a pgvector implementation replaces that one file.
-- Storage is `src/server/storage/index.ts`; swap for Supabase Storage.
-- Auth lives in `src/server/auth/*`; swap the session provider without touching `can()`.
-- External systems go through `src/server/integrations/*` typed stubs.
+1. Create the service from this repository and add a volume at `/app/data`.
+2. `npm run railway:variables` writes `railway-variables.txt` (fresh `SESSION_SECRET`, your API keys, `DATA_DIR=/app/data`, `TZ=Asia/Riyadh`, a `SETUP_TOKEN`). Paste it into the service variables, then delete the file.
+3. Deploy. `railway.json` builds with `npm run build` and starts `npm run start:railway`, which runs `scripts/boot.mjs` (folders, bundle restore, migrations, SQLite pragmas). `/api/health` is the health check.
+4. `npm run data:export` writes the data bundle. Open `/setup/restore` on the deployment, enter `SETUP_TOKEN` and upload it.
+5. Delete `SETUP_TOKEN` and redeploy. The restore page stops existing.
 
 ## Commands
 
 ```bash
-npm run setup       # full idempotent setup (install, sources, fonts, migrate, seed)
-npm run dev         # dev server + job worker (scans self-schedule)
-npm run seed        # rebuild the database from /sources (drops and recreates)
-npm run smoke       # end-to-end acceptance checks against a running server (mock mode; CR08 adds one module per section)
-npm run start:demo  # the client path: builds once if needed, then serves the production build with the job worker
-npm run reset-demo  # restores the demo database and files from data/demo-snapshot (server stopped; under two minutes)
-npm run reset-demo:snapshot   # freeze the current state as that baseline
-npm run data:export # bundle the data directory into sianexus-data.tar.gz for a deployment
-npm run railway:variables      # write railway-variables.txt from .env.local (a fresh SESSION_SECRET)
-npm run start:railway          # the container's start command: boot (restore, migrate) then next start
-npm run qc:sweep    # no em dashes anywhere, no HTML tables in new UI
-npm run qc:permissions        # every route and API as every role, into docs/qc/permissions-matrix.md
-npm run qc:console  # every page in both locales in system Edge, into docs/qc/console-sweep.md
-npm run analyze     # production build with the bundle treemaps in .next/analyze/
-npm run fetch-indices  # refresh the international index data (SKIP_INDICES_FETCH=1 to reuse the cached raw files)
-node scripts/contrast-audit.mjs        # the CR05 WCAG-AA token-pair audit
-npm run test        # unit tests (gamification caps/multipliers/freezes, i18n parity)
-npm run typecheck   # tsc --noEmit
-npm run lint        # eslint
-npm run build       # production build
-npm run screenshots # refresh data/screenshots (needs a running server)
-npx tsx scripts/screenshots-cr02.ts    # CR02 screens (home strategy lessons podcast add trends; pass names to limit)
-npx tsx scripts/screenshots-cr03.ts    # CR03 screens with hover states (vault strategy trends home; pass names to limit)
-npx tsx scripts/screenshots-cr04.ts    # CR04 screens (vault strategy lessons podcast; pass names to limit)
-npx tsx scripts/screenshots-cr05.ts    # CR05 screens (before colour entities stakeholders indices hr access)
-node scripts/lighthouse-a11y.mjs       # Lighthouse perf+a11y gates via system Edge (now incl. Indices and HR)
-npx tsx scripts/test-analyst-live.ts   # optional: the ten reference cases against the live model (spends tokens)
+npm run dev | build | start | typecheck | lint | test
+npm run migrate        # apply migrations
+npm run seed           # rebuild the database from seed content
+npm run fetch-fonts    # fetch fonts
+npm run fetch-indices  # refresh international index data
+npm run smoke          # acceptance checks against a running server
+npm run data:export    # bundle the data directory
+npm run qc:sweep       # no em dashes, no HTML tables in new UI
+npm run qc:permissions # every route as every role
+npm run analyze        # bundle treemaps
 ```
 
-## Known limitations (honest list)
+## Known limitations
 
-- `data/seed-report.md` lists every item marked **illustrative** or **to verify**. Seeded signals carry `publisher` but empty `url` where a real link could not be verified during the build.
-- Live web-search scanning depends on the account having the Anthropic web search tool; without it the scanner logs the fallback and relies on feeds. Feed fetching tolerates this machine's TLS-intercepting proxy (relaxed verification for those requests only).
-- This machine's Application Control policy blocks several native binaries; the repo ships WASM fallbacks and a resolver patch (`scripts/patch-native.mjs`, run by setup). Details in `DECISIONS.md`.
-- Lighthouse accessibility was checked with axe-style manual passes and system Edge; the policy blocks Playwright's bundled Chromium.
-- Report charts render as docx-native shaded-bar tables: the CR's preferred `@resvg/resvg-js` is a native binary this machine's policy blocks, and the CR's tables-only fallback applies (DECISIONS.md).
-- Podcast intro/outro tones are skipped (no pure-JS mp3 encoder for a generated WAV); the 600ms speaker pauses come from ElevenLabs break tags instead of a stitched silent chunk.
-- Browser-voice playback and Speak-mode recognition depend on the browser (Chrome or Edge recommended); voices vary by machine.
-- Settings implements the high-value tabs; review-rule editing, spotlight/daily-card curation, and branding upload are seeded as data but not yet editable UIs.
-- The reader renders PDFs on canvas one page at a time; pptx/xlsx render as extracted views.
-- Gap radar, freshness watch, and taxonomy drift remain feature-flagged off; the signal scanner shipped as the Trends and Signals module.
-- Index data honesty (CR05): every observation stores its source URL; where a publisher offers no machine-readable file the values were read from official report PDFs and pages by a web research pass (provenance in `sources/indices/research/*.json`). GPI comes from a secondary compiler (the IEP PDFs defeat this machine's parsers) and says so in its source notes; WJP covers Qatar only from its 2025 debut; IMD is rank-led because detailed scores are paywalled; EPI editions are not comparable across methodology changes. Forecasts are model outputs, cited as such, never as published figures.
-- No mail server exists locally, so invitation links are shown to the admin and logged instead of emailed; two-factor authentication is not in this phase (DECISIONS 70).
-
-## Reset
-
-```bash
-npm run seed        # fresh database from /sources (keeps downloaded sources)
-npm run fetch-sources  # re-crawl public NPC material into /sources
-```
+- Live web-search scanning needs the Anthropic web search tool on the account; otherwise the scanner falls back to feeds.
+- Browser voice playback and Speak-mode recognition depend on the browser (Chrome or Edge recommended).
+- No mail server exists locally: invitation links are shown to the admin and logged.
+- Items marked **Illustrative** are placeholders for content the client supplies. Never present them as sourced fact.

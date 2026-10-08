@@ -14,7 +14,7 @@ import path from "node:path";
 const BASE = "http://localhost:3000";
 const OUT = path.join(process.cwd(), "data", "screenshots", "cr08");
 const ONLY = process.argv[2] ?? "all";
-const PASSWORD = "Nexus!2026";
+const PASSWORD = "EnviroAI!2026";
 const NAV = { waitUntil: "networkidle" as const, timeout: 120000 };
 /** the process API answers in 8 to 25 seconds while the shared server is under load */
 const PANEL_WAIT = 120000;
@@ -85,7 +85,7 @@ const ACTIVE_CODE = "(document.activeElement && document.activeElement.getAttrib
 
 async function desktop(browser: import("playwright").Browser, locale: "en" | "ar") {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-  await login(ctx, "admin@npc.qa");
+  await login(ctx, "admin@enviroai.demo");
   const page = await ctx.newPage();
   const errors: string[] = [];
   watch(page, errors);
@@ -250,7 +250,7 @@ async function phone(browser: import("playwright").Browser, locale: "en" | "ar")
      viewport (window.innerWidth reads 1439), which moves every drawer in the
      app off screen and makes an overflow check meaningless */
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true });
-  await login(ctx, "admin@npc.qa");
+  await login(ctx, "admin@enviroai.demo");
   const page = await ctx.newPage();
   const errors: string[] = [];
   watch(page, errors);

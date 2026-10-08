@@ -17,13 +17,13 @@ export async function verifyPassword(plain: string, hash: string): Promise<boole
 const COMMON_PASSWORDS = new Set([
   "password1234",
   "password12345",
-  "qatar1234567",
+  "saudi1234567",
   "welcome12345",
   "123456789012",
   "qwerty123456",
   "letmein12345",
   "admin1234567",
-  "npcqatar2026",
+  "enviroai-demo-2026",
   "changeme1234",
 ]);
 

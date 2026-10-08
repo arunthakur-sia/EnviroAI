@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-// CR08 2.3 smoke: Ask NPC everywhere. The recent-conversations list, the
+// CR08 2.3 smoke: Ask EnviroAI everywhere. The recent-conversations list, the
 // contextItem plumbing through the analyst stream, the messages endpoint
 // with its ownership and sharing rules, the i18n namespace, and the item
 // pages that mount the context marker. Wired into scripts/smoke.ts by the

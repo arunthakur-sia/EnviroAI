@@ -6,7 +6,7 @@ import { getSetting } from "@/server/settings";
 import type { ChapterInfo } from "@/server/services/strategy";
 
 /* CR04 2.3: "Read the chapter" full text, served from the existing document
-   chunks of the NDS3 document, paginated by source page. No new storage. */
+   chunks of the NES document, paginated by source page. No new storage. */
 export async function GET(req: NextRequest) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ data: null, error: "unauthorized" }, { status: 401 });

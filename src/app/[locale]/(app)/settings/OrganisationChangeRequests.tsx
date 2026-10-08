@@ -11,7 +11,7 @@ import { Button, Chip, EmptyState, Skeleton } from "@/components/ui/primitives";
 import { useToast } from "@/components/ui/toast";
 import { editorCall, editorGet, type ChangeRequestRow } from "./OrganisationEditorShared";
 
-const STATUS_TONE: Record<string, "warn" | "ok" | "sand"> = { open: "warn", resolved: "ok", declined: "sand" };
+const STATUS_TONE: Record<string, "warn" | "ok" | "mist"> = { open: "warn", resolved: "ok", declined: "mist" };
 
 export function OrganisationChangeRequests({ canEdit }: { canEdit: boolean }) {
   const t = useTranslations("settings.organisationTab");
@@ -57,7 +57,7 @@ export function OrganisationChangeRequests({ canEdit }: { canEdit: boolean }) {
     <div className="card p-4" data-testid="org-requests">
       <div className="mb-3 flex items-center justify-end">
         <label className="flex cursor-pointer items-center gap-1.5 text-xs text-ink-600">
-          <input type="checkbox" checked={showClosed} onChange={(e) => setShowClosed(e.target.checked)} className="size-3.5 cursor-pointer accent-maroon-700" data-testid="org-requests-closed" />
+          <input type="checkbox" checked={showClosed} onChange={(e) => setShowClosed(e.target.checked)} className="size-3.5 cursor-pointer accent-navy-700" data-testid="org-requests-closed" />
           {t("requestsShowClosed")}
         </label>
       </div>
@@ -71,18 +71,18 @@ export function OrganisationChangeRequests({ canEdit }: { canEdit: boolean }) {
       ) : rows.length === 0 ? (
         <EmptyState icon={<Inbox />} title={t("requestsEmpty")} className="py-8" />
       ) : (
-        <ul className="divide-y divide-sand-100">
+        <ul className="divide-y divide-mist-100">
           {rows.map((r) => (
             <li key={r.id} className="flex flex-wrap items-start gap-3 py-3" data-testid="org-request-row" data-status={r.status}>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Link href={`/organisation?unit=${encodeURIComponent(r.unitCode)}`} className="link-draw text-sm font-medium text-ink-900 hover:text-maroon-700" title={t("requestOpenUnit")}>
+                  <Link href={`/organisation?unit=${encodeURIComponent(r.unitCode)}`} className="link-draw text-sm font-medium text-ink-900 hover:text-navy-700" title={t("requestOpenUnit")}>
                     {bi(locale, r.unitNameEn, r.unitNameAr)}
                   </Link>
                   <span className="text-[11px] text-ink-400 tnum" dir="ltr">
                     {r.unitCode}
                   </span>
-                  <Chip tone={STATUS_TONE[r.status] ?? "sand"}>{t(`requestStatus.${r.status}` as never)}</Chip>
+                  <Chip tone={STATUS_TONE[r.status] ?? "mist"}>{t(`requestStatus.${r.status}` as never)}</Chip>
                 </div>
                 <p className="mt-1 text-sm text-ink-900">{r.what}</p>
                 {r.why ? (

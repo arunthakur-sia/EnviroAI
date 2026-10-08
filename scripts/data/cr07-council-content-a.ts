@@ -1,15 +1,15 @@
-// CR07 2.6: illustrative content for the Council Strategy, part A.
-// This module carries the hand written bilingual words of NPC's own institutional
-// strategy: the strategic direction, the situation analysis, governance, the risk
-// register, and the results chain down to outputs. Part B carries the projects,
+// CR07 2.6: illustrative content for the Programme Strategy, part A.
+// This module carries the hand written bilingual words of the Programme Office's own
+// institutional strategy: the strategic direction, the situation analysis, governance,
+// the risk register, and the results chain down to outputs. Part B carries the projects,
 // activities and indicator cards that hang beneath these outputs.
 //
 // IMPORTANT: the content below is ILLUSTRATIVE. It is a plausible internal strategy
-// written to exercise the Council Strategy screens, not the real approved strategy of
-// the National Planning Council. Everything seeded from this file is marked
+// written to exercise the Programme Strategy screens, not the real approved strategy of
+// any organisation. Everything seeded from this file is marked
 // is_illustrative = true and carries the "Illustrative" chip in the product until the
-// real strategy replaces it. Organisational unit codes, NDS3 outcome codes and the
-// results chain codes are real and must not be edited here without updating the seed.
+// real strategy replaces it. Organisational unit codes, theme codes (O1 to O7) and the
+// results chain codes must not be edited here without updating the seed.
 
 import type {
   StrategyMeta,
@@ -29,20 +29,20 @@ import type {
 /* ------------------------------------------------------------------ */
 
 export const STRATEGY_META: StrategyMeta = {
-  nameEn: "NPC Institutional Strategy 2025 to 2030",
-  nameAr: "الاستراتيجية المؤسسية للمجلس الوطني للتخطيط 2025 - 2030",
+  nameEn: "Programme Office Institutional Strategy 2025 to 2030",
+  nameAr: "الاستراتيجية المؤسسية لمكتب البرنامج 2025 - 2030",
   periodFrom: "2025-01-01",
   periodTo: "2030-12-31",
   approvedOn: "2025-03-16",
   visionEn:
-    "A reference institution whose planning, statistics and foresight set the professional standard for government work in Qatar.",
+    "A reference institution whose strategy, environmental data and foresight set the professional standard for environment, water and agriculture work in Saudi Arabia.",
   visionAr:
-    "مؤسسة مرجعية يضع تخطيطها وإحصاؤها واستشرافها المعيار المهني للعمل الحكومي في دولة قطر.",
+    "مؤسسة مرجعية تضع استراتيجيتها وبياناتها البيئية واستشرافها المعيار المهني لأعمال البيئة والمياه والزراعة في المملكة العربية السعودية.",
   missionEn:
-    "We prepare the national development strategy, monitor its delivery, produce Qatar's official statistics and read the future, so that national choices rest on evidence rather than assumption. We work alongside every government entity, and with partners in the private sector, universities and the community, to turn national priorities into plans that are delivered and measured.",
+    "We steer the National Environment Strategy, monitor its delivery, keep environmental data trustworthy and read the future, so that choices on water, food, climate, land, waste and air rest on evidence rather than assumption. We work alongside every entity in the sector, and with partners in universities, the private sector and the community, to turn national priorities into plans that are delivered and measured.",
   missionAr:
-    "نُعِدّ استراتيجية التنمية الوطنية ونتابع تنفيذها، ونُنتج الإحصاءات الرسمية لدولة قطر، ونستشرف المستقبل، لتستند الخيارات الوطنية إلى الأدلة لا إلى الافتراضات. ونعمل جنباً إلى جنب مع الجهات الحكومية كافة، ومع شركائنا في القطاع الخاص والجامعات والمجتمع، لتحويل الأولويات الوطنية إلى خطط قابلة للتنفيذ والقياس.",
-  ownerUnitCode: "IDP",
+    "نقود الاستراتيجية الوطنية للبيئة ونتابع تنفيذها، ونحافظ على موثوقية البيانات البيئية ونستشرف المستقبل، لتستند الخيارات في المياه والغذاء والمناخ والأراضي والنفايات والهواء إلى الأدلة لا إلى الافتراضات. ونعمل جنباً إلى جنب مع جهات القطاع كافة، ومع شركائنا في الجامعات والقطاع الخاص والمجتمع، لتحويل الأولويات الوطنية إلى خطط قابلة للتنفيذ والقياس.",
+  ownerUnitCode: "SPD",
   values: [
     {
       nameEn: "Evidence first",
@@ -56,17 +56,17 @@ export const STRATEGY_META: StrategyMeta = {
       nameEn: "Professional independence",
       nameAr: "الاستقلالية المهنية",
       descriptionEn:
-        "We publish statistics and assessments as the numbers read them, without softening a message to suit any party. That independence is precisely what makes our figures usable by everyone.",
+        "We publish assessments and figures as the data reads them, without softening a message to suit any party. That independence is precisely what makes our work usable by everyone.",
       descriptionAr:
-        "ننشر الإحصاءات والتقييمات كما تدل عليها الأرقام، دون تطويع الرسالة لصالح أي جهة. وهذه الاستقلالية هي بالذات ما يجعل أرقامنا صالحة للاستخدام لدى الجميع.",
+        "ننشر التقييمات والأرقام كما تدل عليها البيانات، دون تطويع الرسالة لصالح أي جهة. وهذه الاستقلالية هي بالذات ما يجعل عملنا صالحاً للاستخدام لدى الجميع.",
     },
     {
       nameEn: "Partnership in delivery",
       nameAr: "الشراكة في التنفيذ",
       descriptionEn:
-        "We do not hand a plan over and step away; we sit with the entity that carries it until the obstacles are named and cleared. Our success is measured by what the country delivers, not by the number of documents we issue.",
+        "We do not hand a plan over and step away; we sit with the entity that carries it until the obstacles are named and cleared. Our success is measured by what the sector delivers, not by the number of documents we issue.",
       descriptionAr:
-        "لا نُسلّم الخطة ثم ننصرف، بل نجلس مع الجهة المنفذة حتى تُحدَّد العوائق وتُذلَّل. ويُقاس نجاحنا بما تُنجزه الدولة لا بعدد الوثائق التي نُصدرها.",
+        "لا نُسلّم الخطة ثم ننصرف، بل نجلس مع الجهة المنفذة حتى تُحدَّد العوائق وتُذلَّل. ويُقاس نجاحنا بما يُنجزه القطاع لا بعدد الوثائق التي نُصدرها.",
     },
     {
       nameEn: "Foresight as a habit",
@@ -80,9 +80,9 @@ export const STRATEGY_META: StrategyMeta = {
       nameEn: "Knowledge that stays",
       nameAr: "معرفة تبقى في المؤسسة",
       descriptionEn:
-        "What a colleague learns becomes an asset of the Council: recorded, findable and ready for the next team to reuse. We hand over knowledge deliberately so that a departure never costs us a capability.",
+        "What a colleague learns becomes an asset of the Office: recorded, findable and ready for the next team to reuse. We hand over knowledge deliberately so that a departure never costs us a capability.",
       descriptionAr:
-        "ما يتعلمه الزميل يصبح أصلاً من أصول المجلس: موثقاً وقابلاً للاسترجاع وجاهزاً لإعادة استخدامه من الفريق التالي. ونُسلّم المعرفة بشكل منظم حتى لا يكلفنا خروج موظف فقدان قدرة مؤسسية.",
+        "ما يتعلمه الزميل يصبح أصلاً من أصول المكتب: موثقاً وقابلاً للاسترجاع وجاهزاً لإعادة استخدامه من الفريق التالي. ونُسلّم المعرفة بشكل منظم حتى لا يكلفنا خروج موظف فقدان قدرة مؤسسية.",
     },
   ],
 };
@@ -95,30 +95,30 @@ export const SWOT: SwotItem[] = [
   {
     quadrant: "strength",
     textEn:
-      "A clear legal mandate to prepare and monitor the national development strategy, which gives the Council standing to convene every government entity around one plan.",
+      "A clear mandate to steer the National Environment Strategy, which gives the Office standing to convene every entity in the sector around one plan.",
     textAr:
-      "ولاية قانونية واضحة لإعداد استراتيجية التنمية الوطنية ومتابعة تنفيذها، تمنح المجلس الصفة التي تتيح له جمع الجهات الحكومية كافة حول خطة واحدة.",
+      "تكليف واضح بقيادة الاستراتيجية الوطنية للبيئة، يمنح المكتب الصفة التي تتيح له جمع جهات القطاع كافة حول خطة واحدة.",
   },
   {
     quadrant: "strength",
     textEn:
-      "Custody of the national statistical system through the National Statistics Center, including the census, the price indices, the labour force survey and the statistical business register.",
+      "A dedicated data and knowledge sector that brings together environmental data affairs, data operations, systems, quality and governance under one roof.",
     textAr:
-      "الإشراف على المنظومة الإحصائية الوطنية من خلال مركز الإحصاء الوطني، بما يشمل التعداد والأرقام القياسية للأسعار ومسح القوى العاملة والسجل الإحصائي للمنشآت.",
+      "قطاع مخصص للبيانات والمعرفة يجمع شؤون البيانات البيئية وعمليات البيانات والنظم والجودة والحوكمة تحت مظلة واحدة.",
   },
   {
     quadrant: "strength",
     textEn:
-      "A dedicated foresight and national visions function, still uncommon in the region, that connects Qatar National Vision 2030 work to live policy questions.",
+      "A dedicated foresight and risk function, still uncommon in the sector, that connects Saudi Vision 2030 environmental work to live policy questions.",
     textAr:
-      "وجود قطاع مخصص لاستشراف المستقبل والرؤى الوطنية، وهو أمر لا يزال نادراً إقليمياً، يربط أعمال رؤية قطر الوطنية 2030 بالقضايا السياساتية الآنية.",
+      "وجود إدارة مخصصة للاستشراف والمخاطر، وهو أمر لا يزال نادراً في القطاع، تربط أعمال رؤية السعودية 2030 البيئية بالقضايا السياساتية الآنية.",
   },
   {
     quadrant: "strength",
     textEn:
-      "A direct reporting line to the Council of Ministers, so analysis reaches the decision table without passing through intermediaries who reshape it.",
+      "A direct reporting line to the Programme Steering Committee, so analysis reaches the decision table without passing through intermediaries who reshape it.",
     textAr:
-      "خط رفع مباشر إلى مجلس الوزراء، بما يتيح وصول التحليل إلى طاولة القرار دون وسطاء يعيدون صياغته.",
+      "خط رفع مباشر إلى اللجنة التوجيهية للبرنامج، بما يتيح وصول التحليل إلى طاولة القرار دون وسطاء يعيدون صياغته.",
   },
   {
     quadrant: "strength",
@@ -130,347 +130,359 @@ export const SWOT: SwotItem[] = [
   {
     quadrant: "weakness",
     textEn:
-      "The monitoring picture depends on what entities submit, so the Council's view of national delivery is only as current as its slowest reporting partner.",
+      "The monitoring picture depends on what entities submit, so the Office's view of delivery is only as timely and complete as their returns.",
     textAr:
-      "تعتمد صورة المتابعة على ما ترفعه الجهات، ما يجعل رؤية المجلس للإنجاز الوطني لا تتجاوز في حداثتها أبطأ الجهات في رفع تقاريرها.",
+      "تعتمد صورة المتابعة على ما ترفعه الجهات، فلا تكون نظرة المكتب إلى الإنجاز أسرع أو أكمل من تقاريرها.",
   },
   {
     quadrant: "weakness",
     textEn:
-      "Statistical production still passes through ageing systems and manual steps, which stretches the distance between the reference period and the published figure.",
+      "Environmental data is produced on separate systems with uneven documentation, so combining water, agriculture, climate and waste figures still takes manual effort.",
     textAr:
-      "لا يزال الإنتاج الإحصائي يمر عبر أنظمة قديمة وخطوات يدوية، ما يُطيل المسافة بين الفترة المرجعية وتاريخ نشر الرقم.",
+      "تُنتج البيانات البيئية على نظم منفصلة وبتوثيق متفاوت، فيظل الجمع بين أرقام المياه والزراعة والمناخ والنفايات جهداً يدوياً.",
   },
   {
     quadrant: "weakness",
     textEn:
-      "Results based planning is applied thoroughly by some Council departments and treated as a form filling exercise by others, so internal plans are not comparable.",
+      "Knowledge sits with individuals and in personal folders, so a change of role can remove context that the next team needs.",
     textAr:
-      "يُطبَّق التخطيط القائم على النتائج بعمق في بعض إدارات المجلس ويُتعامل معه في أخرى بوصفه تعبئة نماذج، ما يجعل الخطط الداخلية غير قابلة للمقارنة.",
+      "تتركز المعرفة لدى الأفراد وفي مجلدات شخصية، فقد يؤدي تغيير الدور إلى فقدان سياق يحتاجه الفريق التالي.",
   },
   {
     quadrant: "weakness",
     textEn:
-      "Specialist posts in national accounts, statistical modelling and foresight are slow to fill and hard to retain, and several remain vacant across a full planning cycle.",
+      "Specialist skills in modelling, remote sensing and data science are concentrated in a few people, which limits how many initiatives can run in parallel.",
     textAr:
-      "يصعب شغل الوظائف التخصصية في الحسابات القومية والنمذجة الإحصائية والاستشراف ويصعب الاحتفاظ بشاغليها، ويبقى عدد منها شاغراً طوال دورة تخطيطية كاملة.",
+      "تتركز المهارات المتخصصة في النمذجة والاستشعار عن بعد وعلوم البيانات لدى قلة من الأفراد، مما يحدّ من عدد المبادرات التي تُنفَّذ بالتوازي.",
   },
   {
     quadrant: "weakness",
     textEn:
-      "Method and context sit in the heads of experienced analysts rather than in documented procedures, so when they move the method often moves with them.",
+      "Regulatory changes reach the Office through informal channels, so impact on plans and indicators is often assessed after the fact.",
     textAr:
-      "تستقر المنهجية والسياق في أذهان المحللين ذوي الخبرة بدل أن تكون في إجراءات موثقة، فإذا انتقلوا انتقلت المنهجية معهم في الغالب.",
+      "تصل التغييرات التنظيمية إلى المكتب عبر قنوات غير رسمية، فيجري تقدير أثرها على الخطط والمؤشرات في الغالب بعد وقوعها.",
   },
   {
     quadrant: "opportunity",
     textEn:
-      "The NDS3 delivery cycle to 2030 gives the Council a standing mandate and sustained leadership attention that can be used to institutionalise planning discipline.",
+      "Growing national attention to water security, food security and climate commitments raises demand for a trusted, shared evidence base.",
     textAr:
-      "تمنح دورة تنفيذ استراتيجية التنمية الوطنية الثالثة حتى عام 2030 المجلسَ ولاية مستمرة واهتماماً قيادياً متواصلاً يمكن توظيفهما لترسيخ انضباط التخطيط مؤسسياً.",
+      "يرفع تنامي الاهتمام الوطني بالأمن المائي والغذائي والالتزامات المناخية الطلب على قاعدة أدلة موثوقة ومشتركة.",
   },
   {
     quadrant: "opportunity",
     textEn:
-      "The national data agenda and the digital government programme open the way to replacing costly survey collection with governed administrative data.",
+      "Satellite imagery, sensor networks and open geospatial data make it possible to measure land, water and air conditions more often and at lower cost than field surveys alone.",
     textAr:
-      "تفتح الأجندة الوطنية للبيانات وبرنامج الحكومة الرقمية الطريق أمام استبدال جمع البيانات المكلف عبر المسوح ببيانات إدارية محكومة.",
+      "تتيح صور الأقمار الصناعية وشبكات المستشعرات والبيانات المكانية المفتوحة قياس أحوال الأراضي والمياه والهواء بوتيرة أعلى وتكلفة أقل من المسوح الميدانية وحدها.",
   },
   {
     quadrant: "opportunity",
     textEn:
-      "Entities are increasingly asking for policy simulation and behavioural testing before they commit, which creates real demand for the Policy Lab and the simulation models.",
+      "Research capacity in Saudi universities and research centres offers a ready partner base for modelling, simulation and applied studies.",
     textAr:
-      "يتزايد طلب الجهات لمحاكاة السياسات واختبارها سلوكياً قبل الالتزام بها، ما يخلق طلباً حقيقياً على مختبر السياسات ونماذج المحاكاة.",
+      "توفر القدرات البحثية في الجامعات ومراكز الأبحاث السعودية قاعدة شركاء جاهزة للنمذجة والمحاكاة والدراسات التطبيقية.",
   },
   {
     quadrant: "opportunity",
     textEn:
-      "Qatar's position in global indices gives the Council leverage to improve national data sources while raising the country's standing in international reporting.",
+      "Machine assisted search and summarisation can make the Office's regulatory and institutional knowledge findable in seconds, with sources cited.",
     textAr:
-      "يمنح موقع دولة قطر في المؤشرات العالمية المجلسَ قدرة على تحسين مصادر البيانات الوطنية وترقية مكانة الدولة في التقارير الدولية في الوقت نفسه.",
+      "يمكن للبحث والتلخيص بمساعدة الآلة أن يجعل المعرفة التنظيمية والمؤسسية للمكتب متاحة خلال ثوانٍ مع الإشارة إلى المصادر.",
   },
   {
     quadrant: "opportunity",
     textEn:
-      "National universities and research centres are ready to co produce studies and to second researchers, which extends analytical capacity without new posts.",
+      "International reporting on sustainable development, climate and biodiversity is converging on common indicators, which lets one data effort serve several audiences.",
     textAr:
-      "تُبدي الجامعات ومراكز البحوث الوطنية استعداداً لإنتاج الدراسات بالشراكة ولإعارة الباحثين، ما يوسّع القدرة التحليلية دون استحداث وظائف جديدة.",
+      "يتجه الإبلاغ الدولي عن التنمية المستدامة والمناخ والتنوع الأحيائي نحو مؤشرات مشتركة، مما يتيح لجهد بيانات واحد أن يخدم جهات متعددة.",
   },
   {
     quadrant: "threat",
     textEn:
-      "Competition for scarce statistical, economic and data science talent from other government entities and from the private sector keeps salary expectations above the Council's grades.",
+      "Competing priorities among entities can push shared data and reporting duties down the agenda, leaving the national picture incomplete.",
     textAr:
-      "تُبقي المنافسة على الكفاءات النادرة في الإحصاء والاقتصاد وعلوم البيانات، من جهات حكومية أخرى ومن القطاع الخاص، توقعات الرواتب أعلى من درجات المجلس.",
+      "قد تدفع الأولويات المتنافسة بين الجهات واجبات مشاركة البيانات والإبلاغ إلى مراتب متأخرة، فتبقى الصورة الوطنية ناقصة.",
   },
   {
     quadrant: "threat",
     textEn:
-      "Frequent turnover of planning focal points inside entities resets relationships and capability, so each training cycle starts partly from the beginning.",
+      "Competition for scarce data, modelling and digital talent from the private sector and giga projects makes retention difficult.",
     textAr:
-      "يؤدي التغيّر المتكرر لضباط الاتصال المعنيين بالتخطيط داخل الجهات إلى إعادة بناء العلاقات والقدرات من جديد، فتبدأ كل دورة تدريبية من نقطة قريبة من الصفر.",
+      "تصعّب المنافسة على الكفاءات النادرة في البيانات والنمذجة والتقنية من القطاع الخاص والمشاريع الكبرى الاحتفاظَ بالمواهب.",
   },
   {
     quadrant: "threat",
     textEn:
-      "Regional and global economic volatility can force mid cycle re planning and pull leadership attention away from the longer term goals of the strategy.",
+      "A cyber incident or a data breach would damage trust in environmental data and could suspend shared services for a period.",
     textAr:
-      "قد يفرض التقلب الاقتصادي الإقليمي والعالمي إعادة تخطيط في منتصف الدورة ويصرف اهتمام القيادة عن الأهداف بعيدة المدى في الاستراتيجية.",
+      "قد يضرّ حادث سيبراني أو اختراق للبيانات بالثقة في البيانات البيئية ويعلّق الخدمات المشتركة لفترة.",
   },
   {
     quadrant: "threat",
     textEn:
-      "A confidentiality or cyber incident affecting microdata would damage respondent trust and depress response rates across every survey for years.",
+      "Unofficial or poorly sourced environmental figures circulate faster than official ones and can shape public debate before the Office responds.",
     textAr:
-      "من شأن أي حادثة تتعلق بالسرية أو الأمن السيبراني تمس البيانات الجزئية أن تضر بثقة المستجيبين وتخفض معدلات الاستجابة في المسوح كافة لسنوات.",
+      "تنتشر الأرقام البيئية غير الرسمية أو ضعيفة التوثيق أسرع من الأرقام الرسمية، وقد تشكّل النقاش العام قبل أن يرد المكتب.",
   },
   {
     quadrant: "threat",
     textEn:
-      "Unofficial figures published by entities, consultancies and media compete with official statistics and blur which number the public should rely on.",
+      "Climate and water shocks, such as prolonged drought or extreme heat, can force re-planning mid cycle and absorb capacity meant for long term work.",
     textAr:
-      "تنافس الأرقام غير الرسمية التي تنشرها جهات وشركات استشارية ووسائل إعلام الإحصاءاتِ الرسمية وتُربك الجمهور بشأن الرقم الذي ينبغي الاعتماد عليه.",
+      "قد تفرض الصدمات المناخية والمائية، كالجفاف الممتد أو الحرارة الشديدة، إعادة التخطيط في منتصف الدورة وتستنزف قدرات مخصصة لعمل طويل الأجل.",
   },
 ];
 
+/* ------------------------------------------------------------------ */
+/* 3. Stakeholders                                                     */
+/* ------------------------------------------------------------------ */
+
 export const STAKEHOLDERS: StakeholderItem[] = [
   {
-    nameEn: "The Amiri Diwan",
-    nameAr: "الديوان الأميري",
-    interest: 3,
-    influence: 5,
-    roleEn:
-      "Sets the national direction the strategy serves and receives the Council's major foresight and national vision work. Engagement is at the level of briefings on the strategic picture rather than delivery detail.",
-    roleAr:
-      "يحدد التوجه الوطني الذي تخدمه الاستراتيجية ويتلقى أعمال المجلس الكبرى في الاستشراف والرؤى الوطنية. ويكون التفاعل على مستوى الإحاطات بالصورة الاستراتيجية لا بتفاصيل التنفيذ.",
-  },
-  {
-    nameEn: "The Council of Ministers",
-    nameAr: "مجلس الوزراء",
+    nameEn: "Programme Steering Committee",
+    nameAr: "اللجنة التوجيهية للبرنامج",
     interest: 5,
     influence: 5,
     roleEn:
-      "Approves the national development strategy, receives its progress reports and decides on the policy options the Council puts forward. It is the primary audience for the delivery dashboard and the annual assessment.",
+      "Approves the direction of the National Environment Strategy, receives its progress reports and decides on the policy options the Office puts forward. It is the primary audience for the delivery dashboard and the annual assessment.",
     roleAr:
-      "يعتمد استراتيجية التنمية الوطنية ويتلقى تقارير تقدمها ويبت في خيارات السياسات التي يرفعها المجلس. وهو الجمهور الأول للوحة المتابعة التنفيذية وللتقييم السنوي.",
+      "تعتمد توجه الاستراتيجية الوطنية للبيئة وتتلقى تقارير تقدمها وتبت في خيارات السياسات التي يرفعها المكتب. وهي الجمهور الأول للوحة المتابعة التنفيذية وللتقييم السنوي.",
   },
   {
-    nameEn: "Ministries and government entities",
-    nameAr: "الوزارات والجهات الحكومية",
+    nameEn: "Ministry of Environment, Water and Agriculture (MEWA)",
+    nameAr: "وزارة البيئة والمياه والزراعة",
+    interest: 5,
+    influence: 5,
+    roleEn:
+      "Leads sector policy and holds much of the water, agriculture and environment data the Office relies on. Engagement is continuous, on strategy alignment, data sharing and delivery of shared initiatives.",
+    roleAr:
+      "تقود سياسات القطاع وتحتفظ بجانب كبير من بيانات المياه والزراعة والبيئة التي يعتمد عليها المكتب. والتفاعل معها مستمر في مواءمة الاستراتيجية ومشاركة البيانات وتنفيذ المبادرات المشتركة.",
+  },
+  {
+    nameEn: "Environmental regulators and sector centres (NCEC, NCW, NCVC, MWAN)",
+    nameAr: "الجهات التنظيمية والمراكز القطاعية البيئية (المركز الوطني للرقابة على الالتزام البيئي، المركز الوطني للحياة الفطرية، المركز الوطني لتنمية الغطاء النباتي ومكافحة التصحر، المركز الوطني لإدارة النفايات)",
     interest: 4,
     influence: 4,
     roleEn:
-      "Own the sector strategies and the initiatives the Council monitors, and supply the administrative data and progress evidence behind the national picture. They are both the Council's clients and the source of its inputs.",
+      "Own regulation, permitting, monitoring and enforcement within their mandates. They supply administrative records and regulatory changes and carry many of the outputs the strategy tracks.",
     roleAr:
-      "تملك الاستراتيجيات القطاعية والمبادرات التي يتابعها المجلس، وتزوّده بالبيانات الإدارية وأدلة الإنجاز التي تُبنى عليها الصورة الوطنية. وهي عملاء المجلس ومصدر مدخلاته في آن واحد.",
+      "تتولى التنظيم والترخيص والرصد والرقابة في نطاق اختصاصاتها. وتمد المكتب بالسجلات الإدارية والتغييرات التنظيمية وتنفذ كثيراً من المخرجات التي تتابعها الاستراتيجية.",
   },
   {
-    nameEn: "Ministry of Finance",
-    nameAr: "وزارة المالية",
-    interest: 2,
-    influence: 5,
+    nameEn: "Water sector entities (SWA, NWC)",
+    nameAr: "جهات قطاع المياه (الهيئة السعودية للمياه، شركة المياه الوطنية)",
+    interest: 4,
+    influence: 4,
     roleEn:
-      "Controls the budget envelope that decides which initiatives can move, so its cycle shapes what any plan can promise. Its day to day interest in the Council's institutional strategy is limited, which makes early alignment on the budget calendar essential.",
+      "Regulate and operate water supply, sanitation and reuse. They provide operational data for the water security theme and are central to demand and supply policy testing.",
     roleAr:
-      "تتحكم في سقف الموازنة الذي يحدد المبادرات القابلة للتنفيذ، فتُشكّل دورتها المالية حدود ما تستطيع أي خطة الالتزام به. واهتمامها اليومي بالاستراتيجية المؤسسية للمجلس محدود، ما يجعل التنسيق المبكر حول الروزنامة المالية أمراً جوهرياً.",
+      "تنظم وتشغّل إمدادات المياه والصرف الصحي وإعادة الاستخدام. وتوفر بيانات تشغيلية لمحور الأمن المائي، وهي محورية في اختبار سياسات الطلب والإمداد.",
   },
   {
-    nameEn: "Private sector and the chambers",
-    nameAr: "القطاع الخاص والغرف",
+    nameEn: "General Authority for Statistics (GASTAT)",
+    nameAr: "الهيئة العامة للإحصاء",
+    interest: 4,
+    influence: 3,
+    roleEn:
+      "Sets national statistical standards and publishes official statistics. The Office aligns its environmental statistics, classifications and release practice with it.",
+    roleAr:
+      "تضع المعايير الإحصائية الوطنية وتنشر الإحصاءات الرسمية. ويواءم المكتب إحصاءاته البيئية وتصنيفاته وممارسات النشر لديه معها.",
+  },
+  {
+    nameEn: "Saudi Data and AI Authority (SDAIA)",
+    nameAr: "الهيئة السعودية للبيانات والذكاء الاصطناعي",
+    interest: 3,
+    influence: 4,
+    roleEn:
+      "Sets national direction on data governance and artificial intelligence. The Office follows its guidance in data sharing, classification and responsible use of analytics.",
+    roleAr:
+      "تحدد التوجه الوطني لحوكمة البيانات والذكاء الاصطناعي. ويتبع المكتب إرشاداتها في مشاركة البيانات وتصنيفها والاستخدام المسؤول للتحليلات.",
+  },
+  {
+    nameEn: "Universities and research centres (KAUST, KFUPM, KACST)",
+    nameAr: "الجامعات ومراكز الأبحاث (كاوست، جامعة الملك فهد للبترول والمعادن، مدينة الملك عبدالعزيز للعلوم والتقنية)",
     interest: 4,
     influence: 2,
     roleEn:
-      "Uses official statistics for investment and market decisions and responds to the establishment surveys that produce them. Its influence on the Council's institutional choices is indirect but its interest in timely economic data is high.",
+      "Provide research, modelling expertise and independent review. They are partners for simulation models, scenario work and capability building.",
     roleAr:
-      "يستخدم الإحصاءات الرسمية في قرارات الاستثمار والسوق ويستجيب لمسوح المنشآت التي تُنتجها. وتأثيره في الخيارات المؤسسية للمجلس غير مباشر، غير أن اهتمامه بالبيانات الاقتصادية في وقتها مرتفع.",
+      "توفر الأبحاث والخبرة في النمذجة والمراجعة المستقلة. وهي شريك في نماذج المحاكاة وأعمال السيناريوهات وبناء القدرات.",
   },
   {
-    nameEn: "Universities and research centres",
-    nameAr: "الجامعات ومراكز البحوث",
-    interest: 5,
-    influence: 2,
-    roleEn:
-      "Depend on access to microdata and national classifications for their research and are the Council's partners in studies, scenario work and secondments. They ask a great deal of the Council but hold little formal authority over it.",
-    roleAr:
-      "تعتمد على الوصول إلى البيانات الجزئية والتصنيفات الوطنية في بحوثها، وهي شريك المجلس في الدراسات وأعمال السيناريوهات والإعارات. وهي كثيرة المطالب تجاه المجلس وإن كانت سلطتها الرسمية عليه محدودة.",
-  },
-  {
-    nameEn: "International organisations",
-    nameAr: "المنظمات الدولية",
+    nameEn: "International organisations (FAO, UNEP, World Bank)",
+    nameAr: "المنظمات الدولية (منظمة الأغذية والزراعة، برنامج الأمم المتحدة للبيئة، البنك الدولي)",
     interest: 3,
     influence: 3,
     roleEn:
-      "Set the statistical standards the Council adheres to and compile the global indices in which Qatar appears, drawing on data the Council submits. They give technical weight to quality reforms and expect regular reporting in return.",
+      "Define global indicators and reporting frameworks and offer technical benchmarks. Engagement is through reporting, methodological exchange and joint studies.",
     roleAr:
-      "تضع المعايير الإحصائية التي يلتزم بها المجلس وتُعِدّ المؤشرات العالمية التي تظهر فيها دولة قطر اعتماداً على البيانات التي يرفعها. وتمنح إصلاحات الجودة ثقلاً فنياً وتتوقع في المقابل رفع تقارير منتظمة.",
-  },
-  {
-    nameEn: "The public and the media",
-    nameAr: "الجمهور ووسائل الإعلام",
-    interest: 4,
-    influence: 1,
-    roleEn:
-      "Reads and reuses the Council's releases and judges whether national plans are working. Coverage shapes public trust in official numbers even though it carries no formal authority over the Council.",
-    roleAr:
-      "يقرأ إصدارات المجلس ويعيد استخدامها ويحكم على مدى نجاح الخطط الوطنية. وتُشكّل التغطية الإعلامية ثقة الجمهور بالأرقام الرسمية وإن لم تكن لها أي سلطة رسمية على المجلس.",
+      "تحدد المؤشرات العالمية وأطر الإبلاغ وتقدم مرجعيات فنية. ويتم التفاعل عبر الإبلاغ وتبادل المنهجيات والدراسات المشتركة.",
   },
 ];
+
+/* ------------------------------------------------------------------ */
+/* 4. Challenges                                                       */
+/* ------------------------------------------------------------------ */
 
 export const CHALLENGES: ChallengeItem[] = [
   {
     titleEn: "Plans written to different standards",
     titleAr: "خطط مُعدّة وفق معايير متباينة",
     descriptionEn:
-      "Entity and sector strategies arrive in different structures, with objectives that mix outcomes, outputs and activities in the same list. The Council then spends review time reconstructing the results chain instead of judging the substance, and the resulting plans cannot be compared or aggregated into a national picture.",
+      "Entity and sector strategies arrive in different structures, with objectives that mix outcomes, outputs and activities in the same list. The Office then spends review time reconstructing the results chain instead of judging the substance, and the resulting plans cannot be compared or aggregated into a national picture.",
     descriptionAr:
-      "تصل استراتيجيات الجهات والقطاعات بهياكل مختلفة، وبأهداف تخلط النتائج والمخرجات والأنشطة في قائمة واحدة. فيستهلك المجلس وقت المراجعة في إعادة بناء سلسلة النتائج بدل الحكم على المضمون، وتبقى الخطط الناتجة غير قابلة للمقارنة أو للتجميع في صورة وطنية واحدة.",
+      "تصل استراتيجيات الجهات والقطاعات بهياكل مختلفة، وبأهداف تخلط النتائج والمخرجات والأنشطة في قائمة واحدة. فيستهلك المكتب وقت المراجعة في إعادة بناء سلسلة النتائج بدل الحكم على المضمون، وتبقى الخطط الناتجة غير قابلة للمقارنة أو للتجميع في صورة وطنية واحدة.",
     goalCode: "G1",
   },
   {
-    titleEn: "Administrative data held in silos",
-    titleAr: "بيانات إدارية محتجزة في صوامع",
+    titleEn: "Environmental data held in silos",
+    titleAr: "بيانات بيئية محتجزة في صوامع",
     descriptionEn:
-      "Much of the data the national statistical system needs already exists inside entity systems, but access depends on personal relationships and case by case correspondence. Without standing agreements and a shared governance model, the Council repeats expensive collection for data the state already holds.",
+      "Much of the data the Office needs already exists inside entity systems, but access depends on personal relationships and case by case correspondence. Without standing agreements and a shared governance model, collection is repeated for data the sector already holds.",
     descriptionAr:
-      "يوجد جزء كبير من البيانات التي تحتاجها المنظومة الإحصائية الوطنية داخل أنظمة الجهات بالفعل، غير أن الوصول إليها يعتمد على العلاقات الشخصية والمراسلات حالة بحالة. ومن دون اتفاقيات دائمة ونموذج حوكمة مشترك، يكرر المجلس جمعاً مكلفاً لبيانات تملكها الدولة أصلاً.",
+      "يوجد جانب كبير من البيانات التي يحتاجها المكتب داخل نظم الجهات، لكن الوصول إليها يعتمد على العلاقات الشخصية والمراسلات في كل حالة على حدة. ومن دون اتفاقيات دائمة ونموذج حوكمة مشترك يتكرر جمع بيانات يملكها القطاع أصلاً.",
     goalCode: "G2",
   },
   {
-    titleEn: "Releases that arrive after the decision",
-    titleAr: "إصدارات تصل بعد اتخاذ القرار",
+    titleEn: "Data that arrives after the decision",
+    titleAr: "بيانات تصل بعد اتخاذ القرار",
     descriptionEn:
-      "Users increasingly need quarterly economic and social figures within weeks, not months, and turn to unofficial estimates when the official release is still being compiled. Every week of delay reduces the practical value of a statistic that is otherwise accurate and well documented.",
+      "Environmental data is often released weeks or months after the period it describes, and revisions are not always explained. Decision makers turn to faster but less reliable sources, and the Office's figures lose influence at the moment they matter most.",
     descriptionAr:
-      "بات المستخدمون يحتاجون الأرقام الاقتصادية والاجتماعية الربعية خلال أسابيع لا أشهر، ويلجأون إلى تقديرات غير رسمية ما دام الإصدار الرسمي قيد الإعداد. وكل أسبوع تأخير يقلّص القيمة العملية لإحصاء دقيق وموثّق في الأصل.",
+      "تُنشر البيانات البيئية في الغالب بعد أسابيع أو أشهر من الفترة التي تصفها، ولا تُشرح المراجعات دائماً. فيلجأ صناع القرار إلى مصادر أسرع وأقل موثوقية، وتفقد أرقام المكتب أثرها في اللحظة التي تكون فيها الأهم.",
     goalCode: "G2",
   },
   {
     titleEn: "Foresight that is read but not used",
     titleAr: "استشراف يُقرأ ولا يُستخدم",
     descriptionEn:
-      "Scenario and horizon scanning products are well received yet rarely change a budget line or a project design, because they are produced outside the planning and budgeting calendar. Foresight has to enter the cycle at the moment decisions are framed if it is to alter them.",
+      "Scans, scenarios and risk notes are produced but rarely tied to a decision on the calendar. Without a route into planning cycles and committee agendas, early signals about water, climate or land remain interesting reading rather than prompts for action.",
     descriptionAr:
-      "تلقى منتجات السيناريوهات ومسح الأفق قبولاً حسناً لكنها نادراً ما تغيّر بنداً في الموازنة أو تصميماً لمشروع، لأنها تُنتَج خارج روزنامة التخطيط وإعداد الموازنة. ولا بد أن يدخل الاستشراف الدورة في اللحظة التي تُصاغ فيها القرارات حتى يكون قادراً على تغييرها.",
+      "تُنتج المسوح والسيناريوهات ومذكرات المخاطر لكنها نادراً ما ترتبط بقرار مدرج في الروزنامة. ومن دون مسار إلى دورات التخطيط وجداول أعمال اللجان، تبقى الإشارات المبكرة عن المياه والمناخ والأراضي مادة للقراءة لا دافعاً للعمل.",
     goalCode: "G3",
   },
   {
-    titleEn: "Internal work carried by spreadsheets",
-    titleAr: "عمل داخلي محمول على الجداول الإلكترونية",
+    titleEn: "Regulation and internal work carried by spreadsheets",
+    titleAr: "التنظيمات والعمل الداخلي محمولان على الجداول الإلكترونية",
     descriptionEn:
-      "The Council advises government on digital transformation while running much of its own reporting, approvals and knowledge capture through email attachments and spreadsheets. The result is duplicated effort, versions that disagree, and a leadership report that is out of date on the day it is circulated.",
+      "Regulatory changes, approvals, reporting and internal performance figures are tracked in spreadsheets and email threads. Context is lost when people change roles, and nobody can see at a glance which regulation affects which plan or indicator.",
     descriptionAr:
-      "يقدّم المجلس المشورة للحكومة في التحول الرقمي بينما يدير جانباً كبيراً من تقاريره واعتماداته وتوثيق معرفته عبر مرفقات البريد والجداول الإلكترونية. فينتج عن ذلك ازدواج في الجهد ونسخ متعارضة وتقرير للقيادة يفقد حداثته يوم تعميمه.",
+      "تُتابَع التغييرات التنظيمية والموافقات والتقارير وأرقام الأداء الداخلي في جداول إلكترونية وسلاسل بريد. ويضيع السياق عند تغيير الأدوار، ولا يستطيع أحد أن يرى بنظرة واحدة أي تنظيم يؤثر في أي خطة أو مؤشر.",
     goalCode: "G4",
   },
   {
-    titleEn: "A national story told in fragments",
-    titleAr: "رواية وطنية مجزأة",
+    titleEn: "A sector story told in fragments",
+    titleAr: "رواية قطاعية مجزأة",
     descriptionEn:
-      "Public understanding of the national development strategy and of how official statistics are produced remains limited, and each entity communicates its own part separately. The Council needs one coherent narrative, published on a predictable calendar, so that progress is understood as a national effort rather than a series of announcements.",
+      "Entities, the Office and international bodies each tell part of the environmental story with different figures and different timing. Without one coordinated voice and an agreed set of headline messages, public and partner understanding stays partial.",
     descriptionAr:
-      "لا يزال إدراك الجمهور لاستراتيجية التنمية الوطنية ولكيفية إنتاج الإحصاءات الرسمية محدوداً، وتتواصل كل جهة بشأن جزئها على حدة. ويحتاج المجلس إلى رواية واحدة متماسكة تُنشر وفق روزنامة معلومة ليُفهم التقدم بوصفه جهداً وطنياً لا سلسلة إعلانات متفرقة.",
+      "تروي الجهات والمكتب والهيئات الدولية كل منها جزءاً من القصة البيئية بأرقام وتوقيتات مختلفة. ومن دون صوت منسّق واحد ورسائل رئيسية متفق عليها يظل فهم الجمهور والشركاء جزئياً.",
     goalCode: "G5",
   },
 ];
 
+/* ------------------------------------------------------------------ */
+/* 5. Baselines (illustrative starting positions)                      */
+/* ------------------------------------------------------------------ */
+
 export const BASELINES: BaselineItem[] = [
   {
     textEn:
-      "In 2024, 62 percent of government entities submitted their annual implementation plans by the published deadline, and 11 entities submitted after the national report had been drafted.",
+      "Illustrative baseline: in 2024, about 60 percent of entities submitted their annual implementation plans by the published deadline, and a number of entities submitted after the national report had been drafted.",
     textAr:
-      "في عام 2024 رفعت 62 بالمئة من الجهات الحكومية خططها التنفيذية السنوية في الموعد المعلن، فيما رفعت 11 جهة خططها بعد إعداد مسودة التقرير الوطني.",
+      "خط أساس توضيحي: في عام 2024 رفعت نحو 60 بالمئة من الجهات خططها التنفيذية السنوية في الموعد المعلن، فيما رفعت جهات أخرى خططها بعد إعداد مسودة التقرير الوطني.",
   },
   {
     textEn:
-      "In 2024, 71 percent of scheduled statistical releases were published on the date announced in the advance release calendar.",
+      "Illustrative baseline: in 2024, around 70 percent of scheduled data releases were published on the date announced in the advance release calendar.",
     textAr:
-      "في عام 2024 نُشر 71 بالمئة من الإصدارات الإحصائية المجدولة في التاريخ المعلن في روزنامة النشر المسبقة.",
+      "خط أساس توضيحي: في عام 2024 نُشر نحو 70 بالمئة من إصدارات البيانات المجدولة في التاريخ المعلن في روزنامة النشر المسبقة.",
   },
   {
     textEn:
-      "The average gap between the end of the reference period and publication for quarterly economic statistics was 96 days in 2024, against an international good practice range of 60 to 75 days.",
+      "Illustrative baseline: the average gap between the end of the reference period and publication for quarterly environmental indicators was about 90 days in 2024, against a good practice target the Office has set at 60 days.",
     textAr:
-      "بلغ متوسط الفجوة بين نهاية الفترة المرجعية وتاريخ النشر للإحصاءات الاقتصادية الربعية 96 يوماً في عام 2024، مقابل نطاق الممارسات الدولية الجيدة الذي يتراوح بين 60 و75 يوماً.",
+      "خط أساس توضيحي: بلغ متوسط الفجوة بين نهاية الفترة المرجعية والنشر للمؤشرات البيئية الربعية نحو 90 يوماً في عام 2024، مقابل مستهدف الممارسة الجيدة الذي وضعه المكتب عند 60 يوماً.",
   },
   {
     textEn:
-      "At the end of 2024, 18 of the 42 priority administrative data sources identified by the National Statistics Center were covered by a signed data sharing agreement.",
+      "Illustrative baseline: at the end of 2024, fewer than half of the priority administrative data sources identified by the Office were covered by a signed data sharing agreement.",
     textAr:
-      "بنهاية عام 2024 كان 18 مصدراً من أصل 42 مصدراً للبيانات الإدارية ذات الأولوية التي حددها مركز الإحصاء الوطني مشمولاً باتفاقية موقّعة لتبادل البيانات.",
+      "خط أساس توضيحي: في نهاية عام 2024 كان أقل من نصف مصادر البيانات الإدارية ذات الأولوية التي حددها المكتب مغطى باتفاقية مشاركة بيانات موقّعة.",
   },
   {
     textEn:
-      "NDS3 monitoring covered 214 initiatives in 2024, of which 37 percent submitted a complete evidence pack with their progress report.",
+      "Illustrative baseline: NES monitoring covered a few hundred initiatives in 2024, of which roughly one third submitted a complete evidence pack with their progress report.",
     textAr:
-      "شملت متابعة استراتيجية التنمية الوطنية الثالثة 214 مبادرة في عام 2024، رفعت 37 بالمئة منها حزمة أدلة مكتملة مرفقة بتقرير التقدم.",
+      "خط أساس توضيحي: غطّت متابعة الاستراتيجية الوطنية للبيئة بضع مئات من المبادرات في عام 2024، قدّم نحو ثلثها حزمة أدلة مكتملة مع تقرير التقدم.",
   },
   {
     textEn:
-      "Staff turnover at the Council was 14 percent in 2024, rising to 21 percent in specialist statistical and modelling roles, with an average of 187 days to fill a specialist vacancy.",
+      "Illustrative baseline: staff turnover at the Office was in the low teens in percentage terms in 2024 and higher in specialist data and modelling roles, with filling a specialist vacancy taking about six months on average.",
     textAr:
-      "بلغ معدل دوران الموظفين في المجلس 14 بالمئة في عام 2024، وارتفع إلى 21 بالمئة في الوظائف التخصصية في الإحصاء والنمذجة، بمتوسط 187 يوماً لشغل الوظيفة التخصصية الشاغرة.",
+      "خط أساس توضيحي: بلغ دوران الموظفين في المكتب نسبة تقارب العشرة بالمئة وما فوقها قليلاً في عام 2024، وارتفع في أدوار البيانات والنمذجة المتخصصة، مع استغراق شغل الشاغر المتخصص نحو ستة أشهر في المتوسط.",
   },
   {
     textEn:
-      "By mid 2025, only 9 percent of the planning staff working in government entities had completed certified training in results based planning.",
+      "Illustrative baseline: by mid 2025, only a small minority of the planning staff working in entities had completed certified training in results based planning.",
     textAr:
-      "بحلول منتصف عام 2025 لم يكن قد أكمل التدريب المعتمد على التخطيط القائم على النتائج سوى 9 بالمئة من موظفي التخطيط العاملين في الجهات الحكومية.",
+      "خط أساس توضيحي: بحلول منتصف عام 2025 لم يكن قد أتمّ التدريب المعتمد على التخطيط القائم على النتائج سوى أقلية صغيرة من العاملين في التخطيط داخل الجهات.",
   },
   {
     textEn:
-      "The open data portal held 310 published datasets at the end of 2024 and recorded 48,000 dataset downloads during the year, with 46 percent of user support requests answered within five working days.",
+      "Illustrative baseline: the open data portal held a few hundred published datasets at the end of 2024, and less than half of user support requests were answered within five working days.",
     textAr:
-      "ضمّت بوابة البيانات المفتوحة 310 مجموعات بيانات منشورة بنهاية عام 2024 وسجّلت 48,000 عملية تحميل خلال العام، مع الرد على 46 بالمئة من طلبات دعم المستخدمين خلال خمسة أيام عمل.",
+      "خط أساس توضيحي: ضمّت بوابة البيانات المفتوحة بضع مئات من مجموعات البيانات المنشورة في نهاية عام 2024، وأُجيب عن أقل من نصف طلبات دعم المستخدمين خلال خمسة أيام عمل.",
   },
   {
     textEn:
-      "At the start of 2025 the Council operated 3 policy simulation models, covering the macroeconomy, the labour market and population, and delivered 2 strategic risk briefings to leadership during 2024.",
+      "Illustrative baseline: at the start of 2025 the Office operated a small number of policy simulation models and delivered two strategic risk briefings to leadership during 2024.",
     textAr:
-      "في مطلع عام 2025 كان المجلس يشغّل 3 نماذج لمحاكاة السياسات تغطي الاقتصاد الكلي وسوق العمل والسكان، وقدّم إحاطتين بالمخاطر الاستراتيجية للقيادة خلال عام 2024.",
+      "خط أساس توضيحي: في بداية عام 2025 كان المكتب يشغّل عدداً محدوداً من نماذج محاكاة السياسات، وقدّم إحاطتين استراتيجيتين عن المخاطر إلى القيادة خلال عام 2024.",
   },
   {
     textEn:
-      "Of the Council's 31 core internal processes, 5 were automated end to end at the start of 2025, and 68 percent of internal performance reporting was still compiled manually in spreadsheets.",
+      "Illustrative baseline: at the start of 2025 only a handful of the Office's core internal processes were automated end to end, and most internal performance reporting was still compiled manually in spreadsheets.",
     textAr:
-      "من أصل 31 إجراءً داخلياً جوهرياً في المجلس، كانت 5 إجراءات مؤتمتة من طرف إلى طرف في مطلع عام 2025، وكان 68 بالمئة من تقارير الأداء الداخلي لا يزال يُعدّ يدوياً عبر الجداول الإلكترونية.",
+      "خط أساس توضيحي: في بداية عام 2025 لم يكن مؤتمتاً من البداية إلى النهاية سوى عدد قليل من العمليات الداخلية الأساسية للمكتب، وظل معظم تقارير الأداء الداخلي يُعدّ يدوياً في جداول إلكترونية.",
   },
 ];
 
 /* ------------------------------------------------------------------ */
-/* 3. Governance                                                       */
+/* 6. Governance                                                       */
 /* ------------------------------------------------------------------ */
 
 export const GOVERNANCE: GovernanceBody[] = [
   {
     bodyNameEn: "Strategy Steering Committee",
-    bodyNameAr: "اللجنة التوجيهية للاستراتيجية",
+    bodyNameAr: "لجنة توجيه الاستراتيجية",
     roleEn:
-      "Chaired by the Secretary General, the committee owns the institutional strategy: it approves the annual targets, reviews the scorecard and the risk register each quarter, decides on the reallocation of budget and people between projects, and escalates blockers that departments cannot resolve on their own.",
+      "Chaired by the Programme Director, the committee owns the institutional strategy: it approves the annual targets, reviews the scorecard and the risk register each quarter, decides on the reallocation of budget and people between projects, and escalates blockers that departments cannot resolve on their own.",
     roleAr:
-      "برئاسة الأمين العام، تتولى اللجنة ملكية الاستراتيجية المؤسسية: تعتمد المستهدفات السنوية، وتستعرض بطاقة الأداء وسجل المخاطر كل ربع سنة، وتبت في إعادة توزيع الموازنة والكوادر بين المشاريع، وتعالج المعوقات التي تعجز الإدارات عن حلها بمفردها.",
+      "برئاسة مدير البرنامج، تتولى اللجنة ملكية الاستراتيجية المؤسسية: تعتمد المستهدفات السنوية، وتستعرض بطاقة الأداء وسجل المخاطر كل ربع سنة، وتبت في إعادة توزيع الموازنة والكوادر بين المشاريع، وتعالج المعوقات التي تعجز الإدارات عن حلها بمفردها.",
     cadence: "quarterly",
     members: [
-      { en: "Secretary General, Chair", ar: "الأمين العام، رئيساً" },
+      { en: "Programme Director, Chair", ar: "مدير البرنامج، رئيساً" },
       {
-        en: "Assistant Secretary General for National Planning and Development Policy Affairs",
-        ar: "مساعد الأمين العام لشؤون التخطيط وسياسات التنمية الوطنية",
+        en: "Head of the Strategy and Performance Sector",
+        ar: "رئيس قطاع الاستراتيجية والأداء",
       },
       {
-        en: "Assistant Secretary General for the National Statistics Center",
-        ar: "مساعد الأمين العام لشؤون مركز الإحصاء الوطني",
+        en: "Head of the Data and Knowledge Sector",
+        ar: "رئيس قطاع البيانات والمعرفة",
       },
       {
-        en: "Assistant Secretary General for Future Foresight and National Visions Affairs",
-        ar: "مساعد الأمين العام لشؤون استشراف المستقبل والرؤى الوطنية",
+        en: "Head of the Regulatory Affairs Sector",
+        ar: "رئيس قطاع الشؤون التنظيمية",
       },
       {
-        en: "Assistant Secretary General for Follow up Affairs and Implementation Support",
-        ar: "مساعد الأمين العام لشؤون المتابعة ودعم التنفيذ",
+        en: "Head of the Corporate Services Sector",
+        ar: "رئيس قطاع الخدمات المؤسسية",
       },
       {
-        en: "Director of Institutional Development and Modernization Planning and Policies, Rapporteur",
-        ar: "مدير إدارة تخطيط وسياسات التطوير المؤسسي والتحديث، مقرراً",
+        en: "Director of Strategy Development, Rapporteur",
+        ar: "مدير إدارة تطوير الاستراتيجية، مقرراً",
       },
     ],
   },
@@ -478,30 +490,30 @@ export const GOVERNANCE: GovernanceBody[] = [
     bodyNameEn: "Strategy Office",
     bodyNameAr: "مكتب الاستراتيجية",
     roleEn:
-      "The Department of Institutional Development and Modernization Planning and Policies acts as the Strategy Office. It maintains the results chain and the indicator cards, collects actuals on each indicator's cadence, challenges the quality of the evidence behind a reported figure, prepares the quarterly pack for the steering committee, and keeps the change log of every amendment to the strategy.",
+      "The Strategy Development department acts as the Strategy Office. It maintains the results chain and the indicator cards, collects actuals on each indicator's cadence, challenges the quality of the evidence behind a reported figure, prepares the quarterly pack for the steering committee, and keeps the change log of every amendment to the strategy.",
     roleAr:
-      "تقوم إدارة تخطيط وسياسات التطوير المؤسسي والتحديث بدور مكتب الاستراتيجية. فتتعهد سلسلة النتائج وبطاقات المؤشرات، وتجمع القيم الفعلية وفق دورية كل مؤشر، وتراجع جودة الأدلة خلف الرقم المرفوع، وتُعِدّ الحزمة الربعية للجنة التوجيهية، وتحتفظ بسجل التغييرات لكل تعديل يطرأ على الاستراتيجية.",
+      "تقوم إدارة تطوير الاستراتيجية بدور مكتب الاستراتيجية. فتتعهد سلسلة النتائج وبطاقات المؤشرات، وتجمع القيم الفعلية وفق دورية كل مؤشر، وتراجع جودة الأدلة وراء أي رقم مرفوع، وتُعدّ الحزمة الربعية للجنة التوجيهية، وتحتفظ بسجل التغييرات لكل تعديل على الاستراتيجية.",
     cadence: "monthly",
     members: [
       {
-        en: "Director of Institutional Development and Modernization Planning and Policies, Head of the Strategy Office",
-        ar: "مدير إدارة تخطيط وسياسات التطوير المؤسسي والتحديث، رئيساً لمكتب الاستراتيجية",
+        en: "Director of Strategy Development, Head of the Strategy Office",
+        ar: "مدير إدارة تطوير الاستراتيجية، رئيساً لمكتب الاستراتيجية",
       },
       {
         en: "Strategy and institutional performance analysts",
         ar: "محللو الاستراتيجية والأداء المؤسسي",
       },
       {
-        en: "Representative of Planning Quality and Innovation",
-        ar: "ممثل إدارة جودة التخطيط والابتكار",
+        en: "Representative of Planning Quality and Standards",
+        ar: "ممثل إدارة جودة الخطط والمعايير",
       },
       {
-        en: "Representative of Monitoring and Implementation Follow up",
-        ar: "ممثل إدارة الرصد ومتابعة التنفيذ",
+        en: "Representative of Programme Monitoring",
+        ar: "ممثل إدارة متابعة البرنامج",
       },
       {
-        en: "Representative of Financial and Administrative Affairs for the budget link",
-        ar: "ممثل إدارة الشؤون المالية والإدارية للربط مع الموازنة",
+        en: "Representative of Finance and Administration for the budget link",
+        ar: "ممثل إدارة المالية والشؤون الإدارية للربط مع الموازنة",
       },
     ],
   },
@@ -509,41 +521,41 @@ export const GOVERNANCE: GovernanceBody[] = [
     bodyNameEn: "Department Focal Points Network",
     bodyNameAr: "شبكة ضباط الاتصال في الإدارات",
     roleEn:
-      "One named focal point in every department carries the strategy inside the department: updating project and activity status, entering actuals against indicators owned by the department, raising new risks and lessons, and confirming that reported evidence exists before the Strategy Office consolidates it.",
+      "One named focal point in every department carries the strategy inside the department: updating project and activity status, entering actuals against indicators the department owns, and raising risks and dependencies early. The network meets monthly and is the Strategy Office's working channel into the departments.",
     roleAr:
-      "يتولى ضابط اتصال مسمّى في كل إدارة حمل الاستراتيجية داخل إدارته: تحديث حالة المشاريع والأنشطة، وإدخال القيم الفعلية للمؤشرات التي تملكها الإدارة، ورفع المخاطر والدروس المستفادة الجديدة، وتأكيد وجود الأدلة المرفوعة قبل أن يوحّدها مكتب الاستراتيجية.",
+      "يتولى ضابط اتصال مسمّى في كل إدارة حمل الاستراتيجية داخل إدارته: تحديث حالة المشاريع والأنشطة، وإدخال القيم الفعلية للمؤشرات التي تملكها الإدارة، ورفع المخاطر والاعتماديات مبكراً. وتجتمع الشبكة شهرياً وهي قناة عمل مكتب الاستراتيجية مع الإدارات.",
     cadence: "monthly",
     members: [
       {
-        en: "Focal points of the departments of National Planning and Development Policy Affairs",
-        ar: "ضباط الاتصال في إدارات قطاع شؤون التخطيط وسياسات التنمية الوطنية",
+        en: "Focal points of the departments of the Strategy and Performance Sector",
+        ar: "ضباط الاتصال في إدارات قطاع الاستراتيجية والأداء",
       },
       {
-        en: "Focal points of the departments of the National Statistics Center",
-        ar: "ضباط الاتصال في إدارات مركز الإحصاء الوطني",
+        en: "Focal points of the departments of the Data and Knowledge Sector",
+        ar: "ضباط الاتصال في إدارات قطاع البيانات والمعرفة",
       },
       {
-        en: "Focal points of the departments of Future Foresight and National Visions Affairs",
-        ar: "ضباط الاتصال في إدارات قطاع شؤون استشراف المستقبل والرؤى الوطنية",
+        en: "Focal points of the departments of the Regulatory Affairs Sector",
+        ar: "ضباط الاتصال في إدارات قطاع الشؤون التنظيمية",
       },
       {
-        en: "Focal points of the departments of Follow up Affairs and Implementation Support",
-        ar: "ضباط الاتصال في إدارات قطاع شؤون المتابعة ودعم التنفيذ",
+        en: "Focal points of the theme departments for water, agriculture, climate, land, waste and air",
+        ar: "ضباط الاتصال في إدارات المحاور للمياه والزراعة والمناخ والأراضي والنفايات والهواء",
       },
       {
-        en: "Focal points of the departments of Shared Services Affairs",
-        ar: "ضباط الاتصال في إدارات قطاع شؤون الخدمات المشتركة",
+        en: "Focal points of the departments of the Corporate Services Sector",
+        ar: "ضباط الاتصال في إدارات قطاع الخدمات المؤسسية",
       },
       {
-        en: "Focal points of the Office of the Secretary General departments",
-        ar: "ضباط الاتصال في إدارات مكتب الأمين العام",
+        en: "Focal points of the Office of the Programme Director departments",
+        ar: "ضباط الاتصال في إدارات مكتب مدير البرنامج",
       },
     ],
   },
 ];
 
 /* ------------------------------------------------------------------ */
-/* 4. Risk register                                                    */
+/* 7. Risk register (20 risks, R-01 to R-20)                           */
 /* ------------------------------------------------------------------ */
 
 export const RISKS: RiskItem[] = [
@@ -552,100 +564,100 @@ export const RISKS: RiskItem[] = [
     titleEn: "Entities submit progress data late or incomplete",
     titleAr: "تأخر الجهات في رفع بيانات التقدم أو نقصها",
     descriptionEn:
-      "Quarterly progress submissions from government entities arrive after the consolidation window or without the supporting evidence, so the national delivery picture is built on partial returns and has to be revised after publication.",
+      "Quarterly progress submissions from entities arrive after the consolidation window or without the supporting evidence, so the national delivery picture is built on partial returns and has to be revised after publication.",
     descriptionAr:
-      "تصل تقارير التقدم الربعية من الجهات الحكومية بعد نافذة التجميع أو من دون الأدلة الداعمة، فتُبنى صورة الإنجاز الوطني على بيانات ناقصة ويُضطر المجلس إلى تعديلها بعد النشر.",
+      "تصل تقارير التقدم الربعية من الجهات بعد نافذة التجميع أو من دون الأدلة الداعمة، فتُبنى صورة الإنجاز الوطني على بيانات ناقصة ويُضطر المكتب إلى تعديلها بعد النشر.",
     likelihood: 5,
     impact: 4,
     mitigationEn:
-      "Publish a binding reporting calendar with an automated reminder sequence, give each entity a named implementation support officer, and report submission compliance by entity to the Council of Ministers alongside the progress figures.",
+      "Publish a binding reporting calendar with an automated reminder sequence, give each entity a named implementation support officer, and report submission compliance by entity to the Programme Steering Committee alongside the progress figures.",
     mitigationAr:
-      "إصدار روزنامة ملزمة لرفع التقارير مع سلسلة تذكيرات آلية، وتخصيص ضابط دعم تنفيذ مسمّى لكل جهة، ورفع مستوى الالتزام بالرفع لكل جهة إلى مجلس الوزراء إلى جانب أرقام التقدم.",
+      "إصدار روزنامة ملزمة لرفع التقارير مع سلسلة تذكيرات آلية، وتخصيص ضابط دعم تنفيذ مسمّى لكل جهة، ورفع مستوى الالتزام بالرفع لكل جهة إلى اللجنة التوجيهية للبرنامج إلى جانب أرقام التقدم.",
     status: "open",
     nodeCode: "G1.IO2",
   },
   {
     code: "R-02",
-    titleEn: "Cyber incident exposing statistical microdata",
-    titleAr: "حادثة سيبرانية تكشف البيانات الإحصائية الجزئية",
+    titleEn: "Cyber incident exposing sensitive environmental data",
+    titleAr: "حادثة سيبرانية تكشف بيانات بيئية حساسة",
     descriptionEn:
-      "An intrusion or a mishandled transfer exposes identifiable respondent records held for statistical production, breaching the confidentiality pledge on which every survey depends.",
+      "An intrusion or a mishandled transfer exposes restricted records held for analysis, such as facility level compliance data or licensing records, breaching the confidentiality terms under which entities share them.",
     descriptionAr:
-      "يؤدي اختراق أو نقل غير آمن إلى كشف سجلات مستجيبين قابلة للتعريف محفوظة لأغراض الإنتاج الإحصائي، بما يخل بتعهد السرية الذي تقوم عليه كل المسوح.",
+      "اختراق أو نقل خاطئ يكشف سجلات مقيّدة محتفظاً بها للتحليل، مثل بيانات الامتثال على مستوى المنشآت أو سجلات التراخيص، بما يخل بشروط السرية التي تشارك الجهات بياناتها بموجبها.",
     likelihood: 2,
     impact: 5,
     mitigationEn:
-      "Segregate the microdata environment with no external egress, enforce role based access with quarterly recertification, encrypt every transfer, and run an annual breach simulation with the incident response team.",
+      "Segregate the restricted data environment with no external egress, enforce role based access with quarterly recertification, encrypt every transfer, and run an annual breach simulation with the incident response team.",
     mitigationAr:
-      "عزل بيئة البيانات الجزئية ومنع أي نفاذ خارجي منها، وتطبيق صلاحيات مبنية على الأدوار مع إعادة اعتماد ربع سنوية، وتشفير كل عمليات النقل، وإجراء محاكاة سنوية لاختراق البيانات مع فريق الاستجابة للحوادث.",
+      "عزل بيئة البيانات المقيّدة دون منافذ خروج خارجية، وتطبيق صلاحيات قائمة على الأدوار مع إعادة اعتماد ربعية، وتشفير كل عملية نقل، وإجراء محاكاة سنوية للاختراق مع فريق الاستجابة للحوادث.",
     status: "mitigating",
     nodeCode: "G4.IO2.OP2",
   },
   {
     code: "R-03",
-    titleEn: "Loss of specialist statistical and modelling staff",
-    titleAr: "فقدان الكوادر التخصصية في الإحصاء والنمذجة",
+    titleEn: "Loss of specialist data and modelling staff",
+    titleAr: "فقدان الكوادر المتخصصة في البيانات والنمذجة",
     descriptionEn:
-      "Experienced staff in national accounts, sampling and econometric modelling leave for better paid roles, and the methods they hold personally are not documented well enough for a successor to continue without a gap.",
+      "Experienced staff in environmental accounts, remote sensing and quantitative modelling leave for better paid roles, and the methods they hold personally are not documented well enough for a successor to continue without a gap.",
     descriptionAr:
-      "يغادر الموظفون ذوو الخبرة في الحسابات القومية وتصميم العينات والنمذجة القياسية إلى وظائف أعلى أجراً، ولا تكون المنهجيات التي يحملونها شخصياً موثقة بما يكفي ليواصل الخلف العمل دون انقطاع.",
+      "يغادر أصحاب الخبرة في الحسابات البيئية والاستشعار عن بعد والنمذجة الكمية إلى وظائف أعلى أجراً، ولا تكون المنهجيات التي يحتفظون بها شخصياً موثقة بما يكفي ليواصل خلفهم العمل دون انقطاع.",
     likelihood: 4,
     impact: 4,
     mitigationEn:
-      "Run a retention review for critical roles with the Human Resources department, require a documented method file and a named deputy for every statistical product, and build a standing pool of trained successors through the training centre.",
+      "Run a retention review for critical roles with the Human Resources department, require a documented method file and a named deputy for every data product, and build a standing pool of trained successors through capability development.",
     mitigationAr:
-      "إجراء مراجعة للاستبقاء في الوظائف الحرجة بالتعاون مع إدارة الموارد البشرية، واشتراط ملف منهجية موثق ونائب مسمّى لكل منتج إحصائي، وبناء مخزون دائم من الخلفاء المدربين عبر مركز التدريب.",
+      "إجراء مراجعة للاحتفاظ بالأدوار الحرجة مع إدارة الموارد البشرية، واشتراط ملف منهجية موثق ونائب مسمّى لكل منتج بيانات، وبناء رصيد دائم من الخلفاء المدرَّبين عبر إدارة تنمية القدرات.",
     status: "mitigating",
     nodeCode: "G2",
   },
   {
     code: "R-04",
-    titleEn: "Statistical systems modernisation overruns",
-    titleAr: "تجاوز مشروع تحديث الأنظمة الإحصائية للمدة والكلفة",
+    titleEn: "Data systems modernisation overruns",
+    titleAr: "تجاوز مشروع تحديث نظم البيانات للمدة والكلفة",
     descriptionEn:
-      "The replacement of the statistical production platform slips beyond its planned window, forcing teams to run the old and new systems in parallel and delaying the releases that depend on the migration.",
+      "The replacement of the environmental data production platform slips beyond its planned window, forcing teams to run the old and new systems in parallel and delaying the releases that depend on the migration.",
     descriptionAr:
-      "ينزلق استبدال منصة الإنتاج الإحصائي إلى ما بعد المدة المخططة، فتضطر الفرق إلى تشغيل النظامين القديم والجديد بالتوازي وتتأخر الإصدارات المرتبطة بعملية الترحيل.",
+      "يتأخر استبدال منصة إنتاج البيانات البيئية عن نافذته المخططة، فتضطر الفرق إلى تشغيل النظامين القديم والجديد بالتوازي وتتأخر الإصدارات المعتمدة على الترحيل.",
     likelihood: 3,
     impact: 4,
     mitigationEn:
-      "Migrate one statistical domain at a time with a tested rollback for each, hold release dates on the legacy system until the new one has produced two clean cycles, and review the vendor plan monthly against milestones.",
+      "Migrate one data domain at a time with a tested rollback for each, hold release dates on the legacy system until the new one has produced two clean cycles, and review the vendor plan monthly against milestones.",
     mitigationAr:
-      "ترحيل مجال إحصائي واحد في كل مرة مع خطة تراجع مُختبرة لكل مجال، والإبقاء على مواعيد النشر عبر النظام القديم حتى ينتج النظام الجديد دورتين سليمتين، ومراجعة خطة المورّد شهرياً مقابل المحطات الرئيسة.",
+      "ترحيل مجال بيانات واحد في كل مرة مع خطة تراجع مجرّبة لكل منها، والإبقاء على مواعيد الإصدار على النظام القديم حتى ينتج الجديد دورتين سليمتين، ومراجعة خطة المورّد شهرياً قياساً بالمراحل.",
     status: "open",
     nodeCode: "G2.IO1.OP2",
   },
   {
     code: "R-05",
     titleEn: "Data sharing agreements stall on legal grounds",
-    titleAr: "تعثر اتفاقيات تبادل البيانات لأسباب قانونية",
+    titleAr: "تعثر اتفاقيات تبادل البيانات لأسباب نظامية",
     descriptionEn:
-      "Entities decline or delay signature because their own legislation restricts disclosure, so priority administrative sources remain unavailable and survey based collection continues at full cost.",
+      "Entities decline or delay signature because their own rules restrict disclosure, so priority administrative sources remain unavailable and costly separate collection continues.",
     descriptionAr:
-      "تمتنع جهات عن التوقيع أو تؤجله لأن تشريعاتها تقيّد الإفصاح، فتظل المصادر الإدارية ذات الأولوية غير متاحة ويستمر الجمع عبر المسوح بكامل كلفته.",
+      "ترفض جهات التوقيع أو تؤجله لأن أنظمتها تقيّد الإفصاح، فتظل مصادر البيانات الإدارية ذات الأولوية غير متاحة ويستمر جمع منفصل مرتفع الكلفة.",
     likelihood: 4,
     impact: 3,
     mitigationEn:
-      "Issue a standard agreement cleared in advance by Legal Affairs, offer a restricted access tier for sensitive fields, and escalate the remaining cases through the national data governance committee rather than bilaterally.",
+      "Issue a standard agreement cleared in advance by legal advisers, offer a restricted access tier for sensitive fields, and escalate the remaining cases through the Data Governance Board rather than bilaterally.",
     mitigationAr:
-      "إصدار اتفاقية نموذجية مُجازة مسبقاً من إدارة الشؤون القانونية، وإتاحة مستوى وصول مقيّد للحقول الحساسة، ورفع الحالات المتبقية عبر لجنة حوكمة البيانات الوطنية بدل معالجتها ثنائياً.",
+      "إصدار اتفاقية نموذجية يُجاز نصها مسبقاً من المستشارين القانونيين، وإتاحة مستوى وصول مقيّد للحقول الحساسة، ورفع الحالات المتبقية عبر مجلس حوكمة البيانات بدل المعالجة الثنائية.",
     status: "open",
     nodeCode: "G2.IO2.OP1",
   },
   {
     code: "R-06",
-    titleEn: "Declining survey response rates",
-    titleAr: "تراجع معدلات الاستجابة في المسوح",
+    titleEn: "Gaps in field monitoring coverage and response",
+    titleAr: "فجوات في تغطية الرصد الميداني والاستجابة له",
     descriptionEn:
-      "Households and establishments respond less often and less completely, which raises sampling error, forces heavier imputation and weakens confidence in the published estimates.",
+      "Monitoring stations, field surveys and reporting entities cover less ground, or respond less completely, than planned, which raises uncertainty, forces heavier estimation and weakens confidence in the published figures.",
     descriptionAr:
-      "تتراجع استجابة الأسر والمنشآت من حيث التكرار والاكتمال، ما يرفع خطأ المعاينة ويزيد الاعتماد على التقدير ويضعف الثقة في التقديرات المنشورة.",
+      "تغطي محطات الرصد والمسوح الميدانية والجهات المبلِّغة نطاقاً أقل مما هو مخطط، أو تستجيب بصورة أقل اكتمالاً، مما يرفع عدم اليقين ويفرض تقديراً أكبر ويضعف الثقة في الأرقام المنشورة.",
     likelihood: 3,
     impact: 4,
     mitigationEn:
-      "Shorten questionnaires by substituting administrative data where it is available, add multi mode collection with online first contact, and run a respondent communication campaign explaining how the data is protected and used.",
+      "Combine ground measurement with satellite and administrative sources where they are available, simplify reporting templates, and tell reporting entities how their data is protected and used.",
     mitigationAr:
-      "تقصير الاستمارات عبر إحلال البيانات الإدارية حيثما توفرت، واعتماد الجمع متعدد الأساليب مع بدء الاتصال إلكترونياً، وتنفيذ حملة تواصل مع المستجيبين تشرح كيفية حماية بياناتهم وأوجه استخدامها.",
+      "الجمع بين القياس الميداني ومصادر الأقمار الصناعية والبيانات الإدارية متى توفرت، وتبسيط نماذج الإبلاغ، وإعلام الجهات المبلِّغة بكيفية حماية بياناتها واستخدامها.",
     status: "mitigating",
     nodeCode: "G2.IO1",
   },
@@ -656,81 +668,81 @@ export const RISKS: RiskItem[] = [
     descriptionEn:
       "Scenario sets and scanning reports are circulated but arrive outside the planning and budget calendar, so they inform discussion without changing any commitment.",
     descriptionAr:
-      "تُعمَّم حزم السيناريوهات وتقارير المسح لكنها تصل خارج روزنامة التخطيط وإعداد الموازنة، فتُغذّي النقاش دون أن تغيّر أي التزام.",
+      "تُوزَّع مجموعات السيناريوهات وتقارير المسح لكنها تصل خارج روزنامة التخطيط والموازنة، فتثري النقاش دون أن تغيّر أي التزام.",
     likelihood: 3,
     impact: 3,
     mitigationEn:
       "Fix the foresight calendar to the planning and budget cycle, require a foresight annex in every sector strategy review, and close each briefing with named decisions and owners rather than with a discussion.",
     mitigationAr:
-      "ربط روزنامة الاستشراف بدورة التخطيط والموازنة، واشتراط ملحق استشرافي في مراجعة كل استراتيجية قطاعية، وإنهاء كل إحاطة بقرارات محددة وجهات مسؤولة عنها بدل الاكتفاء بالنقاش.",
+      "ربط روزنامة الاستشراف بدورة التخطيط والموازنة، واشتراط ملحق استشرافي في كل مراجعة لاستراتيجية قطاعية، وإنهاء كل إحاطة بقرارات ومسؤولين مسمّين لا بنقاش.",
     status: "open",
     nodeCode: "G3",
   },
   {
     code: "R-08",
-    titleEn: "Mid cycle reduction of the Council budget",
-    titleAr: "خفض موازنة المجلس في منتصف الدورة",
+    titleEn: "Mid cycle reduction of the Programme Office budget",
+    titleAr: "خفض موازنة مكتب البرنامج في منتصف الدورة",
     descriptionEn:
-      "A fiscal correction cuts the operating and capital envelope during the strategy period, which would stop the systems modernisation and the survey programme at the same time.",
+      "A fiscal correction cuts the operating and capital envelope during the strategy period, which would stop the systems modernisation and the monitoring programme at the same time.",
     descriptionAr:
-      "يؤدي تصحيح مالي إلى خفض الاعتمادات التشغيلية والرأسمالية خلال فترة الاستراتيجية، بما يوقف تحديث الأنظمة وبرنامج المسوح في آن واحد.",
+      "تخفض مراجعة مالية سقف الإنفاق التشغيلي والرأسمالي خلال فترة الاستراتيجية، مما قد يوقف تحديث النظم وبرنامج الرصد في آن واحد.",
     likelihood: 1,
     impact: 5,
     mitigationEn:
-      "Maintain a ranked list of projects with the minimum viable scope of each, agree the statutory statistical programme as a protected core with the Ministry of Finance, and phase contracts so that commitments can be paused at defined points.",
+      "Maintain a ranked list of projects with the minimum viable scope of each, agree the core monitoring programme as a protected line with the Ministry of Finance, and phase contracts so that commitments can be paused at defined points.",
     mitigationAr:
-      "الاحتفاظ بقائمة مرتبة للمشاريع مع الحد الأدنى القابل للتنفيذ من نطاق كل منها، والاتفاق مع وزارة المالية على اعتبار البرنامج الإحصائي الإلزامي نواة محمية، وتقسيم العقود إلى مراحل تتيح إيقاف الالتزامات عند نقاط محددة.",
+      "الاحتفاظ بقائمة مرتبة للمشاريع مع الحد الأدنى القابل للتنفيذ من كل منها، والاتفاق مع وزارة المالية على برنامج الرصد الأساسي بوصفه بنداً محمياً، وتجزئة العقود بحيث يمكن إيقاف الالتزامات عند نقاط محددة.",
     status: "open",
     nodeCode: null,
   },
   {
     code: "R-09",
-    titleEn: "Shift in national priorities forces re planning",
+    titleEn: "Shift in national priorities forces re-planning",
     titleAr: "تغير الأولويات الوطنية يفرض إعادة التخطيط",
     descriptionEn:
-      "A change in national direction or an urgent mandate redirects Council capacity to unplanned work, and the institutional strategy is quietly deprioritised while the new demand is served.",
+      "A change in national direction or an urgent environmental mandate, such as a drought response, redirects the Office's capacity to unplanned work, and the institutional strategy is quietly deprioritised while the new demand is served.",
     descriptionAr:
-      "يؤدي تغير في التوجه الوطني أو تكليف عاجل إلى تحويل قدرات المجلس نحو أعمال غير مخططة، فتتراجع أولوية الاستراتيجية المؤسسية بهدوء ريثما تُلبّى المهمة الجديدة.",
+      "يؤدي تغير التوجه الوطني أو تكليف بيئي عاجل، كالاستجابة للجفاف، إلى تحويل طاقة المكتب نحو عمل غير مخطط، فتتراجع الاستراتيجية المؤسسية بهدوء في سلّم الأولويات أثناء تلبية الطلب الجديد.",
     likelihood: 3,
     impact: 4,
     mitigationEn:
       "Reserve a defined share of departmental capacity for unplanned national tasking, and require the steering committee to record formally which targets are deferred whenever new work is absorbed.",
     mitigationAr:
-      "حجز نسبة محددة من قدرة الإدارات للتكليفات الوطنية غير المخططة، وإلزام اللجنة التوجيهية بتوثيق المستهدفات المؤجلة رسمياً عند استيعاب أي أعمال جديدة.",
+      "تخصيص حصة محددة من طاقة الإدارات للتكليفات الوطنية غير المخططة، واشتراط أن تسجّل اللجنة التوجيهية رسمياً المستهدفات المؤجلة كلما استُوعب عمل جديد.",
     status: "open",
     nodeCode: null,
   },
   {
     code: "R-10",
-    titleEn: "The planning manual is adopted formally but not in practice",
-    titleAr: "اعتماد دليل التخطيط شكلياً دون تطبيق فعلي",
+    titleEn: "The results framework manual is adopted formally but not in practice",
+    titleAr: "اعتماد دليل إطار النتائج شكلياً دون تطبيق فعلي",
     descriptionEn:
       "Entities fill in the new templates while keeping their old habit of listing activities as objectives, so documents look compliant and the results chain behind them remains broken.",
     descriptionAr:
-      "تعبّئ الجهات النماذج الجديدة مع الإبقاء على عادتها القديمة في إدراج الأنشطة بوصفها أهدافاً، فتبدو الوثائق مطابقة بينما تظل سلسلة النتائج خلفها مختلة.",
+      "تملأ الجهات النماذج الجديدة مع إبقاء عادتها القديمة في سرد الأنشطة بوصفها أهدافاً، فتبدو الوثائق ملتزمة وتبقى سلسلة النتائج خلفها مكسورة.",
     likelihood: 4,
     impact: 2,
     mitigationEn:
       "Score every submitted strategy against a published quality checklist, return non compliant documents with written findings, and pair the manual with coaching clinics for entity planning teams during drafting.",
     mitigationAr:
-      "تقييم كل استراتيجية مرفوعة وفق قائمة تحقق معلنة للجودة، وإعادة الوثائق غير المطابقة مصحوبة بملاحظات مكتوبة، ومرافقة الدليل بعيادات إرشادية لفرق التخطيط في الجهات أثناء مرحلة الصياغة.",
+      "تقييم كل استراتيجية مرفوعة وفق قائمة تحقق معلنة للجودة، وإعادة الوثائق غير المستوفية مع ملاحظات مكتوبة، وربط الدليل بعيادات إرشاد لفرق التخطيط في الجهات أثناء الصياغة.",
     status: "mitigating",
     nodeCode: "G1.IO1.OP1",
   },
   {
     code: "R-11",
-    titleEn: "Unofficial figures compete with official statistics",
-    titleAr: "منافسة الأرقام غير الرسمية للإحصاءات الرسمية",
+    titleEn: "Unofficial figures compete with official environmental data",
+    titleAr: "منافسة الأرقام غير الرسمية للبيانات البيئية الرسمية",
     descriptionEn:
-      "Entities, consultancies and media publish their own estimates for the same phenomena, and the public is left with several numbers and no way to tell which is authoritative.",
+      "Entities, consultancies and media publish their own estimates for the same phenomena, and users are left with several numbers and no way to tell which is authoritative.",
     descriptionAr:
-      "تنشر جهات وشركات استشارية ووسائل إعلام تقديراتها الخاصة للظواهر نفسها، فيجد الجمهور أمامه أرقاماً عدة دون وسيلة لتمييز الرقم المرجعي بينها.",
+      "تنشر الجهات وشركات الاستشارات ووسائل الإعلام تقديراتها الخاصة للظواهر نفسها، فيجد المستخدمون أمامهم أرقاماً متعددة ولا سبيل لمعرفة أيها المرجع.",
     likelihood: 5,
     impact: 2,
     mitigationEn:
-      "Publish an official statistics mark and a single reference page per indicator, shorten release lag so the official figure arrives first, and agree a clearance rule with entities before any national figure is released.",
+      "Publish an official data mark and a single reference page per indicator, shorten release lag so the official figure arrives first, and agree a clearance rule with entities before any national figure is released.",
     mitigationAr:
-      "اعتماد علامة للإحصاءات الرسمية وصفحة مرجعية واحدة لكل مؤشر، وتقصير فترة التأخر في النشر ليصل الرقم الرسمي أولاً، والاتفاق مع الجهات على قاعدة إجازة مسبقة قبل إصدار أي رقم وطني.",
+      "إصدار علامة للبيانات الرسمية وصفحة مرجعية واحدة لكل مؤشر، وتقصير فجوة النشر ليصل الرقم الرسمي أولاً، والاتفاق مع الجهات على قاعدة إجازة قبل إصدار أي رقم وطني.",
     status: "open",
     nodeCode: "G2.IO3",
   },
@@ -741,13 +753,13 @@ export const RISKS: RiskItem[] = [
     descriptionEn:
       "Staff continue to work through email attachments and personal spreadsheets after the new platform is delivered, so the promised single version of a document never materialises.",
     descriptionAr:
-      "يواصل الموظفون العمل عبر مرفقات البريد والجداول الشخصية بعد تسليم المنصة الجديدة، فلا تتحقق النسخة الواحدة الموحدة للوثيقة التي وُعد بها.",
+      "يواصل الموظفون العمل عبر مرفقات البريد والجداول الشخصية بعد تسليم المنصة الجديدة، فلا تتحقق النسخة الواحدة الموعودة للوثيقة.",
     likelihood: 3,
     impact: 2,
     mitigationEn:
       "Move the processes that matter most to each department first, retire the old channel for those processes on a published date, and track adoption per department in the monthly focal points meeting.",
     mitigationAr:
-      "نقل الإجراءات الأكثر أهمية لكل إدارة أولاً، وإيقاف القناة القديمة لتلك الإجراءات في تاريخ معلن، وتتبع نسبة التبني لكل إدارة في اجتماع ضباط الاتصال الشهري.",
+      "نقل العمليات الأهم في كل إدارة أولاً، وإيقاف القناة القديمة لتلك العمليات في تاريخ معلن، ومتابعة التبني لكل إدارة في اجتماع ضباط الاتصال الشهري.",
     status: "mitigating",
     nodeCode: "G4.IO2.OP1",
   },
@@ -756,15 +768,15 @@ export const RISKS: RiskItem[] = [
     titleEn: "Dependence on a single vendor for analytics platforms",
     titleAr: "الاعتماد على مورّد وحيد لمنصات التحليل",
     descriptionEn:
-      "Several reporting and analytics products rest on one supplier's stack, which concentrates renewal risk and limits the Council's room to negotiate or to move.",
+      "Several reporting and analytics products rest on one supplier's stack, which concentrates renewal risk and limits the Office's room to negotiate or to move.",
     descriptionAr:
-      "تعتمد عدة منتجات للتقارير والتحليل على منظومة مورّد واحد، ما يركّز مخاطر التجديد ويحد من هامش المجلس في التفاوض أو الانتقال.",
+      "تعتمد عدة منتجات للتقارير والتحليل على حزمة مورّد واحد، مما يركّز مخاطر التجديد ويحدّ من مساحة المكتب للتفاوض أو للانتقال.",
     likelihood: 2,
     impact: 3,
     mitigationEn:
-      "Keep all source data and transformation logic inside Council owned stores, require export in open formats in every contract, and stagger renewal dates so no two critical platforms expire together.",
+      "Keep all source data and transformation logic inside stores owned by the Office, require export in open formats in every contract, and stagger renewal dates so no two critical platforms expire together.",
     mitigationAr:
-      "الاحتفاظ بجميع البيانات المصدرية ومنطق المعالجة داخل مستودعات يملكها المجلس، واشتراط التصدير بصيغ مفتوحة في كل عقد، وتوزيع مواعيد التجديد بحيث لا ينتهي عقدا منصتين حرجتين في وقت واحد.",
+      "إبقاء كل البيانات المصدرية ومنطق التحويل داخل مخازن يملكها المكتب، واشتراط التصدير بصيغ مفتوحة في كل عقد، وتوزيع مواعيد التجديد بحيث لا تنتهي منصتان حرجتان معاً.",
     status: "open",
     nodeCode: null,
   },
@@ -773,15 +785,15 @@ export const RISKS: RiskItem[] = [
     titleEn: "Late submissions to international indicator bodies",
     titleAr: "التأخر في الرفع إلى جهات المؤشرات الدولية",
     descriptionEn:
-      "A national data return misses an international compilation deadline, and Qatar is scored on an older figure or on an estimate produced by the compiling organisation.",
+      "A national data return misses an international compilation deadline, and Saudi Arabia is shown with an older figure or with an estimate produced by the compiling organisation.",
     descriptionAr:
-      "يفوت أحد الردود الوطنية موعد التجميع لدى جهة دولية، فتُقيَّم دولة قطر على رقم أقدم أو على تقدير تُعِدّه الجهة المُجمِّعة.",
+      "تفوت بيانات وطنية موعد تجميع دولياً، فتظهر المملكة بأرقام أقدم أو بتقدير تعدّه المنظمة المجمِّعة.",
     likelihood: 2,
     impact: 2,
     mitigationEn:
       "Maintain a calendar of every international submission with an owner and a two week buffer, and pre clear recurring returns with the source entities at the start of each year.",
     mitigationAr:
-      "الاحتفاظ بروزنامة لكل عمليات الرفع الدولية مع جهة مسؤولة وهامش أمان مدته أسبوعان، والحصول على إجازة مسبقة للردود المتكررة من الجهات المصدرية في مطلع كل عام.",
+      "الاحتفاظ بروزنامة لكل رفع دولي مع مسؤول وهامش أسبوعين، وإجازة التقارير المتكررة مسبقاً مع الجهات المصدرية في مطلع كل عام.",
     status: "open",
     nodeCode: "G5.IO1.OP2",
   },
@@ -792,13 +804,13 @@ export const RISKS: RiskItem[] = [
     descriptionEn:
       "Focal points change frequently and their replacements arrive without induction, so data quality in the strategy system drops and the Strategy Office absorbs the correction work.",
     descriptionAr:
-      "يتغير ضباط الاتصال بوتيرة متكررة ويأتي خلفاؤهم دون تهيئة، فتتراجع جودة البيانات في نظام الاستراتيجية ويتحمل مكتب الاستراتيجية عبء التصحيح.",
+      "يتغير ضباط الاتصال بكثرة ويصل بدلاؤهم دون تهيئة، فتنخفض جودة البيانات في منظومة الاستراتيجية ويتحمل مكتب الاستراتيجية عبء التصحيح.",
     likelihood: 4,
     impact: 2,
     mitigationEn:
       "Name a deputy focal point in every department, publish a one hour induction pack and a short guide, and require a handover note before any focal point is replaced.",
     mitigationAr:
-      "تسمية ضابط اتصال مناوب في كل إدارة، ونشر حزمة تهيئة مدتها ساعة واحدة مع دليل مختصر، واشتراط مذكرة تسليم قبل استبدال أي ضابط اتصال.",
+      "تسمية نائب لضابط الاتصال في كل إدارة، ونشر حزمة تهيئة مدتها ساعة ودليل موجز، واشتراط مذكرة تسليم قبل استبدال أي ضابط اتصال.",
     status: "open",
     nodeCode: null,
   },
@@ -807,15 +819,15 @@ export const RISKS: RiskItem[] = [
     titleEn: "Business continuity arrangements untested",
     titleAr: "عدم اختبار ترتيبات استمرارية الأعمال",
     descriptionEn:
-      "Continuity plans exist on paper but have not been exercised against a real disruption, so recovery times for the statistical release chain and the leadership dashboard are unproven.",
+      "Continuity plans exist on paper but have not been exercised against a real disruption, so recovery times for the data release chain and the leadership dashboard are unproven.",
     descriptionAr:
-      "توجد خطط الاستمرارية على الورق دون أن تُختبر في مواجهة انقطاع حقيقي، فتبقى أزمنة التعافي لسلسلة النشر الإحصائي ولوحة متابعة القيادة غير مثبتة.",
+      "توجد خطط الاستمرارية على الورق لكنها لم تُجرَّب أمام تعطل فعلي، فتبقى أزمنة التعافي لسلسلة إصدار البيانات ولوحة القيادة غير مثبتة.",
     likelihood: 2,
     impact: 4,
     mitigationEn:
       "Run two continuity exercises a year covering a data centre failure and the loss of a key system, publish the recovery times achieved, and close every gap found with a dated action.",
     mitigationAr:
-      "إجراء تمرينين للاستمرارية سنوياً يغطيان تعطل مركز بيانات وفقدان نظام رئيس، ونشر أزمنة التعافي المتحققة، ومعالجة كل فجوة مكتشفة بإجراء محدد بتاريخ.",
+      "إجراء تمرينين للاستمرارية سنوياً يغطيان تعطل مركز البيانات وفقدان نظام رئيسي، ونشر أزمنة التعافي المتحققة، وإغلاق كل فجوة تُكتشف بإجراء مؤرخ.",
     status: "mitigating",
     nodeCode: null,
   },
@@ -826,30 +838,30 @@ export const RISKS: RiskItem[] = [
     descriptionEn:
       "A behavioural or policy trial is run on too small a sample or without a clean comparison group, so the finding cannot support a recommendation either way.",
     descriptionAr:
-      "تُنفَّذ تجربة سلوكية أو سياساتية على عينة صغيرة أو دون مجموعة مقارنة سليمة، فلا تصلح النتيجة لدعم توصية في أي اتجاه.",
+      "تُجرى تجربة سلوكية أو سياساتية على عينة صغيرة أو دون مجموعة مقارنة نظيفة، فلا تدعم النتيجة أي توصية في أي اتجاه.",
     likelihood: 2,
     impact: 2,
     mitigationEn:
       "Require a pre registered design with a power calculation before any trial starts, and publish null results as findings so that the learning is kept rather than repeated.",
     mitigationAr:
-      "اشتراط تصميم مُسجّل مسبقاً مع حساب للقوة الإحصائية قبل بدء أي تجربة، ونشر النتائج غير الدالة بوصفها نتائج حتى تُحفظ المعرفة بدل تكرار التجربة.",
+      "اشتراط تصميم مسجّل مسبقاً مع حساب القوة الإحصائية قبل بدء أي تجربة، ونشر النتائج الصفرية بوصفها مخرجات حتى يُحفظ التعلم ولا يتكرر.",
     status: "open",
     nodeCode: "G1.IO3.OP2",
   },
   {
     code: "R-18",
-    titleEn: "Misinterpretation of statistics in public coverage",
-    titleAr: "إساءة تفسير الإحصاءات في التغطية العامة",
+    titleEn: "Misinterpretation of environmental figures in public coverage",
+    titleAr: "إساءة تفسير الأرقام البيئية في التغطية العامة",
     descriptionEn:
-      "A release is reported without its definitions or its revision status, a misleading headline spreads, and the Council spends the following weeks correcting the record instead of explaining the substance.",
+      "A release is reported without its definitions or its revision status, a misleading headline spreads, and the Office spends the following weeks correcting the record instead of explaining the substance.",
     descriptionAr:
-      "يُنقل أحد الإصدارات دون تعريفاته أو دون بيان حالة مراجعته، فينتشر عنوان مضلل ويقضي المجلس الأسابيع التالية في تصحيح المعلومة بدل شرح مضمونها.",
+      "يُنقل إصدار دون تعريفاته أو حالة مراجعته، فينتشر عنوان مضلل، ويقضي المكتب الأسابيع التالية في تصحيح السجل بدل شرح المضمون.",
     likelihood: 3,
     impact: 2,
     mitigationEn:
       "Issue a plain language summary and a chart pack with every major release, brief editors ahead of sensitive publications, and keep a standing correction procedure with a named spokesperson.",
     mitigationAr:
-      "إصدار ملخص بلغة مبسطة وحزمة رسوم بيانية مع كل إصدار رئيس، وإحاطة المحررين قبل النشرات الحساسة، واعتماد إجراء دائم للتصحيح مع متحدث رسمي مسمّى.",
+      "إصدار ملخص بلغة مبسطة وحزمة رسوم مع كل إصدار رئيسي، وإحاطة المحررين قبل المنشورات الحساسة، والاحتفاظ بإجراء تصحيح دائم مع متحدث مسمّى.",
     status: "open",
     nodeCode: null,
   },
@@ -858,15 +870,15 @@ export const RISKS: RiskItem[] = [
     titleEn: "Disruption from the office relocation",
     titleAr: "اضطراب ناتج عن الانتقال إلى المقر الجديد",
     descriptionEn:
-      "The move of Council departments to the new premises during 2025 was expected to interrupt survey operations and the release schedule for several weeks.",
+      "The move of departments to the new premises during 2025 was expected to interrupt monitoring operations and the release schedule for several weeks.",
     descriptionAr:
-      "كان من المتوقع أن يؤدي انتقال إدارات المجلس إلى المقر الجديد خلال عام 2025 إلى تعطيل عمليات المسوح وجدول النشر لعدة أسابيع.",
+      "كان يُتوقع أن يعطّل انتقال الإدارات إلى المقر الجديد خلال عام 2025 عمليات الرصد وجدول الإصدار لعدة أسابيع.",
     likelihood: 1,
     impact: 1,
     mitigationEn:
       "The move was phased outside the release peaks with remote working kept available throughout, and no release date was missed, so the risk was closed after the final department relocated.",
     mitigationAr:
-      "نُفّذ الانتقال على مراحل خارج ذروات النشر مع إبقاء العمل عن بُعد متاحاً طوال المدة، ولم يفت أي موعد نشر، فأُغلق الخطر بعد انتقال آخر إدارة.",
+      "جرى الانتقال على مراحل خارج ذرى الإصدار مع إبقاء العمل عن بُعد متاحاً طوال الوقت، ولم يفُت أي موعد إصدار، فأُغلقت المخاطرة بعد انتقال آخر إدارة.",
     status: "closed",
     nodeCode: null,
   },
@@ -877,400 +889,400 @@ export const RISKS: RiskItem[] = [
     descriptionEn:
       "Approval of the strategy was at risk of slipping past the start of the 2025 planning year, which would have left departments planning against an unapproved results chain.",
     descriptionAr:
-      "كان اعتماد الاستراتيجية معرضاً للتأخر إلى ما بعد بداية السنة التخطيطية 2025، بما كان سيترك الإدارات تخطط استناداً إلى سلسلة نتائج غير معتمدة.",
+      "كان اعتماد الاستراتيجية معرّضاً للتأخر عن بداية سنة التخطيط 2025، مما كان سيترك الإدارات تخطط وفق سلسلة نتائج غير معتمدة.",
     likelihood: 1,
     impact: 2,
     mitigationEn:
       "The draft was reviewed with the sectors ahead of submission and approved on 16 March 2025, and departmental plans were aligned within the same quarter, so the risk was closed.",
     mitigationAr:
-      "روجعت المسودة مع القطاعات قبل الرفع واعتُمدت في 16 مارس 2025، وجرت مواءمة خطط الإدارات خلال الربع نفسه، فأُغلق الخطر.",
+      "روجعت المسودة مع القطاعات قبل رفعها واعتُمدت في 16 مارس 2025، ووُوئمت خطط الإدارات في الربع نفسه، فأُغلقت المخاطرة.",
     status: "closed",
     nodeCode: null,
   },
 ];
 
 /* ------------------------------------------------------------------ */
-/* 5. Results chain: goals                                             */
+/* 8. Goals (G1 to G5)                                                 */
 /* ------------------------------------------------------------------ */
 
 export const GOALS: GoalSeed[] = [
   {
     code: "G1",
-    titleEn: "Excellence in national development planning",
-    titleAr: "التميز في التخطيط التنموي الوطني",
+    titleEn: "Excellence in environmental strategy and delivery",
+    titleAr: "التميز في الاستراتيجية البيئية وتنفيذها",
     descriptionEn:
-      "The Council makes national planning a disciplined craft: one results based method, one set of templates, and a technical review that every sector and entity strategy passes before it is adopted. It supports the delivery of NDS3 with evidence and hands on implementation help rather than correspondence, and it tests major policies through simulation and trials before they are committed. The goal is achieved when plans across government are comparable, monitorable and actually delivered.",
+      "The Office makes environmental planning a disciplined craft: one results based method, one set of templates, and a technical review that every sector and entity strategy passes before it is adopted. It supports the delivery of the National Environment Strategy with evidence and hands on implementation help rather than correspondence, and it tests major policies through simulation and trials before they are committed. The goal is achieved when plans across the sector are comparable, monitorable and actually delivered.",
     descriptionAr:
-      "يجعل المجلس التخطيط الوطني ممارسة منضبطة تقوم على منهجية موحدة قائمة على النتائج، ونماذج معتمدة، ومراجعة فنية تمر بها كل استراتيجية قطاعية ومؤسسية قبل اعتمادها. ويدعم تنفيذ استراتيجية التنمية الوطنية الثالثة بالأدلة وبالدعم الميداني المباشر لا بالمراسلات، ويختبر السياسات الكبرى عبر المحاكاة والتجارب قبل الالتزام بها. ويتحقق الهدف حين تصبح خطط الجهات قابلة للمقارنة والمتابعة والإنجاز الفعلي.",
-    ownerUnitCode: "NPD",
+      "يجعل المكتب التخطيط البيئي ممارسة منضبطة تقوم على منهجية موحدة قائمة على النتائج، ونماذج معتمدة، ومراجعة فنية تمر بها كل استراتيجية قطاعية ومؤسسية قبل اعتمادها. ويدعم تنفيذ الاستراتيجية الوطنية للبيئة بالأدلة وبالدعم الميداني المباشر لا بالمراسلات، ويختبر السياسات الكبرى عبر المحاكاة والتجارب قبل الالتزام بها. ويتحقق الهدف حين تصبح خطط القطاع قابلة للمقارنة والمتابعة والإنجاز الفعلي.",
+    ownerUnitCode: "SPD",
     alignment: [
       {
-        targetKind: "nds_node",
+        targetKind: "nes_node",
         targetCode: "O7",
-        labelEn: "Government Excellence",
-        labelAr: "التميز الحكومي",
+        labelEn: "Regulatory Compliance",
+        labelAr: "الامتثال التنظيمي",
         noteEn:
-          "A single planning standard, quality assured reviews and evidence based follow up raise the planning and delivery capability of every government entity, which is the operating core of government excellence.",
+          "A single planning standard and quality assured reviews keep entity plans consistent with the regulatory framework they must deliver under, and make gaps visible early.",
         noteAr:
-          "يرفع توحيد معيار التخطيط ومراجعات ضمان الجودة والمتابعة القائمة على الأدلة قدرةَ كل جهة حكومية على التخطيط والإنجاز، وهي جوهر التميز الحكومي في التشغيل.",
+          "يحافظ توحيد معيار التخطيط ومراجعات ضمان الجودة على اتساق خطط الجهات مع الإطار التنظيمي الذي تنفذ في ظله، ويكشف الفجوات مبكراً.",
       },
       {
-        targetKind: "nds_node",
+        targetKind: "nes_node",
         targetCode: "O1",
-        labelEn: "Sustainable Economic Growth",
-        labelAr: "النمو الاقتصادي المستدام",
+        labelEn: "Water Security",
+        labelAr: "الأمن المائي",
         noteEn:
-          "Economic initiatives reach their targets faster when their plans are properly specified and when simulation exposes weak assumptions before money is committed.",
+          "Water initiatives reach their targets faster when their plans are properly specified and when simulation exposes weak assumptions before money is committed.",
         noteAr:
-          "تبلغ المبادرات الاقتصادية مستهدفاتها بوتيرة أسرع حين تكون خططها محددة بدقة وحين تكشف المحاكاة الافتراضات الضعيفة قبل الالتزام بالإنفاق.",
+          "تبلغ مبادرات المياه مستهدفاتها بوتيرة أسرع حين تكون خططها محددة بدقة وحين تكشف المحاكاة الافتراضات الضعيفة قبل الالتزام بالإنفاق.",
       },
       {
-        targetKind: "nds_node",
+        targetKind: "nes_node",
         targetCode: "O2",
-        labelEn: "Fiscal Sustainability",
-        labelAr: "الاستدامة المالية",
+        labelEn: "Agriculture and Food Security",
+        labelAr: "الأمن الغذائي والزراعة",
         noteEn:
-          "Testing policies before adoption and linking plans to costed outputs reduces spending on initiatives that would not have produced the intended result.",
+          "Testing policies before adoption and linking plans to costed outputs reduces spending on initiatives that would not have produced the intended result for farming and food systems.",
         noteAr:
-          "يقلّص اختبار السياسات قبل اعتمادها وربط الخطط بمخرجات مُكلّفة الإنفاقَ على مبادرات ما كانت لتحقق النتيجة المقصودة.",
+          "يقلّص اختبار السياسات قبل اعتمادها وربط الخطط بمخرجات مُكلّفة الإنفاقَ على مبادرات ما كانت لتحقق النتيجة المقصودة للمزارع والنظم الغذائية.",
       },
     ],
   },
   {
     code: "G2",
-    titleEn: "Trusted official statistics and national data",
-    titleAr: "إحصاءات رسمية وبيانات وطنية موثوقة",
+    titleEn: "Trusted environmental data and statistics",
+    titleAr: "بيانات وإحصاءات بيئية موثوقة",
     descriptionEn:
-      "Official statistics are produced to international quality standards, released on a published calendar, and documented so that any user can judge how a figure was made and when it may be revised. National data is governed as a shared public asset, with standing sharing agreements and one catalogue that tells a user what exists and how to obtain it. Trust is the real outcome: the figures the country argues with should be the Council's figures.",
+      "The Office builds the environmental evidence base the sector relies on: data that meets international quality standards, is governed and shared as an asset across entities, and is easy for users to find, trust and reuse. It modernises how monitoring data is captured and produced, publishes on a predictable calendar and explains every revision. The goal is achieved when decision makers reach for the Office's figures first.",
     descriptionAr:
-      "تُنتَج الإحصاءات الرسمية وفق معايير الجودة الدولية وتُنشر وفق روزنامة معلنة وتُوثَّق بحيث يستطيع أي مستخدم الحكم على كيفية إنتاج الرقم وموعد مراجعته المحتمل. وتُحكَم البيانات الوطنية بوصفها أصلاً عاماً مشتركاً، باتفاقيات تبادل دائمة ودليل موحد يخبر المستخدم بما هو متاح وبكيفية الحصول عليه. والثقة هي المحصلة الحقيقية: أن تكون أرقام المجلس هي المرجع الذي يستند إليه الجميع.",
-    ownerUnitCode: "NSC",
+      "يبني المكتب قاعدة الأدلة البيئية التي يعتمد عليها القطاع: بيانات تستوفي المعايير الدولية للجودة، وتُحوكَم وتُشارَك بين الجهات بوصفها أصلاً، ويسهل على المستخدمين إيجادها والوثوق بها وإعادة استخدامها. ويحدّث طريقة التقاط بيانات الرصد وإنتاجها، وينشر وفق روزنامة متوقعة ويشرح كل مراجعة. ويتحقق الهدف حين يلجأ صناع القرار إلى أرقام المكتب أولاً.",
+    ownerUnitCode: "EDA",
     alignment: [
       {
-        targetKind: "nds_node",
-        targetCode: "O7",
-        labelEn: "Government Excellence",
-        labelAr: "التميز الحكومي",
+        targetKind: "nes_node",
+        targetCode: "O3",
+        labelEn: "Climate and Environment",
+        labelAr: "المناخ والبيئة",
         noteEn:
-          "Government decisions, budgets and performance reports all draw on official statistics, so the quality and timeliness of those statistics set a ceiling on the quality of government decision making.",
+          "Trusted emissions, land and environmental condition data is the base for climate reporting and for tracking environmental commitments.",
         noteAr:
-          "تستند قرارات الحكومة وموازناتها وتقارير أدائها إلى الإحصاءات الرسمية، ومن ثم فإن جودة تلك الإحصاءات وحداثتها تضعان سقفاً لجودة صنع القرار الحكومي.",
+          "تشكل بيانات الانبعاثات والأراضي والأحوال البيئية الموثوقة القاعدة للإبلاغ المناخي ولمتابعة الالتزامات البيئية.",
       },
       {
         targetKind: "data_strategy_initiative",
-        targetCode: "national-data-statistics-strategy",
-        labelEn: "National Data and Statistics Strategy",
-        labelAr: "الاستراتيجية الوطنية للبيانات والإحصاء",
+        targetCode: "environmental-data-strategy",
+        labelEn: "Environmental Data Strategy",
+        labelAr: "استراتيجية البيانات البيئية",
         noteEn:
-          "The quality framework, the data sharing agreements and the unified catalogue are the Council's direct contribution to the national data and statistics agenda.",
+          "Data governance, sharing agreements, a unified catalogue and quality standards are the core of the environmental data strategy and are delivered through this goal.",
         noteAr:
-          "يمثل إطار الجودة واتفاقيات تبادل البيانات والدليل الموحد إسهام المجلس المباشر في الأجندة الوطنية للبيانات والإحصاء.",
+          "تشكل حوكمة البيانات واتفاقيات المشاركة والفهرس الموحد ومعايير الجودة جوهر استراتيجية البيانات البيئية، وتُنفَّذ عبر هذا الهدف.",
       },
       {
-        targetKind: "nds_node",
+        targetKind: "nes_node",
         targetCode: "O1",
-        labelEn: "Sustainable Economic Growth",
-        labelAr: "النمو الاقتصادي المستدام",
+        labelEn: "Water Security",
+        labelAr: "الأمن المائي",
         noteEn:
-          "Investors, firms and analysts price risk from official economic statistics, so faster and better documented releases improve the information base of the whole economy.",
+          "Consistent water supply, demand and quality data lets the water theme be steered on shared figures instead of entity by entity estimates.",
         noteAr:
-          "يقيس المستثمرون والشركات والمحللون المخاطر انطلاقاً من الإحصاءات الاقتصادية الرسمية، فتُحسّن الإصدارات الأسرع والأفضل توثيقاً القاعدةَ المعلوماتية للاقتصاد بأكمله.",
+          "تتيح بيانات العرض والطلب وجودة المياه المتسقة توجيه محور المياه بأرقام مشتركة بدل تقديرات كل جهة على حدة.",
       },
     ],
   },
   {
     code: "G3",
-    titleEn: "Foresight and readiness for national risks",
-    titleAr: "الاستشراف والجاهزية للمخاطر الوطنية",
+    titleEn: "Foresight and readiness for environmental risk",
+    titleAr: "الاستشراف والجاهزية للمخاطر البيئية",
     descriptionEn:
-      "The Council watches the horizon on the country's behalf: it scans for signals of change, turns them into scenarios that leadership can act on, and keeps a live reading of the risks that could knock national plans off course. Foresight is scheduled into the planning and budget cycle so that it shapes commitments rather than commenting on them. Over the period, the capability spreads beyond the Council into a network of trained foresight practitioners across government.",
+      "The Office scans for emerging risks and opportunities, briefs leadership every quarter and builds scenarios for Saudi Vision 2030 environmental targets and beyond. It tests how people respond to water and waste policies through behavioural trials, and grows a foresight network across entities. The goal is achieved when long term choices on water, climate and land visibly change because of what foresight showed.",
     descriptionAr:
-      "يرصد المجلس الأفق نيابة عن الدولة: يمسح إشارات التغيير، ويحوّلها إلى سيناريوهات قابلة للتحرك من قبل القيادة، ويحتفظ بقراءة حيّة للمخاطر التي قد تحرف الخطط الوطنية عن مسارها. ويُدرَج الاستشراف ضمن دورة التخطيط والموازنة ليصوغ الالتزامات لا ليعلّق عليها بعد إقرارها. وخلال فترة الاستراتيجية تمتد هذه القدرة خارج المجلس لتصبح شبكة من ممارسي الاستشراف المدرَّبين في الجهات الحكومية.",
-    ownerUnitCode: "FFV",
+      "يرصد المكتب المخاطر والفرص الناشئة، ويُطلع القيادة كل ربع سنة، ويبني سيناريوهات لمستهدفات رؤية السعودية 2030 البيئية وما بعدها. ويختبر استجابة الناس لسياسات المياه والنفايات عبر التجارب السلوكية، وينمّي شبكة استشراف عبر الجهات. ويتحقق الهدف حين تتغير الخيارات الطويلة الأجل في المياه والمناخ والأراضي بشكل ملموس بفضل ما أظهره الاستشراف.",
+    ownerUnitCode: "FRS",
     alignment: [
       {
-        targetKind: "nds_node",
-        targetCode: "O7",
-        labelEn: "Government Excellence",
-        labelAr: "التميز الحكومي",
-        noteEn:
-          "Anticipating disruption and preparing options in advance is what separates a government that reacts from one that is ready, and readiness is the part of excellence that only shows under stress.",
-        noteAr:
-          "استباق الاضطرابات وإعداد الخيارات مسبقاً هو ما يفصل بين حكومة تتفاعل مع الأحداث وأخرى جاهزة لها، والجاهزية هي وجه التميز الذي لا يظهر إلا تحت الضغط.",
-      },
-      {
-        targetKind: "nds_node",
-        targetCode: "O6",
-        labelEn: "Environmental Sustainability",
-        labelAr: "الاستدامة البيئية",
-        noteEn:
-          "Climate, water and energy transition risks unfold over decades, so scenario work is the main instrument for bringing them into decisions taken today.",
-        noteAr:
-          "تمتد مخاطر المناخ والمياه وتحول الطاقة على مدى عقود، ما يجعل أعمال السيناريوهات الأداة الرئيسة لإدخالها في القرارات التي تُتخذ اليوم.",
-      },
-      {
-        targetKind: "nds_node",
+        targetKind: "nes_node",
         targetCode: "O3",
-        labelEn: "Future-Ready Workforce",
-        labelAr: "قوة عاملة جاهزة للمستقبل",
+        labelEn: "Climate and Environment",
+        labelAr: "المناخ والبيئة",
         noteEn:
-          "Scenarios of technology and labour market change tell education and training entities which skills to build before the demand for them arrives.",
+          "Early signals on climate impacts and environmental pressure give the climate theme time to adapt its plans before shocks arrive.",
         noteAr:
-          "تُبيّن سيناريوهات التغير التقني وتحولات سوق العمل لجهات التعليم والتدريب المهاراتِ الواجب بناؤها قبل أن يظهر الطلب عليها.",
+          "تمنح الإشارات المبكرة عن الآثار المناخية والضغوط البيئية محور المناخ وقتاً لتكييف خططه قبل وقوع الصدمات.",
+      },
+      {
+        targetKind: "nes_node",
+        targetCode: "O4",
+        labelEn: "Biodiversity and Land",
+        labelAr: "التنوع الأحيائي والأراضي",
+        noteEn:
+          "Scenarios on land degradation, desertification and habitat pressure help the land and biodiversity theme choose where to act first.",
+        noteAr:
+          "تساعد السيناريوهات عن تدهور الأراضي والتصحر وضغوط الموائل محور الأراضي والتنوع الأحيائي على اختيار مواضع التدخل الأولى.",
+      },
+      {
+        targetKind: "nes_node",
+        targetCode: "O6",
+        labelEn: "Air Quality",
+        labelAr: "جودة الهواء",
+        noteEn:
+          "Horizon scanning on emission sources and exposure trends supports earlier action on air quality.",
+        noteAr:
+          "يدعم مسح الأفق لمصادر الانبعاثات واتجاهات التعرض اتخاذ إجراءات أبكر بشأن جودة الهواء.",
       },
     ],
   },
   {
     code: "G4",
-    titleEn: "Institutional and digital excellence",
-    titleAr: "التميز المؤسسي والرقمي",
+    titleEn: "Regulatory clarity and institutional excellence",
+    titleAr: "الوضوح التنظيمي والتميز المؤسسي",
     descriptionEn:
-      "The Council holds itself to the standard it asks of others: clear processes, measured service quality, knowledge that survives the departure of the person who created it, and digital platforms that carry the real work instead of sitting beside it. Internal performance is reported from data the systems already hold, not assembled by hand each quarter. This goal is the enabler beneath the other four.",
+      "The Office keeps regulation and institutional knowledge current and findable, and runs its own work on modern digital platforms. A regulatory register tracks changes and their effect on plans and indicators, knowledge is captured so a change of role never removes context, and information security and continuity are built in. The goal is achieved when anyone in the Office can find the current rule, its source and its impact in minutes.",
     descriptionAr:
-      "يُخضِع المجلس نفسه للمعيار الذي يطلبه من غيره: إجراءات واضحة، وجودة خدمة مُقاسة، ومعرفة تبقى بعد مغادرة من أنتجها، ومنصات رقمية تحمل العمل الحقيقي بدل أن تقف على هامشه. ويُرفع الأداء الداخلي من البيانات التي تحتفظ بها الأنظمة أصلاً لا بتجميع يدوي كل ربع سنة. وهذا الهدف هو الممكّن الذي تقوم عليه الأهداف الأربعة الأخرى.",
-    ownerUnitCode: "IDP",
+      "يُبقي المكتب الأنظمة والمعرفة المؤسسية محدّثة وسهلة الاسترجاع، ويدير عمله على منصات رقمية حديثة. يتتبع سجل تنظيمي التغييرات وأثرها على الخطط والمؤشرات، وتُوثَّق المعرفة فلا يزيل تغيير الدور سياقاً، وتُبنى أمن المعلومات والاستمرارية في صلب العمل. ويتحقق الهدف حين يستطيع أي موظف في المكتب إيجاد النظام الحالي ومصدره وأثره خلال دقائق.",
+    ownerUnitCode: "RCM",
     alignment: [
       {
-        targetKind: "nds_node",
+        targetKind: "nes_node",
         targetCode: "O7",
-        labelEn: "Government Excellence",
-        labelAr: "التميز الحكومي",
+        labelEn: "Regulatory Compliance",
+        labelAr: "الامتثال التنظيمي",
         noteEn:
-          "An institution that advises government on modernisation has to model it, so the Council's own process automation, service quality system and continuity arrangements are a direct contribution to the excellence agenda.",
+          "A current regulatory register and change tracking is the working core of the regulatory compliance theme.",
         noteAr:
-          "على المؤسسة التي تقدّم المشورة للحكومة في التحديث أن تكون قدوة فيه، ومن ثم تمثل أتمتة إجراءات المجلس ونظام جودة خدماته وترتيبات استمراريته إسهاماً مباشراً في أجندة التميز الحكومي.",
+          "يشكل السجل التنظيمي المحدّث وتتبع التغييرات الجوهر العملي لمحور الامتثال التنظيمي.",
       },
       {
-        targetKind: "nds_node",
-        targetCode: "O3",
-        labelEn: "Future-Ready Workforce",
-        labelAr: "قوة عاملة جاهزة للمستقبل",
+        targetKind: "nes_node",
+        targetCode: "O5",
+        labelEn: "Waste and Circular Economy",
+        labelAr: "النفايات والاقتصاد الدائري",
         noteEn:
-          "Building analytical, statistical and foresight careers inside the Council, with documented methods and structured handover, adds to the national stock of advanced skills.",
+          "Clear and findable rules on waste and recycling help entities and operators comply and help the Office see where requirements overlap or conflict.",
         noteAr:
-          "يضيف بناء المسارات المهنية في التحليل والإحصاء والاستشراف داخل المجلس، مع توثيق المنهجيات وتنظيم التسليم، إلى الرصيد الوطني من المهارات المتقدمة.",
+          "تساعد القواعد الواضحة وسهلة الاسترجاع بشأن النفايات وإعادة التدوير الجهات والمشغّلين على الامتثال، وتُظهر للمكتب مواضع تداخل المتطلبات أو تعارضها.",
       },
       {
         targetKind: "data_strategy_initiative",
-        targetCode: "national-data-statistics-strategy",
-        labelEn: "National Data and Statistics Strategy",
-        labelAr: "الاستراتيجية الوطنية للبيانات والإحصاء",
+        targetCode: "environmental-data-strategy",
+        labelEn: "Environmental Data Strategy",
+        labelAr: "استراتيجية البيانات البيئية",
         noteEn:
-          "Internal data platforms, security controls and automated reporting give the national data agenda a working reference implementation inside the Council itself.",
+          "Unified digital platforms and data driven performance reporting are the internal systems on which the environmental data strategy runs.",
         noteAr:
-          "تمنح المنصات الداخلية للبيانات وضوابط الأمن والتقارير المؤتمتة الأجندةَ الوطنية للبيانات تطبيقاً مرجعياً عاملاً داخل المجلس نفسه.",
+          "تشكل المنصات الرقمية الموحدة وتقارير الأداء القائمة على البيانات النظم الداخلية التي تقوم عليها استراتيجية البيانات البيئية.",
       },
     ],
   },
   {
     code: "G5",
-    titleEn: "Partnerships and national communication",
-    titleAr: "الشراكات والتواصل الوطني",
+    titleEn: "Partnerships and communication",
+    titleAr: "الشراكات والاتصال",
     descriptionEn:
-      "The Council extends its reach through structured partnerships with government entities, universities, the private sector and international organisations, so that analytical capacity is shared rather than duplicated. At the same time it explains national plans and official statistics to the public in language people can use, on a predictable calendar. The goal is a Council that is both connected and understood.",
+      "The Office extends its reach through structured partnerships with entities, universities and international organisations, and tells the environmental story with one clear voice. It engages the global indicator frameworks the Kingdom reports against, publishes on a coordinated plan and runs steering committee sessions that end in decisions with owners. The goal is achieved when partners and the public understand the national picture and what is being done about it.",
     descriptionAr:
-      "يوسّع المجلس أثره عبر شراكات منظمة مع الجهات الحكومية والجامعات والقطاع الخاص والمنظمات الدولية، بحيث تُتقاسم القدرة التحليلية بدل تكرارها. ويشرح في الوقت نفسه الخطط الوطنية والإحصاءات الرسمية للجمهور بلغة قابلة للاستخدام ووفق روزنامة معلومة. والغاية أن يكون المجلس موصولاً بشركائه ومفهوماً لدى جمهوره في آن واحد.",
-    ownerUnitCode: "CA",
+      "يوسّع المكتب أثره عبر شراكات منظمة مع الجهات والجامعات والمنظمات الدولية، ويروي القصة البيئية بصوت واحد واضح. ويتفاعل مع أطر المؤشرات العالمية التي تُبلّغ المملكة عنها، وينشر وفق خطة منسقة، ويدير جلسات اللجنة التوجيهية بحيث تنتهي بقرارات لها مسؤولون. ويتحقق الهدف حين يفهم الشركاء والجمهور الصورة الوطنية وما يُعمل بشأنها.",
+    ownerUnitCode: "PAR",
     alignment: [
       {
-        targetKind: "nds_node",
-        targetCode: "O7",
-        labelEn: "Government Excellence",
-        labelAr: "التميز الحكومي",
+        targetKind: "nes_node",
+        targetCode: "O3",
+        labelEn: "Climate and Environment",
+        labelAr: "المناخ والبيئة",
         noteEn:
-          "Coordinated partnerships and clear public reporting on national progress are how government demonstrates that it is accountable for what it promised.",
+          "International cooperation and consistent public messages support the Kingdom's climate and environmental commitments and its standing in global reporting.",
         noteAr:
-          "تمثل الشراكات المنسقة والتقارير العامة الواضحة عن التقدم الوطني الوسيلةَ التي تُظهر بها الحكومة مساءلتها عما التزمت به.",
+          "يدعم التعاون الدولي والرسائل العامة المتسقة التزامات المملكة المناخية والبيئية ومكانتها في الإبلاغ العالمي.",
       },
       {
-        targetKind: "nds_node",
-        targetCode: "O4",
-        labelEn: "Cohesive Society",
-        labelAr: "مجتمع متماسك",
+        targetKind: "nes_node",
+        targetCode: "O1",
+        labelEn: "Water Security",
+        labelAr: "الأمن المائي",
         noteEn:
-          "When people can see the national plan and the evidence behind it in their own language, participation in national goals rests on understanding rather than on announcement.",
+          "Research and international partnerships bring methods and benchmarks that water entities can use for planning and demand management.",
         noteAr:
-          "حين يتمكن الناس من الاطلاع على الخطة الوطنية والأدلة التي تسندها بلغتهم، تقوم المشاركة في الأهداف الوطنية على الفهم لا على الإعلان.",
+          "تجلب الشراكات البحثية والدولية منهجيات ومرجعيات تستفيد منها جهات المياه في التخطيط وإدارة الطلب.",
       },
       {
-        targetKind: "nds_node",
-        targetCode: "O5",
-        labelEn: "Quality of Life",
-        labelAr: "جودة الحياة",
+        targetKind: "nes_node",
+        targetCode: "O2",
+        labelEn: "Agriculture and Food Security",
+        labelAr: "الأمن الغذائي والزراعة",
         noteEn:
-          "Publishing accessible social and living standards statistics lets residents and service providers see where quality of life is improving and where it is not.",
+          "Cooperation with international and academic partners brings evidence on sustainable farming and food systems into national planning.",
         noteAr:
-          "يتيح نشر الإحصاءات الاجتماعية وإحصاءات مستويات المعيشة بصورة ميسّرة للسكان ومقدمي الخدمات رؤية المجالات التي تتحسن فيها جودة الحياة وتلك التي لا تتحسن.",
+          "يُدخل التعاون مع الشركاء الدوليين والأكاديميين أدلة عن الزراعة المستدامة والنظم الغذائية في التخطيط الوطني.",
       },
     ],
   },
 ];
 
 /* ------------------------------------------------------------------ */
-/* 6. Results chain: intermediate outcomes                             */
+/* 9. Intermediate outcomes                                            */
 /* ------------------------------------------------------------------ */
 
 export const INTERMEDIATE_OUTCOMES: IntermediateOutcomeSeed[] = [
   {
     code: "G1.IO1",
     goalCode: "G1",
-    titleEn: "Strategies and plans are prepared to a single national standard",
-    titleAr: "إعداد الاستراتيجيات والخطط وفق معيار وطني موحد",
+    titleEn: "Environment strategies and plans follow one national standard",
+    titleAr: "اتباع استراتيجيات البيئة وخططها معياراً وطنياً موحداً",
     descriptionEn:
-      "Every sector and entity strategy follows the same results chain, uses the same templates and carries indicator cards that meet a published quality checklist. Planning teams across government are trained and certified in the method, so compliance comes from capability rather than from correction.",
+      "Every sector and entity strategy follows the same results chain, uses the same templates and carries indicator cards that meet a published quality checklist. Planning teams across the sector are trained and certified in the method, so compliance comes from capability rather than from correction.",
     descriptionAr:
-      "تتبع كل استراتيجية قطاعية ومؤسسية سلسلة النتائج ذاتها وتستخدم النماذج ذاتها وتتضمن بطاقات مؤشرات مستوفية لقائمة تحقق معلنة للجودة. وتُدرَّب فرق التخطيط في الجهات وتُعتمد في المنهجية، فيأتي الالتزام من القدرة لا من التصحيح اللاحق.",
-    ownerUnitCode: "PQI",
+      "تتبع كل استراتيجية قطاعية ومؤسسية سلسلة النتائج ذاتها وتستخدم النماذج ذاتها وتتضمن بطاقات مؤشرات مستوفية لقائمة تحقق معلنة للجودة. وتُدرَّب فرق التخطيط في القطاع وتُعتمد في المنهجية، فيأتي الالتزام من القدرة لا من التصحيح اللاحق.",
+    ownerUnitCode: "PQS",
   },
   {
     code: "G1.IO2",
     goalCode: "G1",
-    titleEn: "NDS3 delivery is monitored and supported with evidence",
-    titleAr: "متابعة تنفيذ استراتيجية التنمية الوطنية الثالثة ودعمه بالأدلة",
+    titleEn: "NES delivery is monitored and supported with evidence",
+    titleAr: "متابعة تنفيذ الاستراتيجية الوطنية للبيئة ودعمه بالأدلة",
     descriptionEn:
-      "Progress on NDS3 initiatives is reported on a fixed cycle against verifiable evidence, and leadership sees one integrated picture rather than a set of entity submissions. Entities that fall behind receive targeted implementation support instead of another request for a report.",
+      "Progress on National Environment Strategy initiatives is reported on a fixed cycle against verifiable evidence, and lagging initiatives receive hands on support. Leadership sees one integrated picture of delivery and can act on it before delays become failures.",
     descriptionAr:
-      "يُرفع التقدم في مبادرات استراتيجية التنمية الوطنية الثالثة وفق دورة ثابتة واستناداً إلى أدلة قابلة للتحقق، وترى القيادة صورة واحدة متكاملة بدل مجموعة من تقارير الجهات المنفصلة. وتتلقى الجهات المتعثرة دعماً تنفيذياً موجّهاً بدل طلب تقرير إضافي.",
-    ownerUnitCode: "FAI",
+      "يُبلَّغ عن التقدم في مبادرات الاستراتيجية الوطنية للبيئة وفق دورة ثابتة وبأدلة يمكن التحقق منها، وتتلقى المبادرات المتأخرة دعماً مباشراً. وترى القيادة صورة واحدة متكاملة للإنجاز وتستطيع التصرف قبل أن يتحول التأخر إلى إخفاق.",
+    ownerUnitCode: "PMD",
   },
   {
     code: "G1.IO3",
     goalCode: "G1",
-    titleEn: "Policies are tested before they are adopted",
-    titleAr: "اختبار السياسات قبل اعتمادها",
+    titleEn: "Policies and regulations are tested before they are adopted",
+    titleAr: "اختبار السياسات والأنظمة قبل اعتمادها",
     descriptionEn:
-      "Major policy proposals pass through simulation or a controlled trial before they reach the decision table, so their expected effects and trade offs are stated in numbers. Where a proposal does not survive the test, the finding is recorded and reused rather than rediscovered.",
+      "Major policy proposals on water, agriculture and climate pass through simulation or a controlled trial before they reach the decision table. Decision makers see likely effects, costs and trade-offs in advance, and weak proposals are improved or dropped early.",
     descriptionAr:
-      "تمر مقترحات السياسات الكبرى بالمحاكاة أو بتجربة محكومة قبل وصولها إلى طاولة القرار، بحيث تُعرض آثارها المتوقعة ومفاضلاتها بالأرقام. وحين لا يصمد المقترح أمام الاختبار تُوثَّق النتيجة ويُعاد استخدامها بدل اكتشافها من جديد.",
-    ownerUnitCode: "SPS",
+      "تمر مقترحات السياسات الكبرى في المياه والزراعة والمناخ عبر المحاكاة أو تجربة مضبوطة قبل وصولها إلى طاولة القرار. ويرى صناع القرار الآثار المرجحة والتكاليف والمفاضلات مسبقاً، وتُحسَّن المقترحات الضعيفة أو تُسقَط مبكراً.",
+    ownerUnitCode: "PLB",
   },
   {
     code: "G2.IO1",
     goalCode: "G2",
-    titleEn: "Official statistics meet international quality standards",
-    titleAr: "استيفاء الإحصاءات الرسمية لمعايير الجودة الدولية",
+    titleEn: "Environmental data meets international quality standards",
+    titleAr: "استيفاء البيانات البيئية للمعايير الدولية للجودة",
     descriptionEn:
-      "Statistical production follows a documented quality assurance framework aligned to international principles, supported by modern systems and accredited classifications. Each statistical product carries a quality report that states its methods, its limits and its revision history.",
+      "Environmental data is produced under a documented quality framework, on modern monitoring and production systems, with accredited metadata and classifications. Quality is assessed against international practice and the results are published.",
     descriptionAr:
-      "يسير الإنتاج الإحصائي وفق إطار موثق لضمان الجودة متوائم مع المبادئ الدولية، ومسنود بأنظمة حديثة وتصنيفات معتمدة. ويحمل كل منتج إحصائي تقرير جودة يبيّن منهجياته وحدوده وسجل مراجعاته.",
-    ownerUnitCode: "SQ",
+      "تُنتج البيانات البيئية في إطار جودة موثق، وعلى نظم رصد وإنتاج حديثة، مع بيانات وصفية وتصنيفات معتمدة. وتُقيَّم الجودة قياساً إلى الممارسات الدولية وتُنشر النتائج.",
+    ownerUnitCode: "DQS",
   },
   {
     code: "G2.IO2",
     goalCode: "G2",
-    titleEn: "National data is shared and governed as an asset",
-    titleAr: "تبادل البيانات الوطنية وحوكمتها بوصفها أصلاً وطنياً",
+    titleEn: "Environmental data is shared and governed as an asset",
+    titleAr: "مشاركة البيانات البيئية وحوكمتها بوصفها أصلاً",
     descriptionEn:
-      "Priority administrative data flows to the national statistical system under standing agreements with clear custodianship, access tiers and protection rules. One national catalogue describes what data exists, who holds it and how it may be obtained.",
+      "Standing agreements, clear ownership and one catalogue let entities share the data they hold with confidence. Priority administrative sources flow to the Office on agreed terms, and users can see what exists, who owns it and under what conditions it can be used.",
     descriptionAr:
-      "تتدفق البيانات الإدارية ذات الأولوية إلى المنظومة الإحصائية الوطنية بموجب اتفاقيات دائمة تحدد الجهة الحافظة ومستويات الوصول وقواعد الحماية. ويصف دليل وطني واحد البيانات المتاحة والجهات المالكة لها وسبل الحصول عليها.",
-    ownerUnitCode: "NDA",
+      "تتيح الاتفاقيات الدائمة والملكية الواضحة وفهرس واحد للجهات مشاركة ما تحتفظ به من بيانات بثقة. وتصل مصادر البيانات الإدارية ذات الأولوية إلى المكتب وفق شروط متفق عليها، ويرى المستخدمون ما هو موجود ومن يملكه وبأي شروط يمكن استخدامه.",
+    ownerUnitCode: "DGS",
   },
   {
     code: "G2.IO3",
     goalCode: "G2",
-    titleEn: "Users find, trust and reuse NPC statistics",
-    titleAr: "وصول المستخدمين إلى إحصاءات المجلس والثقة بها وإعادة استخدامها",
+    titleEn: "Users find, trust and reuse Office data",
+    titleAr: "إيجاد المستخدمين لبيانات المكتب والوثوق بها وإعادة استخدامها",
     descriptionEn:
-      "Statistics are published on time through services designed around how people actually search, download and cite data, with definitions and revisions visible next to every figure. Users are supported and taught to read the numbers correctly, so reuse grows without misinterpretation.",
+      "Open data and dissemination services are easy to use, releases follow a published calendar, and revisions are explained. Users are supported to understand and apply the data, and reuse by entities, researchers and the public grows year on year.",
     descriptionAr:
-      "تُنشر الإحصاءات في مواعيدها عبر خدمات مصممة وفق طريقة بحث المستخدمين وتحميلهم للبيانات واستشهادهم بها، مع إظهار التعريفات والمراجعات إلى جانب كل رقم. ويُدعم المستخدمون ويُدرَّبون على قراءة الأرقام قراءة صحيحة، فتتسع إعادة الاستخدام دون سوء تفسير.",
-    ownerUnitCode: "SOA",
+      "تتسم خدمات البيانات المفتوحة والنشر بسهولة الاستخدام، وتتبع الإصدارات روزنامة معلنة، وتُشرح المراجعات. ويُدعم المستخدمون لفهم البيانات وتطبيقها، وينمو استخدامها من الجهات والباحثين والجمهور عاماً بعد عام.",
+    ownerUnitCode: "DOP",
   },
   {
     code: "G3.IO1",
     goalCode: "G3",
     titleEn: "Emerging risks and opportunities are detected early",
-    titleAr: "الرصد المبكر للمخاطر والفرص الناشئة",
+    titleAr: "رصد المخاطر والفرص الناشئة مبكراً",
     descriptionEn:
-      "A standing scanning system collects and assesses signals of change from national and international sources and turns the significant ones into structured briefings. Leadership receives a regular reading of the strategic risk picture with options attached, not only a description.",
+      "A standing scanning system tracks signals across water, agriculture, climate, land, waste and air, and leadership receives a short strategic risk briefing every quarter with proposed responses and owners.",
     descriptionAr:
-      "تجمع منظومة مسح دائمة إشارات التغيير من مصادر وطنية ودولية وتقيّمها وتحوّل المهم منها إلى إحاطات منظمة. وتتلقى القيادة قراءة دورية لصورة المخاطر الاستراتيجية مصحوبة بخيارات للتعامل معها لا بالوصف وحده.",
-    ownerUnitCode: "SF",
+      "يتتبع نظام مسح دائم الإشارات في المياه والزراعة والمناخ والأراضي والنفايات والهواء، وتتلقى القيادة إحاطة موجزة عن المخاطر الاستراتيجية كل ربع سنة مع الاستجابات المقترحة والمسؤولين.",
+    ownerUnitCode: "SCN",
   },
   {
     code: "G3.IO2",
     goalCode: "G3",
-    titleEn: "National visions and long term choices are informed by foresight",
-    titleAr: "استناد الرؤى الوطنية والخيارات بعيدة المدى إلى الاستشراف",
+    titleEn: "Long term environmental choices are informed by foresight",
+    titleAr: "استنارة الخيارات البيئية الطويلة الأجل بالاستشراف",
     descriptionEn:
-      "Scenario sets, behavioural evidence and long range analysis feed directly into Qatar National Vision work and into the design of national priorities. The capability is shared with entities so that foresight becomes a normal part of how plans are written across government.",
+      "Scenario sets, behavioural insight and a network of foresight practitioners across entities feed into planning cycles and policy choices, so that long term options are weighed before they are closed off.",
     descriptionAr:
-      "تغذي حزم السيناريوهات والأدلة السلوكية والتحليلات بعيدة المدى أعمالَ رؤية قطر الوطنية وتصميمَ الأولويات الوطنية مباشرة. وتُتقاسم هذه القدرة مع الجهات ليصبح الاستشراف جزءاً معتاداً من طريقة إعداد الخطط في العمل الحكومي.",
-    ownerUnitCode: "NV",
+      "تغذي مجموعات السيناريوهات والرؤى السلوكية وشبكة ممارسي الاستشراف في الجهات دورات التخطيط والخيارات السياساتية، فتُوزن الخيارات الطويلة الأجل قبل أن تُغلق.",
+    ownerUnitCode: "FRS",
   },
   {
     code: "G4.IO1",
     goalCode: "G4",
-    titleEn: "The Council works as one modern institution",
-    titleAr: "عمل المجلس كمؤسسة حديثة واحدة",
+    titleEn: "Regulation and institutional knowledge are kept current and findable",
+    titleAr: "إبقاء الأنظمة والمعرفة المؤسسية محدّثة وسهلة الاسترجاع",
     descriptionEn:
-      "Processes, service standards and internal quality are defined once and applied across all sectors, with performance reviewed openly rather than defended department by department. Knowledge produced anywhere in the Council is captured, owned and handed over so that experience accumulates instead of leaking.",
+      "A regulatory register records each rule in force, its source and its changes, and links it to the plans and indicators it affects. Knowledge from projects, studies and departing colleagues is captured and findable, so the Office does not relearn what it already knew.",
     descriptionAr:
-      "تُحدَّد الإجراءات ومعايير الخدمة والجودة الداخلية مرة واحدة وتُطبَّق في القطاعات كافة، ويُستعرض الأداء بشفافية بدل الدفاع عنه إدارة بإدارة. وتُوثَّق المعرفة المنتَجة في أي موقع من المجلس وتُسنَد إلى مالك وتُسلَّم، فتتراكم الخبرة بدل أن تتسرب.",
-    ownerUnitCode: "IDP",
+      "يسجّل سجل تنظيمي كل نظام ساري ومصدره وتعديلاته، ويربطه بالخطط والمؤشرات التي يؤثر فيها. وتُحفظ المعرفة المستمدة من المشاريع والدراسات والزملاء المغادرين وتُتاح للاسترجاع، فلا يعيد المكتب تعلّم ما كان يعرفه.",
+    ownerUnitCode: "RCM",
   },
   {
     code: "G4.IO2",
     goalCode: "G4",
-    titleEn: "Digital platforms carry the Council's core work",
-    titleAr: "منصات رقمية تحمل الأعمال الجوهرية للمجلس",
+    titleEn: "Digital platforms carry the Office's core work",
+    titleAr: "حمل المنصات الرقمية لأعمال المكتب الأساسية",
     descriptionEn:
-      "The Council's main processes run on integrated digital platforms with automated workflow, protected data and tested continuity arrangements. Internal performance reporting is generated from those platforms, so leadership reads current data rather than a compiled snapshot.",
+      "Core processes run on a unified digital workplace with automation where it pays back, information security and business continuity are tested, and internal performance reporting is produced from data rather than compiled by hand.",
     descriptionAr:
-      "تعمل إجراءات المجلس الرئيسة على منصات رقمية متكاملة بمسارات عمل مؤتمتة وبيانات محمية وترتيبات استمرارية مُختبرة. وتُولَّد تقارير الأداء الداخلي من تلك المنصات، فتقرأ القيادة بيانات حيّة لا لقطة مُجمّعة يدوياً.",
-    ownerUnitCode: "IS",
+      "تُدار العمليات الأساسية على بيئة عمل رقمية موحدة مع أتمتة حيث يكون العائد مجدياً، وتُختبر أمن المعلومات واستمرارية الأعمال، وتُنتج تقارير الأداء الداخلي من البيانات بدل جمعها يدوياً.",
+    ownerUnitCode: "DIG",
   },
   {
     code: "G5.IO1",
     goalCode: "G5",
-    titleEn: "Partnerships extend the Council's reach",
-    titleAr: "شراكات توسّع أثر المجلس",
+    titleEn: "Partnerships extend the Office's reach",
+    titleAr: "توسيع الشراكات لنطاق عمل المكتب",
     descriptionEn:
-      "Agreements with entities, universities, research centres and international organisations give the Council access to expertise, data and joint research capacity it does not need to build alone. Each partnership carries a defined purpose, named owners and products that can be pointed to.",
+      "A structured programme with entities, universities and international organisations brings in research, methods and benchmarks the Office could not build alone, and keeps national reporting against global indicators timely and consistent.",
     descriptionAr:
-      "تمنح الاتفاقيات مع الجهات والجامعات ومراكز البحوث والمنظمات الدولية المجلسَ نفاذاً إلى خبرات وبيانات وقدرة بحثية مشتركة لا يحتاج إلى بنائها وحده. ولكل شراكة غرض محدد وجهات مسؤولة مسماة ومنتجات يمكن الإشارة إليها.",
-    ownerUnitCode: "IIC",
+      "يجلب برنامج منظم مع الجهات والجامعات والمنظمات الدولية الأبحاث والمنهجيات والمرجعيات التي لا يستطيع المكتب بناءها بمفرده، ويحافظ على انتظام الإبلاغ الوطني مقابل المؤشرات العالمية واتساقه.",
+    ownerUnitCode: "PAR",
   },
   {
     code: "G5.IO2",
     goalCode: "G5",
-    titleEn: "The Council communicates clearly with the public",
-    titleAr: "تواصل واضح مع الجمهور",
+    titleEn: "The Office communicates clearly with the public",
+    titleAr: "تواصل المكتب بوضوح مع الجمهور",
     descriptionEn:
-      "National plans, progress and statistics are explained in both languages through a planned publication calendar, in formats people can read, quote and reuse. Council sessions and the decisions that follow them are documented and tracked so that commitments do not disappear after the meeting.",
+      "One integrated communication and publication plan sets the headline messages and the calendar, and steering committee sessions are run so that every decision is recorded, owned and followed up.",
     descriptionAr:
-      "تُشرح الخطط الوطنية والتقدم المحرز والإحصاءات باللغتين وفق روزنامة نشر مخططة وبصيغ يمكن للناس قراءتها والاستشهاد بها وإعادة استخدامها. وتُوثَّق جلسات المجلس والقرارات الصادرة عنها وتُتابَع حتى لا تتلاشى الالتزامات بعد انتهاء الاجتماع.",
-    ownerUnitCode: "PR",
+      "تحدد خطة اتصال ونشر متكاملة الرسائل الرئيسية والروزنامة، وتُدار جلسات اللجنة التوجيهية بحيث يُسجَّل كل قرار ويُسنَد إلى مسؤول ويُتابَع.",
+    ownerUnitCode: "COM",
   },
 ];
 
 /* ------------------------------------------------------------------ */
-/* 7. Results chain: outputs                                           */
+/* 10. Outputs                                                         */
 /* ------------------------------------------------------------------ */
 
 export const OUTPUTS: OutputSeed[] = [
   {
     code: "G1.IO1.OP1",
     intermediateCode: "G1.IO1",
-    titleEn: "Updated results based planning manual and templates",
-    titleAr: "دليل التخطيط القائم على النتائج المحدّث ونماذجه",
+    titleEn: "Updated results framework manual and templates",
+    titleAr: "دليل إطار النتائج المحدّث ونماذجه",
     descriptionEn:
-      "A revised national manual covering the full results chain from strategic goals to activities, issued in both languages with ready to use templates for strategy documents, indicator cards, implementation plans and risk registers.",
+      "A revised manual covering the full results chain from strategic goals to activities, issued in both languages with ready to use templates for strategy documents, indicator cards, implementation plans and risk registers.",
     descriptionAr:
-      "دليل وطني منقّح يغطي سلسلة النتائج كاملة من الأهداف الاستراتيجية إلى الأنشطة، يصدر باللغتين مصحوباً بنماذج جاهزة للاستخدام لوثائق الاستراتيجيات وبطاقات المؤشرات والخطط التنفيذية وسجلات المخاطر.",
-    ownerUnitCode: "PQI",
+      "دليل منقّح يغطي سلسلة النتائج كاملة من الأهداف الاستراتيجية إلى الأنشطة، يصدر باللغتين مصحوباً بنماذج جاهزة للاستخدام لوثائق الاستراتيجيات وبطاقات المؤشرات والخطط التنفيذية وسجلات المخاطر.",
+    ownerUnitCode: "PQS",
   },
   {
     code: "G1.IO1.OP2",
     intermediateCode: "G1.IO1",
-    titleEn: "Planning capability programme for entity planning teams",
-    titleAr: "برنامج بناء القدرات التخطيطية لفرق التخطيط في الجهات",
+    titleEn: "Planning capability programme for entity programme teams",
+    titleAr: "برنامج تنمية قدرات التخطيط لفرق البرامج في الجهات",
     descriptionEn:
-      "A certified training track of workshops, applied case exercises and a practitioner handbook, delivered to the planning teams of government entities and closed with an assessed certificate of competence.",
+      "A certified training and coaching programme that builds results based planning skills in the programme teams of entities, with practical clinics held while strategies are being drafted.",
     descriptionAr:
-      "مسار تدريبي معتمد يضم ورش عمل وتمارين على حالات تطبيقية ودليلاً للممارسين، يُقدَّم لفرق التخطيط في الجهات الحكومية ويُختتم بشهادة كفاءة قائمة على تقييم.",
-    ownerUnitCode: "SDT",
+      "برنامج تدريب وإرشاد معتمد يبني مهارات التخطيط القائم على النتائج لدى فرق البرامج في الجهات، مع عيادات تطبيقية تُعقد أثناء صياغة الاستراتيجيات.",
+    ownerUnitCode: "CAP",
   },
   {
     code: "G1.IO1.OP3",
@@ -1278,32 +1290,32 @@ export const OUTPUTS: OutputSeed[] = [
     titleEn: "Quality assured reviews of sector and entity strategies",
     titleAr: "مراجعات مضمونة الجودة لاستراتيجيات القطاعات والجهات",
     descriptionEn:
-      "Written technical review reports issued for each sector and entity strategy before adoption, scoring the document against the published checklist and listing the amendments required.",
+      "A technical review service that scores each submitted strategy against a published checklist, returns written findings and confirms alignment with the National Environment Strategy before adoption.",
     descriptionAr:
-      "تقارير مراجعة فنية مكتوبة تصدر لكل استراتيجية قطاعية ومؤسسية قبل اعتمادها، تقيّم الوثيقة وفق قائمة التحقق المعلنة وتحصر التعديلات المطلوبة.",
-    ownerUnitCode: "EDP",
+      "خدمة مراجعة فنية تقيّم كل استراتيجية مرفوعة وفق قائمة تحقق معلنة، وتعيد ملاحظات مكتوبة، وتؤكد المواءمة مع الاستراتيجية الوطنية للبيئة قبل الاعتماد.",
+    ownerUnitCode: "SPD",
   },
   {
     code: "G1.IO2.OP1",
     intermediateCode: "G1.IO2",
-    titleEn: "NDS3 monitoring framework and reporting cycle",
-    titleAr: "إطار متابعة استراتيجية التنمية الوطنية الثالثة ودورة رفع التقارير",
+    titleEn: "NES monitoring framework and reporting cycle",
+    titleAr: "إطار متابعة الاستراتيجية الوطنية للبيئة ودورة الإبلاغ",
     descriptionEn:
-      "A published monitoring framework with the indicator set, evidence requirements, submission calendar and validation rules that every entity follows when reporting on NDS3 initiatives.",
+      "A monitoring framework with defined indicators, evidence requirements and a fixed reporting cycle, so that every initiative reports in the same way and on the same dates.",
     descriptionAr:
-      "إطار متابعة معلن يتضمن مجموعة المؤشرات ومتطلبات الأدلة وروزنامة الرفع وقواعد التحقق التي تلتزم بها كل جهة عند رفع تقاريرها عن مبادرات الاستراتيجية.",
-    ownerUnitCode: "MIF",
+      "إطار متابعة بمؤشرات محددة ومتطلبات أدلة ودورة إبلاغ ثابتة، بحيث تبلّغ كل مبادرة بالطريقة نفسها وفي المواعيد نفسها.",
+    ownerUnitCode: "PMD",
   },
   {
     code: "G1.IO2.OP2",
     intermediateCode: "G1.IO2",
-    titleEn: "Implementation support packages for lagging entities",
-    titleAr: "حزم دعم التنفيذ للجهات المتعثرة",
+    titleEn: "Implementation support packages for lagging initiatives",
+    titleAr: "حزم دعم التنفيذ للمبادرات المتأخرة",
     descriptionEn:
-      "A tailored support package per entity containing a diagnosis of the delivery bottleneck, an agreed recovery plan with dates, and on site assistance from the implementation support teams.",
+      "Targeted support for initiatives that fall behind: a diagnosis of blockers, a recovery plan with owners and dates, and a named support officer who stays with the initiative until it is back on track.",
     descriptionAr:
-      "حزمة دعم مصممة لكل جهة تتضمن تشخيصاً لعنق الزجاجة في التنفيذ، وخطة تعافٍ متفقاً عليها بمواعيد محددة، ومساندة ميدانية من فرق دعم التنفيذ.",
-    ownerUnitCode: "SIE",
+      "دعم موجّه للمبادرات المتأخرة: تشخيص للعوائق، وخطة تعافٍ بمسؤولين ومواعيد، وضابط دعم مسمّى يرافق المبادرة حتى تعود إلى المسار.",
+    ownerUnitCode: "ISU",
   },
   {
     code: "G1.IO2.OP3",
@@ -1311,21 +1323,21 @@ export const OUTPUTS: OutputSeed[] = [
     titleEn: "Integrated delivery dashboard for leadership",
     titleAr: "لوحة متابعة تنفيذية متكاملة للقيادة",
     descriptionEn:
-      "One dashboard that brings NDS3 outcomes, targets, initiatives and their indicators into a single current view, with drill down to the entity and the evidence behind each status.",
+      "One dashboard that brings progress, risks, indicators and evidence status together for leadership, refreshed on the reporting cycle and drillable down to the initiative.",
     descriptionAr:
-      "لوحة واحدة تجمع نتائج استراتيجية التنمية الوطنية الثالثة ومستهدفاتها ومبادراتها ومؤشراتها في عرض واحد محدّث، مع إمكانية التعمق حتى مستوى الجهة والأدلة التي تسند كل حالة.",
-    ownerUnitCode: "MIF",
+      "لوحة واحدة تجمع التقدم والمخاطر والمؤشرات وحالة الأدلة للقيادة، وتُحدَّث وفق دورة الإبلاغ ويمكن التعمق منها حتى مستوى المبادرة.",
+    ownerUnitCode: "PMD",
   },
   {
     code: "G1.IO3.OP1",
     intermediateCode: "G1.IO3",
-    titleEn: "Policy simulation models for priority sectors",
-    titleAr: "نماذج محاكاة السياسات للقطاعات ذات الأولوية",
+    titleEn: "Policy simulation models for water, agriculture and climate",
+    titleAr: "نماذج محاكاة السياسات للمياه والزراعة والمناخ",
     descriptionEn:
-      "Documented and validated simulation models for the macroeconomy, population, labour market, energy and water, each with a user interface that lets analysts run policy options and compare results.",
+      "A set of documented simulation models for water demand and supply, agricultural water use and climate related policy options, developed with research partners and maintained by the Office.",
     descriptionAr:
-      "نماذج محاكاة موثقة ومُتحقق من صحتها للاقتصاد الكلي والسكان وسوق العمل والطاقة والمياه، لكل منها واجهة استخدام تتيح للمحللين تشغيل خيارات السياسات ومقارنة نتائجها.",
-    ownerUnitCode: "SPS",
+      "مجموعة نماذج محاكاة موثقة للطلب على المياه والإمداد، واستخدام المياه الزراعي، وخيارات السياسات المرتبطة بالمناخ، تُطوَّر مع شركاء بحثيين ويتولى المكتب صيانتها.",
+    ownerUnitCode: "PLB",
   },
   {
     code: "G1.IO3.OP2",
@@ -1333,208 +1345,208 @@ export const OUTPUTS: OutputSeed[] = [
     titleEn: "Policy lab evaluations of proposed interventions",
     titleAr: "تقييمات مختبر السياسات للتدخلات المقترحة",
     descriptionEn:
-      "Evaluation reports on proposed government interventions, each stating the design of the test, the measured effect and a clear recommendation to adopt, amend or drop the intervention.",
+      "Structured evaluations of proposed interventions, using pilots and controlled comparisons where feasible, reported with their limits so that decision makers know how far the evidence goes.",
     descriptionAr:
-      "تقارير تقييم للتدخلات الحكومية المقترحة، يبيّن كل منها تصميم الاختبار والأثر المقاس وتوصية واضحة باعتماد التدخل أو تعديله أو صرف النظر عنه.",
-    ownerUnitCode: "PL",
+      "تقييمات منظمة للتدخلات المقترحة، باستخدام التجارب الرائدة والمقارنات المضبوطة حيثما أمكن، وتُعرض مع حدودها ليعرف صناع القرار مدى ما تدعمه الأدلة.",
+    ownerUnitCode: "PLB",
   },
   {
     code: "G2.IO1.OP1",
     intermediateCode: "G2.IO1",
-    titleEn: "National statistical quality assurance framework",
-    titleAr: "الإطار الوطني لضمان جودة الإحصاءات",
+    titleEn: "Environmental data quality assurance framework",
+    titleAr: "إطار ضمان جودة البيانات البيئية",
     descriptionEn:
-      "A published framework of quality dimensions, compliance criteria and self assessment tools, applied to every statistical product and accompanied by a quality report per release.",
+      "A quality framework with dimensions, checks and scoring applied to every data product, with a published self assessment and an independent review cycle against international practice.",
     descriptionAr:
-      "إطار معلن يحدد أبعاد الجودة ومعايير الالتزام وأدوات التقييم الذاتي، يُطبَّق على كل منتج إحصائي ويرافقه تقرير جودة مع كل إصدار.",
-    ownerUnitCode: "SQ",
+      "إطار جودة بأبعاد وفحوص وتقييم يُطبَّق على كل منتج بيانات، مع تقييم ذاتي منشور ودورة مراجعة مستقلة قياساً إلى الممارسات الدولية.",
+    ownerUnitCode: "DQS",
   },
   {
     code: "G2.IO1.OP2",
     intermediateCode: "G2.IO1",
-    titleEn: "Modernised statistical production systems",
-    titleAr: "أنظمة إنتاج إحصائي محدّثة",
+    titleEn: "Modernised monitoring and data production systems",
+    titleAr: "نظم الرصد وإنتاج البيانات الحديثة",
     descriptionEn:
-      "A replacement production platform covering collection, editing, imputation, estimation and dissemination, migrated domain by domain with automated validation replacing manual checks.",
+      "A modern platform for capturing monitoring data, remote sensing products and administrative records, and for producing, validating and releasing environmental data with full lineage.",
     descriptionAr:
-      "منصة إنتاج بديلة تغطي الجمع والتدقيق والتقدير للقيم الناقصة والاستدلال والنشر، تُرحَّل إليها المجالات الإحصائية واحداً تلو الآخر مع إحلال التحقق الآلي محل الفحص اليدوي.",
-    ownerUnitCode: "SSD",
+      "منصة حديثة لالتقاط بيانات الرصد ومنتجات الاستشعار عن بعد والسجلات الإدارية، ولإنتاج البيانات البيئية والتحقق منها وإصدارها مع تتبع كامل للمصدر.",
+    ownerUnitCode: "DSY",
   },
   {
     code: "G2.IO1.OP3",
     intermediateCode: "G2.IO1",
-    titleEn: "Accredited statistical metadata and classifications",
-    titleAr: "بيانات وصفية وتصنيفات إحصائية معتمدة",
+    titleEn: "Accredited metadata and classifications",
+    titleAr: "بيانات وصفية وتصنيفات معتمدة",
     descriptionEn:
-      "A maintained national set of statistical classifications, concepts, variables and code lists, aligned to international standards and published as the reference every producer must use.",
+      "Metadata and classifications for environmental data aligned with national and international standards, reviewed on a fixed cycle and published for reuse by entities.",
     descriptionAr:
-      "مجموعة وطنية متعهدة بالتحديث من التصنيفات والمفاهيم والمتغيرات وقوائم الترميز الإحصائية، متوائمة مع المعايير الدولية ومنشورة بوصفها المرجع الملزم لكل منتج للبيانات.",
-    ownerUnitCode: "SOA",
+      "بيانات وصفية وتصنيفات للبيانات البيئية متوائمة مع المعايير الوطنية والدولية، تُراجَع وفق دورة ثابتة وتُنشر لإعادة استخدامها من الجهات.",
+    ownerUnitCode: "DQS",
   },
   {
     code: "G2.IO2.OP1",
     intermediateCode: "G2.IO2",
-    titleEn: "National data governance and data sharing agreements",
-    titleAr: "حوكمة البيانات الوطنية واتفاقيات تبادل البيانات",
+    titleEn: "Data governance and sharing agreements",
+    titleAr: "حوكمة البيانات واتفاقيات المشاركة",
     descriptionEn:
-      "A governance model with defined custodianship, access tiers and protection rules, together with signed sharing agreements covering the priority administrative data sources.",
+      "A data governance model with named owners and stewards, a standard sharing agreement with tiers for sensitive fields, and a pipeline of agreements signed with priority source entities.",
     descriptionAr:
-      "نموذج حوكمة يحدد الجهات الحافظة ومستويات الوصول وقواعد الحماية، مصحوباً باتفاقيات موقّعة لتبادل البيانات تغطي مصادر البيانات الإدارية ذات الأولوية.",
-    ownerUnitCode: "NDA",
+      "نموذج حوكمة بيانات بملاك ووكلاء بيانات مسمّين، واتفاقية مشاركة نموذجية بمستويات للحقول الحساسة، ومسار اتفاقيات يجري توقيعها مع الجهات المصدرية ذات الأولوية.",
+    ownerUnitCode: "DGS",
   },
   {
     code: "G2.IO2.OP2",
     intermediateCode: "G2.IO2",
-    titleEn: "Unified national data catalogue",
-    titleAr: "الدليل الوطني الموحد للبيانات",
+    titleEn: "Unified environmental data catalogue",
+    titleAr: "فهرس موحد للبيانات البيئية",
     descriptionEn:
-      "A searchable catalogue describing national datasets, their custodians, coverage, update frequency and access conditions, kept current through automated harvesting from source systems.",
+      "One searchable catalogue of environmental datasets held by the Office and by partner entities, showing owner, definition, update frequency, quality status and conditions of use.",
     descriptionAr:
-      "دليل قابل للبحث يصف مجموعات البيانات الوطنية وجهاتها الحافظة وتغطيتها ودورية تحديثها وشروط الوصول إليها، ويُبقى محدّثاً عبر حصاد آلي من الأنظمة المصدرية.",
-    ownerUnitCode: "NDA",
+      "فهرس واحد قابل للبحث لمجموعات البيانات البيئية التي يحتفظ بها المكتب والجهات الشريكة، يُظهر المالك والتعريف وتكرار التحديث وحالة الجودة وشروط الاستخدام.",
+    ownerUnitCode: "EDA",
   },
   {
     code: "G2.IO3.OP1",
     intermediateCode: "G2.IO3",
     titleEn: "Redesigned open data and dissemination services",
-    titleAr: "خدمات نشر وبيانات مفتوحة بتصميم جديد",
+    titleAr: "خدمات البيانات المفتوحة والنشر بتصميم جديد",
     descriptionEn:
-      "A rebuilt statistics portal with data explorer, bulk download, an open application programming interface and bilingual indicator pages that show definitions and revision history next to every figure.",
+      "A redesigned open data portal and delivery channels with interactive tools, machine readable downloads and programmatic access, built around the tasks users actually perform.",
     descriptionAr:
-      "بوابة إحصائية معاد بناؤها تتضمن مستكشف بيانات وتحميلاً بالجملة وواجهة برمجة تطبيقات مفتوحة وصفحات مؤشرات ثنائية اللغة تعرض التعريفات وسجل المراجعات إلى جانب كل رقم.",
-    ownerUnitCode: "SSD",
+      "بوابة بيانات مفتوحة وقنوات نشر بتصميم جديد تضم أدوات تفاعلية وتنزيلات مقروءة آلياً ووصولاً برمجياً، مبنية حول المهام التي ينفذها المستخدمون فعلاً.",
+    ownerUnitCode: "DSY",
   },
   {
     code: "G2.IO3.OP2",
     intermediateCode: "G2.IO3",
-    titleEn: "Statistical literacy and user support programme",
-    titleAr: "برنامج الثقافة الإحصائية ودعم المستخدمين",
+    titleEn: "Data literacy and user support programme",
+    titleAr: "برنامج الإلمام بالبيانات ودعم المستخدمين",
     descriptionEn:
-      "A programme of training sessions, explanatory guides and a responsive user help desk for journalists, researchers, entity analysts and the interested public.",
+      "Guides, training sessions and a user support desk that help policy teams, researchers and journalists interpret environmental data correctly and apply it in their work.",
     descriptionAr:
-      "برنامج يضم جلسات تدريبية وأدلة تفسيرية ومكتب دعم سريع الاستجابة للمستخدمين من الصحفيين والباحثين ومحللي الجهات والجمهور المهتم.",
-    ownerUnitCode: "SDT",
+      "أدلة وجلسات تدريب ومكتب دعم للمستخدمين يساعد فرق السياسات والباحثين والصحفيين على تفسير البيانات البيئية تفسيراً صحيحاً وتطبيقها في أعمالهم.",
+    ownerUnitCode: "CAP",
   },
   {
     code: "G2.IO3.OP3",
     intermediateCode: "G2.IO3",
     titleEn: "Faster release calendar with a published revisions policy",
-    titleAr: "روزنامة نشر أسرع مع سياسة معلنة للمراجعات",
+    titleAr: "روزنامة إصدار أسرع مع سياسة مراجعات معلنة",
     descriptionEn:
-      "An advance release calendar with shortened publication lags for the main economic and social statistics, issued alongside a written revisions policy that states when and why a figure may change.",
+      "A release calendar announced in advance with shorter lags between the reference period and publication, and a revisions policy that explains when and why published figures change.",
     descriptionAr:
-      "روزنامة نشر مسبقة بفترات تأخر مختصرة لأبرز الإحصاءات الاقتصادية والاجتماعية، تصدر مصحوبة بسياسة مكتوبة للمراجعات تبيّن متى يتغير الرقم ولماذا.",
-    ownerUnitCode: "SOA",
+      "روزنامة إصدار تُعلن مسبقاً مع فجوات أقصر بين الفترة المرجعية والنشر، وسياسة مراجعات تشرح متى ولماذا تتغير الأرقام المنشورة.",
+    ownerUnitCode: "DOP",
   },
   {
     code: "G3.IO1.OP1",
     intermediateCode: "G3.IO1",
-    titleEn: "National foresight scanning system",
-    titleAr: "منظومة المسح الاستشرافي الوطني",
+    titleEn: "Environmental horizon scanning system",
+    titleAr: "نظام مسح الأفق البيئي",
     descriptionEn:
-      "A working scanning platform and signal library that collects, classifies and rates signals of change from national and international sources, with a documented method for promoting a signal to a strategic issue.",
+      "A standing system that collects, rates and tracks weak signals on water, agriculture, climate, land, waste and air from public sources, partners and expert networks, and routes them to the right team.",
     descriptionAr:
-      "منصة مسح عاملة ومكتبة إشارات تجمع إشارات التغيير من مصادر وطنية ودولية وتصنفها وتقيّمها، مع منهجية موثقة لترقية الإشارة إلى قضية استراتيجية.",
-    ownerUnitCode: "SF",
+      "نظام دائم يجمع الإشارات الضعيفة عن المياه والزراعة والمناخ والأراضي والنفايات والهواء من المصادر العامة والشركاء وشبكات الخبراء، ويقيّمها ويتتبعها ويوجّهها إلى الفريق المناسب.",
+    ownerUnitCode: "SCN",
   },
   {
     code: "G3.IO1.OP2",
     intermediateCode: "G3.IO1",
     titleEn: "Quarterly strategic risk briefings for leadership",
-    titleAr: "إحاطات ربع سنوية بالمخاطر الاستراتيجية للقيادة",
+    titleAr: "إحاطات ربعية عن المخاطر الاستراتيجية للقيادة",
     descriptionEn:
-      "A quarterly briefing pack for senior leadership setting out the strategic risk picture, what has changed since the last quarter, and the response options with their implications.",
+      "A short, regular briefing that sets out the leading risks and opportunities, their likely timing and effect, and proposed responses with named owners.",
     descriptionAr:
-      "حزمة إحاطة ربع سنوية للقيادة العليا تعرض صورة المخاطر الاستراتيجية، وما استجد منذ الربع السابق، وخيارات الاستجابة وتبعات كل منها.",
-    ownerUnitCode: "SF",
+      "إحاطة موجزة ومنتظمة تعرض أبرز المخاطر والفرص وتوقيتها وأثرها المرجح والاستجابات المقترحة مع مسؤولين مسمّين.",
+    ownerUnitCode: "SCN",
   },
   {
     code: "G3.IO2.OP1",
     intermediateCode: "G3.IO2",
-    titleEn: "Scenario sets for Qatar National Vision 2030 and beyond",
-    titleAr: "حزم سيناريوهات لرؤية قطر الوطنية 2030 وما بعدها",
+    titleEn: "Scenario sets for Saudi Vision 2030 environmental targets and beyond",
+    titleAr: "مجموعات سيناريوهات لمستهدفات رؤية السعودية 2030 البيئية وما بعدها",
     descriptionEn:
-      "Published scenario sets covering the economy, population, environment and society to 2040, each with implications for national priorities and a set of early warning indicators.",
+      "A maintained set of scenarios on water, climate, land and food that stress test the environmental targets of Saudi Vision 2030 and show what choices matter beyond 2030.",
     descriptionAr:
-      "حزم سيناريوهات منشورة تغطي الاقتصاد والسكان والبيئة والمجتمع حتى عام 2040، يتضمن كل منها انعكاساته على الأولويات الوطنية ومجموعة من مؤشرات الإنذار المبكر.",
-    ownerUnitCode: "NV",
+      "مجموعة سيناريوهات محدّثة عن المياه والمناخ والأراضي والغذاء تختبر تحمّل المستهدفات البيئية لرؤية السعودية 2030 وتُظهر الخيارات المهمة بعد عام 2030.",
+    ownerUnitCode: "SCN",
   },
   {
     code: "G3.IO2.OP2",
     intermediateCode: "G3.IO2",
-    titleEn: "Behavioural insight trials for national priorities",
-    titleAr: "تجارب الرؤى السلوكية للأولويات الوطنية",
+    titleEn: "Behavioural insight trials for water and waste priorities",
+    titleAr: "تجارب الرؤى السلوكية لأولويات المياه والنفايات",
     descriptionEn:
-      "Completed behavioural trials on priority national themes such as energy and water use, road safety and survey response, each reported with its design, its measured effect and a scale up recommendation.",
+      "Trials that test how messages, defaults and incentives change household and business behaviour on water use and waste, reported with their design and limits.",
     descriptionAr:
-      "تجارب سلوكية منجزة في موضوعات وطنية ذات أولوية مثل استهلاك الطاقة والمياه والسلامة المرورية والاستجابة للمسوح، يُرفع عن كل منها تقرير يبيّن تصميمها وأثرها المقاس وتوصية بشأن توسيع نطاقها.",
-    ownerUnitCode: "BSN",
+      "تجارب تختبر كيف تغيّر الرسائل والخيارات الافتراضية والحوافز سلوك الأسر والأعمال في استخدام المياه والنفايات، وتُعرض مع تصميمها وحدودها.",
+    ownerUnitCode: "BIN",
   },
   {
     code: "G3.IO2.OP3",
     intermediateCode: "G3.IO2",
-    titleEn: "Foresight capability network across government entities",
-    titleAr: "شبكة القدرات الاستشرافية في الجهات الحكومية",
+    titleEn: "Foresight capability network across entities",
+    titleAr: "شبكة قدرات الاستشراف عبر الجهات",
     descriptionEn:
-      "A trained network of foresight practitioners in government entities, supported by a shared toolkit, a community of practice and joint scanning exercises each year.",
+      "A network of foresight practitioners in entities with shared methods, a common library of scenarios and regular sessions, so that foresight is practised across the sector and not only in the Office.",
     descriptionAr:
-      "شبكة مدرَّبة من ممارسي الاستشراف في الجهات الحكومية، مسنودة بحقيبة أدوات مشتركة ومجتمع ممارسة وتمارين مسح مشتركة تُنفَّذ سنوياً.",
-    ownerUnitCode: "SF",
+      "شبكة ممارسي استشراف في الجهات بمنهجيات مشتركة ومكتبة سيناريوهات موحدة وجلسات منتظمة، ليُمارَس الاستشراف في القطاع كله لا في المكتب وحده.",
+    ownerUnitCode: "FRS",
   },
   {
     code: "G4.IO1.OP1",
     intermediateCode: "G4.IO1",
-    titleEn: "Institutional excellence and service quality system",
-    titleAr: "نظام التميز المؤسسي وجودة الخدمات",
+    titleEn: "Regulatory register and change tracking service",
+    titleAr: "السجل التنظيمي وخدمة تتبع التغييرات",
     descriptionEn:
-      "A documented process architecture with service standards, a customer satisfaction measurement cycle and an internal excellence assessment applied to every sector of the Council.",
+      "A register of environmental, water and agriculture regulation with source, status and effective dates, and a service that tracks changes and tells owners which plans and indicators are affected.",
     descriptionAr:
-      "بنية إجراءات موثقة تتضمن معايير للخدمة ودورة لقياس رضا المستفيدين وتقييماً داخلياً للتميز يُطبَّق على قطاعات المجلس كافة.",
-    ownerUnitCode: "PQI",
+      "سجل للأنظمة البيئية والمائية والزراعية بمصدرها وحالتها وتواريخ نفاذها، وخدمة تتتبع التغييرات وتُخبر المسؤولين بالخطط والمؤشرات المتأثرة.",
+    ownerUnitCode: "RLR",
   },
   {
     code: "G4.IO1.OP2",
     intermediateCode: "G4.IO1",
     titleEn: "Knowledge management and continuity programme",
-    titleAr: "برنامج إدارة المعرفة واستمرارية الخبرة",
+    titleAr: "برنامج إدارة المعرفة والاستمرارية",
     descriptionEn:
-      "A knowledge base of documented methods, lessons learned and handover files, with a named knowledge owner for every critical product and a structured handover required before any departure.",
+      "A programme that captures lessons, methods and decisions, maintains role handover notes, and makes institutional memory searchable so that a change of role does not remove context.",
     descriptionAr:
-      "قاعدة معرفية تضم المنهجيات الموثقة والدروس المستفادة وملفات التسليم، مع مالك معرفة مسمّى لكل منتج حرج وتسليم منظم يُشترط قبل مغادرة أي موظف.",
-    ownerUnitCode: "HR",
+      "برنامج يوثّق الدروس والمنهجيات والقرارات، ويحتفظ بمذكرات تسليم الأدوار، ويجعل الذاكرة المؤسسية قابلة للبحث بحيث لا يزيل تغيير الدور السياق.",
+    ownerUnitCode: "KMD",
   },
   {
     code: "G4.IO2.OP1",
     intermediateCode: "G4.IO2",
     titleEn: "Unified digital workplace and process automation",
-    titleAr: "بيئة عمل رقمية موحدة وأتمتة الإجراءات",
+    titleAr: "بيئة عمل رقمية موحدة وأتمتة العمليات",
     descriptionEn:
-      "An integrated digital workplace carrying correspondence, approvals, documents and tasks, with the Council's core administrative processes automated end to end.",
+      "One digital workplace for documents, approvals and collaboration, with the highest volume processes automated end to end and the old channels retired on published dates.",
     descriptionAr:
-      "بيئة عمل رقمية متكاملة تحمل المراسلات والاعتمادات والوثائق والمهام، مع أتمتة الإجراءات الإدارية الجوهرية في المجلس من طرف إلى طرف.",
-    ownerUnitCode: "IS",
+      "بيئة عمل رقمية واحدة للوثائق والموافقات والتعاون، مع أتمتة العمليات الأعلى حجماً من البداية إلى النهاية وإيقاف القنوات القديمة في تواريخ معلنة.",
+    ownerUnitCode: "DIG",
   },
   {
     code: "G4.IO2.OP2",
     intermediateCode: "G4.IO2",
     titleEn: "Information security and business continuity uplift",
-    titleAr: "الارتقاء بأمن المعلومات واستمرارية الأعمال",
+    titleAr: "رفع مستوى أمن المعلومات واستمرارية الأعمال",
     descriptionEn:
-      "An upgraded security posture covering access control, microdata segregation, monitoring and incident response, together with tested continuity and recovery arrangements for critical systems.",
+      "Stronger access control, encryption and monitoring, together with tested continuity plans and regular exercises for the systems that carry the Office's core work.",
     descriptionAr:
-      "وضع أمني مطوّر يغطي ضبط الصلاحيات وعزل البيانات الجزئية والرصد والاستجابة للحوادث، مع ترتيبات مُختبرة لاستمرارية الأعمال والتعافي للأنظمة الحرجة.",
-    ownerUnitCode: "IFS",
+      "ضوابط وصول وتشفير ومراقبة أقوى، إلى جانب خطط استمرارية مجرّبة وتمارين منتظمة للنظم التي تحمل أعمال المكتب الأساسية.",
+    ownerUnitCode: "DGS",
   },
   {
     code: "G4.IO2.OP3",
     intermediateCode: "G4.IO2",
     titleEn: "Data driven internal performance reporting",
-    titleAr: "تقارير الأداء الداخلي المبنية على البيانات",
+    titleAr: "تقارير الأداء الداخلي القائمة على البيانات",
     descriptionEn:
-      "An internal performance reporting service generated automatically from source systems, giving each sector and department a current view of its indicators, projects and service levels.",
+      "Internal performance reports produced automatically from source systems, with one definition per measure, replacing figures compiled by hand in spreadsheets.",
     descriptionAr:
-      "خدمة لتقارير الأداء الداخلي تُولَّد آلياً من الأنظمة المصدرية، وتمنح كل قطاع وإدارة عرضاً محدّثاً لمؤشراته ومشاريعه ومستويات خدمته.",
-    ownerUnitCode: "TO",
+      "تقارير أداء داخلية تُنتج آلياً من النظم المصدرية بتعريف واحد لكل مقياس، بديلاً عن أرقام تُجمع يدوياً في جداول إلكترونية.",
+    ownerUnitCode: "DTO",
   },
   {
     code: "G5.IO1.OP1",
@@ -1542,42 +1554,42 @@ export const OUTPUTS: OutputSeed[] = [
     titleEn: "Structured partnership programme with entities and academia",
     titleAr: "برنامج شراكات منظم مع الجهات والأوساط الأكاديمية",
     descriptionEn:
-      "A portfolio of signed partnership agreements with government entities, universities and research centres, each with an annual work plan, joint products and a named owner on both sides.",
+      "A programme of agreements and joint work plans with entities, universities and research centres, with named counterparts, shared deliverables and an annual review of what each partnership produced.",
     descriptionAr:
-      "محفظة من اتفاقيات الشراكة الموقّعة مع الجهات الحكومية والجامعات ومراكز البحوث، لكل منها خطة عمل سنوية ومنتجات مشتركة وجهة مسؤولة مسماة لدى الطرفين.",
-    ownerUnitCode: "IIC",
+      "برنامج اتفاقيات وخطط عمل مشتركة مع الجهات والجامعات ومراكز الأبحاث، بنظراء مسمّين ومخرجات مشتركة ومراجعة سنوية لما أنتجته كل شراكة.",
+    ownerUnitCode: "PAR",
   },
   {
     code: "G5.IO1.OP2",
     intermediateCode: "G5.IO1",
     titleEn: "International cooperation and global indicator engagement",
-    titleAr: "التعاون الدولي والمشاركة في المؤشرات العالمية",
+    titleAr: "التعاون الدولي والتفاعل مع المؤشرات العالمية",
     descriptionEn:
-      "A managed programme of international submissions, technical cooperation and representation, with a calendar of every global index and reporting obligation and the national data behind each one.",
+      "A coordinated route for engaging international organisations and for reporting on global indicators, including sustainable development, climate and food, with an owner and calendar for each return.",
     descriptionAr:
-      "برنامج مُدار للرفع الدولي والتعاون الفني والتمثيل، يتضمن روزنامة لكل مؤشر عالمي والتزام إبلاغي مع البيانات الوطنية التي يستند إليها كل منها.",
-    ownerUnitCode: "IIC",
+      "مسار منسق للتفاعل مع المنظمات الدولية والإبلاغ عن المؤشرات العالمية، بما فيها التنمية المستدامة والمناخ والغذاء، مع مسؤول وروزنامة لكل تقرير.",
+    ownerUnitCode: "PAR",
   },
   {
     code: "G5.IO2.OP1",
     intermediateCode: "G5.IO2",
     titleEn: "Integrated communication and publication plan",
-    titleAr: "خطة تواصل ونشر متكاملة",
+    titleAr: "خطة اتصال ونشر متكاملة",
     descriptionEn:
-      "An annual bilingual communication and publication plan covering releases, national progress reporting, digital channels and media engagement, with plain language summaries and chart packs for major products.",
+      "One annual plan that sets headline messages, publications, events and channels, and keeps the Office's public voice consistent with that of partner entities.",
     descriptionAr:
-      "خطة سنوية للتواصل والنشر باللغتين تغطي الإصدارات والتقارير الوطنية عن التقدم والقنوات الرقمية والتفاعل الإعلامي، مع ملخصات بلغة مبسطة وحزم رسوم بيانية للمنتجات الرئيسة.",
-    ownerUnitCode: "PR",
+      "خطة سنوية واحدة تحدد الرسائل الرئيسية والمنشورات والفعاليات والقنوات، وتُبقي صوت المكتب العام متسقاً مع صوت الجهات الشريكة.",
+    ownerUnitCode: "COM",
   },
   {
     code: "G5.IO2.OP2",
     intermediateCode: "G5.IO2",
-    titleEn: "Council sessions and decision follow up service",
-    titleAr: "خدمة جلسات المجلس ومتابعة القرارات",
+    titleEn: "Steering committee sessions and decision follow up service",
+    titleAr: "جلسات اللجنة التوجيهية وخدمة متابعة القرارات",
     descriptionEn:
-      "A managed service preparing Council session agendas and papers, recording decisions, and tracking each decision through to closure with the responsible unit and a due date.",
+      "Preparation, secretariat and follow up for steering committee sessions, so that papers arrive on time, each decision has an owner and a date, and progress on decisions is reported at the next session.",
     descriptionAr:
-      "خدمة مُدارة تتولى إعداد جداول أعمال جلسات المجلس وأوراقها، وتوثيق القرارات، وتتبع كل قرار حتى إغلاقه مع تحديد الوحدة المسؤولة وتاريخ الاستحقاق.",
-    ownerUnitCode: "CSA",
+      "إعداد جلسات اللجنة التوجيهية وأمانتها ومتابعتها، بحيث تصل الأوراق في وقتها ولكل قرار مسؤول وموعد، ويُعرض التقدم في القرارات في الجلسة التالية.",
+    ownerUnitCode: "PSA",
   },
 ];

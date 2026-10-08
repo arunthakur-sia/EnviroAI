@@ -1,5 +1,5 @@
 // CR07 1: a lesson links to one or more strategy nodes, across both stores
-// (NDS editions and the Council Strategy). One link is primary and rides on
+// (NES editions and the Programme Strategy). One link is primary and rides on
 // the card; the rest show in the expanded lesson. Parent levels (targets,
 // outcomes, council goals and intermediate outcomes) roll the lessons of
 // everything beneath them up, marked inherited with the originating node.
@@ -10,7 +10,7 @@ import { can } from "@/server/auth/permissions";
 import { newId, nowIso } from "@/lib/ids";
 import { audit } from "@/server/auth/audit";
 
-export type NodeKind = "nds" | "council";
+export type NodeKind = "nes" | "council";
 
 export type LinkedNode = {
   id: string;
@@ -20,7 +20,7 @@ export type LinkedNode = {
   titleAr: string;
   /** strategy_nodes.node_type, or council_nodes.level */
   level: string;
-  /** the NDS edition code, null for council nodes */
+  /** the NES edition code, null for council nodes */
   edition: string | null;
 };
 
@@ -46,7 +46,7 @@ export async function loadNodeIndex(): Promise<{
   byId: Map<string, LinkedNode>;
   childrenOf: Map<string, TreeNode[]>;
 }> {
-  const [nds, council, editions] = await Promise.all([
+  const [nes, council, editions] = await Promise.all([
     db
       .select({
         id: schema.strategyNodes.id,
@@ -79,10 +79,10 @@ export async function loadNodeIndex(): Promise<{
     if (!parentId) return;
     (childrenOf.get(parentId) ?? childrenOf.set(parentId, []).get(parentId)!).push(node);
   };
-  for (const n of nds) {
+  for (const n of nes) {
     byId.set(n.id, {
       id: n.id,
-      kind: "nds",
+      kind: "nes",
       code: n.code,
       titleEn: n.titleEn,
       titleAr: n.titleAr,
@@ -444,8 +444,8 @@ export async function syncPrimaryMirror(lessonId: string): Promise<void> {
     .select()
     .from(schema.lessonNodeLinks)
     .where(eq(schema.lessonNodeLinks.lessonId, lessonId));
-  // only NDS nodes can sit in the legacy column; a council-only lesson clears it
-  const primary = rows.find((r) => r.isPrimary === 1 && r.nodeKind === "nds");
+  // only NES nodes can sit in the legacy column; a council-only lesson clears it
+  const primary = rows.find((r) => r.isPrimary === 1 && r.nodeKind === "nes");
   await db
     .update(schema.lessons)
     .set({ nodeId: primary?.nodeId ?? null, updatedAt: nowIso() })

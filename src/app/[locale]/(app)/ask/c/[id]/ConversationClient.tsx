@@ -126,7 +126,7 @@ export function ConversationClient({
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "sianexus-answer.docx";
+    a.download = "enviroai-answer.docx";
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -180,12 +180,12 @@ export function ConversationClient({
       <div className="mb-5 flex flex-wrap items-center gap-2">
         <Link
           href="/ask"
-          className="inline-flex items-center gap-1.5 text-sm text-ink-600 hover:text-maroon-900"
+          className="inline-flex items-center gap-1.5 text-sm text-ink-600 hover:text-navy-900"
         >
           <ArrowLeft className="size-4 flip-rtl" /> {t("backToAsk")}
         </Link>
         <h1 className="min-w-0 flex-1 truncate text-lg">{title || t("newConversation")}</h1>
-        {shared ? <Chip tone="gulf">{t("sharedChip")}</Chip> : null}
+        {shared ? <Chip tone="teal">{t("sharedChip")}</Chip> : null}
         {isOwner && conversationId ? (
           <span className="flex items-center gap-1">
             <Button variant="ghost" size="sm" onClick={toggleShare} aria-label={t("share")}>
@@ -205,8 +205,8 @@ export function ConversationClient({
               scope={{
                 kind: "ask",
                 ids: [conversationId],
-                labelEn: title || "Ask NPC answer",
-                labelAr: title || "إجابة اسأل المجلس",
+                labelEn: title || "Ask EnviroAI answer",
+                labelAr: title || "إجابة اسأل EnviroAI",
               }}
               trigger={
                 <Button variant="ghost" size="sm">
@@ -219,7 +219,7 @@ export function ConversationClient({
                 <Pin /> {t("pin")}
               </Button>
               {pinOpen ? (
-                <span className="absolute end-0 top-9 z-40 block w-56 rounded-xl border border-sand-300 bg-white p-2 shadow-[var(--shadow-pop)]">
+                <span className="absolute end-0 top-9 z-40 block w-56 rounded-xl border border-mist-300 bg-white p-2 shadow-[var(--shadow-pop)]">
                   {collections.length ? (
                     <NativeSelect
                       autoFocus
@@ -250,7 +250,7 @@ export function ConversationClient({
         {turns.map((turn, i) =>
           turn.role === "user" ? (
             <div key={i} className="flex justify-end">
-              <p className="max-w-[85%] rounded-2xl rounded-ee-md bg-maroon-100 px-4 py-2.5 text-[15px] leading-relaxed text-maroon-900">
+              <p className="max-w-[85%] rounded-2xl rounded-ee-md bg-navy-100 px-4 py-2.5 text-[15px] leading-relaxed text-navy-900">
                 {turn.content}
               </p>
             </div>
@@ -286,7 +286,7 @@ export function ConversationClient({
             className="card p-3 shadow-[var(--shadow-pop)]"
           >
             <div className="relative">
-              <Sparkles className="pointer-events-none absolute start-3 top-3 size-4 text-gold-500" />
+              <Sparkles className="pointer-events-none absolute start-3 top-3 size-4 text-aqua-500" />
               <Textarea
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -305,7 +305,7 @@ export function ConversationClient({
                 type="submit"
                 disabled={analyst.streaming || !query.trim()}
                 className={cn(
-                  "absolute bottom-2 end-2 rounded-lg bg-maroon-700 p-2 text-white transition-colors hover:bg-maroon-900 disabled:opacity-40 cursor-pointer"
+                  "absolute bottom-2 end-2 rounded-lg bg-navy-700 p-2 text-white transition-colors hover:bg-navy-900 disabled:opacity-40 cursor-pointer"
                 )}
                 aria-label={t("send")}
               >

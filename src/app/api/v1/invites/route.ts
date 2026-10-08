@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
   }
   const parsed = Body.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ data: null, error: "invalid" }, { status: 400 });
-  const allowed = await getSetting<string[]>("allowed_domains", ["npc.qa"]);
+  const allowed = await getSetting<string[]>("allowed_domains", ["enviroai.demo"]);
   const created: { email: string; link: string }[] = [];
   const rejected: { email: string; reason: string }[] = [];
   for (const row of parsed.data.invites) {

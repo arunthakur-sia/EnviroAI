@@ -30,7 +30,7 @@ const def: SectionDefinition<LessonsData> = {
     const room = await memo(ctx, "learning-room", () => getLearningRoomData(ctx.user).catch(() => null));
     if (!room) return { lessons: [], widened: false, themes: [], byCategory: {}, totalInScope: 0 };
     const inScope = room.lessons.filter((l) => {
-      if (scope.kind === "npc" || scope.kind === "period") return true;
+      if (scope.kind === "org" || scope.kind === "period") return true;
       if (scope.kind === "department" && scope.unit) return l.departmentEn === scope.unit.nameEn || l.links.some((k) => scope.scopeNodeIds.has(k.nodeId));
       return l.links.some((k) => scope.scopeNodeIds.has(k.nodeId)) || (l.nodeId ? scope.scopeNodeIds.has(l.nodeId) : false);
     });

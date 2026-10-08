@@ -111,7 +111,7 @@ export function runs(ctx: Ctx, text: string, o: RunOpts = {}): TextRun[] {
         sizeComplexScript: true,
         boldComplexScript: o.bold,
         italicsComplexScript: o.italics,
-        language: { value: "ar-QA", bidirectional: "ar-QA" },
+        language: { value: "ar-SA", bidirectional: "ar-SA" },
       })
   );
 }
@@ -203,7 +203,7 @@ export const NO_BORDERS: ITableBordersOptions = {
   insideHorizontal: NONE,
   insideVertical: NONE,
 };
-const HAIR: IBorderOptions = { style: BorderStyle.SINGLE, size: 4, color: C.sandLine };
+const HAIR: IBorderOptions = { style: BorderStyle.SINGLE, size: 4, color: C.mistLine };
 export const ROW_LINES: ITableBordersOptions = {
   top: NONE,
   bottom: HAIR,
@@ -261,7 +261,7 @@ function columnWidths(n: number, total = TEXT_W): number[] {
 
 export function headingBlock(ctx: Ctx, level: 2 | 3, s: string): Paragraph {
   if (level === 2) {
-    return para(ctx, runs(ctx, s, { bold: true, color: C.maroon, size: SIZE.h2[ctx.lang], font: "head" }), {
+    return para(ctx, runs(ctx, s, { bold: true, color: C.navy, size: SIZE.h2[ctx.lang], font: "head" }), {
       heading: HeadingLevel.HEADING_2,
       before: 260,
       after: 80,
@@ -288,10 +288,10 @@ export function paragraphBlock(ctx: Ctx, s: string, style: "body" | "lead" | "no
   return text(ctx, s, {}, { after: 120 });
 }
 
-/** Run-in heading: a bold maroon lead-in followed by the paragraph text. */
+/** Run-in heading: a bold navy lead-in followed by the paragraph text. */
 export function runInParagraph(ctx: Ctx, head: string, body: string): Paragraph {
   const sep = isAr(ctx.lang) ? "  " : "  ";
-  return para(ctx, [...runs(ctx, head.replace(/[.:]\s*$/, "") + ".", { bold: true, color: C.maroon }), ...runs(ctx, sep + body)], {
+  return para(ctx, [...runs(ctx, head.replace(/[.:]\s*$/, "") + ".", { bold: true, color: C.navy }), ...runs(ctx, sep + body)], {
     after: 120,
   });
 }
@@ -308,10 +308,10 @@ export function listBlock(ctx: Ctx, items: string[], kind: "bullets" | "numbered
 
 export function quoteBlock(ctx: Ctx, s: string, attribution?: string, width = TEXT_W): Table {
   const ar = isAr(ctx.lang);
-  const gold: IBorderOptions = { style: BorderStyle.SINGLE, size: 24, color: C.gold };
+  const gold: IBorderOptions = { style: BorderStyle.SINGLE, size: 24, color: C.aqua };
   const narrow = width < TEXT_W * 0.7;
   const children = [
-    text(ctx, s, { font: "serif", size: (ar ? 30 : 26) - (narrow ? 2 : 0), color: C.maroonDark }, { after: attribution ? 80 : 0, line: ar ? 340 : 320 }),
+    text(ctx, s, { font: "serif", size: (ar ? 30 : 26) - (narrow ? 2 : 0), color: C.navyDark }, { after: attribution ? 80 : 0, line: ar ? 340 : 320 }),
   ];
   if (attribution) children.push(text(ctx, attribution, { size: SIZE.small[ctx.lang], color: C.ink600, bold: true }, { after: 0 }));
   const pad = narrow ? 180 : 260;
@@ -319,7 +319,7 @@ export function quoteBlock(ctx: Ctx, s: string, attribution?: string, width = TE
     cantSplit: true,
     children: [
       cell(children, {
-        fill: C.sand,
+        fill: C.mist,
         width,
         margins: { top: narrow ? 160 : 200, bottom: narrow ? 160 : 200, left: ar ? pad - 40 : pad, right: ar ? pad : pad - 40 },
         borders: { top: NONE, bottom: NONE, left: ar ? NONE : gold, right: ar ? gold : NONE },
@@ -346,14 +346,14 @@ export async function keyFigureBlock(ctx: Ctx, value: string, label: string, wid
     if (png) return [para(ctx, [image(png, widthPx, 96, `${value} ${label}`)], { before: 80, after: 160 })];
   }
   return [
-    text(ctx, value, { bold: true, color: C.maroon, size: 56, font: "head" }, { after: 20, line: 240, keepNext: true }),
+    text(ctx, value, { bold: true, color: C.navy, size: 56, font: "head" }, { after: 20, line: 240, keepNext: true }),
     text(ctx, label, { size: SIZE.small[ctx.lang], color: C.ink600 }, { after: 160 }),
   ];
 }
 
 function headerCell(ctx: Ctx, s: string, width: number, align: Align): TableCell {
   return cell([text(ctx, s, { bold: true, color: C.white, size: SIZE.small[ctx.lang] }, { align, after: 0, line: 240 })], {
-    fill: C.maroon,
+    fill: C.navy,
     width,
     margins: { top: 100, bottom: 100 },
   });
@@ -379,7 +379,7 @@ export function tableBlock(ctx: Ctx, b: Extract<Block, { kind: "table" }>): File
     (r, ri) =>
       new TableRow({
         cantSplit: true,
-        children: b.columns.map((_, i) => bodyCell(ctx, pick(r[i], ctx.lang), widths[i], aligns[i], ri % 2 === 1 ? C.sand : C.white)),
+        children: b.columns.map((_, i) => bodyCell(ctx, pick(r[i], ctx.lang), widths[i], aligns[i], ri % 2 === 1 ? C.mist : C.white)),
       })
   );
   out.push(table(ctx, [header, ...rows], widths, ROW_LINES));
@@ -417,7 +417,7 @@ export async function scorecardBlock(ctx: Ctx, b: Extract<Block, { kind: "scorec
   });
   const rows: TableRow[] = [];
   for (const [ri, r] of b.rows.entries()) {
-    const band = ri % 2 === 1 ? C.sand : C.white;
+    const band = ri % 2 === 1 ? C.mist : C.white;
     const cells: TableCell[] = [bodyCell(ctx, pick(r.label, ctx.lang), widths[0], "start", band, { bold: true })];
     for (const [i, c] of r.cells.entries()) {
       const rag = ragColours(c.rag);
@@ -455,8 +455,8 @@ function chartFallback(ctx: Ctx, spec: ChartSpec): FileChild[] {
   const widths = [Math.floor(TEXT_W * 0.2), Math.floor(TEXT_W * 0.6), Math.floor(TEXT_W * 0.2)];
   const rows = pts.map((p) => {
     const pct = Math.max(2, Math.round((Math.abs(p.y) / max) * 100));
-    // a negative value keeps its magnitude but reads in ink, not maroon
-    const fill = p.y < 0 ? C.ink200 : C.maroon;
+    // a negative value keeps its magnitude but reads in ink, not navy
+    const fill = p.y < 0 ? C.ink200 : C.navy;
     const bar = new Table({
       width: { size: 100, type: WidthType.PERCENTAGE },
       borders: NO_BORDERS,
@@ -464,7 +464,7 @@ function chartFallback(ctx: Ctx, spec: ChartSpec): FileChild[] {
         new TableRow({
           children: [
             new TableCell({ width: { size: pct, type: WidthType.PERCENTAGE }, shading: { type: ShadingType.CLEAR, fill, color: "auto" }, children: [new Paragraph({ children: [], spacing: { before: 0, after: 0 } })] }),
-            new TableCell({ width: { size: 100 - pct, type: WidthType.PERCENTAGE }, shading: { type: ShadingType.CLEAR, fill: C.sand, color: "auto" }, children: [new Paragraph({ children: [], spacing: { before: 0, after: 0 } })] }),
+            new TableCell({ width: { size: 100 - pct, type: WidthType.PERCENTAGE }, shading: { type: ShadingType.CLEAR, fill: C.mist, color: "auto" }, children: [new Paragraph({ children: [], spacing: { before: 0, after: 0 } })] }),
           ],
         }),
       ],
@@ -483,7 +483,7 @@ function chartFallback(ctx: Ctx, spec: ChartSpec): FileChild[] {
 export async function chartBlock(ctx: Ctx, spec: ChartSpec, opts: { title?: boolean } = {}): Promise<FileChild[]> {
   const out: FileChild[] = [];
   if (opts.title !== false) {
-    out.push(text(ctx, pick(spec.title, ctx.lang), { bold: true, color: C.maroon, size: SIZE.h2[ctx.lang] - 2, font: "head" }, { before: 200, after: 120, keepNext: true, line: 240 }));
+    out.push(text(ctx, pick(spec.title, ctx.lang), { bold: true, color: C.navy, size: SIZE.h2[ctx.lang] - 2, font: "head" }, { before: 200, after: 120, keepNext: true, line: 240 }));
   }
   let png: Buffer | null = null;
   if (ctx.raster) png = await svgToPng(chartSvg(spec, ctx.lang, CHART.w, CHART.h), CHART.w, CHART.h, 2);
@@ -535,7 +535,7 @@ function pngDims(buf: Buffer): { w: number; h: number } | null {
 export function sourcesBlock(ctx: Ctx, items: SourceItem[]): Paragraph[] {
   return items.map((s) => {
     const children: (TextRun | ExternalHyperlink)[] = [
-      ...runs(ctx, `[${s.n}]`, { bold: true, color: C.maroon, size: SIZE.small[ctx.lang] }),
+      ...runs(ctx, `[${s.n}]`, { bold: true, color: C.navy, size: SIZE.small[ctx.lang] }),
       new TextRun({ text: "\t" }),
       ...runs(ctx, s.title, { size: SIZE.small[ctx.lang] }),
     ];
@@ -545,7 +545,7 @@ export function sourcesBlock(ctx: Ctx, items: SourceItem[]): Paragraph[] {
       children.push(
         new ExternalHyperlink({
           link: s.url,
-          children: [new TextRun({ text: s.url, font: FONT.enBody, size: SIZE.tiny[ctx.lang], color: C.gulf, underline: {} })],
+          children: [new TextRun({ text: s.url, font: FONT.enBody, size: SIZE.tiny[ctx.lang], color: C.teal, underline: {} })],
         })
       );
     }
@@ -573,7 +573,7 @@ export async function kpisBlock(ctx: Ctx, tiles: KpiTile[]): Promise<FileChild[]
           text(ctx, `${k.value}${k.unit ? ` ${k.unit}` : ""}`, { bold: true, size: 40, color: C.ink, font: "head" }, { after: 40, line: 240 }),
           text(ctx, k.delta ?? "", { size: SIZE.tiny[ctx.lang], color: C.ink600 }, { after: 0, line: 240 }),
         ],
-        { fill: C.sand, width: widths[i], margins: { top: 140, bottom: 140, left: 160, right: 160 } }
+        { fill: C.mist, width: widths[i], margins: { top: 140, bottom: 140, left: 160, right: 160 } }
       )
     );
     while (cells.length < KPI_ROW.perRow) cells.push(cell([], { width: widths[cells.length] }));
@@ -595,7 +595,7 @@ export function draftBanner(ctx: Ctx): Table {
             after: 0,
           }),
         ],
-        { fill: C.gold100, width: TEXT_W, margins: { top: 120, bottom: 120, left: 200, right: 200 } }
+        { fill: C.aqua100, width: TEXT_W, margins: { top: 120, bottom: 120, left: 200, right: 200 } }
       ),
     ],
   });

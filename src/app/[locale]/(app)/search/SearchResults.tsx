@@ -99,7 +99,7 @@ export function SearchResults({
             </p>
           </div>
           <div className="ms-auto text-end">
-            <p className="font-[family-name:var(--font-display)] text-3xl font-semibold text-maroon-900 tnum">
+            <p className="font-[family-name:var(--font-display)] text-3xl font-semibold text-navy-900 tnum">
               {formatNumber(indicatorTile.value, locale, { decimals: indicatorTile.decimals })}
               {indicatorTile.unit ? (
                 <span className="ms-1 text-base text-ink-600">{indicatorTile.unit}</span>
@@ -116,7 +116,7 @@ export function SearchResults({
       ) : null}
 
       {/* Tabs */}
-      <div className="mb-4 flex flex-wrap gap-1 rounded-xl bg-sand-100 p-1">
+      <div className="mb-4 flex flex-wrap gap-1 rounded-xl bg-mist-100 p-1">
         {["all", "document", "indicator", "node", "expert", "question", "lesson"]
           .filter((k) => k === "all" || counts[k])
           .map((k) => (
@@ -125,7 +125,7 @@ export function SearchResults({
               onClick={() => setTab(k)}
               className={cn(
                 "rounded-lg px-3 py-1.5 text-sm transition-colors cursor-pointer",
-                tab === k ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+                tab === k ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
               )}
             >
               {t(`tabs.${k}` as never)}{" "}
@@ -148,7 +148,7 @@ export function SearchResults({
   );
 }
 
-function ResultRow({ r, q, accent }: { r: SearchResult; q: string; accent?: "maroon" | "gulf" }) {
+function ResultRow({ r, q, accent }: { r: SearchResult; q: string; accent?: "navy" | "teal" }) {
   const t = useTranslations("search");
   const locale = useLocale();
   const Icon = ICONS[r.type] ?? FileText;
@@ -163,23 +163,23 @@ function ResultRow({ r, q, accent }: { r: SearchResult; q: string; accent?: "mar
       data-kind={r.kind}
     >
       {accent ? (
-        <span aria-hidden className={cn("absolute inset-y-0 start-0 w-1", accent === "maroon" ? "bg-maroon-700" : "bg-gulf-600")} />
+        <span aria-hidden className={cn("absolute inset-y-0 start-0 w-1", accent === "navy" ? "bg-navy-700" : "bg-teal-600")} />
       ) : null}
       <Icon className="mt-0.5 size-5 shrink-0 text-ink-400" />
       <div className="min-w-0 flex-1">
         <p className="flex flex-wrap items-center gap-2 font-medium text-ink-900">
           <Link
             href={href as never}
-            className="rounded after:absolute after:inset-0 after:content-[''] hover:text-maroon-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+            className="rounded after:absolute after:inset-0 after:content-[''] hover:text-navy-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
             data-testid="result-link"
           >
             {bi(locale, r.titleEn, r.titleAr)}
           </Link>
-          {r.verified ? <BadgeCheck className="size-4 text-gulf-600" /> : null}
+          {r.verified ? <BadgeCheck className="size-4 text-teal-600" /> : null}
           {/* CR08 8: the ribbon on this week's document or lesson */}
           {r.type === "document" || r.type === "lesson" ? <KowRibbon resourceType={r.type} resourceId={r.id} /> : null}
           {r.semantic ? (
-            <Chip tone="gulf">
+            <Chip tone="teal">
               <Sparkles className="size-3" /> {t("semanticMatch")}
             </Chip>
           ) : null}
@@ -224,9 +224,9 @@ function ExpertGroups({
 }) {
   const te = useTranslations("experts");
   const locale = useLocale();
-  const groups: { key: "internal" | "external"; items: SearchResult[]; accent: "maroon" | "gulf" }[] = [
-    { key: "internal", items: internal, accent: "maroon" },
-    { key: "external", items: external, accent: "gulf" },
+  const groups: { key: "internal" | "external"; items: SearchResult[]; accent: "navy" | "teal" }[] = [
+    { key: "internal", items: internal, accent: "navy" },
+    { key: "external", items: external, accent: "teal" },
   ];
   return (
     <section className="my-1 flex flex-col gap-3" data-testid="expert-groups" aria-label={te("title")}>
@@ -235,7 +235,7 @@ function ExpertGroups({
         .map((g) => (
           <div key={g.key} data-testid={`expert-group-${g.key}`} className="flex flex-col gap-2">
             <p className="flex items-center gap-2 px-1">
-              <span aria-hidden className={cn("h-3.5 w-1 rounded-full", g.accent === "maroon" ? "bg-maroon-700" : "bg-gulf-600")} />
+              <span aria-hidden className={cn("h-3.5 w-1 rounded-full", g.accent === "navy" ? "bg-navy-700" : "bg-teal-600")} />
               <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-600 rtl:tracking-normal">
                 {te(`groups.${g.key}`)}
               </span>
@@ -263,7 +263,7 @@ function Highlighted({ text, q }: { text: string; q: string }) {
     <>
       {parts.map((p, i) =>
         re.test(p) ? (
-          <mark key={i} className="rounded bg-gold-100 px-0.5 text-ink-900">
+          <mark key={i} className="rounded bg-aqua-100 px-0.5 text-ink-900">
             {p}
           </mark>
         ) : (

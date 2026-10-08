@@ -50,7 +50,7 @@ export async function upsertReportTypes(): Promise<number> {
 
 /** The scope the example of a type uses: the first outcome of the default
     edition, the department of the seeded Department Head, the project with
-    the most deliverables, or the Council. Exported for the probe. */
+    the most deliverables, or the Office. Exported for the probe. */
 export async function exampleScopeFor(scopeKind: string): Promise<ScopeInput> {
   const { db, schema } = await import("../src/server/db/client");
   const { and, asc, eq, sql } = await import("drizzle-orm");
@@ -63,7 +63,7 @@ export async function exampleScopeFor(scopeKind: string): Promise<ScopeInput> {
     return { kind: "outcome", id: outcome.id };
   }
   if (scopeKind === "department") {
-    const [head] = await db.select({ departmentId: schema.users.departmentId }).from(schema.users).where(eq(schema.users.email, "head.stats@npc.qa")).limit(1);
+    const [head] = await db.select({ departmentId: schema.users.departmentId }).from(schema.users).where(eq(schema.users.email, "head.stats@enviroai.demo")).limit(1);
     if (head?.departmentId) return { kind: "department", id: head.departmentId };
     const [unit] = await db.select().from(schema.orgUnits).where(eq(schema.orgUnits.level, "department")).orderBy(asc(schema.orgUnits.sort)).limit(1);
     if (!unit) throw new Error("no department to scope the example on");
@@ -79,7 +79,7 @@ export async function exampleScopeFor(scopeKind: string): Promise<ScopeInput> {
     if (!rows[0]) throw new Error("no project to scope the example on");
     return { kind: "project", id: rows[0].id };
   }
-  return { kind: scopeKind === "period" ? "period" : "npc" };
+  return { kind: scopeKind === "period" ? "period" : "org" };
 }
 
 /** 2026 for annual and on-demand types, Q3 2026 for quarterly, September 2026 for monthly. */
@@ -112,10 +112,10 @@ export default async function seedCr08Reports(): Promise<void> {
   console.log(`cr08 reports: ${n} report types upserted`);
   await ensureGameRule();
 
-  const [adminRow] = await db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.email, "admin@npc.qa")).limit(1);
+  const [adminRow] = await db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.email, "admin@enviroai.demo")).limit(1);
   const admin = adminRow ? await getUserById(adminRow.id) : null;
   if (!admin) {
-    console.log("cr08 reports: admin@npc.qa is missing; no examples generated");
+    console.log("cr08 reports: admin@enviroai.demo is missing; no examples generated");
     return;
   }
   const forceMock = !process.env.REPORTS_SEED_AI;

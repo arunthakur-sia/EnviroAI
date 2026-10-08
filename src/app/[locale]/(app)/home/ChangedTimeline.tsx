@@ -1,5 +1,5 @@
 "use client";
-// CR03 4.4.4: What changed in NDS3 as a compact timeline: a vertical maroon
+// CR03 4.4.4: What changed in NES as a compact timeline: a vertical navy
 // hairline with dots, each change one short line with the outcome chip and a
 // delta or status change; hovering shows the full update card. The rows
 // highlight when a lesson of their outcome is hovered elsewhere on the page.
@@ -39,7 +39,7 @@ export function ChangedTimeline({ rows }: { rows: ChangedRow[] }) {
         {t("whatChanged")}
       </p>
       {rows.length ? (
-        <ol className="relative flex flex-1 flex-col gap-3.5 border-s border-maroon-100 ps-4">
+        <ol className="relative flex flex-1 flex-col gap-3.5 border-s border-navy-100 ps-4">
           {rows.map((row, i) => {
             const lit = hovered !== null && row.outcome === hovered;
             return (
@@ -47,18 +47,18 @@ export function ChangedTimeline({ rows }: { rows: ChangedRow[] }) {
                 key={i}
                 className={cn(
                   "group/row relative rounded-lg px-2 py-1 transition-colors duration-300 -ms-2",
-                  lit && "bg-maroon-100/70"
+                  lit && "bg-navy-100/70"
                 )}
                 onMouseEnter={() => row.outcome && conn?.setHovered(row.outcome)}
                 onMouseLeave={() => conn?.setHovered(null)}
               >
                 <span
                   aria-hidden
-                  className="absolute top-2.5 size-2 rounded-full bg-maroon-700"
+                  className="absolute top-2.5 size-2 rounded-full bg-navy-700"
                   style={{ insetInlineStart: -21 }}
                 />
                 <p className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm leading-snug text-ink-900">
-                  {row.outcomeCode ? <Chip tone="maroon">{row.outcomeCode}</Chip> : null}
+                  {row.outcomeCode ? <Chip tone="navy">{row.outcomeCode}</Chip> : null}
                   <span className="min-w-0 flex-1 truncate">{bi(locale, row.titleEn, row.titleAr)}</span>
                 </p>
                 <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs text-ink-600">
@@ -89,7 +89,7 @@ export function ChangedTimeline({ rows }: { rows: ChangedRow[] }) {
       <div className="mt-3 text-end">
         <Link
           href="/strategy"
-          className="card-action link-draw inline-flex items-center gap-1 text-sm font-medium text-maroon-700"
+          className="card-action link-draw inline-flex items-center gap-1 text-sm font-medium text-navy-700"
         >
           {t("seeAllChanges")} <ArrowRight className="size-3.5 flip-rtl" />
         </Link>

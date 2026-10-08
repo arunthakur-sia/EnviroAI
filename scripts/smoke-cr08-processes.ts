@@ -60,7 +60,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   const p41 = await (await user("/en/processes?p=P4.1")).text();
   const steps = count(p41, 'data-testid="process-step"');
   check("processes: ?p=P4.1 opens the panel with its numbered steps", p41.includes('data-testid="process-panel"') && p41.includes('data-code="P4.1"') && steps >= 4, `${steps} steps`);
-  check("processes: the panel carries the Ask NPC context marker for the process", p41.includes('data-ask-context="process:P4.1"'));
+  check("processes: the panel carries the Ask EnviroAI context marker for the process", p41.includes('data-ask-context="process:P4.1"'));
   check("processes: the panel names the owner unit and the RACI", p41.includes('data-testid="process-owner"') && p41.includes('data-testid="process-raci"') && count(p41, 'data-testid="raci-cell"') >= 2);
   check("processes: a Level 1 deep link expands its Level 0 parent in place", p41.includes('data-testid="level1-panel"') && p41.includes('data-testid="level1-panel" data-code="P4"') && count(p41, 'data-testid="process-l1-row"') >= 3);
   const p43 = await (await user("/en/processes?p=P4.3")).text();
@@ -71,10 +71,10 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   check("processes: an unknown ?p code still renders the map", missing.status === 200 && count(await missing.text(), 'data-testid="process-l0-card"') === 8);
 
   /* 4. the by-unit and by-policy views */
-  const byUnit = await (await user("/en/processes?view=unit&unit=SOA")).text();
+  const byUnit = await (await user("/en/processes?view=unit&unit=DOP")).text();
   check(
-    "processes: ?view=unit lists the units and expands SOA with its processes",
-    byUnit.includes('data-testid="by-unit-view"') && /data-unit="SOA" data-expanded="true"/.test(byUnit) && count(byUnit, 'data-testid="process-list-row"') >= 5
+    "processes: ?view=unit lists the units and expands DOP with its processes",
+    byUnit.includes('data-testid="by-unit-view"') && /data-unit="DOP" data-expanded="true"/.test(byUnit) && count(byUnit, 'data-testid="process-list-row"') >= 5
   );
   const byPolicy = await (await user("/en/processes?view=policy&tab=procedure")).text();
   check(
@@ -85,7 +85,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   check("processes: the Arabic by-unit view names the tabs from the Organisation", arUnit.includes('data-testid="by-unit-view"') && arUnit.includes("حسب الوحدة"));
 
   /* 5. a reader whose portal is denied gets the friendly 404 */
-  const [analyst] = (await db.execute("select id from users where email = 'analyst@npc.qa' limit 1")).rows;
+  const [analyst] = (await db.execute("select id from users where email = 'analyst@enviroai.demo' limit 1")).rows;
   const analystId = String(analyst?.id ?? "");
   if (analystId) {
     const denied = await json(admin, `/api/v1/users/${analystId}/access`, "POST", { permissionKey: "portal:processes", effect: "deny", reason: "smoke test" });
@@ -99,7 +99,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
 
   /* 6. writes: a Contributor is refused, the Super Admin creates and deletes */
   const smokeCode = "P9.SMOKE";
-  const body = { code: smokeCode, level: 0, parentId: null, nameEn: "Smoke process", nameAr: "عملية اختبار", purposeEn: "Created by the smoke suite.", purposeAr: "أنشأتها حزمة الاختبار.", steps: [{ n: 1, textEn: "One", textAr: "واحد", roleUnitCode: "SOA", system: "SiaNexus" }], isIllustrative: true };
+  const body = { code: smokeCode, level: 0, parentId: null, nameEn: "Smoke process", nameAr: "عملية اختبار", purposeEn: "Created by the smoke suite.", purposeAr: "أنشأتها حزمة الاختبار.", steps: [{ n: 1, textEn: "One", textAr: "واحد", roleUnitCode: "DOP", system: "EnviroAI" }], isIllustrative: true };
   const refused = await json(user, "/api/v1/processes", "POST", body);
   check("processes: a Contributor outside the Strategy Office cannot add a process", refused.status === 403);
   const created = await json(admin, "/api/v1/processes", "POST", body);
@@ -109,7 +109,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   if (createdId) {
     const read = await admin(`/api/v1/processes/${smokeCode}`);
     const readJson = await read.json().catch(() => null);
-    check("processes: the new process reads back with its step and owner", read.status === 200 && readJson?.data?.steps?.length === 1 && readJson?.data?.steps?.[0]?.roleUnit?.code === "SOA");
+    check("processes: the new process reads back with its step and owner", read.status === 200 && readJson?.data?.steps?.length === 1 && readJson?.data?.steps?.[0]?.roleUnit?.code === "DOP");
     const clash = await json(admin, "/api/v1/processes", "POST", body);
     check("processes: a second process with the same code is refused", clash.status === 409);
     const patched = await json(admin, "/api/v1/processes", "PATCH", { ...body, id: createdId, nameEn: "Smoke process (edited)" });
@@ -123,22 +123,22 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   /* 7. the unit tab the Organisation panel mounts loads itself from ?view=unit */
   const unitView = await user("/api/v1/processes?view=unit");
   const unitJson = (await unitView.json().catch(() => null)) as { data?: { byUnit?: { unit: { id: string; code: string }; processes: { code: string }[] }[] } } | null;
-  const soaGroup = unitJson?.data?.byUnit?.find((u) => u.unit.code === "SOA");
+  const soaGroup = unitJson?.data?.byUnit?.find((u) => u.unit.code === "DOP");
   check(
     "processes: GET ?view=unit feeds the unit panel tab with the unit's processes",
     unitView.status === 200 && Boolean(soaGroup?.unit.id) && (soaGroup?.processes.length ?? 0) >= 5,
-    `${unitJson?.data?.byUnit?.length ?? 0} units, SOA ${soaGroup?.processes.length ?? 0} processes`
+    `${unitJson?.data?.byUnit?.length ?? 0} units, DOP ${soaGroup?.processes.length ?? 0} processes`
   );
 
   /* 8. the unit tab helper the Organisation panel may use server side */
   try {
     const { getUnitProcesses } = await import("../src/server/services/operating-model-unit");
     const { getUserById } = await import("../src/server/auth/session");
-    const [adminRow] = (await db.execute("select id from users where email = 'admin@npc.qa' limit 1")).rows;
-    const [soa] = (await db.execute("select id from org_units where code = 'SOA' limit 1")).rows;
+    const [adminRow] = (await db.execute("select id from users where email = 'admin@enviroai.demo' limit 1")).rows;
+    const [soa] = (await db.execute("select id from org_units where code = 'DOP' limit 1")).rows;
     const adminUser = await getUserById(String(adminRow?.id ?? ""));
     const owned = adminUser ? await getUnitProcesses(adminUser, String(soa?.id ?? "")) : [];
-    check("processes: getUnitProcesses(SOA) lists the unit's processes for the unit panel", owned.length >= 5 && owned.some((p) => p.code === "P4.1"), `${owned.length} processes`);
+    check("processes: getUnitProcesses(DOP) lists the unit's processes for the unit panel", owned.length >= 5 && owned.some((p) => p.code === "P4.1"), `${owned.length} processes`);
   } catch (e) {
     check("processes: getUnitProcesses loads from the script", false, String((e as Error)?.message ?? e).slice(0, 160));
   }

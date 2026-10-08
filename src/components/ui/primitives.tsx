@@ -1,25 +1,26 @@
 "use client";
-// Core restyled primitives: paper-and-ink, maroon accent, quiet by default.
+// Core restyled primitives: paper-and-ink, navy accent, quiet by default.
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
 import { cn, initialsOf } from "@/lib/utils";
+import { colourKey } from "@/lib/colour-keys";
 
 /* ---------------- Button ---------------- */
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon-700 [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-700 [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer",
   {
     variants: {
       variant: {
         primary:
-          "bg-maroon-700 text-white shadow-sm hover:bg-maroon-900 active:translate-y-px",
+          "bg-navy-700 text-white shadow-sm hover:bg-navy-900 active:translate-y-px",
         secondary:
-          "border border-sand-300 bg-white text-ink-900 hover:border-maroon-300 hover:text-maroon-700",
-        ghost: "text-ink-600 hover:bg-maroon-100/60 hover:text-maroon-900",
-        gold: "bg-gold-100 text-maroon-900 border border-gold-300 hover:bg-gold-300/40",
+          "border border-mist-300 bg-white text-ink-900 hover:border-navy-300 hover:text-navy-700",
+        ghost: "text-ink-600 hover:bg-navy-100/60 hover:text-navy-900",
+        aqua: "bg-aqua-100 text-navy-900 border border-aqua-300 hover:bg-aqua-300/40",
         danger: "bg-danger text-white hover:opacity-90",
-        link: "text-maroon-700 underline-offset-4 hover:underline p-0 h-auto",
+        link: "text-navy-700 underline-offset-4 hover:underline p-0 h-auto",
       },
       size: {
         sm: "h-8 px-3 text-xs",
@@ -62,7 +63,7 @@ export const Input = React.forwardRef<
   <input
     ref={ref}
     className={cn(
-      "h-9.5 w-full rounded-lg border border-sand-300 bg-white px-3 text-sm text-ink-900 placeholder:text-ink-400 shadow-none transition-colors focus:border-maroon-500 focus:outline-none focus:ring-2 focus:ring-maroon-100 disabled:opacity-50",
+      "h-9.5 w-full rounded-lg border border-mist-300 bg-white px-3 text-sm text-ink-900 placeholder:text-ink-400 shadow-none transition-colors focus:border-navy-500 focus:outline-none focus:ring-2 focus:ring-navy-100 disabled:opacity-50",
       className
     )}
     {...props}
@@ -77,7 +78,7 @@ export const Textarea = React.forwardRef<
   <textarea
     ref={ref}
     className={cn(
-      "w-full rounded-lg border border-sand-300 bg-white px-3 py-2 text-sm text-ink-900 placeholder:text-ink-400 transition-colors focus:border-maroon-500 focus:outline-none focus:ring-2 focus:ring-maroon-100 disabled:opacity-50 min-h-24",
+      "w-full rounded-lg border border-mist-300 bg-white px-3 py-2 text-sm text-ink-900 placeholder:text-ink-400 transition-colors focus:border-navy-500 focus:outline-none focus:ring-2 focus:ring-navy-100 disabled:opacity-50 min-h-24",
       className
     )}
     {...props}
@@ -104,7 +105,7 @@ export function NativeSelect({
   return (
     <select
       className={cn(
-        "h-9.5 w-full rounded-lg border border-sand-300 bg-white px-2.5 text-sm text-ink-900 focus:border-maroon-500 focus:outline-none focus:ring-2 focus:ring-maroon-100",
+        "h-9.5 w-full rounded-lg border border-mist-300 bg-white px-2.5 text-sm text-ink-900 focus:border-navy-500 focus:outline-none focus:ring-2 focus:ring-navy-100",
         className
       )}
       {...props}
@@ -119,10 +120,10 @@ const chipVariants = cva(
   {
     variants: {
       tone: {
-        maroon: "bg-maroon-100 text-maroon-900",
-        sand: "bg-sand-100 text-ink-600 border border-sand-300",
-        gulf: "bg-gulf-100 text-gulf-600",
-        gold: "bg-gold-100 text-maroon-900 border border-gold-300",
+        navy: "bg-navy-100 text-navy-900",
+        mist: "bg-mist-100 text-ink-600 border border-mist-300",
+        teal: "bg-teal-100 text-teal-600",
+        aqua: "bg-aqua-100 text-navy-900 border border-aqua-300",
         ok: "bg-ok-light text-ok",
         warn: "bg-warn-light text-warn",
         danger: "bg-danger-light text-danger",
@@ -130,7 +131,7 @@ const chipVariants = cva(
         ghost: "text-ink-400",
       },
     },
-    defaultVariants: { tone: "sand" },
+    defaultVariants: { tone: "mist" },
   }
 );
 
@@ -150,24 +151,24 @@ export function ClassificationChip({
   level: number;
   labels: [string, string, string, string];
 }) {
-  const tones = ["gulf", "sand", "warn", "danger"] as const;
+  const tones = ["teal", "mist", "warn", "danger"] as const;
   const tone = tones[Math.min(3, Math.max(0, level - 1))];
   return <Chip tone={tone}>{labels[Math.min(3, Math.max(0, level - 1))]}</Chip>;
 }
 
 /* ---------------- Avatar ---------------- */
 
-/* Each ground carries its own ink: white initials on gold-500 measure 2.4 to 1,
+/* Each ground carries its own ink: white initials on aqua-500 measure 2.4 to 1,
    which no amount of weight rescues, so the gold monogram reads in ink. */
 const AVATAR_BG: Record<string, string> = {
-  maroon: "bg-maroon-700 text-white",
-  gulf: "bg-gulf-600 text-white",
-  gold: "bg-gold-500 text-ink-900",
+  navy: "bg-navy-700 text-white",
+  teal: "bg-teal-600 text-white",
+  aqua: "bg-aqua-500 text-ink-900",
 };
 
 export function Avatar({
   name,
-  color = "maroon",
+  color = "navy",
   size = 32,
   className,
 }: {
@@ -180,7 +181,7 @@ export function Avatar({
     <span
       className={cn(
         "inline-flex shrink-0 select-none items-center justify-center rounded-full font-semibold",
-        AVATAR_BG[color] ?? "bg-maroon-700 text-white",
+        AVATAR_BG[colourKey(color)] ?? "bg-navy-700 text-white",
         className
       )}
       style={{ width: size, height: size, fontSize: Math.max(10, size * 0.38) }}
@@ -225,7 +226,7 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-sand-300 bg-sand-50 px-6 py-12 text-center",
+        "flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-mist-300 bg-mist-50 px-6 py-12 text-center",
         className
       )}
     >
@@ -263,8 +264,8 @@ export function ProgressRing({
   size = 40,
   stroke = 3.5,
   className,
-  color = "var(--color-maroon-700)",
-  track = "var(--color-sand-200)",
+  color = "var(--color-navy-700)",
+  track = "var(--color-mist-200)",
   children,
 }: {
   value: number; // 0..1

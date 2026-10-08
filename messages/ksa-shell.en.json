@@ -1,0 +1,63 @@
+{
+  "shell": {
+    "nav": {
+      "regulatory": "Regulatory Overview",
+      "sources": "Source Library"
+    },
+    "groups": {
+      "more": "More"
+    },
+    "primary": {
+      "home": {
+        "en": "Scorecard",
+        "ar": "بطاقة المؤشرات"
+      },
+      "indices": {
+        "en": "SDG Performance",
+        "ar": "أداء أهداف التنمية المستدامة"
+      },
+      "water": {
+        "en": "Water Security",
+        "ar": "الأمن المائي"
+      },
+      "agriculture": {
+        "en": "Agriculture & Food Security",
+        "ar": "الأمن الغذائي والزراعة"
+      },
+      "climate": {
+        "en": "Climate & Environment",
+        "ar": "المناخ والبيئة"
+      },
+      "regulatory": {
+        "en": "Regulatory Overview",
+        "ar": "نظام البيئة"
+      },
+      "sources": {
+        "en": "Source Library",
+        "ar": "مكتبة المصادر"
+      },
+      "trends": {
+        "en": "Insights & Trends",
+        "ar": "الرؤى والاتجاهات"
+      },
+      "vault": {
+        "en": "Institutional Memory",
+        "ar": "الذاكرة المؤسسية"
+      }
+    },
+    "languageToggle": "Language",
+    "poweredBy": "Delivered by Sia",
+    "searchPlaceholder": "Search sources, indicators, regulations..."
+  },
+  "settings": {
+    "portals": {
+      "regulatory": "Regulatory",
+      "sources": "Sources"
+    }
+  },
+  "login": {
+    "heroTitle": "Environmental, water and agriculture intelligence for the Kingdom",
+    "heroSubtitle": "Regulations, indicators, sources and institutional memory in one place, findable in one search and explainable with citations.",
+    "descriptor": "Knowledge, regulatory and data platform for the Saudi environment sector"
+  }
+}

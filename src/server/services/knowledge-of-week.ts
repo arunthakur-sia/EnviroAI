@@ -8,7 +8,7 @@
 // the unit head. Readers earn 10 points once for reading the pick in full.
 // Every page reads through this file: the Home reveal and strip, the Hall of
 // Knowledge, the ribbons (a small cached id set), the profile award and the
-// Ask NPC tool.
+// Ask EnviroAI tool.
 import { and, desc, eq, inArray, lt, lte } from "drizzle-orm";
 import { db, schema } from "@/server/db/client";
 import type { CurrentUser } from "@/server/auth/session";
@@ -543,11 +543,11 @@ export async function ensureKnowledgeOfWeekBadge(): Promise<string> {
     family: "guardian",
     nameEn: "Knowledge of the Week",
     nameAr: "معرفة الأسبوع",
-    descriptionEn: "Your work was chosen as the Council's Knowledge of the Week.",
-    descriptionAr: "اختير عملك معرفةَ الأسبوع في المجلس.",
+    descriptionEn: "Your work was chosen as the Office's Knowledge of the Week.",
+    descriptionAr: "اختير عملك معرفةَ الأسبوع في المكتب.",
     criteriaJson: JSON.stringify({ kind: "kow_contributor", weeks: 1 }),
     icon: "star",
-    tier: "gold",
+    tier: "aqua",
   });
   return id;
 }

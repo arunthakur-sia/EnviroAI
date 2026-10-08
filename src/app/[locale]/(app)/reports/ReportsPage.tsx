@@ -33,7 +33,7 @@ function periodSortKey(r: ReportListItem): number {
 }
 
 function scopeKey(r: ReportListItem): string {
-  return r.scope.kind === "period" ? "npc" : r.scope.kind;
+  return r.scope.kind === "period" ? "org" : r.scope.kind;
 }
 
 function updatedAt(r: ReportListItem): string {
@@ -55,8 +55,8 @@ function BuildBar({ report, library }: { report: ReportListItem; library: Librar
   const stageLabel = stageItem ? bi(locale, stageItem.name.en, stageItem.name.ar) : stage;
   return (
     <div className="mt-2" data-testid="row-progress">
-      <div className="h-1.5 overflow-hidden rounded-full bg-sand-200" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={done}>
-        <div className="h-full rounded-full bg-maroon-700 transition-[width] duration-300 ease-[var(--ease-paper)]" style={{ width: `${Math.round((done / total) * 100)}%` }} />
+      <div className="h-1.5 overflow-hidden rounded-full bg-mist-200" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={done}>
+        <div className="h-full rounded-full bg-navy-700 transition-[width] duration-300 ease-[var(--ease-paper)]" style={{ width: `${Math.round((done / total) * 100)}%` }} />
       </div>
       <p className="mt-1 text-[11px] text-ink-600">
         <span className="tnum">{t("hub.progressOf", { done, total })}</span>
@@ -87,7 +87,7 @@ function ReportRows({
       <div
         role="row"
         className={cn(
-          "hidden gap-3 border-b border-sand-200 bg-sand-50 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal md:grid",
+          "hidden gap-3 border-b border-mist-200 bg-mist-50 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal md:grid",
           cols
         )}
       >
@@ -102,7 +102,7 @@ function ReportRows({
       {items.map((r) => {
         const title = bi(locale, r.titleEn, r.titleAr);
         const scope =
-          r.scope.kind === "npc" || r.scope.kind === "period" ? t(`scopeKinds.${r.scope.kind}`) : bi(locale, r.scope.label.en, r.scope.label.ar);
+          r.scope.kind === "org" || r.scope.kind === "period" ? t(`scopeKinds.${r.scope.kind}`) : bi(locale, r.scope.label.en, r.scope.label.ar);
         return (
           /* CR08 9.1: the requester is a person chip, a button of its own, so
              the row is no longer one link: the title carries the link and
@@ -114,7 +114,7 @@ function ReportRows({
             data-report-id={r.id}
             data-status={r.status}
             className={cn(
-              "relative grid grid-cols-1 gap-2 border-b border-sand-200 px-4 py-3 transition-colors last:border-b-0 hover:bg-maroon-50 md:items-center md:gap-3",
+              "relative grid grid-cols-1 gap-2 border-b border-mist-200 px-4 py-3 transition-colors last:border-b-0 hover:bg-navy-50 md:items-center md:gap-3",
               cols
             )}
           >
@@ -122,12 +122,12 @@ function ReportRows({
               <Link
                 href={`/reports/${r.id}`}
                 aria-label={t("hub.openReport", { title })}
-                className="block rounded-md after:absolute after:inset-0 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-gold-500"
+                className="block rounded-md after:absolute after:inset-0 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-aqua-500"
               >
                 <p className="truncate text-sm font-medium text-ink-900">{title}</p>
               </Link>
               <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-ink-600">
-                <Chip tone={FAMILY_TONE[r.family] ?? "sand"}>{t(`families.${r.family as FamilyKey}`)}</Chip>
+                <Chip tone={FAMILY_TONE[r.family] ?? "mist"}>{t(`families.${r.family as FamilyKey}`)}</Chip>
                 <span className="truncate">{bi(locale, r.typeNameEn, r.typeNameAr)}</span>
               </p>
               {r.status === "generating" ? <BuildBar report={r} library={library} /> : null}
@@ -167,7 +167,7 @@ function ReportRows({
               )}
             </div>
             <div role="cell" className="flex items-center gap-1.5 md:justify-end">
-              <Chip tone={STATUS_TONE[r.status] ?? "sand"}>{t(`statuses.${r.status as StatusKey}`)}</Chip>
+              <Chip tone={STATUS_TONE[r.status] ?? "mist"}>{t(`statuses.${r.status as StatusKey}`)}</Chip>
             </div>
           </div>
         );
@@ -293,7 +293,7 @@ export function ReportsPage({
               <h2 id="gallery-heading" className="font-display text-xl text-ink-900">
                 {t("hub.gallery")}
               </h2>
-              <Chip tone="sand" title={t("hub.illustrativeHint")}>
+              <Chip tone="mist" title={t("hub.illustrativeHint")}>
                 {tc("illustrative")}
               </Chip>
             </div>
@@ -305,7 +305,7 @@ export function ReportsPage({
         </div>
 
         <div className="mb-4 flex flex-wrap items-center gap-2" data-testid="gallery-filters">
-          <div role="tablist" aria-label={t("hub.filters.family")} className="inline-flex items-center gap-1 rounded-xl bg-sand-100 p-1">
+          <div role="tablist" aria-label={t("hub.filters.family")} className="inline-flex items-center gap-1 rounded-xl bg-mist-100 p-1">
             {(["all", "public", "internal"] as Family[]).map((f) => (
               <button
                 key={f}
@@ -315,8 +315,8 @@ export function ReportsPage({
                 onClick={() => setFamily(f)}
                 data-testid={`family-tab-${f}`}
                 className={cn(
-                  "cursor-pointer rounded-lg px-3.5 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-gold-500",
-                  family === f ? "bg-white text-maroon-900 shadow-sm" : "text-ink-600 hover:text-ink-900"
+                  "cursor-pointer rounded-lg px-3.5 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-aqua-500",
+                  family === f ? "bg-white text-navy-900 shadow-sm" : "text-ink-600 hover:text-ink-900"
                 )}
               >
                 {f === "all" ? tc("all") : t(`families.${f}`)}
@@ -343,7 +343,7 @@ export function ReportsPage({
             <option value="">{t("hub.filters.anyScope")}</option>
             {scopeOptions.map((k) => (
               <option key={k} value={k}>
-                {t(`scopeKinds.${k as "npc" | "outcome" | "department" | "project"}`)}
+                {t(`scopeKinds.${k as "org" | "outcome" | "department" | "project"}`)}
               </option>
             ))}
           </NativeSelect>
@@ -421,7 +421,7 @@ export function ReportsPage({
               </h2>
               <p className="mt-0.5 text-sm text-ink-600">{t("hub.allHint")}</p>
             </div>
-            <ButtonLink href="/reports/new?type=custom" variant="gold" size="sm">
+            <ButtonLink href="/reports/new?type=custom" variant="aqua" size="sm">
               <Wand2 /> {t("hub.custom")}
             </ButtonLink>
           </div>
@@ -438,8 +438,8 @@ export function ReportsPage({
                   onClick={() => setAdminStatus(s)}
                   data-testid={`status-tab-${s}`}
                   className={cn(
-                    "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-gold-500",
-                    active ? "border-maroon-700 bg-maroon-700 text-white" : "border-sand-300 bg-white text-ink-600 hover:border-maroon-300 hover:text-maroon-700"
+                    "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-aqua-500",
+                    active ? "border-navy-700 bg-navy-700 text-white" : "border-mist-300 bg-white text-ink-600 hover:border-navy-300 hover:text-navy-700"
                   )}
                 >
                   {s === "all" ? tc("all") : t(`statuses.${s}`)}

@@ -53,10 +53,10 @@ function RoomLessonCard({
   const t = useTranslations("lessons");
   const locale = useLocale();
   const chipFill: Record<string, string> = {
-    delivery: "group-hover/rl:bg-maroon-700 group-hover/rl:text-white",
-    external: "group-hover/rl:bg-gulf-600 group-hover/rl:text-white",
-    expert: "group-hover/rl:bg-gold-500 group-hover/rl:text-white",
-    institutional: "group-hover/rl:bg-sand-300 group-hover/rl:text-ink-900",
+    delivery: "group-hover/rl:bg-navy-700 group-hover/rl:text-white",
+    external: "group-hover/rl:bg-teal-600 group-hover/rl:text-white",
+    expert: "group-hover/rl:bg-aqua-500 group-hover/rl:text-white",
+    institutional: "group-hover/rl:bg-mist-300 group-hover/rl:text-ink-900",
   };
   return (
     /* CR08 9.1: the author is a person chip, which is a button of its own, so
@@ -71,26 +71,26 @@ function RoomLessonCard({
     >
       <span className="flex items-center gap-2">
         <Chip
-          tone={CATEGORY_TONES[lesson.category] ?? "sand"}
+          tone={CATEGORY_TONES[lesson.category] ?? "mist"}
           className={cn("transition-colors duration-200", chipFill[lesson.category] ?? "")}
         >
           {t(`categories.${lesson.category}` as never)}
         </Chip>
         <span
           aria-hidden
-          className="inline-block size-2 rounded-full bg-maroon-500 group-hover/rl:[animation:dot-once_600ms_ease-out]"
+          className="inline-block size-2 rounded-full bg-navy-500 group-hover/rl:[animation:dot-once_600ms_ease-out]"
         />
         {lesson.status === "verified" ? (
-          <BadgeCheck className="size-3.5 shrink-0 text-gulf-600" aria-hidden />
+          <BadgeCheck className="size-3.5 shrink-0 text-teal-600" aria-hidden />
         ) : null}
         {lesson.topReuse ? (
-          <span className="ms-auto size-2 rounded-full bg-gold-500" title={t("room.goldMark")} aria-label={t("room.goldMark")} />
+          <span className="ms-auto size-2 rounded-full bg-aqua-500" title={t("room.goldMark")} aria-label={t("room.goldMark")} />
         ) : null}
       </span>
       <button
         type="button"
         onClick={onOpen}
-        className="rounded-md text-start after:absolute after:inset-0 after:rounded-[inherit] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
+        className="rounded-md text-start after:absolute after:inset-0 after:rounded-[inherit] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-500"
         data-testid="room-lesson-open"
       >
         <span className="line-clamp-2 text-sm font-medium leading-snug text-ink-900">
@@ -109,7 +109,7 @@ function RoomLessonCard({
         {/* CR07 1.2: the primary link rides on the card, the rest count up */}
         <PrimaryNodeChip links={lesson.links} />
         {lesson.reuseCount ? (
-          <span className={cn("flex items-center gap-1 tnum", lesson.topReuse && "font-medium text-gold-500")}>
+          <span className={cn("flex items-center gap-1 tnum", lesson.topReuse && "font-medium text-aqua-500")}>
             <Recycle className="size-3" /> {lesson.reuseCount}
           </span>
         ) : null}
@@ -119,7 +119,7 @@ function RoomLessonCard({
               id: lesson.authorId,
               nameEn: lesson.authorNameEn,
               nameAr: lesson.authorNameAr ?? lesson.authorNameEn,
-              avatarColor: lesson.authorColor ?? "maroon",
+              avatarColor: lesson.authorColor ?? "navy",
             }}
             item={{ type: "lesson", id: lesson.id, titleEn: lesson.titleEn, titleAr: lesson.titleAr, href: `/lessons/${lesson.id}` }}
             align="end"
@@ -127,7 +127,7 @@ function RoomLessonCard({
           />
         ) : lesson.authorNameEn ? (
           <span className="ms-auto">
-            <Avatar name={lesson.authorNameEn} color={lesson.authorColor ?? "maroon"} size={18} />
+            <Avatar name={lesson.authorNameEn} color={lesson.authorColor ?? "navy"} size={18} />
           </span>
         ) : null}
       </span>
@@ -144,7 +144,7 @@ function ThemeSparkline({ values }: { values: number[] }) {
     .join(" ");
   return (
     <svg width={w} height={h} aria-hidden style={{ direction: "ltr" }} className="block">
-      <polyline points={points} fill="none" stroke="var(--color-gulf-400)" strokeWidth="1.5" strokeLinejoin="round" />
+      <polyline points={points} fill="none" stroke="var(--color-teal-400)" strokeWidth="1.5" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -242,7 +242,7 @@ export function LearningRoom({
           />
           {data.learnModeEnabled ? (
             <Button
-              variant={learnMode ? "primary" : "gold"}
+              variant={learnMode ? "primary" : "aqua"}
               onClick={() => setLearnMode((v) => !v)}
               data-testid="learn-mode-toggle"
               aria-pressed={learnMode}
@@ -288,22 +288,22 @@ export function LearningRoom({
                 <div
                   className="bento-card relative flex min-h-60 flex-col overflow-hidden p-7"
                   style={{
-                    background: `linear-gradient(to ${locale === "ar" ? "left" : "right"}, var(--color-gold-100), #ffffff 45%)`,
+                    background: `linear-gradient(to ${locale === "ar" ? "left" : "right"}, var(--color-aqua-100), #ffffff 45%)`,
                   }}
                 >
                   <p className="flex flex-wrap items-center gap-2">
                     <span
-                      className="text-xs font-semibold uppercase tracking-[0.12em] text-maroon-900"
+                      className="text-xs font-semibold uppercase tracking-[0.12em] text-navy-900"
                       style={{ fontFamily: "inherit" }}
                     >
                       {t("room.lessonOfWeek")}
                     </span>
-                    <Chip tone={CATEGORY_TONES[week.lesson.category] ?? "sand"}>
+                    <Chip tone={CATEGORY_TONES[week.lesson.category] ?? "mist"}>
                       {t(`categories.${week.lesson.category}` as never)}
                     </Chip>
                     {week.suggested ? <Chip tone="ghost">{t("room.suggested")}</Chip> : null}
                     {week.lesson.topReuse ? (
-                      <span className="flex items-center gap-1 text-[11px] font-medium text-gold-500 tnum">
+                      <span className="flex items-center gap-1 text-[11px] font-medium text-aqua-500 tnum">
                         <Recycle className="size-3" /> {week.lesson.reuseCount} · {t("room.goldMark")}
                       </span>
                     ) : null}
@@ -319,12 +319,12 @@ export function LearningRoom({
                   </p>
                   <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-ink-600">
                     {week.lesson.nodeCode ? (
-                      <Chip tone="sand">
+                      <Chip tone="mist">
                         {t("room.source")}: {week.lesson.nodeCode}
                       </Chip>
                     ) : null}
                     {week.lesson.outcomeNameEn ? (
-                      <Chip tone="maroon">
+                      <Chip tone="navy">
                         {bi(locale, week.lesson.outcomeNameEn, week.lesson.outcomeNameAr ?? "")}
                       </Chip>
                     ) : null}
@@ -336,7 +336,7 @@ export function LearningRoom({
                             id: week.lesson.authorId,
                             nameEn: week.lesson.authorNameEn,
                             nameAr: week.lesson.authorNameAr ?? week.lesson.authorNameEn,
-                            avatarColor: week.lesson.authorColor ?? "maroon",
+                            avatarColor: week.lesson.authorColor ?? "navy",
                           }}
                           item={{
                             type: "lesson",
@@ -355,7 +355,7 @@ export function LearningRoom({
                       </span>
                     ) : week.lesson.authorNameEn ? (
                       <span className="flex items-center gap-1.5">
-                        <Avatar name={week.lesson.authorNameEn} color={week.lesson.authorColor ?? "maroon"} size={20} />
+                        <Avatar name={week.lesson.authorNameEn} color={week.lesson.authorColor ?? "navy"} size={20} />
                         {bi(locale, week.lesson.authorNameEn, week.lesson.authorNameAr ?? "")}
                         {week.lesson.departmentEn ? (
                           <span className="text-ink-600">
@@ -398,7 +398,7 @@ export function LearningRoom({
                   {data.themes.length > 8 ? (
                     <button
                       onClick={() => setAllThemes((v) => !v)}
-                      className="link-draw text-xs font-medium text-maroon-700 cursor-pointer"
+                      className="link-draw text-xs font-medium text-navy-700 cursor-pointer"
                     >
                       {t("room.allThemes")}
                     </button>
@@ -454,7 +454,7 @@ export function LearningRoom({
                         <button
                           onClick={() => toggleLane(category)}
                           aria-expanded={isOpen}
-                          className="flex min-w-0 items-center gap-2 rounded-lg py-1.5 text-start hover:text-maroon-900 cursor-pointer"
+                          className="flex min-w-0 items-center gap-2 rounded-lg py-1.5 text-start hover:text-navy-900 cursor-pointer"
                         >
                           <span className="text-sm font-medium text-ink-900">
                             {t(`categories.${category}` as never)}
@@ -469,11 +469,11 @@ export function LearningRoom({
                             setFeedCategory(category);
                             document.getElementById("all-lessons")?.scrollIntoView({ behavior: "smooth" });
                           }}
-                          className="link-draw ms-2 text-[11px] font-medium text-maroon-700 cursor-pointer"
+                          className="link-draw ms-2 text-[11px] font-medium text-navy-700 cursor-pointer"
                         >
                           {t("room.seeAll")}
                         </button>
-                        <span className="mx-2 h-px flex-1 bg-sand-300/70" aria-hidden />
+                        <span className="mx-2 h-px flex-1 bg-mist-300/70" aria-hidden />
                         <button
                           onClick={() => toggleLane(category)}
                           aria-label={t(`categories.${category}` as never)}
@@ -511,7 +511,7 @@ export function LearningRoom({
                 >
                   {t("room.browse")}
                 </h2>
-                <span className="inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5">
+                <span className="inline-flex items-center gap-0.5 rounded-lg bg-mist-100 p-0.5">
                   {(
                     [
                       ["projects", t("room.byProject")],
@@ -524,7 +524,7 @@ export function LearningRoom({
                       onClick={() => setBrowseTab(key)}
                       className={cn(
                         "rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
-                        browseTab === key ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+                        browseTab === key ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
                       )}
                     >
                       {label}
@@ -537,26 +537,26 @@ export function LearningRoom({
                     value={q}
                     onChange={(e) => setQ(e.target.value)}
                     placeholder={t("room.searchLessons")}
-                    className="h-9 w-64 rounded-lg border border-sand-300 bg-white ps-8 pe-3 text-sm placeholder:text-ink-400 focus:border-maroon-500 focus:outline-none focus:ring-2 focus:ring-maroon-100"
+                    className="h-9 w-64 rounded-lg border border-mist-300 bg-white ps-8 pe-3 text-sm placeholder:text-ink-400 focus:border-navy-500 focus:outline-none focus:ring-2 focus:ring-navy-100"
                     data-testid="lesson-search"
                   />
                 </span>
               </div>
 
               {q.trim().length >= 2 ? (
-                <div className="card divide-y divide-sand-100">
+                <div className="card divide-y divide-mist-100">
                   {searchResults.length ? (
                     searchResults.map((l) => (
                       <button
                         key={l.id}
                         onClick={() => openLesson(l.id, "browse")}
-                        className="flex w-full items-center gap-3 px-4 py-2.5 text-start text-sm hover:bg-maroon-50 cursor-pointer"
+                        className="flex w-full items-center gap-3 px-4 py-2.5 text-start text-sm hover:bg-navy-50 cursor-pointer"
                       >
-                        <Lightbulb className="size-4 shrink-0 text-gold-500" />
+                        <Lightbulb className="size-4 shrink-0 text-aqua-500" />
                         <span className="min-w-0 flex-1 truncate text-ink-900">
                           {bi(locale, l.titleEn, l.titleAr)}
                         </span>
-                        {l.nodeCode ? <Chip tone="sand">{l.nodeCode}</Chip> : null}
+                        {l.nodeCode ? <Chip tone="mist">{l.nodeCode}</Chip> : null}
                       </button>
                     ))
                   ) : (
@@ -590,8 +590,8 @@ export function LearningRoom({
                           className={cn(
                             "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs transition-colors cursor-pointer",
                             feedOutcome === o.tax
-                              ? "border-maroon-700 bg-maroon-700 text-white"
-                              : "border-sand-300 bg-white text-ink-900 hover:border-maroon-300"
+                              ? "border-navy-700 bg-navy-700 text-white"
+                              : "border-mist-300 bg-white text-ink-900 hover:border-navy-300"
                           )}
                         >
                           {bi(locale, o.nameEn, o.nameAr)} <span className="tnum">{o.count}</span>
@@ -611,9 +611,9 @@ export function LearningRoom({
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {data.contributors.map((c) => (
-                    <span key={c.nameEn} className="flex items-center gap-2 rounded-lg border border-sand-100 bg-white px-3 py-2 text-xs">
+                    <span key={c.nameEn} className="flex items-center gap-2 rounded-lg border border-mist-100 bg-white px-3 py-2 text-xs">
                       <span
-                        className="flex size-6 items-center justify-center rounded-full bg-maroon-700 text-[10px] font-semibold text-white"
+                        className="flex size-6 items-center justify-center rounded-full bg-navy-700 text-[10px] font-semibold text-white"
                         aria-hidden
                       >
                         {initialsOf(c.nameEn)}
@@ -636,7 +636,7 @@ export function LearningRoom({
                 >
                   {t("room.allLessons")}
                 </h2>
-                <span className="mx-2 h-px flex-1 bg-sand-300/70" aria-hidden />
+                <span className="mx-2 h-px flex-1 bg-mist-300/70" aria-hidden />
                 <NativeSelect
                   value={feedCategory}
                   onChange={(e) => setFeedCategory(e.target.value)}
@@ -701,7 +701,7 @@ function ThemeCard({
         // min-w-0: a grid item will not shrink below its content otherwise, and
         // the footer row below carries a count, two chips and a sparkline
         "bento-card flex min-w-0 flex-col gap-1.5 p-4 text-start cursor-pointer",
-        open && "border-maroon-300"
+        open && "border-navy-300"
       )}
       data-testid="theme-card"
     >
@@ -717,7 +717,7 @@ function ThemeCard({
         <span className="flex min-w-0 items-center gap-1.5">
           <span className="truncate text-[11px] text-ink-600 tnum">{t("room.themeLessons", { count: theme.count })}</span>
           {theme.outcomes.slice(0, 2).map((o) => (
-            <Chip key={o.code} tone="maroon" className="shrink-0">{o.code}</Chip>
+            <Chip key={o.code} tone="navy" className="shrink-0">{o.code}</Chip>
           ))}
         </span>
         <span className="flex shrink-0 flex-col items-end">
@@ -754,7 +754,7 @@ function ThemeLane({
       className="overflow-hidden"
       data-testid="theme-lane"
     >
-      <div className="mt-3 rounded-xl border border-maroon-100 bg-maroon-50/40 p-4">
+      <div className="mt-3 rounded-xl border border-navy-100 bg-navy-50/40 p-4">
         <div className="mb-2 flex items-center justify-between gap-3">
           <p className="text-sm font-medium text-ink-900">{bi(locale, theme.labelEn, theme.labelAr)}</p>
           <Button size="sm" variant="secondary" onClick={onListen} disabled={listening}>

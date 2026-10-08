@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 // CR08 8: smoke checks for the Knowledge of the Week. Wired into
 // scripts/smoke.ts by the coordinator.
-//   ctx.cookie is a Contributor session (analyst@npc.qa), ctx.adminCookie the
+//   ctx.cookie is a Contributor session (analyst@enviroai.demo), ctx.adminCookie the
 //   Super Admin, ctx.db a raw libsql client.
 // The writes below target a far-future week and are removed again at the
 // end, so the seeded picks are untouched.
@@ -138,7 +138,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   }
 
   /* ---- seen and read, once ---- */
-  const contributorRow = await ctx.db.execute("select id from users where email = 'analyst@npc.qa'");
+  const contributorRow = await ctx.db.execute("select id from users where email = 'analyst@enviroai.demo'");
   const contributorId = String(contributorRow.rows[0]?.id ?? "");
   const wasRead = await ctx.db.execute({ sql: "select id from knowledge_of_week_reads where kow_id = ? and user_id = ?", args: [activeId, contributorId] });
   const pointsBefore = await ctx.db.execute({ sql: "select count(*) as n from game_events where user_id = ? and event_type = 'kow_read' and resource_id = ?", args: [contributorId, activeId] });
@@ -210,7 +210,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   const hallHtml = await (await fetch(ctx.base + "/en/hall-of-knowledge", { headers: { cookie: ctx.cookie } })).text();
   check("the Hall of Knowledge page renders", hallHtml.includes('data-testid="hall-page"') && hallHtml.includes("Hall of Knowledge"));
 
-  /* ---- Ask NPC ---- */
+  /* ---- Ask EnviroAI ---- */
   try {
     const { runTool, AnalystState } = await import("../src/server/ai/analyst/tools");
     const { getUserById } = await import("../src/server/auth/session");

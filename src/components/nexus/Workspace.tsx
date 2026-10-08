@@ -162,7 +162,7 @@ export function useAnalyst() {
       locale: string;
       conversationId?: string | null;
       context?: { type: string; id: string } | null;
-      /* CR08 2.3: the item the reader is looking at, from the Ask NPC panel */
+      /* CR08 2.3: the item the reader is looking at, from the Ask EnviroAI panel */
       contextItem?: { kind: string; id: string; code?: string | null; title: string } | null;
       onFinal?: (turn: AnalystTurnData, conversationId: string) => void;
       onConversation?: (id: string) => void;
@@ -288,7 +288,7 @@ export function AnalystAnswer({
   chips?: { labelEn: string; labelAr: string }[];
   onFollowUp?: (text: string) => void;
   showFollowUps?: boolean;
-  /* CR08 2.3: one column everywhere, for the 480px Ask NPC panel */
+  /* CR08 2.3: one column everywhere, for the 480px Ask EnviroAI panel */
   compact?: boolean;
 }) {
   const locale = useLocale();
@@ -308,11 +308,11 @@ export function AnalystAnswer({
             <span
               key={i}
               className={cn(
-                "flex items-center gap-1.5 rounded-lg bg-sand-100 px-2.5 py-1 text-xs text-ink-600",
-                i === chips.length - 1 && "animate-pulse text-maroon-900"
+                "flex items-center gap-1.5 rounded-lg bg-mist-100 px-2.5 py-1 text-xs text-ink-600",
+                i === chips.length - 1 && "animate-pulse text-navy-900"
               )}
             >
-              <Sparkles className="size-3 text-gold-500" />
+              <Sparkles className="size-3 text-aqua-500" />
               {locale === "ar" ? c.labelAr : c.labelEn}
             </span>
           ))}
@@ -341,8 +341,8 @@ export function AnalystAnswer({
                 <div className="flex items-center gap-2 text-[11px] text-ink-400">
                   <RagDot status={s.status} />
                   <span className="font-medium uppercase">{s.code ?? s.nodeType}</span>
-                  {s.editionCode !== "nds3" ? (
-                    <Chip tone="sand">{s.editionCode.toUpperCase()}</Chip>
+                  {s.editionCode !== "nes3" ? (
+                    <Chip tone="mist">{s.editionCode.toUpperCase()}</Chip>
                   ) : null}
                   {s.ownerName ? <span className="ms-auto truncate">{s.ownerName}</span> : null}
                 </div>
@@ -357,7 +357,7 @@ export function AnalystAnswer({
                       {s.kpi.unit ? ` ${s.kpi.unit}` : ""}
                     </span>
                     {s.kpi.target !== null ? (
-                      <span className="text-gold-500">
+                      <span className="text-aqua-500">
                         {" "}
                         / {s.kpi.target} ({s.kpi.targetYear ?? 2030})
                       </span>
@@ -429,9 +429,9 @@ export function AnalystAnswer({
                 {/* CR02 2.3: deliverables carry their chip and node code */}
                 {d.deliverable ? (
                   <span className="absolute start-3 top-3 flex items-center gap-1">
-                    <Chip tone="maroon">{t("chipDeliverable")}</Chip>
+                    <Chip tone="navy">{t("chipDeliverable")}</Chip>
                     {d.deliverable.nodeCode ? (
-                      <Chip tone="sand">
+                      <Chip tone="mist">
                         <span className="tnum">
                           {d.deliverable.code} · {d.deliverable.nodeCode}
                         </span>
@@ -516,14 +516,14 @@ export function AnalystAnswer({
       {workspace.people.length ? (
         <div>
           <SectionLabel icon={Users}>{t("sectionPeople")}</SectionLabel>
-          <div className="card divide-y divide-sand-100">
+          <div className="card divide-y divide-mist-100">
             {workspace.people.map((p) => (
               <div key={p.id} className="flex items-center gap-3 px-4 py-3">
-                <Avatar name={p.nameEn} color="gulf" size={34} />
+                <Avatar name={p.nameEn} color="teal" size={34} />
                 <div className="min-w-0 flex-1">
                   <Link
                     href={`/experts/${p.id}` as never}
-                    className="block truncate text-sm font-medium text-ink-900 hover:text-maroon-900"
+                    className="block truncate text-sm font-medium text-ink-900 hover:text-navy-900"
                   >
                     {bi(locale, p.nameEn, p.nameAr)}
                   </Link>
@@ -559,7 +559,7 @@ export function AnalystAnswer({
             <button
               key={i}
               onClick={() => onFollowUp?.(f)}
-              className="rounded-lg border border-maroon-100 bg-maroon-50 px-3 py-1.5 text-sm text-maroon-900 transition-colors hover:bg-maroon-700 hover:text-white cursor-pointer"
+              className="rounded-lg border border-navy-100 bg-navy-50 px-3 py-1.5 text-sm text-navy-900 transition-colors hover:bg-navy-700 hover:text-white cursor-pointer"
             >
               {f}
             </button>
@@ -569,7 +569,7 @@ export function AnalystAnswer({
 
       {/* 9. Sources footer */}
       {citations.length ? (
-        <div className="border-t border-sand-100 pt-1">
+        <div className="border-t border-mist-100 pt-1">
           {turn.hiddenSources ? (
             <p className="mt-2 text-xs text-ink-400">
               {t("hiddenSources", { count: turn.hiddenSources })}

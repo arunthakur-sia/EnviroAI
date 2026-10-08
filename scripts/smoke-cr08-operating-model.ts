@@ -258,7 +258,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   await exec("delete from calendar_events where title_en like 'Smoke forum%'");
 
   /* 7. the interfaces: one unit's flows, an unknown unit, and a change request a Contributor may not file */
-  const unitCode = model.interfaces.units[0]?.code ?? "SOA";
+  const unitCode = model.interfaces.units[0]?.code ?? "DOP";
   const unitRes = await user(`/api/v1/operating-model/interfaces?unit=${encodeURIComponent(unitCode)}`);
   const unitView = (await data(unitRes)) as { gives?: unknown[]; receives?: unknown[] } | null;
   const unknownUnit = await user("/api/v1/operating-model/interfaces?unit=NOPE");

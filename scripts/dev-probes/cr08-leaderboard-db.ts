@@ -48,10 +48,10 @@ async function main() {
   console.log("guardians month rows:", (await q("select count(*) as n from leaderboard_periods where category='guardians' and period_kind='month' and board='people'"))[0].n);
   console.log("learners month rows:", (await q("select count(*) as n from leaderboard_periods where category='learners' and period_kind='month' and board='people'"))[0].n);
   console.log("reader month row:", await q(
-    "select l.rank, l.points from leaderboard_periods l join users u on u.id = l.subject_id where u.email='reader@npc.qa' and l.board='people' and l.category='overall' and l.period_kind='month'"
+    "select l.rank, l.points from leaderboard_periods l join users u on u.id = l.subject_id where u.email='reader@enviroai.demo' and l.board='people' and l.category='overall' and l.period_kind='month'"
   ));
   console.log("reader all row:", await q(
-    "select l.rank, l.points from leaderboard_periods l join users u on u.id = l.subject_id where u.email='reader@npc.qa' and l.board='people' and l.category='overall' and l.period_kind='all'"
+    "select l.rank, l.points from leaderboard_periods l join users u on u.id = l.subject_id where u.email='reader@enviroai.demo' and l.board='people' and l.category='overall' and l.period_kind='all'"
   ));
   console.log("jobs queued leaderboard_refresh:", await q("select id, status, run_after from jobs where type='leaderboard_refresh' order by created_at desc limit 3"));
   console.log("settings:", await q("select key, value_json from settings where key like 'leaderboard%'"));

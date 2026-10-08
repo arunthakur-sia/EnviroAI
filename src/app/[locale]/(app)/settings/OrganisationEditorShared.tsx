@@ -210,7 +210,7 @@ export function ImpactList({ impact, loading }: { impact: Impact | null; loading
     <ul className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2" data-testid="org-impact-list">
       {lines.map((line) => (
         <li key={line.key} className="flex items-center gap-2 text-sm text-ink-900" data-testid="org-impact-item">
-          <span className="size-1.5 shrink-0 rounded-full bg-maroon-500" aria-hidden />
+          <span className="size-1.5 shrink-0 rounded-full bg-navy-500" aria-hidden />
           <span className="tnum">{line.text}</span>
         </li>
       ))}

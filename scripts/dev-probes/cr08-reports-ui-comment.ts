@@ -13,7 +13,7 @@ async function main() {
   const login = await fetch(`${BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email: "admin@npc.qa", password: "Nexus!2026" }),
+    body: JSON.stringify({ email: "admin@enviroai.demo", password: "EnviroAI!2026" }),
   });
   const cookie = (login.headers.get("set-cookie") ?? "").split(",").map((s) => s.trim().split(";")[0]).find((s) => s.includes("=")) ?? "";
   console.log("login", login.status, cookie ? "cookie ok" : "no cookie");

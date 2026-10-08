@@ -164,7 +164,7 @@ export function PersonCard({
         <button
           type="button"
           onClick={onBack}
-          className="-mb-1.5 -mt-1 inline-flex w-fit items-center gap-1 rounded-md text-[11px] font-medium text-maroon-700 hover:text-maroon-900 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+          className="-mb-1.5 -mt-1 inline-flex w-fit items-center gap-1 rounded-md text-[11px] font-medium text-navy-700 hover:text-navy-900 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
           data-testid="person-card-back"
         >
           <ChevronLeft className="size-3 flip-rtl" aria-hidden /> {t("back")}
@@ -181,7 +181,7 @@ export function PersonCard({
                 <React.Fragment key={c.id}>
                   {i ? <ChevronRight className="size-3 flip-rtl" aria-hidden /> : null}
                   {i === card.breadcrumb.length - 1 && card.links.unit ? (
-                    <Link href={card.links.unit as never} className="link-draw text-ink-600 hover:text-maroon-700">
+                    <Link href={card.links.unit as never} className="link-draw text-ink-600 hover:text-navy-700">
                       {bi(locale, c.nameEn, c.nameAr)}
                     </Link>
                   ) : (
@@ -199,7 +199,7 @@ export function PersonCard({
         {card.expertise.length ? (
           <div className="mt-1.5 flex flex-wrap gap-1.5">
             {card.expertise.slice(0, 6).map((d) => (
-              <Chip key={d.id} tone="maroon">
+              <Chip key={d.id} tone="navy">
                 {bi(locale, d.nameEn, d.nameAr)}
               </Chip>
             ))}
@@ -220,7 +220,7 @@ export function PersonCard({
       ) : null}
 
       {card.backupOwner ? (
-        <div className="rounded-lg border border-sand-200 bg-sand-50 px-3 py-2" data-testid="person-card-backup">
+        <div className="rounded-lg border border-mist-200 bg-mist-50 px-3 py-2" data-testid="person-card-backup">
           <Eyebrow>
             {t("backupOwner")}
             {card.backupOwner.forItem ? <span className="ms-1 normal-case tracking-normal text-ink-400">({t("backupForItem")})</span> : null}
@@ -230,12 +230,12 @@ export function PersonCard({
               <button
                 type="button"
                 onClick={() => onFocusPerson(card.backupOwner!.id)}
-                className="group flex min-w-0 flex-1 items-center gap-2 rounded-md text-start cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+                className="group flex min-w-0 flex-1 items-center gap-2 rounded-md text-start cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
                 aria-label={t("openCardOf", { name: bi(locale, card.backupOwner.nameEn, card.backupOwner.nameAr) })}
                 data-testid="person-card-backup-open"
               >
                 <Avatar name={card.backupOwner.nameEn} color={card.backupOwner.avatarColor} size={24} />
-                <span className="min-w-0 flex-1 truncate text-sm text-ink-900 group-hover:text-maroon-900">
+                <span className="min-w-0 flex-1 truncate text-sm text-ink-900 group-hover:text-navy-900">
                   {bi(locale, card.backupOwner.nameEn, card.backupOwner.nameAr)}
                 </span>
               </button>
@@ -257,7 +257,7 @@ export function PersonCard({
                   avatarColor: card.backupOwner!.avatarColor,
                 })
               }
-              className="rounded-md p-1 text-ink-400 hover:bg-white hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500 cursor-pointer"
+              className="rounded-md p-1 text-ink-400 hover:bg-white hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500 cursor-pointer"
               aria-label={`${t("actions.message")}: ${bi(locale, card.backupOwner.nameEn, card.backupOwner.nameAr)}`}
             >
               <MessageSquare className="size-3.5" />
@@ -267,14 +267,14 @@ export function PersonCard({
       ) : null}
 
       {card.delegate ? (
-        <div className="rounded-lg border border-gold-300 bg-gold-100/50 px-3 py-2" data-testid="person-card-delegate">
+        <div className="rounded-lg border border-aqua-300 bg-aqua-100/50 px-3 py-2" data-testid="person-card-delegate">
           <Eyebrow>{t("delegate")}</Eyebrow>
           <div className="mt-1.5 flex items-center gap-2">
             {onFocusPerson ? (
               <button
                 type="button"
                 onClick={() => onFocusPerson(card.delegate!.id)}
-                className="rounded-full cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+                className="rounded-full cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
                 aria-label={t("openCardOf", { name: bi(locale, card.delegate.nameEn, card.delegate.nameAr) })}
                 data-testid="person-card-delegate-open"
               >
@@ -288,7 +288,7 @@ export function PersonCard({
                 <button
                   type="button"
                   onClick={() => onFocusPerson(card.delegate!.id)}
-                  className="block max-w-full truncate rounded-md text-start text-sm text-ink-900 hover:text-maroon-900 cursor-pointer focus-visible:outline-2 focus-visible:outline-gold-500"
+                  className="block max-w-full truncate rounded-md text-start text-sm text-ink-900 hover:text-navy-900 cursor-pointer focus-visible:outline-2 focus-visible:outline-aqua-500"
                 >
                   {bi(locale, card.delegate.nameEn, card.delegate.nameAr)}
                 </button>
@@ -309,7 +309,7 @@ export function PersonCard({
         </div>
       ) : null}
 
-      <div className="grid grid-cols-2 gap-1.5 border-t border-sand-100 pt-3" role="group">
+      <div className="grid grid-cols-2 gap-1.5 border-t border-mist-100 pt-3" role="group">
         <Button size="sm" onClick={() => onMessage(toPicked(card))} data-testid="person-card-message">
           <MessageSquare /> {t("actions.message")}
         </Button>
@@ -320,7 +320,7 @@ export function PersonCard({
         ) : (
           <Link
             href={askHref as never}
-            className="inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-sand-300 bg-white px-3 text-xs font-medium text-ink-900 hover:border-maroon-300 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500 [&_svg]:size-4"
+            className="inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-mist-300 bg-white px-3 text-xs font-medium text-ink-900 hover:border-navy-300 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500 [&_svg]:size-4"
             data-testid="person-card-ask"
           >
             <HelpCircle /> {t("actions.ask")}
@@ -328,7 +328,7 @@ export function PersonCard({
         )}
         <a
           href={mailto}
-          className="inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-sand-300 bg-white px-3 text-xs font-medium text-ink-900 hover:border-maroon-300 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500 [&_svg]:size-4"
+          className="inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-mist-300 bg-white px-3 text-xs font-medium text-ink-900 hover:border-navy-300 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500 [&_svg]:size-4"
           data-testid="person-card-email"
         >
           <Mail /> {t("actions.email")}
@@ -336,13 +336,13 @@ export function PersonCard({
         <Button size="sm" variant="secondary" onClick={copyLink} data-testid="person-card-copy">
           <Copy /> {t("actions.copyLink")}
         </Button>
-        <Button size="sm" variant="ghost" className="col-span-2 justify-start text-gulf-600 hover:text-gulf-600" onClick={onTeams} data-testid="person-card-teams">
+        <Button size="sm" variant="ghost" className="col-span-2 justify-start text-teal-600 hover:text-teal-600" onClick={onTeams} data-testid="person-card-teams">
           <MessagesSquare /> {t("actions.teams")}
         </Button>
         {card.links.profile ? (
           <Link
             href={card.links.profile as never}
-            className="col-span-2 inline-flex items-center gap-1.5 px-1 text-[11px] text-ink-400 hover:text-maroon-700 focus-visible:outline-2 focus-visible:outline-gold-500"
+            className="col-span-2 inline-flex items-center gap-1.5 px-1 text-[11px] text-ink-400 hover:text-navy-700 focus-visible:outline-2 focus-visible:outline-aqua-500"
             data-testid="person-card-profile"
           >
             <UserRound className="size-3" /> {t("profile")}

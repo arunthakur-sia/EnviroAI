@@ -1,4 +1,4 @@
-// Verify the generated report docx: valid zip, TOC field, maroon shading,
+// Verify the generated report docx: valid zip, TOC field, navy shading,
 // headers/footers, page numbers.
 import fs from "node:fs";
 import JSZip from "jszip";

@@ -16,7 +16,7 @@ async function main() {
     console.log(`  ${r.name_en}: processes=${portals.includes('"processes"')} operating_model=${portals.includes('"operating_model"')}`);
   }
   const users = await rawClient.execute(
-    "select u.email, r.name_en role, o.code unit from users u join roles r on r.id = u.role_id left join org_units o on o.id = u.department_id where u.email like '%@npc.qa' and u.deleted_at is null order by u.email"
+    "select u.email, r.name_en role, o.code unit from users u join roles r on r.id = u.role_id left join org_units o on o.id = u.department_id where u.email like '%@enviroai.demo' and u.deleted_at is null order by u.email"
   );
   console.log("== seeded accounts");
   for (const u of users.rows) console.log(`  ${u.email}: ${u.role} unit=${u.unit ?? "-"}`);

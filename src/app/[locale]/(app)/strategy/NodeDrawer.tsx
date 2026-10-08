@@ -224,12 +224,12 @@ export function NodeDrawer({
         transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
       >
         {/* header */}
-        <div className="flex items-center gap-1.5 border-b border-sand-100 px-4 py-3">
+        <div className="flex items-center gap-1.5 border-b border-mist-100 px-4 py-3">
           <button
             onClick={() => prevId && onNavigate(prevId)}
             disabled={!prevId}
             aria-label={t("canvas.prev")}
-            className="rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 disabled:opacity-30 cursor-pointer"
+            className="rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 disabled:opacity-30 cursor-pointer"
           >
             <ChevronLeft className="size-4 flip-rtl" />
           </button>
@@ -237,7 +237,7 @@ export function NodeDrawer({
             onClick={() => nextId && onNavigate(nextId)}
             disabled={!nextId}
             aria-label={t("canvas.next")}
-            className="rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 disabled:opacity-30 cursor-pointer"
+            className="rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 disabled:opacity-30 cursor-pointer"
           >
             <ChevronRight className="size-4 flip-rtl" />
           </button>
@@ -248,14 +248,14 @@ export function NodeDrawer({
               toast(t("canvas.linkCopied"), "success");
             }}
             aria-label={t("canvas.copyLink")}
-            className="rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 cursor-pointer"
+            className="rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 cursor-pointer"
           >
             <LinkIcon className="size-4" />
           </button>
           <button
             onClick={onClose}
             aria-label={tc("close")}
-            className="rounded-lg p-1.5 text-ink-600 hover:bg-sand-100 cursor-pointer"
+            className="rounded-lg p-1.5 text-ink-600 hover:bg-mist-100 cursor-pointer"
           >
             <X className="size-4" />
           </button>
@@ -279,7 +279,7 @@ export function NodeDrawer({
                   {/* header block */}
                   <div>
                     <p className="flex flex-wrap items-center gap-2 text-xs text-ink-600">
-                      <Chip tone="maroon">{t(`nodeType.${node.nodeType}` as never)}</Chip>
+                      <Chip tone="navy">{t(`nodeType.${node.nodeType}` as never)}</Chip>
                       {node.code ? <span className="tnum">{node.code}</span> : null}
                       <RagDot status={node.status} />
                       <span>{tc(`status.${node.status}` as never)}</span>
@@ -332,13 +332,13 @@ export function NodeDrawer({
                   {/* timeline bar with milestones */}
                   {todayPct !== null ? (
                     <div>
-                      <div className="relative h-1.5 rounded-full bg-sand-300/80">
+                      <div className="relative h-1.5 rounded-full bg-mist-300/80">
                         <span
-                          className="absolute inset-y-0 start-0 rounded-full bg-gulf-400"
+                          className="absolute inset-y-0 start-0 rounded-full bg-teal-400"
                           style={{ width: `${Math.round(todayPct * 100)}%` }}
                         />
                         <span
-                          className="absolute -top-1 h-3.5 w-0.5 rounded-full bg-maroon-700"
+                          className="absolute -top-1 h-3.5 w-0.5 rounded-full bg-navy-700"
                           style={{ insetInlineStart: `${Math.round(todayPct * 100)}%` }}
                         />
                         {milestones.map((m) => (
@@ -346,7 +346,7 @@ export function NodeDrawer({
                             key={m.code}
                             className={cn(
                               "absolute top-1/2 size-2.5 -translate-y-1/2 rounded-full border-2 border-white",
-                              m.done ? "bg-ok" : "bg-sand-300"
+                              m.done ? "bg-ok" : "bg-mist-300"
                             )}
                             style={{ insetInlineStart: `calc(${Math.round((m.pct ?? 0) * 100)}% - 5px)` }}
                             title={`${m.code} · ${formatDate(m.date, locale, { style: "short" })}`}
@@ -382,9 +382,9 @@ export function NodeDrawer({
                           <Link
                             key={d.id}
                             href={`/vault/${d.documentId}` as never}
-                            className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs hover:bg-maroon-50"
+                            className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs hover:bg-navy-50"
                           >
-                            <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-maroon-100 text-[10px] font-semibold text-maroon-900 tnum">
+                            <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-navy-100 text-[10px] font-semibold text-navy-900 tnum">
                               {d.deliverableCode}
                             </span>
                             <span className="min-w-0 flex-1 truncate text-ink-900">
@@ -410,7 +410,7 @@ export function NodeDrawer({
                           <Link
                             key={l.id}
                             href={`/lessons/${l.id}` as never}
-                            className="rounded-lg border border-sand-100 px-3 py-2 text-sm hover:border-maroon-100 hover:bg-maroon-50"
+                            className="rounded-lg border border-mist-100 px-3 py-2 text-sm hover:border-navy-100 hover:bg-navy-50"
                           >
                             <span className="line-clamp-1 font-medium text-ink-900">
                               {bi(locale, l.titleEn, l.titleAr)}
@@ -437,7 +437,7 @@ export function NodeDrawer({
                           <Link
                             key={e.id}
                             href={`/experts/${e.id}` as never}
-                            className="flex items-center gap-2 rounded-lg border border-sand-100 px-2.5 py-1.5 text-xs hover:border-maroon-100 hover:bg-maroon-50"
+                            className="flex items-center gap-2 rounded-lg border border-mist-100 px-2.5 py-1.5 text-xs hover:border-navy-100 hover:bg-navy-50"
                           >
                             <Avatar name={e.nameEn} color={e.avatarColor} size={22} />
                             <span className="text-ink-900">{bi(locale, e.nameEn, e.nameAr)}</span>
@@ -458,7 +458,7 @@ export function NodeDrawer({
                           <Link
                             key={s.id}
                             href={`/trends/${s.id}` as never}
-                            className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs hover:bg-maroon-50"
+                            className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs hover:bg-navy-50"
                           >
                             <span className="min-w-0 flex-1 truncate text-ink-900">
                               {bi(locale, s.titleEn, s.titleAr)}
@@ -476,7 +476,7 @@ export function NodeDrawer({
                       <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-600" style={{ fontFamily: "inherit" }}>
                         {t("statusUpdates")}
                       </p>
-                      <ol className="flex flex-col gap-2 border-s border-maroon-100 ps-3">
+                      <ol className="flex flex-col gap-2 border-s border-navy-100 ps-3">
                         {payload.updates.map((u) => (
                           <li key={u.id} className="text-xs">
                             <p className="flex items-center gap-2">
@@ -506,9 +506,9 @@ export function NodeDrawer({
                         <Link
                           key={l!.id}
                           href={`/strategy/${l!.nodeId}` as never}
-                          className="flex items-center gap-1.5 rounded-lg bg-gulf-100/50 px-2 py-1 text-[11px] text-ink-900 hover:text-gulf-600"
+                          className="flex items-center gap-1.5 rounded-lg bg-teal-100/50 px-2 py-1 text-[11px] text-ink-900 hover:text-teal-600"
                         >
-                          <Chip tone="gulf">{l!.editionCode}</Chip>
+                          <Chip tone="teal">{l!.editionCode}</Chip>
                           <span className="max-w-44 truncate">{bi(locale, l!.titleEn, l!.titleAr)}</span>
                         </Link>
                       ))}
@@ -528,11 +528,11 @@ export function NodeDrawer({
                   ) : null}
 
                   {/* actions */}
-                  <div className="flex flex-wrap items-center gap-2 border-t border-sand-100 pt-4">
+                  <div className="flex flex-wrap items-center gap-2 border-t border-mist-100 pt-4">
                     <BriefDialog resourceType="node" resourceId={node.id} />
                     <Link
                       href={`/ask/c/new?q=${encodeURIComponent(`Tell me about ${node.code ?? ""} ${node.titleEn}`.trim())}` as never}
-                      className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-sand-300 bg-white px-4 text-sm font-medium text-ink-900 hover:border-maroon-300 hover:text-maroon-700"
+                      className="inline-flex h-9.5 items-center gap-2 rounded-lg border border-mist-300 bg-white px-4 text-sm font-medium text-ink-900 hover:border-navy-300 hover:text-navy-700"
                     >
                       <MessageCircleQuestion className="size-4" /> {t("canvas.askAboutThis")}
                     </Link>

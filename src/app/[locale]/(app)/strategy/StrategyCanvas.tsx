@@ -1,5 +1,5 @@
 "use client";
-// CR04 2: the Strategy Canvas. One page, one URL: the QNV pillars strip with
+// CR04 2: the Strategy Canvas. One page, one URL: the Vision pillars strip with
 // connector lines, the at-a-glance numbers, the 2024-2030 timeline, the
 // medallion arc, the outcome panel that opens beneath it (with a sliding
 // pointer and a sticky ring rail once the arc scrolls away), target cards
@@ -21,7 +21,7 @@ import { Lane, type OwnerMap } from "./OutcomeTargets";
 
 const RAG: Record<string, string> = {
   on_track: "var(--color-ok)",
-  completed: "var(--color-gulf-600)",
+  completed: "var(--color-teal-600)",
   at_risk: "var(--color-warn)",
   delayed: "var(--color-danger)",
   not_started: "var(--color-ink-200)",
@@ -96,8 +96,8 @@ function OutcomeMedallion({
             cx={size / 2}
             cy={size / 2}
             r={r}
-            fill={selected ? "var(--color-maroon-50)" : "none"}
-            stroke="var(--color-sand-300)"
+            fill={selected ? "var(--color-navy-50)" : "none"}
+            stroke="var(--color-mist-300)"
             strokeWidth={stroke}
           />
           <circle
@@ -105,13 +105,13 @@ function OutcomeMedallion({
             cy={size / 2}
             r={r}
             fill="none"
-            stroke={glow || selected ? "var(--color-maroon-500)" : "var(--color-maroon-700)"}
+            stroke={glow || selected ? "var(--color-navy-500)" : "var(--color-navy-700)"}
             strokeWidth={selected ? stroke + 2 : stroke}
             strokeLinecap="round"
             strokeDasharray={c}
             strokeDashoffset={drawn ? c * (1 - value) : c}
             transform={`rotate(-90 ${size / 2} ${size / 2})`}
-            className="transition-[stroke] group-hover/med:stroke-maroon-500"
+            className="transition-[stroke] group-hover/med:stroke-navy-500"
             style={{ transition: "stroke-dashoffset 700ms var(--ease-paper), stroke 200ms, stroke-width 200ms" }}
           />
           {drawn && value > 0.01 ? (
@@ -120,7 +120,7 @@ function OutcomeMedallion({
         </svg>
         <span className="absolute inset-0 flex items-center justify-center">
           <span
-            className="font-semibold text-maroon-900 tnum"
+            className="font-semibold text-navy-900 tnum"
             style={{ fontFamily: "var(--font-display)", fontSize: 40 }}
           >
             {outcomeNumber(outcome.code)}
@@ -168,7 +168,7 @@ function Sparkline({ values, labelId }: { values: number[]; labelId: string }) {
       <polyline
         points={points}
         fill="none"
-        stroke="var(--color-maroon-500)"
+        stroke="var(--color-navy-500)"
         strokeWidth="1.75"
         strokeLinejoin="round"
         strokeLinecap="round"
@@ -289,16 +289,16 @@ function ByLeadView({
                     <button
                       onClick={() => setOpen(isOpen ? null : g.key)}
                       aria-expanded={isOpen}
-                      className="flex w-full items-center gap-3 px-4 py-3 text-start cursor-pointer hover:bg-sand-50"
+                      className="flex w-full items-center gap-3 px-4 py-3 text-start cursor-pointer hover:bg-mist-50"
                     >
                       <svg width={34} height={34} aria-hidden style={{ direction: "ltr" }} className="shrink-0">
-                        <circle cx={17} cy={17} r={r} fill="none" stroke="var(--color-sand-300)" strokeWidth={3.5} />
+                        <circle cx={17} cy={17} r={r} fill="none" stroke="var(--color-mist-300)" strokeWidth={3.5} />
                         <circle
                           cx={17}
                           cy={17}
                           r={r}
                           fill="none"
-                          stroke="var(--color-maroon-700)"
+                          stroke="var(--color-navy-700)"
                           strokeWidth={3.5}
                           strokeLinecap="round"
                           strokeDasharray={c}
@@ -336,7 +336,7 @@ function ByLeadView({
                           transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
                           className="overflow-hidden"
                         >
-                          <div className="flex flex-col gap-4 border-t border-sand-100 px-4 py-4 lg:flex-row">
+                          <div className="flex flex-col gap-4 border-t border-mist-100 px-4 py-4 lg:flex-row">
                             <Lane
                               label={t("lanes.initiatives")}
                               items={g.items.filter((i) => i.type === "initiative")}
@@ -702,7 +702,7 @@ export function StrategyCanvas({
             onChange={(e) => setLeadFilter(e.target.value || null)}
             aria-label={t("canvas.leadFilterAria")}
             data-testid="lead-filter"
-            className="h-7.5 max-w-56 rounded-lg border border-sand-300 bg-white px-2 text-xs text-ink-900 focus:border-maroon-500 focus:outline-none"
+            className="h-7.5 max-w-56 rounded-lg border border-mist-300 bg-white px-2 text-xs text-ink-900 focus:border-navy-500 focus:outline-none"
           >
             <option value="">{t("canvas.allLeads")}</option>
             <optgroup label={t("canvas.leadDepartments")}>
@@ -725,7 +725,7 @@ export function StrategyCanvas({
             </optgroup>
           </select>
         ) : null}
-        <span className="inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5">
+        <span className="inline-flex items-center gap-0.5 rounded-lg bg-mist-100 p-0.5">
           {data.editions.map((e) => (
             <button
               key={e.code}
@@ -736,7 +736,7 @@ export function StrategyCanvas({
               className={cn(
                 "rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
                 e.code === data.edition.code
-                  ? "bg-white font-medium text-maroon-900 shadow-sm"
+                  ? "bg-white font-medium text-navy-900 shadow-sm"
                   : "text-ink-600 hover:text-ink-900"
               )}
             >
@@ -747,12 +747,12 @@ export function StrategyCanvas({
             </button>
           ))}
         </span>
-        <span className="inline-flex items-center gap-0.5 rounded-lg bg-sand-100 p-0.5">
+        <span className="inline-flex items-center gap-0.5 rounded-lg bg-mist-100 p-0.5">
           <button
             onClick={() => switchView("canvas")}
             className={cn(
               "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
-              view === "canvas" ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+              view === "canvas" ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
             )}
           >
             <CircleDot className="size-3.5" /> {t("nav.outcomes")}
@@ -761,7 +761,7 @@ export function StrategyCanvas({
             onClick={() => switchView("map")}
             className={cn(
               "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
-              view === "map" ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+              view === "map" ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
             )}
           >
             <MapIcon className="size-3.5" /> {t("nav.map")}
@@ -771,7 +771,7 @@ export function StrategyCanvas({
             onClick={() => switchView("lead")}
             className={cn(
               "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
-              view === "lead" ? "bg-white font-medium text-maroon-900 shadow-sm" : "text-ink-600"
+              view === "lead" ? "bg-white font-medium text-navy-900 shadow-sm" : "text-ink-600"
             )}
             data-testid="bylead-toggle"
           >
@@ -781,7 +781,7 @@ export function StrategyCanvas({
       </div>
 
       {archived ? (
-        <div className="mb-5 flex items-center gap-3 rounded-xl border border-sand-300 bg-sand-100 px-4 py-2.5 text-sm text-ink-600" data-testid="archive-banner">
+        <div className="mb-5 flex items-center gap-3 rounded-xl border border-mist-300 bg-mist-100 px-4 py-2.5 text-sm text-ink-600" data-testid="archive-banner">
           <Archive className="size-4 shrink-0" />
           {t("archiveBanner", { name: bi(locale, data.edition.nameEn, data.edition.nameAr) })}
         </div>
@@ -814,9 +814,9 @@ export function StrategyCanvas({
         />
       ) : (
         <>
-          {/* CR04 2.2.1: QNV pillars strip */}
+          {/* CR04 2.2.1: Vision pillars strip */}
           {!archived ? (
-            <div className="relative" data-testid="qnv-pillars">
+            <div className="relative" data-testid="vision-pillars">
               <div
                 className="flex flex-wrap items-center justify-center gap-x-10 gap-y-1"
                 role="list"
@@ -836,7 +836,7 @@ export function StrategyCanvas({
                     onBlur={() => setHoverPillar(null)}
                     className={cn(
                       "cursor-default rounded px-1 text-xs font-semibold uppercase tracking-[0.12em] transition-colors",
-                      hoverPillar === key ? "text-maroon-900" : "text-ink-600"
+                      hoverPillar === key ? "text-navy-900" : "text-ink-600"
                     )}
                     style={{ fontFamily: "inherit" }}
                   >
@@ -859,7 +859,7 @@ export function StrategyCanvas({
                       key={i}
                       d={`M ${l.x1} 0 C ${l.x1} ${connectorH * 0.5}, ${l.x2} ${connectorH * 0.45}, ${l.x2} ${connectorH}`}
                       fill="none"
-                      stroke={lit ? "rgba(138, 21, 56, 0.6)" : "var(--connection)"}
+                      stroke={lit ? "rgba(23, 48, 68, 0.6)" : "var(--connection)"}
                       strokeWidth={lit ? 1.5 : 1}
                       style={{ transition: "stroke 200ms" }}
                     />
@@ -871,7 +871,7 @@ export function StrategyCanvas({
 
           {/* CR04 2.2.2: at-a-glance numbers */}
           <section
-            className="mt-8 rounded-2xl bg-sand-100 px-7 py-5 lg:mt-10"
+            className="mt-8 rounded-2xl bg-mist-100 px-7 py-5 lg:mt-10"
             aria-label={t("glance.band")}
             data-testid="glance-band"
           >
@@ -879,7 +879,7 @@ export function StrategyCanvas({
               {data.glance.targetsTotal > 0 ? (
                 <div className="digit-tick">
                   <p className="flex items-baseline gap-1.5">
-                    <span className="font-semibold text-maroon-900 tnum" style={{ fontFamily: "var(--font-display)", fontSize: 44, lineHeight: 1 }}>
+                    <span className="font-semibold text-navy-900 tnum" style={{ fontFamily: "var(--font-display)", fontSize: 44, lineHeight: 1 }}>
                       <CountUp value={data.glance.targetsOnTrack} />
                     </span>
                     <span className="text-sm text-ink-600 tnum">
@@ -890,13 +890,13 @@ export function StrategyCanvas({
                 </div>
               ) : null}
               <div className="digit-tick">
-                <p className="font-semibold text-maroon-900 tnum" style={{ fontFamily: "var(--font-display)", fontSize: 44, lineHeight: 1 }}>
+                <p className="font-semibold text-navy-900 tnum" style={{ fontFamily: "var(--font-display)", fontSize: 44, lineHeight: 1 }}>
                   <CountUp value={data.glance.initiatives} />
                 </p>
                 <p className="mt-1 text-xs text-ink-600">{t("glance.initiatives")}</p>
               </div>
               <div className="digit-tick">
-                <p className="font-semibold text-maroon-900 tnum" style={{ fontFamily: "var(--font-display)", fontSize: 44, lineHeight: 1 }}>
+                <p className="font-semibold text-navy-900 tnum" style={{ fontFamily: "var(--font-display)", fontSize: 44, lineHeight: 1 }}>
                   <CountUp value={data.glance.projects} />
                 </p>
                 <p className="mt-1 text-xs text-ink-600">{t("glance.projects")}</p>
@@ -917,20 +917,20 @@ export function StrategyCanvas({
               aria-label={t("canvas.timelineAria")}
               data-testid="delivery-strip"
             >
-              <div className="relative h-1 rounded-full bg-sand-200">
+              <div className="relative h-1 rounded-full bg-mist-200">
                 <span
-                  className="absolute inset-y-0 start-0 rounded-full bg-maroon-300/60"
+                  className="absolute inset-y-0 start-0 rounded-full bg-navy-300/60"
                   style={{ width: `${todayPct * 100}%` }}
                   aria-hidden
                 />
                 {/* today */}
                 <span
-                  className="absolute -top-1 size-3 -translate-x-1/2 rounded-full bg-maroon-700 rtl:translate-x-1/2"
+                  className="absolute -top-1 size-3 -translate-x-1/2 rounded-full bg-navy-700 rtl:translate-x-1/2"
                   style={{ insetInlineStart: `${todayPct * 100}%` }}
                   aria-hidden
                 />
                 <span
-                  className="absolute top-3 -translate-x-1/2 whitespace-nowrap text-[10px] font-medium text-maroon-900 rtl:translate-x-1/2"
+                  className="absolute top-3 -translate-x-1/2 whitespace-nowrap text-[10px] font-medium text-navy-900 rtl:translate-x-1/2"
                   style={{ insetInlineStart: `${todayPct * 100}%` }}
                 >
                   {t("canvas.today")} · <span className="tnum">{formatDate(new Date().toISOString(), locale, { style: "short" })}</span>
@@ -948,23 +948,23 @@ export function StrategyCanvas({
                       onMouseEnter={() => setYearTip(y)}
                       onMouseLeave={() => setYearTip(null)}
                     >
-                      <span className={cn("h-2 w-px", isMid || isHorizon ? "bg-maroon-500" : "bg-sand-300")} aria-hidden />
-                      <span className={cn("text-[11px] tnum", isMid || isHorizon ? "font-semibold text-maroon-900" : "text-ink-600")}>
+                      <span className={cn("h-2 w-px", isMid || isHorizon ? "bg-navy-500" : "bg-mist-300")} aria-hidden />
+                      <span className={cn("text-[11px] tnum", isMid || isHorizon ? "font-semibold text-navy-900" : "text-ink-600")}>
                         {y}
                       </span>
                       {isMid ? (
-                        <span className="text-[9px] uppercase tracking-wider text-maroon-700">{t("canvas.midterm")}</span>
+                        <span className="text-[9px] uppercase tracking-wider text-navy-700">{t("canvas.midterm")}</span>
                       ) : isHorizon ? (
-                        <span className="text-[9px] uppercase tracking-wider text-maroon-700">{t("canvas.horizon")}</span>
+                        <span className="text-[9px] uppercase tracking-wider text-navy-700">{t("canvas.horizon")}</span>
                       ) : null}
                       {/* faint start/end bars */}
                       <span className="flex items-end gap-0.5" aria-hidden style={{ height: 16 }}>
                         <span
-                          className="w-1.5 rounded-t-sm bg-gulf-400/30"
+                          className="w-1.5 rounded-t-sm bg-teal-400/30"
                           style={{ height: `${(entry.starting.length / maxYearCount) * 16}px` }}
                         />
                         <span
-                          className="w-1.5 rounded-t-sm bg-maroon-300/40"
+                          className="w-1.5 rounded-t-sm bg-navy-300/40"
                           style={{ height: `${(entry.ending.length / maxYearCount) * 16}px` }}
                         />
                       </span>
@@ -973,7 +973,7 @@ export function StrategyCanvas({
                           <span className="card block p-3 text-start text-xs shadow-[var(--shadow-pop)]">
                             {entry.starting.length ? (
                               <>
-                                <span className="mb-0.5 block font-medium text-gulf-600">
+                                <span className="mb-0.5 block font-medium text-teal-600">
                                   {t("canvas.yearStarting", { count: entry.starting.length })}
                                 </span>
                                 {entry.starting.slice(0, 4).map((i) => (
@@ -985,7 +985,7 @@ export function StrategyCanvas({
                             ) : null}
                             {entry.ending.length ? (
                               <>
-                                <span className="mb-0.5 mt-1.5 block font-medium text-maroon-700">
+                                <span className="mb-0.5 mt-1.5 block font-medium text-navy-700">
                                   {t("canvas.yearEnding", { count: entry.ending.length })}
                                 </span>
                                 {entry.ending.slice(0, 4).map((i) => (
@@ -1058,8 +1058,8 @@ export function StrategyCanvas({
                 style={{ left: pointerX - 12, transition: reduced ? undefined : "left 300ms var(--ease-paper)" }}
               >
                 <span
-                  className="block size-6 rotate-45 rounded-[3px] bg-sand-100"
-                  style={{ borderTop: "1px solid var(--color-sand-300)", borderLeft: "1px solid var(--color-sand-300)" }}
+                  className="block size-6 rotate-45 rounded-[3px] bg-mist-100"
+                  style={{ borderTop: "1px solid var(--color-mist-300)", borderLeft: "1px solid var(--color-mist-300)" }}
                 />
               </span>
             ) : null}
@@ -1118,11 +1118,11 @@ export function StrategyCanvas({
             data-testid="outcome-rail"
           >
             <div
-              className="flex items-center gap-2 rounded-b-2xl border border-t-0 border-sand-300 bg-white/95 px-4 py-2 shadow-[var(--shadow-paper)] backdrop-blur"
+              className="flex items-center gap-2 rounded-b-2xl border border-t-0 border-mist-300 bg-white/95 px-4 py-2 shadow-[var(--shadow-paper)] backdrop-blur"
               role="toolbar"
               aria-label={t("canvas.railAria")}
             >
-              <span className="rounded-md bg-sand-100 px-2 py-0.5 text-[10px] font-semibold text-ink-600">
+              <span className="rounded-md bg-mist-100 px-2 py-0.5 text-[10px] font-semibold text-ink-600">
                 {data.edition.code.toUpperCase()}
               </span>
               {data.outcomes.map((o) => {
@@ -1142,13 +1142,13 @@ export function StrategyCanvas({
                     className="relative size-10 cursor-pointer rounded-full transition-transform hover:-translate-y-0.5"
                   >
                     <svg width={40} height={40} aria-hidden style={{ direction: "ltr" }}>
-                      <circle cx={20} cy={20} r={r} fill={isSel ? "var(--color-maroon-700)" : "none"} stroke="var(--color-sand-300)" strokeWidth={3} />
+                      <circle cx={20} cy={20} r={r} fill={isSel ? "var(--color-navy-700)" : "none"} stroke="var(--color-mist-300)" strokeWidth={3} />
                       <circle
                         cx={20}
                         cy={20}
                         r={r}
                         fill="none"
-                        stroke={isSel ? "var(--color-maroon-700)" : "var(--color-maroon-500)"}
+                        stroke={isSel ? "var(--color-navy-700)" : "var(--color-navy-500)"}
                         strokeWidth={3}
                         strokeLinecap="round"
                         strokeDasharray={c}
@@ -1159,7 +1159,7 @@ export function StrategyCanvas({
                     <span
                       className={cn(
                         "absolute inset-0 flex items-center justify-center text-xs font-semibold tnum",
-                        isSel ? "text-white" : "text-maroon-900"
+                        isSel ? "text-white" : "text-navy-900"
                       )}
                     >
                       {outcomeNumber(o.code)}

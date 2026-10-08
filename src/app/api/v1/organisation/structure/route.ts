@@ -1,6 +1,6 @@
 // CR07 3.6: Settings > Organisation. Read the structure, add, rename, move,
 // deactivate a unit, set its level and its head, assign members in bulk from a
-// CSV of emails, and run the re-sync against npc.qa which shows a diff before
+// CSV of emails, and run the re-sync against enviroai.demo which shows a diff before
 // anything is applied.
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";

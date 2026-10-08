@@ -15,7 +15,7 @@ async function main() {
   for (const url of PATHS) {
     const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
     const page = await ctx.newPage();
-    await page.request.post(`${BASE}/api/v1/auth/login`, { data: { email: "admin@npc.qa", password: "Nexus!2026" }, timeout: 120000 });
+    await page.request.post(`${BASE}/api/v1/auth/login`, { data: { email: "admin@enviroai.demo", password: "EnviroAI!2026" }, timeout: 120000 });
     const errors: string[] = [];
     page.on("console", (m) => {
       if (m.type() !== "error") return;

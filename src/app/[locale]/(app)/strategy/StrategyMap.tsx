@@ -1,6 +1,6 @@
 "use client";
 // CR03 2.2: the map toggle, redesigned in the outcome-medallion palette.
-// A zoomable radial partition: outcomes as maroon ring segments (each with
+// A zoomable radial partition: outcomes as navy ring segments (each with
 // its medallion lightness), targets as sand segments, initiatives and
 // projects on the outer ring tinted by status. Hovering any segment shows
 // the same card as the medallions. Draw-in once, then static.
@@ -12,21 +12,21 @@ import type { NavigatorData } from "@/server/services/strategy";
 
 const STATUS_FILL: Record<string, string> = {
   on_track: "var(--color-ok)",
-  completed: "var(--color-gulf-600)",
+  completed: "var(--color-teal-600)",
   at_risk: "var(--color-warn)",
   delayed: "var(--color-danger)",
   not_started: "var(--color-ink-200)",
 };
 
-/* the medallion maroon, varied per outcome like the ring lightness */
+/* the medallion navy, varied per outcome like the ring lightness */
 const OUTCOME_FILLS = [
-  "#8a1538",
-  "#7a1533",
-  "#96214a",
-  "#6d1430",
-  "#a8325a",
-  "#821a41",
-  "#5a0e24",
+  "#173044",
+  "#0f6b73",
+  "#26485f",
+  "#077c84",
+  "#455669",
+  "#1f5a6e",
+  "#0a151e",
 ];
 
 type Slice = {
@@ -184,7 +184,7 @@ export function StrategyMap({
 
   const fillOf = (s: Slice): string => {
     if (s.kind === "outcome") return OUTCOME_FILLS[s.outcomeIndex % OUTCOME_FILLS.length];
-    if (s.kind === "target") return "var(--color-sand-300)";
+    if (s.kind === "target") return "var(--color-mist-300)";
     return STATUS_FILL[s.status] ?? "var(--color-ink-200)";
   };
 
@@ -207,14 +207,14 @@ export function StrategyMap({
       <div className="absolute end-4 top-4 z-10 flex gap-1">
         <button
           onClick={() => setZoom((z) => Math.min(2.5, z + 0.5))}
-          className="rounded-lg border border-sand-300 bg-white p-1.5 text-ink-600 hover:text-maroon-700 cursor-pointer"
+          className="rounded-lg border border-mist-300 bg-white p-1.5 text-ink-600 hover:text-navy-700 cursor-pointer"
           aria-label={t("nav.map") + " +"}
         >
           <ZoomIn className="size-4" />
         </button>
         <button
           onClick={() => setZoom((z) => Math.max(1, z - 0.5))}
-          className="rounded-lg border border-sand-300 bg-white p-1.5 text-ink-600 hover:text-maroon-700 cursor-pointer"
+          className="rounded-lg border border-mist-300 bg-white p-1.5 text-ink-600 hover:text-navy-700 cursor-pointer"
           aria-label={t("nav.map") + " -"}
         >
           <ZoomOut className="size-4" />
@@ -227,7 +227,7 @@ export function StrategyMap({
         aria-label={t("nav.map")}
         style={{ direction: "ltr" }}
       >
-        <circle cx={cx} cy={cy} r={64} fill="var(--color-maroon-900)" />
+        <circle cx={cx} cy={cy} r={64} fill="var(--color-navy-900)" />
         <text
           x={cx}
           y={cy + 5}

@@ -37,7 +37,7 @@ const Body = z.discriminatedUnion("action", [
     nameAr: z.string().trim().min(1).max(80),
     descriptionEn: z.string().trim().max(600).optional(),
     descriptionAr: z.string().trim().max(600).optional(),
-    colourToken: Colour.default("maroon"),
+    colourToken: Colour.default("navy"),
   }),
   z.object({
     action: z.literal("update"),

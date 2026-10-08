@@ -55,7 +55,7 @@ async function sessionCookies(email: string) {
   const res = await fetch(BASE + "/api/v1/auth/login", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ email, password: "Nexus!2026" }),
+    body: JSON.stringify({ email, password: "EnviroAI!2026" }),
     redirect: "manual",
   });
   const out: { name: string; value: string; domain: string; path: string }[] = [];
@@ -86,13 +86,13 @@ async function main() {
   await mkdir(OUT, { recursive: true });
   const { db, schema } = await import("../../src/server/db/client");
   const { eq } = await import("drizzle-orm");
-  const [head] = await db.select().from(schema.users).where(eq(schema.users.email, "head.stats@npc.qa")).limit(1);
+  const [head] = await db.select().from(schema.users).where(eq(schema.users.email, "head.stats@enviroai.demo")).limit(1);
   const [delegate] = head?.delegateUserId
     ? await db.select().from(schema.users).where(eq(schema.users.id, head.delegateUserId)).limit(1)
     : [];
   console.log(`delegate of head.stats: ${delegate?.email ?? "none"}`);
   // the seeded unread state for the Contributor (threads 2 and 6) so the dots show
-  const [analyst] = await db.select().from(schema.users).where(eq(schema.users.email, "analyst@npc.qa")).limit(1);
+  const [analyst] = await db.select().from(schema.users).where(eq(schema.users.email, "analyst@enviroai.demo")).limit(1);
   if (analyst) {
     const { and, inArray, like, notLike } = await import("drizzle-orm");
     // sweep threads an earlier aborted run composed from the demo card
@@ -127,7 +127,7 @@ async function main() {
   const want = (section: string) => !only.length || only.includes(section);
 
   /* ---- the Contributor's Inbox ---- */
-  const { page } = await login(browser, "analyst@npc.qa");
+  const { page } = await login(browser, "analyst@enviroai.demo");
   for (const locale of ["en", "ar"] as const) {
     console.log(`\n== ${locale} ==`);
     if (!want("inbox")) break;
@@ -388,7 +388,7 @@ async function main() {
         .set({ prefsJson: JSON.stringify({ ...prefs, rail: { ...((prefs.rail as object) ?? {}), expanded: false } }) })
         .where(eq(schema.users.id, analyst.id));
     }
-    const m = await login(browser, "analyst@npc.qa", { width: 390, height: 844 });
+    const m = await login(browser, "analyst@enviroai.demo", { width: 390, height: 844 });
     await open(m.page, "/en/inbox");
     await shot(m.page, "inbox-390-en");
     await m.page.locator('[data-testid="inbox-thread-row"]').first().click();

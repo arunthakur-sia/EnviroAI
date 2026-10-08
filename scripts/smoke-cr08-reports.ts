@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 // CR08 5: smoke checks for the Reports module, wired into scripts/smoke.ts by
-// the coordinator. `cookie` is a Contributor session (analyst@npc.qa),
+// the coordinator. `cookie` is a Contributor session (analyst@enviroai.demo),
 // `adminCookie` the Super Admin.
 type Check = (name: string, ok: boolean, detail?: string) => void;
 type Ctx = { base: string; cookie: string; adminCookie: string; db: import("@libsql/client").Client };
@@ -92,17 +92,17 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   const id: string | undefined = createJson?.data?.id;
   check("reports: a contributor may request a nominated type", create.status === 200 && Boolean(id), `${create.status} ${createJson?.error ?? ""}`);
 
-  const custom = await send("/api/v1/report-builder", "POST", ctx.cookie, { typeCode: "custom", period: { kind: "year", year: 2026 }, scope: { kind: "npc" }, languageMode: "en" });
+  const custom = await send("/api/v1/report-builder", "POST", ctx.cookie, { typeCode: "custom", period: { kind: "year", year: 2026 }, scope: { kind: "org" }, languageMode: "en" });
   check("reports: the custom type is refused for a contributor", custom.status === 403, `got ${custom.status}`);
 
   const otherUnit = await ctx.db.execute(
-    "select id from org_units where level = 'department' and id != (select coalesce(department_id, '') from users where email = 'analyst@npc.qa') limit 1"
+    "select id from org_units where level = 'department' and id != (select coalesce(department_id, '') from users where email = 'analyst@enviroai.demo') limit 1"
   );
   if (otherUnit.rows[0]?.id) {
     const outside = await send("/api/v1/report-builder", "POST", ctx.cookie, { typeCode: "department_continuity", period: { kind: "year", year: 2026 }, scope: { kind: "department", id: String(otherUnit.rows[0].id) }, languageMode: "en" });
     check("reports: a department outside the requester's unit is refused", outside.status === 403, `got ${outside.status}`);
   }
-  const wrongScope = await send("/api/v1/report-builder", "POST", ctx.cookie, { typeCode: "project_closure", period: { kind: "year", year: 2026 }, scope: { kind: "npc" }, languageMode: "en" });
+  const wrongScope = await send("/api/v1/report-builder", "POST", ctx.cookie, { typeCode: "project_closure", period: { kind: "year", year: 2026 }, scope: { kind: "org" }, languageMode: "en" });
   check("reports: a scope of the wrong kind is rejected", wrongScope.status === 400, `got ${wrongScope.status}`);
 
   if (!id) return;
@@ -178,7 +178,7 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   }
 
   /* visibility: another person's unpublished report is invisible */
-  const foreign = await ctx.db.execute("select id from reports where type_id is not null and status != 'published' and requested_by != (select id from users where email = 'analyst@npc.qa') limit 1");
+  const foreign = await ctx.db.execute("select id from reports where type_id is not null and status != 'published' and requested_by != (select id from users where email = 'analyst@enviroai.demo') limit 1");
   if (foreign.rows[0]?.id) {
     const hidden = await get(`/api/v1/report-builder/${foreign.rows[0].id}`, ctx.cookie);
     check("reports: another requester's draft is not visible", hidden.status === 404, `got ${hidden.status}`);
@@ -187,16 +187,16 @@ export async function run(check: Check, ctx: Ctx): Promise<void> {
   /* the smoke's own report leaves the gallery and Institutional Memory */
   await cleanupReport(ctx, id);
 
-  /* Ask NPC tools */
+  /* Ask EnviroAI tools */
   const { runTool, AnalystState } = await import("../src/server/ai/analyst/tools");
   const { getUserById } = await import("../src/server/auth/session");
-  const adminRow = await ctx.db.execute("select id from users where email = 'admin@npc.qa'");
+  const adminRow = await ctx.db.execute("select id from users where email = 'admin@enviroai.demo'");
   const askUser = adminRow.rows[0]?.id ? await getUserById(String(adminRow.rows[0].id)) : null;
   if (askUser) {
     const state = new AnalystState();
     const toolCtx = { user: askUser, state } as never;
     const typesText = await runTool(toolCtx, "list_report_types", {});
-    check("reports: list_report_types names the Annual Report", typesText.includes("NPC Annual Report") && typesText.includes("leadership_briefing"));
+    check("reports: list_report_types names the Annual Report", typesText.includes("Annual Environment Report") && typesText.includes("leadership_briefing"));
     const found = await runTool(toolCtx, "find_reports", { type: "annual", include_mine: true });
     check("reports: find_reports returns a /reports/ link", /\/reports\/[0-9A-Z]{26}/.test(found), found.slice(0, 120));
   }

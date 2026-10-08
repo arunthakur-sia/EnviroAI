@@ -10,7 +10,7 @@ const mod: ToolModule = {
     {
       name: "list_report_types",
       description:
-        "Lists the report types of the Reports module (NPC Annual Report, NDS3 Progress Report, Council Strategy Performance Report, Leadership Briefing Pack and the rest): family (public or internal), scope kind, cadence and the sections each carries by default. Use it when the user asks what reports SiaNexus can produce or how to request one.",
+        "Lists the report types of the Reports module (Annual Environment Report, National Environment Strategy Progress Report, Programme Office Strategy Performance Report, Leadership Briefing Pack and the rest): family (public or internal), scope kind, cadence and the sections each carries by default. Use it when the user asks what reports EnviroAI can produce or how to request one.",
       input_schema: { type: "object", properties: {} },
     },
     {
@@ -20,7 +20,7 @@ const mod: ToolModule = {
       input_schema: {
         type: "object",
         properties: {
-          type: { type: "string", description: "a type code (e.g. npc_annual_report) or part of a type name" },
+          type: { type: "string", description: "a type code (e.g. org_annual_report) or part of a type name" },
           period: { type: "string", description: "a year like 2026, a quarter like 'Q3 2026' or a month name" },
           scope: { type: "string", description: "part of the scope label: an outcome code or name, a department, a project" },
           include_mine: { type: "boolean", description: "also include the caller's own draft and in-review reports" },

@@ -144,7 +144,7 @@ function LeadsEditor({
                 {role === "lead" ? t("leads") : t("supporting")}
               </span>
               <div
-                className="mt-1 flex min-h-9 flex-wrap items-center gap-1.5 rounded-lg border border-sand-300 bg-sand-50 p-1.5"
+                className="mt-1 flex min-h-9 flex-wrap items-center gap-1.5 rounded-lg border border-mist-300 bg-mist-50 p-1.5"
                 role="group"
                 aria-labelledby={`leads-${role}-label`}
               >
@@ -233,11 +233,11 @@ function LeadsEditor({
                     aria-label={t("entityPlaceholder")}
                   />
                   {entityQ.trim().length >= 2 ? (
-                    <div className="absolute top-11 z-30 w-full overflow-hidden rounded-xl border border-sand-300 bg-white shadow-[var(--shadow-pop)]">
+                    <div className="absolute top-11 z-30 w-full overflow-hidden rounded-xl border border-mist-300 bg-white shadow-[var(--shadow-pop)]">
                       {hits.map((h) => (
                         <button
                           key={h.id}
-                          className="flex w-full items-center gap-2 px-3 py-2 text-start text-sm hover:bg-maroon-100/50 cursor-pointer"
+                          className="flex w-full items-center gap-2 px-3 py-2 text-start text-sm hover:bg-navy-100/50 cursor-pointer"
                           onClick={() => {
                             addRow({
                               kind: "entity",
@@ -259,7 +259,7 @@ function LeadsEditor({
                         </button>
                       ))}
                       <button
-                        className="flex w-full items-center gap-2 bg-sand-50 px-3 py-2 text-start text-sm font-medium text-maroon-700 hover:bg-maroon-100/50 cursor-pointer"
+                        className="flex w-full items-center gap-2 bg-mist-50 px-3 py-2 text-start text-sm font-medium text-navy-700 hover:bg-navy-100/50 cursor-pointer"
                         onClick={createEntity}
                       >
                         <Plus className="size-3.5" /> {t("createNew", { name: entityQ.trim() })}
@@ -401,7 +401,7 @@ export function NodeActions({
                   step={5}
                   value={progress}
                   onChange={(e) => setProgress(Number(e.target.value))}
-                  className="mt-2.5 w-full accent-maroon-700"
+                  className="mt-2.5 w-full accent-navy-700"
                   aria-label={t("progress")}
                 />
               </div>

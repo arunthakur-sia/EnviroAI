@@ -1,4 +1,4 @@
-// The SiaNexus analyst: a tool-using loop (Sonnet by default, Opus for complex
+// The EnviroAI analyst: a tool-using loop (Sonnet by default, Opus for complex
 // questions) that plans, gathers evidence through real tools, and streams a
 // structured answer workspace. Runs fully in mock mode with the same tools.
 import Anthropic from "@anthropic-ai/sdk";
@@ -464,7 +464,7 @@ export async function* analystStream(params: {
   /* ---- mock answer path (also the live-failure fallback) ---- */
   /* A live gather whose calls all failed (an unreachable, refusing or
      out-of-credit API) leaves the analyst with no evidence at all, and the
-     fallback writer would then tell the reader that SiaNexus holds nothing on
+     fallback writer would then tell the reader that EnviroAI holds nothing on
      the question. Run the planned tools first, so the fallback answer is
      grounded in the same real sources mock mode uses and the citations under
      it are genuine. */

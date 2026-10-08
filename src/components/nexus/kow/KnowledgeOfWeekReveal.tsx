@@ -85,7 +85,7 @@ export function KnowledgeOfWeekReveal({ card, numerals }: { card: KowCard; numer
       {open ? (
         <motion.div
           key="kow-reveal"
-          className="fixed inset-0 z-[80] overflow-y-auto bg-sand-50/95 backdrop-blur-md"
+          className="fixed inset-0 z-[80] overflow-y-auto bg-mist-50/95 backdrop-blur-md"
           initial={reduced ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={reduced ? undefined : { opacity: 0, transition: { duration: 0.18 } }}
@@ -101,7 +101,7 @@ export function KnowledgeOfWeekReveal({ card, numerals }: { card: KowCard; numer
               aria-modal="true"
               aria-labelledby="kow-reveal-title"
               aria-describedby="kow-reveal-desc"
-              className="relative rounded-[var(--radius-card)] border border-gold-300 bg-white p-6 shadow-[var(--shadow-pop)] outline-none sm:p-9"
+              className="relative rounded-[var(--radius-card)] border border-aqua-300 bg-white p-6 shadow-[var(--shadow-pop)] outline-none sm:p-9"
               initial={reduced ? false : { opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               exit={reduced ? undefined : { opacity: 0, y: 12, transition: { duration: 0.18 } }}
@@ -110,12 +110,12 @@ export function KnowledgeOfWeekReveal({ card, numerals }: { card: KowCard; numer
               onKeyDown={onKeyDown}
               tabIndex={-1}
             >
-              <span aria-hidden className="absolute inset-x-8 top-0 h-1 rounded-b-full bg-gold-500" />
+              <span aria-hidden className="absolute inset-x-8 top-0 h-1 rounded-b-full bg-aqua-500" />
               <button
                 type="button"
                 onClick={dismiss}
                 aria-label={t("reveal.close")}
-                className="absolute end-4 top-4 rounded-md p-1.5 text-ink-400 transition-colors hover:bg-sand-100 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-gold-500 cursor-pointer"
+                className="absolute end-4 top-4 rounded-md p-1.5 text-ink-400 transition-colors hover:bg-mist-100 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-aqua-500 cursor-pointer"
                 data-testid="kow-reveal-close"
               >
                 <X className="size-4" />

@@ -84,7 +84,7 @@ async function login(page: Page, locale: string, email: string) {
   for (let attempt = 0; attempt < 16; attempt++) {
     try {
       const res = await page.request.post(`${BASE}/api/v1/auth/login`, {
-        data: { email, password: "Nexus!2026" },
+        data: { email, password: "EnviroAI!2026" },
         timeout: 120000,
       });
       status = res.status();
@@ -341,7 +341,7 @@ async function main() {
   if (stage("board")) {
   console.log("EN admin: board");
   const en = await newPage(browser, "en", "en");
-  await login(en, "en", "admin@npc.qa");
+  await login(en, "en", "admin@enviroai.demo");
 
   await go(en, `${BASE}/en/indices`);
   await en.waitForSelector('[data-testid="group-switcher"]', { timeout: 60000 });
@@ -494,7 +494,7 @@ async function main() {
   if (stage("settings")) {
   console.log("EN admin: settings");
   const en = await newPage(browser, "en", "en-settings");
-  await login(en, "en", "admin@npc.qa");
+  await login(en, "en", "admin@enviroai.demo");
   // an interrupted earlier run may have left a probe group active: archive it
   {
     const existing = await apiGet<{ data: unknown }>(en, "/api/v1/indices/groups");
@@ -577,7 +577,7 @@ async function main() {
   await shot(en, "indices-wizard-basics-en");
   await en.click('[data-testid="wizard-next"]');
   await en.waitForSelector('[data-testid="wizard-data"]');
-  await en.fill('[data-testid="wizard-csv"]', "country,year,rank,score\nQAT,2022,30,60.5\nQAT,2023,28,62.1\nQAT,2024,25,64.0\n");
+  await en.fill('[data-testid="wizard-csv"]', "country,year,rank,score\nSAU,2022,30,60.5\nSAU,2023,28,62.1\nSAU,2024,25,64.0\n");
   await en.click('[data-testid="wizard-preview"]');
   await en.waitForSelector('[data-testid="wizard-preview-summary"]', { timeout: 30000 });
   const previewRows = await en.locator('[data-testid="wizard-preview-row"]').count();
@@ -625,13 +625,13 @@ async function main() {
   if (stage("index")) {
   console.log("EN admin: index page");
   const en = await newPage(browser, "en", "en-index");
-  await login(en, "en", "admin@npc.qa");
+  await login(en, "en", "admin@enviroai.demo");
   await go(en, `${BASE}/en/indices/egdi`);
   await settle(en, '[data-testid="index-page"]');
   expect("index page: EGDI shows its group chips (governance and digital)", (await en.locator('[data-testid="index-group-chip"]').count()) >= 2);
   expect("index page: no raw i18n keys", (await rawKeys(en)).length === 0);
   await shot(en, "index-page-en");
-  await go(en, `${BASE}/en/indices/nat_lfpr_qatari`);
+  await go(en, `${BASE}/en/indices/nat_ghg_per_capita`);
   await settle(en, '[data-testid="index-page"]');
   expect("index page: a national indicator shows its target line and Statistics Hub chip", (await en.locator('[data-testid="target-line"]').count()) === 1 && (await en.locator('[data-testid="index-statistics-chip"]').count()) === 1);
   await shot(en, "index-page-national-en");
@@ -646,7 +646,7 @@ async function main() {
   if (stage("ar")) {
   console.log("AR admin");
   const ar = await newPage(browser, "ar", "ar-settings-and-board");
-  await login(ar, "ar", "admin@npc.qa");
+  await login(ar, "ar", "admin@enviroai.demo");
   await go(ar, `${BASE}/ar/indices`);
   await ar.waitForSelector('[data-testid="group-switcher"]', { timeout: 60000 });
   await settle(ar);
@@ -683,7 +683,7 @@ async function main() {
   if (stage("reader")) {
   console.log("EN reader");
   const rd = await newPage(browser, "en", "reader");
-  await login(rd, "en", "reader@npc.qa");
+  await login(rd, "en", "reader@enviroai.demo");
   await go(rd, `${BASE}/en/indices`);
   await rd.waitForSelector('[data-testid="group-switcher"]', { timeout: 60000 });
   expect("reader: no edit toggle", (await rd.locator('[data-testid="indices-edit-toggle"]').count()) === 0);

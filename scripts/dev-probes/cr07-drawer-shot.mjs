@@ -9,8 +9,8 @@ const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } })
 const page = await ctx.newPage();
 page.on("pageerror", (e) => console.log("PAGE EXCEPTION:", String(e).slice(0, 300)));
 await page.goto(BASE + "/en/login");
-await page.fill("#email", "admin@npc.qa");
-await page.fill("#password", "Nexus!2026");
+await page.fill("#email", "admin@enviroai.demo");
+await page.fill("#password", "EnviroAI!2026");
 await page.click("button[type=submit]");
 await page.waitForURL("**/home", { timeout: 60000 });
 await page.goto(BASE + "/en/council-strategy?g=g1", { waitUntil: "domcontentloaded", timeout: 90000 });

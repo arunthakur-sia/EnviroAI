@@ -1,6 +1,6 @@
 // CR04 final sanity on the fresh DB.
 import { createClient } from "@libsql/client";
-const db = createClient({ url: "file:C:/npckms/data/nexus.db" });
+const db = createClient({ url: "file:C:/enviroai/data/nexus.db" });
 const q = async (sql, args = []) => (await db.execute({ sql, args })).rows;
 
 const eps = await q("select title_en, script_json from podcast_episodes order by created_at limit 2");
@@ -16,7 +16,7 @@ const themeIdx = await q("select count(*) c from search_index where resource_typ
 console.log("themes indexed:", themeIdx[0].c);
 const chapters = await q("select value_json from settings where key='outcome_chapters'");
 console.log("chapters:", Object.keys(JSON.parse(chapters[0]?.value_json ?? "{}")).length);
-const pillars = await q("select value_json from settings where key='qnv_pillars'");
+const pillars = await q("select value_json from settings where key='vision_pillars'");
 console.log("pillars:", JSON.parse(pillars[0]?.value_json ?? "[]").length);
 const rules = await q(
   "select event_type, points from game_rules where event_type in ('learn_session_completed','reflection_saved','lesson_read_fully')"

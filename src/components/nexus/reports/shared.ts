@@ -22,41 +22,41 @@ export type ReportStatus = (typeof REPORT_STATUSES)[number];
 
 export const STATUS_TONE: Record<string, ChipTone> = {
   generating: "info",
-  draft: "sand",
+  draft: "mist",
   in_review: "warn",
   approved: "ok",
-  published: "maroon",
+  published: "navy",
   failed: "danger",
 };
 
 export const FAMILY_TONE: Record<string, ChipTone> = {
-  public: "gulf",
-  internal: "sand",
-  custom: "gold",
+  public: "teal",
+  internal: "mist",
+  custom: "aqua",
 };
 
 export const SECTION_STATUS_TONE: Record<string, ChipTone> = {
   pending: "ghost",
   generating: "info",
   ready: "ok",
-  edited: "gold",
+  edited: "aqua",
   failed: "danger",
   needsEditing: "warn",
 };
 
 /** The KPI tile and callout tones as text and wash classes (tokens only). */
 export const TONE_TEXT: Record<string, string> = {
-  maroon: "text-maroon-900",
-  gulf: "text-gulf-600",
-  // gold-500 fails AA as text; the warn ink is the gold family's text pair
-  gold: "text-warn",
+  navy: "text-navy-900",
+  teal: "text-teal-600",
+  // aqua-500 fails AA as text; the warn ink is the gold family's text pair
+  aqua: "text-warn",
   ink: "text-ink-900",
 };
 export const TONE_WASH: Record<string, string> = {
-  maroon: "bg-maroon-100 text-maroon-900",
-  gulf: "bg-gulf-100 text-gulf-600",
-  gold: "bg-gold-100 text-maroon-900 border border-gold-300",
-  ink: "bg-sand-100 text-ink-900",
+  navy: "bg-navy-100 text-navy-900",
+  teal: "bg-teal-100 text-teal-600",
+  aqua: "bg-aqua-100 text-navy-900 border border-aqua-300",
+  ink: "bg-mist-100 text-ink-900",
 };
 
 export function langOf(locale: string): Lang {
@@ -87,5 +87,5 @@ export function isFinalStatus(status: string): boolean {
 }
 
 export function classificationTone(level: number): ChipTone {
-  return (["gulf", "sand", "warn", "danger"] as const)[Math.min(3, Math.max(0, level - 1))];
+  return (["teal", "mist", "warn", "danger"] as const)[Math.min(3, Math.max(0, level - 1))];
 }
