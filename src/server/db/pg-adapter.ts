@@ -160,7 +160,11 @@ export function createPgClient(connectionString: string) {
   const local = /@(localhost|127\.0\.0\.1)[:/]/.test(connectionString);
   const pool = new Pool({
     connectionString,
-    max: 10,
+    /* Serverless instances each hold their own pool and the Supabase pooler
+       allows only a handful of clients in total, so keep it tiny there.
+       PG_POOL_MAX overrides either default. */
+    max: Number(process.env.PG_POOL_MAX) || (process.env.VERCEL ? 1 : 10),
+    idleTimeoutMillis: process.env.VERCEL ? 5_000 : 10_000,
     ssl: local ? undefined : { rejectUnauthorized: false },
     types: typeParsers,
   });
