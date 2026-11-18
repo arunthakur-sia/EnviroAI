@@ -180,3 +180,39 @@ export async function listRecords(
   );
   return rows.map(mapRecord);
 }
+
+export type UserAccessRow = {
+  baseLayer: number;
+  grantedDatasetIds: string[];
+  includePersonalData: boolean;
+  allowExport: boolean;
+  grantExpiresAt: string | null;
+};
+
+/** The caller's NCEC access row (migration 0012 / pg 0002), or null when
+    they have none. granted_dataset_ids is text on SQLite and jsonb on
+    Postgres; grant_expires_at is text on SQLite and a Date on Postgres. */
+export async function getUserAccess(userId: string): Promise<UserAccessRow | null> {
+  const rows = await all(
+    "SELECT base_layer, granted_dataset_ids, include_personal_data, allow_export, grant_expires_at FROM ncec_user_access WHERE user_id = ?",
+    [userId]
+  );
+  const r = rows[0];
+  if (!r) return null;
+  let granted: unknown = r.granted_dataset_ids;
+  if (typeof granted === "string") {
+    try {
+      granted = JSON.parse(granted);
+    } catch {
+      granted = [];
+    }
+  }
+  const expires = r.grant_expires_at;
+  return {
+    baseLayer: Number(r.base_layer),
+    grantedDatasetIds: Array.isArray(granted) ? granted.filter((x): x is string => typeof x === "string") : [],
+    includePersonalData: asBool(r.include_personal_data),
+    allowExport: asBool(r.allow_export),
+    grantExpiresAt: expires instanceof Date ? expires.toISOString() : strOrNull(expires),
+  };
+}

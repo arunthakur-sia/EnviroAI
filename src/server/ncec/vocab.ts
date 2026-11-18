@@ -12,6 +12,15 @@
 // values in the browser.
 
 const DICTIONARY: Record<string, string> = {
+  // violation status (DS-016 helper field)
+  سارية: "Active",
+  "قيد المراجعة": "Under review",
+  مغلقة: "Closed",
+  // employment types (generated DS-056 dummy records)
+  دائم: "Permanent",
+  "إعارة / تكليف": "Secondment / Assignment",
+  "تعاوني وتمهير": "Co-op & Tamheer",
+  "أخرى (استشاري / عقد)": "Other (Consultant / Contract)",
   // regions (DMO-005 / DMO-264 / DMO-419 ...)
   الرياض: "Riyadh Region",
   "مكة المكرمة": "Makkah Region",

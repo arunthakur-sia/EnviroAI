@@ -256,6 +256,14 @@ const HELPERS = [
   { header: "Averaging period [mockup helper]", asset_id: "DUM-HLP-022-01", name_en: "Averaging period" },
   { header: "Period (month) [mockup helper]", asset_id: "DUM-HLP-022-02", name_en: "Period (month)" },
 ];
+// The workbook's dummy permits were written around 1 June 2026. Their issue and expiry dates
+// (DS-001 DMO-017, DMO-018) move forward by the days since then, so "expiring within 90 days"
+// and the active/expired split read as intended on the build day. Rebuild and reload to refresh.
+const PERMIT_DATES_AS_OF = Date.UTC(2026, 5, 1);
+const PERMIT_DATE_FIELDS = new Set(["DMO-017", "DMO-018"]);
+const PERMIT_SHIFT_DAYS = Math.max(0, Math.floor((Date.now() - PERMIT_DATES_AS_OF) / 86400000));
+const shiftIso = (iso, days) => new Date(Date.parse(iso + "T00:00:00Z") + days * 86400000).toISOString().slice(0, 10);
+
 const fieldById = new Map(fields.map((f) => [f.asset_id, f]));
 const recordFiles = {};
 const valueTypes = new Map();
@@ -340,6 +348,11 @@ for (const [tab, dsId] of Object.entries(TABS)) {
       if (t === "date") {
         logRow("D-01", "dummy_value", rid, c.asset_id, v, isoDate(v));
         v = isoDate(v);
+        if (dsId === "DS-001" && PERMIT_DATE_FIELDS.has(c.asset_id) && PERMIT_SHIFT_DAYS > 0) {
+          const shifted = shiftIso(v, PERMIT_SHIFT_DAYS);
+          logRow("D-02", "dummy_value", rid, c.asset_id, v, shifted);
+          v = shifted;
+        }
       } else if (t === "text") v = ws(v);
       if (f.personal_data !== "none") {
         const s = String(v);
@@ -350,10 +363,142 @@ for (const [tab, dsId] of Object.entries(TABS)) {
     }
     out.push(o);
   }
+  if (dsId === "DS-016") {
+    // The mockup's violations table also shows a status, a corrective-plan state and the
+    // reporter's contact, none of which the register itemises for DS-016. They are added as
+    // mockup_helper fields at the dataset's own layer (L3, secret); the reporter contact is
+    // personal data, so it is a masked placeholder and the app masks it again (R6).
+    const helper = (n, nameEn, nameAr, personal) => {
+      const asset_id = "DUM-HLP-016-0" + n;
+      if (!fieldById.has(asset_id)) {
+        const f = {
+          asset_id, dataset_id: dsId, ordinal: dsFields.length + n, register_row: null, field_kind: "mockup_helper",
+          name_ar: nameAr, name_en: nameEn, name_en_status: "working_translation", register_classification: "secret",
+          personal_data: personal ? "personal" : "none", data_nature_ar: null, description_ar: null, data_steward: null,
+          steward_email: null, source_system: null, update_frequency_ar: null, last_update_date: null, update_status_ar: null,
+          notes_ar: null, next_update_date: null, audit_notes_ar: null, workbook_effective_layer: 3, value_type: "",
+        };
+        fields.push(f);
+        fieldById.set(asset_id, f);
+        valueTypes.set(asset_id, "text");
+        logRow("D-05", "field", asset_id, "field_kind", "column not in register", "mockup_helper, layer L3 (class secret)");
+      }
+      cols.push(asset_id);
+      return asset_id;
+    };
+    const status = helper(1, "Violation status", "حالة المخالفة", false);
+    const plan = helper(2, "Corrective plan status", "حالة الخطة التصحيحية", false);
+    const contact = helper(3, "Reporter contact", "بيانات التواصل للمبلغ", true);
+    const STATUS = ["سارية", "سارية", "قيد المراجعة", "سارية", "مغلقة", "قيد المراجعة", "سارية"];
+    const PLAN = ["مفتوحة", "مفتوحة", "مكتملة", "مفتوحة", "غير مطلوبة"];
+    out.forEach((o, i) => {
+      o[status] = STATUS[(i * 5 + 3) % STATUS.length];
+      o[plan] = o[status] === "مغلقة" ? "مكتملة" : PLAN[(i * 3 + 1) % PLAN.length];
+      o[contact] = "تواصل تجريبي " + String(i + 1).padStart(3, "0") + " (masked)";
+    });
+  }
   totalRecords += out.length;
   recordFiles[dsId] = { file: `records_${dsId}.csv`, rows: out.length, columns: cols.length };
   writeCsv(path.join(OUT, `records_${dsId}.csv`), ["record_id", "dataset_id", "is_dummy", "data_status", ...cols], out);
 }
+// ---- generated corporate dummy records ---------------------------------------
+// The workbook has no dummy tab for any corporate dataset, so the corporate dashboard's
+// figures are generated here, deterministically (fixed seed), and marked DUMMY like every
+// other record. Columns the register does not itemise are added as mockup_helper fields,
+// classified like the data they describe: DS-056 dimensions L2 (restricted), its vacancies
+// L3 (secret, they reveal headcount like DMO-809 itself); training helpers L1 (public), the
+// layer of their dataset's register placeholder.
+const rng = (() => {
+  let a = 0x5eed056;
+  return () => {
+    a |= 0; a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+})();
+const between = (lo, hi) => lo + Math.floor(rng() * (hi - lo + 1));
+const CLASS_LAYER = { public: 1, restricted: 2, secret: 3 };
+function addHelper(dsId, n, nameEn, nameAr, cls, type) {
+  const asset_id = "DUM-HLP-" + dsId.slice(3) + "-" + String(n).padStart(2, "0");
+  if (fieldById.has(asset_id)) return asset_id;
+  const f = {
+    asset_id, dataset_id: dsId, ordinal: fields.filter((x) => x.dataset_id === dsId).length + 1, register_row: null,
+    field_kind: "mockup_helper", name_ar: nameAr, name_en: nameEn, name_en_status: "working_translation",
+    register_classification: cls, personal_data: "none", data_nature_ar: null, description_ar: null, data_steward: null,
+    steward_email: null, source_system: null, update_frequency_ar: null, last_update_date: null, update_status_ar: null,
+    notes_ar: null, next_update_date: null, audit_notes_ar: null, workbook_effective_layer: CLASS_LAYER[cls], value_type: "",
+  };
+  fields.push(f);
+  fieldById.set(asset_id, f);
+  valueTypes.set(asset_id, type);
+  logRow("D-04", "field", asset_id, "field_kind", "column not in register", "mockup_helper, layer L" + CLASS_LAYER[cls] + " (class " + cls + ")");
+  return asset_id;
+}
+function writeGenerated(dsId, rows) {
+  const cols = [...new Set(rows.flatMap((r) => Object.keys(r)))];
+  const out = rows.map((r, i) => ({ record_id: "DUM-" + dsId.slice(3) + "-" + String(i + 1).padStart(4, "0"), dataset_id: dsId, is_dummy: "true", data_status: "DUMMY", ...r }));
+  totalRecords += out.length;
+  recordFiles[dsId] = { file: "records_" + dsId + ".csv", rows: out.length, columns: cols.length, generated: true };
+  writeCsv(path.join(OUT, "records_" + dsId + ".csv"), ["record_id", "dataset_id", "is_dummy", "data_status", ...cols], out);
+}
+// staff are spread over the register's own corporate-support departments (the same ones
+// the corporate catalogue's tiles group by), so the staff/training summary a department
+// tile filters to is the same department named on the tile. Mockup-scale totals: 860 in
+// 2026, 825 in 2025.
+const STAFF_DEPTS = [
+  ["NCEC-U19", 162], ["NCEC-U24", 128], ["NCEC-U28", 114], ["NCEC-U29", 98], ["NCEC-U23", 86],
+  ["NCEC-U32", 74], ["NCEC-U22", 62], ["NCEC-U30", 50], ["NCEC-U27", 40], ["NCEC-U21", 28], ["NCEC-U31", 18],
+];
+const deptAr = new Map(departments.map((d) => [d.dept_id, d.name_ar]));
+const EMPLOYMENT = [["دائم", 0.72], ["إعارة / تكليف", 0.14], ["تعاوني وتمهير", 0.09], ["أخرى (استشاري / عقد)", 0.05]];
+{
+  const year = addHelper("DS-056", 1, "Year", "السنة", "restricted", "number");
+  const dept = addHelper("DS-056", 2, "Department", "الإدارة", "restricted", "text");
+  const type = addHelper("DS-056", 3, "Employment type", "نوع التوظيف", "restricted", "text");
+  const vac = addHelper("DS-056", 4, "Vacancies", "الشواغر", "secret", "number");
+  valueTypes.set("DMO-809", "number");
+  const rows = [];
+  for (const [y, scale] of [[2025, 825 / 860], [2026, 1]]) {
+    for (const [id, total] of STAFF_DEPTS) {
+      const t = Math.round(total * scale * (y === 2025 ? 0.97 + rng() * 0.06 : 1));
+      let left = t;
+      EMPLOYMENT.forEach(([name, share], i) => {
+        const n = i === EMPLOYMENT.length - 1 ? left : Math.round(t * share);
+        left -= n;
+        rows.push({ [year]: y, [dept]: deptAr.get(id), [type]: name, "DMO-809": n, [vac]: i === 0 ? between(2, 9) : 0 });
+      });
+    }
+  }
+  writeGenerated("DS-056", rows);
+}
+{
+  const year = addHelper("DS-120", 1, "Year", "السنة", "public", "number");
+  const name = addHelper("DS-120", 2, "Programme", "البرنامج", "public", "text");
+  const dept = addHelper("DS-120", 3, "Department", "الإدارة", "public", "text");
+  const hours = addHelper("DS-120", 4, "Training hours", "الساعات التدريبية", "public", "number");
+  const people = addHelper("DS-120", 5, "Participants", "المشاركون", "public", "number");
+  const rows = [];
+  let n = 0;
+  for (const [y, count] of [[2025, 124], [2026, 146]]) {
+    for (let i = 0; i < count; i++) {
+      const id = STAFF_DEPTS[Math.floor(rng() ** 1.4 * STAFF_DEPTS.length)][0];
+      rows.push({ [year]: y, [name]: "برنامج تدريبي تجريبي " + String(++n).padStart(3, "0"), [dept]: deptAr.get(id), [hours]: between(4, 16), [people]: between(8, 30) });
+    }
+  }
+  writeGenerated("DS-120", rows);
+}
+for (const [dsId, counts] of [["DS-117", [33, 41]], ["DS-118", [27, 33]]]) {
+  const year = addHelper(dsId, 1, "Year", "السنة", "public", "number");
+  const dept = addHelper(dsId, 2, "Host department", "الإدارة المستضيفة", "public", "text");
+  const start = addHelper(dsId, 3, "Start month", "شهر البدء", "public", "number");
+  const rows = [];
+  [2025, 2026].forEach((y, k) => {
+    for (let i = 0; i < counts[k]; i++) rows.push({ [year]: y, [dept]: deptAr.get(STAFF_DEPTS[between(0, STAFF_DEPTS.length - 1)][0]), [start]: between(1, 12) });
+  });
+  writeGenerated(dsId, rows);
+}
+
 for (const f of fields) f.value_type = valueTypes.get(f.asset_id) || "";
 
 // ---- write -----------------------------------------------------------------

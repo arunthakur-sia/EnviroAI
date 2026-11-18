@@ -8,7 +8,10 @@
 // was checked by hand against the loaded data (ui-plan.md s2) and is
 // reported honestly even where it differs from the mockup images.
 import "server-only";
-import { countRecords, getDataset, listDepartments, listRecords } from "./repo";
+import { countRecords, getDataset, listDepartments, listFields, listRecords } from "./repo";
+import { projectRecord } from "./policy";
+import { buildColumns } from "./datasets";
+import type { NcecPrincipal } from "./types";
 
 const DS_FACILITIES = "DS-001";
 const DS_CONTAMINATED = "DS-027";
@@ -38,6 +41,10 @@ const VIO = {
   severity: "DMO-277",
   violationNo: "DMO-278",
   penalty: "DMO-280",
+  // mockup_helper fields added by the CSV build (not in the register), L3
+  status: "DUM-HLP-016-01",
+  correctivePlan: "DUM-HLP-016-02",
+  reporterContact: "DUM-HLP-016-03",
 } as const;
 
 /** DS-015 Facilities visited vs. total registered. */
@@ -98,7 +105,8 @@ export async function getEnvironmentalDashboard(todayIso: string): Promise<Envir
     const expiry = String(v[FAC.expiry] ?? "");
     const sector = String(v[FAC.sector] ?? "");
     const registerActive = status === "ساري";
-    const expired = expiry !== "" && expiry < todayIso;
+    const registerExpired = status === "منتهي";
+    const expired = registerExpired || (expiry !== "" && expiry < todayIso);
     const statusMismatch = registerActive && expired;
     const displayStatus: FacilityRow["displayStatus"] = expired ? "expired" : registerActive ? "active" : "renewal";
     if (displayStatus === "active") active++;
@@ -145,6 +153,9 @@ export type ViolationRow = {
   severity: string;
   issueDate: string;
   penalty: number;
+  status: string;
+  /** personal data (R6): the mask unless the caller's grant includes personal data; null when not visible */
+  reporterContact: string | null;
 };
 
 export type SensitiveDashboard = {
@@ -157,6 +168,7 @@ export type SensitiveDashboard = {
     inspectionsVisited: number;
     inspectionsTotal: number;
     facilitiesWithViolation: number;
+    openCorrectivePlans: number;
   };
   violationsByType: Array<{ type: string; count: number }>;
   violationsByRegion: Array<{ region: string; count: number; point: Coord | null }>;
@@ -166,13 +178,17 @@ export type SensitiveDashboard = {
 /** Approver shown on the demo approval banner: the executive department that
     actually owns the Violations dataset in the register, looked up live
     rather than hardcoded. */
-export async function getSensitiveDashboard(): Promise<SensitiveDashboard> {
-  const [vioRows, insRows, vioDataset, depts] = await Promise.all([
+export async function getSensitiveDashboard(principal: NcecPrincipal): Promise<SensitiveDashboard> {
+  const [vioRows, insRows, vioDataset, depts, vioFields] = await Promise.all([
     listRecords(DS_VIOLATIONS, { limit: 1000 }),
     listRecords(DS_INSPECTIONS, { limit: 1000 }),
     getDataset(DS_VIOLATIONS),
     listDepartments(),
+    listFields(DS_VIOLATIONS),
   ]);
+  // every violation value goes through the same allowlist and personal-data
+  // mask as the generic dataset view, so nothing here can bypass R5/R6
+  const vioColumns = buildColumns(principal, vioFields);
   const deptById = new Map(depts.map((d) => [d.deptId, d]));
   const approver = vioDataset ? deptById.get(vioDataset.execDeptId) ?? null : null;
 
@@ -182,9 +198,11 @@ export async function getSensitiveDashboard(): Promise<SensitiveDashboard> {
   const byRegion = new Map<string, { count: number; points: Coord[] }>();
   const facilitiesWithViolation = new Set<string>();
   const table: ViolationRow[] = [];
+  let openCorrectivePlans = 0;
 
   for (const r of vioRows) {
-    const v = r.values;
+    const v = projectRecord(principal, vioColumns, r.values);
+    if (v[VIO.correctivePlan] === "مفتوحة") openCorrectivePlans++;
     const issueDate = String(v[VIO.issueDate] ?? "");
     const penalty = Number(v[VIO.penalty] ?? 0);
     if (issueDate.startsWith("2026")) {
@@ -211,6 +229,8 @@ export async function getSensitiveDashboard(): Promise<SensitiveDashboard> {
       severity: String(v[VIO.severity] ?? ""),
       issueDate,
       penalty: Number.isFinite(penalty) ? penalty : 0,
+      status: String(v[VIO.status] ?? ""),
+      reporterContact: v[VIO.reporterContact] == null ? null : String(v[VIO.reporterContact]),
     });
   }
 
@@ -231,6 +251,7 @@ export async function getSensitiveDashboard(): Promise<SensitiveDashboard> {
       inspectionsVisited: visited,
       inspectionsTotal: insRows.length,
       facilitiesWithViolation: facilitiesWithViolation.size,
+      openCorrectivePlans,
     },
     violationsByType: [...byType.entries()]
       .map(([type, count]) => ({ type, count }))

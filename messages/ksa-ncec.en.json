@@ -4,11 +4,10 @@
       "navEnvironmental": "NCEC Environmental Data",
       "navCorporate": "NCEC Corporate Data",
       "navSensitive": "Sensitive data (L3)",
-      "demoControl": "Demo persona",
-      "demoBadge": "DEMO ONLY",
-      "demoHint": "Step 1 has no real sign-in yet. Pick the layer you want to preview.",
-      "persona": { "l1": "L1 Public", "l2": "L2 NCEC Institutional", "l3": "L3 Sensitive Environmental" },
-      "badge": { "l2": "L2 · NCEC Institutional", "l3": "L3 · Sensitive Environmental" }
+      "badge": {
+        "l2": "L2 · NCEC Institutional",
+        "l3": "L3 · Sensitive Environmental"
+      }
     },
     "common": {
       "dummyBanner": "Dummy data · for demonstration only",
@@ -19,8 +18,16 @@
       "exportDisabled": "Export disabled for this grant",
       "reveal": "Reveal",
       "locked": "Locked",
-      "layerShort": { "l1": "L1", "l2": "L2", "l3": "L3" },
-      "layerFull": { "l1": "Public", "l2": "Restricted", "l3": "Sensitive" },
+      "layerShort": {
+        "l1": "L1",
+        "l2": "L2",
+        "l3": "L3"
+      },
+      "layerFull": {
+        "l1": "Public",
+        "l2": "Restricted",
+        "l3": "Sensitive"
+      },
       "fields": "fields",
       "records": "records",
       "catalogueOnly": "Catalogue only",
@@ -29,7 +36,11 @@
       "backToCatalogue": "Back to the catalogue",
       "personalDataMasked": "Personal data is masked",
       "noResults": "No results",
-      "schematicNote": "Positions are a simplified schematic from the records' own coordinates, not a surveyed map."
+      "restrictedToL3": "Restricted to L3",
+      "mapLabel": "Map of Saudi Arabia with record locations",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "backToDashboard": "Back to the dashboard"
     },
     "environmental": {
       "title": "NCEC Environmental Data",
@@ -53,9 +64,16 @@
         "expiry": "Expiry",
         "status": "Status"
       },
-      "status": { "active": "Active", "renewal": "Renewal", "expired": "Expired" },
+      "status": {
+        "active": "Active",
+        "renewal": "Renewal",
+        "expired": "Expired"
+      },
       "statusMismatchNote": "Register says active; expiry date has passed",
-      "lockedColumnNote": "This dataset has no Layer 3 fields; see the ODS and HFC inventory dataset for a mixed-layer example."
+      "lockedColumnNote": "This dataset has no Layer 3 fields; see the ODS and HFC inventory dataset for a mixed-layer example.",
+      "mapLegendTitle": "Sector (permitted facilities)",
+      "viewAllDatasets": "View all {count} datasets",
+      "viewAllRecords": "View all {count} records"
     },
     "sensitive": {
       "title": "Sensitive Environmental Data",
@@ -70,10 +88,10 @@
         "violations2026": "Violations issued 2026",
         "totalPenalties": "Total penalties",
         "inspectionCoverage": "Inspection coverage",
-        "facilitiesWithViolation": "Facilities with a violation"
+        "openCorrectivePlans": "Open corrective plans"
       },
       "byTypeTitle": "Violations by type",
-      "byRegionTitle": "Violations by region (schematic)",
+      "byRegionTitle": "Violations by region (Saudi Arabia)",
       "tableTitle": "Violations",
       "columns": {
         "violationNo": "Violation No.",
@@ -81,16 +99,63 @@
         "region": "Region",
         "type": "Type",
         "severity": "Severity",
-        "penalty": "Penalty (SAR)"
+        "penalty": "Penalty (SAR)",
+        "status": "Status",
+        "contact": "Reporter contact"
       },
-      "severity": { "major": "Major", "moderate": "Moderate", "minor": "Minor" },
-      "inspectionsVisited": "{visited} of {total} facilities visited"
+      "severity": {
+        "major": "Major",
+        "moderate": "Moderate",
+        "minor": "Minor"
+      },
+      "inspectionsVisited": "{visited} of {total} facilities visited",
+      "currency": "SAR",
+      "penaltiesExact": "SAR {amount}",
+      "axisViolations": "Number of violations",
+      "legendTitle": "Number of violations"
     },
     "corporate": {
       "title": "NCEC Corporate Data",
-      "subtitle": "Internal administrative data for NCEC staff · catalogue view",
+      "subtitle": "Internal administrative data for NCEC staff · summary view",
       "datasetCount": "{count, plural, one {# dataset} other {# datasets}}",
-      "catalogueOnlyNote": "All corporate datasets are catalogue only in Step 1: none has dummy records yet."
+      "vsPrevious": "vs. {year}",
+      "departmentsLabel": "Corporate datasets by department",
+      "kpis": {
+        "headcount": "NCEC headcount",
+        "programmes": "Training programmes delivered {year}",
+        "hoursPerEmployee": "Training hours per employee",
+        "hoursPerParticipant": "Training hours per participant",
+        "trainees": "Co-op and Tamheer trainees"
+      },
+      "byDepartment": {
+        "headcount": "Headcount by department",
+        "programmes": "Training programmes by department",
+        "hours": "Training hours by department"
+      },
+      "metricLabel": "Chart measure",
+      "metric": {
+        "headcount": "Headcount",
+        "programmes": "Training programmes",
+        "hours": "Training hours"
+      },
+      "headcountLockedNote": "Headcount is classified Secret in the register (Layer 3), so headcount figures open only through a Layer 3 grant on Employee data.",
+      "byEmploymentType": "Headcount by employment type",
+      "total": "Total",
+      "summaryTitle": "Department summary",
+      "columns": {
+        "department": "Department",
+        "headcount": "Headcount",
+        "share": "% of total",
+        "programmes": "Training programmes ({year})",
+        "hours": "Training hours",
+        "vacancies": "Vacancies",
+        "trend": "Trend (vs. {prev})"
+      },
+      "datasetsOf": "{dept}: datasets",
+      "allDepartments": "All departments",
+      "scopeAll": "Showing every department",
+      "scopeDept": "Showing {dept} only",
+      "clearScope": "Show all departments"
     },
     "dataset": {
       "backTo": "Back to {name}",
@@ -104,6 +169,13 @@
     "access": {
       "title": "Access restricted",
       "body": "This dataset's fields are classified above your current NCEC layer. You can request access; a data owner reviews requests of this kind outside Step 1."
+    },
+    "catalogue": {
+      "title": "Dataset catalogue",
+      "subtitle": "{count} core environmental datasets in the NCEC data asset register",
+      "available": "Available to you",
+      "restricted": "Restricted",
+      "restrictedNote": "Every field in these datasets is classified Secret or Top Secret, or is not yet classified (unclassified fields default to Layer 3). They open only through a Layer 3 grant naming the dataset."
     }
   }
 }

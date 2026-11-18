@@ -12,7 +12,7 @@ const L2: NcecPrincipal = {
   includePersonalData: false,
   allowExport: false,
   grantExpiresAt: null,
-  source: "demo",
+  source: "db",
 };
 // L3 is never a blanket layer (brief R4): the principal's own login stays
 // baseLayer 2, and only a named grant opens specific L3 datasets.

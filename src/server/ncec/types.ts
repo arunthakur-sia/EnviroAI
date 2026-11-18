@@ -22,7 +22,7 @@ export type NcecPrincipal = {
   /** ISO timestamp the L3 grant expires at, or null with no active grant. */
   grantExpiresAt: string | null;
   /** Only "demo" is implemented in Step 1; real SSO/grants come later. */
-  source: "demo";
+  source: "db";
 };
 
 /** The layer to show on a badge: L3 only while an active grant exists,

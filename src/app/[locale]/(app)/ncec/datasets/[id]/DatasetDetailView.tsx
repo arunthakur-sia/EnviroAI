@@ -47,7 +47,7 @@ export function DatasetDetailView({ view }: { view: DatasetView }) {
 
   return (
     <div data-testid="ncec-dataset-page">
-      <Link href={"/ncec" as never} className="mb-3 inline-flex text-sm font-medium text-navy-700 hover:underline">
+      <Link href={"/ncec/datasets" as never} className="mb-3 inline-flex text-sm font-medium text-navy-700 hover:underline">
         {t("common.backToCatalogue")}
       </Link>
       <header className="mb-4 flex items-center gap-2.5">

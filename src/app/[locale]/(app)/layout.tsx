@@ -7,7 +7,7 @@ import { getAiSettings } from "@/server/settings";
 import { anthropicKeyPresent, aiRefused } from "@/server/ai/client";
 import { AppShell, type RailPrefs, type ShellUser } from "@/components/nexus/AppShell";
 import { getNcecPrincipal } from "@/server/ncec/principal";
-import { isDemoModeEnabled } from "@/server/ncec/demo/personas";
+import { principalDisplayLayer } from "@/server/ncec/types";
 
 /** CR08 2.2: the rail state stored in users.prefs_json.rail. */
 function railPrefsOf(prefsJson: string | null): RailPrefs {
@@ -88,8 +88,7 @@ export default async function AppLayout({
 
   const portals = visiblePortals(user);
   const ncecPrincipal = await getNcecPrincipal();
-  const ncecPersona: ShellUser["ncecPersona"] =
-    !ncecPrincipal ? "l1" : ncecPrincipal.grantedDatasetIds.length > 0 ? "l3" : "l2";
+  const ncecLayer: ShellUser["ncecLayer"] = ncecPrincipal ? (principalDisplayLayer(ncecPrincipal) as 2 | 3) : null;
   const shellUser: ShellUser = {
     id: user.id,
     nameEn: user.nameEn,
@@ -116,8 +115,7 @@ export default async function AppLayout({
     rail: railPrefsOf(user.prefsJson),
     knowledgeOfWeekLive: kowRows.length > 0,
     inboxUnread: inboxRows[0]?.c ?? 0,
-    ncecDemoMode: isDemoModeEnabled(),
-    ncecPersona,
+    ncecLayer,
   };
 
   // a key that is present but refused counts as mock mode: the chip has to say

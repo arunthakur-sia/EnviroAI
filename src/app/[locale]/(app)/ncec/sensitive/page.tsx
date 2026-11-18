@@ -31,7 +31,7 @@ export default async function NcecSensitivePage() {
   }
 
   const [dashboard, catalogue] = await Promise.all([
-    getSensitiveDashboard(),
+    getSensitiveDashboard(principal),
     getCatalogue(principal, "core_environmental"),
   ]);
   const grantedDatasets = catalogue.filter((d) => principal.grantedDatasetIds.includes(d.datasetId));

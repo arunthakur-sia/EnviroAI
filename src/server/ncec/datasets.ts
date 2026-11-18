@@ -9,7 +9,7 @@ import type { ColumnMeta, DatasetView, NcecPrincipal, RecordsPage } from "./type
 import { countRecords, getDataset, listDepartments, listFields, listRecords } from "./repo";
 import { columnsFor, isDatasetLocked, projectRecord } from "./policy";
 
-function buildColumns(principal: NcecPrincipal, fields: Awaited<ReturnType<typeof listFields>>): ColumnMeta[] {
+export function buildColumns(principal: NcecPrincipal, fields: Awaited<ReturnType<typeof listFields>>): ColumnMeta[] {
   return columnsFor(
     principal,
     fields.map((f) => ({

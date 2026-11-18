@@ -5,6 +5,7 @@ import { getMessages } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { awaitingSetup } from "@/server/setup-state";
 import { AwaitingSetup } from "@/components/nexus/AwaitingSetup";
+import { getNcecPrincipal } from "@/server/ncec/principal";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -34,6 +35,10 @@ export default async function LocaleLayout({
      keeps answering 200, so the platform leaves the service alone while the
      operator uploads the bundle at /setup/restore. */
   const waiting = await awaitingSetup();
+  /* a caller without NCEC access gets no NCEC strings in the browser either
+     (brief R5: no trace of the tab for an L1 user) */
+  const ncecAccess = !waiting && (await getNcecPrincipal()) !== null;
+  const clientMessages = ncecAccess ? messages : Object.fromEntries(Object.entries(messages).filter(([k]) => k !== "ksaNcec"));
 
   return (
     <html lang={locale} dir={dir}>
@@ -62,7 +67,7 @@ export default async function LocaleLayout({
         {waiting ? (
           <AwaitingSetup />
         ) : (
-          <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+          <NextIntlClientProvider messages={clientMessages}>{children}</NextIntlClientProvider>
         )}
       </body>
     </html>

@@ -44,7 +44,8 @@
     "ncec:build": "node scripts/ncec/build-csv.mjs",
     "ncec:migrate-pg": "node scripts/ncec/migrate-pg.mjs",
     "ncec:load": "node scripts/ncec/load.mjs",
-    "ncec:validate": "node scripts/ncec/validate.mjs"
+    "ncec:validate": "node scripts/ncec/validate.mjs",
+    "ncec:access": "node scripts/ncec/seed-access.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.124.0",

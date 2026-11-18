@@ -49,7 +49,6 @@ import { PRIMARY_RAIL, RAIL_GROUPS } from "@/server/db/json";
 import { SiaLogo } from "./Logo";
 import { Avatar, ProgressRing, Chip } from "@/components/ui/primitives";
 import { NcecLayerBadge } from "@/components/ncec/NcecLayerBadge";
-import { DemoPersonaSwitcher, type DemoPersonaKey } from "@/components/ncec/DemoPersonaSwitcher";
 import {
   Dropdown,
   DropdownTrigger,
@@ -98,11 +97,9 @@ export type ShellUser = {
   knowledgeOfWeekLive: boolean;
   /* CR08 9.2: unread message threads */
   inboxUnread: number;
-  /* ui-plan.md s4: whether the NCEC demo persona switcher is shown at all */
-  ncecDemoMode: boolean;
-  /* the NCEC layer resolved for this request (getNcecPrincipal), "l1" when
-     the caller has no NCEC access; drives the badge, sub-nav and switcher */
-  ncecPersona: "l1" | "l2" | "l3";
+  /* the NCEC layer resolved for this request (getNcecPrincipal), null when
+     the caller has no NCEC access; drives the badge and the sub-nav */
+  ncecLayer: 2 | 3 | null;
 };
 
 /* EnviroAI rail: the primary items (PRIMARY_RAIL in json.ts) sit at the top
@@ -224,9 +221,9 @@ export function AppShell({
   })).filter((g) => g.pages.length > 0);
 
   /* ui-plan.md s5: the NCEC sub-nav nests under the Institutional Memory
-     (vault) row. An L1 caller (ncecPersona "l1") gets none of this — the
+     (vault) row. An L1 caller (ncecLayer null) gets none of this — the
      tab looks exactly as it does today, per decision #2. */
-  const ncecLayer: 2 | 3 | null = user.ncecPersona === "l3" ? 3 : user.ncecPersona === "l2" ? 2 : null;
+  const ncecLayer = user.ncecLayer;
   const ncecSubItems = ncecLayer
     ? [
         { key: "environmental", href: "/ncec", icon: Database, locked: false },
@@ -235,12 +232,13 @@ export function AppShell({
       ]
     : [];
   const ncecActive = ncecSubItems.some((i) => pathname.startsWith(i.href));
-  const ncecOpen = ncecActive || collapsed.has("ncec:open");
+  // open by default, as in the mockups; the user can fold it away
+  const ncecOpen = ncecActive || !collapsed.has("ncec:closed");
   function toggleNcec() {
     if (ncecActive) return; // stays open while one of its own pages is active
     const next = new Set(collapsed);
-    if (next.has("ncec:open")) next.delete("ncec:open");
-    else next.add("ncec:open");
+    if (next.has("ncec:closed")) next.delete("ncec:closed");
+    else next.add("ncec:closed");
     setCollapsed(next);
     persist({ expanded, collapsed: [...next] });
   }
@@ -653,7 +651,6 @@ export function AppShell({
                   {visible.has("ask") ? <AskBarButton /> : null}
                 </div>
                 <div className="flex items-center gap-2">
-                  {user.ncecDemoMode ? <DemoPersonaSwitcher persona={user.ncecPersona as DemoPersonaKey} /> : null}
                   {ncecLayer ? <NcecLayerBadge layer={ncecLayer} /> : null}
                   {aiMock ? (
                     <Tip content={t("aiMockHint")}>

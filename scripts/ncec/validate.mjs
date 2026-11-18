@@ -40,7 +40,7 @@ try {
   const by = (k, f = (r) => r) => reg.reduce((m, r) => ((m[f(r[k])] = (m[f(r[k])] || 0) + 1), m), {});
   const kinds = by("field_kind");
   check("V-03", "register rows by kind (field, group_label, dataset_placeholder)", [810, 8, 75], [kinds.field || 0, kinds.group_label || 0, kinds.dataset_placeholder || 0]);
-  check("V-03b", "mockup helpers outside the register", 2, await cnt("SELECT 1 FROM ncec_fields WHERE field_kind = 'mockup_helper'"));
+  check("V-03b", "mockup helpers outside the register", 20, await cnt("SELECT 1 FROM ncec_fields WHERE field_kind = 'mockup_helper'"));
   const lay = by("effective_layer", num);
   check("V-04", "effective layer L1, L2, L3", [174, 283, 436], [lay[1] || 0, lay[2] || 0, lay[3] || 0]);
   const unc = reg.filter((r) => r.register_classification === null);
@@ -118,17 +118,17 @@ try {
   // ---- V-13, V-14 dummy rows ----------------------------------------------------------
   const perRec = {};
   for (const r of recs) perRec[r.dataset_id] = (perRec[r.dataset_id] || 0) + 1;
-  check("V-13", "dummy rows per dataset and total", { "DS-001": 45, "DS-015": 60, "DS-016": 45, "DS-018": 30, "DS-022": 72, "DS-027": 20, "DS-035": 25, "DS-038": 40, "DS-047": 30, total: 367 },
+  check("V-13", "dummy rows per dataset and total", { "DS-001": 45, "DS-015": 60, "DS-016": 45, "DS-018": 30, "DS-022": 72, "DS-027": 20, "DS-035": 25, "DS-038": 40, "DS-047": 30, "DS-056": 88, "DS-117": 74, "DS-118": 60, "DS-120": 270, total: 859 },
     { ...Object.fromEntries(Object.entries(perRec).sort()), total: recs.length });
   const notDummy = recs.filter((r) => canon(r.is_dummy, "bool") !== "1" || r.data_status !== "DUMMY" || !r.record_id.startsWith("DUM-")).map((r) => r.record_id);
-  check("V-14", "records not flagged is_dummy / DUMMY / DUM- (none)", [367, []], [recs.length - notDummy.length, notDummy]);
+  check("V-14", "records not flagged is_dummy / DUMMY / DUM- (none)", [859, []], [recs.length - notDummy.length, notDummy]);
 
   // ---- V-15 personal data values -------------------------------------------------------
   const pdIds = new Set(fieldRows.filter((f) => f.personal_data !== "none").map((f) => f.asset_id));
   const badPd = [];
   let pdCells = 0;
   for (const r of recs) for (const [k, v] of Object.entries(r.values)) if (pdIds.has(k)) { pdCells++; if (/\d{6,}/.test(String(v)) || !/masked|تجريبي/.test(String(v))) badPd.push(`${r.record_id}:${k}`); }
-  check("V-15", "personal data cells (count, unmasked)", [120, []], [pdCells, badPd], "DS-038: 3 personal fields x 40 rows");
+  check("V-15", "personal data cells (count, unmasked)", [165, []], [pdCells, badPd], "DS-038: 3 personal fields x 40 rows, DS-016 reporter contact x 45 rows");
 
   // ---- V-16 facilities ------------------------------------------------------------------
   const isId = (f) => /^Facility ID/.test(f.name_en || ""), isName = (f) => f.name_en === "Facility name", isCr = (f) => /^Commercial registration/.test(f.name_en || "");
