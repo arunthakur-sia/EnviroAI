@@ -40,7 +40,11 @@
     "qc:overflow": "node scripts/qc/overflow-check.mjs",
     "qc:deps": "node scripts/qc/deps-check.mjs",
     "qc:e2e": "tsx scripts/qc/e2e-scenarios.ts",
-    "analyze": "node scripts/analyze.mjs"
+    "analyze": "node scripts/analyze.mjs",
+    "ncec:build": "node scripts/ncec/build-csv.mjs",
+    "ncec:migrate-pg": "node scripts/ncec/migrate-pg.mjs",
+    "ncec:load": "node scripts/ncec/load.mjs",
+    "ncec:validate": "node scripts/ncec/validate.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.124.0",
