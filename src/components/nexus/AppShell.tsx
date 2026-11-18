@@ -39,12 +39,17 @@ import {
   Bookmark,
   Menu,
   X,
+  Database,
+  ShieldAlert,
+  Lock,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PRIMARY_RAIL, RAIL_GROUPS } from "@/server/db/json";
 import { SiaLogo } from "./Logo";
 import { Avatar, ProgressRing, Chip } from "@/components/ui/primitives";
+import { NcecLayerBadge } from "@/components/ncec/NcecLayerBadge";
+import { DemoPersonaSwitcher, type DemoPersonaKey } from "@/components/ncec/DemoPersonaSwitcher";
 import {
   Dropdown,
   DropdownTrigger,
@@ -93,6 +98,11 @@ export type ShellUser = {
   knowledgeOfWeekLive: boolean;
   /* CR08 9.2: unread message threads */
   inboxUnread: number;
+  /* ui-plan.md s4: whether the NCEC demo persona switcher is shown at all */
+  ncecDemoMode: boolean;
+  /* the NCEC layer resolved for this request (getNcecPrincipal), "l1" when
+     the caller has no NCEC access; drives the badge, sub-nav and switcher */
+  ncecPersona: "l1" | "l2" | "l3";
 };
 
 /* EnviroAI rail: the primary items (PRIMARY_RAIL in json.ts) sit at the top
@@ -162,6 +172,7 @@ export function AppShell({
 }) {
   const locale = useLocale();
   const t = useTranslations("shell");
+  const tNcec = useTranslations("ksaNcec");
   const pathname = usePathname();
   const rawPathname = useRawPathname();
   const router = useRouter();
@@ -211,6 +222,28 @@ export function AppShell({
     icon: GROUP_ICON[g.key] ?? Layers,
     pages: g.portals.filter((p) => visible.has(p) && PAGES[p]),
   })).filter((g) => g.pages.length > 0);
+
+  /* ui-plan.md s5: the NCEC sub-nav nests under the Institutional Memory
+     (vault) row. An L1 caller (ncecPersona "l1") gets none of this — the
+     tab looks exactly as it does today, per decision #2. */
+  const ncecLayer: 2 | 3 | null = user.ncecPersona === "l3" ? 3 : user.ncecPersona === "l2" ? 2 : null;
+  const ncecSubItems = ncecLayer
+    ? [
+        { key: "environmental", href: "/ncec", icon: Database, locked: false },
+        { key: "corporate", href: "/ncec/corporate", icon: Building2, locked: false },
+        { key: "sensitive", href: "/ncec/sensitive", icon: ShieldAlert, locked: ncecLayer < 3 },
+      ]
+    : [];
+  const ncecActive = ncecSubItems.some((i) => pathname.startsWith(i.href));
+  const ncecOpen = ncecActive || collapsed.has("ncec:open");
+  function toggleNcec() {
+    if (ncecActive) return; // stays open while one of its own pages is active
+    const next = new Set(collapsed);
+    if (next.has("ncec:open")) next.delete("ncec:open");
+    else next.add("ncec:open");
+    setCollapsed(next);
+    persist({ expanded, collapsed: [...next] });
+  }
 
   const themeSlugs = PRIMARY_RAIL.flatMap((i) => (i.theme ? [i.theme] : []));
   const isPrimaryActive = (item: PrimaryItem) => {
@@ -411,6 +444,50 @@ export function AppShell({
                       <hr className="mx-3 my-1.5 border-white/15" aria-hidden />
                     ) : null}
                     <PrimaryRow item={item} showLabel={showLabels} />
+                    {item.key === "vault" && ncecSubItems.length && showLabels ? (
+                      <div data-testid="ncec-subnav">
+                        <button
+                          type="button"
+                          onClick={toggleNcec}
+                          className="flex w-full items-center gap-2 rounded-lg px-3 py-1 text-[11px] font-medium text-white/50 outline-none hover:text-white/80 focus-visible:outline-2 focus-visible:outline-aqua-500 cursor-pointer"
+                          aria-expanded={ncecOpen}
+                        >
+                          <ChevronDown className={cn("size-3 shrink-0 transition-transform", ncecOpen ? "rotate-180" : "")} aria-hidden />
+                        </button>
+                        <AnimatePresence initial={false}>
+                          {ncecOpen ? (
+                            <motion.div
+                              initial={reduce ? false : { height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={reduce ? undefined : { height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden"
+                            >
+                              <div className="ms-4 flex flex-col gap-0.5 border-s border-white/15 ps-1.5 pb-1">
+                                {ncecSubItems.map((sub) => {
+                                  const active = pathname.startsWith(sub.href);
+                                  return (
+                                    <Link
+                                      key={sub.key}
+                                      href={sub.href as never}
+                                      className={cn(ROW, "min-h-9 py-1", active ? ROW_ACTIVE : ROW_IDLE)}
+                                      aria-current={active ? "page" : undefined}
+                                      data-testid={`ncec-nav-${sub.key}`}
+                                    >
+                                      <sub.icon className={cn("size-4 shrink-0", active && "text-aqua-500")} aria-hidden />
+                                      <span className="min-w-0 truncate text-xs">
+                                        {tNcec(`shell.nav${sub.key[0].toUpperCase()}${sub.key.slice(1)}` as never)}
+                                      </span>
+                                      {sub.locked ? <Lock className="ms-auto size-3 shrink-0 text-amber-300" aria-hidden /> : null}
+                                    </Link>
+                                  );
+                                })}
+                              </div>
+                            </motion.div>
+                          ) : null}
+                        </AnimatePresence>
+                      </div>
+                    ) : null}
                   </React.Fragment>
                 ))}
 
@@ -576,6 +653,8 @@ export function AppShell({
                   {visible.has("ask") ? <AskBarButton /> : null}
                 </div>
                 <div className="flex items-center gap-2">
+                  {user.ncecDemoMode ? <DemoPersonaSwitcher persona={user.ncecPersona as DemoPersonaKey} /> : null}
+                  {ncecLayer ? <NcecLayerBadge layer={ncecLayer} /> : null}
                   {aiMock ? (
                     <Tip content={t("aiMockHint")}>
                       <span>

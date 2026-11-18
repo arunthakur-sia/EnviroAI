@@ -1,0 +1,109 @@
+{
+  "ksaNcec": {
+    "shell": {
+      "navEnvironmental": "NCEC Environmental Data",
+      "navCorporate": "NCEC Corporate Data",
+      "navSensitive": "Sensitive data (L3)",
+      "demoControl": "Demo persona",
+      "demoBadge": "DEMO ONLY",
+      "demoHint": "Step 1 has no real sign-in yet. Pick the layer you want to preview.",
+      "persona": { "l1": "L1 Public", "l2": "L2 NCEC Institutional", "l3": "L3 Sensitive Environmental" },
+      "badge": { "l2": "L2 · NCEC Institutional", "l3": "L3 · Sensitive Environmental" }
+    },
+    "common": {
+      "dummyBanner": "Dummy data · for demonstration only",
+      "notAvailableStep1": "Not available in Step 1",
+      "requestAccess": "Request access",
+      "viewAuditLog": "View audit log",
+      "export": "Export",
+      "exportDisabled": "Export disabled for this grant",
+      "reveal": "Reveal",
+      "locked": "Locked",
+      "layerShort": { "l1": "L1", "l2": "L2", "l3": "L3" },
+      "layerFull": { "l1": "Public", "l2": "Restricted", "l3": "Sensitive" },
+      "fields": "fields",
+      "records": "records",
+      "catalogueOnly": "Catalogue only",
+      "noDummyData": "No dummy data for this dataset yet",
+      "workingTranslationNote": "English names shown here are working translations; the Arabic register entry is the source of truth.",
+      "backToCatalogue": "Back to the catalogue",
+      "personalDataMasked": "Personal data is masked",
+      "noResults": "No results",
+      "schematicNote": "Positions are a simplified schematic from the records' own coordinates, not a surveyed map."
+    },
+    "environmental": {
+      "title": "NCEC Environmental Data",
+      "subtitle": "Internal datasets for NCEC staff",
+      "footer": "Source: NCEC data asset register · Layer 2 fields shown",
+      "kpis": {
+        "permittedFacilities": "Permitted facilities",
+        "activePermits": "Active permits",
+        "expiringIn90Days": "Permits expiring in 90 days",
+        "contaminatedSites": "Contaminated sites"
+      },
+      "mapTitle": "Permitted facilities by sector",
+      "catalogueTitle": "Dataset catalogue",
+      "tableTitle": "Environmentally permitted facilities",
+      "columns": {
+        "facility": "Facility",
+        "city": "City",
+        "region": "Region",
+        "sector": "Sector",
+        "permitType": "Permit type",
+        "expiry": "Expiry",
+        "status": "Status"
+      },
+      "status": { "active": "Active", "renewal": "Renewal", "expired": "Expired" },
+      "statusMismatchNote": "Register says active; expiry date has passed",
+      "lockedColumnNote": "This dataset has no Layer 3 fields; see the ODS and HFC inventory dataset for a mixed-layer example."
+    },
+    "sensitive": {
+      "title": "Sensitive Environmental Data",
+      "subtitle": "Restricted content · L3 (Sensitive Environmental)",
+      "approvalScope": "Scope",
+      "approvalApprovedBy": "Approved by",
+      "approvalExpires": "Expires in {days, plural, one {# day} other {# days}}",
+      "approvalExpired": "This demo grant has expired",
+      "approvalPersonalData": "Personal data: not included",
+      "watermarkConfidential": "L3 Confidential",
+      "kpis": {
+        "violations2026": "Violations issued 2026",
+        "totalPenalties": "Total penalties",
+        "inspectionCoverage": "Inspection coverage",
+        "facilitiesWithViolation": "Facilities with a violation"
+      },
+      "byTypeTitle": "Violations by type",
+      "byRegionTitle": "Violations by region (schematic)",
+      "tableTitle": "Violations",
+      "columns": {
+        "violationNo": "Violation No.",
+        "facility": "Facility",
+        "region": "Region",
+        "type": "Type",
+        "severity": "Severity",
+        "penalty": "Penalty (SAR)"
+      },
+      "severity": { "major": "Major", "moderate": "Moderate", "minor": "Minor" },
+      "inspectionsVisited": "{visited} of {total} facilities visited"
+    },
+    "corporate": {
+      "title": "NCEC Corporate Data",
+      "subtitle": "Internal administrative data for NCEC staff · catalogue view",
+      "datasetCount": "{count, plural, one {# dataset} other {# datasets}}",
+      "catalogueOnlyNote": "All corporate datasets are catalogue only in Step 1: none has dummy records yet."
+    },
+    "dataset": {
+      "backTo": "Back to {name}",
+      "fieldCountsTitle": "Fields by layer",
+      "recordsTitle": "Records",
+      "lockedTitle": "This dataset is restricted",
+      "lockedBody": "Every field in this dataset is above your current layer. Request access to see its fields and records.",
+      "noColumnsVisible": "No columns are visible to you in this dataset.",
+      "page": "Page {page} of {total}"
+    },
+    "access": {
+      "title": "Access restricted",
+      "body": "This dataset's fields are classified above your current NCEC layer. You can request access; a data owner reviews requests of this kind outside Step 1."
+    }
+  }
+}

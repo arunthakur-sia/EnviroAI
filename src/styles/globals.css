@@ -103,6 +103,13 @@
   --color-info: #2f5f9e;
   --color-info-light: #e6edf7;
 
+  /* NCEC L3 identity (brief s8.3): a true amber, distinct from the brown
+     --color-warn used elsewhere for a cautionary tone. */
+  --color-amber-700: #b45309;
+  --color-amber-500: #f59e0b;
+  --color-amber-300: #fcd34d;
+  --color-amber-100: #fef3c7;
+
   --font-display: "Sora", system-ui, sans-serif;
   --font-sans: "Sora", "Segoe UI", system-ui, sans-serif;
   --font-arabic: "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
