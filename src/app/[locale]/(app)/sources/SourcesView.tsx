@@ -2,12 +2,16 @@
 // EnviroAI Source Library. The catalogue is loaded once; search and the chip
 // rows filter it in the client. Items the databank flags carry a badge that
 // opens the verification notes. URLs open in a new tab with rel noopener.
+// The default view puts every source on the bookshelf (one shelf per
+// category, the same Shelf and Book as the library); the table stays one
+// toggle away.
 import * as React from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { AlertTriangle, ExternalLink, Search, ShieldAlert, X } from "lucide-react";
+import { AlertTriangle, ExternalLink, LibraryBig, Rows3, Search, ShieldAlert, X } from "lucide-react";
 import { bi, cn } from "@/lib/utils";
 import { Chip, EmptyState } from "@/components/ui/primitives";
 import { Dialog, DialogContent } from "@/components/ui/overlays";
+import { Shelf, type BookOptions, type ShelfDoc } from "@/components/nexus/Shelf";
 import {
   SOURCE_CATEGORIES,
   type AccessTag,
@@ -26,6 +30,22 @@ const ROW_GRID =
 
 const isHttp = (u: string | null): u is string => Boolean(u && /^https?:\/\//i.test(u));
 
+/* cloth colours come from the library palette, one per category */
+const CATEGORY_CLOTH: Record<SourceCategory, string> = {
+  regulatory: "policy",
+  scientific: "study",
+  initiatives: "strategy",
+  portals: "dataset",
+  indices: "presentation",
+};
+
+/* the spine imprint: the publisher's acronym when it has one, e.g. "(NCEC)" */
+function acronymOf(org: string | null): string | null {
+  if (!org) return null;
+  const m = org.match(/\(([A-Z][A-Za-z0-9&.\-]{1,9})\)/) ?? org.match(/\b([A-Z][A-Z0-9&]{1,7})\b/);
+  return m ? m[1] : null;
+}
+
 function matches(hay: string, q: string): boolean {
   const h = hay.toLowerCase();
   return q
@@ -43,6 +63,7 @@ export function SourcesView({ data }: { data: SourcesPage }) {
   const [access, setAccess] = React.useState<AccessTag | "any">("any");
   const [flaggedOnly, setFlaggedOnly] = React.useState(false);
   const [panel, setPanel] = React.useState<{ source: SourceItem } | { note: VerificationItem } | null>(null);
+  const [view, setView] = React.useState<"shelves" | "table">("shelves");
 
   const sourceById = React.useMemo(() => new Map(data.items.map((s) => [s.id, s])), [data.items]);
 
@@ -164,7 +185,29 @@ export function SourcesView({ data }: { data: SourcesPage }) {
           </div>
         ) : null}
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          {category !== "verification" ? (
+            <div className="flex rounded-lg border border-mist-300 bg-white p-0.5" role="group" aria-label={t("view.label")}>
+              {(["shelves", "table"] as const).map((v) => {
+                const Icon = v === "shelves" ? LibraryBig : Rows3;
+                return (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => setView(v)}
+                    aria-pressed={view === v}
+                    data-testid={`sources-view-${v}`}
+                    className={cn(
+                      "flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-aqua-500",
+                      view === v ? "bg-navy-700 text-white" : "text-ink-600 hover:text-navy-700"
+                    )}
+                  >
+                    <Icon className="size-3.5" aria-hidden /> {t(`view.${v}`)}
+                  </button>
+                );
+              })}
+            </div>
+          ) : null}
           <span className="text-xs text-ink-600 tnum" data-testid="sources-showing" data-shown={shown}>
             {category === "verification" ? t("showingNotes", { shown, total }) : t("showing", { shown, total })}
           </span>
@@ -190,6 +233,8 @@ export function SourcesView({ data }: { data: SourcesPage }) {
         />
       ) : items.length === 0 ? (
         <EmptyState icon={<Search />} title={t("noResults")} hint={t("noResultsHint")} className="mt-6" />
+      ) : view === "shelves" ? (
+        <SourceShelves items={items} category={category} locale={locale} onFlag={(s) => setPanel({ source: s })} />
       ) : (
         <div className="card mt-4 overflow-x-auto" data-testid="sources-table">
           <div role="table" aria-label={t("title")} className="min-w-[1180px]">
@@ -226,6 +271,121 @@ export function SourcesView({ data }: { data: SourcesPage }) {
           </DialogContent>
         ) : null}
       </Dialog>
+    </div>
+  );
+}
+
+function toShelfDoc(s: SourceItem, categoryLabel: string): ShelfDoc {
+  return {
+    id: s.id,
+    titleEn: s.nameEn,
+    titleAr: s.nameAr || s.nameEn,
+    summaryEn: s.organizationEn,
+    summaryAr: s.organizationAr || s.organizationEn,
+    typeCode: CATEGORY_CLOTH[s.category],
+    typeNameEn: categoryLabel,
+    typeNameAr: categoryLabel,
+    classification: 1,
+    // a flagged or unverified source does not wear the verified seal
+    status: s.flags.length || s.unverified ? "flagged" : "verified",
+  };
+}
+
+function SourceShelves({
+  items,
+  category,
+  locale,
+  onFlag,
+}: {
+  items: SourceItem[];
+  category: CategoryKey;
+  locale: string;
+  onFlag: (s: SourceItem) => void;
+}) {
+  const t = useTranslations("ksaSources");
+  const byId = React.useMemo(() => new Map(items.map((s) => [s.id, s])), [items]);
+  const cats = category === "all" ? SOURCE_CATEGORIES : SOURCE_CATEGORIES.filter((c) => c === category);
+  const options: BookOptions = {
+    external: true,
+    hrefFor: (d) => {
+      const s = byId.get(d.id);
+      return s ? (isHttp(s.mainUrl) ? s.mainUrl : isHttp(s.dataUrl) ? s.dataUrl : null) : null;
+    },
+    imprintFor: (d) => acronymOf(byId.get(d.id)?.organizationEn ?? null),
+    renderPreview: (d) => {
+      const s = byId.get(d.id);
+      return s ? <SourcePreview s={s} locale={locale} onFlag={() => onFlag(s)} /> : null;
+    },
+  };
+  return (
+    <div className="mt-5" data-testid="sources-shelves">
+      {cats.map((c) => {
+        const label = t(`categories.${c}` as never);
+        const docs = items.filter((s) => s.category === c).map((s) => toShelfDoc(s, label));
+        if (!docs.length) return null;
+        return <Shelf key={c} docs={docs} label={label} count={docs.length} bookOptions={options} />;
+      })}
+    </div>
+  );
+}
+
+function SourcePreview({ s, locale, onFlag }: { s: SourceItem; locale: string; onFlag: () => void }) {
+  const t = useTranslations("ksaSources");
+  const name = bi(locale, s.nameEn, s.nameAr);
+  const flagged = s.flags.length > 0 || s.unverified;
+  const notes = bi(locale, s.notesEn, s.notesAr);
+  return (
+    <div data-testid="source-preview">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-ink-600">
+        {t(`categories.${s.category}` as never)}
+        {s.subCategoryEn ? ` · ${bi(locale, s.subCategoryEn, s.subCategoryAr)}` : ""}
+      </p>
+      <p className="mt-0.5 line-clamp-2 text-sm font-medium leading-snug text-ink-900">{name}</p>
+      {s.organizationEn ? (
+        <p className="mt-1 line-clamp-2 text-xs text-ink-600">{bi(locale, s.organizationEn, s.organizationAr)}</p>
+      ) : null}
+      {notes ? (
+        <p className="mt-2 line-clamp-4 text-xs leading-relaxed text-ink-600" dir="auto">{notes}</p>
+      ) : null}
+      <div className="mt-2.5 flex flex-wrap items-center gap-1.5 text-[11px] text-ink-600">
+        {s.accessTags.map((a) => (
+          <Chip key={a} tone={ACCESS_TONE[a]}>{t(`access.${a}` as never)}</Chip>
+        ))}
+        {s.formats ? <span dir="auto" className="line-clamp-1">{s.formats}</span> : null}
+        {flagged ? (
+          <button
+            type="button"
+            onClick={onFlag}
+            className="inline-flex cursor-pointer items-center gap-1 rounded-md bg-warn-light px-2 py-0.5 font-medium text-warn hover:opacity-80 focus-visible:outline-2 focus-visible:outline-aqua-500"
+          >
+            <AlertTriangle className="size-3" aria-hidden />
+            {s.flags.length ? t("flagged") : t("unverified")}
+          </button>
+        ) : null}
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        {isHttp(s.mainUrl) ? (
+          <a
+            href={s.mainUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-navy-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-navy-900 focus-visible:outline-2 focus-visible:outline-aqua-500"
+          >
+            {t("shelf.open")} <ExternalLink className="size-3 flip-rtl" aria-hidden />
+          </a>
+        ) : null}
+        {isHttp(s.dataUrl) ? (
+          <a
+            href={s.dataUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-mist-300 px-3 py-1.5 text-xs font-medium text-navy-700 hover:bg-mist-50 focus-visible:outline-2 focus-visible:outline-aqua-500"
+          >
+            {t("shelf.openData")} <ExternalLink className="size-3 flip-rtl" aria-hidden />
+          </a>
+        ) : null}
+        {!isHttp(s.mainUrl) && !isHttp(s.dataUrl) ? <span className="text-xs text-ink-400">{t("shelf.noLink")}</span> : null}
+      </div>
     </div>
   );
 }

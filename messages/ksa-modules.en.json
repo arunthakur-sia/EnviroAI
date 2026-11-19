@@ -59,6 +59,16 @@
     },
     "verification": {
       "intro": "Items the databank flags for a manual hand-check before they are relied on or shared externally."
+    },
+    "view": {
+      "label": "View",
+      "shelves": "Shelves",
+      "table": "Table"
+    },
+    "shelf": {
+      "open": "Open the source",
+      "openData": "Data and publications",
+      "noLink": "No web address in the databank"
     }
   },
   "ksaRegulatory": {

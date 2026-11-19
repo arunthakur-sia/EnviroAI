@@ -198,8 +198,8 @@ export default async function VaultPage({
             scope={{
               kind: "vault",
               ids: shelfDocs.slice(0, 30).map((d) => d.id),
-              labelEn: "Institutional Memory",
-              labelAr: "مكتبة المعرفة",
+              labelEn: "NCEC Data Knowledge",
+              labelAr: "معرفة بيانات المركز",
             }}
           />
           <Link href="/vault/collections">

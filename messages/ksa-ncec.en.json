@@ -1,9 +1,9 @@
 {
   "ksaNcec": {
     "shell": {
-      "navEnvironmental": "NCEC Environmental Data",
+      "navEnvironmental": "NCEC Permitting Data",
       "navCorporate": "NCEC Corporate Data",
-      "navSensitive": "Sensitive data (L3)",
+      "navSensitive": "NCEC Violations Data",
       "badge": {
         "l2": "L2 · NCEC Institutional",
         "l3": "L3 · Sensitive Environmental"
@@ -43,7 +43,7 @@
       "backToDashboard": "Back to the dashboard"
     },
     "environmental": {
-      "title": "NCEC Environmental Data",
+      "title": "NCEC Permitting Data",
       "subtitle": "Internal datasets for NCEC staff",
       "footer": "Source: NCEC data asset register · Layer 2 fields shown",
       "kpis": {
@@ -76,7 +76,7 @@
       "viewAllRecords": "View all {count} records"
     },
     "sensitive": {
-      "title": "Sensitive Environmental Data",
+      "title": "NCEC Violations Data",
       "subtitle": "Restricted content · L3 (Sensitive Environmental)",
       "approvalScope": "Scope",
       "approvalApprovedBy": "Approved by",

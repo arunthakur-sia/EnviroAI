@@ -3,8 +3,8 @@
     "mainNav": "Main navigation",
     "nav": {
       "home": "Home",
-      "vault": "Institutional Memory",
-      "strategy": "Living Strategy",
+      "vault": "NCEC Data Knowledge",
+      "strategy": "NES Strategy",
       "statistics": "Statistics",
       "experts": "Experts",
       "ask": "Ask EnviroAI",
@@ -45,7 +45,7 @@
     "switchLanguage": "Switch language",
     "aiMock": "AI mock mode",
     "aiMockHint": "No AI key configured. All AI features return deterministic local results.",
-    "dropToUpload": "Drop to upload to Institutional Memory",
+    "dropToUpload": "Drop to upload to NCEC Data Knowledge",
     "previewBanner": "Previewing as {label}. Read-only: nothing can be changed.",
     "previewExit": "Exit preview",
     "groups": {
@@ -150,10 +150,10 @@
     "copy": "Copy"
   },
   "vault": {
-    "title": "Institutional Memory",
+    "title": "NCEC Data Knowledge",
     "subtitle": "{count} items on the shelves at your clearance",
     "collections": "Collections",
-    "upload": "Upload to Institutional Memory",
+    "upload": "Upload to NCEC Data Knowledge",
     "otherShelf": "Other",
     "emptyTitle": "The shelves are empty here",
     "emptyHint": "No documents match these filters. Clear them, or add the first document yourself.",
@@ -212,7 +212,7 @@
     }
   },
   "upload": {
-    "title": "Upload to Institutional Memory",
+    "title": "Upload to NCEC Data Knowledge",
     "subtitle": "Drop files and watch EnviroAI title, summarise, tag, and classify them for you.",
     "dropLabel": "Choose files",
     "dropTitle": "Drop files here, or click to choose",
@@ -226,7 +226,7 @@
       "enrich": "Writing metadata"
     },
     "failed": "Upload failed",
-    "duplicateWarning": "Looks {pct}% similar to \"{title}\" already in Institutional Memory.",
+    "duplicateWarning": "Looks {pct}% similar to \"{title}\" already in NCEC Data Knowledge.",
     "addAsVersion": "Add as new version",
     "titleEn": "Title (English)",
     "titleAr": "Title (Arabic)",
@@ -243,7 +243,7 @@
     "collection": "Collection",
     "noCollection": "No collection",
     "relatedHint": "Possibly related:",
-    "uploadCta": "Upload to Institutional Memory",
+    "uploadCta": "Upload to NCEC Data Knowledge",
     "addVersionCta": "Attach as new version",
     "uploadedToast": "Uploaded. {points} points now, more when verified."
   },
@@ -382,7 +382,7 @@
     "importedToast": "Imported {count} values. Points on the way."
   },
   "strategy": {
-    "title": "Living Strategy",
+    "title": "NES Strategy",
     "glance": {
       "band": "Strategy at a glance",
       "targetsOnTrack": "targets on track",
@@ -437,7 +437,7 @@
       "chapterSummaryLabel": "What the chapter says",
       "showFullText": "Show the full text",
       "hideFullText": "Hide the full text",
-      "openInVault": "Open in Institutional Memory",
+      "openInVault": "Open in NCEC Data Knowledge",
       "pageChip": "p. {page}",
       "headlineKpis": "Headline indicators",
       "relatedExperts": "Experts",
@@ -927,7 +927,7 @@
       "insight": "Insight",
       "signal": "Signal",
       "decision": "Decision",
-      "document": "Institutional Memory document",
+      "document": "NCEC Data Knowledge document",
       "expert": "Expert contact",
       "indicator_observation": "Indicator observation"
     },
@@ -945,7 +945,7 @@
     "publishedToast": "{count} items published. {points} points.",
     "justPublished": "Just published",
     "allPublished": "Everything is published.",
-    "allPublishedHint": "Your items went to their modules: lessons feed, signal stream, Institutional Memory, or expert profiles.",
+    "allPublishedHint": "Your items went to their modules: lessons feed, signal stream, NCEC Data Knowledge, or expert profiles.",
     "addMore": "Add more knowledge"
   },
   "analyst": {
@@ -1064,7 +1064,7 @@
     "roleSaved": "Role saved. Applies immediately.",
     "module": "Module",
     "modules": {
-      "vault": "Institutional Memory",
+      "vault": "NCEC Data Knowledge",
       "strategy": "Strategy",
       "statistics": "Statistics",
       "experts": "Experts",
@@ -1796,7 +1796,7 @@
     "exploreEyebrow": "Explore",
     "progressEyebrow": "Your progress",
     "newestShelf": "Newest on the shelves",
-    "openVault": "Open Institutional Memory",
+    "openVault": "Open NCEC Data Knowledge",
     "shelfEmpty": "Nothing on the shelves yet. Upload the first document.",
     "nextUnlock": "{points} points to {level}",
     "topLevel": "Highest level reached",
@@ -1830,7 +1830,7 @@
     "kinds": {
       "signals": "Trends and Signals",
       "lessons": "Lessons",
-      "vault": "Institutional Memory",
+      "vault": "NCEC Data Knowledge",
       "node": "Strategy node and its children",
       "ask": "Ask EnviroAI answer",
       "podcast": "Podcast episode",
@@ -1864,16 +1864,16 @@
     "progressWriting": "Writing the narrative…",
     "progressLayout": "Laying out the document…",
     "download": "Download",
-    "saveToVault": "Save to Institutional Memory",
-    "savedToVault": "Saved to Institutional Memory",
+    "saveToVault": "Save to NCEC Data Knowledge",
+    "savedToVault": "Saved to NCEC Data Knowledge",
     "searchable": "Searchable and citable",
-    "saveFailed": "Could not save to Institutional Memory.",
+    "saveFailed": "Could not save to NCEC Data Knowledge.",
     "failed": "The report could not be generated.",
     "tryAgain": "Try again",
     "hub": {
       "eyebrow": "Knowledge Hub",
       "title": "Reports",
-      "lede": "Designed, bilingual reports written from the Office's live knowledge: request one for your scope, review it section by section, then publish it to Institutional Memory.",
+      "lede": "Designed, bilingual reports written from the Office's live knowledge: request one for your scope, review it section by section, then publish it to NCEC Data Knowledge.",
       "request": "Request report",
       "custom": "Build custom report",
       "illustrativeHint": "The published examples were generated from the prototype's seeded data.",
@@ -2079,8 +2079,8 @@
       "approve": "Approve",
       "requestChanges": "Request changes",
       "publish": "Publish",
-      "memoryDoc": "Open in Institutional Memory",
-      "published": "Published to Institutional Memory",
+      "memoryDoc": "Open in NCEC Data Knowledge",
+      "published": "Published to NCEC Data Knowledge",
       "cover": "Cover",
       "pages": "Pages",
       "pagePreview": "Page {n}",
@@ -2119,7 +2119,7 @@
         "submitted": "Submitted for review.",
         "approved": "Report approved.",
         "changes": "Changes requested.",
-        "published": "Published to Institutional Memory.",
+        "published": "Published to NCEC Data Knowledge.",
         "error": "That did not work: {detail}"
       },
       "errors": {
@@ -2496,7 +2496,7 @@
     "convert": "Convert",
     "convertLesson": "To a lesson",
     "convertRisk": "To a risk",
-    "convertDocument": "To an Institutional Memory document",
+    "convertDocument": "To an NCEC Data Knowledge document",
     "accepted": "Signal accepted.",
     "acceptedPoints": "Signal accepted. {points} points.",
     "dismissed": "Signal dismissed.",
@@ -2539,7 +2539,7 @@
     "convertTargets": {
       "lesson": "Lesson",
       "risk": "Risk",
-      "document": "Institutional Memory document"
+      "document": "NCEC Data Knowledge document"
     },
     "comments": "Comments",
     "noComments": "No comments yet. Start the discussion.",
@@ -3010,7 +3010,7 @@
       "source": "Source on the Office website",
       "fetched": "Fetched on {date}",
       "empty": "The mandate of this unit has not been recorded yet.",
-      "document": "Open the source in Institutional Memory",
+      "document": "Open the source in NCEC Data Knowledge",
       "responsibilities": "Responsibilities in EnviroAI"
     },
     "people": {
@@ -3055,7 +3055,7 @@
         "form_template": "No forms or templates added yet for this unit",
         "service": "No services added yet for this unit"
       },
-      "emptyHint": "Add the first one and it follows the normal Institutional Memory pipeline.",
+      "emptyHint": "Add the first one and it follows the normal NCEC Data Knowledge pipeline.",
       "published": {
         "policy_internal": "No policies published yet",
         "procedure": "No procedures published yet",
@@ -3071,7 +3071,7 @@
       "version": "Version {version}",
       "effective": "Effective {date}",
       "reviewDue": "Review due",
-      "open": "Open in Institutional Memory",
+      "open": "Open in NCEC Data Knowledge",
       "select": "Select {title}",
       "selectedCount": "{count} selected",
       "applyTo": "Apply to the selected items",
@@ -3172,7 +3172,7 @@
       "closePanel": "Close the goal panel",
       "ownerUnit": "Owning unit",
       "alignment": "Alignment",
-      "alignmentOpen": "Open {label} in the Living Strategy",
+      "alignmentOpen": "Open {label} in the NES Strategy",
       "indicators": "Indicators of this goal",
       "noIndicators": "No indicator is attached at this level",
       "openIndicator": "Open the indicator card for {name}",
@@ -3619,7 +3619,7 @@
   },
   "studies": {
     "title": "Studies",
-    "subtitle": "{count, plural, =0 {No studies yet} one {# study, research paper or evaluation from Institutional Memory} other {# studies, research papers and evaluations from Institutional Memory}}",
+    "subtitle": "{count, plural, =0 {No studies yet} one {# study, research paper or evaluation from NCEC Data Knowledge} other {# studies, research papers and evaluations from NCEC Data Knowledge}}",
     "addStudy": "Add study",
     "featuredEyebrow": "Latest verified study",
     "read": "Open the study",
@@ -3803,7 +3803,7 @@
       "subject": "Subject",
       "body": "Message",
       "bodyPlaceholder": "Write your message",
-      "attach": "Attach from Institutional Memory",
+      "attach": "Attach from NCEC Data Knowledge",
       "attachments": "Attachments",
       "send": "Send",
       "sending": "Sending",
@@ -3836,7 +3836,7 @@
       "searching": "Searching",
       "noResults": "No colleagues match",
       "remove": "Remove {name}",
-      "docPlaceholder": "Search Institutional Memory",
+      "docPlaceholder": "Search NCEC Data Knowledge",
       "docNoResults": "No documents match",
       "docHint": "Type at least two characters"
     }
@@ -4656,7 +4656,7 @@
       "version": "Version {version}",
       "effective": "Effective {date}",
       "reviewDue": "Review due",
-      "open": "Open {title} in Institutional Memory",
+      "open": "Open {title} in NCEC Data Knowledge",
       "linkedFrom": "Linked from {unit}"
     },
     "unitTab": {
@@ -4990,7 +4990,7 @@
       },
       "modeHint": {
         "person": "Every item goes to one default recipient; adjust single items afterwards.",
-        "system": "Every item is filed into the Institutional Memory with an AI filing proposal.",
+        "system": "Every item is filed into NCEC Data Knowledge with an AI filing proposal.",
         "per_item": "Items start undecided; you assign them one by one on the detail page."
       },
       "defaultRecipient": "Default recipient",
@@ -5054,8 +5054,8 @@
         },
         "selectFor": "Select {title} for approval",
         "modules": {
-          "vault": "Institutional Memory",
-          "strategy": "Living Strategy",
+          "vault": "NCEC Data Knowledge",
+          "strategy": "NES Strategy",
           "lessons": "Learning Room",
           "organisation": "Organisation",
           "experts": "External Experts",
@@ -5112,7 +5112,7 @@
         "overrideLabel": "Override reason",
         "overridePlaceholder": "Why the handover closes although a check is open",
         "overrideHint": "The override is logged with your name.",
-        "readyHint": "Every check passes. Closing archives the handover report into the Institutional Memory and pays the points.",
+        "readyHint": "Every check passes. Closing archives the handover report into NCEC Data Knowledge and pays the points.",
         "close": "Close the handover",
         "closeWithOverride": "Close with override",
         "closedToast": "Handover closed",
@@ -5125,7 +5125,7 @@
         "cutOffButton": "Perform cut-off",
         "cutOffToast": "Access cut off",
         "reportTitle": "Handover report",
-        "openInVault": "Open in the Institutional Memory",
+        "openInVault": "Open in NCEC Data Knowledge",
         "download": {
           "en": "Download English",
           "ar": "Download Arabic"

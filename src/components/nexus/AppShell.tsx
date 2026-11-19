@@ -214,24 +214,36 @@ export function AppShell({
     icon: PRIMARY_ICON[i.key] ?? PAGES[i.portal].icon,
     theme: i.theme,
   }));
+  /* ui-plan.md s5: the NCEC sub-nav nests under the NCEC Data Knowledge
+     (vault) row. An L1 caller (ncecLayer null) gets none of this — the
+     tab looks exactly as it does today, per decision #2. Processes,
+     Policies, and SOPs sits under NCEC Corporate Data for NCEC callers and
+     stays in More for everyone else. */
+  const ncecLayer = user.ncecLayer;
+  const processesInNcec = !!ncecLayer && visible.has("processes");
+  const ncecSubItems: Array<{ key: string; href: string; icon: LucideIcon; locked: boolean; label: string; nested?: boolean }> = ncecLayer
+    ? [
+        { key: "environmental", href: "/ncec", icon: Database, locked: false, label: tNcec("shell.navEnvironmental") },
+        { key: "corporate", href: "/ncec/corporate", icon: Building2, locked: false, label: tNcec("shell.navCorporate") },
+        ...(processesInNcec
+          ? [{ key: "processes", href: "/processes", icon: Workflow, locked: false, label: t("nav.processes"), nested: true }]
+          : []),
+        { key: "sensitive", href: "/ncec/sensitive", icon: ShieldAlert, locked: ncecLayer < 3, label: tNcec("shell.navSensitive") },
+      ]
+    : [];
   const groups = RAIL_GROUPS.map((g) => ({
     key: g.key,
     icon: GROUP_ICON[g.key] ?? Layers,
-    pages: g.portals.filter((p) => visible.has(p) && PAGES[p]),
+    // the compact rail has no NCEC sub-nav, so there Processes stays in More
+    pages: g.portals.filter((p) => visible.has(p) && PAGES[p] && !(processesInNcec && showLabels && p === "processes")),
   })).filter((g) => g.pages.length > 0);
-
-  /* ui-plan.md s5: the NCEC sub-nav nests under the Institutional Memory
-     (vault) row. An L1 caller (ncecLayer null) gets none of this — the
-     tab looks exactly as it does today, per decision #2. */
-  const ncecLayer = user.ncecLayer;
-  const ncecSubItems = ncecLayer
-    ? [
-        { key: "environmental", href: "/ncec", icon: Database, locked: false },
-        { key: "corporate", href: "/ncec/corporate", icon: Building2, locked: false },
-        { key: "sensitive", href: "/ncec/sensitive", icon: ShieldAlert, locked: ncecLayer < 3 },
-      ]
-    : [];
-  const ncecActive = ncecSubItems.some((i) => pathname.startsWith(i.href));
+  /* "/ncec" is a prefix of its siblings, so it is active only on itself and
+     its dataset pages */
+  const subActive = (href: string) =>
+    href === "/ncec"
+      ? pathname === "/ncec" || pathname.startsWith("/ncec/datasets")
+      : pathname.startsWith(href);
+  const ncecActive = ncecSubItems.some((i) => subActive(i.href));
   // open by default, as in the mockups; the user can fold it away
   const ncecOpen = ncecActive || !collapsed.has("ncec:closed");
   function toggleNcec() {
@@ -463,18 +475,24 @@ export function AppShell({
                             >
                               <div className="ms-4 flex flex-col gap-0.5 border-s border-white/15 ps-1.5 pb-1">
                                 {ncecSubItems.map((sub) => {
-                                  const active = pathname.startsWith(sub.href);
+                                  const active = subActive(sub.href);
                                   return (
                                     <Link
                                       key={sub.key}
                                       href={sub.href as never}
-                                      className={cn(ROW, "min-h-9 py-1", active ? ROW_ACTIVE : ROW_IDLE)}
+                                      className={cn(
+                                        ROW,
+                                        "min-h-9 py-1",
+                                        sub.nested && "ms-4 border-s border-white/15 rounded-s-none",
+                                        active ? ROW_ACTIVE : ROW_IDLE
+                                      )}
                                       aria-current={active ? "page" : undefined}
-                                      data-testid={`ncec-nav-${sub.key}`}
+                                      data-testid={sub.key === "processes" ? "rail-processes" : `ncec-nav-${sub.key}`}
+                                      title={sub.label}
                                     >
                                       <sub.icon className={cn("size-4 shrink-0", active && "text-aqua-500")} aria-hidden />
-                                      <span className="min-w-0 truncate text-xs">
-                                        {tNcec(`shell.nav${sub.key[0].toUpperCase()}${sub.key.slice(1)}` as never)}
+                                      <span className={cn("min-w-0 text-xs", sub.nested ? "line-clamp-2 leading-tight" : "truncate")}>
+                                        {sub.label}
                                       </span>
                                       {sub.locked ? <Lock className="ms-auto size-3 shrink-0 text-amber-300" aria-hidden /> : null}
                                     </Link>

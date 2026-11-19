@@ -47,6 +47,17 @@ export type ShelfDoc = {
   kow?: boolean;
 };
 
+/** Lets a shelf hold things other than library documents (the Source
+    Library's external sources): where a book leads, whether that is off-site,
+    what the hover card says, and the imprint at the foot of the spine. */
+export type BookOptions = {
+  /** null: the book has nowhere to go and only pulls; default /vault/{id} */
+  hrefFor?: (doc: ShelfDoc) => string | null;
+  external?: boolean;
+  renderPreview?: (doc: ShelfDoc) => React.ReactNode;
+  imprintFor?: (doc: ShelfDoc) => string | null;
+};
+
 /* CR03 1.3: the Library palette. Cloth colours by knowledge type; the light
    cloth is the only one with dark text. */
 const CLOTH: Record<string, { color: string; darkText?: boolean }> = {
@@ -122,6 +133,37 @@ function isTouch(): boolean {
 /* The preview card (CR04 1.4): all data from the shelf payload         */
 /* ------------------------------------------------------------------ */
 
+function PreviewShell({
+  pos,
+  onPointerEnter,
+  onPointerLeave,
+  children,
+}: {
+  pos: { x: number; y: number; below: boolean };
+  onPointerEnter: () => void;
+  onPointerLeave: () => void;
+  children: React.ReactNode;
+}) {
+  const locale = useLocale();
+  return createPortal(
+    <div
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      className={cn(
+        "card fixed z-[70] p-3.5 shadow-[var(--shadow-pop)]",
+        pos.below ? "book-preview-below" : "book-preview-above"
+      )}
+      style={{ left: pos.x, top: pos.y, width: PREVIEW_W }}
+      onPointerEnter={onPointerEnter}
+      onPointerLeave={onPointerLeave}
+      onFocusCapture={onPointerEnter}
+      data-testid="book-preview"
+    >
+      {children}
+    </div>,
+    document.body
+  );
+}
+
 function BookPreview({
   doc,
   pos,
@@ -182,19 +224,8 @@ function BookPreview({
     }
   }
 
-  return createPortal(
-    <div
-      dir={locale === "ar" ? "rtl" : "ltr"}
-      className={cn(
-        "card fixed z-[70] p-3.5 shadow-[var(--shadow-pop)]",
-        pos.below ? "book-preview-below" : "book-preview-above"
-      )}
-      style={{ left: pos.x, top: pos.y, width: PREVIEW_W }}
-      onPointerEnter={onPointerEnter}
-      onPointerLeave={onPointerLeave}
-      onFocusCapture={onPointerEnter}
-      data-testid="book-preview"
-    >
+  return (
+    <PreviewShell pos={pos} onPointerEnter={onPointerEnter} onPointerLeave={onPointerLeave}>
       <div className="flex gap-3">
         {/* a 48 by 64 miniature of the cover face */}
         <span
@@ -302,8 +333,7 @@ function BookPreview({
           )}
         </div>
       ) : null}
-    </div>,
-    document.body
+    </PreviewShell>
   );
 }
 
@@ -311,14 +341,27 @@ function BookPreview({
 /* The book (CR04 1.2, 1.3)                                             */
 /* ------------------------------------------------------------------ */
 
+/* The book's clickable face: an app link, an off-site link (new tab), or,
+   with nowhere to go, a focusable element that only pulls the book. */
+const BookAnchor = React.forwardRef<
+  HTMLAnchorElement,
+  Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & { href: string | null; external: boolean }
+>(function BookAnchor({ href, external, ...rest }, ref) {
+  if (href && !external) return <Link ref={ref} href={href as never} {...rest} />;
+  if (href) return <a ref={ref} href={href} target="_blank" rel="noopener noreferrer" {...rest} />;
+  return <a ref={ref} role="button" tabIndex={0} {...rest} />;
+});
+
 export function Book({
   doc,
   index = 0,
   height,
   leaning = false,
+  options,
 }: {
   doc: ShelfDoc;
   index?: number;
+  options?: BookOptions;
   /** Fixed height variant (Home mini shelf 184, project mini shelf 140).
       When omitted, heights alternate tall 216 / short 184 along the shelf. */
   height?: number;
@@ -328,6 +371,9 @@ export function Book({
   const isRtl = locale === "ar";
   const t = useTranslations("vault");
   const tk = useTranslations("kow");
+  const href = options?.hrefFor ? options.hrefFor(doc) : `/vault/${doc.id}`;
+  const external = !!options?.external;
+  const imprint = options?.imprintFor ? options.imprintFor(doc) : "the Office";
   const router = useRouter();
   const title = bi(locale, doc.titleEn, doc.titleAr);
   const summary = bi(locale, doc.summaryEn ?? "", doc.summaryAr ?? "");
@@ -359,12 +405,14 @@ export function Book({
     setPulled(true);
     // only one pulled book at a time, and the reader route warms up now
     window.dispatchEvent(new CustomEvent("sia:book:pull", { detail: { id: doc.id } }));
-    try {
-      router.prefetch(`/vault/${doc.id}` as never);
-    } catch {
-      /* prefetch is a hint */
+    if (href && !external) {
+      try {
+        router.prefetch(href as never);
+      } catch {
+        /* prefetch is a hint */
+      }
     }
-  }, [doc.id, router]);
+  }, [doc.id, router, href, external]);
 
   const release = React.useCallback(() => {
     if (intentRef.current) clearTimeout(intentRef.current);
@@ -445,8 +493,9 @@ export function Book({
       {/* the shadow is its own element, animated independently (CR04 1.2) */}
       <span aria-hidden className="book-shadow" />
 
-      <Link
-        href={`/vault/${doc.id}`}
+      <BookAnchor
+        href={href}
+        external={external}
         aria-label={`${title}${doc.status === "verified" ? ` (${t("verifiedSeal")})` : ""}${doc.kow ? ` (${tk("ribbonAria")})` : ""}`}
         aria-expanded={pulled}
         className="book rounded-t-[3px] rounded-b-[2px] outline-none"
@@ -464,7 +513,7 @@ export function Book({
         }}
         onClick={(e) => {
           // touch: first tap pulls, the second tap (or Open) navigates
-          if (isTouch() && !pulled) {
+          if (!href || (isTouch() && !pulled)) {
             e.preventDefault();
             pull();
           }
@@ -520,9 +569,11 @@ export function Book({
                   {doc.publishYear}
                 </span>
               ) : null}
-              <span style={{ fontSize: 10, fontFamily: "var(--font-sans)", fontWeight: 600, letterSpacing: "0.08em", opacity: 0.75 }}>
-                the Office
-              </span>
+              {imprint ? (
+                <span style={{ fontSize: 10, fontFamily: "var(--font-sans)", fontWeight: 600, letterSpacing: "0.08em", opacity: 0.75 }}>
+                  {imprint}
+                </span>
+              ) : null}
             </span>
           ) : null}
 
@@ -655,9 +706,11 @@ export function Book({
               className="absolute inset-x-0 bottom-3 flex items-center justify-center gap-2"
               style={{ color: cloth.darkText ? "#0a151e" : PAPER }}
             >
-              <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", opacity: 0.8 }}>
-                the Office
-              </span>
+              {imprint ? (
+                <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", opacity: 0.8 }}>
+                  {imprint}
+                </span>
+              ) : null}
               {doc.status === "verified" ? (
                 <span
                   className="flex size-3.5 items-center justify-center rounded-full"
@@ -669,15 +722,21 @@ export function Book({
             </span>
           </span>
         </span>
-      </Link>
+      </BookAnchor>
 
       {pulled && cardPos ? (
-        <BookPreview
-          doc={doc}
-          pos={cardPos}
-          onPointerEnter={cancelLeave}
-          onPointerLeave={scheduleLeave}
-        />
+        options?.renderPreview ? (
+          <PreviewShell pos={cardPos} onPointerEnter={cancelLeave} onPointerLeave={scheduleLeave}>
+            {options.renderPreview(doc)}
+          </PreviewShell>
+        ) : (
+          <BookPreview
+            doc={doc}
+            pos={cardPos}
+            onPointerEnter={cancelLeave}
+            onPointerLeave={scheduleLeave}
+          />
+        )
       ) : null}
     </div>
   );
@@ -694,8 +753,10 @@ export function Shelf({
   count,
   height,
   className,
+  bookOptions,
 }: {
   docs: ShelfDoc[];
+  bookOptions?: BookOptions;
   label?: string;
   labelAr?: string;
   count?: number;
@@ -809,6 +870,7 @@ export function Shelf({
                   index={i}
                   height={height}
                   leaning={i === docs.length - 1 && docs.length > 2}
+                  options={bookOptions}
                 />
               ))}
             </div>
