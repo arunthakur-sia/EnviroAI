@@ -4,6 +4,10 @@
       "navEnvironmental": "NCEC Permitting Data",
       "navCorporate": "NCEC Corporate Data",
       "navSensitive": "NCEC Violations Data",
+      "navEnvData": "NCEC Environmental Data",
+      "navFacilities": "Facilities Data",
+      "navPermits": "Permits Data",
+      "navViolations": "Violations Data",
       "badge": {
         "l2": "L2 · NCEC Institutional",
         "l3": "L3 · Sensitive Environmental"
@@ -41,6 +45,12 @@
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
       "backToDashboard": "Back to the dashboard"
+    },
+    "envData": {
+      "title": "NCEC Environmental Data",
+      "subtitle": "Environmental KPIs for the NCEC",
+      "placeholderTitle": "Coming soon",
+      "placeholderBody": "The environmental KPI dashboard is being designed. It will appear here once the mockup is approved."
     },
     "environmental": {
       "title": "NCEC Permitting Data",

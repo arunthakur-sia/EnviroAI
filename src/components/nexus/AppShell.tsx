@@ -39,13 +39,15 @@ import {
   Bookmark,
   Menu,
   X,
-  Database,
+  Leaf,
+  Factory,
+  FileCheck2,
   ShieldAlert,
   Lock,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { PRIMARY_RAIL, RAIL_GROUPS } from "@/server/db/json";
+import { RAIL_GROUPS } from "@/server/db/json";
 import { SiaLogo } from "./Logo";
 import { Avatar, ProgressRing, Chip } from "@/components/ui/primitives";
 import { NcecLayerBadge } from "@/components/ncec/NcecLayerBadge";
@@ -102,10 +104,10 @@ export type ShellUser = {
   ncecLayer: 2 | 3 | null;
 };
 
-/* EnviroAI rail: the primary items (PRIMARY_RAIL in json.ts) sit at the top
-   with bilingual labels; every other module lives in the collapsible "More"
-   group (RAIL_GROUPS). Settings stands alone at the bottom. Ask left the rail
-   for the bar button and the floating launcher. */
+/* EnviroAI rail: a tree of four top rows (built in AppShell from the caller's
+   portals); every portal not placed in the tree lives in the collapsible
+   "More" group (RAIL_GROUPS). Settings stands alone at the bottom. Ask left
+   the rail for the bar button and the floating launcher. */
 const PAGES: Record<string, { href: string; icon: LucideIcon }> = {
   home: { href: "/home", icon: Home },
   regulatory: { href: "/regulatory", icon: Scale },
@@ -126,18 +128,6 @@ const PAGES: Record<string, { href: string; icon: LucideIcon }> = {
   operating_model: { href: "/operating-model", icon: Layers },
   hr: { href: "/hr", icon: HeartHandshake },
   leaderboard: { href: "/leaderboard", icon: Trophy },
-};
-
-const PRIMARY_ICON: Record<string, LucideIcon> = {
-  home: Home,
-  indices: Globe2,
-  water: Droplet,
-  agriculture: Sprout,
-  climate: Cloud,
-  regulatory: Scale,
-  sources: Bookmark,
-  trends: BarChart3,
-  vault: Library,
 };
 
 const GROUP_ICON: Record<string, LucideIcon> = {
@@ -202,72 +192,163 @@ export function AppShell({
   const searchParams = useSearchParams();
   const theme = searchParams.get("o");
 
-  type PrimaryItem = {
+  /* The rail is a tree. Four top rows, each its own page, with children:
+     Global Environment (Home), Insights & Trends, Regulatory Overview and
+     NCEC Data & Knowledge. A child shows only when its portal is visible to
+     the caller; portals not placed in the tree stay in "More". The NCEC
+     children appear only for NCEC callers (ncecLayer non-null), so an L1
+     caller sees the vault row exactly as before. */
+  type NavNode = {
     key: string;
-    href: string;
+    label: string;
+    /* second-language line, top-level rows only */
+    label2?: string;
+    /* a node without href is a pure group header (Facilities Data) */
+    href?: string;
     icon: LucideIcon;
-    theme?: string;
+    active: boolean;
+    locked?: boolean;
+    testid: string;
+    children?: NavNode[];
   };
-  const primary: PrimaryItem[] = PRIMARY_RAIL.filter((i) => visible.has(i.portal)).map((i) => ({
-    key: i.key,
-    href: i.theme ? `/strategy?o=${i.theme}` : PAGES[i.portal].href,
-    icon: PRIMARY_ICON[i.key] ?? PAGES[i.portal].icon,
-    theme: i.theme,
-  }));
-  /* ui-plan.md s5: the NCEC sub-nav nests under the NCEC Data Knowledge
-     (vault) row. An L1 caller (ncecLayer null) gets none of this — the
-     tab looks exactly as it does today, per decision #2. Processes,
-     Policies, and SOPs sits under NCEC Corporate Data for NCEC callers and
-     stays in More for everyone else. */
-  const ncecLayer = user.ncecLayer;
-  const processesInNcec = !!ncecLayer && visible.has("processes");
-  const ncecSubItems: Array<{ key: string; href: string; icon: LucideIcon; locked: boolean; label: string; nested?: boolean }> = ncecLayer
-    ? [
-        { key: "environmental", href: "/ncec", icon: Database, locked: false, label: tNcec("shell.navEnvironmental") },
-        { key: "corporate", href: "/ncec/corporate", icon: Building2, locked: false, label: tNcec("shell.navCorporate") },
-        ...(processesInNcec
-          ? [{ key: "processes", href: "/processes", icon: Workflow, locked: false, label: t("nav.processes"), nested: true }]
-          : []),
-        { key: "sensitive", href: "/ncec/sensitive", icon: ShieldAlert, locked: ncecLayer < 3, label: tNcec("shell.navSensitive") },
-      ]
-    : [];
-  const groups = RAIL_GROUPS.map((g) => ({
-    key: g.key,
-    icon: GROUP_ICON[g.key] ?? Layers,
-    // the compact rail has no NCEC sub-nav, so there Processes stays in More
-    pages: g.portals.filter((p) => visible.has(p) && PAGES[p] && !(processesInNcec && showLabels && p === "processes")),
-  })).filter((g) => g.pages.length > 0);
-  /* "/ncec" is a prefix of its siblings, so it is active only on itself and
-     its dataset pages */
-  const subActive = (href: string) =>
-    href === "/ncec"
-      ? pathname === "/ncec" || pathname.startsWith("/ncec/datasets")
-      : pathname.startsWith(href);
-  const ncecActive = ncecSubItems.some((i) => subActive(i.href));
-  // open by default, as in the mockups; the user can fold it away
-  const ncecOpen = ncecActive || !collapsed.has("ncec:closed");
-  function toggleNcec() {
-    if (ncecActive) return; // stays open while one of its own pages is active
-    const next = new Set(collapsed);
-    if (next.has("ncec:closed")) next.delete("ncec:closed");
-    else next.add("ncec:closed");
-    setCollapsed(next);
-    persist({ expanded, collapsed: [...next] });
-  }
 
-  const themeSlugs = PRIMARY_RAIL.flatMap((i) => (i.theme ? [i.theme] : []));
-  const isPrimaryActive = (item: PrimaryItem) => {
-    if (item.theme) return pathname.startsWith("/strategy") && theme === item.theme;
-    if (item.key === "home") return pathname === "/home" || pathname.startsWith("/home/");
-    return pathname.startsWith(item.href);
-  };
+  const ncecLayer = user.ncecLayer;
+  const stratPath = pathname.startsWith("/strategy");
+  const THEMES = [
+    { key: "water", slug: "water-security", icon: Droplet },
+    { key: "agriculture", slug: "agriculture-food-security", icon: Sprout },
+    { key: "climate", slug: "climate-environment", icon: Cloud },
+  ] as const;
+  const themeSlugs: string[] = THEMES.map((x) => x.slug);
   const isActive = (portal: string) => {
     if (portal === "strategy") {
-      return pathname.startsWith("/strategy") && !(theme && themeSlugs.includes(theme as never));
+      return stratPath && !(theme && themeSlugs.includes(theme));
     }
     return pathname.startsWith(PAGES[portal].href);
   };
+  const primaryLabel = (key: string, lang: "first" | "second") => {
+    const l = lang === "first" ? (locale === "ar" ? "ar" : "en") : locale === "ar" ? "en" : "ar";
+    return t(`primary.${key}.${l}` as never);
+  };
+
+  const placed = new Set<string>();
+  const portalLeaf = (portal: string, label: string): NavNode => {
+    placed.add(portal);
+    return {
+      key: portal,
+      label,
+      href: PAGES[portal].href,
+      icon: PAGES[portal].icon,
+      active: isActive(portal),
+      testid: `rail-${portal}`,
+    };
+  };
+  const kidsOf = (portals: string[]): NavNode[] =>
+    portals.filter((p) => visible.has(p)).map((p) => portalLeaf(p, t(`nav.${p}` as never)));
+  const topNode = (key: string, portal: string, icon: LucideIcon, children: () => NavNode[]): NavNode | null => {
+    if (!visible.has(portal)) return null;
+    const href = PAGES[portal].href;
+    return {
+      key,
+      label: primaryLabel(key, "first"),
+      label2: primaryLabel(key, "second"),
+      href,
+      icon,
+      active: pathname === href || pathname.startsWith(`${href}/`),
+      testid: `rail-${key}`,
+      children: children(),
+    };
+  };
+  const ncecKids = (): NavNode[] => {
+    if (!ncecLayer) return [];
+    return [
+      {
+        key: "corporate",
+        label: tNcec("shell.navCorporate"),
+        href: "/ncec/corporate",
+        icon: Building2,
+        active: pathname.startsWith("/ncec/corporate"),
+        testid: "ncec-nav-corporate",
+        children: kidsOf(["processes", "organisation", "operating_model"]),
+      },
+      {
+        key: "envdata",
+        label: tNcec("shell.navEnvData"),
+        href: "/ncec/environmental",
+        icon: Leaf,
+        active: pathname.startsWith("/ncec/environmental"),
+        testid: "ncec-nav-envdata",
+      },
+      {
+        key: "facilities",
+        label: tNcec("shell.navFacilities"),
+        icon: Factory,
+        active: false,
+        testid: "ncec-nav-facilities",
+        children: [
+          {
+            key: "permits",
+            label: tNcec("shell.navPermits"),
+            href: "/ncec",
+            icon: FileCheck2,
+            /* "/ncec" is a prefix of its siblings, so it is active only on
+               itself and its dataset pages */
+            active: pathname === "/ncec" || pathname.startsWith("/ncec/datasets"),
+            testid: "ncec-nav-permits",
+          },
+          {
+            key: "violations",
+            label: tNcec("shell.navViolations"),
+            href: "/ncec/sensitive",
+            icon: ShieldAlert,
+            active: pathname.startsWith("/ncec/sensitive"),
+            locked: ncecLayer < 3,
+            testid: "ncec-nav-violations",
+          },
+        ],
+      },
+    ];
+  };
+  const nodes = [
+    topNode("home", "home", Home, () => [
+      ...(visible.has("indices") ? [portalLeaf("indices", primaryLabel("indices", "first"))] : []),
+      ...(visible.has("strategy")
+        ? THEMES.map(
+            (th): NavNode => ({
+              key: th.key,
+              label: primaryLabel(th.key, "first"),
+              href: `/strategy?o=${th.slug}`,
+              icon: th.icon,
+              active: stratPath && theme === th.slug,
+              testid: `rail-${th.key}`,
+            })
+          )
+        : []),
+    ]),
+    topNode("trends", "trends", BarChart3, () => kidsOf(["studies", "lessons", "reports", "statistics"])),
+    topNode("regulatory", "regulatory", Scale, () => kidsOf(["strategy", "council"])),
+    topNode("vault", "vault", Library, ncecKids),
+  ].filter((n): n is NavNode => n !== null);
+
+  const groups = RAIL_GROUPS.map((g) => ({
+    key: g.key,
+    icon: GROUP_ICON[g.key] ?? Layers,
+    pages: g.portals.filter((p) => visible.has(p) && PAGES[p] && !placed.has(p)),
+  })).filter((g) => g.pages.length > 0);
   const activeGroup = groups.find((g) => g.pages.some(isActive))?.key ?? null;
+
+  const containsActive = (n: NavNode): boolean => n.active || (n.children ?? []).some(containsActive);
+  const hasActiveChild = (n: NavNode) => (n.children ?? []).some(containsActive);
+  const markerOf = (key: string) => `nav:${key}:open`;
+  const isNodeOpen = (n: NavNode) => hasActiveChild(n) || collapsed.has(markerOf(n.key));
+  function setNodeOpen(n: NavNode, want: boolean) {
+    if (hasActiveChild(n)) return; // stays open while one of its own pages is active
+    const next = new Set(collapsed);
+    if (want) next.add(markerOf(n.key));
+    else next.delete(markerOf(n.key));
+    setCollapsed(next);
+    persist({ expanded, collapsed: [...next] });
+  }
 
   function toggleExpanded() {
     const next = !expanded;
@@ -349,31 +430,189 @@ export function AppShell({
     );
   }
 
-  /* a primary row: bilingual, the reader's language first, aqua bar when active */
-  function PrimaryRow({ item, showLabel }: { item: PrimaryItem; showLabel: boolean }) {
-    const active = isPrimaryActive(item);
-    const first = t(`primary.${item.key}.${locale === "ar" ? "ar" : "en"}` as never);
-    const second = t(`primary.${item.key}.${locale === "ar" ? "en" : "ar"}` as never);
-    return (
-      <Link
-        href={item.href as never}
-        className={cn(ROW, "min-h-12 py-2", active ? ROW_ACTIVE : ROW_IDLE)}
-        aria-current={active ? "page" : undefined}
-        data-testid={`rail-${item.key}`}
-      >
-        {active ? (
+  const divider = <hr className="mx-3 my-1.5 border-white/15" aria-hidden />;
+
+  /* an expanded tree row: top rows are bilingual, children are one line. A
+     row with children is a link to its own page plus a chevron that folds
+     the children; a node without an href (Facilities Data) only folds. */
+  function renderNode(node: NavNode, depth: number): React.ReactNode {
+    const kids = node.children ?? [];
+    const open = isNodeOpen(node);
+    const top = depth === 0;
+    const active = node.active;
+    const rowCls = cn(ROW, top ? "min-h-12 py-2" : "min-h-9 py-1", active ? ROW_ACTIVE : ROW_IDLE, kids.length > 0 && "min-w-0 flex-1");
+    const body = (
+      <>
+        {active && top ? (
           <span className="absolute inset-y-0 start-0 w-1 rounded-e-full bg-aqua-500" aria-hidden />
         ) : null}
-        <item.icon className={cn("size-5 shrink-0", active && "text-aqua-500")} />
-        {showLabel ? (
+        <node.icon className={cn(top ? "size-5" : "size-4", "shrink-0", active && "text-aqua-500")} aria-hidden />
+        {top ? (
           <span className="min-w-0 leading-tight">
-            <span className="block text-sm">{first}</span>
-            <span className="block text-xs font-normal text-white/65">{second}</span>
+            <span className="block text-sm">{node.label}</span>
+            {node.label2 ? <span className="block text-xs font-normal text-white/65">{node.label2}</span> : null}
           </span>
         ) : (
-          <span className="sr-only">{first}</span>
+          <span className="line-clamp-2 min-w-0 text-[13px] leading-tight">{node.label}</span>
         )}
+        {node.locked ? <Lock className="ms-auto size-3 shrink-0 text-amber-300" aria-hidden /> : null}
+      </>
+    );
+    const main = node.href ? (
+      <Link
+        href={node.href as never}
+        className={rowCls}
+        aria-current={active ? "page" : undefined}
+        data-testid={node.testid}
+        title={node.label}
+        onClick={kids.length ? () => setNodeOpen(node, true) : undefined}
+      >
+        {body}
       </Link>
+    ) : (
+      <button
+        type="button"
+        className={cn(rowCls, "w-full cursor-pointer text-start")}
+        aria-expanded={open}
+        data-testid={node.testid}
+        title={node.label}
+        onClick={() => setNodeOpen(node, !open)}
+      >
+        {body}
+      </button>
+    );
+    const locked = hasActiveChild(node);
+    const chevron = kids.length ? (
+      <button
+        type="button"
+        onClick={() => setNodeOpen(node, !open)}
+        className={cn(
+          "grid size-8 shrink-0 place-items-center rounded-md text-white/60 outline-none hover:bg-white/8 hover:text-white focus-visible:outline-2 focus-visible:outline-aqua-500",
+          locked ? "cursor-default opacity-40" : "cursor-pointer"
+        )}
+        aria-expanded={open}
+        aria-disabled={locked || undefined}
+        aria-label={open ? t("rail.closeGroup", { group: node.label }) : t("rail.openGroup", { group: node.label })}
+        data-testid={`${node.testid}-toggle`}
+      >
+        <ChevronDown className={cn("size-4 transition-transform duration-200", open && "rotate-180")} aria-hidden />
+      </button>
+    ) : null;
+    return (
+      <React.Fragment key={node.key}>
+        {node.key === "regulatory" ? divider : null}
+        <div className="flex items-center gap-0.5">
+          {main}
+          {chevron}
+        </div>
+        <AnimatePresence initial={false}>
+          {kids.length > 0 && open ? (
+            <motion.div
+              key={`${node.key}-kids`}
+              initial={reduce ? false : { height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={reduce ? undefined : { height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+              data-testid={`${node.testid}-children`}
+            >
+              <div className="ms-4 flex flex-col gap-0.5 border-s border-white/15 ps-1.5 pb-1">
+                {kids.map((k) => renderNode(k, depth + 1))}
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </React.Fragment>
+    );
+  }
+
+  /* the compact flyout lists a top row and everything under it, flat */
+  function lightRows(node: NavNode, depth: number, asPage = false): React.ReactNode {
+    const pad = { paddingInlineStart: `${12 + depth * 14}px` };
+    const row = node.href ? (
+      <Link
+        href={node.href as never}
+        className={cn(ROW, node.active ? ROW_ACTIVE_LIGHT : ROW_IDLE_LIGHT)}
+        style={pad}
+        aria-current={node.active ? "page" : undefined}
+        data-testid={asPage ? `${node.testid}-page` : node.testid}
+      >
+        <node.icon className={cn("size-4 shrink-0", node.active && "text-navy-700")} aria-hidden />
+        <span className="line-clamp-2 min-w-0 text-[13px] leading-tight">{node.label}</span>
+        {node.locked ? <Lock className="ms-auto size-3 shrink-0 text-amber-500" aria-hidden /> : null}
+      </Link>
+    ) : (
+      <p
+        className="mt-1 px-3 pt-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400 rtl:tracking-normal"
+        style={pad}
+      >
+        {node.label}
+      </p>
+    );
+    return (
+      <React.Fragment key={node.key}>
+        {row}
+        {(node.children ?? []).map((k) => lightRows(k, depth + 1))}
+      </React.Fragment>
+    );
+  }
+
+  /* a compact top row: the icon links to the page; rows with children also
+     open a flyout on hover or focus */
+  function renderCompact(node: NavNode) {
+    const kids = node.children ?? [];
+    const active = containsActive(node);
+    const icon = (
+      <Link
+        href={(node.href ?? "/home") as never}
+        className={cn(ROW, "min-h-12", active ? ROW_ACTIVE : ROW_IDLE)}
+        aria-current={node.active ? "page" : undefined}
+        data-testid={node.testid}
+      >
+        {active ? <span className="absolute inset-y-0 start-0 w-1 rounded-e-full bg-aqua-500" aria-hidden /> : null}
+        <node.icon className={cn("size-5 shrink-0", active && "text-aqua-500")} />
+        <span className="sr-only">{node.label}</span>
+      </Link>
+    );
+    const isOpen = flyout === node.key;
+    return (
+      <React.Fragment key={node.key}>
+        {node.key === "regulatory" ? divider : null}
+        {kids.length === 0 ? (
+          icon
+        ) : (
+          <div
+            className="relative"
+            onMouseEnter={() => openFlyout(node.key)}
+            onMouseLeave={scheduleCloseFlyout}
+            onFocus={() => openFlyout(node.key)}
+            onBlur={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node)) scheduleCloseFlyout();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setFlyout(null);
+            }}
+          >
+            {icon}
+            <AnimatePresence>
+              {isOpen ? (
+                <motion.div
+                  role="menu"
+                  aria-label={node.label}
+                  initial={reduce ? false : { opacity: 0, x: locale === "ar" ? 6 : -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={reduce ? undefined : { opacity: 0, x: locale === "ar" ? 6 : -6 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute top-0 z-50 max-h-[70vh] w-60 overflow-y-auto rounded-xl border border-mist-200 bg-white p-2 shadow-pop start-[calc(100%+6px)]"
+                  data-testid={`rail-flyout-${node.key}`}
+                >
+                  {lightRows(node, 0, true)}
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+          </div>
+        )}
+      </React.Fragment>
     );
   }
 
@@ -447,65 +686,8 @@ export function AppShell({
                 </button>
               ) : null}
 
-              <div className="mt-1 flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto overflow-x-visible">
-                {primary.map((item) => (
-                  <React.Fragment key={item.key}>
-                    {item.key === "regulatory" ? (
-                      <hr className="mx-3 my-1.5 border-white/15" aria-hidden />
-                    ) : null}
-                    <PrimaryRow item={item} showLabel={showLabels} />
-                    {item.key === "vault" && ncecSubItems.length && showLabels ? (
-                      <div data-testid="ncec-subnav">
-                        <button
-                          type="button"
-                          onClick={toggleNcec}
-                          className="flex w-full items-center gap-2 rounded-lg px-3 py-1 text-[11px] font-medium text-white/50 outline-none hover:text-white/80 focus-visible:outline-2 focus-visible:outline-aqua-500 cursor-pointer"
-                          aria-expanded={ncecOpen}
-                        >
-                          <ChevronDown className={cn("size-3 shrink-0 transition-transform", ncecOpen ? "rotate-180" : "")} aria-hidden />
-                        </button>
-                        <AnimatePresence initial={false}>
-                          {ncecOpen ? (
-                            <motion.div
-                              initial={reduce ? false : { height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={reduce ? undefined : { height: 0, opacity: 0 }}
-                              transition={{ duration: 0.2 }}
-                              className="overflow-hidden"
-                            >
-                              <div className="ms-4 flex flex-col gap-0.5 border-s border-white/15 ps-1.5 pb-1">
-                                {ncecSubItems.map((sub) => {
-                                  const active = subActive(sub.href);
-                                  return (
-                                    <Link
-                                      key={sub.key}
-                                      href={sub.href as never}
-                                      className={cn(
-                                        ROW,
-                                        "min-h-9 py-1",
-                                        sub.nested && "ms-4 border-s border-white/15 rounded-s-none",
-                                        active ? ROW_ACTIVE : ROW_IDLE
-                                      )}
-                                      aria-current={active ? "page" : undefined}
-                                      data-testid={sub.key === "processes" ? "rail-processes" : `ncec-nav-${sub.key}`}
-                                      title={sub.label}
-                                    >
-                                      <sub.icon className={cn("size-4 shrink-0", active && "text-aqua-500")} aria-hidden />
-                                      <span className={cn("min-w-0 text-xs", sub.nested ? "line-clamp-2 leading-tight" : "truncate")}>
-                                        {sub.label}
-                                      </span>
-                                      {sub.locked ? <Lock className="ms-auto size-3 shrink-0 text-amber-300" aria-hidden /> : null}
-                                    </Link>
-                                  );
-                                })}
-                              </div>
-                            </motion.div>
-                          ) : null}
-                        </AnimatePresence>
-                      </div>
-                    ) : null}
-                  </React.Fragment>
-                ))}
+              <div className="mt-1 flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto overflow-x-visible [&>*]:shrink-0">
+                {nodes.map((node) => (showLabels ? renderNode(node, 0) : renderCompact(node)))}
 
                 {groups.map((g) => {
                   const active = g.key === activeGroup;

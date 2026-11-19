@@ -9,8 +9,8 @@
     },
     "primary": {
       "home": {
-        "en": "Scorecard",
-        "ar": "بطاقة المؤشرات"
+        "en": "Global Environment",
+        "ar": "البيئة العالمية"
       },
       "indices": {
         "en": "SDG Performance",
@@ -41,8 +41,8 @@
         "ar": "الرؤى والاتجاهات"
       },
       "vault": {
-        "en": "NCEC Data Knowledge",
-        "ar": "معرفة بيانات المركز"
+        "en": "NCEC Data & Knowledge",
+        "ar": "بيانات ومعرفة المركز"
       }
     },
     "languageToggle": "اللغة",

@@ -81,27 +81,10 @@ export const PORTALS = [
 ] as const;
 export type Portal = (typeof PORTALS)[number];
 
-/* EnviroAI rail. PRIMARY_RAIL is the top of the sidebar in order; the three
-   theme entries are deep links into the strategy module and are visible with
-   the "strategy" portal. RAIL_GROUPS holds the collapsible "More" group; Settings
-   stands alone at the bottom. */
-export const PRIMARY_RAIL: ReadonlyArray<{
-  key: string;
-  portal: Portal;
-  /* optional ?o= outcome slug for the strategy deep links */
-  theme?: "water-security" | "agriculture-food-security" | "climate-environment";
-}> = [
-  { key: "home", portal: "home" },
-  { key: "indices", portal: "indices" },
-  { key: "water", portal: "strategy", theme: "water-security" },
-  { key: "agriculture", portal: "strategy", theme: "agriculture-food-security" },
-  { key: "climate", portal: "strategy", theme: "climate-environment" },
-  { key: "regulatory", portal: "regulatory" },
-  { key: "sources", portal: "sources" },
-  { key: "trends", portal: "trends" },
-  { key: "vault", portal: "vault" },
-];
-
+/* EnviroAI rail. The top of the sidebar is a tree built in AppShell (Global
+   Environment, Insights & Trends, Regulatory Overview, NCEC Data & Knowledge).
+   RAIL_GROUPS holds the collapsible "More" group: every portal the tree does
+   not place. Settings stands alone at the bottom. */
 export const RAIL_GROUPS: ReadonlyArray<{
   key: "more";
   portals: ReadonlyArray<Portal>;
@@ -109,6 +92,7 @@ export const RAIL_GROUPS: ReadonlyArray<{
   {
     key: "more",
     portals: [
+      "sources",
       "strategy",
       "council",
       "statistics",
